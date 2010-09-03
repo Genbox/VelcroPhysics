@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Farseer Physics Engine based on Box2D.XNA port:
 * Copyright (c) 2010 Ian Qvist
 * 
@@ -23,44 +23,36 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Collections.Generic;
+using System;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ContinuousTest : Test
+    public class BulletTest : Test
     {
-        private float _angularVelocity;
-        private Fixture _box;
-
-        private ContinuousTest()
+        private BulletTest()
         {
-            List<Vertices> list = new List<Vertices>();
-            list.Add(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
-            list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
+            FixtureFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0), 0);
+            FixtureFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
 
-            FixtureFactory.CreateCompundPolygon(World, list, 0);
+            //Bar
+            _body = FixtureFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f)).Body;
+            _body.Position = new Vector2(0, 4);
+            _body.BodyType = BodyType.Dynamic;
+            
+            //Bullet
+            _bullet = FixtureFactory.CreateRectangle(World, 0.5f, 0.5f, 100).Body;
+            _bullet.IsBullet = true;
+            _bullet.BodyType = BodyType.Dynamic;
+            _x = 0.20352793f;
+            _bullet.Position = new Vector2(_x, 10);
 
-            _box = FixtureFactory.CreateRectangle(World, 4, 0.2f, 1);
-            _box.Body.Position = new Vector2(0, 20);
-            _box.Body.BodyType = BodyType.Dynamic;
-
-            //_angularVelocity = 46.661274f;
-            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.Body.AngularVelocity = _angularVelocity;
-        }
-
-        private void Launch()
-        {
-            _box.Body.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
-            _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.Body.AngularVelocity = _angularVelocity;
+            _bullet.LinearVelocity = new Vector2(0, -50);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -70,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (Distance.GJKCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}",
-                                     Distance.GJKCalls, Distance.GJKIters / (float) Distance.GJKCalls,
+                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
                                      Distance.GJKMaxIters);
                 TextLine += 15;
             }
@@ -78,12 +70,12 @@ namespace FarseerPhysics.TestBed.Tests
             if (TimeOfImpact.TOICalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "TOI calls = {0:n}, Ave TOI iters = {1:n}, Max TOI iters = {2:n}",
-                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float) TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
                                      TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
                 DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0:n}, Max TOI root iters = {1:n}",
-                                     TimeOfImpact.TOIRootIters / (float) TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
                                      TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
@@ -97,9 +89,35 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
+        void Launch()
+        {
+            _body.SetTransform(new Vector2(0.0f, 4.0f), 0.0f);
+            _body.LinearVelocity = Vector2.Zero;
+            _body.AngularVelocity = 0;
+
+            _x = Rand.RandomFloat(-1.0f, 1.0f);
+            _bullet.SetTransform(new Vector2(_x, 10.0f), 0.0f);
+            _bullet.LinearVelocity = new Vector2(0.0f, -50.0f);
+            _bullet.AngularVelocity = 0;
+
+            Distance.GJKCalls = 0;
+            Distance.GJKIters = 0;
+            Distance.GJKMaxIters = 0;
+
+            TimeOfImpact.TOICalls = 0;
+            TimeOfImpact.TOIIters = 0;
+            TimeOfImpact.TOIMaxIters = 0;
+            TimeOfImpact.TOIRootIters = 0;
+            TimeOfImpact.TOIMaxRootIters = 0;
+        }
+
         internal static Test Create()
         {
-            return new ContinuousTest();
+            return new BulletTest();
         }
+
+        private Body _body;
+        private float _x;
+        private Body _bullet;
     }
 }

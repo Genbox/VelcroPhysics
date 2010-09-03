@@ -33,6 +33,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
+    //TODO: Upgrade
     public class CharacterCollisionTest : Test
     {
         private bool _collision;
@@ -59,9 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
             tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
             ground.Body.CreateFixture(tile);
 
-            // Square made from edges notice how the edges are shrunk to account
-            // for the polygon radius. This makes it so the square character does
-            // not get snagged. However, ray casts can now go through the cracks.
+            // Square made from edge loop
             PolygonShape square = new PolygonShape();
             const float d = 2.0f * Settings.PolygonRadius;
             square.SetAsEdge(new Vector2(-1.0f + d, 3.0f), new Vector2(1.0f - d, 3.0f));
