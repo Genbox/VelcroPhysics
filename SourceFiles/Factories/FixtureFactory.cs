@@ -40,9 +40,6 @@ namespace FarseerPhysics.Factories
             if (height <= 0)
                 throw new ArgumentOutOfRangeException("height", "Height must be more than 0");
 
-            if (density <= 0)
-                throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
-
             if (body != null)
             {
                 Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
@@ -52,8 +49,9 @@ namespace FarseerPhysics.Factories
             }
             else
             {
-                Body newBody = BodyFactory.CreateBody(world, offset);
+                Body newBody = BodyFactory.CreateBody(world);
                 Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+                rectangleVertices.Translate(ref offset);
                 PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
                 return newBody.CreateFixture(rectangleShape, density);
             }

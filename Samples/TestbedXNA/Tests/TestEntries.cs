@@ -32,6 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
         public static TestEntry[] TestList =
             {
                 //Original tests
+                new TestEntry {Name = "Bullet", CreateFcn = BulletTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},

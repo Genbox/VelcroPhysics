@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return;
             }
 
-            if (fixtureB != _character && fixtureB != _character)
+            if (fixtureB != _platform && fixtureB != _character)
             {
                 return;
             }

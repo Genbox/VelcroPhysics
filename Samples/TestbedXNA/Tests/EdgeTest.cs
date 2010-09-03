@@ -41,25 +41,21 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 Vector2 v1 = new Vector2(-10.0f, 0.0f);
-                Vector2 v2 = new Vector2(-7.0f, -1.0f);
+                Vector2 v2 = new Vector2(-7.0f, -2.0f);
                 Vector2 v3 = new Vector2(-4.0f, 0.0f);
                 Vector2 v4 = Vector2.Zero;
                 Vector2 v5 = new Vector2(4.0f, 0.0f);
-                Vector2 v6 = new Vector2(7.0f, 1.0f);
+                Vector2 v6 = new Vector2(7.0f, 2.0f);
                 Vector2 v7 = new Vector2(10.0f, 0.0f);
 
                 EdgeShape shape = new EdgeShape();
 
                 shape.Set(v1, v2);
-                //shape._index1 = 0;
-                //shape._index2 = 1;
                 shape.HasVertex3 = true;
                 shape.Vertex3 = v3;
                 ground.CreateFixture(shape);
 
                 shape.Set(v2, v3);
-                //shape._index1 = 1;
-                //shape._index2 = 2;
                 shape.HasVertex0 = true;
                 shape.HasVertex3 = true;
                 shape.Vertex0 = v1;
@@ -67,8 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape);
 
                 shape.Set(v3, v4);
-                //shape._index1 = 2;
-                //shape._index2 = 3;
                 shape.HasVertex0 = true;
                 shape.HasVertex3 = true;
                 shape.Vertex0 = v2;
@@ -76,8 +70,6 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape);
 
                 shape.Set(v4, v5);
-                //shape._index1 = 3;
-                //shape._index2 = 4;
                 shape.HasVertex0 = true;
                 shape.HasVertex3 = true;
                 shape.Vertex0 = v3;
@@ -85,8 +77,6 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape);
 
                 shape.Set(v5, v6);
-                //shape._index1 = 4;
-                //shape._index2 = 5;
                 shape.HasVertex0 = true;
                 shape.HasVertex3 = true;
                 shape.Vertex0 = v4;
@@ -94,15 +84,13 @@ namespace FarseerPhysics.TestBed.Tests
                 ground.CreateFixture(shape);
 
                 shape.Set(v6, v7);
-                //shape._index1 = 5;
-                //shape._index2 = 6;
                 shape.HasVertex0 = true;
                 shape.Vertex0 = v5;
                 ground.CreateFixture(shape);
             }
 
             {
-                Body body = BodyFactory.CreateBody(World, new Vector2(-0.5f, 0.5f));
+                Body body = BodyFactory.CreateBody(World, new Vector2(-0.5f, 0.6f));
                 body.BodyType = BodyType.Dynamic;
                 body.SleepingAllowed = false;
 
@@ -111,7 +99,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Body body = BodyFactory.CreateBody(World, new Vector2(0.5f, 0.5f));
+                Body body = BodyFactory.CreateBody(World, new Vector2(1.0f, 0.6f));
                 body.BodyType = BodyType.Dynamic;
                 body.SleepingAllowed = false;
 
