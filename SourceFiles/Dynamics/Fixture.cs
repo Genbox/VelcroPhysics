@@ -128,11 +128,11 @@ namespace FarseerPhysics.Dynamics
 
             Body = body;
 
-#if ConserveMemory            
-            Shape = shape;
-#else
-            Shape = shape.Clone();
-#endif
+            if (Settings.ConserveMemory)
+                Shape = shape;
+            else
+                Shape = shape.Clone();
+
             // Reserve proxy space
             int childCount = Shape.ChildCount;
             Proxies = new FixtureProxy[childCount];
@@ -291,7 +291,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="massData">The mass data.</param>
         public MassData GetMassData()
         {
-           return Shape.MassData;
+            return Shape.MassData;
         }
 
         /// <summary>

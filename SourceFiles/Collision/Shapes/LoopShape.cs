@@ -54,23 +54,21 @@ namespace FarseerPhysics.Collision.Shapes
         public LoopShape(Vertices vertices)
             : this()
         {
-#if ConverveMemory
-            Vertices = vertices;
-#else
-            // Copy vertices.
-            Vertices = new Vertices(vertices);
-#endif
+            if (Settings.ConserveMemory)
+                Vertices = vertices;
+            else
+                // Copy vertices.
+                Vertices = new Vertices(vertices);
         }
 
         public LoopShape(Vertices vertices, float density)
             : this()
         {
-#if ConverveMemory
-            Vertices = vertices;
-#else
-            // Copy vertices.
-            Vertices = new Vertices(vertices);
-#endif
+            if (Settings.ConserveMemory)
+                Vertices = vertices;
+            else
+                // Copy vertices.
+                Vertices = new Vertices(vertices);
 
             Density = density;
         }

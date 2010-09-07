@@ -82,11 +82,12 @@ namespace FarseerPhysics.Collision.Shapes
             clone.ShapeType = ShapeType;
             clone.Radius = Radius;
             clone.Centroid = Centroid;
-#if ConverveMemory
-            clone.Vertices  = Vertices;
-#else
-            clone.Vertices = new Vertices(Vertices);
-#endif
+
+            if (Settings.ConserveMemory)
+                clone.Vertices = Vertices;
+            else
+                clone.Vertices = new Vertices(Vertices);
+
             clone.Normals = Normals;
             clone.Density = Density;
             clone.MassData = MassData;
@@ -107,12 +108,12 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Debug.Assert(2 <= vertices.Count && vertices.Count <= Settings.MaxPolygonVertices);
 
-#if ConverveMemory
-            Vertices = vertices;
-#else
-            // Copy vertices.
-            Vertices = new Vertices(vertices);
-#endif
+            if (Settings.ConserveMemory)
+                Vertices = vertices;
+            else
+                // Copy vertices.
+                Vertices = new Vertices(vertices);
+        
             Normals = new Vertices(vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.
