@@ -365,6 +365,18 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Resets the dynamics of this body.
+        /// Sets torque, force and linear/angular velocity to 0
+        /// </summary>
+        public void ResetDynamics()
+        {
+            Torque = 0;
+            AngularVelocityInternal = 0;
+            Force = Vector2.Zero;
+            LinearVelocityInternal = Vector2.Zero;
+        }
+
+        /// <summary>
         /// Gets all the fixtures attached to this body.
         /// </summary>
         /// <value>The fixture list.</value>
