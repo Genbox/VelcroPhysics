@@ -410,7 +410,7 @@ namespace FarseerPhysics.DebugViewXNA
                 case ShapeType.Loop:
                     {
                         LoopShape loop = (LoopShape)fixture.Shape;
-                        int count = loop.Count;
+                        int count = loop.Vertices.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
                         for (int i = 0; i < count; ++i)
