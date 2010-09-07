@@ -71,10 +71,10 @@ namespace FarseerPhysics.Collision
                 case ShapeType.Loop:
                     {
                         LoopShape loop = (LoopShape)shape;
-                        Debug.Assert(0 <= index && index < loop.Count);
+                        Debug.Assert(0 <= index && index < loop.Vertices.Count);
 
                         Buffer[0] = loop.Vertices[index];
-                        if (index + 1 < loop.Count)
+                        if (index + 1 < loop.Vertices.Count)
                         {
                             Buffer[1] = loop.Vertices[index + 1];
                         }

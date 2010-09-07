@@ -192,7 +192,7 @@ namespace FarseerPhysics.Factories
                 return fixtureList;
             }
 
-            return new List<Fixture> {CreatePolygon(world, verts, density)};
+            return new List<Fixture> { CreatePolygon(world, verts, density) };
         }
 
         public static List<Fixture> CreateCapsule(World world, float height, float endRadius, float density)
@@ -244,7 +244,7 @@ namespace FarseerPhysics.Factories
                 return fixtureList;
             }
 
-            return new List<Fixture> {CreatePolygon(world, verts, density)};
+            return new List<Fixture> { CreatePolygon(world, verts, density) };
         }
 
         public static List<Fixture> CreateRoundedRectangle(World world, float width, float height, float xRadius,
@@ -277,6 +277,18 @@ namespace FarseerPhysics.Factories
             world.AddBreakableBody(breakableBody);
 
             return breakableBody;
+        }
+
+        public static Fixture CreateLoopShape(World world, Vertices vertices, Vector2 position, float density)
+        {
+            Body body = BodyFactory.CreateBody(world, position);
+            LoopShape shape = new LoopShape(vertices);
+            return body.CreateFixture(shape, density);
+        }
+
+        public static Fixture CreateLoopShape(World world, Vertices vertices, float density)
+        {
+            return CreateLoopShape(world, vertices, Vector2.Zero, density);
         }
     }
 }

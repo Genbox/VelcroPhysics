@@ -40,33 +40,37 @@ namespace FarseerPhysics.Collision.Shapes
         private static EdgeShape _edgeShape = new EdgeShape();
 
         /// <summary>
-        /// The vertex count.
-        /// </summary>
-        public int Count;
-
-        /// <summary>
         /// The vertices. These are not owned/freed by the loop Shape.
         /// </summary>
-        public Vector2[] Vertices;
+        public Vertices Vertices;
 
-        public LoopShape()
+        private LoopShape()
         {
             ShapeType = ShapeType.Loop;
             Radius = Settings.PolygonRadius;
         }
 
+        public LoopShape(Vertices vertices) : this()
+        {
+#if ConverveMemory
+            Vertices = vertices;
+#else
+            // Copy vertices.
+            Vertices = new Vertices(vertices);
+#endif
+        }
+
         public override Shape Clone()
         {
             LoopShape loop = new LoopShape();
-            loop.Count = Count;
             loop.Radius = Radius;
-            loop.Vertices = (Vector2[]) Vertices.Clone();
+            loop.Vertices = Vertices;
             return loop;
         }
 
         public override int ChildCount
         {
-            get { return Count; }
+            get { return Vertices.Count; }
         }
 
         /// <summary>
@@ -76,20 +80,20 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="index">The index.</param>
         public void GetChildEdge(ref EdgeShape edge, int index)
         {
-            Debug.Assert(2 <= Count);
-            Debug.Assert(0 <= index && index < Count);
+            Debug.Assert(2 <= Vertices.Count);
+            Debug.Assert(0 <= index && index < Vertices.Count);
             edge.ShapeType = ShapeType.Edge;
             edge.Radius = Radius;
             edge.HasVertex0 = true;
             edge.HasVertex3 = true;
 
-            int i0 = index - 1 >= 0 ? index - 1 : Count - 1;
+            int i0 = index - 1 >= 0 ? index - 1 : Vertices.Count - 1;
             int i1 = index;
-            int i2 = index + 1 < Count ? index + 1 : 0;
+            int i2 = index + 1 < Vertices.Count ? index + 1 : 0;
             int i3 = index + 2;
-            while (i3 >= Count)
+            while (i3 >= Vertices.Count)
             {
-                i3 -= Count;
+                i3 -= Vertices.Count;
             }
 
             edge.Vertex0 = Vertices[i0];
@@ -120,11 +124,11 @@ namespace FarseerPhysics.Collision.Shapes
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
                                      ref Transform transform, int childIndex)
         {
-            Debug.Assert(childIndex < Count);
+            Debug.Assert(childIndex < Vertices.Count);
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
-            if (i2 == Count)
+            if (i2 == Vertices.Count)
             {
                 i2 = 0;
             }
@@ -143,12 +147,12 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            Debug.Assert(childIndex < Count);
+            Debug.Assert(childIndex < Vertices.Count);
             aabb = new AABB();
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
-            if (i2 == Count)
+            if (i2 == Vertices.Count)
             {
                 i2 = 0;
             }
