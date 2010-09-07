@@ -67,9 +67,6 @@ namespace FarseerPhysics.Factories
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
 
-            if (density <= 0)
-                throw new ArgumentOutOfRangeException("density", "Density must be more than 0 meters");
-
             if (body != null)
             {
                 CircleShape circleShape = new CircleShape(radius);
@@ -98,9 +95,6 @@ namespace FarseerPhysics.Factories
             if (yRadius <= 0)
                 throw new ArgumentOutOfRangeException("yRadius", "Y-radius must be more than 0");
 
-            if (density <= 0)
-                throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
-
             Body body = BodyFactory.CreateBody(world, position);
             Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices);
@@ -119,7 +113,14 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(polygonShape, density);
         }
 
-        public static List<Fixture> CreateCompundPolygon(World world, List<Vertices> list, float density)
+        public static Fixture CreatePolygon(Vertices vertices, float density, Body body, Vector2 offset)
+        {
+            vertices.Translate(ref offset);
+            PolygonShape polygon = new PolygonShape(vertices);
+            return body.CreateFixture(polygon, density);
+        }
+
+        public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density)
         {
             //We create a single body
             Body polygonBody = BodyFactory.CreateBody(world);
@@ -147,7 +148,7 @@ namespace FarseerPhysics.Factories
                 //Decompose the gear:
                 List<Vertices> list = EarclipDecomposer.ConvexPartition(gearPolygon);
 
-                return CreateCompundPolygon(world, list, density);
+                return CreateCompoundPolygon(world, list, density);
             }
 
             List<Fixture> fixtures = new List<Fixture>();
@@ -178,7 +179,7 @@ namespace FarseerPhysics.Factories
             if (verts.Count >= Settings.MaxPolygonVertices)
             {
                 List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
-                List<Fixture> fixtureList = CreateCompundPolygon(world, vertList, density);
+                List<Fixture> fixtureList = CreateCompoundPolygon(world, vertList, density);
                 fixtureList[0].Body.Position = position;
 
                 return fixtureList;
@@ -195,7 +196,7 @@ namespace FarseerPhysics.Factories
             List<Vertices> list = new List<Vertices>();
             list.Add(rectangle);
 
-            List<Fixture> fixtures = CreateCompundPolygon(world, list, density);
+            List<Fixture> fixtures = CreateCompoundPolygon(world, list, density);
 
             //Create the two circles
             CircleShape topCircle = new CircleShape(endRadius);
@@ -231,7 +232,7 @@ namespace FarseerPhysics.Factories
             if (verts.Count >= Settings.MaxPolygonVertices)
             {
                 List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
-                List<Fixture> fixtureList = CreateCompundPolygon(world, vertList, density);
+                List<Fixture> fixtureList = CreateCompoundPolygon(world, vertList, density);
                 fixtureList[0].Body.Position = position;
                 return fixtureList;
             }
