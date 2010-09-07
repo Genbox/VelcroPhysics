@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
                 const int n = 200;
                 const int m = 10;
-                Vector2 position = new Vector2();
+                Vector2 position = Vector2.Zero;
                 position.Y = 0.0f;
                 for (int j = 0; j < m; ++j)
                 {
@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         PolygonShape shape = new PolygonShape();
                         shape.SetAsBox(a, a, position, 0.0f);
-                        ground.CreateFixture(shape);
+                        ground.CreateFixture(shape, 0);
                         position.X += 2.0f * a;
                     }
                     position.Y -= 2.0f * a;
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             int height = cm.BroadPhase.ComputeHeight();
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;
-            float minimumHeight = (float) Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+            float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
             DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
             TextLine += 15;
 

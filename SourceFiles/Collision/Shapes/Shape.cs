@@ -71,6 +71,10 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public float Radius;
 
+        private float _density;
+
+        public MassData MassData;
+
         protected Shape()
         {
             ShapeType = ShapeType.Unknown;
@@ -93,6 +97,16 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <value></value>
         public abstract int ChildCount { get; }
+
+        public float Density
+        {
+            get { return _density; }
+            set
+            {
+                _density = value;
+                ComputeProperties();
+            }
+        }
 
         /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.
@@ -125,8 +139,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        /// <param name="massData">Returns the mass data for this shape.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public abstract void ComputeMass(out MassData massData, float density);
+        public abstract void ComputeProperties();
     }
 }

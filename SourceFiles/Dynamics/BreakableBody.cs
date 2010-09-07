@@ -127,7 +127,7 @@ namespace FarseerPhysics.Dynamics
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.Rotation;
 
-                body.CreateFixture(shape, fixture.Density);
+                body.CreateFixture(shape, fixture.Shape.Density);
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

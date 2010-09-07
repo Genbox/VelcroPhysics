@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -52,6 +53,17 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public Vector2 Vertex3;
 
+        public EdgeShape(Vector2 start, Vector2 end, float density)
+        {
+            Vertex1 = start;
+            Vertex2 = end;
+            ShapeType = ShapeType.Edge;
+            Radius = Settings.PolygonRadius;
+            HasVertex0 = false;
+            HasVertex3 = false;
+            Density = density;
+        }
+
         public EdgeShape()
         {
             ShapeType = ShapeType.Edge;
@@ -75,7 +87,7 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override Shape Clone()
         {
-            var edge = new EdgeShape();
+            EdgeShape edge = new EdgeShape();
             edge.HasVertex0 = HasVertex0;
             edge.HasVertex3 = HasVertex3;
             edge.Radius = Radius;
@@ -83,6 +95,8 @@ namespace FarseerPhysics.Collision.Shapes
             edge.Vertex1 = Vertex1;
             edge.Vertex2 = Vertex2;
             edge.Vertex3 = Vertex3;
+            edge.Density = Density;
+            edge.MassData = MassData;
             return edge;
         }
 
@@ -202,14 +216,11 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        /// <param name="massData">Returns the mass data for this shape.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public override void ComputeMass(out MassData massData, float density)
+        public override void ComputeProperties()
         {
-            massData = new MassData();
-            massData.Mass = 0.0f;
-            massData.Center = 0.5f * (Vertex1 + Vertex2);
-            massData.Inertia = 0.0f;
+            MassData.Mass = 0.0f;
+            MassData.Center = 0.5f * (Vertex1 + Vertex2);
+            MassData.Inertia = 0.0f;
         }
     }
 }

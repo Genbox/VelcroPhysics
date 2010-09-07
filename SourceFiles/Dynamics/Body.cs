@@ -546,7 +546,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="shape">The shape.</param>
         /// <param name="density">The density.</param>
         /// <returns></returns>
-        public Fixture CreateFixture(Shape shape, float density)
+        public Fixture CreateFixture(Shape shape, float density = 1)
         {
             Debug.Assert(World.IsLocked == false);
             if (World.IsLocked)
@@ -554,7 +554,9 @@ namespace FarseerPhysics.Dynamics
                 return null;
             }
 
-            Fixture fixture = new Fixture(this, shape, density);
+            shape.Density = density;
+
+            Fixture fixture = new Fixture(this, shape);
 
             if ((Flags & BodyFlags.Active) == BodyFlags.Active)
             {
@@ -566,7 +568,7 @@ namespace FarseerPhysics.Dynamics
             fixture.Body = this;
 
             // Adjust mass properties if needed.
-            if (fixture.Density > 0.0f)
+            if (fixture.Shape.Density > 0.0f)
             {
                 ResetMassData();
             }
@@ -581,17 +583,6 @@ namespace FarseerPhysics.Dynamics
             }
 
             return fixture;
-        }
-
-        /// <summary>
-        /// Creates a fixture with the supplied shape.
-        /// Note: Default density is 1
-        /// </summary>
-        /// <param name="shape">The shape</param>
-        /// <returns></returns>
-        public Fixture CreateFixture(Shape shape)
-        {
-            return CreateFixture(shape, 1);
         }
 
         /// <summary>
@@ -617,7 +608,7 @@ namespace FarseerPhysics.Dynamics
             Debug.Assert(FixtureList.Count > 0);
 
 #if DEBUG
-            // You tried to remove a shape that is not attached to this body.
+            // You tried to remove a fixture that not present in the fixturelist.
             Debug.Assert(FixtureList.Contains(fixture));
 #endif
 
@@ -790,8 +781,29 @@ namespace FarseerPhysics.Dynamics
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
+        public void ApplyLinearImpulse(ref Vector2 impulse)
+        {
+            if (Type != BodyType.Dynamic)
+            {
+                return;
+            }
+            if (Awake == false)
+            {
+                Awake = true;
+            }
+            LinearVelocityInternal += InvMass * impulse;
+            AngularVelocityInternal += InvI * MathUtils.Cross(Vector2.Zero, impulse);
+        }
+
+        /// <summary>
+        /// Apply an impulse at a point. This immediately modifies the velocity.
+        /// It also modifies the angular velocity if the point of application
+        /// is not at the center of mass.
+        /// This wakes up the body.
+        /// </summary>
+        /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         /// <param name="point">The world position of the point of application.</param>
-        public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
+        public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
         {
             if (Type != BodyType.Dynamic)
             {
@@ -851,13 +863,12 @@ namespace FarseerPhysics.Dynamics
             Vector2 center = Vector2.Zero;
             foreach (Fixture f in FixtureList)
             {
-                if (MathUtils.FloatEquals(f.Density, 0))
+                if (f.Shape.Density == 0)
                 {
                     continue;
                 }
 
-                MassData massData;
-                f.GetMassData(out massData);
+                MassData massData = f.GetMassData();
                 _mass += massData.Mass;
                 center += massData.Mass * massData.Center;
                 _inertia += massData.Inertia;

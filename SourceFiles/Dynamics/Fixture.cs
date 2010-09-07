@@ -118,7 +118,7 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
-        internal Fixture(Body body, Shape shape, float density)
+        internal Fixture(Body body, Shape shape)
         {
             //Fixture defaults
             Friction = 0.2f;
@@ -143,8 +143,6 @@ namespace FarseerPhysics.Dynamics
                 Proxies[i].ProxyId = BroadPhase.NullProxy;
             }
             ProxyCount = 0;
-
-            Density = density;
 
             FixtureId = _fixtureIdCounter++;
         }
@@ -182,12 +180,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <value>The user data.</value>
         public object UserData { get; set; }
-
-        /// <summary>
-        /// Gets or sets the density.
-        /// </summary>
-        /// <value>The density.</value>
-        public float Density { get; set; }
 
         /// <summary>
         /// Get or set the coefficient of friction.
@@ -297,9 +289,9 @@ namespace FarseerPhysics.Dynamics
         /// the Shape. The rotational inertia is about the Shape's origin.
         /// </summary>
         /// <param name="massData">The mass data.</param>
-        public void GetMassData(out MassData massData)
+        public MassData GetMassData()
         {
-            Shape.ComputeMass(out massData, Density);
+           return Shape.MassData;
         }
 
         /// <summary>

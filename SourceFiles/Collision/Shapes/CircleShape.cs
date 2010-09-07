@@ -40,6 +40,14 @@ namespace FarseerPhysics.Collision.Shapes
             Position = Vector2.Zero;
         }
 
+        public CircleShape(float radius, float density)
+        {
+            ShapeType = ShapeType.Circle;
+            Radius = radius;
+            Position = Vector2.Zero;
+            Density = density;
+        }
+
         public CircleShape()
         {
             ShapeType = ShapeType.Circle;
@@ -53,7 +61,8 @@ namespace FarseerPhysics.Collision.Shapes
             shape.ShapeType = ShapeType;
             shape.Radius = Radius;
             shape.Position = Position;
-
+            shape.Density = Density;
+            shape.MassData = MassData;
             return shape;
         }
 
@@ -143,15 +152,13 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        /// <param name="massData">Returns the mass data for this shape.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public override void ComputeMass(out MassData massData, float density)
+        public override void ComputeProperties()
         {
-            massData.Mass = density * Settings.Pi * Radius * Radius;
-            massData.Center = Position;
+            MassData.Mass = Density * Settings.Pi * Radius * Radius;
+            MassData.Center = Position;
 
             // inertia about the local origin
-            massData.Inertia = massData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
     }
 }
