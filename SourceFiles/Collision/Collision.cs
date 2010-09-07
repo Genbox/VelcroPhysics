@@ -47,46 +47,40 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Feature index on ShapeA
         /// </summary>
-        internal byte IndexA;
+        public byte IndexA;
 
         /// <summary>
         /// Feature index on ShapeB
         /// </summary>
-        internal byte IndexB;
+        public byte IndexB;
 
         /// <summary>
         /// The feature type on ShapeA
         /// </summary>
-        internal byte TypeA;
+        public byte TypeA;
 
         /// <summary>
         /// The feature type on ShapeB
         /// </summary>
-        internal byte TypeB;
+        public byte TypeB;
     }
 
     /// <summary>
     /// Contact ids to facilitate warm starting.
     /// </summary>
-#if (!SILVERLIGHT)
     [StructLayout(LayoutKind.Explicit)]
-#endif
     public struct ContactID
     {
-#if (!SILVERLIGHT)
-        [FieldOffset(0)]
-#endif
         /// <summary>
         /// The features that intersect to form the contact point
         /// </summary>
+        [FieldOffset(0)]
         public ContactFeature Features;
 
         /// <summary>
         /// Used to quickly compare contact ids.
         /// </summary>
-#if (!SILVERLIGHT)
         [FieldOffset(0)]
-#endif
         public uint Key;
     }
 
