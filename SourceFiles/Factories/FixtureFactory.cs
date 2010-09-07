@@ -23,57 +23,52 @@ namespace FarseerPhysics.Factories
 
         public static Fixture CreateRectangle(World world, float width, float height, float density)
         {
-            return CreateRectangle(world, width, height, density, Vector2.Zero, null);
+            return CreateRectangle(world, width, height, density, Vector2.Zero);
+        }
+
+        /// <summary>
+        /// Special overload that takes in an existing body.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="density">The density.</param>
+        /// <param name="body">The body.</param>
+        /// <param name="offset">The offset. The new shape is offset by this value</param>
+        /// <returns></returns>
+        public static Fixture CreateRectangle(float width, float height, float density, Body body, Vector2 offset)
+        {
+            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+            rectangleVertices.Translate(ref offset);
+            PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
+            return body.CreateFixture(rectangleShape, density);
         }
 
         public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 position)
         {
-            return CreateRectangle(world, width, height, density, position, null);
-        }
-
-        public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 offset,
-                                              Body body)
-        {
             if (width <= 0)
-                throw new ArgumentOutOfRangeException("width", "Width must be more than 0");
+                throw new ArgumentOutOfRangeException("width", "Width must be more than 0 meters");
 
             if (height <= 0)
-                throw new ArgumentOutOfRangeException("height", "Height must be more than 0");
+                throw new ArgumentOutOfRangeException("height", "Height must be more than 0 meters");
 
-            if (body != null)
-            {
-                Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
-                rectangleVertices.Translate(ref offset);
-                PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
-                return body.CreateFixture(rectangleShape, density);
-            }
-            else
-            {
-                Body newBody = BodyFactory.CreateBody(world);
-                Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
-                rectangleVertices.Translate(ref offset);
-                PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
-                return newBody.CreateFixture(rectangleShape, density);
-            }
+            Body newBody = BodyFactory.CreateBody(world, position);
+            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+            PolygonShape rectangleShape = new PolygonShape(rectangleVertices);
+            return newBody.CreateFixture(rectangleShape, density);
         }
 
         public static Fixture CreateCircle(World world, float radius, float density)
         {
-            return CreateCircle(world, radius, density, Vector2.Zero, null);
+            return CreateCircle(world, radius, density, Vector2.Zero);
         }
 
-        public static Fixture CreateCircle(World world, float radius, float density, Vector2 position)
-        {
-            return CreateCircle(world, radius, density, position, null);
-        }
-
-        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body)
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body = null)
         {
             if (radius <= 0)
-                throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0");
+                throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
 
             if (density <= 0)
-                throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
+                throw new ArgumentOutOfRangeException("density", "Density must be more than 0 meters");
 
             if (body != null)
             {
