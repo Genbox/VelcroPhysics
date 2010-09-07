@@ -46,7 +46,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             _list = BayazitDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
-            List<Fixture> compund = FixtureFactory.CreateCompundPolygon(World, _list, 1);
+            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);
             compund[0].Body.BodyType = BodyType.Dynamic;
             compund[0].Body.Position = new Vector2(-10, 0);
 

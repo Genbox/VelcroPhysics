@@ -59,7 +59,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             vertices.Add(rect1);
             vertices.Add(rect2);
 
-            _rectangles = FixtureFactory.CreateCompundPolygon(World, vertices, 1);
+            _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1);
             _rectangles[0].Body.BodyType = BodyType.Dynamic;
 
             base.LoadContent();

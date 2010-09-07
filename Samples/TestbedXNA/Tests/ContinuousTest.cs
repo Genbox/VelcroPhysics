@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             list.Add(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
             list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
-            FixtureFactory.CreateCompundPolygon(World, list, 0);
+            FixtureFactory.CreateCompoundPolygon(World, list, 0);
 
             _box = FixtureFactory.CreateRectangle(World, 4, 0.2f, 1);
             _box.Body.Position = new Vector2(0, 20);

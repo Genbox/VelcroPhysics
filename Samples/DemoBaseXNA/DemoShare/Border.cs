@@ -17,7 +17,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, -height / 2), 0));
             borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2((width / 2), 0), 0));
 
-            FixtureFactory.CreateCompundPolygon(world, borders, 1);
+            FixtureFactory.CreateCompoundPolygon(world, borders, 1);
         }
     }
 }

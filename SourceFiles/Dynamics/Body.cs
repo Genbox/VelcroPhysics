@@ -308,9 +308,9 @@ namespace FarseerPhysics.Dynamics
 
                     // Create all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                    foreach (Fixture f in FixtureList)
+                    for (int i = 0; i < FixtureList.Count; i++)
                     {
-                        f.CreateProxies(broadPhase, ref Xf);
+                        FixtureList[i].CreateProxies(broadPhase, ref Xf);
                     }
 
                     // Contacts are created the next time step.
@@ -321,9 +321,10 @@ namespace FarseerPhysics.Dynamics
 
                     // Destroy all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                    foreach (Fixture f in FixtureList)
+
+                    for (int i = 0; i < FixtureList.Count; i++)
                     {
-                        f.DestroyProxies(broadPhase);
+                        FixtureList[i].DestroyProxies(broadPhase);
                     }
 
                     // Destroy the attached contacts.
@@ -689,9 +690,9 @@ namespace FarseerPhysics.Dynamics
             Sweep.a0 = Sweep.a = angle;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
-            foreach (Fixture f in FixtureList)
+            for (int i = 0; i < FixtureList.Count; i++)
             {
-                f.Synchronize(broadPhase, ref Xf, ref Xf);
+                FixtureList[i].Synchronize(broadPhase, ref Xf, ref Xf);
             }
         }
 

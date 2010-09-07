@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
             _list = BayazitDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
-            List<Fixture> compund = FixtureFactory.CreateCompundPolygon(World, _list, 1);
+            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);
             compund[0].Body.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);
