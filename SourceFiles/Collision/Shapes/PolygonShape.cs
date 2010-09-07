@@ -41,11 +41,30 @@ namespace FarseerPhysics.Collision.Shapes
         public Vertices Normals;
         public Vertices Vertices;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonShape"/> class.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
         public PolygonShape(Vertices vertices)
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
             Centroid = Vector2.Zero;
+
+            Set(vertices);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonShape"/> class.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <param name="density">The density in kilograms per meter squared.</param>
+        public PolygonShape(Vertices vertices, float density)
+        {
+            ShapeType = ShapeType.Polygon;
+            Radius = Settings.PolygonRadius;
+            Centroid = Vector2.Zero;
+            Density = density;
 
             Set(vertices);
         }
@@ -69,7 +88,8 @@ namespace FarseerPhysics.Collision.Shapes
             clone.Vertices = new Vertices(Vertices);
 #endif
             clone.Normals = Normals;
-
+            clone.Density = Density;
+            clone.MassData = MassData;
             return clone;
         }
 
@@ -137,26 +157,62 @@ namespace FarseerPhysics.Collision.Shapes
             }
 #endif
 
-            // Compute the polygon centroid.
-            Centroid = ComputeCentroid(Vertices);
+            if (Density > 0)
+            {
+                // Compute the polygon mass data
+                ComputeProperties();
+            }
         }
 
-        private static Vector2 ComputeCentroid(Vertices vertices)
+        /// <summary>
+        /// Compute the mass properties of this shape using its dimensions and density.
+        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// </summary>
+        public override void ComputeProperties()
         {
-            Debug.Assert(vertices.Count >= 2);
+            // Polygon mass, centroid, and inertia.
+            // Let rho be the polygon density in mass per unit area.
+            // Then:
+            // mass = rho * int(dA)
+            // centroid.X = (1/mass) * rho * int(x * dA)
+            // centroid.Y = (1/mass) * rho * int(y * dA)
+            // I = rho * int((x*x + y*y) * dA)
+            //
+            // We can compute these integrals by summing all the integrals
+            // for each triangle of the polygon. To evaluate the integral
+            // for a single triangle, we make a change of variables to
+            // the (u,v) coordinates of the triangle:
+            // x = x0 + e1x * u + e2x * v
+            // y = y0 + e1y * u + e2y * v
+            // where 0 <= u && 0 <= v && u + v <= 1.
+            //
+            // We integrate u from [0,1-v] and then v from [0,1].
+            // We also need to use the Jacobian of the transformation:
+            // D = cross(e1, e2)
+            //
+            // Simplification: triangle centroid = (1/3) * (p1 + p2 + p3)
+            //
+            // The rest of the derivation is handled by computer algebra.
 
-            Vector2 c = Vector2.Zero;
-            float area = 0.0f;
+            Debug.Assert(Vertices.Count >= 2);
 
-            if (vertices.Count == 2)
+            // A line segment has zero mass.
+            if (Vertices.Count == 2)
             {
-                c = 0.5f * (vertices[0] + vertices[1]);
-                return c;
+                MassData.Center = 0.5f * (Vertices[0] + Vertices[1]);
+                MassData.Mass = 0.0f;
+                MassData.Inertia = 0.0f;
+                return;
             }
+
+            Vector2 center = Vector2.Zero;
+            float area = 0.0f;
+            float I = 0.0f;
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
             Vector2 pRef = Vector2.Zero;
+
 #if false
     // This code would put the reference point inside the polygon.
 	        for (int i = 0; i < count; ++i)
@@ -168,29 +224,49 @@ namespace FarseerPhysics.Collision.Shapes
 
             const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < vertices.Count; ++i)
+            for (int i = 0; i < Vertices.Count; ++i)
             {
                 // Triangle vertices.
                 Vector2 p1 = pRef;
-                Vector2 p2 = vertices[i];
-                Vector2 p3 = i + 1 < vertices.Count ? vertices[i + 1] : vertices[0];
+                Vector2 p2 = Vertices[i];
+                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
 
-                float d = MathUtils.Cross(e1, e2);
+                float d;
+                MathUtils.Cross(ref e1, ref e2, out d);
 
                 float triangleArea = 0.5f * d;
                 area += triangleArea;
 
                 // Area weighted centroid
-                c += triangleArea * inv3 * (p1 + p2 + p3);
+                center += triangleArea * inv3 * (p1 + p2 + p3);
+
+                float px = p1.X, py = p1.Y;
+                float ex1 = e1.X, ey1 = e1.Y;
+                float ex2 = e2.X, ey2 = e2.Y;
+
+                float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
+                              0.5f * px * px;
+                float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
+                              0.5f * py * py;
+
+                I += d * (intx2 + inty2);
             }
 
-            // Centroid
             Debug.Assert(area > Settings.Epsilon);
-            c *= 1.0f / area;
-            return c;
+
+            // Total mass
+            MassData.Mass = Density * area;
+
+            // Center of mass
+            Debug.Assert(area > Settings.Epsilon);
+            center *= 1.0f / area;
+            MassData.Center = center;
+
+            // Inertia tensor relative to the local origin.
+            MassData.Inertia = Density * I;
         }
 
         /// <summary>
@@ -399,102 +475,6 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 r = new Vector2(Radius, Radius);
             aabb.LowerBound = lower - r;
             aabb.UpperBound = upper + r;
-        }
-
-        /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
-        /// <param name="massData">Returns the mass data for this shape.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public override void ComputeMass(out MassData massData, float density)
-        {
-            // Polygon mass, centroid, and inertia.
-            // Let rho be the polygon density in mass per unit area.
-            // Then:
-            // mass = rho * int(dA)
-            // centroid.X = (1/mass) * rho * int(x * dA)
-            // centroid.Y = (1/mass) * rho * int(y * dA)
-            // I = rho * int((x*x + y*y) * dA)
-            //
-            // We can compute these integrals by summing all the integrals
-            // for each triangle of the polygon. To evaluate the integral
-            // for a single triangle, we make a change of variables to
-            // the (u,v) coordinates of the triangle:
-            // x = x0 + e1x * u + e2x * v
-            // y = y0 + e1y * u + e2y * v
-            // where 0 <= u && 0 <= v && u + v <= 1.
-            //
-            // We integrate u from [0,1-v] and then v from [0,1].
-            // We also need to use the Jacobian of the transformation:
-            // D = cross(e1, e2)
-            //
-            // Simplification: triangle centroid = (1/3) * (p1 + p2 + p3)
-            //
-            // The rest of the derivation is handled by computer algebra.
-
-            Debug.Assert(Vertices.Count >= 2);
-
-            // A line segment has zero mass.
-            if (Vertices.Count == 2)
-            {
-                massData.Center = 0.5f * (Vertices[0] + Vertices[1]);
-                massData.Mass = 0.0f;
-                massData.Inertia = 0.0f;
-                return;
-            }
-
-            Vector2 center = Vector2.Zero;
-            float area = 0.0f;
-            float I = 0.0f;
-
-            // pRef is the reference point for forming triangles.
-            // It's location doesn't change the result (except for rounding error).
-            Vector2 pRef = Vector2.Zero;
-
-            const float inv3 = 1.0f / 3.0f;
-
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                // Triangle vertices.
-                Vector2 p1 = pRef;
-                Vector2 p2 = Vertices[i];
-                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
-
-                Vector2 e1 = p2 - p1;
-                Vector2 e2 = p3 - p1;
-
-                float d;
-                MathUtils.Cross(ref e1, ref e2, out d);
-
-                float triangleArea = 0.5f * d;
-                area += triangleArea;
-
-                // Area weighted centroid
-                center += triangleArea * inv3 * (p1 + p2 + p3);
-
-                float px = p1.X, py = p1.Y;
-                float ex1 = e1.X, ey1 = e1.Y;
-                float ex2 = e2.X, ey2 = e2.Y;
-
-                float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
-                              0.5f * px * px;
-                float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
-                              0.5f * py * py;
-
-                I += d * (intx2 + inty2);
-            }
-
-            // Total mass
-            massData.Mass = density * area;
-
-            // Center of mass
-            Debug.Assert(area > Settings.Epsilon);
-            center *= 1.0f / area;
-            massData.Center = center;
-
-            // Inertia tensor relative to the local origin.
-            massData.Inertia = density * I;
         }
     }
 }

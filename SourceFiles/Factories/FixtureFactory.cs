@@ -114,9 +114,6 @@ namespace FarseerPhysics.Factories
 
         public static Fixture CreatePolygon(World world, Vertices vertices, float density, Vector2 position)
         {
-            if (density <= 0)
-                throw new ArgumentOutOfRangeException("density", "Density must be more than 0");
-
             Body body = BodyFactory.CreateBody(world, position);
             PolygonShape polygonShape = new PolygonShape(vertices);
             return body.CreateFixture(polygonShape, density);

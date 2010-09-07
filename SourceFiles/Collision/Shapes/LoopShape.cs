@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
@@ -50,7 +51,8 @@ namespace FarseerPhysics.Collision.Shapes
             Radius = Settings.PolygonRadius;
         }
 
-        public LoopShape(Vertices vertices) : this()
+        public LoopShape(Vertices vertices)
+            : this()
         {
 #if ConverveMemory
             Vertices = vertices;
@@ -60,11 +62,26 @@ namespace FarseerPhysics.Collision.Shapes
 #endif
         }
 
+        public LoopShape(Vertices vertices, float density)
+            : this()
+        {
+#if ConverveMemory
+            Vertices = vertices;
+#else
+            // Copy vertices.
+            Vertices = new Vertices(vertices);
+#endif
+
+            Density = density;
+        }
+
         public override Shape Clone()
         {
             LoopShape loop = new LoopShape();
             loop.Radius = Radius;
             loop.Vertices = Vertices;
+            loop.Density = Density;
+            loop.MassData = MassData;
             return loop;
         }
 
@@ -167,14 +184,11 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Chains have zero mass.
         /// </summary>
-        /// <param name="massData">Returns the mass data for this shape.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public override void ComputeMass(out MassData massData, float density)
+        public override void ComputeProperties()
         {
-            massData = new MassData();
-            massData.Mass = 0.0f;
-            massData.Center = Vector2.Zero;
-            massData.Inertia = 0.0f;
+            MassData.Mass = 0.0f;
+            MassData.Center = Vector2.Zero;
+            MassData.Inertia = 0.0f;
         }
     }
 }
