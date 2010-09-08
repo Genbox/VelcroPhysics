@@ -861,8 +861,8 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        // Advance a dynamic body to its first time of contact
-        // and adjust the position to ensure clearance.
+        /// Advance a dynamic body to its first time of contact
+        /// and adjust the position to ensure clearance.
         /// </summary>
         /// <param name="body">The body.</param>
         private void SolveTOI(Body body)
@@ -1059,9 +1059,9 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        // Sequentially solve TOIs for each body. We bring each
-        // body to the time of contact and perform some position correction.
-        // Time is not conserved.
+        /// Sequentially solve TOIs for each body. We bring each
+        /// body to the time of contact and perform some position correction.
+        /// Time is not conserved.
         /// </summary>
         private void SolveTOI()
         {
