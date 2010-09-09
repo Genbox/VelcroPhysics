@@ -150,7 +150,7 @@ namespace FarseerPhysics.Collision
         public bool MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-
+           
             Debug.Assert(_nodes[proxyId].IsLeaf());
 
             if (_nodes[proxyId].AABB.Contains(ref aabb))
@@ -162,7 +162,6 @@ namespace FarseerPhysics.Collision
 
             // Extend AABB.
             AABB b = aabb;
-
             Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
             b.LowerBound = b.LowerBound - r;
             b.UpperBound = b.UpperBound + r;
@@ -191,7 +190,6 @@ namespace FarseerPhysics.Collision
             _nodes[proxyId].AABB = b;
 
             InsertLeaf(proxyId);
-
             return true;
         }
 
@@ -206,6 +204,7 @@ namespace FarseerPhysics.Collision
                 return;
             }
 
+            // Rebalance the tree by removing and re-inserting leaves.
             for (int i = 0; i < iterations; ++i)
             {
                 int node = _root;
@@ -239,7 +238,7 @@ namespace FarseerPhysics.Collision
         public T GetUserData<T>(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T) _nodes[proxyId].UserData;
+            return (T)_nodes[proxyId].UserData;
         }
 
         /// <summary>
@@ -289,7 +288,7 @@ namespace FarseerPhysics.Collision
                     if (node.IsLeaf())
                     {
                         bool proceed = callback(nodeId);
-                        if (!proceed)
+                        if (proceed == false)
                         {
                             return;
                         }
@@ -484,31 +483,64 @@ namespace FarseerPhysics.Collision
             int sibling = _root;
             while (_nodes[sibling].IsLeaf() == false)
             {
+                int child1 = _nodes[sibling].Child1;
+                int child2 = _nodes[sibling].Child2;
+
                 // Expand the node's AABB.
                 _nodes[sibling].AABB.Combine(ref leafAABB);
                 _nodes[sibling].LeafCount += 1;
 
-                int child1 = _nodes[sibling].Child1;
-                int child2 = _nodes[sibling].Child2;
+                float siblingArea = _nodes[sibling].AABB.Perimeter;
+                AABB parentAABB = new AABB();
+                parentAABB.Combine(ref _nodes[sibling].AABB, ref  leafAABB);
+                float parentArea = parentAABB.Perimeter;
+                float cost1 = 2.0f * parentArea;
 
-#if false
-    // This seems to create imbalanced trees
-		        Vector2 delta1 = Math.Abs(_nodes[child1].aabb.GetCenter() - leafCenter);
-		        Vector2 delta2 = Math.Abs(_nodes[child2].aabb.GetCenter() - leafCenter);
+                float inheritanceCost = 2.0f * (parentArea - siblingArea);
 
-		        float norm1 = delta1.x + delta1.y;
-		        float norm2 = delta2.x + delta2.y;
-#else
-                // Surface area heuristic
-                AABB aabb1 = new AABB();
-                AABB aabb2 = new AABB();
-                aabb1.Combine(ref leafAABB, ref _nodes[child1].AABB);
-                aabb2.Combine(ref leafAABB, ref _nodes[child2].AABB);
-                float norm1 = (_nodes[child1].LeafCount + 1) * aabb1.Perimeter;
-                float norm2 = (_nodes[child2].LeafCount + 1) * aabb2.Perimeter;
-#endif
+                float cost2;
+                if (_nodes[child1].IsLeaf())
+                {
+                    AABB aabb = new AABB();
+                    aabb.Combine(ref leafAABB, ref _nodes[child1].AABB);
+                    cost2 = aabb.Perimeter + inheritanceCost;
+                }
+                else
+                {
+                    AABB aabb = new AABB();
+                    aabb.Combine(ref leafAABB, ref _nodes[child1].AABB);
+                    float oldArea = _nodes[child1].AABB.Perimeter;
+                    float newArea = aabb.Perimeter;
+                    cost2 = (newArea - oldArea) + inheritanceCost;
+                }
 
-                if (norm1 < norm2)
+                float cost3;
+                if (_nodes[child2].IsLeaf())
+                {
+                    AABB aabb = new AABB();
+                    aabb.Combine(ref leafAABB, ref _nodes[child2].AABB);
+                    cost3 = aabb.Perimeter + inheritanceCost;
+                }
+                else
+                {
+                    AABB aabb = new AABB();
+                    aabb.Combine(ref leafAABB, ref _nodes[child2].AABB);
+                    float oldArea = _nodes[child2].AABB.Perimeter;
+                    float newArea = aabb.Perimeter;
+                    cost3 = newArea - oldArea + inheritanceCost;
+                }
+
+                // Descend according to the minimum cost.
+                if (cost1 < cost2 && cost1 < cost3)
+                {
+                    break;
+                }
+
+                // Expand the node's AABB to account for the new leaf.
+                _nodes[sibling].AABB.Combine(ref leafAABB);
+
+                // Descend
+                if (cost2 < cost3)
                 {
                     sibling = child1;
                 }
@@ -592,8 +624,7 @@ namespace FarseerPhysics.Collision
                 parent = grandParent;
                 while (parent != NullNode)
                 {
-                    _nodes[parent].AABB.Combine(ref _nodes[_nodes[parent].Child1].AABB,
-                                                ref _nodes[_nodes[parent].Child2].AABB);
+                    _nodes[parent].AABB.Combine(ref _nodes[_nodes[parent].Child1].AABB, ref _nodes[_nodes[parent].Child2].AABB);
 
                     Debug.Assert(_nodes[parent].LeafCount > 0);
                     _nodes[parent].LeafCount -= 1;

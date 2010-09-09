@@ -288,7 +288,6 @@ namespace FarseerPhysics.Collision
 
         public static int TOICalls, TOIIters, TOIMaxIters;
         public static int TOIRootIters, TOIMaxRootIters;
-        public static int TOIMaxOptIters;
 
         /// <summary>
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
