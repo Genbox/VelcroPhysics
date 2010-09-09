@@ -86,9 +86,6 @@ namespace FarseerPhysics.TestBed.Tests
                                      TimeOfImpact.TOIRootIters / (float) TimeOfImpact.TOICalls,
                                      TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
-
-                DebugView.DrawString(50, TextLine, "Max TOI opt iters = {0:n}", TimeOfImpact.TOIMaxOptIters);
-                TextLine += 15;
             }
 
             if (StepCount % 60 == 0)
