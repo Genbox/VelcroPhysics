@@ -185,6 +185,11 @@ namespace FarseerPhysics.Common
         public const float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// <summary>
+        /// Maximum number of sub-steps per contact in continuous physics simulation.
+        /// </summary>
+        public const int MaxSubSteps = 8;
+
+        /// <summary>
         /// Friction mixing law. Feel free to customize this.
         /// </summary>
         /// <param name="friction1">The friction1.</param>
