@@ -90,6 +90,11 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// This bullet contact had a TOI event
         /// </summary>
         BulletHit = 0x0010,
+
+        /// <summary>
+        /// This contact has a valid TOI i the field TOI
+        /// </summary>
+        TOI = 0x0020
     }
 
     /// <summary>
@@ -144,6 +149,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         internal ContactEdge NodeB = new ContactEdge();
         internal int TOICount;
         private ContactType _type;
+        public float TOI;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {
