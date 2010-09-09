@@ -52,6 +52,8 @@ namespace FarseerPhysics.Dynamics
         /// Positive mass, non-zero velocity determined by forces, moved by solver
         /// </summary>
         Dynamic,
+        // TODO_ERIN
+        //b2_bulletBody,
     }
 
     [Flags]
@@ -148,7 +150,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Set the linear velocity of the center of mass.
+        /// Get or sets the linear velocity of the center of mass.
         /// </summary>
         /// <value>The linear velocity.</value>
         public Vector2 LinearVelocity
@@ -297,6 +299,8 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
+                Debug.Assert(World.IsLocked == false);
+
                 if (value == Active)
                 {
                     return;
@@ -1098,10 +1102,10 @@ namespace FarseerPhysics.Dynamics
             return true;
         }
 
-        internal void Advance(float t)
+        internal void Advance(float alpha)
         {
             // Advance to the new safe time.
-            Sweep.Advance(t);
+            Sweep.Advance(alpha);
             Sweep.c = Sweep.c0;
             Sweep.a = Sweep.a0;
             SynchronizeTransform();
