@@ -59,6 +59,9 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    //TODO: The new 131 revision DynamicTree is a bit slower on stacking than the old one
+    //Take a look at it and mesure the tradeoffs.
+
     /// <summary>
     /// A dynamic tree arranges data in a binary tree to accelerate
     /// queries such as volume queries and ray casts. Leafs are proxies
