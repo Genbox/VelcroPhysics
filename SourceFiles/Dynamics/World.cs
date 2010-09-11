@@ -118,6 +118,10 @@ namespace FarseerPhysics.Dynamics
             ContactManager = new ContactManager();
             Gravity = gravity;
 
+            _subStepping = false;
+
+            _stepComplete = true;
+
             Flags = WorldFlags.ClearForces;
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
@@ -520,6 +524,8 @@ namespace FarseerPhysics.Dynamics
 
             TimeStep step;
             step.dt = dt;
+            step.VelocityIterations = Settings.VelocityIterations;
+            step.PositionIterations = Settings.PositionIterations;
             if (dt > 0.0f)
             {
                 step.inv_dt = 1.0f / dt;
@@ -530,6 +536,8 @@ namespace FarseerPhysics.Dynamics
             }
 
             step.dtRatio = _invDt0 * dt;
+
+            step.WarmStarting = Settings.EnableWarmstarting;
 
             //Update controllers
             foreach (Controller controller in Controllers)
@@ -550,7 +558,7 @@ namespace FarseerPhysics.Dynamics
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + ControllersUpdateTime);
 #endif
             // Integrate velocities, solve velocity raints, and integrate positions.
-            if (step.dt > 0.0f)
+            if (_stepComplete && step.dt > 0.0f)
             {
                 Solve(ref step);
             }
@@ -576,7 +584,7 @@ namespace FarseerPhysics.Dynamics
                 _invDt0 = step.inv_dt;
             }
 
-            if ((Flags & WorldFlags.ClearForces) != 0)
+            if ((Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces)
             {
                 ClearForces();
             }
@@ -604,7 +612,10 @@ namespace FarseerPhysics.Dynamics
 #endif
         }
 
+        /// <summary>
         /// Enable/disable single stepped continuous physics. For testing.
+        /// </summary>
+        /// <param name="flag"></param>
         public void SetSubStepping(bool flag)
         {
             _subStepping = flag;
@@ -919,8 +930,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     float alpha = 1.0f;
-                    //TODO: Test
-                    if ((c.Flags & ContactFlags.TOI) == ContactFlags.TOI)
+                    if ((c.Flags & ContactFlags.TOI) != ContactFlags.None)
                     {
                         // This contact has a valid cached TOI.
                         alpha = c.TOI;
@@ -1077,7 +1087,7 @@ namespace FarseerPhysics.Dynamics
 
                             // Has this contact already been added to the island?
                             //TODO: Test
-                            if ((contact.Flags & ContactFlags.Island) == ContactFlags.Island)
+                            if ((contact.Flags & ContactFlags.Island) != ContactFlags.None)
                             {
                                 continue;
                             }
@@ -1100,7 +1110,6 @@ namespace FarseerPhysics.Dynamics
 
                             // Tentatively advance the body to the TOI.
                             Sweep backup = other.Sweep;
-                            //TODO: Test
                             if ((other.Flags & BodyFlags.Island) == 0)
                             {
                                 other.Advance(minAlpha);
@@ -1130,7 +1139,7 @@ namespace FarseerPhysics.Dynamics
                             _island.Add(contact);
 
                             // Has the other body already been added to the island?
-                            if ((other.Flags & BodyFlags.Island) == BodyFlags.Island)
+                            if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
                             {
                                 continue;
                             }
@@ -1152,11 +1161,9 @@ namespace FarseerPhysics.Dynamics
                 subStep.dt = (1.0f - minAlpha) * step.dt;
                 subStep.inv_dt = 1.0f / subStep.dt;
                 subStep.dtRatio = 1.0f;
-
-                //TODO: Not used right now. Might be used in the next revision
-                //subStep.positionIterations = 20;
-                //subStep.velocityIterations = step.velocityIterations;
-                //subStep.warmStarting = false;
+                subStep.PositionIterations = 20;
+                subStep.VelocityIterations = step.VelocityIterations;
+                subStep.WarmStarting = false;
                 _island.SolveTOI(ref subStep, bodyA, bodyB);
 
                 // Reset island flags and synchronize broad-phase proxies.

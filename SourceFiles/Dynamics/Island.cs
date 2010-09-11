@@ -131,7 +131,6 @@ namespace FarseerPhysics.Dynamics
                 if (nonStatic)
                 {
                     ++i1;
-                    //b2Swap(_contacts[i1], _contacts[i2]);
                     Contact temp = _contacts[i1];
                     _contacts[i1] = _contacts[i2];
                     _contacts[i2] = temp;
@@ -139,7 +138,6 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize velocity constraints.
-
             ContactSolverDef solverDef;
             solverDef.Contacts = _contacts;
             solverDef.Count = ContactCount;
@@ -212,7 +210,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Iterate over constraints.
-            for (int i = 0; i < Settings.PositionIterations; ++i)
+            for (int i = 0; i < step.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
@@ -285,16 +283,12 @@ namespace FarseerPhysics.Dynamics
             solverDef.Contacts = _contacts;
             solverDef.Count = ContactCount;
             solverDef.ImpulseRatio = subStep.dtRatio;
-            
-            //Warmstarting is disabled in the substepping
-            solverDef.WarmStarting = false;
+            solverDef.WarmStarting = subStep.WarmStarting;
             _contactSolver.Reset(ref solverDef);
 
             // Solve position constraints.
             const float k_toiBaumgarte = 0.75f;
-
-            //TODO: 20 is the number from the caller of this method.
-            for (int i = 0; i < 20; ++i)
+            for (int i = 0; i < subStep.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolveTOIPositionConstraints(k_toiBaumgarte, bodyA, bodyB);
                 if (contactsOkay)
@@ -302,7 +296,7 @@ namespace FarseerPhysics.Dynamics
                     break;
                 }
 
-                if (i == 20 - 1)
+                if (i == subStep.PositionIterations - 1)
                 {
                     i += 0;
                 }
@@ -344,7 +338,6 @@ namespace FarseerPhysics.Dynamics
             // Leap of faith to new safe state.
             for (int i = 0; i < BodyCount; ++i)
             {
-
                 Bodies[i].Sweep.a0 = Bodies[i].Sweep.a;
                 Bodies[i].Sweep.c0 = Bodies[i].Sweep.c;
             }
@@ -354,8 +347,7 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.InitializeVelocityConstraints();
 
             // Solve velocity constraints.
-            //TODO: VelocityIterations should come from substep
-            for (int i = 0; i < Settings.VelocityIterations; ++i)
+            for (int i = 0; i < subStep.VelocityIterations; ++i)
             {
                 _contactSolver.SolveVelocityConstraints();
             }
@@ -404,7 +396,8 @@ namespace FarseerPhysics.Dynamics
                 // Note: shapes are synchronized later.
             }
 
-            Report(_contactSolver.Constraints);
+            if (_contactManager.PostSolve != null)
+                Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)
