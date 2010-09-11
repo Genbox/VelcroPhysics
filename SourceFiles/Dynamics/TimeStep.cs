@@ -41,5 +41,9 @@ namespace FarseerPhysics.Dynamics
         /// Inverse time step (0 if dt == 0).
         /// </summary>
         public float inv_dt;
+
+        public int VelocityIterations;
+        public bool WarmStarting;
+        public int PositionIterations;
     }
 }
