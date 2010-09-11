@@ -214,9 +214,6 @@
     <Compile Include="..\..\sourcefiles\dynamics\contacts\ContactSolver.cs">
       <Link>Dynamics\Contacts\ContactSolver.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\dynamics\contacts\TOISolver.cs">
-      <Link>Dynamics\Contacts\TOISolver.cs</Link>
-    </Compile>
     <Compile Include="..\..\sourcefiles\dynamics\Fixture.cs">
       <Link>Dynamics\Fixture.cs</Link>
     </Compile>
