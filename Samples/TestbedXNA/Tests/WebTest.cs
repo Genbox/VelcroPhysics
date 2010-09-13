@@ -140,7 +140,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void JointRemovedFired(Joint joint)
         {
-            _removedJoints++;
+            if (joint is FixedDistanceJoint || joint is DistanceJoint)
+                _removedJoints++;
         }
 
         public override void Keyboard(KeyboardState state, KeyboardState oldState)
