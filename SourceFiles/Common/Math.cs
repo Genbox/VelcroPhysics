@@ -24,7 +24,6 @@
 */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
@@ -557,18 +556,9 @@ namespace FarseerPhysics.Common
 
         public float a0;
 
-        /// <summary>
-        /// Center world positions
-        /// </summary>
         public Vector2 c;
 
         public Vector2 c0;
-
-        /// <summary>
-        /// Fraction of the current time step in the range [0,1]
-        /// c0 and a0 are the positions at alpha0.
-        /// </summary>
-        public float alpha0;
 
         /// <summary>
         /// Local center of mass position
@@ -579,12 +569,12 @@ namespace FarseerPhysics.Common
         /// Get the interpolated transform at a specific time.
         /// </summary>
         /// <param name="xf">The xf.</param>
-        /// <param name="beta">beta is a factor in [0,1], where 0 indicates alpha0..</param>
-        public void GetTransform(out Transform xf, float beta)
+        /// <param name="alpha">alpha is a factor in [0,1], where 0 indicates t0..</param>
+        public void GetTransform(out Transform xf, float alpha)
         {
             xf = new Transform();
-            xf.Position = (1.0f - beta) * c0 + beta * c;
-            float angle = (1.0f - beta) * a0 + beta * a;
+            xf.Position = (1.0f - alpha) * c0 + alpha * c;
+            float angle = (1.0f - alpha) * a0 + alpha * a;
             xf.R.Set(angle);
 
             // Shift to origin
@@ -594,14 +584,11 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// Advance the sweep forward, yielding a new initial state.
         /// </summary>
-        /// <param name="alpha">The new initial time..</param>
-        public void Advance(float alpha)
+        /// <param name="t">new initial time..</param>
+        public void Advance(float t)
         {
-            Debug.Assert(alpha0 < 1.0f);
-            float beta = (alpha - alpha0) / (1.0f - alpha0);
-            c0 = (1.0f - beta) * c0 + beta * c;
-            a0 = (1.0f - beta) * a0 + beta * a;
-            alpha0 = alpha;
+            c0 = (1.0f - t) * c0 + t * c;
+            a0 = (1.0f - t) * a0 + t * a;
         }
 
         /// <summary>
