@@ -131,6 +131,7 @@ namespace FarseerPhysics.Dynamics
                 if (nonStatic)
                 {
                     ++i1;
+                    //b2Swap(_contacts[i1], _contacts[i2]);
                     Contact temp = _contacts[i1];
                     _contacts[i1] = _contacts[i2];
                     _contacts[i2] = temp;
@@ -138,18 +139,8 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize velocity constraints.
-            ContactSolverDef solverDef;
-            solverDef.Contacts = _contacts;
-            solverDef.Count = ContactCount;
-            solverDef.ImpulseRatio = step.dtRatio;
-            solverDef.WarmStarting = Settings.EnableWarmstarting;
-
-            _contactSolver.Reset(ref solverDef);
-
-            if (Settings.EnableWarmstarting)
-            {
-                _contactSolver.WarmStart();
-            }
+            _contactSolver.Reset(_contacts, ContactCount, step.dtRatio);
+            _contactSolver.WarmStart();
 
             for (int i = 0; i < JointCount; ++i)
             {
@@ -210,7 +201,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Iterate over constraints.
-            for (int i = 0; i < step.PositionIterations; ++i)
+            for (int i = 0; i < Settings.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
 
@@ -275,129 +266,6 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
             }
-        }
-
-        public void SolveTOI(ref TimeStep subStep, Body bodyA, Body bodyB)
-        {
-            ContactSolverDef solverDef;
-            solverDef.Contacts = _contacts;
-            solverDef.Count = ContactCount;
-            solverDef.ImpulseRatio = subStep.dtRatio;
-            solverDef.WarmStarting = subStep.WarmStarting;
-            _contactSolver.Reset(ref solverDef);
-
-            // Solve position constraints.
-            const float k_toiBaumgarte = 0.75f;
-            for (int i = 0; i < subStep.PositionIterations; ++i)
-            {
-                bool contactsOkay = _contactSolver.SolveTOIPositionConstraints(k_toiBaumgarte, bodyA, bodyB);
-                if (contactsOkay)
-                {
-                    break;
-                }
-
-                if (i == subStep.PositionIterations - 1)
-                {
-                    i += 0;
-                }
-            }
-
-#if false
-	// Is the new position really safe?
-	for (int32 i = 0; i < m_contactCount; ++i)
-	{
-		Contact* c = m_contacts[i];
-		Fixture* fA = c.GetFixtureA();
-		Fixture* fB = c.GetFixtureB();
-
-		Body* bA = fA.GetBody();
-		Body* bB = fB.GetBody();
-
-		int32 indexA = c.GetChildIndexA();
-		int32 indexB = c.GetChildIndexB();
-
-		DistanceInput input;
-		input.proxyA.Set(fA.GetShape(), indexA);
-		input.proxyB.Set(fB.GetShape(), indexB);
-		input.transformA = bA.GetTransform();
-		input.transformB = bB.GetTransform();
-		input.useRadii = false;
-
-		DistanceOutput output;
-		SimplexCache cache;
-		cache.count = 0;
-		Distance(&output, &cache, &input);
-
-		if (output.distance == 0 || cache.count == 3)
-		{
-			cache.count += 0;
-		}
-	}
-#endif
-
-            // Leap of faith to new safe state.
-            for (int i = 0; i < BodyCount; ++i)
-            {
-                Bodies[i].Sweep.a0 = Bodies[i].Sweep.a;
-                Bodies[i].Sweep.c0 = Bodies[i].Sweep.c;
-            }
-
-            // No warm starting is needed for TOI events because warm
-            // starting impulses were applied in the discrete solver.
-            _contactSolver.InitializeVelocityConstraints();
-
-            // Solve velocity constraints.
-            for (int i = 0; i < subStep.VelocityIterations; ++i)
-            {
-                _contactSolver.SolveVelocityConstraints();
-            }
-
-            // Don't store the TOI contact forces for warm starting
-            // because they can be quite large.
-
-            // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
-            {
-                Body b = Bodies[i];
-
-                if (b.BodyType == BodyType.Static)
-                {
-                    continue;
-                }
-
-                // Check for large velocities.
-                Vector2 translation = subStep.dt * b.LinearVelocityInternal;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
-                {
-                    translation.Normalize();
-                    b.LinearVelocityInternal = (Settings.MaxTranslation * subStep.inv_dt) * translation;
-                }
-
-                float rotation = subStep.dt * b.AngularVelocityInternal;
-                if (rotation * rotation > Settings.MaxRotationSquared)
-                {
-                    if (rotation < 0.0)
-                    {
-                        b.AngularVelocityInternal = -subStep.inv_dt * Settings.MaxRotation;
-                    }
-                    else
-                    {
-                        b.AngularVelocityInternal = subStep.inv_dt * Settings.MaxRotation;
-                    }
-                }
-
-                // Integrate
-                b.Sweep.c += subStep.dt * b.LinearVelocityInternal;
-                b.Sweep.a += subStep.dt * b.AngularVelocityInternal;
-
-                // Compute new transform
-                b.SynchronizeTransform();
-
-                // Note: shapes are synchronized later.
-            }
-
-            if (_contactManager.PostSolve != null)
-                Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)
