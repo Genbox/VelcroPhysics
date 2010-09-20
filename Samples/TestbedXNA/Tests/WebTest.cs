@@ -144,9 +144,9 @@ namespace FarseerPhysics.TestBed.Tests
                 _removedJoints++;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.B) && oldState.IsKeyUp(Keys.B))
+            if (keyboardManager.IsNewKeyPress(Keys.B))
             {
                 for (int i = 0; i < 4; ++i)
                 {
@@ -159,7 +159,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            if (state.IsKeyDown(Keys.J) && oldState.IsKeyUp(Keys.J))
+            if (keyboardManager.IsNewKeyPress(Keys.J))
             {
                 for (int i = 0; i < 8; ++i)
                 {
