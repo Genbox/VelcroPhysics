@@ -123,46 +123,46 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
             // Add Circles
-            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
+            if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 AddCircle(3, 8);
             }
 
             // Add Circles
-            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
+            if (keyboardManager.IsNewKeyPress(Keys.W))
             {
                 AddCircle(4, 16);
             }
 
             // Add Circles
-            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            if (keyboardManager.IsNewKeyPress(Keys.E))
             {
                 AddCircle(5, 32);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            if (keyboardManager.IsNewKeyPress(Keys.A))
             {
                 AddRectangle(4, 8);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (keyboardManager.IsNewKeyPress(Keys.S))
             {
                 AddRectangle(5, 2);
             }
 
             // Add Rectangle
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
             {
                 AddRectangle(2, 5);
             }
 
             // Perform a Union
-            if (state.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+            if (keyboardManager.IsNewKeyPress(Keys.Space))
             {
 
                     if (_subject != null && _clip != null)
@@ -173,7 +173,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Perform a Subtraction
-            if (state.IsKeyDown(Keys.Back) && oldState.IsKeyUp(Keys.Back))
+            if (keyboardManager.IsNewKeyPress(Keys.Back))
             {
 
                     if (_subject != null && _clip != null)
@@ -184,7 +184,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Perform a Intersection
-            if (state.IsKeyDown(Keys.LeftShift) && oldState.IsKeyUp(Keys.LeftShift))
+            if (keyboardManager.IsNewKeyPress(Keys.LeftShift))
             {
 
                     if (_subject != null && _clip != null)
@@ -195,7 +195,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Select Subject
-            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1))
+            if (keyboardManager.IsNewKeyPress(Keys.D1))
             {
                 if (_selected != null)
                 {
@@ -208,7 +208,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Select Clip
-            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2))
+            if (keyboardManager.IsNewKeyPress(Keys.D2))
             {
                 if (_selected != null)
                 {
@@ -219,8 +219,6 @@ namespace FarseerPhysics.TestBed.Tests
                     _clip = _selected;
                 }
             }
-
-            base.Keyboard(state, oldState);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)

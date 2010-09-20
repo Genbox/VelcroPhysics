@@ -96,29 +96,29 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            if (keyboardManager.IsNewKeyPress(Keys.A))
             {
                 _positionB.X -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
             {
                 _positionB.X += 0.1f;
             }
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (keyboardManager.IsNewKeyPress(Keys.S))
             {
                 _positionB.Y -= 0.1f;
             }
-            if (state.IsKeyDown(Keys.W) && oldState.IsKeyUp(Keys.W))
+            if (keyboardManager.IsNewKeyPress(Keys.W))
             {
                 _positionB.Y += 0.1f;
             }
-            if (state.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
+            if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 _angleB += 0.1f * Settings.Pi;
             }
-            if (state.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            if (keyboardManager.IsNewKeyPress(Keys.E))
             {
                 _angleB -= 0.1f * Settings.Pi;
             }

@@ -76,9 +76,9 @@ namespace FarseerPhysics.TestBed.Tests
             _bullet = null;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.OemComma) && oldState.IsKeyUp(Keys.OemComma))
+            if (keyboardManager.IsNewKeyPress(Keys.OemComma))
             {
                 if (_bullet != null)
                 {

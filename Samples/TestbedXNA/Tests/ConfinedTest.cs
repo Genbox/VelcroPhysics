@@ -97,9 +97,9 @@ namespace FarseerPhysics.TestBed.Tests
             fixture.Friction = 0;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.C))
+            if (keyboardManager.IsKeyDown(Keys.C))
             {
                 CreateCircle();
             }

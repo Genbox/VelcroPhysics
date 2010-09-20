@@ -110,14 +110,14 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.A))
+            if (keyboardManager.IsKeyDown(Keys.A))
             {
                 _leftJoint.MotorSpeed = 20.0f;
                 _rightJoint.MotorSpeed = -20.0f;
             }
-            if (state.IsKeyUp(Keys.A))
+            if (keyboardManager.IsKeyUp(Keys.A))
             {
                 _leftJoint.MotorSpeed = -10.0f;
                 _rightJoint.MotorSpeed = 10.0f;

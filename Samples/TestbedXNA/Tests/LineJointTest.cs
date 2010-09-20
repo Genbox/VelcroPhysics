@@ -104,15 +104,15 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
+            if (keyboardManager.IsNewKeyPress(Keys.L))
             {
                 _lineJoint.EnableLimit = !_lineJoint.EnableLimit;
                 _fixedLineJoint.EnableLimit = !_fixedLineJoint.EnableLimit;
             }
 
-            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 _lineJoint.MotorEnabled = !_lineJoint.MotorEnabled;
                 _fixedLineJoint.MotorEnabled = !_fixedLineJoint.MotorEnabled;

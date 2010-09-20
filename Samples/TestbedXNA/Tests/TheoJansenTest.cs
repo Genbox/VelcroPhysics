@@ -225,21 +225,21 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            if (keyboardManager.IsNewKeyPress(Keys.A))
             {
                 _motorJoint.MotorSpeed = -_motorSpeed;
             }
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S))
+            if (keyboardManager.IsNewKeyPress(Keys.S))
             {
                 _motorJoint.MotorSpeed = 0.0f;
             }
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
             {
                 _motorJoint.MotorSpeed = _motorSpeed;
             }
-            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 _motorJoint.MotorEnabled = !_motorJoint.MotorEnabled;
             }

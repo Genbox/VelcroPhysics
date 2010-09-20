@@ -44,17 +44,17 @@ namespace FarseerPhysics.TestBed.Tests
             Create(0);
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            if (keyboardManager.IsNewKeyPress(Keys.A))
                 _segments++;
 
-            if (state.IsKeyDown(Keys.S) && oldState.IsKeyUp(Keys.S) && _segments > 0)
+            if (keyboardManager.IsNewKeyPress(Keys.S) && _segments > 0)
                 _segments--;
 
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
                 Create(0);
-            if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+            if (keyboardManager.IsNewKeyPress(Keys.F))
                 Create(1);
         }
 

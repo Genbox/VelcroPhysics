@@ -166,29 +166,29 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.D1) && oldState.IsKeyUp(Keys.D1))
+            if (keyboardManager.IsNewKeyPress(Keys.D1))
             {
                 Create(0);
             }
-            if (state.IsKeyDown(Keys.D2) && oldState.IsKeyUp(Keys.D2))
+            if (keyboardManager.IsNewKeyPress(Keys.D2))
             {
                 Create(1);
             }
-            if (state.IsKeyDown(Keys.D3) && oldState.IsKeyUp(Keys.D3))
+            if (keyboardManager.IsNewKeyPress(Keys.D3))
             {
                 Create(2);
             }
-            if (state.IsKeyDown(Keys.D4) && oldState.IsKeyUp(Keys.D4))
+            if (keyboardManager.IsNewKeyPress(Keys.D4))
             {
                 Create(3);
             }
-            if (state.IsKeyDown(Keys.D5) && oldState.IsKeyUp(Keys.D5))
+            if (keyboardManager.IsNewKeyPress(Keys.D5))
             {
                 Create(4);
             }
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
             {
                 DestroyBody();
             }

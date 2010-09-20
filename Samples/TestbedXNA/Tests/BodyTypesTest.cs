@@ -102,17 +102,17 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.D))
+            if (keyboardManager.IsKeyDown(Keys.D))
             {
                 _platform.BodyType = BodyType.Dynamic;
             }
-            if (state.IsKeyDown(Keys.S))
+            if (keyboardManager.IsKeyDown(Keys.S))
             {
                 _platform.BodyType = BodyType.Static;
             }
-            if (state.IsKeyDown(Keys.K))
+            if (keyboardManager.IsKeyDown(Keys.K))
             {
                 _platform.BodyType = BodyType.Kinematic;
                 _platform.LinearVelocity = new Vector2(-_speed, 0.0f);

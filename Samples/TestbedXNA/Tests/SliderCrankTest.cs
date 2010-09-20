@@ -133,14 +133,14 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.F) && oldState.IsKeyUp(Keys.F))
+            if (keyboardManager.IsNewKeyPress(Keys.F))
             {
                 _joint2.MotorEnabled = !_joint2.MotorEnabled;
                 _joint2.BodyB.Awake = true;
             }
-            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 _joint1.MotorEnabled = !_joint1.MotorEnabled;
                 _joint1.BodyB.Awake = true;
