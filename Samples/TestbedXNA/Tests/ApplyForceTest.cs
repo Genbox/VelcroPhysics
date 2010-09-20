@@ -138,18 +138,18 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.W))
+            if (keyboardManager.IsKeyDown(Keys.W))
             {
                 Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
                 _body.ApplyForce(f);
             }
-            if (state.IsKeyDown(Keys.A))
+            if (keyboardManager.IsKeyDown(Keys.A))
             {
                 _body.ApplyTorque(50.0f);
             }
-            if (state.IsKeyDown(Keys.D))
+            if (keyboardManager.IsKeyDown(Keys.D))
             {
                 _body.ApplyTorque(-50.0f);
             }

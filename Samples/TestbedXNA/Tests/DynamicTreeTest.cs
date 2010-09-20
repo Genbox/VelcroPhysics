@@ -152,21 +152,21 @@ namespace FarseerPhysics.TestBed.Tests
             ++_stepCount;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.A) && oldState.IsKeyUp(Keys.A))
+            if (keyboardManager.IsNewKeyPress(Keys.A))
             {
                 _automated = !_automated;
             }
-            if (state.IsKeyDown(Keys.C) && oldState.IsKeyUp(Keys.C))
+            if (keyboardManager.IsNewKeyPress(Keys.C))
             {
                 CreateProxy();
             }
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D))
+            if (keyboardManager.IsNewKeyPress(Keys.D))
             {
                 DestroyProxy();
             }
-            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 MoveProxy();
             }

@@ -51,9 +51,9 @@ namespace FarseerPhysics.TestBed.Tests
             _fixture2 = null;
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.C) && oldState.IsKeyUp(Keys.C) && _fixture2 == null)
+            if (keyboardManager.IsNewKeyPress(Keys.C) && _fixture2 == null)
             {
                 CircleShape shape = new CircleShape(3.0f);
                 shape.Position = new Vector2(0.5f, -4.0f);
@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.Awake = true;
             }
 
-            if (state.IsKeyDown(Keys.D) && oldState.IsKeyUp(Keys.D) && _fixture2 != null)
+            if (keyboardManager.IsNewKeyPress(Keys.D) && _fixture2 != null)
             {
                 _body.DestroyFixture(_fixture2);
                 _fixture2 = null;

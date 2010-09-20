@@ -89,19 +89,19 @@ namespace FarseerPhysics.TestBed.Tests
             World.AddJoint(_joint);
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.L) && oldState.IsKeyUp(Keys.L))
+            if (keyboardManager.IsNewKeyPress(Keys.L))
             {
                 _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
                 _joint.LimitEnabled = !_joint.LimitEnabled;
             }
-            if (state.IsKeyDown(Keys.M) && oldState.IsKeyUp(Keys.M))
+            if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
                 _joint.MotorEnabled = !_joint.MotorEnabled;
             }
-            if (state.IsKeyDown(Keys.P) && oldState.IsKeyUp(Keys.P))
+            if (keyboardManager.IsNewKeyPress(Keys.P))
             {
                 _fixedJoint.MotorSpeed = -_fixedJoint.MotorSpeed;
                 _joint.MotorSpeed = -_joint.MotorSpeed;

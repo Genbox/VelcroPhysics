@@ -115,12 +115,12 @@ namespace FarseerPhysics.DebugViewXNA
                     if (point.State == PointState.Add)
                     {
                         // Add
-                        DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.95f, 0.3f));
+                        DrawPoint(point.Position, 0.1f, new Color(0.3f, 0.95f, 0.3f));
                     }
                     else if (point.State == PointState.Persist)
                     {
                         // Persist
-                        DrawPoint(point.Position, 0.65f, new Color(0.3f, 0.3f, 0.95f));
+                        DrawPoint(point.Position, 0.1f, new Color(0.3f, 0.3f, 0.95f));
                     }
 
                     if ((Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals)

@@ -95,44 +95,42 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardState state, KeyboardState oldState)
+        public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (state.IsKeyDown(Keys.Tab) && oldState.IsKeyUp(Keys.Tab))
+            if (keyboardManager.IsNewKeyPress(Keys.Tab))
                 _switched = !_switched;
 
-            if (state.IsKeyDown(Keys.Enter) && oldState.IsKeyUp(Keys.Enter))
+            if (keyboardManager.IsNewKeyPress(Keys.Enter))
                 CuttingTools.Cut(World, _start, _end, 0.001f);
 
             if (_switched)
             {
-                if (state.IsKeyDown(Keys.A))
+                if (keyboardManager.IsKeyDown(Keys.A))
                     _start.X -= MoveAmount;
 
-                if (state.IsKeyDown(Keys.S))
+                if (keyboardManager.IsKeyDown(Keys.S))
                     _start.Y -= MoveAmount;
 
-                if (state.IsKeyDown(Keys.W))
+                if (keyboardManager.IsKeyDown(Keys.W))
                     _start.Y += MoveAmount;
 
-                if (state.IsKeyDown(Keys.D))
+                if (keyboardManager.IsKeyDown(Keys.D))
                     _start.X += MoveAmount;
             }
             else
             {
-                if (state.IsKeyDown(Keys.A))
+                if (keyboardManager.IsKeyDown(Keys.A))
                     _end.X -= MoveAmount;
 
-                if (state.IsKeyDown(Keys.S))
+                if (keyboardManager.IsKeyDown(Keys.S))
                     _end.Y -= MoveAmount;
 
-                if (state.IsKeyDown(Keys.W))
+                if (keyboardManager.IsKeyDown(Keys.W))
                     _end.Y += MoveAmount;
 
-                if (state.IsKeyDown(Keys.D))
+                if (keyboardManager.IsKeyDown(Keys.D))
                     _end.X += MoveAmount;
             }
-
-            base.Keyboard(state, oldState);
         }
 
         public override void Gamepad(GamePadState state, GamePadState oldState)
