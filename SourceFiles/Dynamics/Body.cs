@@ -571,7 +571,7 @@ namespace FarseerPhysics.Dynamics
                 return null;
             }
 
-            shape.Density = density;
+            shape._density = density;
 
             Fixture fixture = new Fixture(this, shape);
 
@@ -585,7 +585,7 @@ namespace FarseerPhysics.Dynamics
             fixture.Body = this;
 
             // Adjust mass properties if needed.
-            if (fixture.Shape.Density > 0.0f)
+            if (fixture.Shape._density > 0.0f)
             {
                 ResetMassData();
             }
@@ -880,7 +880,7 @@ namespace FarseerPhysics.Dynamics
             Vector2 center = Vector2.Zero;
             foreach (Fixture f in FixtureList)
             {
-                if (f.Shape.Density == 0)
+                if (f.Shape._density == 0)
                 {
                     continue;
                 }

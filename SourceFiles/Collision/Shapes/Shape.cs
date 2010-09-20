@@ -71,7 +71,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public float Radius;
 
-        private float _density;
+        internal float _density;
 
         public MassData MassData;
 

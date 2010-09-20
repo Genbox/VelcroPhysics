@@ -40,12 +40,12 @@ namespace FarseerPhysics.Collision.Shapes
             Position = Vector2.Zero;
         }
 
-        public CircleShape(float radius, float density)
+        internal CircleShape(float radius, float density)
         {
             ShapeType = ShapeType.Circle;
             Radius = radius;
             Position = Vector2.Zero;
-            Density = density;
+            _density = density;
         }
 
         public CircleShape()
@@ -61,7 +61,7 @@ namespace FarseerPhysics.Collision.Shapes
             shape.ShapeType = ShapeType;
             shape.Radius = Radius;
             shape.Position = Position;
-            shape.Density = Density;
+            shape._density = _density;
             shape.MassData = MassData;
             return shape;
         }
@@ -154,7 +154,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Mass = Density * Settings.Pi * Radius * Radius;
+            MassData.Mass = _density * Settings.Pi * Radius * Radius;
             MassData.Center = Position;
 
             // inertia about the local origin
