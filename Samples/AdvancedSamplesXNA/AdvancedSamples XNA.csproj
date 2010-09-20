@@ -182,7 +182,7 @@
     </ProjectReference>
     <ProjectReference Include="Content\AdvancedSamples XNA Content.contentproj">
       <Project>{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}</Project>
-      <Name>AdvancedSamples XNA Content</Name>
+      <Name>AdvancedSamples XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
