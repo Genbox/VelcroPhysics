@@ -37,7 +37,6 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public class PolygonShape : Shape
     {
-        public Vector2 Centroid;
         public Vertices Normals;
         public Vertices Vertices;
 
@@ -49,22 +48,6 @@ namespace FarseerPhysics.Collision.Shapes
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
-            Centroid = Vector2.Zero;
-
-            Set(vertices);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonShape"/> class.
-        /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <param name="density">The density in kilograms per meter squared.</param>
-        public PolygonShape(Vertices vertices, float density)
-        {
-            ShapeType = ShapeType.Polygon;
-            Radius = Settings.PolygonRadius;
-            Centroid = Vector2.Zero;
-            Density = density;
 
             Set(vertices);
         }
@@ -73,7 +56,6 @@ namespace FarseerPhysics.Collision.Shapes
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
-            Centroid = Vector2.Zero;
         }
 
         public override Shape Clone()
@@ -81,7 +63,6 @@ namespace FarseerPhysics.Collision.Shapes
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
             clone.Radius = Radius;
-            clone.Centroid = Centroid;
 
             if (Settings.ConserveMemory)
                 clone.Vertices = Vertices;
@@ -89,7 +70,7 @@ namespace FarseerPhysics.Collision.Shapes
                 clone.Vertices = new Vertices(Vertices);
 
             clone.Normals = Normals;
-            clone.Density = Density;
+            clone._density = _density;
             clone.MassData = MassData;
             return clone;
         }
@@ -97,6 +78,12 @@ namespace FarseerPhysics.Collision.Shapes
         public override int ChildCount
         {
             get { return 1; }
+        }
+
+        public Vector2 Centroid
+        {
+            get { return MassData.Center; }
+            set { MassData.Center = value; }
         }
 
         /// <summary>
@@ -113,7 +100,7 @@ namespace FarseerPhysics.Collision.Shapes
             else
                 // Copy vertices.
                 Vertices = new Vertices(vertices);
-        
+
             Normals = new Vertices(vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.
@@ -158,7 +145,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 #endif
 
-            if (Density > 0)
+            if (_density > 0)
             {
                 // Compute the polygon mass data
                 ComputeProperties();
@@ -259,7 +246,7 @@ namespace FarseerPhysics.Collision.Shapes
             Debug.Assert(area > Settings.Epsilon);
 
             // Total mass
-            MassData.Mass = Density * area;
+            MassData.Mass = _density * area;
 
             // Center of mass
             Debug.Assert(area > Settings.Epsilon);
@@ -267,7 +254,7 @@ namespace FarseerPhysics.Collision.Shapes
             MassData.Center = center;
 
             // Inertia tensor relative to the local origin.
-            MassData.Inertia = Density * I;
+            MassData.Inertia = _density * I;
         }
 
         /// <summary>

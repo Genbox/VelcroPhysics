@@ -23,7 +23,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -52,17 +51,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// Optional adjacent vertices. These are used for smooth collision.
         /// </summary>
         public Vector2 Vertex3;
-
-        public EdgeShape(Vector2 start, Vector2 end, float density)
-        {
-            Vertex1 = start;
-            Vertex2 = end;
-            ShapeType = ShapeType.Edge;
-            Radius = Settings.PolygonRadius;
-            HasVertex0 = false;
-            HasVertex3 = false;
-            Density = density;
-        }
 
         public EdgeShape()
         {
@@ -95,7 +83,7 @@ namespace FarseerPhysics.Collision.Shapes
             edge.Vertex1 = Vertex1;
             edge.Vertex2 = Vertex2;
             edge.Vertex3 = Vertex3;
-            edge.Density = Density;
+            edge._density = _density;
             edge.MassData = MassData;
             return edge;
         }
