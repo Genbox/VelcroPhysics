@@ -17,19 +17,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA", "HelloWorl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics", "..\Branches\Class\Farseer Physics.csproj", "{A4610E4C-DD34-428B-BABB-779CA0B5993A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics Silverlight", "..\Branches\Silverlight\Farseer Physics Silverlight.csproj", "{56A15171-9270-4C9F-A700-302F38ACFF2D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA Content", "..\DebugViews\DebugViewXNA\Content\DebugView XNA Content.contentproj", "{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA Content", "TestbedXNA\Content\TestBed XNA Content.contentproj", "{301F9A16-7581-4461-A369-D59064FB740E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase XNA Content", "DemoBaseXNA\Content\DemoBase XNA Content.contentproj", "{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "AdvancedSamples XNA Content", "AdvancedSamplesXNA\Content\AdvancedSamples XNA Content.contentproj", "{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamples XNA Content", "AdvancedSamplesXNA\Content\AdvancedSamples XNA Content.contentproj", "{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 14
+		SccNumberOfProjects = 13
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -42,36 +40,33 @@ Global
 		SccProjectUniqueName3 = DemoBaseXNA\\DemoBase\u0020XNA.csproj
 		SccProjectName3 = DemoBaseXNA
 		SccLocalPath3 = DemoBaseXNA
-		SccProjectUniqueName4 = ..\\Branches\\Silverlight\\Farseer\u0020Physics\u0020Silverlight.csproj
-		SccProjectName4 = ../Branches/Silverlight
-		SccLocalPath4 = ..\\Branches\\Silverlight
-		SccProjectUniqueName5 = ..\\Branches\\Class\\Farseer\u0020Physics.csproj
-		SccProjectName5 = ../Branches/Class
-		SccLocalPath5 = ..\\Branches\\Class
-		SccProjectUniqueName6 = ..\\Branches\\XNA\\Farseer\u0020Physics\u0020XNA.csproj
-		SccProjectName6 = ../Branches/XNA
-		SccLocalPath6 = ..\\Branches\\XNA
-		SccProjectUniqueName7 = HelloWorldXNA\\HelloWorld\u0020XNA.csproj
-		SccProjectName7 = HelloWorldXNA
-		SccLocalPath7 = HelloWorldXNA
-		SccProjectUniqueName8 = TestbedXNA\\TestBed\u0020XNA.csproj
-		SccProjectName8 = TestbedXNA
-		SccLocalPath8 = TestbedXNA
-		SccProjectUniqueName9 = SimpleSamplesXNA\\SimpleSamples\u0020XNA.csproj
-		SccProjectName9 = SimpleSamplesXNA
-		SccLocalPath9 = SimpleSamplesXNA
-		SccProjectUniqueName10 = ..\\DebugViews\\DebugViewXNA\\Content\\DebugView\u0020XNA\u0020Content.contentproj
-		SccProjectName10 = ../DebugViews/DebugViewXNA/Content
-		SccLocalPath10 = ..\\DebugViews\\DebugViewXNA\\Content
-		SccProjectUniqueName11 = TestbedXNA\\Content\\TestBed\u0020XNA\u0020Content.contentproj
-		SccProjectName11 = TestbedXNA/Content
-		SccLocalPath11 = TestbedXNA\\Content
-		SccProjectUniqueName12 = DemoBaseXNA\\Content\\DemoBase\u0020XNA\u0020Content.contentproj
-		SccProjectName12 = DemoBaseXNA/Content
-		SccLocalPath12 = DemoBaseXNA\\Content
-		SccProjectUniqueName13 = AdvancedSamplesXNA\\Content\\AdvancedSamples\u0020XNA\u0020Content.contentproj
-		SccProjectName13 = AdvancedSamplesXNA/Content
-		SccLocalPath13 = AdvancedSamplesXNA\\Content
+		SccProjectUniqueName4 = ..\\Branches\\Class\\Farseer\u0020Physics.csproj
+		SccProjectName4 = ../Branches/Class
+		SccLocalPath4 = ..\\Branches\\Class
+		SccProjectUniqueName5 = ..\\Branches\\XNA\\Farseer\u0020Physics\u0020XNA.csproj
+		SccProjectName5 = ../Branches/XNA
+		SccLocalPath5 = ..\\Branches\\XNA
+		SccProjectUniqueName6 = HelloWorldXNA\\HelloWorld\u0020XNA.csproj
+		SccProjectName6 = HelloWorldXNA
+		SccLocalPath6 = HelloWorldXNA
+		SccProjectUniqueName7 = TestbedXNA\\TestBed\u0020XNA.csproj
+		SccProjectName7 = TestbedXNA
+		SccLocalPath7 = TestbedXNA
+		SccProjectUniqueName8 = SimpleSamplesXNA\\SimpleSamples\u0020XNA.csproj
+		SccProjectName8 = SimpleSamplesXNA
+		SccLocalPath8 = SimpleSamplesXNA
+		SccProjectUniqueName9 = ..\\DebugViews\\DebugViewXNA\\Content\\DebugView\u0020XNA\u0020Content.contentproj
+		SccProjectName9 = ../DebugViews/DebugViewXNA/Content
+		SccLocalPath9 = ..\\DebugViews\\DebugViewXNA\\Content
+		SccProjectUniqueName10 = TestbedXNA\\Content\\TestBed\u0020XNA\u0020Content.contentproj
+		SccProjectName10 = TestbedXNA/Content
+		SccLocalPath10 = TestbedXNA\\Content
+		SccProjectUniqueName11 = DemoBaseXNA\\Content\\DemoBase\u0020XNA\u0020Content.contentproj
+		SccProjectName11 = DemoBaseXNA/Content
+		SccLocalPath11 = DemoBaseXNA\\Content
+		SccProjectUniqueName12 = AdvancedSamplesXNA\\Content\\AdvancedSamples\u0020XNA\u0020Content.contentproj
+		SccProjectName12 = AdvancedSamplesXNA/Content
+		SccLocalPath12 = AdvancedSamplesXNA\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -180,18 +175,6 @@ Global
 		{A4610E4C-DD34-428B-BABB-779CA0B5993A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A4610E4C-DD34-428B-BABB-779CA0B5993A}.Release|x86.ActiveCfg = Release|Any CPU
 		{A4610E4C-DD34-428B-BABB-779CA0B5993A}.Release|Xbox 360.ActiveCfg = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|x86.ActiveCfg = Release|Any CPU
-		{56A15171-9270-4C9F-A700-302F38ACFF2D}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}.Debug|x86.ActiveCfg = Debug|Any CPU
