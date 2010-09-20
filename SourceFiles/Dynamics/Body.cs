@@ -572,6 +572,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             shape._density = density;
+            shape.ComputeProperties();
 
             Fixture fixture = new Fixture(this, shape);
 
