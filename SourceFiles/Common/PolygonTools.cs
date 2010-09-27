@@ -336,8 +336,8 @@ namespace FarseerPhysics.Common
         public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            return TextureConverter.CreateVertices(data, width, height, hullTolerance, alphaTolerance, holeDetection,
-                                                   multiPartDetection);
+            return TextureConverter.CreateVertices(data, width, height, hullTolerance, alphaTolerance,
+                                                   multiPartDetection, holeDetection);
         }
     }
 }
