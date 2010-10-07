@@ -81,7 +81,7 @@ namespace FarseerPhysics.Dynamics
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
-        internal BodyType Type;
+        private BodyType _bodyType;
         internal World World;
         internal Transform Xf; // the body origin transform
         private float _inertia;
@@ -118,19 +118,19 @@ namespace FarseerPhysics.Dynamics
         /// <value>The type of body.</value>
         public BodyType BodyType
         {
-            get { return Type; }
+            get { return _bodyType; }
             set
             {
-                if (Type == value)
+                if (_bodyType == value)
                 {
                     return;
                 }
 
-                Type = value;
+                _bodyType = value;
 
                 ResetMassData();
 
-                if (Type == BodyType.Static)
+                if (_bodyType == BodyType.Static)
                 {
                     LinearVelocityInternal = Vector2.Zero;
                     AngularVelocityInternal = 0.0f;
@@ -157,7 +157,7 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (Type == BodyType.Static)
+                if (_bodyType == BodyType.Static)
                 {
                     return;
                 }
@@ -180,7 +180,7 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (Type == BodyType.Static)
+                if (_bodyType == BodyType.Static)
                 {
                     return;
                 }
@@ -432,11 +432,13 @@ namespace FarseerPhysics.Dynamics
         /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
         public bool IsStatic
         {
-            get { return Type == BodyType.Static; }
+            get { return _bodyType == BodyType.Static; }
             set
             {
                 if (value)
-                    Type = BodyType.Static;
+                    BodyType = BodyType.Static;
+                else
+                    BodyType = BodyType.Dynamic;
             }
         }
 
@@ -480,7 +482,7 @@ namespace FarseerPhysics.Dynamics
                     return;
                 }
 
-                if (Type != BodyType.Dynamic)
+                if (_bodyType != BodyType.Dynamic)
                 {
                     return;
                 }
@@ -510,7 +512,7 @@ namespace FarseerPhysics.Dynamics
                     return;
                 }
 
-                if (Type != BodyType.Dynamic)
+                if (_bodyType != BodyType.Dynamic)
                 {
                     return;
                 }
@@ -540,7 +542,7 @@ namespace FarseerPhysics.Dynamics
                     return;
                 }
 
-                if (Type != BodyType.Dynamic)
+                if (_bodyType != BodyType.Dynamic)
                 {
                     return;
                 }
@@ -761,7 +763,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="point">The world position of the point of application.</param>
         public void ApplyForce(ref Vector2 force, ref Vector2 point)
         {
-            if (Type == BodyType.Dynamic)
+            if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)
                 {
@@ -781,7 +783,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
         public void ApplyTorque(float torque)
         {
-            if (Type == BodyType.Dynamic)
+            if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)
                 {
@@ -801,7 +803,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         public void ApplyLinearImpulse(ref Vector2 impulse)
         {
-            if (Type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -823,7 +825,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="point">The world position of the point of application.</param>
         public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
         {
-            if (Type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -841,7 +843,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="impulse">The angular impulse in units of kg*m*m/s.</param>
         public void ApplyAngularImpulse(float impulse)
         {
-            if (Type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic)
             {
                 return;
             }
@@ -1083,7 +1085,7 @@ namespace FarseerPhysics.Dynamics
         internal bool ShouldCollide(Body other)
         {
             // At least one body should be dynamic.
-            if (Type != BodyType.Dynamic && other.Type != BodyType.Dynamic)
+            if (_bodyType != BodyType.Dynamic && other._bodyType != BodyType.Dynamic)
             {
                 return false;
             }
