@@ -86,9 +86,9 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // In the case of a prismatic and revolute joint, the first body must be static.
             if (type1 == JointType.Revolute || type1 == JointType.Prismatic)
-                Debug.Assert(jointA.BodyA.Type == BodyType.Static);
+                Debug.Assert(jointA.BodyA.BodyType == BodyType.Static);
             if (type2 == JointType.Revolute || type2 == JointType.Prismatic)
-                Debug.Assert(jointB.BodyA.Type == BodyType.Static);
+                Debug.Assert(jointB.BodyA.BodyType == BodyType.Static);
 
             float coordinate1 = 0.0f, coordinate2 = 0.0f;
 
