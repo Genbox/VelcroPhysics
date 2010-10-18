@@ -30,7 +30,6 @@ namespace FarseerPhysics.DebugViewXNA
         private static GraphicsDevice _device;
 
         private static List<StringData> _stringData;
-        private static VertexDeclaration _vertexDeclaration;
         private static BasicEffect _effect;
         public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
 
@@ -465,7 +464,7 @@ namespace FarseerPhysics.DebugViewXNA
                 return;
             }
 
-            Color colorFill = new Color(color.R, color.G, color.B, outline ? 0.5f : 1.0f);
+            Color colorFill =  color * (outline ? 0.5f : 1.0f);
 
             for (int i = 1; i < count - 1; i++)
             {
@@ -527,7 +526,7 @@ namespace FarseerPhysics.DebugViewXNA
             const double increment = Math.PI * 2.0 / segments;
             double theta = 0.0;
 
-            Color colorFill = new Color(color.R, color.G, color.B, 0.5f);
+            Color colorFill = color * 0.5f;
 
             Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
@@ -604,9 +603,6 @@ namespace FarseerPhysics.DebugViewXNA
             DrawDebugData();
 
             _device.RasterizerState = RasterizerState.CullNone;
-
-            // turn alpha blending on
-            _device.BlendState = BlendState.NonPremultiplied;
 
             // set the effects projection matrix
             _effect.Projection = projection;
