@@ -132,9 +132,6 @@
     <Compile Include="..\..\SourceFiles\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\GrowableStack.cs">
-      <Link>Common\GrowableStack.cs</Link>
-    </Compile>
     <Compile Include="..\..\SourceFiles\Common\LineTools.cs">
       <Link>Common\LineTools.cs</Link>
     </Compile>
@@ -152,9 +149,6 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\PathManager.cs">
       <Link>Common\PathManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\PolygonManipulation\BooleanTools.cs">
-      <Link>Common\PolygonManipulation\BooleanTools.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\PolygonManipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
