@@ -307,6 +307,57 @@ namespace FarseerPhysics.Common
             return true;
         }
 
+        //TODO: Test
+        //Implementation found here: http://www.gamedev.net/community/forums/topic.asp?topic_id=548477
+        public bool IsSimple2()
+        {
+            for (int i = 0; i < Count; ++i)
+            {
+                if (i < Count - 1)
+                {
+                    for (int h = i + 1; h < Count; ++h)
+                    {
+                        // Do two vertices lie on top of one another?
+                        if (this[i] == this[h])
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                int j = (i + 1) % Count;
+                Vector2 iToj = this[j] - this[i];
+                Vector2 iTojNormal = new Vector2(iToj.Y, -iToj.X);
+
+                // i is the first vertex and j is the second
+                int startK = (j + 1) % Count;
+                int endK = (i - 1 + Count) % Count;
+                endK += startK < endK ? 0 : startK + 1;
+                int k = startK;
+                Vector2 iTok = this[k] - this[i];
+                bool onLeftSide = Vector2.Dot(iTok, iTojNormal) >= 0;
+                Vector2 prevK = this[k];
+                ++k;
+                for (; k <= endK; ++k)
+                {
+                    int modK = k % Count;
+                    iTok = this[modK] - this[i];
+                    if (onLeftSide != Vector2.Dot(iTok, iTojNormal) >= 0)
+                    {
+                        Vector2 prevKtoK = this[modK] - prevK;
+                        Vector2 prevKtoKNormal = new Vector2(prevKtoK.Y, -prevKtoK.X);
+                        if ((Vector2.Dot(this[i] - prevK, prevKtoKNormal) >= 0) != (Vector2.Dot(this[j] - prevK, prevKtoKNormal) >= 0))
+                        {
+                            return true;
+                        }
+                    }
+                    onLeftSide = Vector2.Dot(iTok, iTojNormal) > 0;
+                    prevK = this[modK];
+                }
+            }
+            return false;
+        }
+
         // From Eric Jordan's convex decomposition library
 
         /// <summary>
