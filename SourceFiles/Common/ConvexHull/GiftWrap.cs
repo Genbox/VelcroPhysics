@@ -12,7 +12,7 @@ namespace FarseerPhysics.Common.ConvexHull
         /// angles.
         /// 
         /// Runs in O(N*S) time where S is number of sides of resulting polygon.
-        /// Worst case: point cloud is all vertices of convex polygon -&gt; O(N^2).
+        /// Worst case: point cloud is all vertices of convex polygon: O(N^2).
         /// There may be faster algorithms to do this, should you need one -
         /// this is just the simplest. You can get O(N log N) expected time if you
         /// try, I think, and O(N) if you restrict inputs to simple polygons.
