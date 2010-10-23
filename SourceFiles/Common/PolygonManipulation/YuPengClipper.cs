@@ -47,7 +47,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// Merges two polygons, a subject and a clip with the specified operation. Polygons may not be 
         /// self-intersecting.
         /// 
-        /// Warning: May yield incorrect results or even crash if polygons contain colinear points.
+        /// Warning: May yield incorrect results or even crash if polygons contain collinear points.
         /// </summary>
         /// <param name="subject">The subject polygon.</param>
         /// <param name="clip">The clip polygon, which is added, 
