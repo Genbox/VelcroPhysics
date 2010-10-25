@@ -325,6 +325,7 @@
     <Compile Include="..\..\sourcefiles\factories\LinkFactory.cs">
       <Link>Factories\LinkFactory.cs</Link>
     </Compile>
+    <Compile Include="Dynamics\Joints\RopeJoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
