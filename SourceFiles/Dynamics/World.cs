@@ -241,6 +241,11 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Enable/disable single stepped continuous physics. For testing.
+        /// </summary>
+        public bool EnableSubStepping { get { return _subStepping; } set { _subStepping = value; } }
+
+        /// <summary>
         /// Create a rigid body.
         /// Warning: This function is locked during callbacks.
         /// </summary>
