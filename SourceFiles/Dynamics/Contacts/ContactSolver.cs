@@ -51,6 +51,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Body BodyA;
         public Body BodyB;
         public float Friction;
+        public float Restitution;
         public Mat22 K;
         public Vector2 LocalNormal;
         public Vector2 LocalPoint;
@@ -59,7 +60,8 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Mat22 NormalMass;
         public int PointCount;
         public FixedArray2<ContactConstraintPoint> Points;
-        public float Radius;
+        public float RadiusA;
+        public float RadiusB;
         public ManifoldType Type;
 
         public ContactConstraint()
@@ -92,6 +94,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 }
             }
 
+            // Initialize position independent portions of the constraints.
             for (int i = 0; i < _constraintCount; ++i)
             {
                 Contact contact = contacts[i];
@@ -107,30 +110,21 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Manifold manifold;
                 contact.GetManifold(out manifold);
 
-                float friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
-                float restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
-
-                Vector2 vA = bodyA.LinearVelocityInternal;
-                Vector2 vB = bodyB.LinearVelocityInternal;
-                float wA = bodyA.AngularVelocityInternal;
-                float wB = bodyB.AngularVelocityInternal;
-
                 Debug.Assert(manifold.PointCount > 0);
 
-                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf,
-                                                                radiusB);
-
                 ContactConstraint cc = Constraints[i];
+                cc.Friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
+                cc.Restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
                 cc.BodyA = bodyA;
                 cc.BodyB = bodyB;
                 cc.Manifold = manifold;
-                cc.Normal = worldManifold.Normal;
+                cc.Normal = Vector2.Zero;
                 cc.PointCount = manifold.PointCount;
-                cc.Friction = friction;
 
                 cc.LocalNormal = manifold.LocalNormal;
                 cc.LocalPoint = manifold.LocalPoint;
-                cc.Radius = radiusA + radiusB;
+                cc.RadiusA = radiusA;
+                cc.RadiusB = radiusB;
                 cc.Type = manifold.Type;
 
                 for (int j = 0; j < cc.PointCount; ++j)
@@ -142,10 +136,48 @@ namespace FarseerPhysics.Dynamics.Contacts
                     ccp.TangentImpulse = impulseRatio * cp.TangentImpulse;
 
                     ccp.LocalPoint = cp.LocalPoint;
+                    ccp.rA = Vector2.Zero;
+			        ccp.rB = Vector2.Zero;
+			        ccp.NormalMass = 0.0f;
+			        ccp.TangentMass = 0.0f;
+			        ccp.VelocityBias = 0.0f;
+                }
+
+		        cc.K.SetZero();
+		        cc.NormalMass.SetZero();
+            }
+        }
+
+        public void InitializeVelocityConstraints()
+        {
+            for (int i = 0; i < _constraintCount; ++i)
+            {
+                ContactConstraint cc = Constraints[i];
+
+                float radiusA = cc.RadiusA;
+                float radiusB = cc.RadiusB;
+                Body bodyA = cc.BodyA;
+                Body bodyB = cc.BodyB;
+                Manifold manifold = cc.Manifold;
+
+                Vector2 vA = bodyA.LinearVelocity;
+                Vector2 vB = bodyB.LinearVelocity;
+                float wA = bodyA.AngularVelocity;
+                float wB = bodyB.AngularVelocity;
+
+                Debug.Assert(manifold.PointCount > 0);
+
+                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf, radiusB);
+
+                cc.Normal = worldManifold.Normal;
+
+                for (int j = 0; j < cc.PointCount; ++j)
+                {
+                    ManifoldPoint cp = manifold.Points[j];
+                    ContactConstraintPoint ccp = cc.Points[j];
 
                     ccp.rA = worldManifold.Points[j] - bodyA.Sweep.c;
                     ccp.rB = worldManifold.Points[j] - bodyB.Sweep.c;
-
 #if MATH_OVERLOADS
 			        float rnA = MathUtils.Cross(ccp.rA, cc.Normal);
 			        float rnB = MathUtils.Cross(ccp.rB, cc.Normal);
@@ -185,7 +217,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                                              vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA));
                     if (vRel < -Settings.VelocityThreshold)
                     {
-                        ccp.VelocityBias = -restitution * vRel;
+                        ccp.VelocityBias = -cc.Restitution * vRel;
                     }
                 }
 
@@ -224,12 +256,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                         cc.PointCount = 1;
                     }
                 }
-
-                if (fixtureA.PostSolve != null)
-                    fixtureA.PostSolve(cc);
-
-                if (fixtureB.PostSolve != null)
-                    fixtureB.PostSolve(cc);
             }
         }
 
@@ -801,6 +827,77 @@ namespace FarseerPhysics.Dynamics.Contacts
             // push the separation above -Settings.b2_linearSlop.
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
+
+        // Sequential position solver for position constraints.
+        public bool SolvePositionConstraintsTOI(float baumgarte, Body toiBodyA, Body toiBodyB)
+        {
+            float minSeparation = 0.0f;
+
+            for (int i = 0; i < _constraintCount; ++i)
+            {
+                ContactConstraint c = Constraints[i];
+                Body bodyA = c.BodyA;
+                Body bodyB = c.BodyB;
+
+                float massA = 0.0f;
+                if (bodyA == toiBodyA || bodyA == toiBodyB)
+                {
+                    massA = bodyA.Mass;
+                }
+
+                float massB = 0.0f;
+                if (bodyB == toiBodyA || bodyB == toiBodyB)
+                {
+                    massB = bodyB.Mass;
+                }
+
+                float invMassA = bodyA.Mass * bodyA.InvMass;
+                float invIA = bodyA.Mass * bodyA.InvI;
+                float invMassB = bodyB.Mass * bodyB.InvMass;
+                float invIB = bodyB.Mass * bodyB.InvI;
+
+                // Solve normal constraints
+                for (int j = 0; j < c.PointCount; ++j)
+                {
+                    PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
+                    Vector2 normal = psm.Normal;
+
+                    Vector2 point = psm.Point;
+                    float separation = psm.Separation;
+
+                    Vector2 rA = point - bodyA.Sweep.c;
+                    Vector2 rB = point - bodyB.Sweep.c;
+
+                    // Track max constraint error.
+                    minSeparation = Math.Min(minSeparation, separation);
+
+                    // Prevent large corrections and allow slop.
+                    float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+
+                    // Compute the effective mass.
+                    float rnA = MathUtils.Cross(rA, normal);
+                    float rnB = MathUtils.Cross(rB, normal);
+                    float K = invMassA + invMassB + invIA * rnA * rnA + invIB * rnB * rnB;
+
+                    // Compute normal impulse
+                    float impulse = K > 0.0f ? -C / K : 0.0f;
+
+                    Vector2 P = impulse * normal;
+
+                    bodyA.Sweep.c -= invMassA * P;
+                    bodyA.Sweep.a -= invIA * MathUtils.Cross(rA, P);
+                    bodyA.SynchronizeTransform();
+
+                    bodyB.Sweep.c += invMassB * P;
+                    bodyB.Sweep.a += invIB * MathUtils.Cross(rB, P);
+                    bodyB.SynchronizeTransform();
+                }
+            }
+
+            // We can't expect minSpeparation >= -b2_linearSlop because we don't
+            // push the separation above -b2_linearSlop.
+            return minSeparation >= -1.5f * Settings.LinearSlop;
+        }
     }
 
     internal struct PositionSolverManifold
@@ -830,7 +927,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         }
 
                         Point = 0.5f * (pointA + pointB);
-                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.Radius;
+                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.RadiusA - cc.RadiusB;
                     }
                     break;
 
@@ -840,7 +937,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         Vector2 planePoint = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyB.GetWorldPoint(ref cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.RadiusA - cc.RadiusB;
                         Point = clipPoint;
                     }
                     break;
@@ -851,7 +948,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         Vector2 planePoint = cc.BodyB.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyA.GetWorldPoint(ref cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.Radius;
+                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.RadiusA - cc.RadiusB;
                         Point = clipPoint;
 
                         // Ensure normal points from A to B

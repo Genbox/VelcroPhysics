@@ -560,6 +560,10 @@ namespace FarseerPhysics.Common
 
         public Vector2 c0;
 
+        /// Fraction of the current time step in the range [0,1]
+ 		/// c0 and a0 are the positions at alpha0.
+        public float alpha0;
+
         /// <summary>
         /// Local center of mass position
         /// </summary>
@@ -584,11 +588,13 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// Advance the sweep forward, yielding a new initial state.
         /// </summary>
-        /// <param name="t">new initial time..</param>
-        public void Advance(float t)
+        /// <param name="alpha">new initial time..</param>
+        public void Advance(float alpha)
         {
-            c0 = (1.0f - t) * c0 + t * c;
-            a0 = (1.0f - t) * a0 + t * a;
+            float beta = (alpha - alpha0) / (1.0f - alpha0);
+            c0 = (1.0f - beta) * c0 + beta * c;
+            a0 = (1.0f - beta) * a0 + beta * a;
+            alpha0 = alpha;
         }
 
         /// <summary>
