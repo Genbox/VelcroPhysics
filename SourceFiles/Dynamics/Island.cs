@@ -48,6 +48,7 @@ namespace FarseerPhysics.Dynamics
         private Contact[] _contacts;
         private int _jointCapacity;
         private Joint[] _joints;
+        private int _positionIterationCount;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -140,6 +141,7 @@ namespace FarseerPhysics.Dynamics
 
             // Initialize velocity constraints.
             _contactSolver.Reset(_contacts, ContactCount, step.dtRatio);
+            _contactSolver.InitializeVelocityConstraints();
             _contactSolver.WarmStart();
 
             for (int i = 0; i < JointCount; ++i)
@@ -266,6 +268,125 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
             }
+        }
+
+        internal void SolveTOI(TimeStep subStep, Body bodyA, Body bodyB)
+        {
+            _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio);
+
+            // Solve position constraints.
+            const float k_toiBaumgarte = 0.75f;
+            // TODO - Add subStep.positionIterations into TimeStep
+            for (int i = 0; i < 5; ++i)
+            {
+                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(k_toiBaumgarte, bodyA, bodyB);
+                if (contactsOkay)
+                {
+                    break;
+                }
+
+                if (i == 5 - 1)
+                {
+                    i += 0;
+                }
+            }
+            /*
+            #if 0
+                // Is the new position really safe?
+                for (int32 i = 0; i < m_contactCount; ++i)
+                {
+                    b2Contact* c = m_contacts[i];
+                    b2Fixture* fA = c->GetFixtureA();
+                    b2Fixture* fB = c->GetFixtureB();
+
+                    b2Body* bA = fA->GetBody();
+                    b2Body* bB = fB->GetBody();
+
+                    int32 indexA = c->GetChildIndexA();
+                    int32 indexB = c->GetChildIndexB();
+
+                    b2DistanceInput input;
+                    input.proxyA.Set(fA->GetShape(), indexA);
+                    input.proxyB.Set(fB->GetShape(), indexB);
+                    input.transformA = bA->GetTransform();
+                    input.transformB = bB->GetTransform();
+                    input.useRadii = false;
+
+                    b2DistanceOutput output;
+                    b2SimplexCache cache;
+                    cache.count = 0;
+                    b2Distance(&output, &cache, &input);
+
+                    if (output.distance == 0 || cache.count == 3)
+                    {
+                        cache.count += 0;
+                    }
+                }
+            #endif
+             */
+
+            // Leap of faith to new safe state.
+            for (int i = 0; i < BodyCount; ++i)
+            {
+                Bodies[i].Sweep.a0 = Bodies[i].Sweep.a;
+                Bodies[i].Sweep.c0 = Bodies[i].Sweep.c;
+            }
+
+            // No warm starting is needed for TOI events because warm
+            // starting impulses were applied in the discrete solver.
+            _contactSolver.InitializeVelocityConstraints();
+
+            // Solve velocity constraints.
+            for (int i = 0; i < 5; ++i)
+            {
+                _contactSolver.SolveVelocityConstraints();
+            }
+
+            // Don't store the TOI contact forces for warm starting
+            // because they can be quite large.
+
+            // Integrate positions.
+            for (int i = 0; i < BodyCount; ++i)
+            {
+                Body b = Bodies[i];
+
+                if (b.BodyType == BodyType.Static)
+                {
+                    continue;
+                }
+
+                // Check for large velocities.
+                Vector2 translation = subStep.dt * b.LinearVelocity;
+                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                {
+                    translation.Normalize();
+                    b.LinearVelocity = (Settings.MaxTranslation * subStep.inv_dt) * translation;
+                }
+
+                float rotation = subStep.dt * b.AngularVelocity;
+                if (rotation * rotation > Settings.MaxRotationSquared)
+                {
+                    if (rotation < 0.0)
+                    {
+                        b.AngularVelocity = -subStep.inv_dt * Settings.MaxRotation;
+                    }
+                    else
+                    {
+                        b.AngularVelocity = subStep.inv_dt * Settings.MaxRotation;
+                    }
+                }
+
+                // Integrate
+                b.Sweep.c += subStep.dt * b.LinearVelocity;
+                b.Sweep.a += subStep.dt * b.AngularVelocity;
+
+                // Compute new transform
+                b.SynchronizeTransform();
+
+                // Note: shapes are synchronized later.
+            }
+
+            Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)

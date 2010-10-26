@@ -83,6 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 anchor = new Vector2(i, y);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
                     jd.CollideConnected = false;
+
                     World.AddJoint(jd);
 
                     prevBody = body;
@@ -90,7 +91,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 rj = new RopeJoint(ground, prevBody, new Vector2(0, 15), Vector2.Zero);
 
-                rj.MaxLength = Count - 1.0f + 0.01f;
+                rj.MaxLength = Count - 1.0f;
+
+                rj.CollideConnected = true;
 
                 World.AddJoint(rj);
             }
