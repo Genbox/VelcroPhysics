@@ -255,6 +255,9 @@
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\RevoluteJoint.cs">
       <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Dynamics\Joints\RopeJoint.cs">
+      <Link>Dynamics\Joints\RopeJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\SliderJoint.cs">
       <Link>Dynamics\Joints\SliderJoint.cs</Link>
     </Compile>
@@ -282,7 +285,6 @@
     <Compile Include="..\..\SourceFiles\Factories\LinkFactory.cs">
       <Link>Factories\LinkFactory.cs</Link>
     </Compile>
-    <Compile Include="Dynamics\Joints\RopeJoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
