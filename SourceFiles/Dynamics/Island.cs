@@ -276,8 +276,8 @@ namespace FarseerPhysics.Dynamics
 
             // Solve position constraints.
             const float k_toiBaumgarte = 0.75f;
-            // TODO - Add subStep.positionIterations into TimeStep
-            for (int i = 0; i < 5; ++i)
+
+            for (int i = 0; i < Settings.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(k_toiBaumgarte, bodyA, bodyB);
                 if (contactsOkay)
@@ -337,7 +337,7 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.InitializeVelocityConstraints();
 
             // Solve velocity constraints.
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
                 _contactSolver.SolveVelocityConstraints();
             }
