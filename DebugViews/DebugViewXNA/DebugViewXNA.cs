@@ -336,7 +336,8 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawSolidCircle(p2, 0.1f, new Vector2(), Color.Red);
                     DrawSolidCircle(p1, 0.1f, new Vector2(), Color.Blue);
                     break;
-                case JointType.FixedRevolute:
+				case JointType.FixedRevolute:
+					DrawSegment(x1, p1, color);
                     DrawSolidCircle(p1, 0.1f, new Vector2(), Color.Pink);
                     break;
                 case JointType.FixedLine:
