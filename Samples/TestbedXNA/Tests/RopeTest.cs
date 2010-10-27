@@ -41,8 +41,8 @@ namespace FarseerPhysics.TestBed.Tests
     public class RopeTest : Test
     {
         private const int Count = 10;
-        RopeJoint rj;
-        bool useRopeJoint = true;
+        RopeJoint _rj;
+        bool _useRopeJoint = true;
 
         private RopeTest()
         {
@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box);
                 shape.Density = 20;
 
-                float y = 15;
+                const float y = 15;
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -89,13 +89,14 @@ namespace FarseerPhysics.TestBed.Tests
                     prevBody = body;
                 }
 
-                rj = new RopeJoint(ground, prevBody, new Vector2(0, 15), Vector2.Zero);
+                _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
 
-                rj.MaxLength = Count - 1.0f;
+                const float extraLength = 0.01f;
+                _rj.MaxLength = Count - 1.0f + extraLength;
 
-                rj.CollideConnected = true;
+                _rj.CollideConnected = true;
 
-                World.AddJoint(rj);
+                World.AddJoint(_rj);
             }
         }
   
@@ -103,31 +104,31 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsKeyDown(Keys.J))
             {
-                if (useRopeJoint)
+                if (_useRopeJoint)
                 {
-                    useRopeJoint = false;
-                    World.RemoveJoint(rj);
+                    _useRopeJoint = false;
+                    World.RemoveJoint(_rj);
                 }
                 else
                 {
-                    useRopeJoint = true;
-                    World.AddJoint(rj);
+                    _useRopeJoint = true;
+                    World.AddJoint(_rj);
                 }
             }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(5, TextLine, "Press (j) to toggle the rope joint.");
+            DebugView.DrawString(50, TextLine, "Press (j) to toggle the rope joint.");
             TextLine += 15;
 
-            if (useRopeJoint)
+            if (_useRopeJoint)
             {
-                DebugView.DrawString(5, TextLine, "Rope ON");
+                DebugView.DrawString(50, TextLine, "Rope ON");
             }
             else
             {
-                DebugView.DrawString(5, TextLine, "Rope OFF");
+                DebugView.DrawString(50, TextLine, "Rope OFF");
             }
             TextLine += 15;
 

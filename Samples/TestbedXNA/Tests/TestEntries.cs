@@ -33,11 +33,11 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 //Original tests
                 new TestEntry {Name = "Rope Test", CreateFcn = RopeTest.Create},
-                new TestEntry {Name = "Bullet Test", CreateFcn = BulletTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
                 new TestEntry {Name = "Edge Test", CreateFcn = EdgeTest.Create},
                 new TestEntry {Name = "One-Sided Platform", CreateFcn = OneSidedPlatformTest.Create},
                 new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
+                new TestEntry {Name = "Bullet Test", CreateFcn = BulletTest.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
@@ -63,17 +63,17 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Compound Shapes", CreateFcn = CompoundShapes.Create},
                 new TestEntry {Name = "Distance Test", CreateFcn = DistanceTest.Create},
                 new TestEntry {Name = "Dominos", CreateFcn = DominosTest.Create},
+                new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
                 new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
                 new TestEntry {Name = "Revolute", CreateFcn = RevoluteTest.Create},
-                new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
                 new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
 
-                //FPE 3.0 specific tests
+                //FPE 3.0 tests
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
