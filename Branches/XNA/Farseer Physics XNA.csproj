@@ -199,6 +199,9 @@
     <Compile Include="..\..\sourcefiles\common\PathManager.cs">
       <Link>Common\PathManager.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\Explosion.cs">
+      <Link>Common\PhysicsLogic\Explosion.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\polygonmanipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
     </Compile>
@@ -329,6 +332,7 @@
       <Link>Factories\LinkFactory.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
