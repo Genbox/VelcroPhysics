@@ -150,6 +150,9 @@
     <Compile Include="..\..\SourceFiles\Common\PathManager.cs">
       <Link>Common\PathManager.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\Explosion.cs">
+      <Link>Common\PhysicsLogic\Explosion.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\PolygonManipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
     </Compile>
