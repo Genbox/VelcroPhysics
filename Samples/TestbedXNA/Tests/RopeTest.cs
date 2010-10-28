@@ -56,33 +56,46 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
-                shape.Density = 20;
-
                 const float y = 15;
 
                 Body prevBody = ground;
+
                 for (int i = 0; i < Count; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + 1.0f * i, y);
 
+                    Fixture fixture;
+                    
                     if (i == Count - 1)
                     {
-                        shape.SetAsBox(1.5f, 1.5f);
+                        Vertices box = PolygonTools.CreateRectangle(1.5f, 1.5f);
+                        PolygonShape shape = new PolygonShape(box);
                         shape.Density = 100;
+                        fixture = body.CreateFixture(shape);
+                        fixture.Friction = 0.2f;
+                        //fixture.CollisionCategories = CollisionCategory.Cat2;
+                        //fixture.CollidesWith = (CollisionCategory)(0xFFFF);
+                        //fixture.CollisionGroup = 1;
                         body.Position = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
-
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.2f;
+                    else
+                    {
+                        Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                        PolygonShape shape = new PolygonShape(box);
+                        shape.Density = 20;
+                        fixture = body.CreateFixture(shape);
+                        fixture.Friction = 0.2f;
+                        //fixture.CollisionCategories = CollisionCategory.Cat1 | CollisionCategory.Cat2;
+                        //fixture.CollidesWith = (CollisionCategory)(0xFFFF & ~0x0002);
+                        //fixture.CollisionGroup = 1;
+                    }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(anchor), body.GetLocalPoint(anchor));
-                    jd.CollideConnected = false;
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor), body.GetLocalPoint(ref anchor));
+                    //jd.CollideConnected = true;
 
                     World.AddJoint(jd);
 
@@ -93,8 +106,6 @@ namespace FarseerPhysics.TestBed.Tests
 
                 const float extraLength = 0.01f;
                 _rj.MaxLength = Count - 1.0f + extraLength;
-
-                _rj.CollideConnected = true;
 
                 World.AddJoint(_rj);
             }

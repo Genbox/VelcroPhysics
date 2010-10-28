@@ -350,14 +350,18 @@ namespace FarseerPhysics.TestBed
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
+            /*
             float u = x / (float)_viewportWidth;
             float v = (_viewportHeight - y) / (float)_viewportHeight;
 
             Vector2 p = new Vector2();
             p.X = (1.0f - u) * _lower.X + u * _upper.X;
             p.Y = (1.0f - v) * _lower.Y + v * _upper.Y;
+             * */
 
-            return p;
+            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), _projection, Matrix.Identity, Matrix.Identity);
+
+            return new Vector2(temp.X, temp.Y);
         }
 
         private void Restart()
