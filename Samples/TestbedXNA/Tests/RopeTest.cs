@@ -1,4 +1,4 @@
-﻿    /*
+﻿/*
 * Copyright (c) 2006-2010 Erin Catto http://www.gphysics.com
 *
 * This software is provided 'as-is', without any express or implied
@@ -15,7 +15,7 @@
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-    
+
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -27,17 +27,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-
-
-
-/// This test shows how a rope joint can be used to stabilize a chain of
-/// bodies with a heavy payload. Notice that the rope joint just prevents
-/// excessive stretching and has no other effect.
-/// By disabling the rope joint you can see that the Box2D solver has trouble
-/// supporting heavy bodies with light bodies. Try playing around with the
-/// densities, time step, and iterations to see how they affect stability.
-/// This test also shows how to use contact filtering. Filtering is configured
-/// so that the payload does not collide with the chain.
+    /// This test shows how a rope joint can be used to stabilize a chain of
+    /// bodies with a heavy payload. Notice that the rope joint just prevents
+    /// excessive stretching and has no other effect.
+    /// By disabling the rope joint you can see that the Box2D solver has trouble
+    /// supporting heavy bodies with light bodies. Try playing around with the
+    /// densities, time step, and iterations to see how they affect stability.
+    /// This test also shows how to use contact filtering. Filtering is configured
+    /// so that the payload does not collide with the chain.
     public class RopeTest : Test
     {
         private const int Count = 10;
@@ -67,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(0.5f + 1.0f * i, y);
 
                     Fixture fixture;
-                    
+
                     if (i == Count - 1)
                     {
                         Vertices box = PolygonTools.CreateRectangle(1.5f, 1.5f);
@@ -110,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                 World.AddJoint(_rj);
             }
         }
-  
+
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.J))
@@ -145,7 +142,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             base.Update(settings, gameTime);
         }
-        
+
         internal static Test Create()
         {
             return new RopeTest();

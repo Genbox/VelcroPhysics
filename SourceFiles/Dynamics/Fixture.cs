@@ -122,8 +122,12 @@ namespace FarseerPhysics.Dynamics
         {
             //Fixture defaults
             Friction = 0.2f;
-            _collisionCategories = CollisionCategory.All;
+            Restitution = 0;
+
+            _collisionCategories = CollisionCategory.Cat1;
             _collidesWith = CollisionCategory.All;
+            _collisionGroup = 0;
+
             IsSensor = false;
 
             Body = body;
