@@ -25,6 +25,8 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework.Input;
 
+//TODO: Syncronize with Box2D
+
 namespace FarseerPhysics.TestBed.Tests
 {
     /// This test shows how a rope joint can be used to stabilize a chain of

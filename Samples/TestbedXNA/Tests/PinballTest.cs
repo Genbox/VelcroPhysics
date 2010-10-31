@@ -32,9 +32,13 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+//TODO: Syncronize with Box2D
+
 namespace FarseerPhysics.TestBed.Tests
 {
+    /// <summary>
     /// This tests bullet collision and provides an example of a gameplay scenario.
+    /// </summary>
     public class PinballTest : Test
     {
         private Body _ball;

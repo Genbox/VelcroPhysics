@@ -31,6 +31,8 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+//TODO: Syncronize with Box2D
+
 namespace FarseerPhysics.TestBed.Tests
 {
     public class VerticalStackTest : Test
