@@ -139,14 +139,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (_collision)
-            {
-                DebugView.DrawString(50, TextLine, "OnCollision fired");
-            }
-            else
-            {
-                DebugView.DrawString(50, TextLine, "OnSeparation fired");
-            }
+            DebugView.DrawString(50, TextLine, _collision ? "OnCollision fired" : "OnSeparation fired");
 
             base.Update(settings, gameTime);
         }

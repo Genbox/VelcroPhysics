@@ -35,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private Fixture _circleFixture;
 
-        public EdgeTest()
+        private EdgeTest()
         {
             {
                 Body ground = BodyFactory.CreateBody(World);
@@ -95,7 +95,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.SleepingAllowed = false;
 
                 CircleShape shape = new CircleShape(0.5f);
-                _circleFixture = body.CreateFixture(shape, 1);
+                _circleFixture = body.CreateFixture(shape);
             }
 
             {
@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape();
                 shape.SetAsBox(0.5f, 0.5f);
 
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape);
             }
         }
 

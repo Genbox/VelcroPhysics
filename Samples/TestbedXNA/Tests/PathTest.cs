@@ -21,7 +21,7 @@ namespace FarseerPhysics.TestBed.Tests
             _movingBody = BodyFactory.CreateBody(World);
             _movingBody.Position = new Vector2(-25, 25);
             _movingBody.BodyType = BodyType.Dynamic;
-            _movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f)), 1);
+            _movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f)));
 
             //Static shape made up of bodies
             _path = new Path();

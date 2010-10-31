@@ -118,7 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
                     body.BodyType = BodyType.Dynamic;
 
-                    Fixture fixture = body.CreateFixture(shape, 1);
+                    Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.3f;
 
                     const float gravity = 10.0f;

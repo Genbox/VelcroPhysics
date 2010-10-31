@@ -3,7 +3,6 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
@@ -270,30 +269,6 @@ namespace FarseerPhysics.TestBed.Tests
             _selected = null;
         }
 
-        public Vertices CreateRectangle(float width, float height)
-        {
-            //Note: The rectangle has vertices along the edges. This is to support the distance grid better.
-            Vertices vertices = new Vertices();
-            vertices.Add(new Vector2(-width * .5f, -height * .5f));
-            vertices.Add(new Vector2(-width * .5f, -height * .25f));
-            vertices.Add(new Vector2(-width * .5f, 0));
-            vertices.Add(new Vector2(-width * .5f, height * .25f));
-            vertices.Add(new Vector2(-width * .5f, height * .5f));
-            vertices.Add(new Vector2(-width * .25f, height * .5f));
-            vertices.Add(new Vector2(0, height * .5f));
-            vertices.Add(new Vector2(width * .25f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .5f));
-            vertices.Add(new Vector2(width * .5f, height * .25f));
-            vertices.Add(new Vector2(width * .5f, 0));
-            vertices.Add(new Vector2(width * .5f, -height * .25f));
-            vertices.Add(new Vector2(width * .5f, -height * .5f));
-            vertices.Add(new Vector2(width * .25f, -height * .5f));
-            vertices.Add(new Vector2(0, -height * .5f));
-            vertices.Add(new Vector2(-width * .25f, -height * .5f));
-
-            return vertices;
-        }
-
         private void AddCircle(int radius, int numSides)
         {
             Vertices verts = PolygonTools.CreateCircle(radius, numSides);
@@ -302,7 +277,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void AddRectangle(int width, int height)
         {
-            Vertices verts = CreateRectangle(width, height);//PolygonTools.CreateRectangle(width, height);
+            Vertices verts = PolygonTools.CreateRectangle(width, height);
             _polygons.Add(verts);
         }
 
