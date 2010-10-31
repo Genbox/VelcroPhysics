@@ -26,7 +26,7 @@ namespace FarseerPhysics.TestBed.Tests
             planet.Position = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2);
-            planet.CreateFixture(planetShape, 1);
+            planet.CreateFixture(planetShape);
 
             //Add the planet as the one that has gravity
             gravity.AddBody(planet);

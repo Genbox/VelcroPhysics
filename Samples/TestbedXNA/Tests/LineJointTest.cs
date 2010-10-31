@@ -58,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape);
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(10.0f, 7.0f);
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape);
 
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();

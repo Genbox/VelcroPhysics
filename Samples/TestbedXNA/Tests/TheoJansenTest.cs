@@ -73,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape);
             }
 
             // Chassis
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _chassis.BodyType = BodyType.Dynamic;
                 _chassis.Position = pivot + _offset;
 
-                Fixture fixture = _chassis.CreateFixture(shape, 1);
+                Fixture fixture = _chassis.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
             }
 
@@ -96,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _wheel.BodyType = BodyType.Dynamic;
                 _wheel.Position = pivot + _offset;
 
-                Fixture fixture = _wheel.CreateFixture(shape, 1);
+                Fixture fixture = _wheel.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
             }
 
@@ -174,7 +174,7 @@ namespace FarseerPhysics.TestBed.Tests
             body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;
 
-            Fixture f1 = body1.CreateFixture(poly1, 1);
+            Fixture f1 = body1.CreateFixture(poly1);
             f1.CollisionGroup = -1;
 
             Fixture f2 = body2.CreateFixture(poly2, 2);

@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
-                body.CreateFixture(shape, 1);
+                body.CreateFixture(shape);
             }
 
             for (int i = 0; i < 3; ++i)

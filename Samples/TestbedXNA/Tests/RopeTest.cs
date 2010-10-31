@@ -130,14 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Press (j) to toggle the rope joint.");
             TextLine += 15;
 
-            if (_useRopeJoint)
-            {
-                DebugView.DrawString(50, TextLine, "Rope ON");
-            }
-            else
-            {
-                DebugView.DrawString(50, TextLine, "Rope OFF");
-            }
+            DebugView.DrawString(50, TextLine, _useRopeJoint ? "Rope ON" : "Rope OFF");
             TextLine += 15;
 
             base.Update(settings, gameTime);
