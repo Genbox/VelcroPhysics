@@ -31,6 +31,8 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
+//TODO: Syncronize with Box2D
+
 namespace FarseerPhysics.TestBed.Tests
 {
     public class CantileverTest : Test

@@ -33,6 +33,8 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
+//TODO: Copy this test to a new test and make this the original revolute test from Box2D
+
 namespace FarseerPhysics.TestBed.Tests
 {
     public class RevoluteTest : Test
