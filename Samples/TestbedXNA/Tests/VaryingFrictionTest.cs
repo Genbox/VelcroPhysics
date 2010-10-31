@@ -30,8 +30,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class VaryingFrictionTest : Test
@@ -84,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(13f, 1.0f);
+                Vertices box = PolygonTools.CreateRectangle(13f, 0.25f);
                 PolygonShape shape = new PolygonShape(box);
 
                 Body ground = BodyFactory.CreateBody(World);
