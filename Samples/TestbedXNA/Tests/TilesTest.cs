@@ -31,10 +31,12 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
+    /// <summary>
+    /// This stress tests the dynamic tree broad-phase. This also shows that tile
+    /// based collision is _not_ smooth due to Box2D not knowing about adjacency.
+    /// </summary>
     public class TilesTest : Test
     {
         private const int Count = 20;
@@ -63,7 +65,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                const float a = 0.5f;
+                Vertices box = PolygonTools.CreateRectangle(a, a);
                 PolygonShape shape = new PolygonShape(box);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
@@ -96,6 +99,10 @@ namespace FarseerPhysics.TestBed.Tests
             int leafCount = cm.BroadPhase.ProxyCount;
             int minimumNodeCount = 2 * leafCount - 1;
             float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+            DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height, minimumHeight);
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.", height, minimumHeight);
+            TextLine += 15;
             DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
             TextLine += 15;
 
