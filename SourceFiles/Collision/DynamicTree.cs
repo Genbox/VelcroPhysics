@@ -59,9 +59,6 @@ namespace FarseerPhysics.Collision
         }
     }
 
-    //TODO: The new 131 revision DynamicTree is a bit slower on stacking than the old one
-    //Take a look at it and mesure the tradeoffs.
-
     /// <summary>
     /// A dynamic tree arranges data in a binary tree to accelerate
     /// queries such as volume queries and ray casts. Leafs are proxies
@@ -89,7 +86,7 @@ namespace FarseerPhysics.Collision
         private int _root;
 
         /// <summary>
-        /// constructing the tree initializes the node pool.
+        /// Constructing the tree initializes the node pool.
         /// </summary>
         public DynamicTree()
         {
@@ -107,11 +104,13 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
-        /// Create a proxy. Provide a tight fitting AABB and a userData pointer.
-        /// </summary>
+        /// Create a proxy in the tree as a leaf node. We return the index
+        /// of the node instead of a pointer so that we can grow
+        /// the node pool.        
+        /// /// </summary>
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
+        /// <returns>Index of the created proxy</returns>
         public int CreateProxy(ref AABB aabb, object userData)
         {
             int proxyId = AllocateNode();
@@ -153,7 +152,7 @@ namespace FarseerPhysics.Collision
         public bool MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-           
+
             Debug.Assert(_nodes[proxyId].IsLeaf());
 
             if (_nodes[proxyId].AABB.Contains(ref aabb))
@@ -312,8 +311,8 @@ namespace FarseerPhysics.Collision
         /// roughly equal to k * log(n), where k is the number of collisions and n is the
         /// number of proxies in the tree.
         /// </summary>
-        /// <param name="callback">a callback class that is called for each proxy that is hit by the ray.</param>
-        /// <param name="input">the ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
+        /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
+        /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
         public void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
         {
             Vector2 p1 = input.Point1;
