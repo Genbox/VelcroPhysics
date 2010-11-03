@@ -341,7 +341,7 @@ namespace FarseerPhysics.Dynamics
                 Shape.ComputeAABB(out proxy.AABB, ref xf, i);
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
-                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.AABB, proxy);
+                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.AABB, ref proxy);
 
                 Proxies[i] = proxy;
             }

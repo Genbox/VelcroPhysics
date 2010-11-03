@@ -42,13 +42,13 @@ namespace FarseerPhysics.Collision
             {
                 return -1;
             }
-            else if (ProxyIdA == other.ProxyIdA)
+            if (ProxyIdA == other.ProxyIdA)
             {
                 if (ProxyIdB < other.ProxyIdB)
                 {
                     return -1;
                 }
-                else if (ProxyIdB == other.ProxyIdB)
+                if (ProxyIdB == other.ProxyIdB)
                 {
                     return 0;
                 }
@@ -107,7 +107,7 @@ namespace FarseerPhysics.Collision
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
         /// <returns></returns>
-        public int CreateProxy(ref AABB aabb, object userData)
+        public int CreateProxy(ref AABB aabb, ref FixtureProxy userData)
         {
             int proxyId = _tree.CreateProxy(ref aabb, userData);
             ++_proxyCount;
@@ -173,9 +173,8 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="callback">The callback.</param>
-        public void UpdatePairs<T>(BroadphaseDelegate callback)
+        public void UpdatePairs(BroadphaseDelegate callback)
         {
             // Reset pair buffer
             _pairCount = 0;
@@ -242,6 +241,15 @@ namespace FarseerPhysics.Collision
             _tree.Query(callback, ref aabb);
         }
 
+        /// <summary>
+        /// Ray-cast against the proxies in the tree. This relies on the callback
+        /// to perform a exact ray-cast in the case were the proxy contains a shape.
+        /// The callback also performs the any collision filtering. This has performance
+        /// roughly equal to k * log(n), where k is the number of collisions and n is the
+        /// number of proxies in the tree.
+        /// </summary>
+        /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
+        /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
         internal void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
         {
             _tree.RayCast(callback, ref input);
