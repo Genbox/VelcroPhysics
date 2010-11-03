@@ -386,7 +386,8 @@ namespace FarseerPhysics.Dynamics
                 // Note: shapes are synchronized later.
             }
 
-            Report(_contactSolver.Constraints);
+            if (_contactManager.PostSolve != null)
+                Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)
