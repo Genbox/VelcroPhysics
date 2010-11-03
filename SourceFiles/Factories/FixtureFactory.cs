@@ -62,7 +62,12 @@ namespace FarseerPhysics.Factories
             return CreateCircle(world, radius, density, Vector2.Zero);
         }
 
-        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body = null)
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset)
+        {
+            return CreateCircle(world, radius, density, offset, null);
+        }
+
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
