@@ -116,11 +116,9 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                            },
                                                            {
                                                                ContactType.EdgeAndCircle,
-                                                               ContactType.EdgeAndCircle,
-                                                               // 1,1 is invalid (no ContactType.Edge)
+                                                               ContactType.NotSupported, // 1,1 is invalid (no ContactType.Edge)
                                                                ContactType.EdgeAndPolygon,
-                                                               ContactType.EdgeAndPolygon,
-                                                               // 1,3 is invalid (no ContactType.EdgeAndLoop)
+                                                               ContactType.NotSupported, // 1,3 is invalid (no ContactType.EdgeAndLoop)
                                                            },
                                                            {
                                                                ContactType.PolygonAndCircle,
@@ -130,11 +128,9 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                            },
                                                            {
                                                                ContactType.LoopAndCircle,
-                                                               ContactType.LoopAndCircle,
-                                                               // 3,1 is invalid (no ContactType.EdgeAndLoop)
+                                                               ContactType.NotSupported, // 3,1 is invalid (no ContactType.EdgeAndLoop)
                                                                ContactType.LoopAndPolygon,
-                                                               ContactType.LoopAndPolygon,
-                                                               // 3,3 is invalid (no ContactType.Loop)
+                                                               ContactType.NotSupported, // 3,3 is invalid (no ContactType.Loop)
                                                            },
                                                        };
 
@@ -509,6 +505,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         private enum ContactType
         {
+            NotSupported,
             Polygon,
             PolygonAndCircle,
             Circle,
