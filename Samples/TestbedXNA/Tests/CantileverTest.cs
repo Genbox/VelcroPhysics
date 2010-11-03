@@ -31,8 +31,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class CantileverTest : Test
@@ -53,7 +51,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box);
-
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
