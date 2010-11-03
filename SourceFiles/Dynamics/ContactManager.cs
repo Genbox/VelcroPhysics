@@ -179,7 +179,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void FindNewContacts()
         {
-            BroadPhase.UpdatePairs<FixtureProxy>(OnBroadphaseCollision);
+            BroadPhase.UpdatePairs(OnBroadphaseCollision);
         }
 
         internal void Destroy(Contact contact)

@@ -82,7 +82,6 @@ namespace FarseerPhysics.Collision
         /// This is used incrementally traverse the tree for re-balancing.
         /// </summary>
         private int _path;
-
         private int _root;
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace FarseerPhysics.Collision
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
-        public int CreateProxy(ref AABB aabb, object userData)
+        public int CreateProxy<T>(ref AABB aabb, T userData)
         {
             int proxyId = AllocateNode();
 
