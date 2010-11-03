@@ -173,7 +173,7 @@ namespace FarseerPhysics.Dynamics
         /// Change the global gravity vector.
         /// </summary>
         /// <value>The gravity.</value>
-        public Vector2 Gravity { get; set; }
+        public Vector2 Gravity;
 
         /// <summary>
         /// Is the world locked (in the middle of a time step).
@@ -832,7 +832,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-                _island.Solve(ref step, Gravity);
+                _island.Solve(ref step, ref Gravity);
 
                 // Post solve cleanup.
                 for (int i = 0; i < _island.BodyCount; ++i)

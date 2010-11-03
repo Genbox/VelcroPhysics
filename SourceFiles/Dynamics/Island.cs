@@ -48,7 +48,6 @@ namespace FarseerPhysics.Dynamics
         private Contact[] _contacts;
         private int _jointCapacity;
         private Joint[] _joints;
-        private int _positionIterationCount;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -85,7 +84,7 @@ namespace FarseerPhysics.Dynamics
             JointCount = 0;
         }
 
-        public void Solve(ref TimeStep step, Vector2 gravity)
+        public void Solve(ref TimeStep step, ref Vector2 gravity)
         {
             // Integrate velocities and apply damping.
             for (int i = 0; i < BodyCount; ++i)
@@ -97,7 +96,8 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                // Integrate velocities. Only apply gravity if the body wants it.
+                // Integrate velocities.
+                // FPE 3 only - Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
                     b.LinearVelocityInternal += step.dt * (b.InvMass * b.Force);
@@ -132,17 +132,25 @@ namespace FarseerPhysics.Dynamics
                 if (nonStatic)
                 {
                     ++i1;
-                    //b2Swap(_contacts[i1], _contacts[i2]);
-                    Contact temp = _contacts[i1];
-                    _contacts[i1] = _contacts[i2];
-                    _contacts[i2] = temp;
+
+                    //TODO: Only swap if they are not the same? see http://code.google.com/p/box2d/issues/detail?id=162
+                    //if (i1 != i2)
+                    MathUtils.Swap(ref _contacts[i1], ref _contacts[i2]);
+
+                    //Contact temp = _contacts[i1];
+                    //_contacts[i1] = _contacts[i2];
+                    //_contacts[i2] = temp;
                 }
             }
 
             // Initialize velocity constraints.
             _contactSolver.Reset(_contacts, ContactCount, step.dtRatio);
             _contactSolver.InitializeVelocityConstraints();
-            _contactSolver.WarmStart();
+
+            if (Settings.EnableWarmstarting)
+            {
+                _contactSolver.WarmStart();
+            }
 
             for (int i = 0; i < JointCount; ++i)
             {
@@ -275,17 +283,16 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio);
 
             // Solve position constraints.
-            const float k_toiBaumgarte = 0.75f;
-
-            for (int i = 0; i < Settings.PositionIterations; ++i)
+            const float kTOIBaumgarte = 0.75f;
+            for (int i = 0; i < Settings.TOIPositionIterations; ++i)
             {
-                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(k_toiBaumgarte, bodyA, bodyB);
+                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(kTOIBaumgarte, bodyA, bodyB);
                 if (contactsOkay)
                 {
                     break;
                 }
 
-                if (i == 5 - 1)
+                if (i == Settings.TOIPositionIterations - 1)
                 {
                     i += 0;
                 }
@@ -337,7 +344,7 @@ namespace FarseerPhysics.Dynamics
             _contactSolver.InitializeVelocityConstraints();
 
             // Solve velocity constraints.
-            for (int i = 0; i < Settings.VelocityIterations; ++i)
+            for (int i = 0; i < Settings.TOIVelocityIterations; ++i)
             {
                 _contactSolver.SolveVelocityConstraints();
             }

@@ -57,6 +57,10 @@ namespace FarseerPhysics.Common
         /// </summary>
         public static bool ContinuousPhysics = true;
 
+        public const int TOIVelocityIterations = 8;
+
+        public const int TOIPositionIterations = 20;
+
         /// <summary>
         /// Enable/Disable warmstarting
         /// </summary>

@@ -33,8 +33,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class ApplyForceTest : Test
@@ -106,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.LinearDamping = 0.8f;
                 _body.SleepingAllowed = true;
 
-                _body.CreateFixture(poly1, 2.0f);
+                _body.CreateFixture(poly1, 4.0f);
                 _body.CreateFixture(poly2, 2.0f);
             }
 
@@ -138,6 +136,14 @@ namespace FarseerPhysics.TestBed.Tests
                     World.AddJoint(jd);
                 }
             }
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            DebugView.DrawString(50, TextLine, "Note: The left side of the ship has a different density than the right side of the ship");
+            TextLine += 15;
+
+            base.Update(settings, gameTime);
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
