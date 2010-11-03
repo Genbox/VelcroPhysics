@@ -563,9 +563,23 @@ namespace FarseerPhysics.Dynamics
         /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <param name="shape">The shape.</param>
+
+        /// <returns></returns>
+        public Fixture CreateFixture(Shape shape)
+        {
+            return CreateFixture(shape, 1);
+        }
+
+        /// <summary>
+        /// Creates a fixture and attach it to this body.
+        /// If the density is non-zero, this function automatically updates the mass of the body.
+        /// Contacts are not created until the next time step.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="shape">The shape.</param>
         /// <param name="density">The density.</param>
         /// <returns></returns>
-        public Fixture CreateFixture(Shape shape, float density = 1)
+        public Fixture CreateFixture(Shape shape, float density)
         {
             Debug.Assert(World.IsLocked == false);
             if (World.IsLocked)
