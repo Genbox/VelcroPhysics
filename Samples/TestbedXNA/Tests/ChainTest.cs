@@ -32,8 +32,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class ChainTest : Test
@@ -45,15 +43,23 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Chain start / end
             Path path = new Path();
-            path.Add(new Vector2(0, 20));
-            path.Add(new Vector2(30, 20));
+            path.Add(new Vector2(0, 25));
+            path.Add(new Vector2(40, 25));
 
             //A single chainlink
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f));
 
             //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 20, 1);
+            List<Body> chainLinks = PathManager.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 30, 20);
 
+            foreach (Body chainLink in chainLinks)
+            {
+                foreach (Fixture f in chainLink.FixtureList)
+                {
+                    f.Friction = 0.2f;
+                }
+            }
+            
             //Fix the first chainlink to the world
             FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
             World.AddJoint(fixedJoint);

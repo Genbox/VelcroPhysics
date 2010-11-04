@@ -76,6 +76,7 @@ namespace FarseerPhysics.Factories
         /// <param name="shapes">The shapes.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
+        /// <param name="density">The density you would like to use on each fixture</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
                                                                 BodyType type, int copies, float density)

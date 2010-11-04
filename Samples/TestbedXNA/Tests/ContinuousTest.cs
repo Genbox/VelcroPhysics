@@ -31,8 +31,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class ContinuousTest : Test
@@ -51,8 +49,10 @@ namespace FarseerPhysics.TestBed.Tests
             _box = FixtureFactory.CreateRectangle(World, 4, 0.2f, 1);
             _box.Body.Position = new Vector2(0, 20);
             _box.Body.BodyType = BodyType.Dynamic;
+            //_box.Body.Rotation = 0.1f;
 
             //_angularVelocity = 46.661274f;
+            _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
             _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
             _box.Body.AngularVelocity = _angularVelocity;
         }
@@ -67,6 +67,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            if (StepCount == 12)
+            {
+                StepCount += 0;
+            }
+
             base.Update(settings, gameTime);
 
             if (Distance.GJKCalls > 0)
@@ -92,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (StepCount % 60 == 0)
             {
-                Launch();
+                //Launch();
             }
         }
 
