@@ -30,8 +30,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class DynamicTreeTest : Test
@@ -52,6 +50,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             _worldExtent = 15.0f;
             _proxyExtent = 0.5f;
+
+            Rand.Random = new Random(888);
 
             for (int i = 0; i < ActorCount; ++i)
             {
