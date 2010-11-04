@@ -28,6 +28,7 @@ namespace FarseerPhysics.DebugViewXNA
         private static SpriteBatch _batch;
         private static SpriteFont _font;
         private static GraphicsDevice _device;
+        private static Vector2[] temp_vertices;
 
         private static List<StringData> _stringData;
         private static BasicEffect _effect;
@@ -46,6 +47,8 @@ namespace FarseerPhysics.DebugViewXNA
         {
             _vertsLines = new VertexPositionColor[1000000];
             _vertsFill = new VertexPositionColor[1000000];
+
+            temp_vertices = new Vector2[Settings.MaxPolygonVertices];
 
             world.ContactManager.PreSolve += PreSolve;
 
@@ -386,14 +389,14 @@ namespace FarseerPhysics.DebugViewXNA
                         PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
+                        //Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
+                            temp_vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        DrawSolidPolygon(vertices, vertexCount, color);
+                        DrawSolidPolygon(temp_vertices, vertexCount, color);
                     }
                     break;
 
