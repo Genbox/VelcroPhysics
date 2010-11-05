@@ -90,7 +90,7 @@
       <Project>{786DC838-D746-4107-93FF-19A902A78CFC}</Project>
       <Name>Farseer Physics Silverlight</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DebugViewSilverlight\DebugView Silverlight.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugViewSilverlight\DebugView Silverlight.csproj">
       <Project>{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}</Project>
       <Name>DebugView Silverlight</Name>
     </ProjectReference>

@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase Silverlight", "Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamples Silverlight", "SimpleSamplesSilverlight\SimpleSamples Silverlight.csproj", "{77CA64E6-113F-4AB1-B8CF-B213343BD0DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView Silverlight", "DebugViewSilverlight\DebugView Silverlight.csproj", "{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView Silverlight", "..\DebugViews\DebugViewSilverlight\DebugView Silverlight.csproj", "{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics WP7", "..\Branches\WP7\Farseer Physics WP7.csproj", "{FC7B15BD-254A-48F3-94C7-886686538876}"
 EndProject
@@ -86,12 +86,12 @@ Global
 		SccProjectUniqueName15 = SimpleSamplesSilverlight\\SimpleSamples\u0020Silverlight.csproj
 		SccProjectName15 = SimpleSamplesSilverlight
 		SccLocalPath15 = SimpleSamplesSilverlight
-		SccProjectUniqueName16 = DebugViewSilverlight\\DebugView\u0020Silverlight.csproj
-		SccProjectName16 = DebugViewSilverlight
-		SccLocalPath16 = DebugViewSilverlight
-		SccProjectUniqueName17 = ..\\Branches\\WP7\\Farseer\u0020Physics\u0020WP7.csproj
-		SccProjectName17 = ../Branches/WP7
-		SccLocalPath17 = ..\\Branches\\WP7
+		SccProjectUniqueName16 = ..\\Branches\\WP7\\Farseer\u0020Physics\u0020WP7.csproj
+		SccProjectName16 = ../Branches/WP7
+		SccLocalPath16 = ..\\Branches\\WP7
+		SccProjectUniqueName17 = ..\\DebugViews\\DebugViewSilverlight\\DebugView\u0020Silverlight.csproj
+		SccProjectName17 = ../DebugViews/DebugViewSilverlight
+		SccLocalPath17 = ..\\DebugViews\\DebugViewSilverlight
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
