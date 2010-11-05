@@ -34,7 +34,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    //TODO: Upgrade
+    /// <summary>
+    /// A motor driven slider crank with joint friction.
+    /// </summary>
     public class SliderCrankTest : Test
     {
         private RevoluteJoint _joint1;

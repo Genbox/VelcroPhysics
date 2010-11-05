@@ -32,8 +32,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     /// <summary>
@@ -47,9 +45,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PinballTest()
         {
+            // Ground body
             Body ground;
             {
                 ground = BodyFactory.CreateBody(World);
+
                 Vertices vertices = new Vertices(5);
                 vertices.Add(new Vector2(0.0f, -2.0f));
                 vertices.Add(new Vector2(8.0f, 6.0f));
@@ -57,55 +57,46 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
 
-                PolygonShape shape = new PolygonShape();
-                for (int i = 0; i < vertices.Count; i++)
-                {
-                    Vertices edge = PolygonTools.CreateEdge(vertices[i % 5], vertices[(i + 1) % 5]);
-                    shape.Set(edge);
-                    Fixture fixture = ground.CreateFixture(shape, 0);
-                    fixture.Restitution = 0.4f;
-                }
+                LoopShape loop = new LoopShape(vertices);
+                ground.CreateFixture(loop, 0);
             }
 
+            // Flippers
             {
-                var leftFlipper = BodyFactory.CreateBody(World, new Vector2(-2.0f, 0.8f));
+                Vector2 p1 = new Vector2(-2.0f, 0f);
+                Vector2 p2 = new Vector2(2.0f, 0f);
+                
+                Body leftFlipper = BodyFactory.CreateBody(World, p1);
                 leftFlipper.BodyType = BodyType.Dynamic;
-
-                var rightFlipper = BodyFactory.CreateBody(World, new Vector2(2.0f, 0.8f));
+                Body rightFlipper = BodyFactory.CreateBody(World, p2);
                 rightFlipper.BodyType = BodyType.Dynamic;
 
-                var box = new PolygonShape();
+                PolygonShape box = new PolygonShape();
                 box.SetAsBox(1.75f, 0.1f);
 
                 leftFlipper.CreateFixture(box);
                 rightFlipper.CreateFixture(box);
 
-                _leftJoint = new RevoluteJoint(ground, leftFlipper, Vector2.Zero, Vector2.Zero);
-                _leftJoint.LocalAnchorB = -Vector2.UnitX;
-                _leftJoint.LocalAnchorA = ground.GetLocalPoint(leftFlipper.GetWorldPoint(_leftJoint.LocalAnchorB));
+                _leftJoint = new RevoluteJoint(ground, leftFlipper, p1, Vector2.Zero);
                 _leftJoint.MaxMotorTorque = 1000.0f;
                 _leftJoint.LimitEnabled = true;
                 _leftJoint.MotorEnabled = true;
                 _leftJoint.MotorSpeed = 0.0f;
-
                 _leftJoint.LowerLimit = -30.0f * Settings.Pi / 180.0f;
                 _leftJoint.UpperLimit = 5.0f * Settings.Pi / 180.0f;
                 World.AddJoint(_leftJoint);
 
-                _rightJoint = new RevoluteJoint(ground, rightFlipper, Vector2.Zero, Vector2.Zero);
-                _rightJoint.LocalAnchorB = Vector2.UnitX;
-                _rightJoint.LocalAnchorA = ground.GetLocalPoint(rightFlipper.GetWorldPoint(_rightJoint.LocalAnchorB));
-
+                _rightJoint = new RevoluteJoint(ground, rightFlipper, p2, Vector2.Zero);
                 _rightJoint.MaxMotorTorque = 1000.0f;
                 _rightJoint.LimitEnabled = true;
                 _rightJoint.MotorEnabled = true;
                 _rightJoint.MotorSpeed = 0.0f;
-
                 _rightJoint.LowerLimit = -5.0f * Settings.Pi / 180.0f;
                 _rightJoint.UpperLimit = 30.0f * Settings.Pi / 180.0f;
                 World.AddJoint(_rightJoint);
             }
 
+            // Circle character
             {
                 _ball = BodyFactory.CreateBody(World, new Vector2(1.0f, 15.0f));
                 _ball.BodyType = BodyType.Dynamic;
