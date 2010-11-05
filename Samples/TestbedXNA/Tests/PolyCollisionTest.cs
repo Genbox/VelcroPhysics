@@ -30,8 +30,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class PolyCollisionTest : Test
@@ -47,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PolyCollisionTest()
         {
             {
-                _polygonA.SetAsEdge(new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
+                _polygonA.SetAsBox(0.2f, 0.4f);
                 _transformA.Set(Vector2.Zero, 0.0f);
             }
 
@@ -99,27 +97,27 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            if (keyboardManager.IsKeyDown(Keys.A))
             {
                 _positionB.X -= 0.1f;
             }
-            if (keyboardManager.IsNewKeyPress(Keys.D))
+            if (keyboardManager.IsKeyDown(Keys.D))
             {
                 _positionB.X += 0.1f;
             }
-            if (keyboardManager.IsNewKeyPress(Keys.S))
+            if (keyboardManager.IsKeyDown(Keys.S))
             {
                 _positionB.Y -= 0.1f;
             }
-            if (keyboardManager.IsNewKeyPress(Keys.W))
+            if (keyboardManager.IsKeyDown(Keys.W))
             {
                 _positionB.Y += 0.1f;
             }
-            if (keyboardManager.IsNewKeyPress(Keys.Q))
+            if (keyboardManager.IsKeyDown(Keys.Q))
             {
                 _angleB += 0.1f * Settings.Pi;
             }
-            if (keyboardManager.IsNewKeyPress(Keys.E))
+            if (keyboardManager.IsKeyDown(Keys.E))
             {
                 _angleB -= 0.1f * Settings.Pi;
             }
