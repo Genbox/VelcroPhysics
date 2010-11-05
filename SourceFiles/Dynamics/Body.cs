@@ -563,8 +563,7 @@ namespace FarseerPhysics.Dynamics
         /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <param name="shape">The shape.</param>
-
-        /// <returns></returns>
+        /// <returns>A new fixture with the provided shape.</returns>
         public Fixture CreateFixture(Shape shape)
         {
             if (shape.Density > 0)
