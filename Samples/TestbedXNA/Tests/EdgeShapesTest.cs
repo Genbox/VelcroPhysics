@@ -32,8 +32,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class EdgeShapes : Test
@@ -55,11 +53,11 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 float x1 = -20.0f;
-                float y1 = 2.0f * (float) Math.Cos(x1 / 10.0f * (float) Math.PI);
+                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * (float)Math.PI);
                 for (int i = 0; i < 80; ++i)
                 {
                     float x2 = x1 + 0.5f;
-                    float y2 = 2.0f * (float) Math.Cos(x2 / 10.0f * (float) Math.PI);
+                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * (float)Math.PI);
 
                     PolygonShape shape = new PolygonShape();
                     shape.SetAsEdge(new Vector2(x1, y1), new Vector2(x2, y2));
@@ -90,8 +88,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float) Math.Sqrt(2.0f));
-                float s = (float) Math.Sqrt(2.0f) * b;
+                float b = w / (2.0f + (float)Math.Sqrt(2.0f));
+                float s = (float)Math.Sqrt(2.0f) * b;
 
                 Vertices vertices = new Vertices(8);
                 vertices.Add(new Vector2(0.5f * s, 0.0f));
@@ -136,7 +134,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
             }
             _bodies[_bodyIndex].Position = new Vector2(x, y);
-            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float) Math.PI, (float) Math.PI);
+            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float)Math.PI, (float)Math.PI);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 
             if (index < 4)
@@ -205,8 +203,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float l = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(l * (float) Math.Cos(_angle), -l * Math.Abs((float) Math.Sin(_angle)));
+            Vector2 d = new Vector2(l * (float)Math.Cos(_angle), -l * Math.Abs((float)Math.Sin(_angle)));
             Vector2 point2 = point1 + d;
+
+            _fixture = null;
 
             World.RayCast((fixture, point, normal, fraction) =>
                               {
