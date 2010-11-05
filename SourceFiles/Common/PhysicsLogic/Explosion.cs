@@ -91,7 +91,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             _world.QueryAABB(
                 fixture =>
                 {
-                    shapes[shapeCount++] = fixture.Fixture;
+                    shapes[shapeCount++] = fixture;
 
                     // Continue the query.
                     return true;

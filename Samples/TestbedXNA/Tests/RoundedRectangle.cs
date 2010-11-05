@@ -30,15 +30,13 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class PolygonShapesTest : Test
+    public class RoundedRectangle : Test
     {
         private int _segments = 3;
 
-        private PolygonShapesTest()
+        private RoundedRectangle()
         {
             //Ground
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
@@ -92,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new PolygonShapesTest();
+            return new RoundedRectangle();
         }
     }
 }

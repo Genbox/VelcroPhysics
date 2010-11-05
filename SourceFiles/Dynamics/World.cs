@@ -96,7 +96,7 @@ namespace FarseerPhysics.Dynamics
 
         private float _invDt0;
         private Island _island = new Island();
-        private Func<FixtureProxy, bool> _queryAABBCallback;
+        private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private RayCastCallback _rayCastCallback;
         private RayCastCallbackInternal _rayCastCallbackWrapper;
@@ -626,7 +626,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <param name="callback">A user implemented callback class.</param>
         /// <param name="aabb">The aabb query box.</param>
-        public void QueryAABB(Func<FixtureProxy, bool> callback, ref AABB aabb)
+        public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
             ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
@@ -636,7 +636,7 @@ namespace FarseerPhysics.Dynamics
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
             FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
-            return _queryAABBCallback(proxy);
+            return _queryAABBCallback(proxy.Fixture);
         }
 
         /// <summary>
