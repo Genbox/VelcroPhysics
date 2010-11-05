@@ -109,7 +109,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -567,6 +567,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public Fixture CreateFixture(Shape shape)
         {
+            if (shape.Density > 0)
+                return CreateFixture(shape, shape.Density);
             return CreateFixture(shape, 1);
         }
 

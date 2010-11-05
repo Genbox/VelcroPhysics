@@ -25,10 +25,9 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
+    /// <summary>
     /// This test shows how a rope joint can be used to stabilize a chain of
     /// bodies with a heavy payload. Notice that the rope joint just prevents
     /// excessive stretching and has no other effect.
@@ -37,6 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
     /// densities, time step, and iterations to see how they affect stability.
     /// This test also shows how to use contact filtering. Filtering is configured
     /// so that the payload does not collide with the chain.
+    /// </summary>
     public class RopeTest : Test
     {
         private const int Count = 10;
@@ -65,18 +65,15 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + 1.0f * i, y);
 
-                    Fixture fixture;
-
                     if (i == Count - 1)
                     {
                         Vertices box = PolygonTools.CreateRectangle(1.5f, 1.5f);
                         PolygonShape shape = new PolygonShape(box);
                         shape.Density = 100;
-                        fixture = body.CreateFixture(shape);
+                        Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;
-                        //fixture.CollisionCategories = CollisionCategory.Cat2;
-                        //fixture.CollidesWith = (CollisionCategory)(0xFFFF);
-                        //fixture.CollisionGroup = 1;
+                        fixture.CollisionCategories = CollisionCategory.Cat2;
+                        fixture.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat2;
                         body.Position = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
@@ -85,16 +82,15 @@ namespace FarseerPhysics.TestBed.Tests
                         Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
                         PolygonShape shape = new PolygonShape(box);
                         shape.Density = 20;
-                        fixture = body.CreateFixture(shape);
+                        Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;
-                        //fixture.CollisionCategories = CollisionCategory.Cat1 | CollisionCategory.Cat2;
-                        //fixture.CollidesWith = (CollisionCategory)(0xFFFF & ~0x0002);
-                        //fixture.CollisionGroup = 1;
+                        fixture.CollisionCategories = CollisionCategory.Cat1;
+                        fixture.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat2;
                     }
 
                     Vector2 anchor = new Vector2(i, y);
                     RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor), body.GetLocalPoint(ref anchor));
-                    //jd.CollideConnected = true;
+                    jd.CollideConnected = false;
 
                     World.AddJoint(jd);
 
@@ -112,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (keyboardManager.IsKeyDown(Keys.J))
+            if (keyboardManager.IsNewKeyPress(Keys.J))
             {
                 if (_useRopeJoint)
                 {

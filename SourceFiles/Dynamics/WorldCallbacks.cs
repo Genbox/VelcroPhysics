@@ -77,18 +77,22 @@ namespace FarseerPhysics.Dynamics
 
         private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
         {
-            if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) && fixtureA.CollisionGroup != 0 &&
-                fixtureB.CollisionGroup != 0)
-                return false;
+            if (fixtureA.CollisionGroup == fixtureB.CollisionGroup && fixtureA.CollisionGroup != 0)
+            {
+                return fixtureA.CollisionGroup > 0;
+            }
 
-            if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) == CollisionCategory.None) &
-                ((fixtureB.CollisionCategories & fixtureA.CollidesWith) == CollisionCategory.None))
-                return false;
+            bool collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 && (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
 
-            if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
-                return false;
+            if (collide)
+            {
+                if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
+                {
+                    return false;
+                }
+            }
 
-            return true;
+            return collide;
         }
     }
 

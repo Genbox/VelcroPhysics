@@ -366,11 +366,7 @@ namespace FarseerPhysics.Dynamics
                     joint.BodyB.JointList.Prev = joint.EdgeB;
 
                 joint.BodyB.JointList = joint.EdgeB;
-            }
 
-            // WIP David
-            if (!joint.IsFixedType())
-            {
                 Body bodyA = joint.BodyA;
                 Body bodyB = joint.BodyB;
 
