@@ -31,8 +31,6 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-//TODO: Syncronize with Box2D
-
 namespace FarseerPhysics.TestBed.Tests
 {
     public class VerticalStackTest : Test
@@ -47,6 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //Ground
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f), 0);
 
             float[] xs = new[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 
@@ -68,6 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
+                   
                     _bodies[n] = body;
 
                     Fixture fixture = body.CreateFixture(shape);
