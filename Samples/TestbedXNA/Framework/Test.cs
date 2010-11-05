@@ -203,13 +203,13 @@ namespace FarseerPhysics.TestBed.Framework
             World.QueryAABB(
                 fixture =>
                     {
-                        Body body = fixture.Fixture.Body;
+                        Body body = fixture.Body;
                         if (body.BodyType == BodyType.Dynamic)
                         {
-                            bool inside = fixture.Fixture.TestPoint(ref p);
+                            bool inside = fixture.TestPoint(ref p);
                             if (inside)
                             {
-                                myFixture = fixture.Fixture;
+                                myFixture = fixture;
 
                                 // We are done, terminate the query.
                                 return false;

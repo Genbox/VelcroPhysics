@@ -355,19 +355,19 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
             aabb.LowerBound = p - d;
             aabb.UpperBound = p + d;
 
-            Fixture _fixture = null;
+            Fixture savedFixture = null;
 
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
                 {
-                    Body body = fixture.Fixture.Body;
+                    Body body = fixture.Body;
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        bool inside = fixture.Fixture.TestPoint(ref p);
+                        bool inside = fixture.TestPoint(ref p);
                         if (inside)
                         {
-                            _fixture = fixture.Fixture;
+                            savedFixture = fixture;
 
                             // We are done, terminate the query.
                             return false;
@@ -378,9 +378,9 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
                     return true;
                 }, ref aabb);
 
-            if (_fixture != null)
+            if (savedFixture != null)
             {
-                Body body = _fixture.Body;
+                Body body = savedFixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
                 _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
                 World.AddJoint(_fixedMouseJoint);

@@ -36,12 +36,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    /// This tests stacking. It also shows how to use b2World::Query
-    /// and b2TestOverlap.
+    /// <summary>
+    /// This tests stacking. It also shows how to use World.Query()
+    /// and AABB.TestOverlap().
     /// 
-    /// This callback is called by b2World::QueryAABB. We find all the fixtures
-    /// that overlap an AABB. Of those, we use b2TestOverlap to determine which fixtures
+    /// This callback is called by World.QueryAABB(). We find all the fixtures
+    /// that overlap an AABB. Of those, we use AABB.TestOverlap() to determine which fixtures
     /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
+    /// </summary>
     public class PolyShapesCallback
     {
         private const int MaxCount = 4;
@@ -61,18 +63,18 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) fixture.Shape;
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
 
-                        DebugDraw.DrawCircle(center, radius, color);
+                        DebugDraw.DrawSolidCircle(center, radius, Vector2.Zero, color);
                     }
                     break;
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape) fixture.Shape;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
                         Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -82,18 +84,19 @@ namespace FarseerPhysics.TestBed.Tests
                             vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        DebugDraw.DrawPolygon(vertices, vertexCount, color);
+                        DebugDraw.DrawSolidPolygon(vertices, vertexCount, color);
                     }
                     break;
             }
         }
 
+        /// <summary>
         /// Called for each fixture found in the query AABB.
-        /// @return false to terminate the query.
-        public bool ReportFixture(FixtureProxy fixtureProxy)
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
+        /// <returns>false to terminate the query.</returns>
+        public bool ReportFixture(Fixture fixture)
         {
-            Fixture fixture = fixtureProxy.Fixture;
-
             if (_count == MaxCount)
             {
                 return false;
@@ -154,8 +157,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float) Math.Sqrt(2.0));
-                float s = (float) Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float)Math.Sqrt(2.0));
+                float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices8 = new Vertices(8);
                 vertices8.Add(new Vector2(0.5f * s, 0.0f));
@@ -294,6 +297,7 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Press d to destroy a body");
             TextLine += 15;
+
         }
 
         internal static Test Create()

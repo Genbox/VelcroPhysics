@@ -134,7 +134,7 @@
     <Compile Include="Tests\PathTest.cs" />
     <Compile Include="Tests\PinballTest.cs" />
     <Compile Include="Tests\PolyCollisionTest.cs" />
-    <Compile Include="Tests\PolygonShapesTest.cs" />
+    <Compile Include="Tests\RoundedRectangle.cs" />
     <Compile Include="Tests\PolyShapesTest.cs" />
     <Compile Include="Tests\PrismaticTest.cs" />
     <Compile Include="Tests\PulleysTest.cs" />
