@@ -78,7 +78,7 @@ namespace FarseerPhysics.Collision
         private int _proxyCount;
         private Func<int, bool> _queryCallback;
         private int _queryProxyId;
-        private DynamicTree _tree = new DynamicTree();
+        private DynamicTree<FixtureProxy> _tree = new DynamicTree<FixtureProxy>();
 
         public BroadPhase()
         {
@@ -148,12 +148,11 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Get user data from a proxy. Returns null if the id is invalid.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns></returns>
-        public T GetUserData<T>(int proxyId)
+        public FixtureProxy GetUserData(int proxyId)
         {
-            return _tree.GetUserData<T>(proxyId);
+            return _tree.GetUserData(proxyId);
         }
 
         /// <summary>
@@ -208,8 +207,8 @@ namespace FarseerPhysics.Collision
             while (i < _pairCount)
             {
                 Pair primaryPair = _pairBuffer[i];
-                FixtureProxy userDataA = _tree.GetUserData<FixtureProxy>(primaryPair.ProxyIdA);
-                FixtureProxy userDataB = _tree.GetUserData<FixtureProxy>(primaryPair.ProxyIdB);
+                FixtureProxy userDataA = _tree.GetUserData(primaryPair.ProxyIdA);
+                FixtureProxy userDataB = _tree.GetUserData(primaryPair.ProxyIdB);
 
                 callback(ref userDataA, ref userDataB);
                 ++i;

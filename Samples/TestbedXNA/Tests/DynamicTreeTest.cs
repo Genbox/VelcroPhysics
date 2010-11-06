@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
         private int _stepCount;
-        private DynamicTree _tree = new DynamicTree();
+        private DynamicTree<Actor> _tree = new DynamicTree<Actor>();
         private float _worldExtent;
 
         private DynamicTreeTest()
@@ -175,14 +175,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool QueryCallback(int proxyid)
         {
-            Actor actor = _tree.GetUserData<Actor>(proxyid);
+            Actor actor = _tree.GetUserData(proxyid);
             actor.Overlap = AABB.TestOverlap(ref _queryAABB, ref actor.AABB);
             return true;
         }
 
         private float RayCastCallback(ref RayCastInput input, int proxyid)
         {
-            Actor actor = _tree.GetUserData<Actor>(proxyid);
+            Actor actor = _tree.GetUserData(proxyid);
 
             RayCastOutput output;
             bool hit = actor.AABB.RayCast(out output, ref input);
