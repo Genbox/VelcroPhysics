@@ -34,8 +34,8 @@ namespace FarseerPhysics.TestBed
 {
     public class KeyboardManager
     {
-        internal KeyboardState _oldKeyboardState;
         internal KeyboardState _newKeyboardState;
+        internal KeyboardState _oldKeyboardState;
 
         public bool IsNewKeyPress(Keys key)
         {
@@ -68,6 +68,7 @@ namespace FarseerPhysics.TestBed
         private TestEntry _entry;
         private GraphicsDeviceManager _graphics;
         private int _height = 480;
+        private KeyboardManager _keyboardManager = new KeyboardManager();
         private Vector2 _lower;
         private GamePadState _oldGamePad;
         private MouseState _oldMouseState;
@@ -83,7 +84,6 @@ namespace FarseerPhysics.TestBed
         private int _viewportHeight;
         private int _viewportWidth;
         private int _width = 640;
-        private KeyboardManager _keyboardManager = new KeyboardManager();
 
         public Game1()
         {

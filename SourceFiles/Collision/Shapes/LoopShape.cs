@@ -60,6 +60,11 @@ namespace FarseerPhysics.Collision.Shapes
                 Vertices = new Vertices(vertices);
         }
 
+        public override int ChildCount
+        {
+            get { return Vertices.Count; }
+        }
+
         public override Shape Clone()
         {
             LoopShape loop = new LoopShape();
@@ -68,11 +73,6 @@ namespace FarseerPhysics.Collision.Shapes
             loop._density = _density;
             loop.MassData = MassData;
             return loop;
-        }
-
-        public override int ChildCount
-        {
-            get { return Vertices.Count; }
         }
 
         /// <summary>

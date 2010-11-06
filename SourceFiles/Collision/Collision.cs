@@ -345,20 +345,6 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
-        /// Verify that the bounds are sorted.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsValid()
-        {
-            Vector2 d = UpperBound - LowerBound;
-            bool valid = d.X >= 0.0f && d.Y >= 0.0f;
-            valid = valid && LowerBound.IsValid() && UpperBound.IsValid();
-            return valid;
-        }
-
-        /// <summary>
         /// Get the center of the AABB.
         /// </summary>
         /// <value></value>
@@ -388,6 +374,37 @@ namespace FarseerPhysics.Collision
                 float wy = UpperBound.Y - LowerBound.Y;
                 return 2.0f * (wx + wy);
             }
+        }
+
+        /// <summary>
+        /// Gets the vertices of the AABB.
+        /// </summary>
+        /// <value>The corners of the AABB</value>
+        public Vertices Vertices
+        {
+            get
+            {
+                Vertices vertices = new Vertices();
+                vertices.Add(LowerBound);
+                vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
+                vertices.Add(UpperBound);
+                vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
+                return vertices;
+            }
+        }
+
+        /// <summary>
+        /// Verify that the bounds are sorted.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValid()
+        {
+            Vector2 d = UpperBound - LowerBound;
+            bool valid = d.X >= 0.0f && d.Y >= 0.0f;
+            valid = valid && LowerBound.IsValid() && UpperBound.IsValid();
+            return valid;
         }
 
         /// <summary>
@@ -562,38 +579,10 @@ namespace FarseerPhysics.Collision
             output.Normal = normal;
             return true;
         }
-
-        /// <summary>
-        /// Gets the vertices of the AABB.
-        /// </summary>
-        /// <value>The corners of the AABB</value>
-        public Vertices Vertices
-        {
-            get
-            {
-                Vertices vertices = new Vertices();
-                vertices.Add(LowerBound);
-                vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
-                vertices.Add(UpperBound);
-                vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
-                return vertices;
-            }
-        }
     }
 
     public static class Collision
     {
-        #region EPAxisType enum
-
-        private enum EPAxisType
-        {
-            Unknown,
-            EdgeA,
-            EdgeB,
-        }
-
-        #endregion
-
         private static PolygonShape s_polygonA = new PolygonShape();
         private static PolygonShape s_polygonB = new PolygonShape();
 
@@ -1729,6 +1718,17 @@ namespace FarseerPhysics.Collision
             public int Index;
             public float Separation;
             public EPAxisType Type;
+        }
+
+        #endregion
+
+        #region Nested type: EPAxisType
+
+        private enum EPAxisType
+        {
+            Unknown,
+            EdgeA,
+            EdgeB,
         }
 
         #endregion

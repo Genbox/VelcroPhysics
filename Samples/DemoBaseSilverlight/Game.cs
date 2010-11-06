@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using FarseerPhysics.Dynamics;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseSilverlight
@@ -19,19 +12,9 @@ namespace FarseerPhysics.DemoBaseSilverlight
     /// </summary>
     public class Game
     {
-        public bool IsActive { get; set; }
-        public bool IsFixedTimeStep { get; set; }
-        public TimeSpan TargetElapsedTime { get; set; }
-        public Canvas DrawingCanvas { get; set; }
-        public Canvas DebugCanvas { get; set; }
-        public TextBlock TxtDebug { get; set; }
-        public UserControl UserControl { get; set; }
-        public World World { get; set; }
-        public List<DrawableGameComponent> Components { get; private set; }
-
-        private TimeSpan _minimumGameLoopDuration = new TimeSpan(0, 0, 0, 0, 1);
         private Storyboard _gameLoop;
         private GameTime _gameTime;
+        private TimeSpan _minimumGameLoopDuration = new TimeSpan(0, 0, 0, 0, 1);
 
         public Game(UserControl userControl, Canvas drawingCanvas, Canvas debugCanvas, TextBlock txtDebug)
         {
@@ -51,14 +34,24 @@ namespace FarseerPhysics.DemoBaseSilverlight
             DrawingCanvas = drawingCanvas;
             DebugCanvas = debugCanvas;
             TxtDebug = txtDebug;
-            this.UserControl = userControl;
+            UserControl = userControl;
 
             //Setup GameLoop
             _gameLoop = new Storyboard();
-            _gameLoop.Completed += new EventHandler(GameLoop);
+            _gameLoop.Completed += GameLoop;
             _gameLoop.Duration = TargetElapsedTime;
             DrawingCanvas.Resources.Add("gameloop", _gameLoop);
         }
+
+        public bool IsActive { get; set; }
+        public bool IsFixedTimeStep { get; set; }
+        public TimeSpan TargetElapsedTime { get; set; }
+        public Canvas DrawingCanvas { get; set; }
+        public Canvas DebugCanvas { get; set; }
+        public TextBlock TxtDebug { get; set; }
+        public UserControl UserControl { get; set; }
+        public World World { get; set; }
+        public List<DrawableGameComponent> Components { get; private set; }
 
         /// <summary>
         /// This is the method that starts the game engine

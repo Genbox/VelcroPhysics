@@ -10,8 +10,8 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 {
     internal class Demo3Screen : GameScreen, IDemoScreen
     {
-        private Fixture[] _obstacles = new Fixture[5];
         private Agent _agent;
+        private Fixture[] _obstacles = new Fixture[5];
 
         #region IDemoScreen Members
 

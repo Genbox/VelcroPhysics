@@ -51,7 +51,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Body BodyA;
         public Body BodyB;
         public float Friction;
-        public float Restitution;
         public Mat22 K;
         public Vector2 LocalNormal;
         public Vector2 LocalPoint;
@@ -62,6 +61,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public FixedArray2<ContactConstraintPoint> Points;
         public float RadiusA;
         public float RadiusB;
+        public float Restitution;
         public ManifoldType Type;
 
         public ContactConstraint()

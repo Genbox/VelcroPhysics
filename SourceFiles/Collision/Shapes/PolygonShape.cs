@@ -58,6 +58,17 @@ namespace FarseerPhysics.Collision.Shapes
             Radius = Settings.PolygonRadius;
         }
 
+        public override int ChildCount
+        {
+            get { return 1; }
+        }
+
+        public Vector2 Centroid
+        {
+            get { return MassData.Center; }
+            set { MassData.Center = value; }
+        }
+
         public override Shape Clone()
         {
             PolygonShape clone = new PolygonShape();
@@ -73,17 +84,6 @@ namespace FarseerPhysics.Collision.Shapes
             clone._density = _density;
             clone.MassData = MassData;
             return clone;
-        }
-
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
-
-        public Vector2 Centroid
-        {
-            get { return MassData.Center; }
-            set { MassData.Center = value; }
         }
 
         /// <summary>

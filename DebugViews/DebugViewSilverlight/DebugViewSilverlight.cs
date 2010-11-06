@@ -1,6 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -8,11 +12,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Controls;
-using System.Text;
-using System.Windows;
+using Transform = FarseerPhysics.Common.Transform;
 
 namespace FarseerPhysics.DebugViewSilverlight
 {
@@ -24,8 +24,6 @@ namespace FarseerPhysics.DebugViewSilverlight
     public class DebugViewSilverlight : DebugView, IDisposable
     {
         private const int MaxContactPoints = 2048;
-        private Canvas _debugCanvas;
-        private TextBlock _txtDebug;
 
         public Color DefaultShapeColor = Color.FromArgb(255, 230, 179, 179);
 
@@ -34,9 +32,10 @@ namespace FarseerPhysics.DebugViewSilverlight
         public Color SleepingShapeColor = Color.FromArgb(255, 153, 153, 153);
         public Color StaticShapeColor = Color.FromArgb(255, 128, 230, 128);
         public Color TextColor = Colors.White;
-        public CompositeTransform Transform { get; set; }
+        private Canvas _debugCanvas;
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
+        private TextBlock _txtDebug;
 
         public DebugViewSilverlight(Canvas debugCanvas, TextBlock txtDebug, World world)
             : base(world)
@@ -51,6 +50,8 @@ namespace FarseerPhysics.DebugViewSilverlight
             AppendFlags(DebugViewFlags.Shape);
             AppendFlags(DebugViewFlags.Joint);
         }
+
+        public CompositeTransform Transform { get; set; }
 
         #region IDisposable Members
 
@@ -140,7 +141,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                         PolygonShape polygon = f.Shape as PolygonShape;
                         if (polygon != null)
                         {
-                            FarseerPhysics.Common.Transform xf;
+                            Transform xf;
                             body.GetTransform(out xf);
 
                             for (int i = 0; i < polygon.Vertices.Count; i++)
@@ -162,7 +163,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             {
                 foreach (Body b in World.BodyList)
                 {
-                    FarseerPhysics.Common.Transform xf;
+                    Transform xf;
                     b.GetTransform(out xf);
                     foreach (Fixture f in b.FixtureList)
                     {
@@ -253,7 +254,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             {
                 foreach (Body b in World.BodyList)
                 {
-                    FarseerPhysics.Common.Transform xf;
+                    Transform xf;
                     b.GetTransform(out xf);
                     xf.Position = b.WorldCenter;
                     DrawTransform(ref xf);
@@ -290,7 +291,7 @@ namespace FarseerPhysics.DebugViewSilverlight
         {
             Body b1 = joint.BodyA;
             Body b2 = joint.BodyB;
-            FarseerPhysics.Common.Transform xf1, xf2;
+            Transform xf1, xf2;
             b1.GetTransform(out xf1);
 
             Vector2 x2 = new Vector2();
@@ -368,7 +369,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             }
         }
 
-        private void DrawShape(Fixture fixture, FarseerPhysics.Common.Transform xf, Color color)
+        private void DrawShape(Fixture fixture, Transform xf, Color color)
         {
             switch (fixture.ShapeType)
             {
@@ -440,7 +441,7 @@ namespace FarseerPhysics.DebugViewSilverlight
 
             for (int i = 0; i < count; i++)
             {
-                poly.Points.Add(Transform.Transform(new System.Windows.Point(vertices[i].X, vertices[i].Y)));
+                poly.Points.Add(Transform.Transform(new Point(vertices[i].X, vertices[i].Y)));
             }
             _debugCanvas.Children.Add(poly);
         }
@@ -470,7 +471,7 @@ namespace FarseerPhysics.DebugViewSilverlight
 
             for (int i = 0; i < count; i++)
             {
-                poly.Points.Add(Transform.Transform(new System.Windows.Point(vertices[i].X, vertices[i].Y)));
+                poly.Points.Add(Transform.Transform(new Point(vertices[i].X, vertices[i].Y)));
             }
             _debugCanvas.Children.Add(poly);
 
@@ -551,7 +552,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             _debugCanvas.Children.Add(line);
         }
 
-        public override void DrawTransform(ref FarseerPhysics.Common.Transform transform)
+        public override void DrawTransform(ref Transform transform)
         {
             const float axisScale = 0.4f;
             Vector2 p1 = transform.Position;

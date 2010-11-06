@@ -9,8 +9,8 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 {
     public class Demo6Screen : GameScreen, IDemoScreen
     {
-        private Spider[] _spiders;
         private Agent _agent;
+        private Spider[] _spiders;
 
         #region IDemoScreen Members
 

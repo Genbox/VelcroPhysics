@@ -278,6 +278,7 @@ namespace FarseerPhysics.Common
             [FieldOffset(0)]
             public int i;
         }
+
         #endregion
     }
 
@@ -326,6 +327,31 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
+        /// Extract the angle from this matrix (assumed to be
+        /// a rotation matrix).
+        /// </summary>
+        /// <value></value>
+        public float Angle
+        {
+            get { return (float)Math.Atan2(col1.Y, col1.X); }
+        }
+
+        public Mat22 Inverse
+        {
+            get
+            {
+                float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
+                float det = a * d - b * c;
+                if (det != 0.0f)
+                {
+                    det = 1.0f / det;
+                }
+
+                return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
+            }
+        }
+
+        /// <summary>
         /// Initialize this matrix using columns.
         /// </summary>
         /// <param name="c1">The c1.</param>
@@ -370,31 +396,6 @@ namespace FarseerPhysics.Common
             col2.X = 0.0f;
             col1.Y = 0.0f;
             col2.Y = 0.0f;
-        }
-
-        /// <summary>
-        /// Extract the angle from this matrix (assumed to be
-        /// a rotation matrix).
-        /// </summary>
-        /// <value></value>
-        public float Angle
-        {
-            get { return (float)Math.Atan2(col1.Y, col1.X); }
-        }
-
-        public Mat22 Inverse
-        {
-            get
-            {
-                float a = col1.X, b = col2.X, c = col1.Y, d = col2.Y;
-                float det = a * d - b * c;
-                if (det != 0.0f)
-                {
-                    det = 1.0f / det;
-                }
-
-                return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
-            }
         }
 
         /// <summary>
@@ -512,6 +513,15 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
+        /// Calculate the angle that the rotation matrix represents.
+        /// </summary>
+        /// <value></value>
+        public float Angle
+        {
+            get { return (float)Math.Atan2(R.col1.Y, R.col1.X); }
+        }
+
+        /// <summary>
         /// Set this to the identity transform.
         /// </summary>
         public void SetIdentity()
@@ -530,15 +540,6 @@ namespace FarseerPhysics.Common
             Position = position;
             R.Set(angle);
         }
-
-        /// <summary>
-        /// Calculate the angle that the rotation matrix represents.
-        /// </summary>
-        /// <value></value>
-        public float Angle
-        {
-            get { return (float)Math.Atan2(R.col1.Y, R.col1.X); }
-        }
     }
 
     /// <summary>
@@ -550,24 +551,24 @@ namespace FarseerPhysics.Common
     public struct Sweep
     {
         /// <summary>
+        /// Local center of mass position
+        /// </summary>
+        public Vector2 LocalCenter;
+
+        /// <summary>
         /// World angles
         /// </summary>
         public float a;
 
         public float a0;
 
+        /// Fraction of the current time step in the range [0,1]
+        /// c0 and a0 are the positions at alpha0.
+        public float alpha0;
+
         public Vector2 c;
 
         public Vector2 c0;
-
-        /// Fraction of the current time step in the range [0,1]
- 		/// c0 and a0 are the positions at alpha0.
-        public float alpha0;
-
-        /// <summary>
-        /// Local center of mass position
-        /// </summary>
-        public Vector2 LocalCenter;
 
         /// <summary>
         /// Get the interpolated transform at a specific time.

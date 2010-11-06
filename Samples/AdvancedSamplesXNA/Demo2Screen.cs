@@ -9,20 +9,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo2Screen : GameScreen, IDemoScreen
     {
-        public override void Initialize()
-        {
-            World = new World(new Vector2(0, -50));
-
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
-            LinkFactory.CreateChain(World, new Vector2(-5, 0), new Vector2(15, 0), 0.125f, 0.6f, true, true, 15, 1);
-            LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-7, -10), 0.125f, 0.6f, true, false, 15, 1);
-
-            base.LoadContent();
-        }
+        #region IDemoScreen Members
 
         public string GetTitle()
         {
@@ -39,6 +26,23 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             sb.AppendLine("  -Rotate : left and right arrows");
             sb.AppendLine("  -Move : A,S,D,W");
             return sb.ToString();
+        }
+
+        #endregion
+
+        public override void Initialize()
+        {
+            World = new World(new Vector2(0, -50));
+
+            base.Initialize();
+        }
+
+        public override void LoadContent()
+        {
+            LinkFactory.CreateChain(World, new Vector2(-5, 0), new Vector2(15, 0), 0.125f, 0.6f, true, true, 15, 1);
+            LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-7, -10), 0.125f, 0.6f, true, false, 15, 1);
+
+            base.LoadContent();
         }
     }
 }

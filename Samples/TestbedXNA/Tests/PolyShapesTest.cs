@@ -49,9 +49,9 @@ namespace FarseerPhysics.TestBed.Tests
         private const int MaxCount = 4;
 
         internal CircleShape Circle = new CircleShape(0);
-        private int _count;
         internal DebugViewXNA.DebugViewXNA DebugDraw;
         internal Transform Transform;
+        private int _count;
 
         private void DrawFixture(Fixture fixture)
         {

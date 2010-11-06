@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Controls;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 {

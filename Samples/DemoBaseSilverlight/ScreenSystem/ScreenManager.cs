@@ -1,12 +1,8 @@
 #region Using Statements
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using FarseerPhysics.DemoBaseSilverlight;
-using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
 using System.Windows.Controls;
+using Microsoft.Xna.Framework;
 
 #endregion
 
@@ -23,10 +19,10 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
         public MainMenuScreen MainMenuScreen = new MainMenuScreen();
         private Canvas _canvas;
         private Canvas _debugCanvas;
-        private TextBlock _txtDebug;
         private InputState _input = new InputState();
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
+        private TextBlock _txtDebug;
 
         /// <summary>
         /// Constructs a new screen manager component.

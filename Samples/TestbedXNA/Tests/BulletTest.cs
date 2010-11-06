@@ -33,6 +33,10 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BulletTest : Test
     {
+        private Body _body;
+        private Body _bullet;
+        private float _x;
+
         private BulletTest()
         {
             FixtureFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0), 0);
@@ -110,9 +114,5 @@ namespace FarseerPhysics.TestBed.Tests
         {
             return new BulletTest();
         }
-
-        private Body _body;
-        private float _x;
-        private Body _bullet;
     }
 }

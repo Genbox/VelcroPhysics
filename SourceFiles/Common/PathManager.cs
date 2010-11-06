@@ -14,11 +14,15 @@ namespace FarseerPhysics.Factories
     /// </summary>
     public static class PathManager
     {
+        #region LinkType enum
+
         public enum LinkType
         {
             Revolute,
             Slider
         }
+
+        #endregion
 
         //Contributed by Matthew Bettcher
 
