@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f));
 
             //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistibuteShapesAlongPath(World, path, shape, BodyType.Dynamic, 30, 20);
+            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30, 20);
 
             foreach (Body chainLink in chainLinks)
             {

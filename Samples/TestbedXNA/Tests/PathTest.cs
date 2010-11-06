@@ -34,7 +34,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             CircleShape shape = new CircleShape(0.25f);
 
-            PathManager.EvenlyDistibuteShapesAlongPath(World, _path, shape, BodyType.Static, 100, 1);
+            PathManager.EvenlyDistributeShapesAlongPath(World, _path, shape, BodyType.Static, 100, 1);
 
             ////Smaller shape that is movable. Created from small rectangles and circles.
             Vector2 xform = new Vector2(0.5f, 0.5f);
@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
             shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0)));
             shapes.Add(new CircleShape(0.5f));
 
-            List<Body> bodies = PathManager.EvenlyDistibuteShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20, 1);
+            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20, 1);
 
             //Attach the bodies together with revolute joints
             PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
