@@ -129,6 +129,9 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\EarclipDecomposer.cs">
       <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\FlipcodeDecomposer.cs">
+      <Link>Common\Decomposition\FlipcodeDecomposer.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
