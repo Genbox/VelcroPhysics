@@ -39,7 +39,7 @@ namespace FarseerPhysics.Collision
     /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
     /// </summary>
-    internal struct DynamicTreeNode
+    internal struct DynamicTreeNode<T>
     {
         /// <summary>
         /// This is the fattened AABB.
@@ -51,11 +51,11 @@ namespace FarseerPhysics.Collision
 
         internal int LeafCount;
         internal int ParentOrNext;
-        internal object UserData;
+        internal T UserData;
 
         internal bool IsLeaf()
         {
-            return Child1 == DynamicTree.NullNode;
+            return Child1 == DynamicTree<T>.NullNode;
         }
     }
 
@@ -68,7 +68,7 @@ namespace FarseerPhysics.Collision
     ///
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     /// </summary>
-    public class DynamicTree
+    public class DynamicTree<T>
     {
         internal const int NullNode = -1;
         private static Stack<int> _stack = new Stack<int>(256);
@@ -76,7 +76,7 @@ namespace FarseerPhysics.Collision
         private int _insertionCount;
         private int _nodeCapacity;
         private int _nodeCount;
-        private DynamicTreeNode[] _nodes;
+        private DynamicTreeNode<T>[] _nodes;
 
         /// <summary>
         /// This is used incrementally traverse the tree for re-balancing.
@@ -92,7 +92,7 @@ namespace FarseerPhysics.Collision
             _root = NullNode;
 
             _nodeCapacity = 16;
-            _nodes = new DynamicTreeNode[_nodeCapacity];
+            _nodes = new DynamicTreeNode<T>[_nodeCapacity];
 
             // Build a linked list for the free list.
             for (int i = 0; i < _nodeCapacity - 1; ++i)
@@ -110,7 +110,7 @@ namespace FarseerPhysics.Collision
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
-        public int CreateProxy<T>(ref AABB aabb, T userData)
+        public int CreateProxy(ref AABB aabb, T userData)
         {
             int proxyId = AllocateNode();
 
@@ -236,7 +236,7 @@ namespace FarseerPhysics.Collision
         /// <typeparam name="T"></typeparam>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns>the proxy user data or 0 if the id is invalid.</returns>
-        public T GetUserData<T>(int proxyId)
+        public T GetUserData(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             return (T)_nodes[proxyId].UserData;
@@ -282,7 +282,7 @@ namespace FarseerPhysics.Collision
                     continue;
                 }
 
-                DynamicTreeNode node = _nodes[nodeId];
+                DynamicTreeNode<T> node = _nodes[nodeId];
 
                 if (AABB.TestOverlap(ref node.AABB, ref aabb))
                 {
@@ -348,7 +348,7 @@ namespace FarseerPhysics.Collision
                     continue;
                 }
 
-                DynamicTreeNode node = _nodes[nodeId];
+                DynamicTreeNode<T> node = _nodes[nodeId];
 
                 if (AABB.TestOverlap(ref node.AABB, ref segmentAABB) == false)
                 {
@@ -405,7 +405,7 @@ namespace FarseerPhysics.Collision
             }
 
             Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            DynamicTreeNode node = _nodes[nodeId];
+            DynamicTreeNode<T> node = _nodes[nodeId];
 
             if (node.IsLeaf())
             {
@@ -433,9 +433,9 @@ namespace FarseerPhysics.Collision
                 Debug.Assert(_nodeCount == _nodeCapacity);
 
                 // The free list is empty. Rebuild a bigger pool.
-                DynamicTreeNode[] oldNodes = _nodes;
+                DynamicTreeNode<T>[] oldNodes = _nodes;
                 _nodeCapacity *= 2;
-                _nodes = new DynamicTreeNode[_nodeCapacity];
+                _nodes = new DynamicTreeNode<T>[_nodeCapacity];
                 Array.Copy(oldNodes, _nodes, _nodeCount);
 
                 // Build a linked list for the free list. The parent
@@ -555,7 +555,7 @@ namespace FarseerPhysics.Collision
             int oldParent = _nodes[sibling].ParentOrNext;
             int newParent = AllocateNode();
             _nodes[newParent].ParentOrNext = oldParent;
-            _nodes[newParent].UserData = null;
+            _nodes[newParent].UserData = default(T);
             _nodes[newParent].AABB.Combine(ref leafAABB, ref _nodes[sibling].AABB);
             _nodes[newParent].LeafCount = _nodes[sibling].LeafCount + 1;
 
@@ -649,7 +649,7 @@ namespace FarseerPhysics.Collision
             }
 
             Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
-            DynamicTreeNode node = _nodes[nodeId];
+            DynamicTreeNode<T> node = _nodes[nodeId];
             int height1 = ComputeHeight(node.Child1);
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);

@@ -635,7 +635,7 @@ namespace FarseerPhysics.Dynamics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
             return _queryAABBCallback(proxy.Fixture);
         }
 
@@ -661,7 +661,7 @@ namespace FarseerPhysics.Dynamics
 
         private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
         {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData<FixtureProxy>(proxyId);
+            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
             Fixture fixture = proxy.Fixture;
             int index = proxy.ChildIndex;
             RayCastOutput output;
