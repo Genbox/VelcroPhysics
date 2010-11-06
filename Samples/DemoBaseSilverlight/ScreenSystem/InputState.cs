@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 {
@@ -16,12 +9,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
     /// </summary>
     public class InputState
     {
-        public MouseState LastMouseState { get; set; }
-        public MouseState CurrentMouseState { get; set; }
-        public KeyboardState LastKeyboardState { get; set; }
-        public KeyboardState CurrentKeyboardState { get; set; }
-
-        private UserControl _userControl = null;
+        private UserControl _userControl;
 
         public InputState()
         {
@@ -31,16 +19,21 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
             CurrentMouseState = new MouseState();
         }
 
+        public MouseState LastMouseState { get; set; }
+        public MouseState CurrentMouseState { get; set; }
+        public KeyboardState LastKeyboardState { get; set; }
+        public KeyboardState CurrentKeyboardState { get; set; }
+
         public void Attach(UserControl userControl)
         {
             CurrentKeyboardState.ClearKeyPresses();
             _userControl = userControl;
-            userControl.MouseMove += new MouseEventHandler(target_MouseMove);
-            userControl.MouseLeftButtonDown += new MouseButtonEventHandler(target_MouseLeftButtonDown);
-            userControl.MouseLeftButtonUp += new MouseButtonEventHandler(target_MouseLeftButtonUp);
-            userControl.KeyDown += new KeyEventHandler(target_KeyDown);
-            userControl.KeyUp += new KeyEventHandler(target_KeyUp);
-            userControl.LostFocus += new RoutedEventHandler(target_LostFocus);
+            userControl.MouseMove += target_MouseMove;
+            userControl.MouseLeftButtonDown += target_MouseLeftButtonDown;
+            userControl.MouseLeftButtonUp += target_MouseLeftButtonUp;
+            userControl.KeyDown += target_KeyDown;
+            userControl.KeyUp += target_KeyUp;
+            userControl.LostFocus += target_LostFocus;
         }
 
         private void target_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -65,9 +58,9 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 
         public void Detach(UserControl target)
         {
-            target.KeyDown -= new KeyEventHandler(target_KeyDown);
-            target.KeyUp -= new KeyEventHandler(target_KeyUp);
-            target.LostFocus -= new RoutedEventHandler(target_LostFocus);
+            target.KeyDown -= target_KeyDown;
+            target.KeyUp -= target_KeyUp;
+            target.LostFocus -= target_LostFocus;
             CurrentKeyboardState.ClearKeyPresses();
         }
 

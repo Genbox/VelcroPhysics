@@ -1,7 +1,6 @@
 using System;
-using Microsoft.Xna.Framework;
-using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem

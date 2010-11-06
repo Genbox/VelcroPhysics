@@ -66,14 +66,14 @@ namespace FarseerPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
+        public MassData MassData;
+
         /// <summary>
         /// Radius of the Shape
         /// </summary>
         public float Radius;
 
         internal float _density;
-
-        public MassData MassData;
 
         protected Shape()
         {
@@ -85,12 +85,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         /// <value>The type of the shape.</value>
         public ShapeType ShapeType { get; internal set; }
-
-        /// <summary>
-        /// Clone the concrete shape
-        /// </summary>
-        /// <returns>A clone of the shape</returns>
-        public abstract Shape Clone();
 
         /// <summary>
         /// Get the number of child primitives.
@@ -107,6 +101,12 @@ namespace FarseerPhysics.Collision.Shapes
                 ComputeProperties();
             }
         }
+
+        /// <summary>
+        /// Clone the concrete shape
+        /// </summary>
+        /// <returns>A clone of the shape</returns>
+        public abstract Shape Clone();
 
         /// <summary>
         /// Test a point for containment in this shape. This only works for convex shapes.

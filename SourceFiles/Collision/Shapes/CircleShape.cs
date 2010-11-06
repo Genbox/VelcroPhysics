@@ -55,6 +55,11 @@ namespace FarseerPhysics.Collision.Shapes
             Position = Vector2.Zero;
         }
 
+        public override int ChildCount
+        {
+            get { return 1; }
+        }
+
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
@@ -64,11 +69,6 @@ namespace FarseerPhysics.Collision.Shapes
             shape._density = _density;
             shape.MassData = MassData;
             return shape;
-        }
-
-        public override int ChildCount
-        {
-            get { return 1; }
         }
 
         /// <summary>

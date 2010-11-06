@@ -2,7 +2,6 @@ using FarseerPhysics.DebugViewXNA;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace HelloWorld
@@ -16,15 +15,12 @@ namespace HelloWorld
         //
         // Press A or D to rotate the ball
 
-        private GraphicsDeviceManager _graphics;
-
-        //The most important object of them all; the world.
-        private World _world = new World(new Vector2(0, -20));
-
-        private Fixture _rectangleFixture;
         private Fixture _circleFixture;
 
         private DebugViewXNA _debugView;
+        private GraphicsDeviceManager _graphics;
+        private Fixture _rectangleFixture;
+        private World _world = new World(new Vector2(0, -20));
 
         public Game1()
         {

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseSilverlight;
 using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using System.Windows.Input;
 
 namespace FarseerPhysics.SimpleSamplesSilverlight
 {

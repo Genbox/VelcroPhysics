@@ -1,14 +1,15 @@
 using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.DemoBaseSilverlight.DemoShare;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Input;
-using System.Windows;
+using Border = FarseerPhysics.DemoBaseSilverlight.DemoShare.Border;
+using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 {
@@ -32,12 +33,13 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
     /// </summary>
     public abstract class GameScreen : IDisposable
     {
-        private bool _otherScreenHasFocus;
-        public bool firstRun = true;
+        public Matrix Projection;
+
+        public Matrix View = Matrix.Identity;
         private FixedMouseJoint _fixedMouseJoint;
-        public Canvas DebugCanvas { get; set; }
-        public TextBlock TxtDebug { get; set; }
-        public CompositeTransform Transform { get; set; }
+        private bool _otherScreenHasFocus;
+        private Vector2 _viewCenter = Vector2.Zero;
+        public bool firstRun = true;
 
         protected GameScreen()
         {
@@ -50,13 +52,13 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
             Transform = new CompositeTransform();
         }
 
+        public Canvas DebugCanvas { get; set; }
+        public TextBlock TxtDebug { get; set; }
+        public CompositeTransform Transform { get; set; }
+
         public World World { get; set; }
 
         public DebugViewSilverlight.DebugViewSilverlight DebugView { get; set; }
-
-        public Microsoft.Xna.Framework.Matrix Projection;
-
-        public Microsoft.Xna.Framework.Matrix View = Microsoft.Xna.Framework.Matrix.Identity;
 
         public bool DebugViewEnabled { get; set; }
 
@@ -152,11 +154,9 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
                 DebugView = new DebugViewSilverlight.DebugViewSilverlight(DebugCanvas, TxtDebug, World);
                 DebugView.DefaultShapeColor = Colors.White;
                 DebugView.SleepingShapeColor = Colors.LightGray;
-                DebugView.Transform = this.Transform;
+                DebugView.Transform = Transform;
             }
         }
-
-        private Vector2 _viewCenter = Vector2.Zero;
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
@@ -187,7 +187,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
         {
             if (World != null)
             {
-                new FarseerPhysics.DemoBaseSilverlight.DemoShare.Border(World, ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 2);
+                new Border(World, ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 2);
             }
         }
 
@@ -311,13 +311,13 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
             }
 
             //Mouse
-            Point p = Transform.Inverse.Transform(new System.Windows.Point(input.CurrentMouseState.X, input.CurrentMouseState.Y));
+            Point p = Transform.Inverse.Transform(new Point(input.CurrentMouseState.X, input.CurrentMouseState.Y));
             Vector2 position = new Vector2((float)p.X, (float)p.Y);
-            if (input.CurrentMouseState.IsLeftButtonDown == false && input.LastMouseState.IsLeftButtonDown == true)
+            if (input.CurrentMouseState.IsLeftButtonDown == false && input.LastMouseState.IsLeftButtonDown)
             {
                 MouseUp();
             }
-            else if (input.CurrentMouseState.IsLeftButtonDown == true && input.LastMouseState.IsLeftButtonDown == false)
+            else if (input.CurrentMouseState.IsLeftButtonDown && input.LastMouseState.IsLeftButtonDown == false)
             {
                 MouseDown(position);
             }

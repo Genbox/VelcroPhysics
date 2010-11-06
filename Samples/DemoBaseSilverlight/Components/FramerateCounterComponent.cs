@@ -1,8 +1,7 @@
 using System;
 using System.Globalization;
-using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
-using Microsoft.Xna.Framework;
 using System.Windows.Controls;
+using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
 
 namespace FarseerPhysics.DemoBaseSilverlight.Components
 {

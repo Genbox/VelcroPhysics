@@ -2,7 +2,6 @@ using System;
 using FarseerPhysics.DemoBaseXNA.Components;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.AdvancedSamplesXNA
 {

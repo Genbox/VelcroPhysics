@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
-using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PhysicsLogic
 {
     struct ShapeData
     {
         public Body Body;
-        public float Min; // absolute angles
         public float Max;
+        public float Min; // absolute angles
     }
 
     struct RayData
@@ -27,6 +27,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
     /// </summary>
     class RayDataComparer : IComparer<RayData>
     {
+        #region IComparer<RayData> Members
+
         int IComparer<RayData>.Compare(RayData a, RayData b)
         {
             float diff = (a.Angle - b.Angle);
@@ -36,6 +38,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 return -1;
             return 0;
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -47,9 +51,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
     public abstract class Explosive
     {
         const int MaxShapes = 100;
+        List<ShapeData> _data = new List<ShapeData>();
         Dictionary<Fixture, List<Vector2>> _exploded;
         RayDataComparer _rdc;
-        List<ShapeData> _data = new List<ShapeData>();
         World _world;
 
         public Explosive(World world)

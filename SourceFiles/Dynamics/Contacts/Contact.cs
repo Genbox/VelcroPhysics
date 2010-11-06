@@ -143,9 +143,9 @@ namespace FarseerPhysics.Dynamics.Contacts
         // Nodes for connecting bodies.
         internal ContactEdge NodeA = new ContactEdge();
         internal ContactEdge NodeB = new ContactEdge();
+        public float TOI;
         internal int TOICount;
         private ContactType _type;
-        public float TOI;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {

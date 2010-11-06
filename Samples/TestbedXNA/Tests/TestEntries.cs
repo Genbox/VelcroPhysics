@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
                 new TestEntry {Name = "Controllers", CreateFcn = ControllerTest.Create},
                 new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
-                new TestEntry {Name = "Polygon shapes", CreateFcn = PolygonShapesTest.Create},
+                new TestEntry {Name = "Rounded rectangle", CreateFcn = RoundedRectangle.Create},
                 new TestEntry {Name = "Angle Joint", CreateFcn = AngleJointTest.Create},
                 new TestEntry {Name = "Slider Joint", CreateFcn = SliderJointTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},

@@ -60,6 +60,11 @@ namespace FarseerPhysics.Collision.Shapes
             HasVertex3 = false;
         }
 
+        public override int ChildCount
+        {
+            get { return 1; }
+        }
+
         /// <summary>
         /// Set this as an isolated edge.
         /// </summary>
@@ -86,11 +91,6 @@ namespace FarseerPhysics.Collision.Shapes
             edge._density = _density;
             edge.MassData = MassData;
             return edge;
-        }
-
-        public override int ChildCount
-        {
-            get { return 1; }
         }
 
         /// <summary>

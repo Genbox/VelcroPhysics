@@ -81,9 +81,9 @@ namespace FarseerPhysics.Dynamics
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
-        private BodyType _bodyType;
         internal World World;
         internal Transform Xf; // the body origin transform
+        private BodyType _bodyType;
         private float _inertia;
         private float _mass;
 
@@ -369,18 +369,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Resets the dynamics of this body.
-        /// Sets torque, force and linear/angular velocity to 0
-        /// </summary>
-        public void ResetDynamics()
-        {
-            Torque = 0;
-            AngularVelocityInternal = 0;
-            Force = Vector2.Zero;
-            LinearVelocityInternal = Vector2.Zero;
-        }
-
-        /// <summary>
         /// Gets all the fixtures attached to this body.
         /// </summary>
         /// <value>The fixture list.</value>
@@ -554,6 +542,18 @@ namespace FarseerPhysics.Dynamics
                     InvI = 1.0f / _inertia;
                 }
             }
+        }
+
+        /// <summary>
+        /// Resets the dynamics of this body.
+        /// Sets torque, force and linear/angular velocity to 0
+        /// </summary>
+        public void ResetDynamics()
+        {
+            Torque = 0;
+            AngularVelocityInternal = 0;
+            Force = Vector2.Zero;
+            LinearVelocityInternal = Vector2.Zero;
         }
 
         /// <summary>

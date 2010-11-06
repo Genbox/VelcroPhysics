@@ -11,8 +11,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class TextureVerticesTest : Test
     {
-        private Texture2D _polygonTexture;
         private List<Vertices> _list;
+        private Texture2D _polygonTexture;
         private Vertices _verts;
 
         private TextureVerticesTest()

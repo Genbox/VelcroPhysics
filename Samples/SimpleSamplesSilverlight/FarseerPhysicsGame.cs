@@ -1,9 +1,8 @@
 using System;
+using System.Windows.Controls;
 using FarseerPhysics.DemoBaseSilverlight;
 using FarseerPhysics.DemoBaseSilverlight.Components;
 using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
-using Microsoft.Xna.Framework;
-using System.Windows.Controls;
 
 namespace FarseerPhysics.SimpleSamplesSilverlight
 {

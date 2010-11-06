@@ -6,6 +6,8 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo5Screen : GameScreen, IDemoScreen
     {
+        #region IDemoScreen Members
+
         public string GetTitle()
         {
             return "Demo1: A Single Body";
@@ -26,5 +28,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             sb.AppendLine("  -Move: A,S,D,W");
             return sb.ToString();
         }
+
+        #endregion
     }
 }

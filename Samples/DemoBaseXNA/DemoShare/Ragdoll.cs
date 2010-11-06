@@ -12,8 +12,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private const float LegDensity = 15;
         private const float LimbAngularDamping = 7;
 
-        private Fixture _head;
         private List<Fixture> _body;
+        private Fixture _head;
 
         private List<Fixture> _lowerLeftArm;
         private List<Fixture> _lowerLeftLeg;

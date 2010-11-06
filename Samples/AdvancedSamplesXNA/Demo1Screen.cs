@@ -13,9 +13,29 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo1Screen : GameScreen, IDemoScreen
     {
-        private Texture2D _polygonTexture;
         private List<Vertices> _list;
+        private Texture2D _polygonTexture;
         private Vertices _verts;
+
+        #region IDemoScreen Members
+
+        public string GetTitle()
+        {
+            return "Demo1: Map vertices from textures";
+        }
+
+        public string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how to map vertices from a texture");
+            sb.AppendLine(string.Empty);
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  -Rotate : left and right arrows");
+            sb.AppendLine("  -Move : A,S,D,W");
+            return sb.ToString();
+        }
+
+        #endregion
 
         public override void Initialize()
         {
@@ -65,22 +85,6 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             }
 
             base.HandleInput(input);
-        }
-
-        public string GetTitle()
-        {
-            return "Demo1: Map vertices from textures";
-        }
-
-        public string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how to map vertices from a texture");
-            sb.AppendLine(string.Empty);
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  -Rotate : left and right arrows");
-            sb.AppendLine("  -Move : A,S,D,W");
-            return sb.ToString();
         }
     }
 }
