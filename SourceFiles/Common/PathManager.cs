@@ -82,7 +82,7 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <param name="density">The density you would like to use on each fixture</param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
                                                                 BodyType type, int copies, float density)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
@@ -119,13 +119,13 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <param name="density">The density.</param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistibuteShapesAlongPath(World world, Path path, Shape shape, BodyType type,
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
                                                                 int copies, float density)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
 
-            return EvenlyDistibuteShapesAlongPath(world, path, shapes, type, copies, density);
+            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, density);
         }
 
         /// <summary>

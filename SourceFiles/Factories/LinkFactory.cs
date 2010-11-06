@@ -32,7 +32,7 @@ namespace FarseerPhysics.Factories
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(linkWidth, linkHeight));
 
             //Use PathManager to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistibuteShapesAlongPath(world, path, shape, BodyType.Dynamic, numberOfLinks, linkDensity);
+            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(world, path, shape, BodyType.Dynamic, numberOfLinks, linkDensity);
 
             if (fixStart)
             {
