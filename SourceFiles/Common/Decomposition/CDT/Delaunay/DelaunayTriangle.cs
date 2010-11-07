@@ -29,15 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   attributification
-// Future possibilities
-//   Flattening out the number of indirections
-//     Replacing arrays of 3 with fixed-length arrays?
-//     Replacing bool[3] with a bit array of some sort?
-//     Bundling everything into an AoS mess?
-//     Hardcode them all as ABC ?
-
 using System;
 using System.Diagnostics;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;

@@ -29,17 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   Polygon constructors sprused up, checks for 3+ polys
-//   Naming of everything
-//   getTriangulationMode() -> TriangulationMode { get; }
-//   Exceptions replaced
-// Future possibilities
-//   We have a lot of Add/Clear methods -- we may prefer to just expose the container
-//   Some self-explanitory methods may deserve commenting anyways
-
 using System.Collections.Generic;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
@@ -47,15 +37,9 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
     {
         private List<PolygonPoint> _points = new List<PolygonPoint>();
 
-        #region Triangulatable Members
-
         public IList<PolygonPoint> Points
         {
             get { return _points; }
         }
-
-
-
-        #endregion
     }
 }

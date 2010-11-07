@@ -33,10 +33,6 @@ using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
 namespace FarseerPhysics.Common.Decomposition.CDT
 {
-    /**
-	 * @author Thomas Åhlén, thahlen@gmail.com
-	 */
-
     public static class TriangulationUtil
     {
         public const double Epsilon = 1e-12;

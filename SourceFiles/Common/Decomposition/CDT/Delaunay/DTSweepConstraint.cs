@@ -37,6 +37,5 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
     {
         public PolygonPoint P;
         public PolygonPoint Q;
-
     }
 }
