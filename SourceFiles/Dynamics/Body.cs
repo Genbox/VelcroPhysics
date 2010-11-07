@@ -87,8 +87,14 @@ namespace FarseerPhysics.Dynamics
         private float _inertia;
         private float _mass;
 
-        internal Body(World world)
+        public Body(World world)
         {
+            Debug.Assert(!world.IsLocked);
+            if (world.IsLocked)
+            {
+                return;
+            }
+
             FixtureList = new List<Fixture>(32);
 
             World = world;
@@ -101,6 +107,12 @@ namespace FarseerPhysics.Dynamics
             Active = true;
 
             Xf.R.Set(0);
+
+            // Add to world doubly linked list.
+            world.BodyList.Add(this);
+
+            if (World.BodyAdded != null)
+                World.BodyAdded(this);
         }
 
         /// <summary>
@@ -582,42 +594,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public Fixture CreateFixture(Shape shape, float density)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
-            {
-                return null;
-            }
-
-            shape._density = density;
-            shape.ComputeProperties();
-
-            Fixture fixture = new Fixture(this, shape);
-
-            if ((Flags & BodyFlags.Active) == BodyFlags.Active)
-            {
-                BroadPhase broadPhase = World.ContactManager.BroadPhase;
-                fixture.CreateProxies(broadPhase, ref Xf);
-            }
-
-            FixtureList.Add(fixture);
-            fixture.Body = this;
-
-            // Adjust mass properties if needed.
-            if (fixture.Shape._density > 0.0f)
-            {
-                ResetMassData();
-            }
-
-            // Let the world know we have a new fixture. This will cause new contacts
-            // to be created at the beginning of the next time step.
-            World.Flags |= WorldFlags.NewFixture;
-
-            if (World.FixtureAdded != null)
-            {
-                World.FixtureAdded(fixture);
-            }
-
-            return fixture;
+            return new Fixture(this, shape, density);
         }
 
         /// <summary>
