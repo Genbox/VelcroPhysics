@@ -181,6 +181,57 @@
     <Compile Include="..\..\sourcefiles\common\decomposition\BayazitDecomposer.cs">
       <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDTDecomposer.cs">
+      <Link>Common\Decomposition\CDTDecomposer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepBasin.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepBasin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepEdgeEvent.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepEdgeEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Orientation.cs">
+      <Link>Common\Decomposition\CDT\Orientation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\Polygon.cs">
+      <Link>Common\Decomposition\CDT\Polygon\Polygon.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\PolygonPoint.cs">
+      <Link>Common\Decomposition\CDT\Polygon\PolygonPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationUtil.cs">
+      <Link>Common\Decomposition\CDT\TriangulationUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\FixedArray3.cs">
+      <Link>Common\Decomposition\CDT\Util\FixedArray3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\FixedBitArray3.cs">
+      <Link>Common\Decomposition\CDT\Util\FixedBitArray3.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\decomposition\EarclipDecomposer.cs">
       <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
     </Compile>
@@ -335,7 +386,6 @@
       <Link>Factories\LinkFactory.cs</Link>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

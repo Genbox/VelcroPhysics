@@ -38,49 +38,17 @@
 //   We have a lot of Add/Clear methods -- we may prefer to just expose the container
 //   Some self-explanitory methods may deserve commenting anyways
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
-    public class Polygon : Triangulatable
+    public class Polygon
     {
-        protected List<Polygon> _holes;
-        protected List<PolygonPoint> _points = new List<PolygonPoint>();
-        protected List<PolygonPoint> _steinerPoints;
-        protected List<DelaunayTriangle> _triangles;
-
-        /// <summary>
-        /// Create a polygon from a list of at least 3 points with no duplicates.
-        /// </summary>
-        /// <param name="points">A list of unique points</param>
-        public Polygon(IList<PolygonPoint> points)
-        {
-            if (points.Count < 3) throw new ArgumentException("List has fewer than 3 points", "points");
-
-            // Lets do one sanity check that first and last point hasn't got same position
-            // Its something that often happen when importing polygon data from other formats
-            if (points[0].Equals(points[points.Count - 1])) points.RemoveAt(points.Count - 1);
-
-            _points.AddRange(points);
-        }
-
-        /// <summary>
-        /// Create a polygon from a list of at least 3 points with no duplicates.
-        /// </summary>
-        /// <param name="points">A list of unique points.</param>
-        public Polygon(IEnumerable<PolygonPoint> points) : this((points as IList<PolygonPoint>) ?? points.ToArray())
-        {
-        }
-
-        /// <summary>
-        /// Create a polygon from a list of at least 3 points with no duplicates.
-        /// </summary>
-        /// <param name="points">A list of unique points.</param>
-        public Polygon(params PolygonPoint[] points) : this((IList<PolygonPoint>) points)
-        {
-        }
+        private List<Polygon> _holes;
+        private List<PolygonPoint> _points = new List<PolygonPoint>();
+        private List<DelaunayTriangle> _triangles;
 
         public IList<Polygon> Holes
         {
@@ -89,17 +57,12 @@ namespace Farseer
 
         #region Triangulatable Members
 
-        public TriangulationMode TriangulationMode
-        {
-            get { return TriangulationMode.Polygon; }
-        }
-
         public IList<PolygonPoint> Points
         {
             get { return _points; }
         }
 
-        public IList<DelaunayTriangle> Triangles
+        public IEnumerable<DelaunayTriangle> Triangles
         {
             get { return _triangles; }
         }
@@ -114,16 +77,11 @@ namespace Farseer
             _triangles.AddRange(list);
         }
 
-        public void ClearTriangles()
-        {
-            if (_triangles != null) _triangles.Clear();
-        }
-
         /// <summary>
         /// Creates constraints and populates the context with points
         /// </summary>
         /// <param name="tcx">The context</param>
-        public void Prepare(TriangulationContext tcx)
+        public void Prepare(DTSweepContext tcx)
         {
             if (_triangles == null)
             {
@@ -148,11 +106,6 @@ namespace Farseer
                     tcx.NewConstraint(p._points[0], p._points[p._points.Count - 1]);
                     tcx.Points.AddRange(p._points);
                 }
-            }
-
-            if (_steinerPoints != null)
-            {
-                tcx.Points.AddRange(_steinerPoints);
             }
         }
 

@@ -29,7 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Farseer
+using System.Collections.Generic;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     /**
 	 * 
@@ -37,11 +40,14 @@ namespace Farseer
 	 *
 	 */
 
-    public class DTSweepContext : TriangulationContext
+    public class DTSweepContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.
-        private readonly float ALPHA = 0.3f;
+        private const float ALPHA = 0.3f;
+        public readonly List<PolygonPoint> Points = new List<PolygonPoint>(200);
+        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
+        private Polygon.Polygon Polygon { get; set; }
 
         public DTSweepBasin Basin = new DTSweepBasin();
         public DTSweepEdgeEvent EdgeEvent = new DTSweepEdgeEvent();
@@ -53,19 +59,15 @@ namespace Farseer
         {
             Clear();
         }
+        public int StepCount { get; private set; }
+
+        public void Done()
+        {
+            StepCount++;
+        }
 
         public PolygonPoint Head { get; set; }
         public PolygonPoint Tail { get; set; }
-
-        public override bool IsDebugEnabled
-        {
-            get { return base.IsDebugEnabled; }
-            protected set
-            {
-                if (value && DebugContext == null) DebugContext = new DTSweepDebugContext(this);
-                base.IsDebugEnabled = value;
-            }
-        }
 
         public void RemoveFromList(DelaunayTriangle triangle)
         {
@@ -91,7 +93,7 @@ namespace Farseer
             if (triangle != null && !triangle.IsInterior)
             {
                 triangle.IsInterior = true;
-                Triangulatable.AddTriangle(triangle);
+                Polygon.AddTriangle(triangle);
 
                 for (int i = 0; i < 3; i++)
                     if (!triangle.EdgeIsConstrained[i])
@@ -101,24 +103,12 @@ namespace Farseer
             }
         }
 
-        public override void Clear()
+        private void Clear()
         {
-            base.Clear();
+            Points.Clear();
+            StepCount = 0;
+
             Triangles.Clear();
-        }
-
-        public void AddNode(AdvancingFrontNode node)
-        {
-            //        Console.WriteLine( "add:" + node.key + ":" + System.identityHashCode(node.key));
-            //        m_nodeTree.put( node.getKey(), node );
-            Front.AddNode(node);
-        }
-
-        public void RemoveNode(AdvancingFrontNode node)
-        {
-            //        Console.WriteLine( "remove:" + node.key + ":" + System.identityHashCode(node.key));
-            //        m_nodeTree.delete( node.getKey() );
-            Front.RemoveNode(node);
         }
 
         public AdvancingFrontNode LocateNode(PolygonPoint point)
@@ -140,7 +130,6 @@ namespace Farseer
             tail = new AdvancingFrontNode(iTriangle.Points[2]);
 
             Front = new AdvancingFront(head, tail);
-            Front.AddNode(middle);
 
             // TODO: I think it would be more intuitive if head is middles next and not previous
             //       so swap head and tail
@@ -149,7 +138,6 @@ namespace Farseer
             middle.Prev = Front.Head;
             Front.Tail.Prev = middle;
         }
-
 
         /// <summary>
         /// Try to map a node to all sides of this triangle that don't have 
@@ -165,9 +153,10 @@ namespace Farseer
                 }
         }
 
-        public override void PrepareTriangulation(Triangulatable t)
+        public void PrepareTriangulation(Polygon.Polygon t)
         {
-            base.PrepareTriangulation(t);
+            Polygon = t;
+            t.Prepare(this);
 
             double xmax, xmin;
             double ymax, ymin;
@@ -201,13 +190,13 @@ namespace Farseer
 
         public void FinalizeTriangulation()
         {
-            Triangulatable.AddTriangles(Triangles);
+            Polygon.AddTriangles(Triangles);
             Triangles.Clear();
         }
 
-        public override TriangulationConstraint NewConstraint(PolygonPoint a, PolygonPoint b)
+        public void NewConstraint(PolygonPoint a, PolygonPoint b)
         {
-            return new DTSweepConstraint(a, b);
+            new DTSweepConstraint(a, b);
         }
     }
 }

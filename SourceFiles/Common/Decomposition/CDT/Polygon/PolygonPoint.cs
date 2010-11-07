@@ -35,8 +35,9 @@
 //   Documentation!
 
 using System.Collections.Generic;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
     public class PolygonPoint
     {
@@ -51,18 +52,6 @@ namespace Farseer
         }
 
         public List<DTSweepConstraint> Edges { get; private set; }
-
-        public float Xf
-        {
-            get { return (float) X; }
-            set { X = value; }
-        }
-
-        public float Yf
-        {
-            get { return (float) Y; }
-            set { Y = value; }
-        }
 
         public bool HasEdges
         {

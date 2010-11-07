@@ -30,8 +30,9 @@
  */
 
 using System.Collections.Generic;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     public class DTSweepPointComparator : IComparer<PolygonPoint>
     {

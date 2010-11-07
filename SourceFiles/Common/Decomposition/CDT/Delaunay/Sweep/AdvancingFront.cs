@@ -29,16 +29,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// Changes from the Java version
-///   Removed BST code, but not all artifacts of it
-/// Future possibilities
-///   Eliminate Add/RemoveNode ?
-///   Comments comments and more comments!
+// Changes from the Java version
+//   Removed BST code, but not all artifacts of it
+// Future possibilities
+//   Eliminate Add/RemoveNode ?
+//   Comments comments and more comments!
 
 using System;
 using System.Text;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     /**
 	 * @author Thomas Åhlen (thahlen@gmail.com)
@@ -47,7 +48,7 @@ namespace Farseer
     public class AdvancingFront
     {
         public AdvancingFrontNode Head;
-        protected AdvancingFrontNode Search;
+        private AdvancingFrontNode Search;
         public AdvancingFrontNode Tail;
 
         public AdvancingFront(AdvancingFrontNode head, AdvancingFrontNode tail)
@@ -55,16 +56,6 @@ namespace Farseer
             Head = head;
             Tail = tail;
             Search = head;
-            AddNode(head);
-            AddNode(tail);
-        }
-
-        public void AddNode(AdvancingFrontNode node)
-        {
-        }
-
-        public void RemoveNode(AdvancingFrontNode node)
-        {
         }
 
         public override string ToString()
@@ -84,7 +75,7 @@ namespace Farseer
         /// MM:  This seems to be used by LocateNode to guess a position in the implicit linked list of AdvancingFrontNodes near x
         ///      Removed an overload that depended on this being exact
         /// </summary>
-        private AdvancingFrontNode FindSearchNode(double x)
+        private AdvancingFrontNode FindSearchNode()
         {
             return Search;
         }
@@ -99,7 +90,7 @@ namespace Farseer
 
         private AdvancingFrontNode LocateNode(double x)
         {
-            AdvancingFrontNode node = FindSearchNode(x);
+            AdvancingFrontNode node = FindSearchNode();
             if (x < node.Value)
             {
                 while ((node = node.Prev) != null)
@@ -127,7 +118,7 @@ namespace Farseer
         public AdvancingFrontNode LocatePoint(PolygonPoint point)
         {
             double px = point.X;
-            AdvancingFrontNode node = FindSearchNode(px);
+            AdvancingFrontNode node = FindSearchNode();
             double nx = node.Point.X;
 
             if (px == nx)

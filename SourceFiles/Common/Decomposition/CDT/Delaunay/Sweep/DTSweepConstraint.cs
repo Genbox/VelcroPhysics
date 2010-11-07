@@ -29,10 +29,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Farseer
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
-    public class DTSweepConstraint : TriangulationConstraint
+    public class DTSweepConstraint
     {
+        public PolygonPoint P;
+        public PolygonPoint Q;
+
         /// <summary>
         /// Give two points in any order. Will always be ordered so
         /// that q.y > p.y and q.x > p.x if same y value 

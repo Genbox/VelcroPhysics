@@ -29,10 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// Changes from the Java version
-///   Turned DTSweepEdgeEvent into a value type
+// Changes from the Java version
+//   Turned DTSweepEdgeEvent into a value type
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     public class DTSweepEdgeEvent
     {

@@ -33,14 +33,14 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            _verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, true);
+            _verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, false);
 
             //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, 0.07f);
             _verts.Scale(ref scale);
 
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
-            _list = BayazitDecomposer.ConvexPartition(_verts);
+            _list = CDTDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
             List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);

@@ -29,14 +29,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     public class DTSweepBasin
     {
-        public AdvancingFrontNode bottomNode;
-        public bool leftHighest;
-        public AdvancingFrontNode leftNode;
-        public AdvancingFrontNode rightNode;
-        public double width;
+        public AdvancingFrontNode BottomNode;
+        public bool LeftHighest;
+        public AdvancingFrontNode LeftNode;
+        public AdvancingFrontNode RightNode;
+        public double Width;
     }
 }

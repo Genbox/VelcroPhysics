@@ -29,75 +29,46 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Poly2Tri
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using FarseerPhysics.Common.Decomposition.CDT;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using Microsoft.Xna.Framework;
+
+namespace FarseerPhysics.Common.Decomposition
 {
-    public static class Poly2Tri
+    public static class CDTDecomposer
     {
-        public static void Triangulate(PolygonSet ps)
+        public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            TriangulationContext tcx = CreateContext();
-            foreach (Polygon p in ps.Polygons)
+            Polygon poly = new Polygon();
+
+            foreach (Vector2 vertex in vertices)
             {
-                tcx.PrepareTriangulation(p);
-                Triangulate(tcx);
-                tcx.Clear();
+                poly.Points.Add(new PolygonPoint(vertex.X, vertex.Y));
             }
-        }
 
-        public static void Triangulate(Polygon p)
-        {
-            Triangulate(p);
-        }
-
-        public static void Triangulate(ConstrainedPointSet cps)
-        {
-            Triangulate(cps);
-        }
-
-        public static void Triangulate(PointSet ps)
-        {
-            Triangulate(ps);
-        }
-
-        public static TriangulationContext CreateContext()
-        {
-            return new DTSweepContext();
-
-        }
-
-        public static void Triangulate(ITriangulatable t)
-        {
-            TriangulationContext tcx;
-
-            //        long time = System.nanoTime();
-            tcx = CreateContext();
-            tcx.PrepareTriangulation(t);
-            Triangulate(tcx);
-            //        logger.info( "Triangulation of {} points [{}ms]", tcx.getPoints().size(), ( System.nanoTime() - time ) / 1e6 );
-        }
-
-        public static void Triangulate(TriangulationContext tcx)
-        {
+            DTSweepContext tcx = new DTSweepContext();
+            tcx.PrepareTriangulation(poly);
             DTSweep.Triangulate((DTSweepContext)tcx);
-        }
 
+            List<Vertices> results = new List<Vertices>();
 
-        /// <summary>
-        /// Will do a warmup run to let the JVM optimize the triangulation code -- or would if this were Java --MM
-        /// </summary>
-        public static void Warmup()
-        {
-#if false
-    /*
-			 * After a method is run 10000 times, the Hotspot compiler will compile
-			 * it into native code. Periodically, the Hotspot compiler may recompile
-			 * the method. After an unspecified amount of time, then the compilation
-			 * system should become quiet.
-			 */
-			Polygon poly = PolygonGenerator.RandomCircleSweep2(50, 50000);
-			TriangulationProcess process = new TriangulationProcess();
-			process.triangulate(poly);
-#endif
+            foreach (DelaunayTriangle triangle in poly.Triangles)
+            {
+                Vertices v = new Vertices();
+                foreach (PolygonPoint p in triangle.Points)
+                {
+                    v.Add(new Vector2((float)p.X, (float)p.Y));
+                }
+                results.Add(v);
+            }
+
+            return results;
         }
     }
 }

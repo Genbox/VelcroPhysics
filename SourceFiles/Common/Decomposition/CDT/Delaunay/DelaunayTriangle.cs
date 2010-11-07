@@ -29,26 +29,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/// Changes from the Java version
-///   attributification
-/// Future possibilities
-///   Flattening out the number of indirections
-///     Replacing arrays of 3 with fixed-length arrays?
-///     Replacing bool[3] with a bit array of some sort?
-///     Bundling everything into an AoS mess?
-///     Hardcode them all as ABC ?
+// Changes from the Java version
+//   attributification
+// Future possibilities
+//   Flattening out the number of indirections
+//     Replacing arrays of 3 with fixed-length arrays?
+//     Replacing bool[3] with a bit array of some sort?
+//     Bundling everything into an AoS mess?
+//     Hardcode them all as ABC ?
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using FarseerPhysics.Common.Decomposition.CDT.Util;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     public class DelaunayTriangle
     {
         public FixedBitArray3 EdgeIsConstrained, EdgeIsDelaunay;
-        public FixedArray3<DelaunayTriangle> Neighbors;
-        public FixedArray3<PolygonPoint> Points;
+        public CDTFixedArray3<DelaunayTriangle> Neighbors;
+        public CDTFixedArray3<PolygonPoint> Points;
 
         public DelaunayTriangle(PolygonPoint p1, PolygonPoint p2, PolygonPoint p3)
         {
@@ -66,12 +67,7 @@ namespace Farseer
             return i;
         }
 
-        public int IndexCWFrom(PolygonPoint p)
-        {
-            return (IndexOf(p) + 2) % 3;
-        }
-
-        public int IndexCCWFrom(PolygonPoint p)
+        private int IndexCCWFrom(PolygonPoint p)
         {
             return (IndexOf(p) + 1) % 3;
         }
@@ -179,45 +175,9 @@ namespace Farseer
             return Points[0] + "," + Points[1] + "," + Points[2];
         }
 
-        /// <summary>
-        /// Finalize edge marking
-        /// </summary>
-        public void MarkNeighborEdges()
-        {
-            for (int i = 0; i < 3; i++)
-                if (EdgeIsConstrained[i] && Neighbors[i] != null)
-                {
-                    Neighbors[i].MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
-                }
-        }
-
-        public void MarkEdge(DelaunayTriangle triangle)
-        {
-            for (int i = 0; i < 3; i++)
-                if (EdgeIsConstrained[i])
-                {
-                    triangle.MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
-                }
-        }
-
-        public void MarkEdge(List<DelaunayTriangle> tList)
-        {
-            foreach (DelaunayTriangle t in tList)
-                for (int i = 0; i < 3; i++)
-                    if (t.EdgeIsConstrained[i])
-                    {
-                        MarkConstrainedEdge(t.Points[(i + 1) % 3], t.Points[(i + 2) % 3]);
-                    }
-        }
-
         public void MarkConstrainedEdge(int index)
         {
             EdgeIsConstrained[index] = true;
-        }
-
-        public void MarkConstrainedEdge(DTSweepConstraint edge)
-        {
-            MarkConstrainedEdge(edge.P, edge.Q);
         }
 
         /// <summary>
@@ -227,21 +187,6 @@ namespace Farseer
         {
             int i = EdgeIndex(p, q);
             if (i != -1) EdgeIsConstrained[i] = true;
-        }
-
-        public double Area()
-        {
-            double b = Points[0].X - Points[1].X;
-            double h = Points[2].Y - Points[1].Y;
-
-            return Math.Abs((b * h * 0.5f));
-        }
-
-        public PolygonPoint Centroid()
-        {
-            double cx = (Points[0].X + Points[1].X + Points[2].X) / 3f;
-            double cy = (Points[0].Y + Points[1].Y + Points[2].Y) / 3f;
-            return new PolygonPoint(cx, cy);
         }
 
         /// <summary>
@@ -274,11 +219,6 @@ namespace Farseer
             return EdgeIsConstrained[(IndexOf(p) + 1) % 3];
         }
 
-        public bool GetConstrainedEdgeAcross(PolygonPoint p)
-        {
-            return EdgeIsConstrained[IndexOf(p)];
-        }
-
         public void SetConstrainedEdgeCCW(PolygonPoint p, bool ce)
         {
             EdgeIsConstrained[(IndexOf(p) + 2) % 3] = ce;
@@ -287,11 +227,6 @@ namespace Farseer
         public void SetConstrainedEdgeCW(PolygonPoint p, bool ce)
         {
             EdgeIsConstrained[(IndexOf(p) + 1) % 3] = ce;
-        }
-
-        public void SetConstrainedEdgeAcross(PolygonPoint p, bool ce)
-        {
-            EdgeIsConstrained[IndexOf(p)] = ce;
         }
 
         public bool GetDelaunayEdgeCCW(PolygonPoint p)
@@ -304,11 +239,6 @@ namespace Farseer
             return EdgeIsDelaunay[(IndexOf(p) + 1) % 3];
         }
 
-        public bool GetDelaunayEdgeAcross(PolygonPoint p)
-        {
-            return EdgeIsDelaunay[IndexOf(p)];
-        }
-
         public void SetDelaunayEdgeCCW(PolygonPoint p, bool ce)
         {
             EdgeIsDelaunay[(IndexOf(p) + 2) % 3] = ce;
@@ -317,11 +247,6 @@ namespace Farseer
         public void SetDelaunayEdgeCW(PolygonPoint p, bool ce)
         {
             EdgeIsDelaunay[(IndexOf(p) + 1) % 3] = ce;
-        }
-
-        public void SetDelaunayEdgeAcross(PolygonPoint p, bool ce)
-        {
-            EdgeIsDelaunay[IndexOf(p)] = ce;
         }
     }
 }
