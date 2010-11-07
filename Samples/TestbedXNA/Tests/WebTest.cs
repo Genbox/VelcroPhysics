@@ -33,7 +33,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    // This tests distance joints, body destruction, and joint destruction.
+    /// <summary>
+    /// This tests distance joints, body destruction, and joint destruction.
+    /// </summary>
     public class WebTest : Test
     {
         private Body[] _bodies = new Body[4];
