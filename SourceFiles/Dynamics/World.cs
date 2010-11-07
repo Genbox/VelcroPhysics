@@ -252,21 +252,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public Body CreateBody()
         {
-            Debug.Assert(!IsLocked);
-            if (IsLocked)
-            {
-                return null;
-            }
-
-            Body body = new Body(this);
-
-            // Add to world doubly linked list.
-            BodyList.Add(body);
-
-            if (BodyAdded != null)
-                BodyAdded(body);
-
-            return body;
+            return new Body(this);
         }
 
         /// <summary>

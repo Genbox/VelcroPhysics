@@ -118,8 +118,17 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
-        internal Fixture(Body body, Shape shape)
+        public Fixture(Body body, Shape shape, float density)
         {
+            Debug.Assert(body.World.IsLocked == false);
+            if (body.World.IsLocked)
+            {
+                return;
+            }
+
+            shape._density = density;
+            shape.ComputeProperties();
+
             //Fixture defaults
             Friction = 0.2f;
             Restitution = 0;
@@ -149,6 +158,29 @@ namespace FarseerPhysics.Dynamics
             ProxyCount = 0;
 
             FixtureId = _fixtureIdCounter++;
+
+            if ((Body.Flags & BodyFlags.Active) == BodyFlags.Active)
+            {
+                BroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
+                CreateProxies(broadPhase, ref Body.Xf);
+            }
+
+            Body.FixtureList.Add(this);
+
+            // Adjust mass properties if needed.
+            if (Shape._density > 0.0f)
+            {
+                Body.ResetMassData();
+            }
+
+            // Let the world know we have a new fixture. This will cause new contacts
+            // to be created at the beginning of the next time step.
+            Body.World.Flags |= WorldFlags.NewFixture;
+
+            if (Body.World.FixtureAdded != null)
+            {
+                Body.World.FixtureAdded(this);
+            }
         }
 
         /// <summary>
