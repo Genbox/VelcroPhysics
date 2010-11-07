@@ -184,35 +184,35 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDTDecomposer.cs">
       <Link>Common\Decomposition\CDTDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\AdvancingFront.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFront.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\AdvancingFrontNode.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFrontNode.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs">
       <Link>Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweep.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweep.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepBasin.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepBasin.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepConstraint.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepBasin.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepBasin.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepContext.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepContext.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepEdgeEvent.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepEdgeEvent.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepPointComparator.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepPointComparator.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepEdgeEvent.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepEdgeEvent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\PointOnEdgeException.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\PointOnEdgeException.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Orientation.cs">
       <Link>Common\Decomposition\CDT\Orientation.cs</Link>
