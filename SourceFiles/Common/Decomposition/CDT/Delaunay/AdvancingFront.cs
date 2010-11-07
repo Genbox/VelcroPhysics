@@ -39,7 +39,7 @@ using System;
 using System.Text;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     /**
 	 * @author Thomas Åhlen (thahlen@gmail.com)

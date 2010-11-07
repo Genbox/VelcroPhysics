@@ -29,13 +29,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using FarseerPhysics.Common.Decomposition.CDT;
 using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 using Microsoft.Xna.Framework;
 
@@ -54,11 +49,11 @@ namespace FarseerPhysics.Common.Decomposition
 
             DTSweepContext tcx = new DTSweepContext();
             tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate((DTSweepContext)tcx);
+            DTSweep.Triangulate(tcx);
 
             List<Vertices> results = new List<Vertices>();
 
-            foreach (DelaunayTriangle triangle in poly.Triangles)
+            foreach (DelaunayTriangle triangle in tcx.trianglesCleaned)
             {
                 Vertices v = new Vertices();
                 foreach (PolygonPoint p in triangle.Points)

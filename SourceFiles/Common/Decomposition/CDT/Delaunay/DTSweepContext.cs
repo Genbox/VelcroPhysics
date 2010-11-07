@@ -32,7 +32,7 @@
 using System.Collections.Generic;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     /**
 	 * 
@@ -47,6 +47,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         private const float ALPHA = 0.3f;
         public readonly List<PolygonPoint> Points = new List<PolygonPoint>(200);
         public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
+        public List<DelaunayTriangle> trianglesCleaned = new List<DelaunayTriangle>();
         private Polygon.Polygon Polygon { get; set; }
 
         public DTSweepBasin Basin = new DTSweepBasin();
@@ -69,20 +70,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         public PolygonPoint Head { get; set; }
         public PolygonPoint Tail { get; set; }
 
-        public void RemoveFromList(DelaunayTriangle triangle)
-        {
-            Triangles.Remove(triangle);
-            // TODO: remove all neighbor pointers to this triangle
-            //        for( int i=0; i<3; i++ )
-            //        {
-            //            if( triangle.neighbors[i] != null )
-            //            {
-            //                triangle.neighbors[i].clearNeighbor( triangle );
-            //            }
-            //        }
-            //        triangle.clearNeighbors();
-        }
-
         public void MeshClean(DelaunayTriangle triangle)
         {
             MeshCleanReq(triangle);
@@ -93,7 +80,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
             if (triangle != null && !triangle.IsInterior)
             {
                 triangle.IsInterior = true;
-                Polygon.AddTriangle(triangle);
+                trianglesCleaned.Add(triangle);
 
                 for (int i = 0; i < 3; i++)
                     if (!triangle.EdgeIsConstrained[i])
@@ -156,7 +143,17 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         public void PrepareTriangulation(Polygon.Polygon t)
         {
             Polygon = t;
-            t.Prepare(this);
+
+            // Outer constraints
+            for (int i = 0; i < Polygon.Points.Count - 1; i++)
+            {
+                DTSweep.CreateSweepConstraint(Polygon.Points[i], Polygon.Points[i + 1]);
+                //new DTSweepConstraint(Polygon.Points[i], Polygon.Points[i + 1]);
+            }
+            DTSweep.CreateSweepConstraint(Polygon.Points[0], Polygon.Points[Polygon.Points.Count - 1]);
+
+            //new DTSweepConstraint(Polygon.Points[0], Polygon.Points[Polygon.Points.Count - 1]);
+            Points.AddRange(Polygon.Points);
 
             double xmax, xmin;
             double ymax, ymin;
@@ -185,18 +182,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
             // Sort the points along y-axis
             Points.Sort(_comparator);
             //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
-        }
-
-
-        public void FinalizeTriangulation()
-        {
-            Polygon.AddTriangles(Triangles);
-            Triangles.Clear();
-        }
-
-        public void NewConstraint(PolygonPoint a, PolygonPoint b)
-        {
-            new DTSweepConstraint(a, b);
         }
     }
 }

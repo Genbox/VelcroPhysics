@@ -32,7 +32,7 @@
 // Changes from the Java version
 //   Turned DTSweepEdgeEvent into a value type
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     public class DTSweepEdgeEvent
     {
