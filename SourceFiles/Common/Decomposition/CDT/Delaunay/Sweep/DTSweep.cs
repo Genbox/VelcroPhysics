@@ -39,16 +39,18 @@
  * Author: Thomas Åhlén, thahlen@gmail.com 
  */
 
-/// Changes from the Java version
-///   Turned DTSweep into a static class
-///   Lots of deindentation via early bailout
-/// Future possibilities
-///   Comments!
+// Changes from the Java version
+//   Turned DTSweep into a static class
+//   Lots of deindentation via early bailout
+// Future possibilities
+//   Comments!
 
 using System;
+using System.Diagnostics;
 using System.Linq;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace Farseer
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     public static class DTSweep
     {
@@ -61,33 +63,8 @@ namespace Farseer
         public static void Triangulate(DTSweepContext tcx)
         {
             tcx.CreateAdvancingFront();
-
             Sweep(tcx);
-
-            // TODO: remove temporary
-            // Check if the sweep algorithm is legalize robust
-            // By doing a legalize on all triangles and see if anything happens
-            // we know if the sweep algorithm missed some legalizations
-            //        Console.WriteLine("============================");
-            //        foreach ( DelaunayTriangle t in tcx.Triangles )
-            //        {
-            //            if( Legalize( tcx, t ) )
-            //            {
-            //                tcx.getDebugContext().setPrimaryTriangle( t );
-            //                Console.WriteLine("[FIX] Triangle needed legalization after sweep");
-            //            }
-            //        }
-
-            // Finalize triangulation
-            if (tcx.TriangulationMode == TriangulationMode.Polygon)
-            {
-                FinalizationPolygon(tcx);
-            }
-            else
-            {
-                FinalizationConvexHull(tcx);
-            }
-
+            FinalizationPolygon(tcx);
             tcx.Done();
         }
 
@@ -109,106 +86,8 @@ namespace Farseer
                 if (point.HasEdges)
                     foreach (DTSweepConstraint e in point.Edges)
                     {
-                        if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveConstraint = e;
                         EdgeEvent(tcx, e, node);
                     }
-                tcx.Update(null);
-            }
-        }
-
-        /// <summary>
-        /// If this is a Delaunay Triangulation of a pointset we need to fill so the triangle mesh gets a ConvexHull 
-        /// </summary>
-        private static void FinalizationConvexHull(DTSweepContext tcx)
-        {
-            AdvancingFrontNode n1, n2, n3;
-            DelaunayTriangle t1;
-            PolygonPoint first, p1;
-
-            n1 = tcx.Front.Head.Next;
-            n2 = n1.Next;
-            n3 = n2.Next;
-            first = n1.Point;
-
-            TurnAdvancingFrontConvex(tcx, n1, n2);
-
-            n1 = tcx.Front.Tail.Prev;
-            if (n1.Triangle.Contains(n1.Next.Point) && n1.Triangle.Contains(n1.Prev.Point))
-            {
-                t1 = n1.Triangle.NeighborAcrossFrom(n1.Point);
-                RotateTrianglePair(n1.Triangle, n1.Point, t1, t1.OppositePoint(n1.Triangle, n1.Point));
-                tcx.MapTriangleToNodes(n1.Triangle);
-                tcx.MapTriangleToNodes(t1);
-            }
-            n1 = tcx.Front.Head.Next;
-            if (n1.Triangle.Contains(n1.Prev.Point) && n1.Triangle.Contains(n1.Next.Point))
-            {
-                t1 = n1.Triangle.NeighborAcrossFrom(n1.Point);
-                RotateTrianglePair(n1.Triangle, n1.Point, t1, t1.OppositePoint(n1.Triangle, n1.Point));
-                tcx.MapTriangleToNodes(n1.Triangle);
-                tcx.MapTriangleToNodes(t1);
-            }
-
-            // TODO: implement ConvexHull for lower right and left boundary
-            // Lower right boundary 
-            first = tcx.Front.Head.Point;
-            n2 = tcx.Front.Tail.Prev;
-            t1 = n2.Triangle;
-            p1 = n2.Point;
-            do
-            {
-                tcx.RemoveFromList(t1);
-                p1 = t1.PointCCWFrom(p1);
-                if (p1 == first) break;
-                t1 = t1.NeighborCCWFrom(p1);
-            } while (true);
-
-            // Lower left boundary
-            first = tcx.Front.Head.Next.Point;
-            p1 = t1.PointCWFrom(tcx.Front.Head.Point);
-            t1 = t1.NeighborCWFrom(tcx.Front.Head.Point);
-            do
-            {
-                tcx.RemoveFromList(t1);
-                p1 = t1.PointCCWFrom(p1);
-                t1 = t1.NeighborCCWFrom(p1);
-            } while (p1 != first);
-
-            tcx.FinalizeTriangulation();
-        }
-
-        /// <summary>
-        /// We will traverse the entire advancing front and fill it to form a convex hull.
-        /// </summary>
-        private static void TurnAdvancingFrontConvex(DTSweepContext tcx, AdvancingFrontNode b, AdvancingFrontNode c)
-        {
-            AdvancingFrontNode first = b;
-            while (c != tcx.Front.Tail)
-            {
-                if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = c;
-
-                if (TriangulationUtil.Orient2d(b.Point, c.Point, c.Next.Point) == Orientation.CCW)
-                {
-                    // [b,c,d] Concave - fill around c
-                    Fill(tcx, c);
-                    c = c.Next;
-                }
-                else
-                {
-                    // [b,c,d] Convex
-                    if (b != first && TriangulationUtil.Orient2d(b.Prev.Point, b.Point, c.Point) == Orientation.CCW)
-                    {
-                        // [a,b,c] Concave - fill around b
-                        Fill(tcx, b);
-                        b = b.Prev;
-                    }
-                    else
-                    {
-                        // [a,b,c] Convex - nothing to fill
-                        b = c;
-                        c = c.Next;
-                    }
-                }
             }
         }
 
@@ -233,14 +112,11 @@ namespace Farseer
             AdvancingFrontNode node, newNode;
 
             node = tcx.LocateNode(point);
-            if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = node;
             newNode = NewFrontTriangle(tcx, point, node);
 
             // Only need to check +epsilon since point never have smaller 
             // x value than node due to how we fetch nodes from the front
-            if (point.X <= node.Point.X + TriangulationUtil.EPSILON) Fill(tcx, node);
-
-            tcx.AddNode(newNode);
+            if (point.X <= node.Point.X + TriangulationUtil.Epsilon) Fill(tcx, node);
 
             FillAdvancingFront(tcx, newNode);
             return newNode;
@@ -265,10 +141,6 @@ namespace Farseer
             node.Next.Prev = newNode;
             node.Next = newNode;
 
-            tcx.AddNode(newNode); // XXX: BST
-
-            if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = newNode;
-
             if (!Legalize(tcx, triangle)) tcx.MapTriangleToNodes(triangle);
 
             return newNode;
@@ -276,30 +148,17 @@ namespace Farseer
 
         private static void EdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
-            try
-            {
-                tcx.EdgeEvent.ConstrainedEdge = edge;
-                tcx.EdgeEvent.Right = edge.P.X > edge.Q.X;
+            tcx.EdgeEvent.ConstrainedEdge = edge;
+            tcx.EdgeEvent.Right = edge.P.X > edge.Q.X;
 
-                if (tcx.IsDebugEnabled)
-                {
-                    tcx.DTDebugContext.PrimaryTriangle = node.Triangle;
-                }
+            if (IsEdgeSideOfTriangle(node.Triangle, edge.P, edge.Q)) return;
 
-                if (IsEdgeSideOfTriangle(node.Triangle, edge.P, edge.Q)) return;
+            // For now we will do all needed filling
+            // TODO: integrate with flip process might give some better performance 
+            //       but for now this avoid the issue with cases that needs both flips and fills
+            FillEdgeEvent(tcx, edge, node);
 
-                // For now we will do all needed filling
-                // TODO: integrate with flip process might give some better performance 
-                //       but for now this avoid the issue with cases that needs both flips and fills
-                FillEdgeEvent(tcx, edge, node);
-
-                EdgeEvent(tcx, edge.P, edge.Q, node.Triangle, edge.Q);
-            }
-            catch (PointOnEdgeException e)
-            {
-                //Debug.WriteLine( String.Format( "Warning: Skipping Edge: {0}", e.Message ) );
-                throw;
-            }
+            EdgeEvent(tcx, edge.P, edge.Q, node.Triangle, edge.Q);
         }
 
         private static void FillEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
@@ -321,10 +180,10 @@ namespace Farseer
             if (node.Next.Point != edge.P)
             {
                 // Next above or below edge?
-                if (TriangulationUtil.Orient2d(edge.Q, node.Next.Point, edge.P) == Orientation.CCW)
+                if (TriangulationUtil.Orient2D(edge.Q, node.Next.Point, edge.P) == Orientation.CCW)
                 {
                     // Below
-                    if (TriangulationUtil.Orient2d(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
+                    if (TriangulationUtil.Orient2D(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
                     {
                         // Next is concave
                         FillRightConcaveEdgeEvent(tcx, edge, node);
@@ -340,7 +199,7 @@ namespace Farseer
         private static void FillRightConvexEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
             // Next concave or convex?
-            if (TriangulationUtil.Orient2d(node.Next.Point, node.Next.Next.Point, node.Next.Next.Next.Point) ==
+            if (TriangulationUtil.Orient2D(node.Next.Point, node.Next.Next.Point, node.Next.Next.Next.Point) ==
                 Orientation.CCW)
             {
                 // Concave
@@ -350,7 +209,7 @@ namespace Farseer
             {
                 // Convex
                 // Next above or below edge?
-                if (TriangulationUtil.Orient2d(edge.Q, node.Next.Next.Point, edge.P) == Orientation.CCW)
+                if (TriangulationUtil.Orient2D(edge.Q, node.Next.Next.Point, edge.P) == Orientation.CCW)
                 {
                     // Below
                     FillRightConvexEdgeEvent(tcx, edge, node.Next);
@@ -364,12 +223,10 @@ namespace Farseer
 
         private static void FillRightBelowEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
-            if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = node;
-
             if (node.Point.X < edge.P.X)
             {
                 // needed?
-                if (TriangulationUtil.Orient2d(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
+                if (TriangulationUtil.Orient2D(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
                 {
                     // Concave 
                     FillRightConcaveEdgeEvent(tcx, edge, node);
@@ -388,12 +245,8 @@ namespace Farseer
         {
             while (node.Next.Point.X < edge.P.X)
             {
-                if (tcx.IsDebugEnabled)
-                {
-                    tcx.DTDebugContext.ActiveNode = node;
-                }
                 // Check if next node is below the edge
-                Orientation o1 = TriangulationUtil.Orient2d(edge.Q, node.Next.Point, edge.P);
+                Orientation o1 = TriangulationUtil.Orient2D(edge.Q, node.Next.Point, edge.P);
                 if (o1 == Orientation.CCW)
                 {
                     FillRightBelowEdgeEvent(tcx, edge, node);
@@ -408,7 +261,7 @@ namespace Farseer
         private static void FillLeftConvexEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
             // Next concave or convex?
-            if (TriangulationUtil.Orient2d(node.Prev.Point, node.Prev.Prev.Point, node.Prev.Prev.Prev.Point) ==
+            if (TriangulationUtil.Orient2D(node.Prev.Point, node.Prev.Prev.Point, node.Prev.Prev.Prev.Point) ==
                 Orientation.CW)
             {
                 // Concave
@@ -418,7 +271,7 @@ namespace Farseer
             {
                 // Convex
                 // Next above or below edge?
-                if (TriangulationUtil.Orient2d(edge.Q, node.Prev.Prev.Point, edge.P) == Orientation.CW)
+                if (TriangulationUtil.Orient2D(edge.Q, node.Prev.Prev.Point, edge.P) == Orientation.CW)
                 {
                     // Below
                     FillLeftConvexEdgeEvent(tcx, edge, node.Prev);
@@ -436,10 +289,10 @@ namespace Farseer
             if (node.Prev.Point != edge.P)
             {
                 // Next above or below edge?
-                if (TriangulationUtil.Orient2d(edge.Q, node.Prev.Point, edge.P) == Orientation.CW)
+                if (TriangulationUtil.Orient2D(edge.Q, node.Prev.Point, edge.P) == Orientation.CW)
                 {
                     // Below
-                    if (TriangulationUtil.Orient2d(node.Point, node.Prev.Point, node.Prev.Prev.Point) == Orientation.CW)
+                    if (TriangulationUtil.Orient2D(node.Point, node.Prev.Point, node.Prev.Prev.Point) == Orientation.CW)
                     {
                         // Next is concave
                         FillLeftConcaveEdgeEvent(tcx, edge, node);
@@ -454,11 +307,9 @@ namespace Farseer
 
         private static void FillLeftBelowEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
-            if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = node;
-
             if (node.Point.X > edge.P.X)
             {
-                if (TriangulationUtil.Orient2d(node.Point, node.Prev.Point, node.Prev.Prev.Point) == Orientation.CW)
+                if (TriangulationUtil.Orient2D(node.Point, node.Prev.Point, node.Prev.Prev.Point) == Orientation.CW)
                 {
                     // Concave 
                     FillLeftConcaveEdgeEvent(tcx, edge, node);
@@ -477,9 +328,8 @@ namespace Farseer
         {
             while (node.Prev.Point.X > edge.P.X)
             {
-                if (tcx.IsDebugEnabled) tcx.DTDebugContext.ActiveNode = node;
                 // Check if next node is below the edge
-                Orientation o1 = TriangulationUtil.Orient2d(edge.Q, node.Prev.Point, edge.P);
+                Orientation o1 = TriangulationUtil.Orient2D(edge.Q, node.Prev.Point, edge.P);
                 if (o1 == Orientation.CW)
                 {
                     FillLeftBelowEdgeEvent(tcx, edge, node);
@@ -506,12 +356,10 @@ namespace Farseer
         {
             PolygonPoint p1, p2;
 
-            if (tcx.IsDebugEnabled) tcx.DTDebugContext.PrimaryTriangle = triangle;
-
             if (IsEdgeSideOfTriangle(triangle, ep, eq)) return;
 
             p1 = triangle.PointCCWFrom(point);
-            Orientation o1 = TriangulationUtil.Orient2d(eq, p1, ep);
+            Orientation o1 = TriangulationUtil.Orient2D(eq, p1, ep);
             if (o1 == Orientation.Collinear)
             {
                 // TODO: Split edge in two
@@ -519,17 +367,19 @@ namespace Farseer
                 //            edgeEvent( tcx, p1, eq, triangle, point );
                 //            edgeEvent( tcx, ep, p1, triangle, p1 );
                 //            return;
+                Debug.Assert(false, "We don't support collinear points.");
                 throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet", eq, p1, ep);
             }
 
             p2 = triangle.PointCWFrom(point);
-            Orientation o2 = TriangulationUtil.Orient2d(eq, p2, ep);
+            Orientation o2 = TriangulationUtil.Orient2D(eq, p2, ep);
             if (o2 == Orientation.Collinear)
             {
                 // TODO: Split edge in two
                 //            edgeEvent( tcx, p2, eq, triangle, point );
                 //            edgeEvent( tcx, ep, p2, triangle, p2 );
                 //            return;
+                Debug.Assert(false, "We don't support collinear points.");
                 throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet", eq, p2, ep);
             }
 
@@ -593,12 +443,6 @@ namespace Farseer
                 throw new InvalidOperationException("[BUG:FIXME] FLIP failed due to missing triangle");
             }
 
-            if (tcx.IsDebugEnabled)
-            {
-                tcx.DTDebugContext.PrimaryTriangle = t;
-                tcx.DTDebugContext.SecondaryTriangle = ot;
-            } // TODO: remove
-
             bool inScanArea = TriangulationUtil.InScanArea(p, t.PointCCWFrom(p), t.PointCWFrom(p), op);
             if (inScanArea)
             {
@@ -612,7 +456,6 @@ namespace Farseer
                     if (eq == tcx.EdgeEvent.ConstrainedEdge.Q
                         && ep == tcx.EdgeEvent.ConstrainedEdge.P)
                     {
-                        if (tcx.IsDebugEnabled) Console.WriteLine("[FLIP] - constrained edge done"); // TODO: remove
                         t.MarkConstrainedEdge(ep, eq);
                         ot.MarkConstrainedEdge(ep, eq);
                         Legalize(tcx, t);
@@ -620,16 +463,12 @@ namespace Farseer
                     }
                     else
                     {
-                        if (tcx.IsDebugEnabled) Console.WriteLine("[FLIP] - subedge done"); // TODO: remove
                         // XXX: I think one of the triangles should be legalized here?
                     }
                 }
                 else
                 {
-                    if (tcx.IsDebugEnabled)
-                        Console.WriteLine("[FLIP] - flipping and continuing with triangle still crossing edge");
-                    // TODO: remove
-                    Orientation o = TriangulationUtil.Orient2d(eq, op, ep);
+                    Orientation o = TriangulationUtil.Orient2D(eq, op, ep);
                     t = NextFlipTriangle(tcx, o, t, ot, p, op);
                     FlipEdgeEvent(tcx, ep, eq, t, p);
                 }
@@ -650,7 +489,7 @@ namespace Farseer
         private static PolygonPoint NextFlipPoint(PolygonPoint ep, PolygonPoint eq,
                                                         DelaunayTriangle ot, PolygonPoint op)
         {
-            Orientation o2d = TriangulationUtil.Orient2d(eq, op, ep);
+            Orientation o2d = TriangulationUtil.Orient2D(eq, op, ep);
             switch (o2d)
             {
                 case Orientation.CW:
@@ -659,6 +498,7 @@ namespace Farseer
                     return ot.PointCWFrom(op);
                 case Orientation.Collinear:
                     // TODO: implement support for point on constraint edge
+                    Debug.Assert(false,"We don't support collinear points.");
                     throw new PointOnEdgeException("Point on constrained edge not supported yet", eq, op, ep);
                 default:
                     throw new NotImplementedException("Orientation not handled");
@@ -725,13 +565,6 @@ namespace Farseer
                 // If we want to integrate the fillEdgeEvent do it here
                 // With current implementation we should never get here
                 throw new Exception("[BUG:FIXME] FLIP failed due to missing triangle");
-            }
-
-            if (tcx.IsDebugEnabled)
-            {
-                Console.WriteLine("[FLIP:SCAN] - scan next point"); // TODO: remove
-                tcx.DTDebugContext.PrimaryTriangle = t;
-                tcx.DTDebugContext.SecondaryTriangle = ot;
             }
 
             inScanArea = TriangulationUtil.InScanArea(eq, flipTriangle.PointCCWFrom(eq), flipTriangle.PointCWFrom(eq),
@@ -801,33 +634,33 @@ namespace Farseer
         /// <param name="node">starting node, this or next node will be left node</param>
         private static void FillBasin(DTSweepContext tcx, AdvancingFrontNode node)
         {
-            if (TriangulationUtil.Orient2d(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
+            if (TriangulationUtil.Orient2D(node.Point, node.Next.Point, node.Next.Next.Point) == Orientation.CCW)
             {
                 // tcx.basin.leftNode = node.next.next;
-                tcx.Basin.leftNode = node;
+                tcx.Basin.LeftNode = node;
             }
             else
             {
-                tcx.Basin.leftNode = node.Next;
+                tcx.Basin.LeftNode = node.Next;
             }
 
             // Find the bottom and right node
-            tcx.Basin.bottomNode = tcx.Basin.leftNode;
-            while (tcx.Basin.bottomNode.HasNext && tcx.Basin.bottomNode.Point.Y >= tcx.Basin.bottomNode.Next.Point.Y)
-                tcx.Basin.bottomNode = tcx.Basin.bottomNode.Next;
+            tcx.Basin.BottomNode = tcx.Basin.LeftNode;
+            while (tcx.Basin.BottomNode.HasNext && tcx.Basin.BottomNode.Point.Y >= tcx.Basin.BottomNode.Next.Point.Y)
+                tcx.Basin.BottomNode = tcx.Basin.BottomNode.Next;
 
-            if (tcx.Basin.bottomNode == tcx.Basin.leftNode) return; // No valid basin
+            if (tcx.Basin.BottomNode == tcx.Basin.LeftNode) return; // No valid basin
 
-            tcx.Basin.rightNode = tcx.Basin.bottomNode;
-            while (tcx.Basin.rightNode.HasNext && tcx.Basin.rightNode.Point.Y < tcx.Basin.rightNode.Next.Point.Y)
-                tcx.Basin.rightNode = tcx.Basin.rightNode.Next;
+            tcx.Basin.RightNode = tcx.Basin.BottomNode;
+            while (tcx.Basin.RightNode.HasNext && tcx.Basin.RightNode.Point.Y < tcx.Basin.RightNode.Next.Point.Y)
+                tcx.Basin.RightNode = tcx.Basin.RightNode.Next;
 
-            if (tcx.Basin.rightNode == tcx.Basin.bottomNode) return; // No valid basins
+            if (tcx.Basin.RightNode == tcx.Basin.BottomNode) return; // No valid basins
 
-            tcx.Basin.width = tcx.Basin.rightNode.Point.X - tcx.Basin.leftNode.Point.X;
-            tcx.Basin.leftHighest = tcx.Basin.leftNode.Point.Y > tcx.Basin.rightNode.Point.Y;
+            tcx.Basin.Width = tcx.Basin.RightNode.Point.X - tcx.Basin.LeftNode.Point.X;
+            tcx.Basin.LeftHighest = tcx.Basin.LeftNode.Point.Y > tcx.Basin.RightNode.Point.Y;
 
-            FillBasinReq(tcx, tcx.Basin.bottomNode);
+            FillBasinReq(tcx, tcx.Basin.BottomNode);
         }
 
         /// <summary>
@@ -838,19 +671,19 @@ namespace Farseer
             if (IsShallow(tcx, node)) return; // if shallow stop filling
 
             Fill(tcx, node);
-            if (node.Prev == tcx.Basin.leftNode && node.Next == tcx.Basin.rightNode)
+            if (node.Prev == tcx.Basin.LeftNode && node.Next == tcx.Basin.RightNode)
             {
                 return;
             }
-            else if (node.Prev == tcx.Basin.leftNode)
+            else if (node.Prev == tcx.Basin.LeftNode)
             {
-                Orientation o = TriangulationUtil.Orient2d(node.Point, node.Next.Point, node.Next.Next.Point);
+                Orientation o = TriangulationUtil.Orient2D(node.Point, node.Next.Point, node.Next.Next.Point);
                 if (o == Orientation.CW) return;
                 node = node.Next;
             }
-            else if (node.Next == tcx.Basin.rightNode)
+            else if (node.Next == tcx.Basin.RightNode)
             {
-                Orientation o = TriangulationUtil.Orient2d(node.Point, node.Prev.Point, node.Prev.Prev.Point);
+                Orientation o = TriangulationUtil.Orient2D(node.Point, node.Prev.Point, node.Prev.Prev.Point);
                 if (o == Orientation.CCW) return;
                 node = node.Prev;
             }
@@ -873,15 +706,15 @@ namespace Farseer
         {
             double height;
 
-            if (tcx.Basin.leftHighest)
+            if (tcx.Basin.LeftHighest)
             {
-                height = tcx.Basin.leftNode.Point.Y - node.Point.Y;
+                height = tcx.Basin.LeftNode.Point.Y - node.Point.Y;
             }
             else
             {
-                height = tcx.Basin.rightNode.Point.Y - node.Point.Y;
+                height = tcx.Basin.RightNode.Point.Y - node.Point.Y;
             }
-            if (tcx.Basin.width > height)
+            if (tcx.Basin.Width > height)
             {
                 return true;
             }
@@ -941,7 +774,6 @@ namespace Farseer
             // Update the advancing front
             node.Prev.Next = node.Next;
             node.Next.Prev = node.Prev;
-            tcx.RemoveNode(node);
 
             // If it was legalized the triangle has already been mapped
             if (!Legalize(tcx, triangle)) tcx.MapTriangleToNodes(triangle);

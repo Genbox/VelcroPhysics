@@ -29,15 +29,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Farseer
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+
+namespace FarseerPhysics.Common.Decomposition.CDT
 {
     /**
 	 * @author Thomas Åhlén, thahlen@gmail.com
 	 */
 
-    public class TriangulationUtil
+    public static class TriangulationUtil
     {
-        public static double EPSILON = 1e-12;
+        public const double Epsilon = 1e-12;
 
         /// <summary>
         ///   Requirements:
@@ -139,12 +141,12 @@ namespace Farseer
         /// 0 if collinear
         /// A[P1,P2,P3]  =  (x1*y2 - y1*x2) + (x2*y3 - y2*x3) + (x3*y1 - y3*x1)
         ///              =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
-        public static Orientation Orient2d(PolygonPoint pa, PolygonPoint pb, PolygonPoint pc)
+        public static Orientation Orient2D(PolygonPoint pa, PolygonPoint pb, PolygonPoint pc)
         {
             double detleft = (pa.X - pc.X) * (pb.Y - pc.Y);
             double detright = (pa.Y - pc.Y) * (pb.X - pc.X);
             double val = detleft - detright;
-            if (val > -EPSILON && val < EPSILON)
+            if (val > -Epsilon && val < Epsilon)
             {
                 return Orientation.Collinear;
             }
