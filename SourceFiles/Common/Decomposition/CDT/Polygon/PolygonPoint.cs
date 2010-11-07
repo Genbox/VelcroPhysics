@@ -35,7 +35,7 @@
 //   Documentation!
 
 using System.Collections.Generic;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
@@ -56,11 +56,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
         public bool HasEdges
         {
             get { return Edges != null; }
-        }
-
-        public override string ToString()
-        {
-            return "[" + X + "," + Y + "]";
         }
 
         public void AddEdge(DTSweepConstraint e)

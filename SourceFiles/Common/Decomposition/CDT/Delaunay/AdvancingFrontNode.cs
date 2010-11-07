@@ -37,7 +37,7 @@
 
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     public class AdvancingFrontNode
     {

@@ -105,11 +105,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Util
             _0 = _1 = _2 = null;
         }
 
-        public void Clear(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = null;
-        }
-
         private IEnumerable<T> Enumerate()
         {
             for (int i = 0; i < 3; ++i) yield return this[i];

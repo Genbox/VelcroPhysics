@@ -46,22 +46,26 @@
 //   Comments!
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     public static class DTSweep
     {
         private const double PI_div2 = Math.PI / 2;
         private const double PI_3div4 = 3 * Math.PI / 4;
+        public static Dictionary<PolygonPoint, List<DTSweepConstraint>> Constrains = new Dictionary<PolygonPoint, List<DTSweepConstraint>>();
 
         /// <summary>
         /// Triangulate simple polygon with holes
         /// </summary>
         public static void Triangulate(DTSweepContext tcx)
         {
+            Constrains.Clear();
+
             tcx.CreateAdvancingFront();
             Sweep(tcx);
             FinalizationPolygon(tcx);
@@ -367,7 +371,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 //            edgeEvent( tcx, p1, eq, triangle, point );
                 //            edgeEvent( tcx, ep, p1, triangle, p1 );
                 //            return;
-                Debug.Assert(false, "We don't support collinear points.");
                 throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet", eq, p1, ep);
             }
 
@@ -379,7 +382,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 //            edgeEvent( tcx, p2, eq, triangle, point );
                 //            edgeEvent( tcx, ep, p2, triangle, p2 );
                 //            return;
-                Debug.Assert(false, "We don't support collinear points.");
                 throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet", eq, p2, ep);
             }
 
@@ -422,12 +424,57 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         {
             DTSweepConstraint edge = eq.Edges.First(e => e.Q == ep || e.P == ep);
             edge.P = p;
-            new DTSweepConstraint(ep, p); // Et tu, Brute? --MM
+            CreateSweepConstraint(ep, p);// Et tu, Brute? --MM
+            //new DTSweepConstraint(ep, p); 
 
             //        // Redo this edge now that we have split the constraint
             //          newEdgeEvent( tcx, edge, triangle, point );
             //          // Continue with new edge
             //          newEdgeEvent( tcx, edge, triangle, p2 );
+        }
+
+        /// <summary>
+        /// Give two points in any order. Will always be ordered so
+        /// that q.y > p.y and q.x > p.x if same y value 
+        /// </summary>
+        public static void CreateSweepConstraint(PolygonPoint p1, PolygonPoint p2)
+        {
+            PolygonPoint P = p1;
+            PolygonPoint Q = p2;
+            if (p1.Y > p2.Y)
+            {
+                Q = p1;
+                P = p2;
+            }
+            else if (p1.Y == p2.Y)
+            {
+                if (p1.X > p2.X)
+                {
+                    Q = p1;
+                    P = p2;
+                }
+                else if (p1.X == p2.X)
+                {
+                    //                logger.info( "Failed to create constraint {}={}", p1, p2 );
+                    //                throw new DuplicatePointException( p1 + "=" + p2 );
+                    //                return;
+                }
+            }
+
+            DTSweepConstraint constraint = new DTSweepConstraint();
+            constraint.P = P;
+            constraint.Q = Q;
+
+            //if (Constrains.ContainsKey(Q))
+            //    Constrains[Q].Add(constraint);
+            //else
+            //{
+            //    List<DTSweepConstraint> list = new List<DTSweepConstraint>();
+            //    list.Add(constraint);
+            //    Constrains.Add(Q, list);
+
+            //}
+            Q.AddEdge(constraint);
         }
 
         private static void FlipEdgeEvent(DTSweepContext tcx, PolygonPoint ep, PolygonPoint eq,
@@ -498,7 +545,6 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     return ot.PointCWFrom(op);
                 case Orientation.Collinear:
                     // TODO: implement support for point on constraint edge
-                    Debug.Assert(false,"We don't support collinear points.");
                     throw new PointOnEdgeException("Point on constrained edge not supported yet", eq, op, ep);
                 default:
                     throw new NotImplementedException("Orientation not handled");

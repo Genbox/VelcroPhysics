@@ -88,26 +88,9 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Util
 
         #endregion
 
-        public bool Contains(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
-            return false;
-        }
-
-        public int IndexOf(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
-            return -1;
-        }
-
         public void Clear()
         {
             _0 = _1 = _2 = false;
-        }
-
-        public void Clear(bool value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = false;
         }
 
         private IEnumerable<bool> Enumerate()

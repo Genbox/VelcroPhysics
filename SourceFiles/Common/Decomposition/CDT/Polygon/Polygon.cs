@@ -40,20 +40,12 @@
 
 using System.Collections.Generic;
 using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
     public class Polygon
     {
-        private List<Polygon> _holes;
         private List<PolygonPoint> _points = new List<PolygonPoint>();
-        private List<DelaunayTriangle> _triangles;
-
-        public IList<Polygon> Holes
-        {
-            get { return _holes; }
-        }
 
         #region Triangulatable Members
 
@@ -62,65 +54,8 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
             get { return _points; }
         }
 
-        public IEnumerable<DelaunayTriangle> Triangles
-        {
-            get { return _triangles; }
-        }
 
-        public void AddTriangle(DelaunayTriangle t)
-        {
-            _triangles.Add(t);
-        }
-
-        public void AddTriangles(IEnumerable<DelaunayTriangle> list)
-        {
-            _triangles.AddRange(list);
-        }
-
-        /// <summary>
-        /// Creates constraints and populates the context with points
-        /// </summary>
-        /// <param name="tcx">The context</param>
-        public void Prepare(DTSweepContext tcx)
-        {
-            if (_triangles == null)
-            {
-                _triangles = new List<DelaunayTriangle>(_points.Count);
-            }
-            else
-            {
-                _triangles.Clear();
-            }
-
-            // Outer constraints
-            for (int i = 0; i < _points.Count - 1; i++) tcx.NewConstraint(_points[i], _points[i + 1]);
-            tcx.NewConstraint(_points[0], _points[_points.Count - 1]);
-            tcx.Points.AddRange(_points);
-
-            // Hole constraints
-            if (_holes != null)
-            {
-                foreach (Polygon p in _holes)
-                {
-                    for (int i = 0; i < p._points.Count - 1; i++) tcx.NewConstraint(p._points[i], p._points[i + 1]);
-                    tcx.NewConstraint(p._points[0], p._points[p._points.Count - 1]);
-                    tcx.Points.AddRange(p._points);
-                }
-            }
-        }
 
         #endregion
-
-        /// <summary>
-        /// Add a hole to the polygon.
-        /// </summary>
-        /// <param name="poly">A subtraction polygon fully contained inside this polygon.</param>
-        public void AddHole(Polygon poly)
-        {
-            if (_holes == null) _holes = new List<Polygon>();
-            _holes.Add(poly);
-            // XXX: tests could be made here to be sure it is fully inside
-            //        addSubtraction( poly.getPoints() );
-        }
     }
 }

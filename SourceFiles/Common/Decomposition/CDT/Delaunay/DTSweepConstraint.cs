@@ -31,41 +31,12 @@
 
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
     public class DTSweepConstraint
     {
         public PolygonPoint P;
         public PolygonPoint Q;
 
-        /// <summary>
-        /// Give two points in any order. Will always be ordered so
-        /// that q.y > p.y and q.x > p.x if same y value 
-        /// </summary>
-        public DTSweepConstraint(PolygonPoint p1, PolygonPoint p2)
-        {
-            P = p1;
-            Q = p2;
-            if (p1.Y > p2.Y)
-            {
-                Q = p1;
-                P = p2;
-            }
-            else if (p1.Y == p2.Y)
-            {
-                if (p1.X > p2.X)
-                {
-                    Q = p1;
-                    P = p2;
-                }
-                else if (p1.X == p2.X)
-                {
-                    //                logger.info( "Failed to create constraint {}={}", p1, p2 );
-                    //                throw new DuplicatePointException( p1 + "=" + p2 );
-                    //                return;
-                }
-            }
-            Q.AddEdge(this);
-        }
     }
 }
