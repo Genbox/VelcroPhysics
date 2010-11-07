@@ -29,11 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   Replaced get/set Next/Previous with attributes
-// Future possibilities
-//   Documentation!
-
 using System.Collections.Generic;
 using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
 

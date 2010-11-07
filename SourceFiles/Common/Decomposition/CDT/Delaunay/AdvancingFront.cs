@@ -29,12 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   Removed BST code, but not all artifacts of it
-// Future possibilities
-//   Eliminate Add/RemoveNode ?
-//   Comments comments and more comments!
-
 using System;
 using System.Text;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;

@@ -29,12 +29,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   Removed getters
-//   Has* turned into attributes
-// Future possibilities
-//   Comments!
-
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay

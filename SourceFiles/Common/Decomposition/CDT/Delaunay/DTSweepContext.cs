@@ -34,12 +34,6 @@ using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
-    /**
-	 * 
-	 * @author Thomas Åhlén, thahlen@gmail.com
-	 *
-	 */
-
     public class DTSweepContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
@@ -148,11 +142,9 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
             for (int i = 0; i < Polygon.Points.Count - 1; i++)
             {
                 DTSweep.CreateSweepConstraint(Polygon.Points[i], Polygon.Points[i + 1]);
-                //new DTSweepConstraint(Polygon.Points[i], Polygon.Points[i + 1]);
             }
             DTSweep.CreateSweepConstraint(Polygon.Points[0], Polygon.Points[Polygon.Points.Count - 1]);
 
-            //new DTSweepConstraint(Polygon.Points[0], Polygon.Points[Polygon.Points.Count - 1]);
             Points.AddRange(Polygon.Points);
 
             double xmax, xmin;
@@ -178,10 +170,8 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
             Head = p1;
             Tail = p2;
 
-            //        long time = System.nanoTime();
             // Sort the points along y-axis
             Points.Sort(_comparator);
-            //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
         }
     }
 }

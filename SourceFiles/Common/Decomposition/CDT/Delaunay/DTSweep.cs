@@ -39,15 +39,7 @@
  * Author: Thomas Åhlén, thahlen@gmail.com 
  */
 
-// Changes from the Java version
-//   Turned DTSweep into a static class
-//   Lots of deindentation via early bailout
-// Future possibilities
-//   Comments!
-
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
@@ -57,15 +49,12 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
     {
         private const double PI_div2 = Math.PI / 2;
         private const double PI_3div4 = 3 * Math.PI / 4;
-        public static Dictionary<PolygonPoint, List<DTSweepConstraint>> Constrains = new Dictionary<PolygonPoint, List<DTSweepConstraint>>();
 
         /// <summary>
         /// Triangulate simple polygon with holes
         /// </summary>
         public static void Triangulate(DTSweepContext tcx)
         {
-            Constrains.Clear();
-
             tcx.CreateAdvancingFront();
             Sweep(tcx);
             FinalizationPolygon(tcx);
