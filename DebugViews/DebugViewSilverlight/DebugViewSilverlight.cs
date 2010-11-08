@@ -42,7 +42,7 @@ namespace FarseerPhysics.DebugViewSilverlight
         {
             _debugCanvas = debugCanvas;
             _txtDebug = txtDebug;
-            if(world!=null)
+            if (world != null)
                 world.ContactManager.PreSolve += PreSolve;
             Transform = new CompositeTransform();
 
@@ -266,15 +266,22 @@ namespace FarseerPhysics.DebugViewSilverlight
         {
             if (_txtDebug != null)
             {
+                int fixtures = 0;
+                for (int i = 0; i < World.BodyList.Count; i++)
+                {
+                    fixtures += World.BodyList[i].FixtureList.Count;
+                }
+
                 StringBuilder output = new StringBuilder();
                 output.AppendLine("Bodies: " + World.BodyList.Count);
-
-                //TODO: Is the number of contacts reliable?
+                output.AppendLine("Fixtures: " + fixtures);
                 output.AppendLine("Contacts: " + World.ContactCount);
                 output.AppendLine("Joints: " + World.JointList.Count);
                 output.AppendLine("Proxies: " + World.ProxyCount);
                 output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
                 output.AppendLine("Controllers: " + World.Controllers.Count);
+                
+                output.AppendLine();
 
                 output.AppendLine("New contacts: " + World.NewContactsTime);
                 output.AppendLine("Controllers: " + World.ControllersUpdateTime);
@@ -525,7 +532,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             Canvas.SetTop(circle, c.Y - circle.Height / 2);
 
             _debugCanvas.Children.Add(circle);
-            
+
             DrawCircle(center, radius, color);
 
             DrawSegment(center, center + axis * radius, color);
@@ -563,7 +570,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             p2 = p1 + axisScale * transform.R.col2;
             DrawSegment(p1, p2, Colors.Green);
         }
-        
+
         public void DrawPoint(Vector2 p, float size, Color color)
         {
             Vector2[] verts = new Vector2[4];

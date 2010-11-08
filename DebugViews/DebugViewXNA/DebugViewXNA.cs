@@ -28,7 +28,7 @@ namespace FarseerPhysics.DebugViewXNA
         private static SpriteBatch _batch;
         private static SpriteFont _font;
         private static GraphicsDevice _device;
-        private static Vector2[] temp_vertices;
+        private static Vector2[] _tempVertices;
 
         private static List<StringData> _stringData;
         private static BasicEffect _effect;
@@ -48,7 +48,7 @@ namespace FarseerPhysics.DebugViewXNA
             _vertsLines = new VertexPositionColor[1000000];
             _vertsFill = new VertexPositionColor[1000000];
 
-            temp_vertices = new Vector2[Settings.MaxPolygonVertices];
+            _tempVertices = new Vector2[Settings.MaxPolygonVertices];
 
             world.ContactManager.PreSolve += PreSolve;
 
@@ -268,14 +268,19 @@ namespace FarseerPhysics.DebugViewXNA
 
         private void DrawDebugPanel()
         {
+            int fixtures = 0;
+            for (int i = 0; i < World.BodyList.Count; i++)
+            {
+                fixtures += World.BodyList[i].FixtureList.Count;
+            }
+            
             DrawString(50, 100, "Bodies: " + World.BodyList.Count);
-
-            //TODO: Is the number of contacts reliable?
-            DrawString(50, 115, "Contacts: " + World.ContactCount);
-            DrawString(50, 130, "Joints: " + World.JointList.Count);
-            DrawString(50, 145, "Proxies: " + World.ProxyCount);
-            DrawString(50, 160, "Breakable: " + World.BreakableBodyList.Count);
-            DrawString(50, 175, "Controllers: " + World.Controllers.Count);
+            DrawString(50, 115, "Fixtures: " + fixtures);
+            DrawString(50, 130, "Contacts: " + World.ContactCount);
+            DrawString(50, 145, "Joints: " + World.JointList.Count);
+            DrawString(50, 160, "Proxies: " + World.ProxyCount);
+            DrawString(50, 175, "Breakable: " + World.BreakableBodyList.Count);
+            DrawString(50, 190, "Controllers: " + World.Controllers.Count);
 
             DrawString(160, 100, "New contacts: " + World.NewContactsTime);
             DrawString(160, 115, "Controllers: " + World.ControllersUpdateTime);
@@ -393,10 +398,10 @@ namespace FarseerPhysics.DebugViewXNA
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            temp_vertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
+                            _tempVertices[i] = MathUtils.Multiply(ref xf, poly.Vertices[i]);
                         }
 
-                        DrawSolidPolygon(temp_vertices, vertexCount, color);
+                        DrawSolidPolygon(_tempVertices, vertexCount, color);
                     }
                     break;
 

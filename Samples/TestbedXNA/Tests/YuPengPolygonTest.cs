@@ -47,9 +47,6 @@ namespace FarseerPhysics.TestBed.Tests
             _clip = _polygons[1];
 
             base.Initialize();
-
-            //Removing debugpanel - this is a tools only simulation
-            GameInstance.DebugViewEnabled = false;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -118,8 +115,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(500, TextLine, "Holes are colored light blue");
             TextLine += 15;
-
-            base.Update(settings, gameTime);
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
