@@ -60,7 +60,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            _jointError = BodyA.Sweep.a - TargetAngle;
+            _jointError = BodyA.Sweep.A - TargetAngle;
 
             _bias = -BiasFactor * step.inv_dt * _jointError;
 

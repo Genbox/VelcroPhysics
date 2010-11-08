@@ -860,7 +860,7 @@ namespace FarseerPhysics.Dynamics
                 for (int i = 0; i < BodyList.Count; i++)
                 {
                     BodyList[i].Flags &= ~BodyFlags.Island;
-                    BodyList[i].Sweep.alpha0 = 0.0f;
+                    BodyList[i].Sweep.Alpha0 = 0.0f;
                 }
 
                 for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
@@ -937,16 +937,16 @@ namespace FarseerPhysics.Dynamics
 
                         // Compute the TOI for this contact.
                         // Put the sweeps onto the same time interval.
-                        float alpha0 = bA.Sweep.alpha0;
+                        float alpha0 = bA.Sweep.Alpha0;
 
-                        if (bA.Sweep.alpha0 < bB.Sweep.alpha0)
+                        if (bA.Sweep.Alpha0 < bB.Sweep.Alpha0)
                         {
-                            alpha0 = bB.Sweep.alpha0;
+                            alpha0 = bB.Sweep.Alpha0;
                             bA.Sweep.Advance(alpha0);
                         }
-                        else if (bB.Sweep.alpha0 < bA.Sweep.alpha0)
+                        else if (bB.Sweep.Alpha0 < bA.Sweep.Alpha0)
                         {
-                            alpha0 = bA.Sweep.alpha0;
+                            alpha0 = bA.Sweep.Alpha0;
                             bB.Sweep.Advance(alpha0);
                         }
 

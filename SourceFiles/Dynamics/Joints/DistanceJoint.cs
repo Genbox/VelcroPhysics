@@ -139,7 +139,7 @@ namespace FarseerPhysics.Dynamics.Joints
             // Compute the effective mass matrix.
             Vector2 r1 = MathUtils.Multiply(ref b1.Xf.R, LocalAnchorA - b1.LocalCenter);
             Vector2 r2 = MathUtils.Multiply(ref b2.Xf.R, LocalAnchorB - b2.LocalCenter);
-            _u = b2.Sweep.c + r2 - b1.Sweep.c - r1;
+            _u = b2.Sweep.C + r2 - b1.Sweep.C - r1;
 
             // Handle singularity.
             float length = _u.Length();
@@ -249,7 +249,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
-            Vector2 d = b2.Sweep.c + r2 - b1.Sweep.c - r1;
+            Vector2 d = b2.Sweep.C + r2 - b1.Sweep.C - r1;
 
             float length = d.Length();
 
@@ -264,12 +264,12 @@ namespace FarseerPhysics.Dynamics.Joints
             _u = d;
             Vector2 P = impulse * _u;
 
-            b1.Sweep.c -= b1.InvMass * P;
+            b1.Sweep.C -= b1.InvMass * P;
             MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
-            b1.Sweep.a -= b1.InvI * _tmpFloat1;
-            b2.Sweep.c += b2.InvMass * P;
+            b1.Sweep.A -= b1.InvI * _tmpFloat1;
+            b2.Sweep.C += b2.InvMass * P;
             MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
-            b2.Sweep.a += b2.InvI * _tmpFloat1;
+            b2.Sweep.A += b2.InvI * _tmpFloat1;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
