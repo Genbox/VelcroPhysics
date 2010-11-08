@@ -176,8 +176,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     ManifoldPoint cp = manifold.Points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
-                    ccp.rA = worldManifold.Points[j] - bodyA.Sweep.c;
-                    ccp.rB = worldManifold.Points[j] - bodyB.Sweep.c;
+                    ccp.rA = worldManifold.Points[j] - bodyA.Sweep.C;
+                    ccp.rB = worldManifold.Points[j] - bodyB.Sweep.C;
 #if MATH_OVERLOADS
 			        float rnA = MathUtils.Cross(ccp.rA, cc.Normal);
 			        float rnB = MathUtils.Cross(ccp.rB, cc.Normal);
@@ -565,7 +565,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         x.X = -cp1.NormalMass * b.X;
                         x.Y = 0.0f;
                         vn1 = 0.0f;
-                        vn2 = c.K.col1.Y * x.X + b.Y;
+                        vn2 = c.K.Col1.Y * x.X + b.Y;
 
                         if (x.X >= 0.0f && vn2 >= 0.0f)
                         {
@@ -623,7 +623,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         //
                         x.X = 0.0f;
                         x.Y = -cp2.NormalMass * b.Y;
-                        vn1 = c.K.col2.X * x.Y + b.X;
+                        vn1 = c.K.Col2.X * x.Y + b.X;
                         vn2 = 0.0f;
 
                         if (x.Y >= 0.0f && vn1 >= 0.0f)
@@ -781,8 +781,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 point = psm.Point;
                     float separation = psm.Separation;
 
-                    Vector2 rA = point - bodyA.Sweep.c;
-                    Vector2 rB = point - bodyB.Sweep.c;
+                    Vector2 rA = point - bodyA.Sweep.C;
+                    Vector2 rB = point - bodyB.Sweep.C;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -810,13 +810,13 @@ namespace FarseerPhysics.Dynamics.Contacts
 #else
                     Vector2 P = new Vector2(impulse * normal.X, impulse * normal.Y);
 
-                    bodyA.Sweep.c.X -= invMassA * P.X;
-                    bodyA.Sweep.c.Y -= invMassA * P.Y;
-                    bodyA.Sweep.a -= invIA * (rA.X * P.Y - rA.Y * P.X);
+                    bodyA.Sweep.C.X -= invMassA * P.X;
+                    bodyA.Sweep.C.Y -= invMassA * P.Y;
+                    bodyA.Sweep.A -= invIA * (rA.X * P.Y - rA.Y * P.X);
 
-                    bodyB.Sweep.c.X += invMassB * P.X;
-                    bodyB.Sweep.c.Y += invMassB * P.Y;
-                    bodyB.Sweep.a += invIB * (rB.X * P.Y - rB.Y * P.X);
+                    bodyB.Sweep.C.X += invMassB * P.X;
+                    bodyB.Sweep.C.Y += invMassB * P.Y;
+                    bodyB.Sweep.A += invIB * (rB.X * P.Y - rB.Y * P.X);
 #endif
                     bodyA.SynchronizeTransform();
                     bodyB.SynchronizeTransform();
@@ -865,8 +865,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 point = psm.Point;
                     float separation = psm.Separation;
 
-                    Vector2 rA = point - bodyA.Sweep.c;
-                    Vector2 rB = point - bodyB.Sweep.c;
+                    Vector2 rA = point - bodyA.Sweep.C;
+                    Vector2 rB = point - bodyB.Sweep.C;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -884,12 +884,12 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     Vector2 P = impulse * normal;
 
-                    bodyA.Sweep.c -= invMassA * P;
-                    bodyA.Sweep.a -= invIA * MathUtils.Cross(rA, P);
+                    bodyA.Sweep.C -= invMassA * P;
+                    bodyA.Sweep.A -= invIA * MathUtils.Cross(rA, P);
                     bodyA.SynchronizeTransform();
 
-                    bodyB.Sweep.c += invMassB * P;
-                    bodyB.Sweep.a += invIB * MathUtils.Cross(rB, P);
+                    bodyB.Sweep.C += invMassB * P;
+                    bodyB.Sweep.A += invIB * MathUtils.Cross(rB, P);
                     bodyB.SynchronizeTransform();
                 }
             }

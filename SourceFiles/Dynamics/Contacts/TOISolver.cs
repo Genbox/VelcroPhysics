@@ -198,8 +198,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 point = psm.Point;
                     float separation = psm.Separation;
 
-                    Vector2 rA = point - bodyA.Sweep.c;
-                    Vector2 rB = point - bodyB.Sweep.c;
+                    Vector2 rA = point - bodyA.Sweep.C;
+                    Vector2 rB = point - bodyB.Sweep.C;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -218,12 +218,12 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     Vector2 P = impulse * normal;
 
-                    bodyA.Sweep.c -= invMassA * P;
-                    bodyA.Sweep.a -= invIA * MathUtils.Cross(rA, P);
+                    bodyA.Sweep.C -= invMassA * P;
+                    bodyA.Sweep.A -= invIA * MathUtils.Cross(rA, P);
                     bodyA.SynchronizeTransform();
 
-                    bodyB.Sweep.c += invMassB * P;
-                    bodyB.Sweep.a += invIB * MathUtils.Cross(rB, P);
+                    bodyB.Sweep.C += invMassB * P;
+                    bodyB.Sweep.A += invIB * MathUtils.Cross(rB, P);
                     bodyB.SynchronizeTransform();
                 }
             }

@@ -334,10 +334,10 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float impulse = _mass * (-C);
 
-            b1.Sweep.c += b1.InvMass * impulse * _J.LinearA;
-            b1.Sweep.a += b1.InvI * impulse * _J.AngularA;
-            b2.Sweep.c += b2.InvMass * impulse * _J.LinearB;
-            b2.Sweep.a += b2.InvI * impulse * _J.AngularB;
+            b1.Sweep.C += b1.InvMass * impulse * _J.LinearA;
+            b1.Sweep.A += b1.InvI * impulse * _J.AngularA;
+            b2.Sweep.C += b2.InvMass * impulse * _J.LinearB;
+            b2.Sweep.A += b2.InvI * impulse * _J.AngularB;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();

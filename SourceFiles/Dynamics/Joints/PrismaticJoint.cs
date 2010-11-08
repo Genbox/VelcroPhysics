@@ -190,8 +190,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
                 Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
-                Vector2 p1 = BodyA.Sweep.c + r1;
-                Vector2 p2 = BodyB.Sweep.c + r2;
+                Vector2 p1 = BodyA.Sweep.C + r1;
+                Vector2 p2 = BodyB.Sweep.C + r2;
                 Vector2 d = p2 - p1;
                 Vector2 axis = BodyA.GetWorldVector(ref _localXAxis1);
 
@@ -334,7 +334,7 @@ namespace FarseerPhysics.Dynamics.Joints
             // Compute the effective masses.
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - LocalCenterA);
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
-            Vector2 d = b2.Sweep.c + r2 - b1.Sweep.c - r1;
+            Vector2 d = b2.Sweep.C + r2 - b1.Sweep.C - r1;
 
             InvMassA = b1.InvMass;
             InvIA = b1.InvI;
@@ -372,9 +372,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k23 = i1 * _a1 + i2 * _a2;
                 float k33 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.col1 = new Vector3(k11, k12, k13);
-                _K.col2 = new Vector3(k12, k22, k23);
-                _K.col3 = new Vector3(k13, k23, k33);
+                _K.Col1 = new Vector3(k11, k12, k13);
+                _K.Col2 = new Vector3(k12, k22, k23);
+                _K.Col3 = new Vector3(k13, k23, k33);
             }
 
             // Compute motor and limit terms.
@@ -493,7 +493,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.col3.X, _K.col3.Y);
+                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.Col3.X, _K.Col3.Y);
                 Vector2 f2r = _K.Solve22(b) + new Vector2(f1.X, f1.Y);
                 _impulse.X = f2r.X;
                 _impulse.Y = f2r.Y;
@@ -539,11 +539,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Body b1 = BodyA;
             Body b2 = BodyB;
 
-            Vector2 c1 = b1.Sweep.c;
-            float a1 = b1.Sweep.a;
+            Vector2 c1 = b1.Sweep.C;
+            float a1 = b1.Sweep.A;
 
-            Vector2 c2 = b2.Sweep.c;
-            float a2 = b2.Sweep.a;
+            Vector2 c2 = b2.Sweep.C;
+            float a2 = b2.Sweep.A;
 
             // Solve linear limit constraint.
             float linearError = 0.0f;
@@ -613,9 +613,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k23 = i1 * _a1 + i2 * _a2;
                 float k33 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.col1 = new Vector3(k11, k12, k13);
-                _K.col2 = new Vector3(k12, k22, k23);
-                _K.col3 = new Vector3(k13, k23, k33);
+                _K.Col1 = new Vector3(k11, k12, k13);
+                _K.Col2 = new Vector3(k12, k22, k23);
+                _K.Col3 = new Vector3(k13, k23, k33);
 
                 Vector3 C = new Vector3(-C1.X, -C1.Y, -C2);
                 impulse = _K.Solve33(C); // negated above
@@ -629,8 +629,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k12 = i1 * _s1 + i2 * _s2;
                 float k22 = i1 + i2;
 
-                _K.col1 = new Vector3(k11, k12, 0.0f);
-                _K.col2 = new Vector3(k12, k22, 0.0f);
+                _K.Col1 = new Vector3(k11, k12, 0.0f);
+                _K.Col2 = new Vector3(k12, k22, 0.0f);
 
                 Vector2 impulse1 = _K.Solve22(-C1);
                 impulse.X = impulse1.X;
@@ -648,10 +648,10 @@ namespace FarseerPhysics.Dynamics.Joints
             a2 += InvIB * L2;
 
             // TODO_ERIN remove need for this.
-            b1.Sweep.c = c1;
-            b1.Sweep.a = a1;
-            b2.Sweep.c = c2;
-            b2.Sweep.a = a2;
+            b1.Sweep.C = c1;
+            b1.Sweep.A = a1;
+            b2.Sweep.C = c2;
+            b2.Sweep.A = a2;
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
 

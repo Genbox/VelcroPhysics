@@ -118,27 +118,29 @@ namespace FarseerPhysics.Dynamics.Joints
             float iA = bA.InvI, iB = bB.InvI;
 
             Mat22 K1 = new Mat22();
-            K1.col1.X = mA + mB;
-            K1.col2.X = 0.0f;
-            K1.col1.Y = 0.0f;
-            K1.col2.Y = mA + mB;
+            K1.Col1.X = mA + mB;
+            K1.Col2.X = 0.0f;
+            K1.Col1.Y = 0.0f;
+            K1.Col2.Y = mA + mB;
 
             Mat22 K2 = new Mat22();
-            K2.col1.X = iA * rA.Y * rA.Y;
-            K2.col2.X = -iA * rA.X * rA.Y;
-            K2.col1.Y = -iA * rA.X * rA.Y;
-            K2.col2.Y = iA * rA.X * rA.X;
+            K2.Col1.X = iA * rA.Y * rA.Y;
+            K2.Col2.X = -iA * rA.X * rA.Y;
+            K2.Col1.Y = -iA * rA.X * rA.Y;
+            K2.Col2.Y = iA * rA.X * rA.X;
 
             Mat22 K3 = new Mat22();
-            K3.col1.X = iB * rB.Y * rB.Y;
-            K3.col2.X = -iB * rB.X * rB.Y;
-            K3.col1.Y = -iB * rB.X * rB.Y;
-            K3.col2.Y = iB * rB.X * rB.X;
+            K3.Col1.X = iB * rB.Y * rB.Y;
+            K3.Col2.X = -iB * rB.X * rB.Y;
+            K3.Col1.Y = -iB * rB.X * rB.Y;
+            K3.Col2.Y = iB * rB.X * rB.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);
+
             Mat22 K;
             Mat22.Add(ref K12, ref K3, out K);
+
             _linearMass = K.Inverse;
 
             _angularMass = iA + iB;

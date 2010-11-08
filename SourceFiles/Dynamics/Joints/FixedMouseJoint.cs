@@ -168,12 +168,12 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);
 
-            K.col1.X += _gamma;
-            K.col2.Y += _gamma;
+            K.Col1.X += _gamma;
+            K.Col2.Y += _gamma;
 
             _mass = K.Inverse;
 
-            _C = b.Sweep.c + r - LocalAnchorB;
+            _C = b.Sweep.C + r - LocalAnchorB;
 
             // Cheat with some damping
             b.AngularVelocityInternal *= 0.98f;

@@ -109,7 +109,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _rB = MathUtils.Multiply(ref xf2.R, _localAnchorB - bB.LocalCenter);
 
             // Rope axis
-            _u = bB.Sweep.c + _rB - bA.Sweep.c - _rA;
+            _u = bB.Sweep.C + _rB - bA.Sweep.C - _rA;
 
             _length = _u.Length();
 
@@ -202,7 +202,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 rA = MathUtils.Multiply(ref xf1.R, _localAnchorA - bA.LocalCenter);
             Vector2 rB = MathUtils.Multiply(ref xf2.R, _localAnchorB - bB.LocalCenter);
 
-            Vector2 u = bB.Sweep.c + rB - bA.Sweep.c - rA;
+            Vector2 u = bB.Sweep.C + rB - bA.Sweep.C - rA;
 
             u.Normalize();
 
@@ -214,10 +214,10 @@ namespace FarseerPhysics.Dynamics.Joints
             float impulse = -_mass*C;
             Vector2 P = impulse*u;
 
-            bA.Sweep.c -= bA.InvMass*P;
-            bA.Sweep.a -= bA.InvI*MathUtils.Cross(rA, P);
-            bB.Sweep.c += bB.InvMass*P;
-            bB.Sweep.a += bB.InvI*MathUtils.Cross(rB, P);
+            bA.Sweep.C -= bA.InvMass*P;
+            bA.Sweep.A -= bA.InvI*MathUtils.Cross(rA, P);
+            bB.Sweep.C += bB.InvMass*P;
+            bB.Sweep.A += bB.InvI*MathUtils.Cross(rB, P);
 
             bA.SynchronizeTransform();
             bB.SynchronizeTransform();

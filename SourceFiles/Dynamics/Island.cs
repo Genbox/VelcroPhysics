@@ -197,12 +197,12 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Store positions for continuous collision.
-                b.Sweep.c0 = b.Sweep.c;
-                b.Sweep.a0 = b.Sweep.a;
+                b.Sweep.C0 = b.Sweep.C;
+                b.Sweep.A0 = b.Sweep.A;
 
                 // Integrate
-                b.Sweep.c += step.dt * b.LinearVelocityInternal;
-                b.Sweep.a += step.dt * b.AngularVelocityInternal;
+                b.Sweep.C += step.dt * b.LinearVelocityInternal;
+                b.Sweep.A += step.dt * b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -335,8 +335,8 @@ namespace FarseerPhysics.Dynamics
             // Leap of faith to new safe state.
             for (int i = 0; i < BodyCount; ++i)
             {
-                Bodies[i].Sweep.a0 = Bodies[i].Sweep.a;
-                Bodies[i].Sweep.c0 = Bodies[i].Sweep.c;
+                Bodies[i].Sweep.A0 = Bodies[i].Sweep.A;
+                Bodies[i].Sweep.C0 = Bodies[i].Sweep.C;
             }
 
             // No warm starting is needed for TOI events because warm
@@ -384,8 +384,8 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Integrate
-                b.Sweep.c += subStep.dt * b.LinearVelocity;
-                b.Sweep.a += subStep.dt * b.AngularVelocity;
+                b.Sweep.C += subStep.dt * b.LinearVelocity;
+                b.Sweep.A += subStep.dt * b.AngularVelocity;
 
                 // Compute new transform
                 b.SynchronizeTransform();

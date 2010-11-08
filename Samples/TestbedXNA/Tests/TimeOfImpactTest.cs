@@ -52,17 +52,17 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             Sweep sweepA = new Sweep();
-            sweepA.c0 = new Vector2(24.0f, -60.0f);
-            sweepA.a0 = 2.95f;
-            sweepA.c = sweepA.c0;
-            sweepA.a = sweepA.a0;
+            sweepA.C0 = new Vector2(24.0f, -60.0f);
+            sweepA.A0 = 2.95f;
+            sweepA.C = sweepA.C0;
+            sweepA.A = sweepA.A0;
             sweepA.LocalCenter = Vector2.Zero;
 
             Sweep sweepB = new Sweep();
-            sweepB.c0 = new Vector2(53.474274f, -50.252514f);
-            sweepB.a0 = 513.36676f; // - 162.0f * b2_pi;
-            sweepB.c = new Vector2(54.595478f, -51.083473f);
-            sweepB.a = 513.62781f; //  - 162.0f * b2_pi;
+            sweepB.C0 = new Vector2(53.474274f, -50.252514f);
+            sweepB.A0 = 513.36676f; // - 162.0f * b2_pi;
+            sweepB.C = new Vector2(54.595478f, -51.083473f);
+            sweepB.A = 513.62781f; //  - 162.0f * b2_pi;
             sweepB.LocalCenter = Vector2.Zero;
 
             //sweepB.a0 -= 300.0f * b2_pi;

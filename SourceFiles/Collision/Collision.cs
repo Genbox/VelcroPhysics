@@ -1522,10 +1522,10 @@ namespace FarseerPhysics.Collision
             Vector2 normal1 = MathUtils.MultiplyT(ref xf2.R, normal1World);
 #else
             Vector2 p1n = poly1.Normals[edge1];
-            Vector2 normal1World = new Vector2(xf1.R.col1.X * p1n.X + xf1.R.col2.X * p1n.Y,
-                                               xf1.R.col1.Y * p1n.X + xf1.R.col2.Y * p1n.Y);
-            Vector2 normal1 = new Vector2(normal1World.X * xf2.R.col1.X + normal1World.Y * xf2.R.col1.Y,
-                                          normal1World.X * xf2.R.col2.X + normal1World.Y * xf2.R.col2.Y);
+            Vector2 normal1World = new Vector2(xf1.R.Col1.X * p1n.X + xf1.R.Col2.X * p1n.Y,
+                                               xf1.R.Col1.Y * p1n.X + xf1.R.Col2.Y * p1n.Y);
+            Vector2 normal1 = new Vector2(normal1World.X * xf2.R.Col1.X + normal1World.Y * xf2.R.Col1.Y,
+                                          normal1World.X * xf2.R.Col2.X + normal1World.Y * xf2.R.Col2.Y);
 #endif
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -1553,10 +1553,10 @@ namespace FarseerPhysics.Collision
 #else
             Vector2 p1ve = poly1.Vertices[edge1];
             Vector2 p2vi = poly2.Vertices[index];
-            Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.col1.X * p1ve.X + xf1.R.col2.X * p1ve.Y,
-                                     xf1.Position.Y + xf1.R.col1.Y * p1ve.X + xf1.R.col2.Y * p1ve.Y);
-            Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.col1.X * p2vi.X + xf2.R.col2.X * p2vi.Y,
-                                     xf2.Position.Y + xf2.R.col1.Y * p2vi.X + xf2.R.col2.Y * p2vi.Y);
+            Vector2 v1 = new Vector2(xf1.Position.X + xf1.R.Col1.X * p1ve.X + xf1.R.Col2.X * p1ve.Y,
+                                     xf1.Position.Y + xf1.R.Col1.Y * p1ve.X + xf1.R.Col2.Y * p1ve.Y);
+            Vector2 v2 = new Vector2(xf2.Position.X + xf2.R.Col1.X * p2vi.X + xf2.R.Col2.X * p2vi.Y,
+                                     xf2.Position.Y + xf2.R.Col1.Y * p2vi.X + xf2.R.Col2.Y * p2vi.Y);
 #endif
 
 #if !MATH_OVERLOADS
