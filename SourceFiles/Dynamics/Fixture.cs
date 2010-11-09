@@ -324,7 +324,6 @@ namespace FarseerPhysics.Dynamics
         /// Get the mass data for this fixture. The mass data is based on the density and
         /// the Shape. The rotational inertia is about the Shape's origin.
         /// </summary>
-        /// <param name="massData">The mass data.</param>
         public MassData GetMassData()
         {
             return Shape.MassData;

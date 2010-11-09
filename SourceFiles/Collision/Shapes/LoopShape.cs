@@ -172,7 +172,7 @@ namespace FarseerPhysics.Collision.Shapes
         public override void ComputeProperties()
         {
             MassData.Mass = 0.0f;
-            MassData.Center = Vector2.Zero;
+            MassData.Centroid = Vector2.Zero;
             MassData.Inertia = 0.0f;
         }
     }

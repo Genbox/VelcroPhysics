@@ -65,8 +65,8 @@ namespace FarseerPhysics.Collision.Shapes
 
         public Vector2 Centroid
         {
-            get { return MassData.Center; }
-            set { MassData.Center = value; }
+            get { return MassData.Centroid; }
+            set { MassData.Centroid = value; }
         }
 
         public override Shape Clone()
@@ -187,7 +187,7 @@ namespace FarseerPhysics.Collision.Shapes
             // A line segment has zero mass.
             if (Vertices.Count == 2)
             {
-                MassData.Center = 0.5f * (Vertices[0] + Vertices[1]);
+                MassData.Centroid = 0.5f * (Vertices[0] + Vertices[1]);
                 MassData.Mass = 0.0f;
                 MassData.Inertia = 0.0f;
                 return;
@@ -251,7 +251,7 @@ namespace FarseerPhysics.Collision.Shapes
             // Center of mass
             Debug.Assert(area > Settings.Epsilon);
             center *= 1.0f / area;
-            MassData.Center = center;
+            MassData.Centroid = center;
 
             // Inertia tensor relative to the local origin.
             MassData.Inertia = _density * I;

@@ -155,7 +155,7 @@ namespace FarseerPhysics.Collision.Shapes
         public override void ComputeProperties()
         {
             MassData.Mass = _density * Settings.Pi * Radius * Radius;
-            MassData.Center = Position;
+            MassData.Centroid = Position;
 
             // inertia about the local origin
             MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
