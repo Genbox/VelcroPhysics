@@ -880,9 +880,9 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                MassData massData = f.GetMassData();
+                MassData massData = f.Shape.MassData;
                 _mass += massData.Mass;
-                center += massData.Mass * massData.Center;
+                center += massData.Mass * massData.Centroid;
                 _inertia += massData.Inertia;
             }
 
