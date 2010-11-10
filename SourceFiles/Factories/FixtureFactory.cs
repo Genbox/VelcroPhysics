@@ -16,6 +16,11 @@ namespace FarseerPhysics.Factories
         public static Fixture CreateEdge(World world, Vector2 start, Vector2 end, float density)
         {
             Body body = BodyFactory.CreateBody(world);
+            return CreateEdge(start, end, body, density);
+        }
+
+        public static Fixture CreateEdge(Vector2 start, Vector2 end, Body body, float density)
+        {
             Vertices edgeVertices = PolygonTools.CreateEdge(start, end);
             PolygonShape rectangleShape = new PolygonShape(edgeVertices);
             return body.CreateFixture(rectangleShape, density);
