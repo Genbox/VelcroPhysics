@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("AdvancedSamplesXNA")]
-[assembly: AssemblyProduct("AdvancedSamplesXNA")]
+[assembly: AssemblyTitle("Advanced Samples XNA")]
+[assembly: AssemblyProduct("Advanced Samples XNA")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCompany("Farseer Physics Engine")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.1.*")]
