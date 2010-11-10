@@ -47,6 +47,11 @@ namespace FarseerPhysics.Collision.Shapes
         /// The mass of the shape, usually in kilograms.
         /// </summary>
         public float Mass;
+
+        /// <summary>
+        /// The area of the shape
+        /// </summary>
+        public float Area;
     }
 
     public enum ShapeType

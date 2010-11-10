@@ -245,6 +245,9 @@ namespace FarseerPhysics.Collision.Shapes
 
             Debug.Assert(area > Settings.Epsilon);
 
+            // We save the area
+            MassData.Area = area;
+
             // Total mass
             MassData.Mass = _density * area;
 
