@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Farseer Physics 3.0 XNA")]
-[assembly: AssemblyProduct("Farseer Physics 3.0 XNA")]
+[assembly: AssemblyTitle("Farseer Physics XNA")]
+[assembly: AssemblyProduct("Farseer Physics XNA")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Farseer Physics")]
+[assembly: AssemblyCompany("Farseer Physics Engine")]
 [assembly: AssemblyCopyright("Copyright © Farseer Physics 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,4 +31,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.1.*")]

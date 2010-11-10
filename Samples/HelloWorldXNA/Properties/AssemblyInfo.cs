@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Hello World XNA Demo")]
+[assembly: AssemblyTitle("Hello World XNA")]
 [assembly: AssemblyProduct("HelloWorld")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
@@ -29,4 +29,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.0.*")]
+[assembly: AssemblyVersion("3.1.*")]
