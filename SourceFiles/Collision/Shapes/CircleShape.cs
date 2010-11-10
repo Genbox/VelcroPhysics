@@ -119,7 +119,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float) Math.Sqrt(sigma));
+            float a = -(c + (float)Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.MaxFraction * rr)
@@ -154,7 +154,9 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Mass = _density * Settings.Pi * Radius * Radius;
+            float area = Settings.Pi * Radius * Radius;
+            MassData.Area = area;
+            MassData.Mass = _density * area;
             MassData.Centroid = Position;
 
             // inertia about the local origin
