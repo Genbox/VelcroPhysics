@@ -110,7 +110,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public SeparationEventHandler OnSeparation;
 
-        public Action<ContactConstraint> PostSolve;
         public FixtureProxy[] Proxies;
         public int ProxyCount;
         private CollisionCategory _collidesWith;

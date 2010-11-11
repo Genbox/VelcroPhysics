@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
@@ -47,9 +48,10 @@ namespace FarseerPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
-        public BreakableBody(List<Vertices> vertices, World world, float density)
+        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density)
         {
             _world = world;
+            _world.ContactManager.PostSolve += PostSolve;
             MainBody = _world.CreateBody();
             MainBody.BodyType = BodyType.Dynamic;
 
@@ -57,26 +59,30 @@ namespace FarseerPhysics.Dynamics
             {
                 PolygonShape polygonShape = new PolygonShape(part);
                 Fixture fixture = MainBody.CreateFixture(polygonShape, density);
-                fixture.PostSolve += PostSolve;
                 Parts.Add(fixture);
             }
         }
 
-        private void PostSolve(ContactConstraint contactConstraint)
+        private void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
             if (!Broken)
             {
-                float maxImpulse = 0.0f;
-                for (int i = 0; i < contactConstraint.Manifold.PointCount; ++i)
+                if (Parts.Contains(contact.FixtureA) || Parts.Contains(contact.FixtureB))
                 {
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[0].NormalImpulse);
-                    maxImpulse = Math.Max(maxImpulse, contactConstraint.Manifold.Points[1].NormalImpulse);
-                }
+                    float maxImpulse = 0.0f;
+                    Manifold manifold;
+                    contact.GetManifold(out manifold);
 
-                if (maxImpulse > Strength)
-                {
-                    // Flag the body for breaking.
-                    _break = true;
+                    for (int i = 0; i < manifold.PointCount; ++i)
+                    {
+                        maxImpulse = Math.Max(maxImpulse, impulse.NormalImpulses[i]);
+                    }
+
+                    if (maxImpulse > Strength)
+                    {
+                        // Flag the body for breaking.
+                        _break = true;
+                    }
                 }
             }
         }
@@ -111,12 +117,12 @@ namespace FarseerPhysics.Dynamics
 
         private void Decompose()
         {
+            //Unsubsribe from the PostSolve delegate
+            _world.ContactManager.PostSolve -= PostSolve;
+
             for (int i = 0; i < Parts.Count; i++)
             {
                 Fixture fixture = Parts[i];
-
-                //Unsubsribe from the PostSolve delegate
-                fixture.PostSolve -= PostSolve;
 
                 Shape shape = fixture.Shape.Clone();
 
