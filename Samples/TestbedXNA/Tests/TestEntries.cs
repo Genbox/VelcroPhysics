@@ -31,8 +31,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
-                new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
-
                 //Original tests
                 new TestEntry {Name = "Rope Test", CreateFcn = RopeTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
@@ -75,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
 
-                //FPE 3.0 tests
+                //FPE tests
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
                 new TestEntry {Name = "Cutting of polygons", CreateFcn = CuttingTest.Create},
