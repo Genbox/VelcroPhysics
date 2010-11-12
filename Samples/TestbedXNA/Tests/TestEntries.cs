@@ -39,7 +39,11 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
                 new TestEntry {Name = "Bullet Test", CreateFcn = BulletTest.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
+
+                //Can crash the application on Xbox360
+#if (!XBOX360)
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
+#endif
                 new TestEntry {Name = "Web", CreateFcn = WebTest.Create},
                 new TestEntry {Name = "Vertical Stack", CreateFcn = VerticalStackTest.Create},
                 new TestEntry {Name = "Time of Impact", CreateFcn = TimeOfImpactTest.Create},
