@@ -47,8 +47,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ContentManager = new ContentManager(game.Services);
             ContentManager.RootDirectory = "Content";
-            _graphicsDeviceService = (IGraphicsDeviceService) game.Services.GetService(
-                typeof (IGraphicsDeviceService));
+            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
+                typeof(IGraphicsDeviceService));
             game.Exiting += Game_Exiting;
 
             if (_graphicsDeviceService == null)
@@ -213,10 +213,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
 
             // Print debug trace?
+#if (!XBOX360)
             if (TraceEnabled)
                 TraceScreens();
+#endif
         }
 
+#if (!XBOX360)
+        
         /// <summary>
         /// Prints a list of all the screens, for debugging.
         /// </summary>
@@ -230,6 +234,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             Trace.WriteLine(string.Join(", ", screenNames.ToArray()));
         }
 
+#endif
         /// <summary>
         /// Tells each screen to draw itself.
         /// </summary>
@@ -302,7 +307,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             SpriteBatch.Draw(_blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte) alpha));
+                             new Color(0, 0, 0, (byte)alpha));
 
             SpriteBatch.End();
         }
