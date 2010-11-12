@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.Common.PhysicsLogic
 {
     struct ShapeData
     {
         public Body Body;
-        public float Max;
         public float Min; // absolute angles
+        public float Max;
     }
 
     struct RayData
     {
         public float Angle;
-        //public Vector2 pos;
     }
 
     /// <summary>
@@ -27,8 +26,6 @@ namespace FarseerPhysics.Common.PhysicsLogic
     /// </summary>
     class RayDataComparer : IComparer<RayData>
     {
-        #region IComparer<RayData> Members
-
         int IComparer<RayData>.Compare(RayData a, RayData b)
         {
             float diff = (a.Angle - b.Angle);
@@ -38,22 +35,22 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 return -1;
             return 0;
         }
-
-        #endregion
     }
 
     /// <summary>
     /// This is an explosive... it explodes.
-    /// Original Code by Steven Lu
-    /// (see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688)
-    /// Ported to Farseer 3.0 by Nicolás Hormazábal
     /// </summary>
-    public abstract class Explosive
+    /// <remarks>
+    /// Original Code by Steven Lu
+    /// Ported to Farseer 3.0 by Nicolás Hormazábal
+    /// </remarks>
+    //  (see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688)
+    public sealed class Explosive
     {
         const int MaxShapes = 100;
-        List<ShapeData> _data = new List<ShapeData>();
         Dictionary<Fixture, List<Vector2>> _exploded;
         RayDataComparer _rdc;
+        List<ShapeData> _data = new List<ShapeData>();
         World _world;
 
         public Explosive(World world)
@@ -66,6 +63,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
         /// <summary>
         /// This makes the explosive explode
+        /// </summary>
         /// <param name="pos">
         /// The position where the explosion happens
         /// </param>
@@ -80,8 +78,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// A dictionnary containing all the "exploded" fixtures
         /// with a list of the applied impulses
         /// </returns>
-        /// </summary>
-        public virtual Dictionary<Fixture, List<Vector2>> Explode(Vector2 pos, float radius, float maxForce)
+        public Dictionary<Fixture, List<Vector2>> Explode(Vector2 pos, float radius, float maxForce)
         {
             _exploded.Clear();
 
@@ -287,8 +284,11 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     }
                     else
                     {
-                        // add entry to data with body = NULL to indicate a lack of objects in this range. Useful for drawing/graphical/other purposes.
-                        if (_data.Count() > 0 && rayMissed && _data.Last().Body == null)
+                        // Add entry to data with body = NULL to indicate a lack of objects in this range.
+                        // Useful for drawing/graphical/other purposes.
+                        // Commented for optimization
+
+                        /*if (_data.Count() > 0 && rayMissed && _data.Last().Body == null)
                         {
                             int laPos = _data.Count - 1;
                             ShapeData la = _data[laPos];
@@ -325,7 +325,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         {
                             last.Min = _data.Last().Min - 2 * MathHelper.Pi;
                             _data[lastPos] = last;
-                        }
+                        }*/
+
                         rayMissed = true; // raycast did not find a shape
                     }
                 }
@@ -341,6 +342,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                     if (_data[i].Body == null)
                     {
+                        // It should never enter here if we commented
+                        // the part where we add null references
                         for (float j = _data[i].Min; j <= _data[i].Max; j += maxAngle)
                         {
                             // Draw Debug stuff... if you want to.
