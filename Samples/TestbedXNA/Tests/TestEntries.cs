@@ -87,6 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Angle Joint", CreateFcn = AngleJointTest.Create},
                 new TestEntry {Name = "Slider Joint", CreateFcn = SliderJointTest.Create},
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
+                new TestEntry {Name = "Explosion", CreateFcn = ExplosionTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }
