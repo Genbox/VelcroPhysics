@@ -53,13 +53,19 @@ namespace FarseerPhysics.Common
         public static int PositionIterations = 3;
 
         /// <summary>
-        /// Enable/Disable CCD
+        /// Enable/Disable Continuous Collision Detection (CCD)
         /// </summary>
         public static bool ContinuousPhysics = true;
 
-        public const int TOIVelocityIterations = 8;
+        /// <summary>
+        /// The number of velocity iterations in the TOI solver
+        /// </summary>
+        public static int TOIVelocityIterations = 8;
 
-        public const int TOIPositionIterations = 20;
+        /// <summary>
+        /// The number of position iterations in the TOI solver
+        /// </summary>
+        public static int TOIPositionIterations = 20;
 
         /// <summary>
         /// Enable/Disable warmstarting
@@ -88,7 +94,7 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// The maximum number of vertices on a convex polygon.
         /// </summary>
-        public const int MaxPolygonVertices = 8;
+        public static int MaxPolygonVertices = 8;
 
         /// <summary>
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
