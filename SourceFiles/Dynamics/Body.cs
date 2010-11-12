@@ -1068,8 +1068,7 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.A);
-            Xf.Position.X = Sweep.C.X - Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y;
-            Xf.Position.Y = Sweep.C.Y - Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y;
+            Xf.Position = Sweep.C - new Vector2(Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y, Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
         }
 
         /// <summary>
