@@ -73,6 +73,9 @@ namespace HelloWorld
 
             if (gamepad.IsConnected)
             {
+                if (gamepad.Buttons.Back == ButtonState.Pressed)
+                    Exit();
+
                 float rotation = 40 * gamepad.Triggers.Left;
                 _circleFixture.Body.ApplyTorque(rotation);
 
