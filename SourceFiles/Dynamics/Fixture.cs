@@ -275,6 +275,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// The collision category bits. Normally you would just set one bit.
+        /// Only fixtures in the same category collides.
         /// </summary>
         public CollisionCategory CollisionCategories
         {
