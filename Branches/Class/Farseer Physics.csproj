@@ -252,8 +252,8 @@
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\PrismaticJoint.cs">
       <Link>Dynamics\Joints\PrismaticJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\PullyJoint.cs">
-      <Link>Dynamics\Joints\PullyJoint.cs</Link>
+    <Compile Include="..\..\SourceFiles\Dynamics\Joints\PulleyJoint.cs">
+      <Link>Dynamics\Joints\PulleyJoint.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\RevoluteJoint.cs">
       <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
