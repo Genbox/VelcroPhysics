@@ -233,9 +233,9 @@ namespace FarseerPhysics.Factories
 
         #endregion
 
-        #region Pully Joint
-
-        public static PulleyJoint CreatePullyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
+        #region Pulley Joint
+        
+        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
         {
             PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
             world.AddJoint(pulleyJoint);
