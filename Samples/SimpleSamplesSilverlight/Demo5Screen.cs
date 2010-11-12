@@ -51,46 +51,47 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 
         public override void LoadContent()
         {
-            //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars, Cat5=Agent
+            //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, Vector2.Zero);
-            _agent.CollisionCategories = CollisionCategory.Cat5;
 
-            //Collide with all but cat4
+            //Collide with all but stars
+            _agent.CollisionCategories = CollisionCategory.All & ~CollisionCategory.Cat4;
             _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4;
 
             Vector2 startPosition = new Vector2(-20, 16);
             Vector2 endPosition = new Vector2(20, 16);
             _circles = new Objects(World, startPosition, endPosition, 15, 1, ObjectType.Circle);
-            _circles.CollisionCategories = (CollisionCategory.Cat1);
-            
-            //Collide with circles (itself only)
-            _circles.CollidesWith = (CollisionCategory.Cat1);
+
+            //Collide with itself only
+            _circles.CollisionCategories = CollisionCategory.Cat1;
+            _circles.CollidesWith = CollisionCategory.Cat1;
 
             startPosition = new Vector2(-20, -16);
             endPosition = new Vector2(20, -16);
             _rectangles = new Objects(World, startPosition, endPosition, 15, 2, ObjectType.Rectangle);
-            _rectangles.CollisionCategories = (CollisionCategory.Cat2);
 
-            //Collides with rectangles (itself only)
+            //Collides with itself only
+            _rectangles.CollisionCategories = CollisionCategory.Cat2;
             _rectangles.CollidesWith = CollisionCategory.Cat2;
 
             startPosition = new Vector2(-20, -10);
             endPosition = new Vector2(-20, 10);
             _gears = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Gear);
-            _gears.CollisionCategories = (CollisionCategory.Cat3);
 
-            //Collides with itself (gears) and stars
-            _gears.CollidesWith = (CollisionCategory.Cat3);
+            //Collides with stars
+            _gears.CollisionCategories = CollisionCategory.Cat3;
+            _gears.CollidesWith = CollisionCategory.Cat3 | CollisionCategory.Cat4;
 
             startPosition = new Vector2(20, -10);
             endPosition = new Vector2(20, 10);
             _stars = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Star);
-            _stars.CollisionCategories = (CollisionCategory.Cat4);
 
-            //Collides with gears and itself (stars)
-            _stars.CollidesWith = (CollisionCategory.All);
+            //Collides with gears
+            _stars.CollisionCategories = CollisionCategory.Cat4;
+            _stars.CollidesWith = CollisionCategory.Cat3 | CollisionCategory.Cat4;
 
             base.LoadContent();
+
         }
     }
 }

@@ -17,7 +17,13 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, -height / 2), 0));
             borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2((width / 2), 0), 0));
 
-            FixtureFactory.CreateCompoundPolygon(world, borders, 1);
+            List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(world, borders, 1);
+
+            foreach (Fixture t in fixtures)
+            {
+                t.CollisionCategories = CollisionCategory.All;
+                t.CollidesWith = CollisionCategory.All;
+            }
         }
     }
 }
