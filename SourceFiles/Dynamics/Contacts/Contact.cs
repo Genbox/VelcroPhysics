@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
@@ -394,11 +395,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                     contactManager.EndContact(this);
             }
 
-            if (sensor == false)
-            {
-                if (contactManager.PreSolve != null)
-                    contactManager.PreSolve(this, ref oldManifold);
-            }
+            if (sensor) 
+                return;
+
+            if (contactManager.PreSolve != null)
+                contactManager.PreSolve(this, ref oldManifold);
         }
 
         /// <summary>
@@ -460,7 +461,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
-            var pool = fixtureA.Body.World.ContactPool;
+            Queue<Contact> pool = fixtureA.Body.World.ContactPool;
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();

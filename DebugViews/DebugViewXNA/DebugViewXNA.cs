@@ -284,10 +284,11 @@ namespace FarseerPhysics.DebugViewXNA
 
             DrawString(160, 100, "New contacts: " + World.NewContactsTime);
             DrawString(160, 115, "Controllers: " + World.ControllersUpdateTime);
-            DrawString(160, 130, "Contacts: " + World.ContactsUpdateTime);
-            DrawString(160, 145, "Solve: " + World.SolveUpdateTime);
-            DrawString(160, 160, "CCD: " + World.ContinuousPhysicsTime);
-            DrawString(160, 175, "Total: " + World.UpdateTime);
+            DrawString(160, 130, "Breakable: " + World.BreakableBodyTime);
+            DrawString(160, 145, "Contacts: " + World.ContactsUpdateTime);
+            DrawString(160, 160, "Solve: " + World.SolveUpdateTime);
+            DrawString(160, 175, "CCD: " + World.ContinuousPhysicsTime);
+            DrawString(160, 190, "Total: " + World.UpdateTime);
         }
 
         private void DrawJoint(Joint joint)

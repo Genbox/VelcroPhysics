@@ -137,14 +137,14 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     ccp.LocalPoint = cp.LocalPoint;
                     ccp.rA = Vector2.Zero;
-			        ccp.rB = Vector2.Zero;
-			        ccp.NormalMass = 0.0f;
-			        ccp.TangentMass = 0.0f;
-			        ccp.VelocityBias = 0.0f;
+                    ccp.rB = Vector2.Zero;
+                    ccp.NormalMass = 0.0f;
+                    ccp.TangentMass = 0.0f;
+                    ccp.VelocityBias = 0.0f;
                 }
 
-		        cc.K.SetZero();
-		        cc.NormalMass.SetZero();
+                cc.K.SetZero();
+                cc.NormalMass.SetZero();
             }
         }
 
@@ -173,7 +173,6 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
-                    ManifoldPoint cp = manifold.Points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
                     ccp.rA = worldManifold.Points[j] - bodyA.Sweep.C;
@@ -213,8 +212,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     // Setup a velocity bias for restitution.
                     ccp.VelocityBias = 0.0f;
-                    float vRel = Vector2.Dot(cc.Normal,
-                                             vB + MathUtils.Cross(wB, ccp.rB) - vA - MathUtils.Cross(wA, ccp.rA));
+                    float vRel = Vector2.Dot(cc.Normal, vB + new Vector2(-wB * ccp.rB.Y, wB * ccp.rB.X) - vA - new Vector2(-wA * ccp.rA.Y, wA * ccp.rA.X));
                     if (vRel < -Settings.VelocityThreshold)
                     {
                         ccp.VelocityBias = -cc.Restitution * vRel;
@@ -775,14 +773,16 @@ namespace FarseerPhysics.Dynamics.Contacts
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
-                    Vector2 normal = psm.Normal;
+                    Vector2 normal;
+                    Vector2 point;
+                    float separation;
 
-                    Vector2 point = psm.Point;
-                    float separation = psm.Separation;
+                    PositionSolverManifold.Solve(ref c, j, out normal, out point, out separation);
 
-                    Vector2 rA = point - bodyA.Sweep.C;
-                    Vector2 rB = point - bodyB.Sweep.C;
+                    Vector2 rA; //= point - bodyA.Sweep.C);
+                    Vector2.Subtract(ref point,ref bodyA.Sweep.C,out rA);
+                    Vector2 rB; // = point - bodyB.Sweep.C;
+                    Vector2.Subtract(ref point, ref bodyB.Sweep.C, out rB);
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -792,8 +792,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                                               -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
-                    float rnA = MathUtils.Cross(rA, normal);
-                    float rnB = MathUtils.Cross(rB, normal);
+                    float rnA = rA.X * normal.Y - rA.Y * normal.X;
+                    float rnB = rB.X * normal.Y - rB.Y * normal.X;
                     float K = invMassA + invMassB + invIA * rnA * rnA + invIB * rnB * rnB;
 
                     // Compute normal impulse
@@ -859,14 +859,16 @@ namespace FarseerPhysics.Dynamics.Contacts
                 // Solve normal constraints
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    PositionSolverManifold psm = new PositionSolverManifold(ref c, j);
-                    Vector2 normal = psm.Normal;
+                    Vector2 normal;
+                    Vector2 point;
+                    float separation;
 
-                    Vector2 point = psm.Point;
-                    float separation = psm.Separation;
-
-                    Vector2 rA = point - bodyA.Sweep.C;
-                    Vector2 rB = point - bodyB.Sweep.C;
+                    PositionSolverManifold.Solve(ref c, j, out normal, out point, out separation);
+                   
+                    Vector2 rA; //= point - bodyA.Sweep.C);
+                    Vector2.Subtract(ref point, ref bodyA.Sweep.C, out rA);
+                    Vector2 rB; // = point - bodyB.Sweep.C;
+                    Vector2.Subtract(ref point, ref bodyB.Sweep.C, out rB);
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -875,8 +877,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     float C = MathUtils.Clamp(baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
 
                     // Compute the effective mass.
-                    float rnA = MathUtils.Cross(rA, normal);
-                    float rnB = MathUtils.Cross(rB, normal);
+                    float rnA = rA.X * normal.Y - rA.Y * normal.X;
+                    float rnB = rB.X * normal.Y - rB.Y * normal.X;
                     float K = invMassA + invMassB + invIA * rnA * rnA + invIB * rnB * rnB;
 
                     // Compute normal impulse
@@ -885,11 +887,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 P = impulse * normal;
 
                     bodyA.Sweep.C -= invMassA * P;
-                    bodyA.Sweep.A -= invIA * MathUtils.Cross(rA, P);
+                    bodyA.Sweep.A -= invIA * (rA.X * P.Y - rA.Y * P.X);
                     bodyA.SynchronizeTransform();
 
                     bodyB.Sweep.C += invMassB * P;
-                    bodyB.Sweep.A += invIB * MathUtils.Cross(rB, P);
+                    bodyB.Sweep.A += invIB * (rB.X * P.Y - rB.Y * P.X);
                     bodyB.SynchronizeTransform();
                 }
             }
@@ -900,13 +902,9 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
     }
 
-    internal struct PositionSolverManifold
+    internal static class PositionSolverManifold
     {
-        internal Vector2 Normal;
-        internal Vector2 Point;
-        internal float Separation;
-
-        internal PositionSolverManifold(ref ContactConstraint cc, int index)
+        public static void Solve(ref ContactConstraint cc, int index, out Vector2 normal, out Vector2 point, out float separation)
         {
             Debug.Assert(cc.PointCount > 0);
 
@@ -918,47 +916,47 @@ namespace FarseerPhysics.Dynamics.Contacts
                         Vector2 pointB = cc.BodyB.GetWorldPoint(ref cc.Points[0].LocalPoint);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
-                            Normal = pointB - pointA;
-                            Normal.Normalize();
+                            normal = pointB - pointA;
+                            normal.Normalize();
                         }
                         else
                         {
-                            Normal = new Vector2(1.0f, 0.0f);
+                            normal = new Vector2(1.0f, 0.0f);
                         }
 
-                        Point = 0.5f * (pointA + pointB);
-                        Separation = Vector2.Dot(pointB - pointA, Normal) - cc.RadiusA - cc.RadiusB;
+                        point = 0.5f * (pointA + pointB);
+                        separation = Vector2.Dot(pointB - pointA, normal) - cc.RadiusA - cc.RadiusB;
                     }
                     break;
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = cc.BodyA.GetWorldVector(ref cc.LocalNormal);
+                        normal = cc.BodyA.GetWorldVector(ref cc.LocalNormal);
                         Vector2 planePoint = cc.BodyA.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyB.GetWorldPoint(ref cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.RadiusA - cc.RadiusB;
-                        Point = clipPoint;
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.RadiusA - cc.RadiusB;
+                        point = clipPoint;
                     }
                     break;
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = cc.BodyB.GetWorldVector(ref cc.LocalNormal);
+                        normal = cc.BodyB.GetWorldVector(ref cc.LocalNormal);
                         Vector2 planePoint = cc.BodyB.GetWorldPoint(ref cc.LocalPoint);
 
                         Vector2 clipPoint = cc.BodyA.GetWorldPoint(ref cc.Points[index].LocalPoint);
-                        Separation = Vector2.Dot(clipPoint - planePoint, Normal) - cc.RadiusA - cc.RadiusB;
-                        Point = clipPoint;
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - cc.RadiusA - cc.RadiusB;
+                        point = clipPoint;
 
                         // Ensure normal points from A to B
-                        Normal = -Normal;
+                        normal = -normal;
                     }
                     break;
                 default:
-                    Normal = Vector2.Zero;
-                    Point = Vector2.Zero;
-                    Separation = 0.0f;
+                    normal = Vector2.Zero;
+                    point = Vector2.Zero;
+                    separation = 0.0f;
                     break;
             }
         }

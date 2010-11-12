@@ -321,8 +321,7 @@ namespace FarseerPhysics.Collision
             r.Normalize();
 
             // v is perpendicular to the segment.
-            Vector2 v = MathUtils.Cross(1.0f, r);
-            Vector2 absV = MathUtils.Abs(v);
+            Vector2 absV = MathUtils.Abs(new Vector2(-r.Y, r.X));
 
             // Separating axis for segment (Gino, p80).
             // |dot(v, p1 - c)| > dot(|v|, h)
@@ -333,8 +332,8 @@ namespace FarseerPhysics.Collision
             AABB segmentAABB = new AABB();
             {
                 Vector2 t = p1 + maxFraction * (p2 - p1);
-                segmentAABB.LowerBound = Vector2.Min(p1, t);
-                segmentAABB.UpperBound = Vector2.Max(p1, t);
+                Vector2.Min(ref p1, ref t, out segmentAABB.LowerBound);
+                Vector2.Max(ref p1, ref t, out segmentAABB.UpperBound);
             }
 
             _stack.Clear();
@@ -359,7 +358,7 @@ namespace FarseerPhysics.Collision
                 // |dot(v, p1 - c)| > dot(|v|, h)
                 Vector2 c = node.AABB.Center;
                 Vector2 h = node.AABB.Extents;
-                float separation = Math.Abs(Vector2.Dot(v, p1 - c)) - Vector2.Dot(absV, h);
+                float separation = Math.Abs(Vector2.Dot(new Vector2(-r.Y, r.X), p1 - c)) - Vector2.Dot(absV, h);
                 if (separation > 0.0f)
                 {
                     continue;
