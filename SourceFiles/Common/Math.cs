@@ -69,7 +69,7 @@ namespace FarseerPhysics.Common
 
         public static Vector2 MultiplyT(ref Mat22 A, ref Vector2 v)
         {
-            return new Vector2(Vector2.Dot(v, A.Col1), Vector2.Dot(v, A.Col2));
+            return new Vector2(v.X * A.Col1.X + v.Y * A.Col1.Y, v.X * A.Col2.X + v.Y * A.Col2.Y);
         }
 
         public static Vector2 Multiply(ref Transform T, Vector2 v)
@@ -79,10 +79,7 @@ namespace FarseerPhysics.Common
 
         public static Vector2 Multiply(ref Transform T, ref Vector2 v)
         {
-            float x = T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y;
-            float y = T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y;
-
-            return new Vector2(x, y);
+            return new Vector2(T.Position.X + T.R.Col1.X * v.X + T.R.Col2.X * v.Y, T.Position.Y + T.R.Col1.Y * v.X + T.R.Col2.Y * v.Y);
         }
 
         public static Vector2 MultiplyT(ref Transform T, Vector2 v)
@@ -92,22 +89,28 @@ namespace FarseerPhysics.Common
 
         public static Vector2 MultiplyT(ref Transform T, ref Vector2 v)
         {
-            return MultiplyT(ref T.R, v - T.Position);
+            Vector2 tmp = Vector2.Zero;
+            tmp.X = v.X - T.Position.X;
+            tmp.Y = v.Y - T.Position.Y;
+            return MultiplyT(ref T.R, ref tmp);
         }
 
         // A^T * B
         public static void MultiplyT(ref Mat22 A, ref Mat22 B, out Mat22 C)
         {
-            Vector2 c1 = new Vector2(Vector2.Dot(A.Col1, B.Col1), Vector2.Dot(A.Col2, B.Col1));
-            Vector2 c2 = new Vector2(Vector2.Dot(A.Col1, B.Col2), Vector2.Dot(A.Col2, B.Col2));
-            C = new Mat22(c1, c2);
+            C = new Mat22();
+            C.Col1.X = A.Col1.X * B.Col1.X + A.Col1.Y * B.Col1.Y;
+            C.Col1.Y = A.Col2.X * B.Col1.X + A.Col2.Y * B.Col1.Y;
+            C.Col2.X = A.Col1.X * B.Col2.X + A.Col1.Y * B.Col2.Y;
+            C.Col2.Y = A.Col2.X * B.Col2.X + A.Col2.Y * B.Col2.Y;
         }
 
         public static void MultiplyT(ref Transform A, ref Transform B, out Transform C)
         {
-            Mat22 R;
-            MultiplyT(ref A.R, ref B.R, out R);
-            C = new Transform(B.Position - A.Position, ref R);
+            C = new Transform();
+            MultiplyT(ref A.R, ref B.R, out C.R);
+            C.Position.X = B.Position.X - A.Position.X;
+            C.Position.Y = B.Position.Y - A.Position.Y;
         }
 
         public static void Swap<T>(ref T a, ref T b)
@@ -507,7 +510,7 @@ namespace FarseerPhysics.Common
         /// </summary>
         /// <param name="position">The position.</param>
         /// <param name="r">The r.</param>
-        public Transform(Vector2 position, ref Mat22 r)
+        public Transform(ref Vector2 position, ref Mat22 r)
         {
             Position = position;
             R = r;
@@ -582,7 +585,8 @@ namespace FarseerPhysics.Common
         public void GetTransform(out Transform xf, float beta)
         {
             xf = new Transform();
-            xf.Position = (1.0f - beta) * C0 + beta * C;
+            xf.Position.X = (1.0f - beta) * C0.X + beta * C.X;
+            xf.Position.Y = (1.0f - beta) * C0.Y + beta * C.Y;
             float angle = (1.0f - beta) * A0 + beta * A;
             xf.R.Set(angle);
 
@@ -598,7 +602,8 @@ namespace FarseerPhysics.Common
         {
             Debug.Assert(Alpha0 < 1.0f);
             float beta = (alpha - Alpha0) / (1.0f - Alpha0);
-            C0 = (1.0f - beta) * C0 + beta * C;
+            C0.X = (1.0f - beta) * C0.X + beta * C.X;
+            C0.Y = (1.0f - beta) * C0.Y + beta * C.Y;
             A0 = (1.0f - beta) * A0 + beta * A;
             Alpha0 = alpha;
         }

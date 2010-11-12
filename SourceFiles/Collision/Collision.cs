@@ -635,11 +635,12 @@ namespace FarseerPhysics.Collision
         {
             manifold.PointCount = 0;
 
-            Vector2 pA = MathUtils.Multiply(ref xfA, circleA.Position);
-            Vector2 pB = MathUtils.Multiply(ref xfB, circleB.Position);
+            Vector2 pA = MathUtils.Multiply(ref xfA, ref circleA.Position);
+            Vector2 pB = MathUtils.Multiply(ref xfB, ref circleB.Position);
 
             Vector2 d = pB - pA;
-            float distSqr = Vector2.Dot(d, d);
+            float distSqr;
+            Vector2.Dot(ref d, ref d, out distSqr);
             float rA = circleA.Radius;
             float rB = circleB.Radius;
             float radius = rA + rB;
@@ -676,8 +677,8 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vector2 c = MathUtils.Multiply(ref transformB, circleB.Position);
-            Vector2 cLocal = MathUtils.MultiplyT(ref transformA, c);
+            Vector2 c = MathUtils.Multiply(ref transformB, ref circleB.Position);
+            Vector2 cLocal = MathUtils.MultiplyT(ref transformA, ref c);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -783,7 +784,7 @@ namespace FarseerPhysics.Collision
                 manifold.LocalNormal = polygonA.Normals[vertIndex1];
                 manifold.LocalPoint = faceCenter;
 
-                var p0d = manifold.Points[0];
+                ManifoldPoint p0d = manifold.Points[0];
 
                 p0d.LocalPoint = circleB.Position;
                 p0d.Id.Key = 0;
@@ -857,20 +858,22 @@ namespace FarseerPhysics.Collision
             Vector2 v11 = poly1.Vertices[iv1];
             Vector2 v12 = poly1.Vertices[iv2];
 
-            Vector2 localTangent = v12 - v11;
+            Vector2 localTangent;
+            Vector2.Subtract(ref v12, ref  v11, out localTangent);
             localTangent.Normalize();
 
-            Vector2 localNormal = MathUtils.Cross(localTangent, 1.0f);
+            Vector2 localNormal = new Vector2(localTangent.Y, -localTangent.X);
             Vector2 planePoint = 0.5f * (v11 + v12);
 
-            Vector2 tangent = MathUtils.Multiply(ref xf1.R, localTangent);
-            Vector2 normal = MathUtils.Cross(tangent, 1.0f);
+            Vector2 tangent = MathUtils.Multiply(ref xf1.R, ref localTangent);
+            Vector2 normal = new Vector2(tangent.Y, -tangent.X);
 
-            v11 = MathUtils.Multiply(ref xf1, v11);
-            v12 = MathUtils.Multiply(ref xf1, v12);
+            v11 = MathUtils.Multiply(ref xf1, ref v11);
+            v12 = MathUtils.Multiply(ref xf1, ref v12);
 
             // Face offset.
-            float frontOffset = Vector2.Dot(normal, v11);
+            float frontOffset;
+            Vector2.Dot(ref normal, ref v11, out frontOffset);
 
             // Side offsets, extended by polytope skin thickness.
             float sideOffset1 = -Vector2.Dot(tangent, v11) + totalRadius;
@@ -945,7 +948,7 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle in frame of edge
-            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, circleB.Position));
+            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, ref circleB.Position));
 
             Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;
@@ -967,7 +970,8 @@ namespace FarseerPhysics.Collision
             {
                 P = A;
                 d = Q - P;
-                float dd = Vector2.Dot(d, d);
+                float dd;
+                Vector2.Dot(ref d, ref d, out dd);
                 if (dd > radius * radius)
                 {
                     return;
@@ -994,7 +998,7 @@ namespace FarseerPhysics.Collision
                 manifold.Type = ManifoldType.Circles;
                 manifold.LocalNormal = Vector2.Zero;
                 manifold.LocalPoint = P;
-                var mp = new ManifoldPoint();
+                ManifoldPoint mp = new ManifoldPoint();
                 mp.Id.Key = 0;
                 mp.Id.Features = cf;
                 mp.LocalPoint = circleB.Position;
@@ -1007,7 +1011,8 @@ namespace FarseerPhysics.Collision
             {
                 P = B;
                 d = Q - P;
-                float dd = Vector2.Dot(d, d);
+                float dd;
+                Vector2.Dot(ref d, ref d, out dd);
                 if (dd > radius * radius)
                 {
                     return;
@@ -1043,11 +1048,13 @@ namespace FarseerPhysics.Collision
             }
 
             // Region AB
-            float den = Vector2.Dot(e, e);
+            float den;
+            Vector2.Dot(ref e, ref e, out den);
             Debug.Assert(den > 0.0f);
             P = (1.0f / den) * (u * A + v * B);
             d = Q - P;
-            float dd2 = Vector2.Dot(d, d);
+            float dd2;
+            Vector2.Dot(ref d, ref d, out dd2);
             if (dd2 > radius * radius)
             {
                 return;
@@ -1368,14 +1375,16 @@ namespace FarseerPhysics.Collision
             Vector2 v11 = poly1.Vertices[iv1];
             Vector2 v12 = poly1.Vertices[iv2];
 
-            Vector2 tangent = v12 - v11;
+            Vector2 tangent; // = v12 - v11;
+            Vector2.Subtract(ref v12, ref v11, out tangent);
             tangent.Normalize();
 
-            Vector2 normal = MathUtils.Cross(tangent, 1.0f);
+            Vector2 normal = new Vector2(tangent.Y, -tangent.X);
             Vector2 planePoint = 0.5f * (v11 + v12);
 
             // Face offset.
-            float frontOffset = Vector2.Dot(normal, v11);
+            float frontOffset;
+            Vector2.Dot(ref normal, ref v11, out frontOffset);
 
             // Side offsets, extended by polytope skin thickness.
             float sideOffset1 = -Vector2.Dot(tangent, v11) + totalRadius;
@@ -1459,8 +1468,7 @@ namespace FarseerPhysics.Collision
         /// <param name="offset">The offset.</param>
         /// <param name="vertexIndexA">The vertex index A.</param>
         /// <returns></returns>
-        public static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
-                                            Vector2 normal, float offset, int vertexIndexA)
+        public static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, Vector2 normal, float offset, int vertexIndexA)
         {
             vOut = new FixedArray2<ClipVertex>();
 
@@ -1586,8 +1594,8 @@ namespace FarseerPhysics.Collision
             int count1 = poly1.Vertices.Count;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vector2 d = MathUtils.Multiply(ref xf2, poly2.Centroid) - MathUtils.Multiply(ref xf1, poly1.Centroid);
-            Vector2 dLocal1 = MathUtils.MultiplyT(ref xf1.R, d);
+            Vector2 d = MathUtils.Multiply(ref xf2, ref poly2.MassData.Centroid) - MathUtils.Multiply(ref xf1, ref poly1.MassData.Centroid);
+            Vector2 dLocal1 = MathUtils.MultiplyT(ref xf1.R, ref d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;

@@ -183,7 +183,9 @@ namespace FarseerPhysics.Dynamics
 
                 // Check for large velocities.
                 Vector2 translation = step.dt * b.LinearVelocityInternal;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                float result;
+                Vector2.Dot(ref translation, ref translation, out result);
+                if (result > Settings.MaxTranslationSquared)
                 {
                     float ratio = Settings.MaxTranslation / translation.Length();
                     b.LinearVelocityInternal *= ratio;
@@ -278,7 +280,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        internal void SolveTOI(TimeStep subStep, Body bodyA, Body bodyB)
+        internal void SolveTOI(ref TimeStep subStep, Body bodyA, Body bodyB)
         {
             _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio);
 

@@ -337,12 +337,12 @@ namespace FarseerPhysics.Collision
                         if (sgn > 0.0f)
                         {
                             // Origin is left of e12.
-                            return MathUtils.Cross(1.0f, e12);
+                            return new Vector2(-e12.Y, e12.X);
                         }
                         else
                         {
                             // Origin is right of e12.
-                            return MathUtils.Cross(e12, 1.0f);
+                            return new Vector2(e12.Y, -e12.X);
                         }
                     }
 

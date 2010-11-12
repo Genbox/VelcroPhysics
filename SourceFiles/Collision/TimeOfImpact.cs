@@ -109,7 +109,8 @@ namespace FarseerPhysics.Collision
                 Vector2 localPointB1 = proxyB.GetVertex(cache.IndexB[0]);
                 Vector2 localPointB2 = proxyB.GetVertex(cache.IndexB[1]);
 
-                _axis = MathUtils.Cross(localPointB2 - localPointB1, 1.0f);
+                Vector2 a = localPointB2 - localPointB1;
+                _axis = new Vector2(a.Y, -a.X);
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfB.R, _axis);
 
@@ -134,7 +135,8 @@ namespace FarseerPhysics.Collision
                 Vector2 localPointA1 = _proxyA.GetVertex(cache.IndexA[0]);
                 Vector2 localPointA2 = _proxyA.GetVertex(cache.IndexA[1]);
 
-                _axis = MathUtils.Cross(localPointA2 - localPointA1, 1.0f);
+                Vector2 a = localPointA2 - localPointA1;
+                _axis = new Vector2(a.Y, -a.X);
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfA.R, _axis);
 

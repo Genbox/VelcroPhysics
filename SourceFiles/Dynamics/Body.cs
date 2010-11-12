@@ -490,10 +490,11 @@ namespace FarseerPhysics.Dynamics
                 // Move center of mass.
                 Vector2 oldCenter = Sweep.C;
                 Sweep.LocalCenter = value;
-                Sweep.C0 = Sweep.C = MathUtils.Multiply(ref Xf, Sweep.LocalCenter);
+                Sweep.C0 = Sweep.C = MathUtils.Multiply(ref Xf, ref Sweep.LocalCenter);
 
                 // Update center of mass velocity.
-                LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.C - oldCenter);
+                Vector2 a = Sweep.C - oldCenter;
+                LinearVelocityInternal += new Vector2(-AngularVelocityInternal * a.Y, AngularVelocityInternal * a.X);
             }
         }
 
@@ -926,7 +927,8 @@ namespace FarseerPhysics.Dynamics
             Sweep.C0 = Sweep.C = MathUtils.Multiply(ref Xf, Sweep.LocalCenter);
 
             // Update center of mass velocity.
-            LinearVelocityInternal += MathUtils.Cross(AngularVelocityInternal, Sweep.C - oldCenter);
+            Vector2 a = Sweep.C - oldCenter;
+            LinearVelocityInternal += new Vector2(-AngularVelocityInternal * a.Y, AngularVelocityInternal * a.X);
         }
 
         /// <summary>
@@ -1026,7 +1028,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromWorldPoint(ref Vector2 worldPoint)
         {
-            return LinearVelocityInternal + MathUtils.Cross(AngularVelocityInternal, worldPoint - Sweep.C);
+            Vector2 a = worldPoint - Sweep.C;
+            return LinearVelocityInternal + new Vector2(-AngularVelocityInternal * a.Y, AngularVelocityInternal * a.X);
         }
 
         /// <summary>
@@ -1065,7 +1068,8 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.A);
-            Xf.Position = Sweep.C - MathUtils.Multiply(ref Xf.R, ref Sweep.LocalCenter);
+            Xf.Position.X = Sweep.C.X - Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y;
+            Xf.Position.Y = Sweep.C.Y - Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y;
         }
 
         /// <summary>
