@@ -126,6 +126,54 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\BayazitDecomposer.cs">
       <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\AdvancingFront.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFront.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\AdvancingFrontNode.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFrontNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DelaunayTriangle.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweep.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweepBasin.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepBasin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweepConstraint.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweepContext.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweepEdgeEvent.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepEdgeEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\DTSweepPointComparator.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\DTSweepPointComparator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\PointOnEdgeException.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\PointOnEdgeException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\Orientation.cs">
+      <Link>Common\Decomposition\CDT\Orientation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\polygon\Polygon.cs">
+      <Link>Common\Decomposition\CDT\Polygon\Polygon.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\polygon\PolygonPoint.cs">
+      <Link>Common\Decomposition\CDT\Polygon\PolygonPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\TriangulationUtil.cs">
+      <Link>Common\Decomposition\CDT\TriangulationUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\util\FixedArray3.cs">
+      <Link>Common\Decomposition\CDT\Util\FixedArray3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\decomposition\cdt\util\FixedBitArray3.cs">
+      <Link>Common\Decomposition\CDT\Util\FixedBitArray3.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\EarclipDecomposer.cs">
       <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
     </Compile>
