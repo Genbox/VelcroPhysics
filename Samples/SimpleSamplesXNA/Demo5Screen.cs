@@ -28,10 +28,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
             sb.AppendLine("This demo shows how to setup complex collision");
             sb.AppendLine("scenerios.");
             sb.AppendLine("In this demo:");
-            sb.AppendLine("-Circles, rectangles, and gears are set to only collide with");
+            sb.AppendLine("-Circles and rectangles are set to only collide with");
             sb.AppendLine(" their own shape.");
-            sb.AppendLine("-Stars is set to collide with itself, circles, rectangles, ");
-            sb.AppendLine(" and gears.");
+            sb.AppendLine("-Stars are set to collide with gears.");
+            sb.AppendLine("-Gears are set to collide with stars.");
             sb.AppendLine("-The 'Agent' (the cross thing) is set to collide");
             sb.AppendLine(" with all but stars");
             sb.AppendLine(string.Empty);
