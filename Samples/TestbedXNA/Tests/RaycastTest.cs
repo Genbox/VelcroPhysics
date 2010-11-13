@@ -247,8 +247,8 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                     break;
                 case RayCastMode.Multiple:
-                    var points = new List<Vector2>();
-                    var normals = new List<Vector2>();
+                    List<Vector2> points = new List<Vector2>();
+                    List<Vector2> normals = new List<Vector2>();
                     World.RayCast((f, p, n, fr) =>
                                       {
                                           Body body = f.Body;

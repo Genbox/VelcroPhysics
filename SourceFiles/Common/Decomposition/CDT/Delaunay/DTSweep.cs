@@ -40,6 +40,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
@@ -66,7 +67,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
         /// </summary>
         private static void Sweep(DTSweepContext tcx)
         {
-            var points = tcx.Points;
+            List<PolygonPoint> points = tcx.Points;
             PolygonPoint point;
             AdvancingFrontNode node;
 
