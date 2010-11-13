@@ -105,6 +105,7 @@ namespace FarseerPhysics.Common
             C.Col2.Y = A.Col2.X * B.Col2.X + A.Col2.Y * B.Col2.Y;
         }
 
+        // v2 = A.R' * (B.R * v1 + B.p - A.p) = (A.R' * B.R) * v1 + (B.p - A.p)
         public static void MultiplyT(ref Transform A, ref Transform B, out Transform C)
         {
             C = new Transform();
