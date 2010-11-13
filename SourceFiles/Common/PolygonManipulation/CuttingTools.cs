@@ -43,7 +43,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 newPolygon[i] = new Vertices(vertices.Count);
             }
 
-            int[] cutAdded = {-1, -1};
+            int[] cutAdded = { -1, -1 };
             int last = -1;
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -185,17 +185,55 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], thickness, out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Shape.Density,
-                                                                        fixtures[i].Body.Position);
-                    firstFixture.Body.BodyType = BodyType.Dynamic;
+                    if (SanityCheck(first))
+                    {
+                        Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Shape.Density,
+                                                                            fixtures[i].Body.Position);
+                        firstFixture.Body.BodyType = BodyType.Dynamic;
+                    }
 
-                    Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Shape.Density,
-                                                                         fixtures[i].Body.Position);
-                    secondFixture.Body.BodyType = BodyType.Dynamic;
-
+                    if (SanityCheck(second))
+                    {
+                        Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Shape.Density,
+                                                                             fixtures[i].Body.Position);
+                        secondFixture.Body.BodyType = BodyType.Dynamic;
+                    }
                     world.RemoveBody(fixtures[i].Body);
                 }
             }
+        }
+
+        private static bool SanityCheck(Vertices vertices)
+        {
+            if (vertices.GetArea() < 0.00001f)
+                return false;
+
+            for (int i = 0; i < vertices.Count; ++i)
+            {
+                int i1 = i;
+                int i2 = i + 1 < vertices.Count ? i + 1 : 0;
+                Vector2 edge = vertices[i2] - vertices[i1];
+
+                for (int j = 0; j < vertices.Count; ++j)
+                {
+                    // Don't check vertices on the current edge.
+                    if (j == i1 || j == i2)
+                    {
+                        continue;
+                    }
+
+                    Vector2 r = vertices[j] - vertices[i1];
+
+                    // Your polygon is non-convex (it has an indentation) or
+                    // has colinear edges.
+                    float s = edge.X * r.Y - edge.Y * r.X;
+
+                    if (s < 0.0f)
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }

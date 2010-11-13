@@ -438,7 +438,6 @@ namespace FarseerPhysics.Common
                 Vector2 n1 = normals[iminus];
                 Vector2 n2 = normals[i];
                 Vector2 v = vertices[i] - centroid;
-                ;
 
                 Vector2 d = new Vector2();
                 d.X = Vector2.Dot(n1, v); // - toiSlop;
