@@ -163,7 +163,7 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// The points of contact
         /// </summary>
-        public FixedArray2<ManifoldPoint> Points;
+        public ManifoldPoint[] Points;
 
         public ManifoldType Type;
     }
@@ -171,18 +171,8 @@ namespace FarseerPhysics.Collision
     /// <summary>
     /// This is used to compute the current state of a contact manifold.
     /// </summary>
-    public struct WorldManifold
+    public static class WorldManifold
     {
-        /// <summary>
-        /// world vector pointing from A to B
-        /// </summary>
-        public Vector2 Normal;
-
-        /// <summary>
-        /// world contact point (point of intersection)
-        /// </summary>
-        public FixedArray2<Vector2> Points;
-
         /// <summary>
         /// Evaluate the manifold with supplied transforms. This assumes
         /// modest motion from the original state. This does not change the
@@ -194,15 +184,15 @@ namespace FarseerPhysics.Collision
         /// <param name="radiusA">The radius for A.</param>
         /// <param name="transformB">The transform for B.</param>
         /// <param name="radiusB">The radius for B.</param>
-        public WorldManifold(ref Manifold manifold,
+        /// <param name="points">world contact point (point of intersection)</param>
+        /// <param name="normal">world vector pointing from A to B.</param>
+        public static void Calculate(ref Manifold manifold,
                              ref Transform transformA, float radiusA,
-                             ref Transform transformB, float radiusB)
+                             ref Transform transformB, float radiusB, ref Vector2[] points, out Vector2 normal)
         {
-            Points = new FixedArray2<Vector2>();
-
             if (manifold.PointCount == 0)
             {
-                Normal = Vector2.UnitY;
+                normal = Vector2.UnitY;
                 return;
             }
 
@@ -212,52 +202,52 @@ namespace FarseerPhysics.Collision
                     {
                         Vector2 pointA = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
                         Vector2 pointB = MathUtils.Multiply(ref transformB, manifold.Points[0].LocalPoint);
-                        Normal = new Vector2(1.0f, 0.0f);
+                        normal = new Vector2(1.0f, 0.0f);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
-                            Normal = pointB - pointA;
-                            Normal.Normalize();
+                            normal = pointB - pointA;
+                            normal.Normalize();
                         }
 
-                        Vector2 cA = pointA + radiusA * Normal;
-                        Vector2 cB = pointB - radiusB * Normal;
-                        Points[0] = 0.5f * (cA + cB);
+                        Vector2 cA = pointA + radiusA * normal;
+                        Vector2 cB = pointB - radiusB * normal;
+                        points[0] = 0.5f * (cA + cB);
                     }
                     break;
 
                 case ManifoldType.FaceA:
                     {
-                        Normal = MathUtils.Multiply(ref transformA.R, manifold.LocalNormal);
+                        normal = MathUtils.Multiply(ref transformA.R, manifold.LocalNormal);
                         Vector2 planePoint = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 clipPoint = MathUtils.Multiply(ref transformB, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
-                            Vector2 cB = clipPoint - radiusB * Normal;
-                            Points[i] = 0.5f * (cA + cB);
+                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                            Vector2 cB = clipPoint - radiusB * normal;
+                            points[i] = 0.5f * (cA + cB);
                         }
                     }
                     break;
 
                 case ManifoldType.FaceB:
                     {
-                        Normal = MathUtils.Multiply(ref transformB.R, manifold.LocalNormal);
+                        normal = MathUtils.Multiply(ref transformB.R, manifold.LocalNormal);
                         Vector2 planePoint = MathUtils.Multiply(ref transformB, manifold.LocalPoint);
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 clipPoint = MathUtils.Multiply(ref transformA, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint - radiusA * Normal;
-                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
-                            Points[i] = 0.5f * (cA + cB);
+                            Vector2 cA = clipPoint - radiusA * normal;
+                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                            points[i] = 0.5f * (cA + cB);
                         }
                         // Ensure normal points from A to B.
-                        Normal *= -1;
+                        normal *= -1;
                     }
                     break;
                 default:
-                    Normal = Vector2.UnitY;
+                    normal = Vector2.UnitY;
                     break;
             }
         }
@@ -586,11 +576,11 @@ namespace FarseerPhysics.Collision
         private static PolygonShape s_polygonA = new PolygonShape();
         private static PolygonShape s_polygonB = new PolygonShape();
 
-        public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
+        public static void GetPointStates(out PointState[] state1, out PointState[] state2,
                                           ref Manifold manifold1, ref Manifold manifold2)
         {
-            state1 = new FixedArray2<PointState>();
-            state2 = new FixedArray2<PointState>();
+            state1 = new PointState[Settings.MaxManifoldPoints];
+            state2 = new PointState[Settings.MaxManifoldPoints];
 
             // Detect persists and removes.
             for (int i = 0; i < manifold1.PointCount; ++i)
@@ -1196,7 +1186,10 @@ namespace FarseerPhysics.Collision
             MathUtils.MultiplyT(ref xfA, ref xfB, out xf);
 
             // Create a polygon for edge shape A
-            s_polygonA.SetAsEdge(edgeA.Vertex1, edgeA.Vertex2);
+            Vertices vertices = new Vertices(2);
+            vertices.Add(edgeA.Vertex1);
+            vertices.Add(edgeA.Vertex2);
+            s_polygonA.Set(vertices);
 
             // Build polygonB in frame A
             s_polygonB.Radius = polygonB_in.Radius;
