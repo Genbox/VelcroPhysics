@@ -46,7 +46,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Vector2 rB;
     }
 
-    public class ContactConstraint
+    public sealed class ContactConstraint
     {
         public Body BodyA;
         public Body BodyB;
@@ -58,7 +58,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Vector2 Normal;
         public Mat22 NormalMass;
         public int PointCount;
-        public FixedArray2<ContactConstraintPoint> Points;
+        public ContactConstraintPoint[] Points = new ContactConstraintPoint[Settings.MaxPolygonVertices];
         public float RadiusA;
         public float RadiusB;
         public float Restitution;
@@ -66,8 +66,10 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         public ContactConstraint()
         {
-            Points[0] = new ContactConstraintPoint();
-            Points[1] = new ContactConstraintPoint();
+            for (int i = 0; i < Settings.MaxPolygonVertices; i++)
+            {
+                Points[i] = new ContactConstraintPoint();
+            }
         }
     }
 
@@ -88,7 +90,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 Constraints = new ContactConstraint[_constraintCount * 2];
 
-                for (int i = 0; i < _constraintCount * 2; i++)
+                for (int i = 0; i < Constraints.Length; i++)
                 {
                     Constraints[i] = new ContactConstraint();
                 }
@@ -740,8 +742,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 for (int j = 0; j < c.PointCount; ++j)
                 {
-                    var pj = m.Points[j];
-                    var cp = c.Points[j];
+                    ManifoldPoint pj = m.Points[j];
+                    ContactConstraintPoint cp = c.Points[j];
 
                     pj.NormalImpulse = cp.NormalImpulse;
                     pj.TangentImpulse = cp.TangentImpulse;
@@ -779,10 +781,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     PositionSolverManifold.Solve(ref c, j, out normal, out point, out separation);
 
-                    Vector2 rA; //= point - bodyA.Sweep.C);
-                    Vector2.Subtract(ref point,ref bodyA.Sweep.C,out rA);
-                    Vector2 rB; // = point - bodyB.Sweep.C;
-                    Vector2.Subtract(ref point, ref bodyB.Sweep.C, out rB);
+                    Vector2 rA = point - bodyA.Sweep.C;
+                    Vector2 rB = point - bodyB.Sweep.C;
 
                     // Track max constraint error.
                     minSeparation = Math.Min(minSeparation, separation);
@@ -864,7 +864,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     float separation;
 
                     PositionSolverManifold.Solve(ref c, j, out normal, out point, out separation);
-                   
+
                     Vector2 rA; //= point - bodyA.Sweep.C);
                     Vector2.Subtract(ref point, ref bodyA.Sweep.C, out rA);
                     Vector2 rB; // = point - bodyB.Sweep.C;

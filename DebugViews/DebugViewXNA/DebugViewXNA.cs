@@ -266,14 +266,19 @@ namespace FarseerPhysics.DebugViewXNA
             }
         }
 
+        private float _min;
+        private long _stepCount;
+
         private void DrawDebugPanel()
         {
+            _stepCount++;
+
             int fixtures = 0;
             for (int i = 0; i < World.BodyList.Count; i++)
             {
                 fixtures += World.BodyList[i].FixtureList.Count;
             }
-            
+
             DrawString(50, 100, "Bodies: " + World.BodyList.Count);
             DrawString(50, 115, "Fixtures: " + fixtures);
             DrawString(50, 130, "Contacts: " + World.ContactCount);
@@ -284,11 +289,21 @@ namespace FarseerPhysics.DebugViewXNA
 
             DrawString(160, 100, "New contacts: " + World.NewContactsTime);
             DrawString(160, 115, "Controllers: " + World.ControllersUpdateTime);
-            DrawString(160, 130, "Breakable: " + World.BreakableBodyTime);
-            DrawString(160, 145, "Contacts: " + World.ContactsUpdateTime);
-            DrawString(160, 160, "Solve: " + World.SolveUpdateTime);
-            DrawString(160, 175, "CCD: " + World.ContinuousPhysicsTime);
-            DrawString(160, 190, "Total: " + World.UpdateTime);
+            DrawString(160, 130, "Add/Remove: " + World.AddRemoveTime);
+            DrawString(160, 145, "Breakable: " + World.BreakableBodyTime);
+            DrawString(160, 160, "Contacts: " + World.ContactsUpdateTime);
+            DrawString(160, 175, "Solve: " + World.SolveUpdateTime);
+            DrawString(160, 190, "CCD: " + World.ContinuousPhysicsTime);
+            DrawString(160, 205, "Total: " + World.UpdateTime);
+            if (_stepCount > 15)
+            {
+                _min = Math.Min(World.UpdateTime, _min);
+                DrawString(160, 220, "Min: " + _min);
+            }
+            else
+            {
+                _min = World.UpdateTime;
+            }
         }
 
         private void DrawJoint(Joint joint)
@@ -345,8 +360,8 @@ namespace FarseerPhysics.DebugViewXNA
                     DrawSolidCircle(p2, 0.1f, Vector2.Zero, Color.Red);
                     DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
                     break;
-				case JointType.FixedRevolute:
-					DrawSegment(x1, p1, color);
+                case JointType.FixedRevolute:
+                    DrawSegment(x1, p1, color);
                     DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Pink);
                     break;
                 case JointType.FixedLine:
@@ -474,7 +489,7 @@ namespace FarseerPhysics.DebugViewXNA
                 return;
             }
 
-            Color colorFill =  color * (outline ? 0.5f : 1.0f);
+            Color colorFill = color * (outline ? 0.5f : 1.0f);
 
             for (int i = 1; i < count - 1; i++)
             {
