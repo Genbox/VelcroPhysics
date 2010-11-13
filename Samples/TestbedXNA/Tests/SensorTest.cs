@@ -47,12 +47,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 {
                     Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                    PolygonShape shape = new PolygonShape(edge);
+                    PolygonShape shape = new PolygonShape(edge, 1);
                     ground.CreateFixture(shape);
                 }
 
                 {
-                    CircleShape shape = new CircleShape(5.0f);
+                    CircleShape shape = new CircleShape(5.0f, 1);
                     shape.Position = new Vector2(0.0f, 10.0f);
 
                     _sensor = ground.CreateFixture(shape);
@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                CircleShape shape = new CircleShape(1.0f, 1);
 
                 for (int i = 0; i < Count; ++i)
                 {
@@ -84,12 +84,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int) (fixtureB.Body.UserData)] = true;
+                _touching[(int)(fixtureB.Body.UserData)] = true;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int) (fixtureA.Body.UserData)] = true;
+                _touching[(int)(fixtureA.Body.UserData)] = true;
             }
         }
 
@@ -101,12 +101,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int) (fixtureB.Body.UserData)] = false;
+                _touching[(int)(fixtureB.Body.UserData)] = false;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int) (fixtureA.Body.UserData)] = false;
+                _touching[(int)(fixtureA.Body.UserData)] = false;
             }
         }
 
@@ -126,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _bodies[i];
                 Body ground = _sensor.Body;
 
-                CircleShape circle = (CircleShape) _sensor.Shape;
+                CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
                 Vector2 position = body.Position;

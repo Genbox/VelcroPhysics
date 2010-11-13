@@ -44,7 +44,9 @@ namespace FarseerPhysics.Collision.Shapes
         /// Initializes a new instance of the <see cref="PolygonShape"/> class.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        public PolygonShape(Vertices vertices)
+        /// <param name="density">The density.</param>
+        public PolygonShape(Vertices vertices, float density)
+            : base(density)
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
@@ -52,7 +54,15 @@ namespace FarseerPhysics.Collision.Shapes
             Set(vertices);
         }
 
-        public PolygonShape()
+        public PolygonShape(float density)
+            : base(density)
+        {
+            ShapeType = ShapeType.Polygon;
+            Radius = Settings.PolygonRadius;
+        }
+
+        private PolygonShape()
+            : base(0)
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
@@ -93,7 +103,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="vertices">The vertices.</param>
         public void Set(Vertices vertices)
         {
-            Debug.Assert(2 <= vertices.Count && vertices.Count <= Settings.MaxPolygonVertices);
+            Debug.Assert(vertices.Count >= 2 && vertices.Count <= Settings.MaxPolygonVertices);
 
             if (Settings.ConserveMemory)
                 Vertices = vertices;
@@ -145,11 +155,8 @@ namespace FarseerPhysics.Collision.Shapes
             }
 #endif
 
-            if (_density > 0)
-            {
-                // Compute the polygon mass data
-                ComputeProperties();
-            }
+            // Compute the polygon mass data
+            ComputeProperties();
         }
 
         /// <summary>
@@ -182,24 +189,26 @@ namespace FarseerPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Debug.Assert(Vertices.Count >= 2);
-
-            // A line segment has zero mass.
-            if (Vertices.Count == 2)
+            if (_density > 0)
             {
-                MassData.Centroid = 0.5f * (Vertices[0] + Vertices[1]);
-                MassData.Mass = 0.0f;
-                MassData.Inertia = 0.0f;
-                return;
-            }
+                Debug.Assert(Vertices.Count >= 2);
 
-            Vector2 center = Vector2.Zero;
-            float area = 0.0f;
-            float I = 0.0f;
+                // A line segment has zero mass.
+                if (Vertices.Count == 2)
+                {
+                    MassData.Centroid = 0.5f * (Vertices[0] + Vertices[1]);
+                    MassData.Mass = 0.0f;
+                    MassData.Inertia = 0.0f;
+                    return;
+                }
 
-            // pRef is the reference point for forming triangles.
-            // It's location doesn't change the result (except for rounding error).
-            Vector2 pRef = Vector2.Zero;
+                Vector2 center = Vector2.Zero;
+                float area = 0.0f;
+                float I = 0.0f;
+
+                // pRef is the reference point for forming triangles.
+                // It's location doesn't change the result (except for rounding error).
+                Vector2 pRef = Vector2.Zero;
 
 #if false
     // This code would put the reference point inside the polygon.
@@ -210,54 +219,55 @@ namespace FarseerPhysics.Collision.Shapes
 	        pRef *= 1.0f / count;
 #endif
 
-            const float inv3 = 1.0f / 3.0f;
+                const float inv3 = 1.0f / 3.0f;
 
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                // Triangle vertices.
-                Vector2 p1 = pRef;
-                Vector2 p2 = Vertices[i];
-                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
+                for (int i = 0; i < Vertices.Count; ++i)
+                {
+                    // Triangle vertices.
+                    Vector2 p1 = pRef;
+                    Vector2 p2 = Vertices[i];
+                    Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
 
-                Vector2 e1 = p2 - p1;
-                Vector2 e2 = p3 - p1;
+                    Vector2 e1 = p2 - p1;
+                    Vector2 e2 = p3 - p1;
 
-                float d;
-                MathUtils.Cross(ref e1, ref e2, out d);
+                    float d;
+                    MathUtils.Cross(ref e1, ref e2, out d);
 
-                float triangleArea = 0.5f * d;
-                area += triangleArea;
+                    float triangleArea = 0.5f * d;
+                    area += triangleArea;
 
-                // Area weighted centroid
-                center += triangleArea * inv3 * (p1 + p2 + p3);
+                    // Area weighted centroid
+                    center += triangleArea * inv3 * (p1 + p2 + p3);
 
-                float px = p1.X, py = p1.Y;
-                float ex1 = e1.X, ey1 = e1.Y;
-                float ex2 = e2.X, ey2 = e2.Y;
+                    float px = p1.X, py = p1.Y;
+                    float ex1 = e1.X, ey1 = e1.Y;
+                    float ex2 = e2.X, ey2 = e2.Y;
 
-                float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
-                              0.5f * px * px;
-                float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
-                              0.5f * py * py;
+                    float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
+                                  0.5f * px * px;
+                    float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
+                                  0.5f * py * py;
 
-                I += d * (intx2 + inty2);
+                    I += d * (intx2 + inty2);
+                }
+
+                Debug.Assert(area > Settings.Epsilon);
+
+                // We save the area
+                MassData.Area = area;
+
+                // Total mass
+                MassData.Mass = _density * area;
+
+                // Center of mass
+                Debug.Assert(area > Settings.Epsilon);
+                center *= 1.0f / area;
+                MassData.Centroid = center;
+
+                // Inertia tensor relative to the local origin.
+                MassData.Inertia = _density * I;
             }
-
-            Debug.Assert(area > Settings.Epsilon);
-
-            // We save the area
-            MassData.Area = area;
-
-            // Total mass
-            MassData.Mass = _density * area;
-
-            // Center of mass
-            Debug.Assert(area > Settings.Epsilon);
-            center *= 1.0f / area;
-            MassData.Centroid = center;
-
-            // Inertia tensor relative to the local origin.
-            MassData.Inertia = _density * I;
         }
 
         /// <summary>

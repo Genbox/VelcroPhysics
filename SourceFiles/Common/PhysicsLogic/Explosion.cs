@@ -129,7 +129,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         v.Add(vec);
                         vec = Vector2.Zero + new Vector2(0, -cs.Radius);
                         v.Add(vec);
-                        ps = new PolygonShape(v);
+                        ps = new PolygonShape(v, 1);
                     }
                     else
                         ps = shapes[i].Shape as PolygonShape;

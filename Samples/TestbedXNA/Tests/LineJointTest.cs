@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
                 ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge);
+                PolygonShape shape = new PolygonShape(edge, 0);
                 ground.CreateFixture(shape);
             }
 
@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
             // FixedLineJoint example
             //-------------------------
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f));
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
             // LineJoint example
             //-------------------------
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f));
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(10.0f, 7.0f);

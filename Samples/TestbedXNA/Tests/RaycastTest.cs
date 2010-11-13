@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(vertices);
+                _polygons[0] = new PolygonShape(vertices, 1);
             }
 
             {
@@ -62,13 +62,13 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices2.Add(new Vector2(-0.1f, 0.0f));
                 vertices2.Add(new Vector2(0.1f, 0.0f));
                 vertices2.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(vertices2);
+                _polygons[1] = new PolygonShape(vertices2, 1);
             }
 
             {
                 const float w = 1.0f;
-                float b = w / (2.0f + (float) Math.Sqrt(2.0));
-                float s = (float) Math.Sqrt(2.0) * b;
+                float b = w / (2.0f + (float)Math.Sqrt(2.0));
+                float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices3 = new Vertices(8);
                 vertices3.Add(new Vector2(0.5f * s, 0.0f));
@@ -79,16 +79,16 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices3.Add(new Vector2(-0.5f * w, b + s));
                 vertices3.Add(new Vector2(-0.5f * w, b));
                 vertices3.Add(new Vector2(-0.5f * s, 0.0f));
-                _polygons[2] = new PolygonShape(vertices3);
+                _polygons[2] = new PolygonShape(vertices3, 1);
             }
 
             {
-                _polygons[3] = new PolygonShape();
+                _polygons[3] = new PolygonShape(1);
                 _polygons[3].SetAsBox(0.5f, 0.5f);
             }
 
             {
-                _circle = new CircleShape(0.5f);
+                _circle = new CircleShape(0.5f, 1);
             }
 
             _bodyIndex = 0;
@@ -168,7 +168,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float l = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(l * (float) Math.Cos(_angle), l * (float) Math.Sin(_angle));
+            Vector2 d = new Vector2(l * (float)Math.Cos(_angle), l * (float)Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
@@ -182,7 +182,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -218,7 +218,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -254,7 +254,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -313,12 +313,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (index < 4)
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index], 0);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
                 fixture.Friction = 0.3f;
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle, 0);
+                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
                 fixture.Friction = 0.3f;
             }
 

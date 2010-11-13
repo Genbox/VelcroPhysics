@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
                 ground.CreateFixture(shape);
 
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Balls
             for (int i = 0; i < 40; ++i)
             {
-                CircleShape shape = new CircleShape(0.25f);
+                CircleShape shape = new CircleShape(0.25f, 1);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Chassis
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(2.5f, 1.0f);
 
                 _chassis = BodyFactory.CreateBody(World);
@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                CircleShape shape = new CircleShape(1.6f);
+                CircleShape shape = new CircleShape(1.6f, 1);
 
                 _wheel = BodyFactory.CreateBody(World);
                 _wheel.BodyType = BodyType.Dynamic;
@@ -133,8 +133,8 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 p5 = new Vector2(6.0f * s, 1.5f);
             Vector2 p6 = new Vector2(2.5f * s, 3.7f);
 
-            PolygonShape poly1 = new PolygonShape();
-            PolygonShape poly2 = new PolygonShape();
+            PolygonShape poly1 = new PolygonShape(1);
+            PolygonShape poly2 = new PolygonShape(2);
 
             Vertices vertices = new Vertices(3);
 
@@ -177,7 +177,7 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture f1 = body1.CreateFixture(poly1);
             f1.CollisionGroup = -1;
 
-            Fixture f2 = body2.CreateFixture(poly2, 2);
+            Fixture f2 = body2.CreateFixture(poly2);
             f2.CollisionGroup = -1;
 
             // Using a soft distanceraint can reduce some jitter.

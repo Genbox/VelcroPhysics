@@ -33,8 +33,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class TimeOfImpactTest : Test
     {
-        private PolygonShape _shapeA = new PolygonShape();
-        private PolygonShape _shapeB = new PolygonShape();
+        private PolygonShape _shapeA = new PolygonShape(1);
+        private PolygonShape _shapeB = new PolygonShape(1);
 
         private TimeOfImpactTest()
         {

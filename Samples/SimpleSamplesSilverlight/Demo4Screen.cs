@@ -33,7 +33,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             _agent = new Agent(World, new Vector2(5, 10));
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-            PolygonShape shape = new PolygonShape(box);
+            PolygonShape shape = new PolygonShape(box, 1);
 
             Vector2 x = new Vector2(-8.0f, -17.0f);
             Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -48,7 +48,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape, 1);
+                    body.CreateFixture(shape);
 
                     y += deltaY;
                 }

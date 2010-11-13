@@ -44,14 +44,14 @@ namespace FarseerPhysics.TestBed.Tests
         private VerticalStackTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
-            FixtureFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
 
-            float[] xs = new[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(0.5f, 0.5f);
 
                 for (int i = 0; i < RowCount; ++i)
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
-                   
+
                     _bodies[n] = body;
 
                     Fixture fixture = body.CreateFixture(shape);
@@ -89,14 +89,14 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 {
-                    CircleShape shape = new CircleShape(0.25f);
+                    CircleShape shape = new CircleShape(0.25f, 20);
 
                     _bullet = BodyFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.IsBullet = true;
                     _bullet.Position = new Vector2(-31.0f, 5.0f);
 
-                    Fixture fixture = _bullet.CreateFixture(shape, 20);
+                    Fixture fixture = _bullet.CreateFixture(shape);
                     fixture.Restitution = 0.05f;
 
                     _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);

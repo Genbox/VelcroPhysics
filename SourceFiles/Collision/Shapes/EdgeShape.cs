@@ -52,12 +52,19 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public Vector2 Vertex3;
 
-        public EdgeShape()
+        internal EdgeShape()
+            : base(0)
         {
             ShapeType = ShapeType.Edge;
             Radius = Settings.PolygonRadius;
-            HasVertex0 = false;
-            HasVertex3 = false;
+        }
+
+        public EdgeShape(Vector2 start, Vector2 end)
+            : base(0)
+        {
+            ShapeType = ShapeType.Edge;
+            Radius = Settings.PolygonRadius;
+            Set(start, end);
         }
 
         public override int ChildCount

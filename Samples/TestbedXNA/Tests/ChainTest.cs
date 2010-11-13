@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ChainTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             //Chain start / end
             Path path = new Path();
@@ -47,10 +47,10 @@ namespace FarseerPhysics.TestBed.Tests
             path.Add(new Vector2(40, 25));
 
             //A single chainlink
-            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f));
+            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f), 20);
 
             //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30, 20);
+            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30);
 
             foreach (Body chainLink in chainLinks)
             {
@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     f.Friction = 0.2f;
                 }
             }
-            
+
             //Fix the first chainlink to the world
             FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
             World.AddJoint(fixedJoint);

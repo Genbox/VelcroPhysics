@@ -51,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
         private BreakableTest()
         {
             // Ground body
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Breakable dynamic body
             _body1 = BodyFactory.CreateBody(World);
@@ -61,13 +61,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
-            _shape1 = new PolygonShape(box);
-            _piece1 = _body1.CreateFixture(_shape1, 1.0f);
+            _shape1 = new PolygonShape(box, 1);
+            _piece1 = _body1.CreateFixture(_shape1);
 
             box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-            _shape2 = new PolygonShape(box);
+            _shape2 = new PolygonShape(box, 1);
 
-            _piece2 = _body1.CreateFixture(_shape2, 1.0f);
+            _piece2 = _body1.CreateFixture(_shape2);
 
             _break = false;
             _broke = false;

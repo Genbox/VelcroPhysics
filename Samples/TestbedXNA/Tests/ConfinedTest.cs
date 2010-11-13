@@ -45,25 +45,25 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Floor
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge);
+                PolygonShape shape = new PolygonShape(edge, 0);
 
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
 
                 // Left wall
                 shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f)));
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
 
                 // Right wall
                 shape.Set(PolygonTools.CreateEdge(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f)));
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
 
                 // Roof
                 shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f)));
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
             }
 
             const float radius = 0.5f;
-            CircleShape shape2 = new CircleShape(radius);
+            CircleShape shape2 = new CircleShape(radius, 1);
             shape2.Position = Vector2.Zero;
 
             for (int j = 0; j < ColumnCount; ++j)
@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
         private void CreateCircle()
         {
             const float radius = 2f;
-            CircleShape shape = new CircleShape(radius);
+            CircleShape shape = new CircleShape(radius, 1);
             shape.Position = Vector2.Zero;
 
             Body body = BodyFactory.CreateBody(World);

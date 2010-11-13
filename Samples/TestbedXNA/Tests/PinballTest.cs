@@ -57,21 +57,21 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
 
-                LoopShape loop = new LoopShape(vertices);
-                ground.CreateFixture(loop, 0);
+                LoopShape loop = new LoopShape(vertices, 0);
+                ground.CreateFixture(loop);
             }
 
             // Flippers
             {
                 Vector2 p1 = new Vector2(-2.0f, 0f);
                 Vector2 p2 = new Vector2(2.0f, 0f);
-                
+
                 Body leftFlipper = BodyFactory.CreateBody(World, p1);
                 leftFlipper.BodyType = BodyType.Dynamic;
                 Body rightFlipper = BodyFactory.CreateBody(World, p2);
                 rightFlipper.BodyType = BodyType.Dynamic;
 
-                PolygonShape box = new PolygonShape();
+                PolygonShape box = new PolygonShape(1);
                 box.SetAsBox(1.75f, 0.1f);
 
                 leftFlipper.CreateFixture(box);
@@ -101,7 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _ball = BodyFactory.CreateBody(World, new Vector2(1.0f, 15.0f));
                 _ball.BodyType = BodyType.Dynamic;
                 _ball.IsBullet = true;
-                _ball.CreateFixture(new CircleShape(0.2f), 1.0f);
+                _ball.CreateFixture(new CircleShape(0.2f, 1.0f));
             }
         }
 

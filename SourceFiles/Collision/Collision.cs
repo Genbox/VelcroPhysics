@@ -583,8 +583,8 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
-        private static PolygonShape s_polygonA = new PolygonShape();
-        private static PolygonShape s_polygonB = new PolygonShape();
+        private static PolygonShape s_polygonA = new PolygonShape(0);
+        private static PolygonShape s_polygonB = new PolygonShape(0);
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
                                           ref Manifold manifold1, ref Manifold manifold2)

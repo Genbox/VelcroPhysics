@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         private TextureVerticesTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
         }
 
         public override void Initialize()

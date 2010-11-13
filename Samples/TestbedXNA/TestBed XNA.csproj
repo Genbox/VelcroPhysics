@@ -122,6 +122,7 @@
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
+    <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
     <Compile Include="Tests\SliderJointTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />

@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
 * Copyright (c) 2010 Ian Qvist
 * 
@@ -23,43 +23,52 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
+using System;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SphereStackTest : Test
+    public class LockTest : Test
     {
-        private const int Count = 10;
-        private Body[] _bodies = new Body[Count];
+        private Fixture _rectangle;
 
-        private SphereStackTest()
+        private LockTest()
         {
-            //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            FixtureFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
 
-            {
-                CircleShape shape = new CircleShape(1.0f, 1);
+            _rectangle = FixtureFactory.CreateRectangle(World, 2, 2, 1);
+            _rectangle.Body.BodyType = BodyType.Dynamic;
+            _rectangle.Body.Position = new Vector2(0, 10);
+            _rectangle.OnCollision += OnCollision;
 
-                for (int i = 0; i < Count; ++i)
-                {
-                    _bodies[i] = BodyFactory.CreateBody(World);
-                    _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].Position = new Vector2(0.0f, 4.0f + 3.0f * i);
-
-                    _bodies[i].CreateFixture(shape);
-
-                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
-                }
-            }
+            //Properties and methods that were checking for lock before
+            //Body.Active
+            //Body.LocalCenter
+            //Body.Mass
+            //Body.Inertia
+            //Fixture.DestroyFixture()
+            //Body.SetTransformIgnoreContacts()
+            //Fixture()
         }
 
-        public static Test Create()
+        private bool OnCollision(Fixture fixturea, Fixture fixtureb, Contact manifold)
         {
-            return new SphereStackTest();
+            _rectangle.Body.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
+            _rectangle.Body.DestroyFixture(_rectangle);
+            //_rectangle.Body.Inertia = 40;
+            //_rectangle.Body.LocalCenter = new Vector2(-1,-1);
+            //_rectangle.Body.Mass = 10;
+            //_rectangle.Body.Active = false;);)
+            return true;
+        }
+
+        internal static Test Create()
+        {
+            return new LockTest();
         }
     }
 }

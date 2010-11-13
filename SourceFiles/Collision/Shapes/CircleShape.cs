@@ -33,22 +33,17 @@ namespace FarseerPhysics.Collision.Shapes
     {
         public Vector2 Position;
 
-        public CircleShape(float radius)
+        public CircleShape(float radius, float density)
+            : base(density)
         {
             ShapeType = ShapeType.Circle;
             Radius = radius;
             Position = Vector2.Zero;
+            ComputeProperties();
         }
 
-        internal CircleShape(float radius, float density)
-        {
-            ShapeType = ShapeType.Circle;
-            Radius = radius;
-            Position = Vector2.Zero;
-            _density = density;
-        }
-
-        public CircleShape()
+        private CircleShape()
+            : base(0)
         {
             ShapeType = ShapeType.Circle;
             Radius = 0.0f;
@@ -152,7 +147,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        public override void ComputeProperties()
+        public sealed override void ComputeProperties()
         {
             float area = Settings.Pi * Radius * Radius;
             MassData.Area = area;

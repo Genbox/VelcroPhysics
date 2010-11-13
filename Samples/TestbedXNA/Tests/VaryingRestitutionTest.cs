@@ -36,12 +36,12 @@ namespace FarseerPhysics.TestBed.Tests
         private VaryingRestitutionTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
-                CircleShape shape = new CircleShape(1.0f);
+                CircleShape shape = new CircleShape(1.0f, 1);
 
-                float[] restitution = new[] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
+                float[] restitution = new[] { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
 
                 for (int i = 0; i < 7; ++i)
                 {

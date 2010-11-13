@@ -44,19 +44,19 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape3 = new PolygonShape();
+                PolygonShape shape3 = new PolygonShape(0);
                 shape3.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape3);
             }
 
-            PolygonShape shape = new PolygonShape();
+            PolygonShape shape = new PolygonShape(5);
             shape.SetAsBox(2.0f, 0.5f);
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(0.0f, 10.0f);
 
-            body.CreateFixture(shape, 5.0f);
+            body.CreateFixture(shape);
 
             _fixedJoint = new FixedPrismaticJoint(body, body.Position, new Vector2(0.5f, 1.0f));
             _fixedJoint.MotorSpeed = 5.0f;
@@ -68,14 +68,14 @@ namespace FarseerPhysics.TestBed.Tests
 
             World.AddJoint(_fixedJoint);
 
-            PolygonShape shape2 = new PolygonShape();
+            PolygonShape shape2 = new PolygonShape(5);
             shape2.SetAsBox(2.0f, 0.5f);
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
             body2.Position = new Vector2(10.0f, 10.0f);
 
-            body2.CreateFixture(shape2, 5.0f);
+            body2.CreateFixture(shape2);
 
             _joint = new PrismaticJoint(ground, body2, ground.GetLocalPoint(body2.Position), Vector2.Zero,
                                         new Vector2(0.5f, 1.0f));

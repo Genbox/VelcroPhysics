@@ -52,26 +52,26 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
 
-                PolygonShape shape = new PolygonShape(edge);
+                PolygonShape shape = new PolygonShape(edge, 0);
 
                 // Left vertical
-                Fixture fixture = ground.CreateFixture(shape, 0);
+                Fixture fixture = ground.CreateFixture(shape);
                 fixture.Restitution = restitution;
 
                 // Right vertical
                 edge = PolygonTools.CreateEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
 
                 // Top horizontal
                 edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
 
                 // Bottom horizontal
                 edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
                 shape.Set(edge);
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
             }
 
             {
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f)));
                 vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f)));
 
-                PolygonShape poly1 = new PolygonShape(vertices);
+                PolygonShape poly1 = new PolygonShape(vertices, 4);
 
                 Transform xf2 = new Transform();
                 xf2.R.Set(-0.3524f * Settings.Pi);
@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
                 vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
 
-                PolygonShape poly2 = new PolygonShape(vertices);
+                PolygonShape poly2 = new PolygonShape(vertices, 2);
 
                 _body = BodyFactory.CreateBody(World);
                 _body.BodyType = BodyType.Dynamic;
@@ -104,13 +104,13 @@ namespace FarseerPhysics.TestBed.Tests
                 _body.LinearDamping = 0.8f;
                 _body.SleepingAllowed = true;
 
-                _body.CreateFixture(poly1, 4.0f);
-                _body.CreateFixture(poly2, 2.0f);
+                _body.CreateFixture(poly1);
+                _body.CreateFixture(poly2);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 1);
 
                 for (int i = 0; i < 10; ++i)
                 {
@@ -126,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
                     float mass = body.Mass;
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float) Math.Sqrt(2.0 * (I / mass));
+                    float radius = (float)Math.Sqrt(2.0 * (I / mass));
 
                     FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero, Vector2.Zero);
                     jd.CollideConnected = true;

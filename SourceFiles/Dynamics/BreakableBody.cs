@@ -52,13 +52,13 @@ namespace FarseerPhysics.Dynamics
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
-            MainBody = _world.CreateBody();
+            MainBody = new Body(_world);
             MainBody.BodyType = BodyType.Dynamic;
 
             foreach (Vertices part in vertices)
             {
-                PolygonShape polygonShape = new PolygonShape(part);
-                Fixture fixture = MainBody.CreateFixture(polygonShape, density);
+                PolygonShape polygonShape = new PolygonShape(part, density);
+                Fixture fixture = MainBody.CreateFixture(polygonShape);
                 Parts.Add(fixture);
             }
         }
@@ -133,7 +133,7 @@ namespace FarseerPhysics.Dynamics
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.Rotation;
 
-                body.CreateFixture(shape, shape.Density);
+                body.CreateFixture(shape);
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];
