@@ -433,13 +433,13 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                               (PolygonShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.LoopAndCircle:
-                    var loop = (LoopShape) FixtureA.Shape;
+                    LoopShape loop = (LoopShape) FixtureA.Shape;
                     loop.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA,
                                                              (CircleShape) FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.LoopAndPolygon:
-                    var loop2 = (LoopShape) FixtureA.Shape;
+                    LoopShape loop2 = (LoopShape) FixtureA.Shape;
                     loop2.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA,
                                                               (PolygonShape) FixtureB.Shape, ref transformB);

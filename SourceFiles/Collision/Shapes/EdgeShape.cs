@@ -83,6 +83,8 @@ namespace FarseerPhysics.Collision.Shapes
             Vertex2 = end;
             HasVertex0 = false;
             HasVertex3 = false;
+
+            ComputeProperties();
         }
 
         public override Shape Clone()
@@ -119,7 +121,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <returns>True if the ray-cast hits the shape</returns>
-        /// Implement Shape.
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
                                      ref Transform transform, int childIndex)
         {
@@ -213,9 +214,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Mass = 0.0f;
             MassData.Centroid = 0.5f * (Vertex1 + Vertex2);
-            MassData.Inertia = 0.0f;
         }
     }
 }

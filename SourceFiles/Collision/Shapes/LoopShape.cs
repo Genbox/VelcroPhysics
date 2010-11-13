@@ -44,17 +44,15 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public Vertices Vertices;
 
-        private LoopShape() : base(0)
+        internal LoopShape()
+            : base(0)
         {
             ShapeType = ShapeType.Loop;
             Radius = Settings.PolygonRadius;
         }
 
-        public LoopShape(Vertices vertices, float density)
-            : this()
+        public LoopShape(Vertices vertices, float density) : base(density)
         {
-            _density = density;
-
             if (Settings.ConserveMemory)
                 Vertices = vertices;
             else
@@ -173,9 +171,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Mass = 0.0f;
-            MassData.Centroid = Vector2.Zero;
-            MassData.Inertia = 0.0f;
+            //Does nothing. Loop shapes don't have properties.
         }
     }
 }

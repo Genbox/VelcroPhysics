@@ -136,7 +136,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                     if ((shapes[i].Body.BodyType == BodyType.Dynamic) && ps != null)
                     {
-                        Vector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.Centroid) - pos;
+                        Vector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
                         float angleToCentroid = (float)Math.Atan2(toCentroid.Y, toCentroid.X);
                         float min = float.MaxValue;
                         float max = float.MinValue;
