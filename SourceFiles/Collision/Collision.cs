@@ -583,8 +583,8 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
-        private static PolygonShape s_polygonA = new PolygonShape(0);
-        private static PolygonShape s_polygonB = new PolygonShape(0);
+        private static PolygonShape s_polygonA = new PolygonShape();
+        private static PolygonShape s_polygonB = new PolygonShape();
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
                                           ref Manifold manifold1, ref Manifold manifold2)
@@ -1200,7 +1200,7 @@ namespace FarseerPhysics.Collision
 
             // Build polygonB in frame A
             s_polygonB.Radius = polygonB_in.Radius;
-            s_polygonB.Centroid = MathUtils.Multiply(ref xf, polygonB_in.Centroid);
+            s_polygonB.MassData.Centroid = MathUtils.Multiply(ref xf, polygonB_in.MassData.Centroid);
             s_polygonB.Vertices = new Vertices(polygonB_in.Vertices.Count);
             s_polygonB.Normals = new Vertices(polygonB_in.Vertices.Count);
             for (int i = 0; i < polygonB_in.Vertices.Count; ++i)
@@ -1219,7 +1219,7 @@ namespace FarseerPhysics.Collision
             edgeNormal.Normalize();
 
             // Determine side
-            bool isFrontSide = Vector2.Dot(edgeNormal, s_polygonB.Centroid - v1) >= 0.0f;
+            bool isFrontSide = Vector2.Dot(edgeNormal, s_polygonB.MassData.Centroid - v1) >= 0.0f;
             if (isFrontSide == false)
             {
                 edgeNormal = -edgeNormal;

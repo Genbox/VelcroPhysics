@@ -61,7 +61,7 @@ namespace FarseerPhysics.Collision.Shapes
             Radius = Settings.PolygonRadius;
         }
 
-        private PolygonShape()
+        internal PolygonShape()
             : base(0)
         {
             ShapeType = ShapeType.Polygon;
@@ -71,12 +71,6 @@ namespace FarseerPhysics.Collision.Shapes
         public override int ChildCount
         {
             get { return 1; }
-        }
-
-        public Vector2 Centroid
-        {
-            get { return MassData.Centroid; }
-            set { MassData.Centroid = value; }
         }
 
         public override Shape Clone()
@@ -189,19 +183,17 @@ namespace FarseerPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
+            Debug.Assert(Vertices.Count >= 2);
+
+            // A line segment has zero mass.
+            if (Vertices.Count == 2)
+            {
+                MassData.Centroid = 0.5f * (Vertices[0] + Vertices[1]);
+                return;
+            }
+            
             if (_density > 0)
             {
-                Debug.Assert(Vertices.Count >= 2);
-
-                // A line segment has zero mass.
-                if (Vertices.Count == 2)
-                {
-                    MassData.Centroid = 0.5f * (Vertices[0] + Vertices[1]);
-                    MassData.Mass = 0.0f;
-                    MassData.Inertia = 0.0f;
-                    return;
-                }
-
                 Vector2 center = Vector2.Zero;
                 float area = 0.0f;
                 float I = 0.0f;
