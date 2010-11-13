@@ -417,7 +417,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     lambda = newImpulse - ccp.NormalImpulse;
 
                     // Apply contact impulse
-                    var P = new Vector2(lambda * normal.X, lambda * normal.Y);
+                    Vector2 P = new Vector2(lambda * normal.X, lambda * normal.Y);
 
                     vA.X -= invMassA * P.X;
                     vA.Y -= invMassA * P.Y;

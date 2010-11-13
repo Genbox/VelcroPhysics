@@ -66,7 +66,7 @@ namespace FarseerPhysics.Factories
             List<Vertices> decomposedVerts = EarclipDecomposer.ConvexPartition(new Vertices(verts));
             //List<Vertices> decomposedVerts = BayazitDecomposer.ConvexPartition(new Vertices(verts));
 
-            foreach (var item in decomposedVerts)
+            foreach (Vertices item in decomposedVerts)
             {
                 body.CreateFixture(new PolygonShape(item, density));
             }

@@ -654,7 +654,7 @@ namespace FarseerPhysics.Collision
             manifold.LocalNormal = Vector2.Zero;
             manifold.PointCount = 1;
 
-            var p0 = manifold.Points[0];
+            ManifoldPoint p0 = manifold.Points[0];
 
             p0.LocalPoint = circleB.Position;
             p0.Id.Key = 0;
@@ -717,7 +717,7 @@ namespace FarseerPhysics.Collision
                 manifold.LocalNormal = polygonA.Normals[normalIndex];
                 manifold.LocalPoint = 0.5f * (v1 + v2);
 
-                var p0 = manifold.Points[0];
+                ManifoldPoint p0 = manifold.Points[0];
 
                 p0.LocalPoint = circleB.Position;
                 p0.Id.Key = 0;
@@ -743,7 +743,7 @@ namespace FarseerPhysics.Collision
                 manifold.LocalNormal.Normalize();
                 manifold.LocalPoint = v1;
 
-                var p0b = manifold.Points[0];
+                ManifoldPoint p0b = manifold.Points[0];
 
                 p0b.LocalPoint = circleB.Position;
                 p0b.Id.Key = 0;
@@ -763,7 +763,7 @@ namespace FarseerPhysics.Collision
                 manifold.LocalNormal.Normalize();
                 manifold.LocalPoint = v2;
 
-                var p0c = manifold.Points[0];
+                ManifoldPoint p0c = manifold.Points[0];
 
                 p0c.LocalPoint = circleB.Position;
                 p0c.Id.Key = 0;
@@ -1039,7 +1039,7 @@ namespace FarseerPhysics.Collision
                 manifold.Type = ManifoldType.Circles;
                 manifold.LocalNormal = Vector2.Zero;
                 manifold.LocalPoint = P;
-                var mp = new ManifoldPoint();
+                ManifoldPoint mp = new ManifoldPoint();
                 mp.Id.Key = 0;
                 mp.Id.Features = cf;
                 mp.LocalPoint = circleB.Position;
@@ -1073,7 +1073,7 @@ namespace FarseerPhysics.Collision
             manifold.Type = ManifoldType.FaceA;
             manifold.LocalNormal = n;
             manifold.LocalPoint = A;
-            var mp2 = new ManifoldPoint();
+            ManifoldPoint mp2 = new ManifoldPoint();
             mp2.Id.Key = 0;
             mp2.Id.Features = cf;
             mp2.LocalPoint = circleB.Position;
@@ -1489,7 +1489,7 @@ namespace FarseerPhysics.Collision
                 // Find intersection point of edge and plane
                 float interp = distance0 / (distance0 - distance1);
 
-                var cv = vOut[numOut];
+                ClipVertex cv = vOut[numOut];
 
                 cv.V = vIn[0].V + interp * (vIn[1].V - vIn[0].V);
 
@@ -1699,7 +1699,7 @@ namespace FarseerPhysics.Collision
             int i1 = index;
             int i2 = i1 + 1 < count2 ? i1 + 1 : 0;
 
-            var cv0 = c[0];
+            ClipVertex cv0 = c[0];
 
             cv0.V = MathUtils.Multiply(ref xf2, poly2.Vertices[i1]);
             cv0.ID.Features.IndexA = (byte)edge1;
@@ -1709,7 +1709,7 @@ namespace FarseerPhysics.Collision
 
             c[0] = cv0;
 
-            var cv1 = c[1];
+            ClipVertex cv1 = c[1];
             cv1.V = MathUtils.Multiply(ref xf2, poly2.Vertices[i2]);
             cv1.ID.Features.IndexA = (byte)edge1;
             cv1.ID.Features.IndexB = (byte)i2;

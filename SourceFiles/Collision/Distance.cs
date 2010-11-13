@@ -463,7 +463,7 @@ namespace FarseerPhysics.Collision
             if (d12_2 <= 0.0f)
             {
                 // a2 <= 0, so we clamp it to 0
-                var v0 = V[0];
+                SimplexVertex v0 = V[0];
                 v0.A = 1.0f;
                 V[0] = v0;
                 Count = 1;
@@ -475,7 +475,7 @@ namespace FarseerPhysics.Collision
             if (d12_1 <= 0.0f)
             {
                 // a1 <= 0, so we clamp it to 0
-                var v1 = V[1];
+                SimplexVertex v1 = V[1];
                 v1.A = 1.0f;
                 V[1] = v1;
                 Count = 1;
@@ -485,8 +485,8 @@ namespace FarseerPhysics.Collision
 
             // Must be in e12 region.
             float inv_d12 = 1.0f / (d12_1 + d12_2);
-            var v0_2 = V[0];
-            var v1_2 = V[1];
+            SimplexVertex v0_2 = V[0];
+            SimplexVertex v1_2 = V[1];
             v0_2.A = d12_1 * inv_d12;
             v1_2.A = d12_2 * inv_d12;
             V[0] = v0_2;
@@ -545,7 +545,7 @@ namespace FarseerPhysics.Collision
             // w1 region
             if (d12_2 <= 0.0f && d13_2 <= 0.0f)
             {
-                var v0_1 = V[0];
+                SimplexVertex v0_1 = V[0];
                 v0_1.A = 1.0f;
                 V[0] = v0_1;
                 Count = 1;
@@ -556,8 +556,8 @@ namespace FarseerPhysics.Collision
             if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
             {
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                var v0_2 = V[0];
-                var v1_2 = V[1];
+                SimplexVertex v0_2 = V[0];
+                SimplexVertex v1_2 = V[1];
                 v0_2.A = d12_1 * inv_d12;
                 v1_2.A = d12_2 * inv_d12;
                 V[0] = v0_2;
@@ -570,8 +570,8 @@ namespace FarseerPhysics.Collision
             if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
             {
                 float inv_d13 = 1.0f / (d13_1 + d13_2);
-                var v0_3 = V[0];
-                var v2_3 = V[2];
+                SimplexVertex v0_3 = V[0];
+                SimplexVertex v2_3 = V[2];
                 v0_3.A = d13_1 * inv_d13;
                 v2_3.A = d13_2 * inv_d13;
                 V[0] = v0_3;
@@ -584,7 +584,7 @@ namespace FarseerPhysics.Collision
             // w2 region
             if (d12_1 <= 0.0f && d23_2 <= 0.0f)
             {
-                var v1_4 = V[1];
+                SimplexVertex v1_4 = V[1];
                 v1_4.A = 1.0f;
                 V[1] = v1_4;
                 Count = 1;
@@ -595,7 +595,7 @@ namespace FarseerPhysics.Collision
             // w3 region
             if (d13_1 <= 0.0f && d23_1 <= 0.0f)
             {
-                var v2_5 = V[2];
+                SimplexVertex v2_5 = V[2];
                 v2_5.A = 1.0f;
                 V[2] = v2_5;
                 Count = 1;
@@ -607,8 +607,8 @@ namespace FarseerPhysics.Collision
             if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
             {
                 float inv_d23 = 1.0f / (d23_1 + d23_2);
-                var v1_6 = V[1];
-                var v2_6 = V[2];
+                SimplexVertex v1_6 = V[1];
+                SimplexVertex v2_6 = V[2];
                 v1_6.A = d23_1 * inv_d23;
                 v2_6.A = d23_2 * inv_d23;
                 V[1] = v1_6;
@@ -620,9 +620,9 @@ namespace FarseerPhysics.Collision
 
             // Must be in triangle123
             float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-            var v0_7 = V[0];
-            var v1_7 = V[1];
-            var v2_7 = V[2];
+            SimplexVertex v0_7 = V[0];
+            SimplexVertex v1_7 = V[1];
+            SimplexVertex v2_7 = V[2];
             v0_7.A = d123_1 * inv_d123;
             v1_7.A = d123_2 * inv_d123;
             v2_7.A = d123_3 * inv_d123;
