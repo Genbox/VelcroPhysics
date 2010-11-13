@@ -38,15 +38,15 @@ namespace FarseerPhysics.TestBed.Tests
         private ShapeEditingTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             _body = BodyFactory.CreateBody(World);
             _body.BodyType = BodyType.Dynamic;
             _body.Position = new Vector2(0.0f, 10.0f);
 
             Vertices box = PolygonTools.CreateRectangle(4.0f, 4.0f);
-            PolygonShape shape2 = new PolygonShape(box);
-            _body.CreateFixture(shape2, 10);
+            PolygonShape shape2 = new PolygonShape(box, 10);
+            _body.CreateFixture(shape2);
 
             _fixture2 = null;
         }
@@ -55,9 +55,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.C) && _fixture2 == null)
             {
-                CircleShape shape = new CircleShape(3.0f);
+                CircleShape shape = new CircleShape(3.0f, 10);
                 shape.Position = new Vector2(0.5f, -4.0f);
-                _fixture2 = _body.CreateFixture(shape, 10);
+                _fixture2 = _body.CreateFixture(shape);
                 _body.Awake = true;
             }
 

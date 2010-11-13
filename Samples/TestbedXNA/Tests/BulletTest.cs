@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BulletTest()
         {
-            FixtureFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
             FixtureFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
 
             //Bar

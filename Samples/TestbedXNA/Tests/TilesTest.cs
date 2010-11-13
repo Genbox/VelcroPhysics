@@ -55,9 +55,9 @@ namespace FarseerPhysics.TestBed.Tests
                     position.X = -n * a;
                     for (int i = 0; i < n; ++i)
                     {
-                        PolygonShape shape = new PolygonShape();
+                        PolygonShape shape = new PolygonShape(0);
                         shape.SetAsBox(a, a, position, 0.0f);
-                        ground.CreateFixture(shape, 0);
+                        ground.CreateFixture(shape);
                         position.X += 2.0f * a;
                     }
                     position.Y -= 2.0f * a;
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 const float a = 0.5f;
                 Vertices box = PolygonTools.CreateRectangle(a, a);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 5);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
                 Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
                         Body body = BodyFactory.CreateBody(World);
                         body.BodyType = BodyType.Dynamic;
                         body.Position = y;
-                        body.CreateFixture(shape, 5);
+                        body.CreateFixture(shape);
 
                         y += deltaY;
                     }

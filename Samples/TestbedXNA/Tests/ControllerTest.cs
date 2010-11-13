@@ -37,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ControllerTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             //Create the gravity controller
             GravityController gravity = new GravityController(20);
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body planet = BodyFactory.CreateBody(World);
             planet.Position = new Vector2(0, 20);
 
-            CircleShape planetShape = new CircleShape(2);
+            CircleShape planetShape = new CircleShape(2, 1);
             planet.CreateFixture(planetShape);
 
             //Add the planet as the one that has gravity
@@ -64,8 +64,8 @@ namespace FarseerPhysics.TestBed.Tests
                 circle.Position = startPosition + offset * i;
                 circle.SleepingAllowed = false;
 
-                CircleShape circleShape = new CircleShape(1);
-                circle.CreateFixture(circleShape, 0.1f);
+                CircleShape circleShape = new CircleShape(1, 0.1f);
+                circle.CreateFixture(circleShape);
             }
         }
 

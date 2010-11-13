@@ -43,14 +43,14 @@ namespace FarseerPhysics.TestBed.Tests
         private OneSidedPlatformTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Platform
             {
                 Body body = BodyFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, 10.0f);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(3.0f, 0.5f);
                 _platform = body.CreateFixture(shape);
 
@@ -64,8 +64,8 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 12.0f);
 
                 _radius = 0.5f;
-                CircleShape shape = new CircleShape(_radius);
-                _character = body.CreateFixture(shape, 20);
+                CircleShape shape = new CircleShape(_radius, 20);
+                _character = body.CreateFixture(shape);
 
                 body.LinearVelocity = new Vector2(0.0f, -50.0f);
             }

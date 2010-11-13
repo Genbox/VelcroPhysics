@@ -48,13 +48,13 @@ namespace FarseerPhysics.TestBed.Tests
         private ExplosionTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(0.5f, 0.5f);
 
                 for (int i = 0; i < RowCount; ++i)
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 
-                    Fixture fixture = body.CreateFixture(shape, 1);
+                    Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.3f;
                 }
             }

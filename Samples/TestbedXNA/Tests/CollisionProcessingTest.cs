@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CollisionProcessingTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             const float xLo = -5.0f;
             const float xHi = 5.0f;
@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(1.0f, 0.0f));
             vertices.Add(new Vector2(0.0f, 2.0f));
 
-            PolygonShape polygon = new PolygonShape(vertices);
+            PolygonShape polygon = new PolygonShape(vertices, 1);
 
             Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
@@ -96,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
             fixture.OnCollision += OnCollision;
 
             // Small circle
-            CircleShape circle = new CircleShape(1.0f);
+            CircleShape circle = new CircleShape(1.0f, 1);
 
             Body body5 = BodyFactory.CreateBody(World);
             body5.BodyType = BodyType.Dynamic;

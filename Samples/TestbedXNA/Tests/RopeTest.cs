@@ -54,11 +54,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.CreateBody();
+                ground = new Body(World);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
             }
 
             {
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i == Count - 1)
                     {
                         Vertices box = PolygonTools.CreateRectangle(1.5f, 1.5f);
-                        PolygonShape shape = new PolygonShape(box);
+                        PolygonShape shape = new PolygonShape(box, 1);
                         shape.Density = 100;
                         Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;
@@ -87,7 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
                     else
                     {
                         Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                        PolygonShape shape = new PolygonShape(box);
+                        PolygonShape shape = new PolygonShape(box, 1);
                         shape.Density = 20;
                         Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;

@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         private BodyTypesTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Define attachment
             {
@@ -52,8 +52,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _attachment.Position = new Vector2(0.0f, 3.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
-                PolygonShape shape = new PolygonShape(box);
-                _attachment.CreateFixture(shape, 2.0f);
+                PolygonShape shape = new PolygonShape(box, 2);
+                _attachment.CreateFixture(shape);
             }
 
             // Define platform
@@ -63,9 +63,9 @@ namespace FarseerPhysics.TestBed.Tests
                 _platform.Position = new Vector2(0.0f, 5.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 2);
 
-                Fixture fixture = _platform.CreateFixture(shape, 2.0f);
+                Fixture fixture = _platform.CreateFixture(shape);
                 fixture.Friction = 0.6f;
 
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
@@ -95,9 +95,9 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 8.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 2);
 
-                Fixture fixture = body.CreateFixture(shape, 2.0f);
+                Fixture fixture = body.CreateFixture(shape);
                 fixture.Friction = 0.6f;
             }
         }

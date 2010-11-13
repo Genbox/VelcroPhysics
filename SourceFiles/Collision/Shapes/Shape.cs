@@ -80,8 +80,9 @@ namespace FarseerPhysics.Collision.Shapes
 
         internal float _density;
 
-        protected Shape()
+        protected Shape(float density)
         {
+            _density = density;
             ShapeType = ShapeType.Unknown;
         }
 

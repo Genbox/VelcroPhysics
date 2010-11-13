@@ -48,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape);
             }
@@ -58,14 +58,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Define crank.
                 {
-                    PolygonShape shape = new PolygonShape();
+                    PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 2.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 7.0f);
 
-                    body.CreateFixture(shape, 2);
+                    body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(0.0f, -2.0f);
                     _joint1 = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(body.GetWorldPoint(anchor)),
@@ -80,14 +80,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Define follower.
                 {
-                    PolygonShape shape = new PolygonShape();
+                    PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(0.5f, 4.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 13.0f);
 
-                    body.CreateFixture(shape, 2);
+                    body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(0.0f, -4.0f);
                     RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body,
@@ -100,14 +100,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Define piston
                 {
-                    PolygonShape shape = new PolygonShape();
+                    PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 17.0f);
 
-                    body.CreateFixture(shape, 2);
+                    body.CreateFixture(shape);
 
                     Vector2 anchor = Vector2.Zero;
                     RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body,
@@ -123,14 +123,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 // Create a payload
                 {
-                    PolygonShape shape = new PolygonShape();
+                    PolygonShape shape = new PolygonShape(2);
                     shape.SetAsBox(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.0f, 23.0f);
 
-                    body.CreateFixture(shape, 2);
+                    body.CreateFixture(shape);
                 }
             }
         }

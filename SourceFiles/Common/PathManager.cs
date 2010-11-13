@@ -39,12 +39,12 @@ namespace FarseerPhysics.Factories
 
             for (int i = 1; i < verts.Count; i++)
             {
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[i], verts[i - 1])), 0);
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[i], verts[i - 1]), 0));
             }
 
             if (path.Closed)
             {
-                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[verts.Count - 1], verts[0])), 0);
+                body.CreateFixture(new PolygonShape(PolygonTools.CreateEdge(verts[verts.Count - 1], verts[0]), 0));
             }
         }
 
@@ -68,7 +68,7 @@ namespace FarseerPhysics.Factories
 
             foreach (var item in decomposedVerts)
             {
-                body.CreateFixture(new PolygonShape(item), density);
+                body.CreateFixture(new PolygonShape(item, density));
             }
         }
 
@@ -83,16 +83,15 @@ namespace FarseerPhysics.Factories
         /// <param name="density">The density you would like to use on each fixture</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                BodyType type, int copies, float density)
+                                                                BodyType type, int copies)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
 
-            Body b;
-
             for (int i = 0; i < centers.Count; i++)
             {
-                b = world.CreateBody();
+                Body b = new Body(world);
+
                 // copy the type from original body
                 b.BodyType = type;
                 b.Position = new Vector2(centers[i].X, centers[i].Y);
@@ -100,7 +99,7 @@ namespace FarseerPhysics.Factories
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape, density);
+                    b.CreateFixture(shape);
                 }
 
                 bodyList.Add(b);
@@ -117,15 +116,14 @@ namespace FarseerPhysics.Factories
         /// <param name="shape">The shape.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
-        /// <param name="density">The density.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
-                                                                int copies, float density)
+                                                                int copies)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
 
-            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, density);
+            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies);
         }
 
         /// <summary>

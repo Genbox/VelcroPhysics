@@ -35,8 +35,8 @@ namespace FarseerPhysics.TestBed.Tests
     public class PolyCollisionTest : Test
     {
         private float _angleB;
-        private PolygonShape _polygonA = new PolygonShape();
-        private PolygonShape _polygonB = new PolygonShape();
+        private PolygonShape _polygonA = new PolygonShape(1);
+        private PolygonShape _polygonB = new PolygonShape(1);
         private Vector2 _positionB;
 
         private Transform _transformA;

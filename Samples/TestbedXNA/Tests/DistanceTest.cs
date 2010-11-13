@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _transformA.SetIdentity();
                 _transformA.Position = new Vector2(0.0f, -0.2f);
                 Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
-                _polygonA = new PolygonShape(vertices);
+                _polygonA = new PolygonShape(vertices, 1);
             }
 
             {
@@ -56,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _transformB.Set(_positionB, _angleB);
 
                 Vertices vertices = PolygonTools.CreateRectangle(2.0f, 0.1f);
-                _polygonB = new PolygonShape(vertices);
+                _polygonB = new PolygonShape(vertices, 1);
             }
         }
 

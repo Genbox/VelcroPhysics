@@ -41,15 +41,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground;
             {
-                ground = World.CreateBody();
+                ground = new Body(World);
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(0);
                 shape.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape, 0);
+                ground.CreateFixture(shape);
             }
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -58,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
-                    Fixture fixture = body.CreateFixture(shape, 20);
+                    Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
 
                     Vector2 anchor = new Vector2(-0.5f, 0.0f);
@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < 2; ++i)
             {
-                PolygonShape shape = new PolygonShape(vertices);
+                PolygonShape shape = new PolygonShape(vertices, 1);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
@@ -93,13 +93,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < 3; ++i)
             {
-                CircleShape shape = new CircleShape(0.5f);
+                CircleShape shape = new CircleShape(0.5f, 1);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 
-                body.CreateFixture(shape, 1.0f);
+                body.CreateFixture(shape);
             }
         }
 

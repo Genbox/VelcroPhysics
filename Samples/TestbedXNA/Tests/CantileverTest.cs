@@ -44,13 +44,13 @@ namespace FarseerPhysics.TestBed.Tests
                 ground = BodyFactory.CreateBody(World);
 
                 Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge);
-                ground.CreateFixture(shape, 0.0f);
+                PolygonShape shape = new PolygonShape(edge, 0);
+                ground.CreateFixture(shape);
             }
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
-                    body.CreateFixture(shape, 20.0f);
+                    body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
                     WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
 
-                    body.CreateFixture(shape, 20.0f);
+                    body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 15.0f);
                     WeldJoint jd = new WeldJoint(prevBody, body, prevBody.GetLocalPoint(anchor),
@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 20);
 
 
                 Body prevBody = ground;
@@ -104,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
 
-                    body.CreateFixture(shape, 20.0f);
+                    body.CreateFixture(shape);
 
                     if (i > 0)
                     {
@@ -121,7 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box);
+                PolygonShape shape = new PolygonShape(box, 20);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -130,7 +130,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
 
-                    body.CreateFixture(shape, 20.0f);
+                    body.CreateFixture(shape);
 
                     if (i > 0)
                     {
@@ -153,25 +153,25 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < 2; ++i)
             {
-                PolygonShape shape = new PolygonShape(vertices);
+                PolygonShape shape = new PolygonShape(vertices, 1);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
-                body.CreateFixture(shape, 1.0f);
+                body.CreateFixture(shape);
             }
 
             //Circles            
             for (int i = 0; i < 2; ++i)
             {
-                CircleShape shape = new CircleShape(0.5f);
+                CircleShape shape = new CircleShape(0.5f, 1);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 
-                body.CreateFixture(shape, 1.0f);
+                body.CreateFixture(shape);
             }
         }
 

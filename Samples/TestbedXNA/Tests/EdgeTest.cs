@@ -48,9 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 v6 = new Vector2(7.0f, 2.0f);
                 Vector2 v7 = new Vector2(10.0f, 0.0f);
 
-                EdgeShape shape = new EdgeShape();
-
-                shape.Set(v1, v2);
+                EdgeShape shape = new EdgeShape(v1,v2);
                 shape.HasVertex3 = true;
                 shape.Vertex3 = v3;
                 ground.CreateFixture(shape);
@@ -94,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.SleepingAllowed = false;
 
-                CircleShape shape = new CircleShape(0.5f);
+                CircleShape shape = new CircleShape(0.5f, 1);
                 _circleFixture = body.CreateFixture(shape);
             }
 
@@ -103,7 +101,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.SleepingAllowed = false;
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(0.5f, 0.5f);
 
                 body.CreateFixture(shape);

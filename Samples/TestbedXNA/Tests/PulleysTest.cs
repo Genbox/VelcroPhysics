@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PulleysTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 const float a = 2.0f;
@@ -47,19 +47,19 @@ namespace FarseerPhysics.TestBed.Tests
                 const float y = 16.0f;
                 const float l = 12.0f;
 
-                PolygonShape shape = new PolygonShape();
+                PolygonShape shape = new PolygonShape(5);
                 shape.SetAsBox(a, b);
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
                 body1.Position = new Vector2(-10.0f, y);
-                body1.CreateFixture(shape, 5.0f);
+                body1.CreateFixture(shape);
 
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, y);
 
-                body2.CreateFixture(shape, 5.0f);
+                body2.CreateFixture(shape);
 
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);
                 Vector2 anchor2 = new Vector2(10.0f, y + b);

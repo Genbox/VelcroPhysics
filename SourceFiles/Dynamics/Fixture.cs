@@ -117,17 +117,8 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
-        public Fixture(Body body, Shape shape, float density)
+        public Fixture(Body body, Shape shape)
         {
-            Debug.Assert(body.World.IsLocked == false);
-            if (body.World.IsLocked)
-            {
-                return;
-            }
-
-            shape._density = density;
-            shape.ComputeProperties();
-
             //Fixture defaults
             Friction = 0.2f;
             Restitution = 0;

@@ -45,17 +45,17 @@ namespace FarseerPhysics.TestBed.Tests
         private RevoluteTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 //The big fixed wheel
-                CircleShape shape = new CircleShape(5.0f);
+                CircleShape shape = new CircleShape(5.0f, 5);
 
                 Body body = BodyFactory.CreateBody(World);
                 body.Position = new Vector2(0.0f, 15.0f);
                 body.BodyType = BodyType.Dynamic;
 
-                body.CreateFixture(shape, 5);
+                body.CreateFixture(shape);
 
                 _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
                 _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;

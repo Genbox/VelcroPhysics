@@ -35,7 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private SliderJointTest()
         {
-            FixtureFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
             Fixture fA = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
             fA.Body.BodyType = BodyType.Dynamic;

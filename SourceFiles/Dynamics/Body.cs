@@ -89,12 +89,6 @@ namespace FarseerPhysics.Dynamics
 
         public Body(World world)
         {
-            Debug.Assert(!world.IsLocked);
-            if (world.IsLocked)
-            {
-                return;
-            }
-
             FixtureList = new List<Fixture>(32);
 
             World = world;
@@ -108,11 +102,7 @@ namespace FarseerPhysics.Dynamics
 
             Xf.R.Set(0);
 
-            // Add to world doubly linked list.
-            world.BodyList.Add(this);
-
-            if (World.BodyAdded != null)
-                World.BodyAdded(this);
+            world.AddBody(this);
         }
 
         /// <summary>
@@ -311,8 +301,6 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                Debug.Assert(World.IsLocked == false);
-
                 if (value == Active)
                 {
                     return;
@@ -476,12 +464,6 @@ namespace FarseerPhysics.Dynamics
             get { return Sweep.LocalCenter; }
             set
             {
-                Debug.Assert(World.IsLocked == false);
-                if (World.IsLocked)
-                {
-                    return;
-                }
-
                 if (_bodyType != BodyType.Dynamic)
                 {
                     return;
@@ -507,12 +489,6 @@ namespace FarseerPhysics.Dynamics
             get { return _mass; }
             set
             {
-                Debug.Assert(World.IsLocked == false);
-                if (World.IsLocked)
-                {
-                    return;
-                }
-
                 if (_bodyType != BodyType.Dynamic)
                 {
                     return;
@@ -537,12 +513,6 @@ namespace FarseerPhysics.Dynamics
             get { return _inertia + Mass * Vector2.Dot(Sweep.LocalCenter, Sweep.LocalCenter); }
             set
             {
-                Debug.Assert(World.IsLocked == false);
-                if (World.IsLocked)
-                {
-                    return;
-                }
-
                 if (_bodyType != BodyType.Dynamic)
                 {
                     return;
@@ -576,26 +546,10 @@ namespace FarseerPhysics.Dynamics
         /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <param name="shape">The shape.</param>
-        /// <returns>A new fixture with the provided shape.</returns>
+        /// <returns></returns>
         public Fixture CreateFixture(Shape shape)
         {
-            if (shape.Density > 0)
-                return CreateFixture(shape, shape.Density);
-            return CreateFixture(shape, 1);
-        }
-
-        /// <summary>
-        /// Creates a fixture and attach it to this body.
-        /// If the density is non-zero, this function automatically updates the mass of the body.
-        /// Contacts are not created until the next time step.
-        /// Warning: This function is locked during callbacks.
-        /// </summary>
-        /// <param name="shape">The shape.</param>
-        /// <param name="density">The density.</param>
-        /// <returns></returns>
-        public Fixture CreateFixture(Shape shape, float density)
-        {
-            return new Fixture(this, shape, density);
+            return new Fixture(this, shape);
         }
 
         /// <summary>
@@ -609,12 +563,6 @@ namespace FarseerPhysics.Dynamics
         /// <param name="fixture">The fixture to be removed.</param>
         public void DestroyFixture(Fixture fixture)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
-            {
-                return;
-            }
-
             Debug.Assert(fixture.Body == this);
 
             // Remove the fixture from this body's singly linked list.
@@ -689,12 +637,6 @@ namespace FarseerPhysics.Dynamics
         /// <param name="angle">The angle.</param>
         public void SetTransformIgnoreContacts(ref Vector2 position, float angle)
         {
-            Debug.Assert(World.IsLocked == false);
-            if (World.IsLocked)
-            {
-                return;
-            }
-
             Xf.R.Set(angle);
             Xf.Position = position;
 

@@ -41,10 +41,10 @@ namespace FarseerPhysics.TestBed.Tests
         private CharacterCollisionTest()
         {
             //Ground body
-            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Collinear edges
-            PolygonShape shape = new PolygonShape();
+            PolygonShape shape = new PolygonShape(1);
             shape.SetAsEdge(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
             ground.Body.CreateFixture(shape);
             shape.SetAsEdge(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             ground.Body.CreateFixture(shape);
 
             // Square tiles
-            PolygonShape tile = new PolygonShape();
+            PolygonShape tile = new PolygonShape(1);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
             ground.Body.CreateFixture(tile);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
@@ -67,8 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
-            LoopShape loopShape = new LoopShape(vertices);
-            ground.Body.CreateFixture(loopShape, 0);
+            LoopShape loopShape = new LoopShape(vertices,0);
+            ground.Body.CreateFixture(loopShape);
 
             // Edge loop.
             vertices = new Vertices(10);

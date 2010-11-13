@@ -44,15 +44,17 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public Vertices Vertices;
 
-        private LoopShape()
+        private LoopShape() : base(0)
         {
             ShapeType = ShapeType.Loop;
             Radius = Settings.PolygonRadius;
         }
 
-        public LoopShape(Vertices vertices)
+        public LoopShape(Vertices vertices, float density)
             : this()
         {
+            _density = density;
+
             if (Settings.ConserveMemory)
                 Vertices = vertices;
             else

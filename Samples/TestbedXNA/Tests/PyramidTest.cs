@@ -39,10 +39,10 @@ namespace FarseerPhysics.TestBed.Tests
         private PyramidTest()
         {
             //Create ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
-            PolygonShape shape = new PolygonShape(box);
+            PolygonShape shape = new PolygonShape(box, 5);
 
             Vector2 x = new Vector2(-7.0f, 0.75f);
             Vector2 deltaX = new Vector2(0.5625f, 1.25f);
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape, 5);
+                    body.CreateFixture(shape);
 
                     y += deltaY;
                 }

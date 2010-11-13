@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CollisionFilteringTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f), 0);
+            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 // Small triangle
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-1.0f, 0.0f));
                 vertices.Add(new Vector2(1.0f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 2.0f));
-                PolygonShape polygon = new PolygonShape(vertices);
+                PolygonShape polygon = new PolygonShape(vertices, 1);
 
                 Body triangleBody = BodyFactory.CreateBody(World);
                 triangleBody.BodyType = BodyType.Dynamic;
@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.Position = new Vector2(-5.0f, 10.0f);
 
                     Vertices box = PolygonTools.CreateRectangle(0.5f, 1.0f);
-                    PolygonShape p = new PolygonShape(box);
+                    PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
                     PrismaticJoint jd = new PrismaticJoint(triangleBody2, body, triangleBody2.GetLocalPoint(body.Position),
@@ -117,7 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
                 boxBody.BodyType = BodyType.Dynamic;
                 boxBody.Position = new Vector2(0.0f, 2.0f);
 
-                Fixture boxFixture = boxBody.CreateFixture(polygon, 0);
+                Fixture boxFixture = boxBody.CreateFixture(polygon);
                 boxFixture.Restitution = 0.1f;
 
                 boxFixture.CollisionGroup = SmallGroup;
@@ -131,13 +131,13 @@ namespace FarseerPhysics.TestBed.Tests
                 boxBody2.BodyType = BodyType.Dynamic;
                 boxBody2.Position = new Vector2(0.0f, 6.0f);
 
-                Fixture boxFixture2 = boxBody2.CreateFixture(polygon, 0);
+                Fixture boxFixture2 = boxBody2.CreateFixture(polygon);
                 boxFixture2.CollisionGroup = LargeGroup;
                 boxFixture2.CollisionCategories = BoxCategory;
                 boxFixture2.CollidesWith = BoxMask;
 
                 // Small circle
-                CircleShape circle = new CircleShape(1.0f);
+                CircleShape circle = new CircleShape(1.0f, 1);
 
                 Body circleBody = BodyFactory.CreateBody(World);
                 circleBody.BodyType = BodyType.Dynamic;
