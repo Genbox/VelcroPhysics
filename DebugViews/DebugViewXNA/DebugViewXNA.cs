@@ -66,8 +66,6 @@ namespace FarseerPhysics.DebugViewXNA
 
         #endregion
 
-        private Vector2[] _worldPoints = new Vector2[Settings.MaxManifoldPoints];
-
         private void PreSolve(Contact contact, ref Manifold oldManifold)
         {
             if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
@@ -81,11 +79,11 @@ namespace FarseerPhysics.DebugViewXNA
 
                 Fixture fixtureA = contact.FixtureA;
 
-                PointState[] state1, state2;
+                FixedArray2<PointState> state1, state2;
                 Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
-                Vector2 normal;
-                contact.GetWorldManifold(ref _worldPoints, out normal);
+                WorldManifold worldManifold;
+                contact.GetWorldManifold(out worldManifold);
 
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
@@ -94,8 +92,8 @@ namespace FarseerPhysics.DebugViewXNA
                         _points[i] = new ContactPoint();
                     }
                     ContactPoint cp = _points[_pointCount];
-                    cp.Position = _worldPoints[i];
-                    cp.Normal = normal;
+                    cp.Position = worldManifold.Points[i];
+                    cp.Normal = worldManifold.Normal;
                     cp.State = state2[i];
                     _points[_pointCount] = cp;
                     ++_pointCount;

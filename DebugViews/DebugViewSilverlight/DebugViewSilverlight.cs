@@ -36,8 +36,6 @@ namespace FarseerPhysics.DebugViewSilverlight
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
         private TextBlock _txtDebug;
-        private Vector2[] _worldPoints;
-        private Vector2 _normal;
 
         public DebugViewSilverlight(Canvas debugCanvas, TextBlock txtDebug, World world)
             : base(world)
@@ -77,11 +75,11 @@ namespace FarseerPhysics.DebugViewSilverlight
 
                 Fixture fixtureA = contact.FixtureA;
 
-                PointState[] state1, state2;
+                FixedArray2<PointState> state1, state2;
                 Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
-                Vector2 normal;
-                contact.GetWorldManifold(ref _worldPoints, out normal);
+                WorldManifold worldManifold;
+                contact.GetWorldManifold(out worldManifold);
 
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
@@ -90,8 +88,8 @@ namespace FarseerPhysics.DebugViewSilverlight
                         _points[i] = new ContactPoint();
                     }
                     ContactPoint cp = _points[_pointCount];
-                    cp.Position = _worldPoints[i];
-                    cp.Normal = normal;
+                    cp.Position = worldManifold.Points[i];
+                    cp.Normal = worldManifold.Normal;
                     cp.State = state2[i];
                     _points[_pointCount] = cp;
                     ++_pointCount;
@@ -282,7 +280,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                 output.AppendLine("Proxies: " + World.ProxyCount);
                 output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
                 output.AppendLine("Controllers: " + World.Controllers.Count);
-
+                
                 output.AppendLine();
 
                 output.AppendLine("New contacts: " + World.NewContactsTime);
