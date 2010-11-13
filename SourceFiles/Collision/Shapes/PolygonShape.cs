@@ -115,7 +115,7 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 edge = Vertices[i2] - Vertices[i1];
                 Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                Vector2 temp = new Vector2(1.0f * edge.Y, -1.0f * edge.X);
+                Vector2 temp = new Vector2(edge.Y, -edge.X);
                 temp.Normalize();
                 Normals.Add(temp);
             }
@@ -123,10 +123,10 @@ namespace FarseerPhysics.Collision.Shapes
 #if DEBUG
             // Ensure the polygon is convex and the interior
             // is to the left of each edge.
-            for (int i = 0; i < vertices.Count; ++i)
+            for (int i = 0; i < Vertices.Count; ++i)
             {
                 int i1 = i;
-                int i2 = i + 1 < vertices.Count ? i + 1 : 0;
+                int i2 = i + 1 < Vertices.Count ? i + 1 : 0;
                 Vector2 edge = Vertices[i2] - Vertices[i1];
 
                 for (int j = 0; j < vertices.Count; ++j)
@@ -141,8 +141,7 @@ namespace FarseerPhysics.Collision.Shapes
 
                     // Your polygon is non-convex (it has an indentation) or
                     // has colinear edges.
-                    float s;
-                    MathUtils.Cross(ref edge, ref  r, out s);
+                    float s = edge.X * r.Y - edge.Y * r.X;
 
                     Debug.Assert(s > 0.0f);
                 }
