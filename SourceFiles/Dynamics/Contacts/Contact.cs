@@ -218,11 +218,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
-            Transform xfA, xfB;
-            bodyA.GetTransform(out xfA);
-            bodyB.GetTransform(out xfB);
-
-            worldManifold = new WorldManifold(ref Manifold, ref xfA, shapeA.Radius, ref xfB, shapeB.Radius);
+            worldManifold = new WorldManifold(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius);
         }
 
         /// <summary>
@@ -293,10 +289,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             Body bodyA = FixtureA.Body;
             Body bodyB = FixtureB.Body;
-            Transform xfA;
-            bodyA.GetTransform(out xfA);
-            Transform xfB;
-            bodyB.GetTransform(out xfB);
+            Transform xfA = bodyA.Xf;
+            Transform xfB = bodyB.Xf;
 
             // Is this contact a sensor?
             if (sensor)

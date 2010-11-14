@@ -109,8 +109,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 float radiusB = shapeB.Radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-                Manifold manifold;
-                contact.GetManifold(out manifold);
+                Manifold manifold = contact.Manifold;
 
                 Debug.Assert(manifold.PointCount > 0);
 
