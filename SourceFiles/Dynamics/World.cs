@@ -95,7 +95,7 @@ namespace FarseerPhysics.Dynamics
         public JointDelegate JointRemoved;
 
         private float _invDt0;
-        private Island _island = new Island();
+        public Island Island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private RayCastCallback _rayCastCallback;
@@ -153,6 +153,8 @@ namespace FarseerPhysics.Dynamics
         public float SolveUpdateTime { get; private set; }
 
         public float BreakableBodyTime { get; private set; }
+
+        public float JointUpdateTime { get; private set; }
 
         /// <summary>
         /// Get the number of broad-phase proxies.
@@ -525,8 +527,7 @@ namespace FarseerPhysics.Dynamics
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
-#endif
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
 
@@ -707,7 +708,7 @@ namespace FarseerPhysics.Dynamics
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
-            _island.Reset(BodyList.Count,
+            Island.Reset(BodyList.Count,
                           ContactManager.ContactCount,
                           JointList.Count,
                           ContactManager);
@@ -751,7 +752,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Reset island and stack.
-                _island.Clear();
+                Island.Clear();
                 int stackCount = 0;
                 _stack[stackCount++] = seed;
                 seed.Flags |= BodyFlags.Island;
@@ -762,7 +763,7 @@ namespace FarseerPhysics.Dynamics
                     // Grab the next body off the stack and add it to the island.
                     Body b = _stack[--stackCount];
                     Debug.Assert(b.Active);
-                    _island.Add(b);
+                    Island.Add(b);
 
                     // Make sure the body is awake.
                     b.Awake = true;
@@ -799,7 +800,7 @@ namespace FarseerPhysics.Dynamics
                             continue;
                         }
 
-                        _island.Add(contact);
+                        Island.Add(contact);
                         contact.Flags |= ContactFlags.Island;
 
                         Body other = ce.Other;
@@ -835,7 +836,7 @@ namespace FarseerPhysics.Dynamics
                                 continue;
                             }
 
-                            _island.Add(je.Joint);
+                            Island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
 
                             if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
@@ -849,19 +850,19 @@ namespace FarseerPhysics.Dynamics
                         }
                         else
                         {
-                            _island.Add(je.Joint);
+                            Island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
                         }
                     }
                 }
 
-                _island.Solve(ref step, ref Gravity);
+                Island.Solve(ref step, ref Gravity);
 
                 // Post solve cleanup.
-                for (int i = 0; i < _island.BodyCount; ++i)
+                for (int i = 0; i < Island.BodyCount; ++i)
                 {
                     // Allow static bodies to participate in other islands.
-                    Body b = _island.Bodies[i];
+                    Body b = Island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
                         b.Flags &= ~BodyFlags.Island;
@@ -897,7 +898,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="step">The step.</param>
         private void SolveTOI(ref TimeStep step)
         {
-            _island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
+            Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
             if (_stepComplete)
             {
@@ -1073,10 +1074,10 @@ namespace FarseerPhysics.Dynamics
                 bB1.Awake = true;
 
                 // Build the island
-                _island.Clear();
-                _island.Add(bA1);
-                _island.Add(bB1);
-                _island.Add(minContact);
+                Island.Clear();
+                Island.Add(bA1);
+                Island.Add(bB1);
+                Island.Add(minContact);
 
                 bA1.Flags |= BodyFlags.Island;
                 bB1.Flags |= BodyFlags.Island;
@@ -1089,7 +1090,7 @@ namespace FarseerPhysics.Dynamics
                     Body body = bodies[i];
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        // for (ContactEdge ce = body.ContactList; ce && _island.BodyCount < Settings.MaxTOIContacts; ce = ce.Next)
+                        // for (ContactEdge ce = body.ContactList; ce && Island.BodyCount < Settings.MaxTOIContacts; ce = ce.Next)
                         for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                         {
                             Contact contact = ce.Contact;
@@ -1144,7 +1145,7 @@ namespace FarseerPhysics.Dynamics
 
                             // Add the contact to the island
                             contact.Flags |= ContactFlags.Island;
-                            _island.Add(contact);
+                            Island.Add(contact);
 
                             // Has the other body already been added to the island?
                             if ((other.Flags & BodyFlags.Island) == BodyFlags.Island)
@@ -1160,7 +1161,7 @@ namespace FarseerPhysics.Dynamics
                                 other.Awake = true;
                             }
 
-                            _island.Add(other);
+                            Island.Add(other);
                         }
                     }
                 }
@@ -1172,12 +1173,12 @@ namespace FarseerPhysics.Dynamics
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
                 //subStep.warmStarting = false;
-                _island.SolveTOI(ref subStep, bA1, bB1);
+                Island.SolveTOI(ref subStep, bA1, bB1);
 
                 // Reset island flags and synchronize broad-phase proxies.
-                for (int i = 0; i < _island.BodyCount; ++i)
+                for (int i = 0; i < Island.BodyCount; ++i)
                 {
-                    Body body = _island.Bodies[i];
+                    Body body = Island.Bodies[i];
                     body.Flags &= ~BodyFlags.Island;
 
                     if (body.BodyType != BodyType.Dynamic)

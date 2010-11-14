@@ -292,13 +292,15 @@ namespace FarseerPhysics.DebugViewXNA
             DrawString(160, 130, "Add/Remove: " + World.AddRemoveTime);
             DrawString(160, 145, "Breakable: " + World.BreakableBodyTime);
             DrawString(160, 160, "Contacts: " + World.ContactsUpdateTime);
-            DrawString(160, 175, "Solve: " + World.SolveUpdateTime);
-            DrawString(160, 190, "CCD: " + World.ContinuousPhysicsTime);
-            DrawString(160, 205, "Total: " + World.UpdateTime);
-            if (_stepCount > 15)
+            DrawString(160, 175, "Joints: " + World.Island.JointUpdateTime);
+            DrawString(160, 190, "Solve: " + World.SolveUpdateTime);
+            DrawString(160, 205, "CCD: " + World.ContinuousPhysicsTime);
+            DrawString(160, 220, "Total: " + World.UpdateTime);
+            
+            if (_stepCount > 150)
             {
                 _min = Math.Min(World.UpdateTime, _min);
-                DrawString(160, 220, "Min: " + _min);
+                DrawString(160, 235, "Min: " + _min);
             }
             else
             {
