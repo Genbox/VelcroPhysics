@@ -70,10 +70,9 @@ namespace FarseerPhysics.Dynamics
                 if (Parts.Contains(contact.FixtureA) || Parts.Contains(contact.FixtureB))
                 {
                     float maxImpulse = 0.0f;
-                    Manifold manifold;
-                    contact.GetManifold(out manifold);
+                    int count = contact.Manifold.PointCount;
 
-                    for (int i = 0; i < manifold.PointCount; ++i)
+                    for (int i = 0; i < count; ++i)
                     {
                         maxImpulse = Math.Max(maxImpulse, impulse.NormalImpulses[i]);
                     }
