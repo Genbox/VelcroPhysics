@@ -58,7 +58,7 @@ namespace FarseerPhysics.Dynamics
 
     public delegate void PreSolveDelegate(Contact contact, ref Manifold oldManifold);
 
-    public delegate void PostSolveDelegate(Contact contact, ContactConstraint impulse);
+    public delegate void PostSolveDelegate(Contact contact, ref ContactImpulse impulse);
 
     public delegate void FixtureDelegate(Fixture fixture);
 
@@ -94,5 +94,11 @@ namespace FarseerPhysics.Dynamics
 
             return collide;
         }
+    }
+
+    public struct ContactImpulse
+    {
+        public FixedArray2<float> NormalImpulses;
+        public FixedArray2<float> TangentImpulses;
     }
 }
