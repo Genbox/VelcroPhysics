@@ -117,14 +117,6 @@ namespace FarseerPhysics.Collision
         FaceB
     }
 
-    public enum EdgeType
-    {
-        Isolated,
-        Concave,
-        Flat,
-        Convex
-    }
-
     /// <summary>
     /// A manifold for two touching convex Shapes.
     /// Box2D supports multiple types of contact:
