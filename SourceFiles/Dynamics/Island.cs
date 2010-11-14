@@ -35,7 +35,7 @@ namespace FarseerPhysics.Dynamics
     /// <summary>
     /// This is an internal class.
     /// </summary>
-    internal class Island
+    public class Island
     {
         public Body[] Bodies;
         public int BodyCount;
@@ -48,6 +48,11 @@ namespace FarseerPhysics.Dynamics
         private Contact[] _contacts;
         private int _jointCapacity;
         private Joint[] _joints;
+        public float JointUpdateTime;
+
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+        private Stopwatch _watch = new Stopwatch();
+#endif
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -83,6 +88,8 @@ namespace FarseerPhysics.Dynamics
             ContactCount = 0;
             JointCount = 0;
         }
+
+        private float _tmpTime;
 
         public void Solve(ref TimeStep step, ref Vector2 gravity)
         {
@@ -152,21 +159,48 @@ namespace FarseerPhysics.Dynamics
                 _contactSolver.WarmStart();
             }
 
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+            if (Settings.EnableDiagnostics)
+            {
+                _watch.Start();
+                _tmpTime = 0;
+            }
+#endif
+
             for (int i = 0; i < JointCount; ++i)
             {
                 _joints[i].InitVelocityConstraints(ref step);
             }
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+            if (Settings.EnableDiagnostics)
+            {
+                _tmpTime += _watch.ElapsedTicks;
+            }
+#endif
 
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+                if (Settings.EnableDiagnostics)
+                    _watch.Start();
+#endif
                 for (int j = 0; j < JointCount; ++j)
                 {
                     _joints[j].SolveVelocityConstraints(ref step);
                 }
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+                if (Settings.EnableDiagnostics)
+                {
+                    _watch.Stop();
+                    _tmpTime += _watch.ElapsedTicks;
+                    _watch.Reset();
+                }
+#endif
 
                 _contactSolver.SolveVelocityConstraints();
             }
+
 
             // Post-solve (store impulses for warm starting).
             _contactSolver.StoreImpulses();
@@ -216,20 +250,39 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < Settings.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
-
                 bool jointsOkay = true;
+
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+                if (Settings.EnableDiagnostics)
+                    _watch.Start();
+#endif
                 for (int j = 0; j < JointCount; ++j)
                 {
                     bool jointOkay = _joints[j].SolvePositionConstraints();
                     jointsOkay = jointsOkay && jointOkay;
                 }
-
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+                if (Settings.EnableDiagnostics)
+                {
+                    _watch.Stop();
+                    _tmpTime += _watch.ElapsedTicks;
+                    _watch.Reset();
+                }
+#endif
                 if (contactsOkay && jointsOkay)
                 {
                     // Exit early if the position errors are small.
                     break;
                 }
             }
+
+
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+            if (Settings.EnableDiagnostics)
+            {
+                JointUpdateTime = _tmpTime;
+            }
+#endif
 
             if (_contactManager.PostSolve != null)
                 Report(_contactSolver.Constraints);
