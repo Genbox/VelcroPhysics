@@ -260,7 +260,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
         }
 
-        protected virtual void PostSolve(Contact contact, ContactConstraint impulse)
+        protected virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
         }
     }

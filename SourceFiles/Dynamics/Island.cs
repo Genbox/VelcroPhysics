@@ -427,9 +427,17 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < ContactCount; ++i)
             {
                 Contact c = _contacts[i];
+
                 ContactConstraint cc = constraints[i];
 
-                _contactManager.PostSolve(c, cc);
+                ContactImpulse impulse = new ContactImpulse();
+                for (int j = 0; j < cc.PointCount; ++j)
+                {
+                    impulse.NormalImpulses[j] = cc.Points[j].NormalImpulse;
+                    impulse.TangentImpulses[j] = cc.Points[j].TangentImpulse;
+                }
+
+                _contactManager.PostSolve(c, ref impulse);
             }
         }
     }

@@ -63,18 +63,19 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        private void PostSolve(Contact contact, ContactConstraint impulse)
+        private void PostSolve(Contact contact, ref ContactImpulse impulse)
         {
             if (!Broken)
             {
                 if (Parts.Contains(contact.FixtureA) || Parts.Contains(contact.FixtureB))
                 {
                     float maxImpulse = 0.0f;
-                    int count = contact.Manifold.PointCount;
+                    Manifold manifold;
+                    contact.GetManifold(out manifold);
 
-                    for (int i = 0; i < count; ++i)
+                    for (int i = 0; i < manifold.PointCount; ++i)
                     {
-                        maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
+                        maxImpulse = Math.Max(maxImpulse, impulse.NormalImpulses[i]);
                     }
 
                     if (maxImpulse > Strength)

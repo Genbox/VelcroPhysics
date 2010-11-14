@@ -292,7 +292,9 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public bool TestPoint(ref Vector2 point)
         {
-            return Shape.TestPoint(ref Body.Xf, ref point);
+            Transform xf;
+            Body.GetTransform(out xf);
+            return Shape.TestPoint(ref xf, ref point);
         }
 
         /// <summary>
@@ -304,7 +306,9 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
-            return Shape.RayCast(out output, ref input, ref Body.Xf, childIndex);
+            Transform xf;
+            Body.GetTransform(out xf);
+            return Shape.RayCast(out output, ref input, ref xf, childIndex);
         }
 
         /// <summary>

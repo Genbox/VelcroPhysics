@@ -73,11 +73,8 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
     }
 
-
     public class ContactSolver
     {
-        private Vector2[] _points = new Vector2[Settings.MaxManifoldPoints];
-
         public ContactConstraint[] Constraints;
         private int _constraintCount; // collection can be bigger.
         private Contact[] _contacts;
@@ -112,7 +109,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 float radiusB = shapeB.Radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-                Manifold manifold = contact.Manifold;
+                Manifold manifold;
+                contact.GetManifold(out manifold);
 
                 Debug.Assert(manifold.PointCount > 0);
 
@@ -171,14 +169,16 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 Debug.Assert(manifold.PointCount > 0);
 
-                WorldManifold.Calculate(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf, radiusB, ref _points, out cc.Normal);
+                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf, radiusB);
+
+                cc.Normal = worldManifold.Normal;
 
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
                     ContactConstraintPoint ccp = cc.Points[j];
 
-                    ccp.rA = _points[j] - bodyA.Sweep.C;
-                    ccp.rB = _points[j] - bodyB.Sweep.C;
+                    ccp.rA = worldManifold.Points[j] - bodyA.Sweep.C;
+                    ccp.rB = worldManifold.Points[j] - bodyB.Sweep.C;
 #if MATH_OVERLOADS
 			        float rnA = MathUtils.Cross(ccp.rA, cc.Normal);
 			        float rnB = MathUtils.Cross(ccp.rB, cc.Normal);
