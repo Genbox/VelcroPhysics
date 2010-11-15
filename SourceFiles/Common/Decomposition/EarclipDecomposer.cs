@@ -25,9 +25,20 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
 {
+    /// <summary>
+    /// Ported from jBox2D. Original author: ewjordan 
+    /// Triangulates a polygon using simple ear-clipping algorithm.
+    /// 
+    /// Only works on simple polygons.
+    /// 
+    /// Triangles may be degenerate, especially if you have identical points
+    /// in the input to the algorithm.  Check this before you use them.
+    /// </summary>
     public static class EarclipDecomposer
     {
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50
+
+        private const float Tol = .001f;
 
         /// <summary>
         /// Decomposes a non-convex polygon into a number of convex polygons, up
@@ -48,14 +59,13 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Decomposes a non-convex polygon into a number of convex polygons, up
         /// to maxPolys (remaining pieces are thrown out).
-        ///
         /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
         /// vertices.
-        /// 
         /// Warning: Only works on simple polygons
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons.</param>
+        /// <param name="tolerance">The tolerance.</param>
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys, float tolerance)
         {
@@ -108,7 +118,8 @@ namespace FarseerPhysics.Common.Decomposition
         /// practice it works fairly well.
         /// </summary>
         /// <param name="triangulated">The triangulated.</param>
-        ///<param name="maxPolys"></param>
+        ///<param name="maxPolys">The maximun number of polygons</param>
+        ///<param name="tolerance">The tolerance</param>
         ///<returns></returns>
         public static List<Vertices> PolygonizeTriangles(List<Triangle> triangulated, int maxPolys, float tolerance)
         {
@@ -236,10 +247,8 @@ namespace FarseerPhysics.Common.Decomposition
             Vertices pin = new Vertices(vertices);
             if (ResolvePinchPoint(pin, out pA, out pB))
             {
-                List<Triangle> mergeA;
-                List<Triangle> mergeB;
-                mergeA = TriangulatePolygon(pA);
-                mergeB = TriangulatePolygon(pB);
+                List<Triangle> mergeA = TriangulatePolygon(pA);
+                List<Triangle> mergeB = TriangulatePolygon(pB);
 
                 if (mergeA.Count == -1 || mergeB.Count == -1)
                     throw new Exception("Can't triangulate your polygon.");
@@ -272,7 +281,6 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 // Find an ear
                 int earIndex = -1;
-                //float32 earVolume = -1.0f;
                 float earMaxMinCross = -10.0f;
                 for (int i = 0; i < vNum; ++i)
                 {
@@ -306,13 +314,6 @@ namespace FarseerPhysics.Common.Decomposition
                             earIndex = i;
                             earMaxMinCross = minCross;
                         }
-
-                        /*//This bit chooses the ear with greatest volume first
-                        float32 testVol = b2Abs( d1.x*d2.y-d2.x*d1.y );
-                        if (testVol > earVolume){
-                            earIndex = i;
-                            earVolume = testVol;
-                        }*/
                     }
                 }
 
@@ -350,7 +351,7 @@ namespace FarseerPhysics.Common.Decomposition
                 int over = (earIndex == vNum) ? 0 : (earIndex + 1);
                 Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under],
                                               yrem[under]);
-                buffer[bufferSize] = new Triangle(toAdd);
+                buffer[bufferSize] = toAdd;
                 ++bufferSize;
 
                 // - replace the old list with the new one
@@ -358,9 +359,8 @@ namespace FarseerPhysics.Common.Decomposition
                 yrem = newy;
             }
 
-            Triangle tooAdd = new Triangle(xrem[1], yrem[1], xrem[2], yrem[2],
-                                           xrem[0], yrem[0]);
-            buffer[bufferSize] = new Triangle(tooAdd);
+            Triangle tooAdd = new Triangle(xrem[1], yrem[1], xrem[2], yrem[2], xrem[0], yrem[0]);
+            buffer[bufferSize] = tooAdd;
             ++bufferSize;
 
             for (int i = 0; i < bufferSize; i++)
@@ -374,9 +374,13 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Finds and fixes "pinch points," points where two polygon
         /// vertices are at the same point.
+        /// 
         /// If a pinch point is found, pin is broken up into poutA and poutB
         /// and true is returned; otherwise, returns false.
+        /// 
         /// Mostly for internal use.
+        /// 
+        /// O(N^2) time, which sucks...
         /// </summary>
         /// <param name="pin">The pin.</param>
         /// <param name="poutA">The pout A.</param>
@@ -390,7 +394,6 @@ namespace FarseerPhysics.Common.Decomposition
             if (pin.Count < 3)
                 return false;
 
-            const float tol = .001f;
             bool hasPinchPoint = false;
             int pinchIndexA = -1;
             int pinchIndexB = -1;
@@ -400,12 +403,10 @@ namespace FarseerPhysics.Common.Decomposition
                 {
                     //Don't worry about pinch points where the points
                     //are actually just dupe neighbors
-                    if (Math.Abs(pin[i].X - pin[j].X) < tol && Math.Abs(pin[i].Y - pin[j].Y) < tol && j != i + 1)
+                    if (Math.Abs(pin[i].X - pin[j].X) < Tol && Math.Abs(pin[i].Y - pin[j].Y) < Tol && j != i + 1)
                     {
                         pinchIndexA = i;
                         pinchIndexB = j;
-                        //printf("pinch: %f, %f == %f, %f\n",pin.x[i],pin.y[i],pin.x[j],pin.y[j]);
-                        //printf("at indexes %d, %d\n",i,j);
                         hasPinchPoint = true;
                         break;
                     }
@@ -414,7 +415,6 @@ namespace FarseerPhysics.Common.Decomposition
             }
             if (hasPinchPoint)
             {
-                //printf("Found pinch point\n");
                 int sizeA = pinchIndexB - pinchIndexA;
                 if (sizeA == pin.Count) return false; //has dupe points at wraparound, not a problem here
                 for (int i = 0; i < sizeA; ++i)
@@ -429,7 +429,6 @@ namespace FarseerPhysics.Common.Decomposition
                     int ind = Remainder(pinchIndexB + i, pin.Count); // is this right    
                     poutB.Add(pin[ind]);
                 }
-                //printf("Size of a: %d, size of b: %d\n",sizeA,sizeB);
             }
             return hasPinchPoint;
         }
@@ -452,7 +451,6 @@ namespace FarseerPhysics.Common.Decomposition
 
         private static Vertices AddTriangle(Triangle t, Vertices vertices)
         {
-            // float32 equalTol = .001f;
             // First, find vertices that connect
             int firstP = -1;
             int firstT = -1;
