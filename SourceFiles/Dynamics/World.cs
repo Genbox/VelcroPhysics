@@ -527,11 +527,13 @@ namespace FarseerPhysics.Dynamics
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
-
-            if (Settings.EnableDiagnostics)
-                AddRemoveTime = _watch.ElapsedTicks;
+#endif
 
             ProcessChanges();
+
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+            if (Settings.EnableDiagnostics)
+                AddRemoveTime = _watch.ElapsedTicks;
 #endif
 
             // If new fixtures were added, we need to find the new contacts.
