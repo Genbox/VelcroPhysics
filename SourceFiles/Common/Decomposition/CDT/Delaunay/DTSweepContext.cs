@@ -147,6 +147,19 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 
             Points.AddRange(Polygon.Points);
 
+            // Hole constraints
+            if (Polygon.Holes != null)
+            {
+                foreach (Polygon.Polygon p in Polygon.Holes)
+                {
+                    for (int i = 0; i < p.Points.Count - 1; i++)
+                        DTSweep.CreateSweepConstraint(p.Points[i], p.Points[i + 1]);
+
+                    DTSweep.CreateSweepConstraint(p.Points[0], p.Points[p.Points.Count - 1]);
+                    Points.AddRange(p.Points);
+                }
+            }
+
             double xmax, xmin;
             double ymax, ymin;
 

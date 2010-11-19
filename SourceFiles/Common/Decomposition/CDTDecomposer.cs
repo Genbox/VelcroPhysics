@@ -50,7 +50,7 @@ namespace FarseerPhysics.Common.Decomposition
             DTSweepContext tcx = new DTSweepContext();
             tcx.PrepareTriangulation(poly);
             DTSweep.Triangulate(tcx);
-
+            
             List<Vertices> results = new List<Vertices>();
 
             foreach (DelaunayTriangle triangle in tcx.trianglesCleaned)

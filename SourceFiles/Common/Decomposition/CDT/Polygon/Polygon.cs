@@ -35,11 +35,21 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
     public class Polygon
     {
+        public List<Polygon> Holes;
+
         private List<PolygonPoint> _points = new List<PolygonPoint>();
 
         public IList<PolygonPoint> Points
         {
             get { return _points; }
+        }
+
+        public void AddHole(Polygon poly)
+        {
+            if (Holes == null)
+                Holes = new List<Polygon>();
+
+            Holes.Add(poly);
         }
     }
 }
