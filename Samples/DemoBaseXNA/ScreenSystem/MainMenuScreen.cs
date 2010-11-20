@@ -42,8 +42,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 ScreenManager.AddScreen(_mainMenuItems[entryIndex].Screen);
             }
-
-            ExitScreen();
         }
 
         public override void Draw(GameTime gameTime)
