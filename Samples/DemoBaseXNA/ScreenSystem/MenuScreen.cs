@@ -11,18 +11,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     /// </summary>
     public abstract class MenuScreen : GameScreen
     {
-        private float _leftBorder = 100;
         private List<string> _menuEntries = new List<string>();
         private Vector2 _position = Vector2.Zero;
         private int _selectedEntry;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected MenuScreen()
+        public MenuScreen()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            LeftBorder = 100;
         }
 
         /// <summary>
@@ -34,11 +29,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get { return _menuEntries; }
         }
 
-        public float LeftBorder
-        {
-            get { return _leftBorder; }
-            set { _leftBorder = value; }
-        }
+        public float LeftBorder { get; set; }
 
         /// <summary>
         /// Responds to user input, changing the selected entry and accepting
@@ -87,7 +78,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             totalHeight *= _menuEntries.Count;
 
             _position.Y = (ScreenManager.GraphicsDevice.Viewport.Height - totalHeight) / 2;
-            _position.X = _leftBorder;
+            _position.X = LeftBorder;
         }
 
         /// <summary>

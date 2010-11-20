@@ -38,8 +38,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ScreenState = ScreenState.TransitionOn;
             TransitionPosition = 1;
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
         public World World { get; set; }
@@ -216,8 +214,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     // variable time step but never less then 30 Hz
                     World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
                                         (1f / 30f)));
-                    Settings.VelocityIterations = 5;
-                    Settings.PositionIterations = 3;
                 }
             }
         }
