@@ -1,6 +1,7 @@
 using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -30,7 +31,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public abstract class GameScreen : IDisposable
     {
         private bool _otherScreenHasFocus;
-        public bool firstRun = true;
+        public bool FirstRun = true;
         private FixedMouseJoint _fixedMouseJoint;
 
         protected GameScreen()
@@ -43,11 +44,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public World World { get; set; }
 
-        public DebugViewXNA.DebugViewXNA DebugView { get; set; }
-
-        public Matrix Projection;
-
-        public Matrix View = Matrix.Identity;
+        public DebugViewXNA DebugView { get; set; }
 
         public bool DebugViewEnabled { get; set; }
 
@@ -132,36 +129,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public virtual void Initialize()
         {
-            if (World != null)
-            {
-                DebugView = new DebugViewXNA.DebugViewXNA(World);
-                DebugView.DefaultShapeColor = Color.White;
-                DebugView.SleepingShapeColor = Color.LightGray;
-            }
-        }
+            if (World == null)
+                return;
 
-        private Vector2 _viewCenter = Vector2.Zero;
-
-        public Vector2 ConvertScreenToWorld(int x, int y)
-        {
-            float viewportWidth = ScreenManager.GraphicsDevice.Viewport.Width;
-            float viewportHeight = ScreenManager.GraphicsDevice.Viewport.Height;
-
-            float aspectRatio = ScreenManager.GraphicsDevice.Viewport.AspectRatio;
-
-            Vector2 extents = new Vector2(aspectRatio * 40, 40);
-
-            Vector2 lower = _viewCenter - extents;
-            Vector2 upper = _viewCenter + extents;
-
-            float u = x / viewportWidth;
-            float v = (viewportHeight - y) / viewportHeight;
-
-            Vector2 p = new Vector2();
-            p.X = (1.0f - u) * lower.X + u * upper.X;
-            p.Y = (1.0f - v) * lower.Y + v * upper.Y;
-
-            return p;
+            DebugView = new DebugViewXNA(World);
+            DebugView.DefaultShapeColor = Color.White;
+            DebugView.SleepingShapeColor = Color.LightGray;
         }
 
         /// <summary>
@@ -169,14 +142,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            if (World != null)
-            {
-                DebugViewXNA.DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-
-                Vector2 gameWorld = ConvertScreenToWorld(ScreenManager.ScreenWidth, ScreenManager.ScreenHeight);
-
-                new Border(World, gameWorld.X, -gameWorld.Y, 2);
-            }
+            if (World == null)
+                return;
+            
+            DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+            new Border(World, gameWorld.X, gameWorld.Y, 1);
         }
 
         /// <summary>
@@ -283,50 +254,36 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// is only called when the screen is active, and not when some other
         /// screen has taken the focus.
         /// </summary>
-        public virtual void HandleInput(InputState input)
+        public virtual void HandleInput(InputHelper input)
         {
             //Xbox
-            if (input.LastGamePadState.Buttons.Y != ButtonState.Pressed &&
-                input.CurrentGamePadState.Buttons.Y == ButtonState.Pressed)
+            if (input.IsNewPress(Buttons.Y))
             {
                 DebugViewEnabled = !DebugViewEnabled;
                 Settings.EnableDiagnostics = DebugViewEnabled;
             }
 
-            if (input.LastGamePadState.Buttons.B != ButtonState.Pressed &&
-                input.CurrentGamePadState.Buttons.B == ButtonState.Pressed)
+            if (input.IsNewPress(Buttons.B))
             {
-                ScreenManager.GoToMainMenu();
+                ScreenManager.RemoveScreen(this);
             }
 
             //Windows
-            if (!input.LastKeyboardState.IsKeyDown(Keys.F1) && input.CurrentKeyboardState.IsKeyDown(Keys.F1))
+            if (input.IsNewPress(Keys.F1))
             {
                 DebugViewEnabled = !DebugViewEnabled;
                 Settings.EnableDiagnostics = DebugViewEnabled;
             }
 
-            if (!input.LastKeyboardState.IsKeyDown(Keys.Escape) && input.CurrentKeyboardState.IsKeyDown(Keys.Escape))
+            if (input.IsNewPress(Keys.Escape))
             {
-                ScreenManager.GoToMainMenu();
+                ScreenManager.RemoveScreen(this);
             }
-
-            if (DebugViewEnabled)
-                DebugView.AppendFlags(DebugViewFlags.DebugPanel);
-            else
-                DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
-
-
-            //TODO: Create pause screen and presentation screen
-            //if (input.PauseGame)
-            //{
-            //    ScreenManager.AddScreen(new PauseScreen(GetTitle(), GetDetails()));
-            //}
 
 #if !XBOX
             if (World != null)
             {
-                Mouse(input.CurrentMouseState, input.LastMouseState);
+                Mouse(input);
             }
 #else
             if (World != null)
@@ -337,30 +294,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
 #if !XBOX
-
-        private void Mouse(MouseState state, MouseState oldState)
+        private void Mouse(InputHelper state)
         {
-            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.X, state.Y, 0),
-                                                                                    Projection, View, Matrix.Identity);
-            Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
+            Vector2 position = ScreenManager.Camera.ConvertScreenToWorld(state.MousePosition);
 
-            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            if (state.CurrentMouseState.LeftButton == ButtonState.Released && state.LastMouseState.LeftButton == ButtonState.Pressed)
             {
                 MouseUp();
             }
-            else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            else if (state.CurrentMouseState.LeftButton == ButtonState.Pressed && state.LastMouseState.LeftButton == ButtonState.Released)
             {
                 MouseDown(position);
             }
 
-            MouseMove(position);
-        }
-
-        private void MouseMove(Vector2 p)
-        {
             if (_fixedMouseJoint != null)
             {
-                _fixedMouseJoint.Target = p;
+                _fixedMouseJoint.Target = position;
             }
         }
 #else
@@ -453,11 +402,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                float aspect = (float)ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
-
-                Projection = Matrix.CreateOrthographic(40 * aspect, 40, 0, 1);
-
-                DebugView.RenderDebugData(ref Projection, ref View);
+                DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
             }
         }
 

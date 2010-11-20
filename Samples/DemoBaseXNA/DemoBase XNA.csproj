@@ -117,8 +117,9 @@
     <Compile Include="IDemoScreen.cs" />
     <Compile Include="Materials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
-    <Compile Include="ScreenSystem\InputState.cs" />
+    <Compile Include="ScreenSystem\InputHelper.cs" />
     <Compile Include="ScreenSystem\LogoScreen.cs" />
     <Compile Include="ScreenSystem\MainMenuScreen.cs" />
     <Compile Include="ScreenSystem\MenuItem.cs" />

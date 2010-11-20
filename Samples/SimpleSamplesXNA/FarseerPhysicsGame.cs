@@ -55,16 +55,17 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Demo5Screen demo5 = new Demo5Screen();
             Demo6Screen demo6 = new Demo6Screen();
             Demo7Screen demo7 = new Demo7Screen();
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
-            ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
+            MainMenuScreen mainMenuScreen = new MainMenuScreen();
+            mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+            mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            mainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
+            mainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
+            mainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
+            mainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
+            mainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
+            mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.GoToMainMenu();
+            ScreenManager.AddScreen(mainMenuScreen);
         }
 
         public ScreenManager ScreenManager { get; set; }

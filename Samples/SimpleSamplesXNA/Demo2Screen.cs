@@ -65,9 +65,9 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.LoadContent();
         }
 
-        public override void HandleInput(InputState input)
+        public override void HandleInput(InputHelper input)
         {
-            if (input.CurrentGamePadState.IsConnected)
+            if (input.CurrentGamepadState.IsConnected)
             {
                 HandleGamePadInput(input);
             }
@@ -79,23 +79,22 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.HandleInput(input);
         }
 
-        private void HandleGamePadInput(InputState input)
+        private void HandleGamePadInput(InputHelper input)
         {
-            Vector2 force = 100 * input.CurrentGamePadState.ThumbSticks.Left;
+            Vector2 force = 100 * input.CurrentGamepadState.ThumbSticks.Left;
             _rectangles[0].Body.ApplyForce(force);
 
-            float rotation = 200 * input.CurrentGamePadState.Triggers.Left;
+            float rotation = 200 * input.CurrentGamepadState.Triggers.Left;
             _rectangles[0].Body.ApplyTorque(rotation);
 
-            rotation = -200 * input.CurrentGamePadState.Triggers.Right;
+            rotation = -200 * input.CurrentGamepadState.Triggers.Right;
             _rectangles[0].Body.ApplyTorque(rotation);
         }
 
-        private void HandleKeyboardInput(InputState input)
+        private void HandleKeyboardInput(InputHelper input)
         {
             const float forceAmount = 100;
             Vector2 force = Vector2.Zero;
-            force.Y = -force.Y;
 
             if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
             {
@@ -103,7 +102,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
             {
-                force += new Vector2(0, -forceAmount);
+                force += new Vector2(0, forceAmount);
             }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
             {
@@ -111,7 +110,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
             {
-                force += new Vector2(0, forceAmount);
+                force += new Vector2(0, -forceAmount);
             }
 
             _rectangles[0].Body.ApplyForce(force);
@@ -121,11 +120,11 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
             {
-                torque += torqueAmount;
+                torque -= torqueAmount;
             }
             if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
             {
-                torque -= torqueAmount;
+                torque += torqueAmount;
             }
 
             _rectangles[0].Body.ApplyTorque(torque);

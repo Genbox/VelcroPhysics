@@ -49,14 +49,15 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             Demo4Screen demo4 = new Demo4Screen();
             Demo5Screen demo5 = new Demo5Screen();
 
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
-            ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
-            ScreenManager.MainMenuScreen.AddMainMenuItem("Exit", null, true);
+            MainMenuScreen mainMenuScreen = new MainMenuScreen();
+            mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+            mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            mainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
+            mainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
+            mainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
+            mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.GoToMainMenu();
+            ScreenManager.AddScreen(mainMenuScreen);
         }
 
         public ScreenManager ScreenManager { get; set; }

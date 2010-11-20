@@ -72,19 +72,5 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
             base.LoadContent();
         }
-
-        public override void HandleInput(InputState input)
-        {
-            if (input.CurrentGamePadState.IsConnected)
-            {
-                //HandleGamePadInput(input);
-            }
-            else
-            {
-                //HandleKeyboardInput(input);
-            }
-
-            base.HandleInput(input);
-        }
     }
 }

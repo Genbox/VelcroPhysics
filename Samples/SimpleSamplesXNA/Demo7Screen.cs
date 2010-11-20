@@ -63,17 +63,17 @@ namespace FarseerPhysics.SimpleSamplesXNA
             rect[3].Body.Position = new Vector2(7, 5);
         }
 
-        public override void HandleInput(InputState input)
+        public override void HandleInput(InputHelper input)
         {
-            if (input.CurrentGamePadState.IsConnected)
+            if (input.CurrentGamepadState.IsConnected)
             {
-                Vector2 force = 1000 * input.CurrentGamePadState.ThumbSticks.Left;
+                Vector2 force = 1000 * input.CurrentGamepadState.ThumbSticks.Left;
                 _ragdoll.Body.ApplyForce(force);
 
-                float rotation = 4000 * input.CurrentGamePadState.Triggers.Left;
+                float rotation = 4000 * input.CurrentGamepadState.Triggers.Left;
                 _ragdoll.Body.ApplyTorque(rotation);
 
-                rotation = -4000 * input.CurrentGamePadState.Triggers.Right;
+                rotation = -4000 * input.CurrentGamepadState.Triggers.Right;
                 _ragdoll.Body.ApplyTorque(rotation);
             }
 

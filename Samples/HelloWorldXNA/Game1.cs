@@ -1,4 +1,4 @@
-using FarseerPhysics.DebugViewXNA;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;

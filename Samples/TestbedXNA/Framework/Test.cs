@@ -25,6 +25,7 @@
 
 using System;
 using FarseerPhysics.Collision;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
@@ -80,7 +81,7 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class Test
     {
-        internal DebugViewXNA.DebugViewXNA DebugView;
+        internal DebugViewXNA DebugView;
         internal int StepCount;
         internal int TextLine;
         internal World World;
@@ -105,7 +106,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Initialize()
         {
-            DebugView = new DebugViewXNA.DebugViewXNA(World);
+            DebugView = new DebugViewXNA(World);
         }
 
         protected virtual void JointRemoved(Joint joint)
