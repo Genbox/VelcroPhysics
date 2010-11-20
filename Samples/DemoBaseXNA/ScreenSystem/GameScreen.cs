@@ -147,7 +147,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             
             DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-            new Border(World, gameWorld.X, gameWorld.Y, 1);
+            new Border(World, gameWorld.X, -gameWorld.Y, 1);
         }
 
         /// <summary>

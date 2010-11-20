@@ -17,7 +17,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private Vector2 _origPosition = Vector2.Zero;
         private float _origRotation;
         private float _origZoom = 1;
-        private Vector2 _position = Vector2.Zero;
+        private Vector2 _position;
         private bool _positionUnset = true;
         private float _rotation;
         private bool _rotationUnset = true;
@@ -26,7 +26,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private float _targetZoom = 1;
         private float _transition;
         private bool _transitioning;
-        private float _zoom = 1;
+        private float _zoom;
         private bool _zoomUnset = true;
 
         /// <summary>
@@ -40,20 +40,36 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             RotationRate = 0.01f;
             MinZoom = 0.25f;
             MaxZoom = 4;
-            VerticalCameraMovement = (input, camera) => (input.RightStickPosition.Y * camera.MoveRate) * camera.Zoom;
-            HorizontalCameraMovement = (input, camera) => (input.RightStickPosition.X * camera.MoveRate) * camera._zoom;
-            ClampingEnabled = camera => (camera.MinPosition != camera.MaxPosition);
-            ZoomOut = input => input.IsCurPress(Buttons.DPadDown);
-            ZoomIn = input => input.IsCurPress(Buttons.DPadUp);
             MaxPosition = Vector2.Zero;
             MinPosition = Vector2.Zero;
-            RotateLeft = input => false;
-            ResetCamera = input => input.IsCurPress(Buttons.RightStick);
-            RotateRight = input => false;
             _graphics = graphics;
 
-            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-20 * _graphics.Viewport.AspectRatio,
-                                                      20 * _graphics.Viewport.AspectRatio, 20, -20, 0, 1);
+            CreateProjection();
+            ResetView();
+        }
+
+        private Vector2 _lower;
+        private Vector2 _upper;
+
+        public void CreateProjection()
+        {
+            _lower = -new Vector2(25.0f * _graphics.Viewport.AspectRatio, 25.0f);
+            _upper = new Vector2(25.0f * _graphics.Viewport.AspectRatio, 25.0f);
+
+            // L/R/B/T
+            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
+        }
+
+        private void ResetView()
+        {
+            _zoom = 1.0f;
+            _position = Vector2.Zero;
+            Resize();
+        }
+
+        private void Resize()
+        {
+            ViewMatrix = Matrix.CreateScale(_zoom) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0);
         }
 
         /// <summary>
@@ -71,6 +87,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
                 _position = value;
                 _targetPosition = value;
+
+                Resize();
             }
         }
 
@@ -89,6 +107,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
                 _rotation = value;
                 _targetRotation = value;
+
+                Resize();
             }
         }
 
@@ -109,6 +129,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
                 _zoom = value;
                 _targetZoom = value;
+
+                Resize();
             }
         }
 
@@ -246,66 +268,64 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </param>
         public void Update(InputHelper input)
         {
-            ViewMatrix = Matrix.CreateScale(_zoom) * Matrix.CreateRotationZ(_rotation);
-
-            if (!_transitioning)
-            {
-                if (TrackingBody == null)
-                {
-                    if (ClampingEnabled(this))
-                        _targetPosition = Vector2.Clamp(_position + new Vector2(
-                                                                        HorizontalCameraMovement(input, this),
-                                                                        VerticalCameraMovement(input, this)),
-                                                        MinPosition,
-                                                        MaxPosition);
-                    else
-                        _targetPosition += new Vector2(
-                            HorizontalCameraMovement(input, this),
-                            VerticalCameraMovement(input, this));
-                }
-                else
-                {
-                    if (ClampingEnabled(this))
-                        _targetPosition = Vector2.Clamp(
-                            TrackingBody.Position,
-                            MinPosition,
-                            MaxPosition);
-                    else
-                        _targetPosition = TrackingBody.Position;
-                }
-                if (ZoomIn(input))
-                    _targetZoom = Math.Min(MaxZoom, _zoom + ZoomRate);
-                if (ZoomOut(input))
-                    _targetZoom = Math.Max(MinZoom, _zoom - ZoomRate);
-                //these might need to be swapped
-                if (RotateLeft(input))
-                    _targetRotation = (_rotation + RotationRate) % (float) (Math.PI * 2);
-                if (RotateRight(input))
-                    _targetRotation = (_rotation - RotationRate) % (float) (Math.PI * 2);
-                if (input.IsCurPress(Buttons.RightStick))
-                {
-                    _transitioning = true;
-                    _targetPosition = _origPosition;
-                    _targetRotation = _origRotation;
-                    _targetZoom = _origZoom;
-                    TrackingBody = null;
-                }
-            }
-            else if (_transition < 1)
-            {
-                _transition += TransitionSpeed;
-            }
-            if (_transition >= 1f ||
-                (_position == _origPosition &&
-                 _rotation == _origRotation &&
-                 _zoom == _origZoom))
-            {
-                _transition = 0;
-                _transitioning = false;
-            }
-            _position = Vector2.SmoothStep(_position, _targetPosition, SmoothingSpeed);
-            _rotation = MathHelper.SmoothStep(_rotation, _targetRotation, SmoothingSpeed);
-            _zoom = MathHelper.SmoothStep(_zoom, _targetZoom, SmoothingSpeed);
+            //if (!_transitioning)
+            //{
+            //    if (TrackingBody == null)
+            //    {
+            //        if (ClampingEnabled(this))
+            //            _targetPosition = Vector2.Clamp(_position + new Vector2(
+            //                                                            HorizontalCameraMovement(input, this),
+            //                                                            VerticalCameraMovement(input, this)),
+            //                                            MinPosition,
+            //                                            MaxPosition);
+            //        else
+            //            _targetPosition += new Vector2(
+            //                HorizontalCameraMovement(input, this),
+            //                VerticalCameraMovement(input, this));
+            //    }
+            //    else
+            //    {
+            //        if (ClampingEnabled(this))
+            //            _targetPosition = Vector2.Clamp(
+            //                TrackingBody.Position,
+            //                MinPosition,
+            //                MaxPosition);
+            //        else
+            //            _targetPosition = TrackingBody.Position;
+            //    }
+            //    if (ZoomIn(input))
+            //        _targetZoom = Math.Min(MaxZoom, _zoom + ZoomRate);
+            //    if (ZoomOut(input))
+            //        _targetZoom = Math.Max(MinZoom, _zoom - ZoomRate);
+            //    //these might need to be swapped
+            //    if (RotateLeft(input))
+            //        _targetRotation = (_rotation + RotationRate) % (float)(Math.PI * 2);
+            //    if (RotateRight(input))
+            //        _targetRotation = (_rotation - RotationRate) % (float)(Math.PI * 2);
+            //    if (input.IsCurPress(Buttons.RightStick))
+            //    {
+            //        _transitioning = true;
+            //        _targetPosition = _origPosition;
+            //        _targetRotation = _origRotation;
+            //        _targetZoom = _origZoom;
+            //        TrackingBody = null;
+            //    }
+            //}
+            //else if (_transition < 1)
+            //{
+            //    _transition += TransitionSpeed;
+            //}
+            //if (_transition >= 1f ||
+            //    (_position == _origPosition &&
+            //     _rotation == _origRotation &&
+            //     _zoom == _origZoom))
+            //{
+            //    _transition = 0;
+            //    _transitioning = false;
+            //}
+            //_position = Vector2.SmoothStep(_position, _targetPosition, SmoothingSpeed);
+            //_rotation = MathHelper.SmoothStep(_rotation, _targetRotation, SmoothingSpeed);
+            //_zoom = MathHelper.SmoothStep(_zoom, _targetZoom, SmoothingSpeed);
         }
 
         public Vector2 ConvertScreenToWorld(Vector2 location)
@@ -315,6 +335,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             t = _graphics.Viewport.Unproject(t, ProjectionMatrix, ViewMatrix, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
+
         }
 
         public Vector2 ConvertWorldToScreen(Vector2 location)

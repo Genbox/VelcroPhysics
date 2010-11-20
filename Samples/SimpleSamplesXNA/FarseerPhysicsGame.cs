@@ -18,27 +18,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _graphics = new GraphicsDeviceManager(this);
 
             _graphics.SynchronizeWithVerticalRetrace = false;
-
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = true;
-
+            _graphics.PreferMultiSampling = true;
             Content.RootDirectory = "Content";
-
-            //windowed
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.IsFullScreen = false;
-
-            //fullscreen
-            //_graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            //_graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //_graphics.IsFullScreen = true;
-
             IsMouseVisible = true;
 
-            //Set window defaults. Parent game can override in constructor
-            Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += Window_ClientSizeChanged;
+            IsFixedTimeStep = true;
+
+            _graphics.SynchronizeWithVerticalRetrace = false;
 
             //new-up components and add to Game.Components
             ScreenManager = new ScreenManager(this);
@@ -47,6 +33,23 @@ namespace FarseerPhysics.SimpleSamplesXNA
             FrameRateCounter frameRateCounter = new FrameRateCounter(ScreenManager);
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
+        }
+
+        public ScreenManager ScreenManager { get; set; }
+
+        /// <summary>
+        /// Allows the game to perform any initialization it needs to before starting to run.
+        /// This is where it can query for any required services and load any non-graphic
+        /// related content.  Calling base.Initialize will enumerate through any components
+        /// and initialize them as well.
+        /// </summary>
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            //Set window defaults. Parent game can override in constructor
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += WindowClientSizeChanged;
 
             Demo1Screen demo1 = new Demo1Screen();
             Demo2Screen demo2 = new Demo2Screen();
@@ -68,20 +71,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
             ScreenManager.AddScreen(mainMenuScreen);
         }
 
-        public ScreenManager ScreenManager { get; set; }
-
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
-        {
-            _graphics.ApplyChanges();
-            base.Initialize();
-        }
-
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -93,13 +82,16 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.Draw(gameTime);
         }
 
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        private void WindowClientSizeChanged(object sender, EventArgs e)
         {
             if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
             {
                 _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
                 _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
             }
+
+            //We recreate the projection matrix to keep aspect ratio.
+            ScreenManager.Camera.CreateProjection();
         }
     }
 }
