@@ -126,6 +126,9 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\BayazitDecomposer.cs">
       <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDTDecomposer.cs">
+      <Link>Common\Decomposition\CDTDecomposer.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\decomposition\cdt\delaunay\AdvancingFront.cs">
       <Link>Common\Decomposition\CDT\Delaunay\AdvancingFront.cs</Link>
     </Compile>
@@ -179,6 +182,9 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\FlipcodeDecomposer.cs">
       <Link>Common\Decomposition\FlipcodeDecomposer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\common\decomposition\SeidelDecomposer.cs">
+      <Link>Common\Decomposition\SeidelDecomposer.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
