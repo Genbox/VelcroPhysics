@@ -28,6 +28,7 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -49,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
         private const int MaxCount = 4;
 
         internal CircleShape Circle = new CircleShape(0, 0);
-        internal DebugViewXNA.DebugViewXNA DebugDraw;
+        internal DebugViewXNA DebugDraw;
         internal Transform Transform;
         private int _count;
 

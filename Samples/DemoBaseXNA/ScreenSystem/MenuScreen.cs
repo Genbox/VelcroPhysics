@@ -44,7 +44,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// Responds to user input, changing the selected entry and accepting
         /// or canceling the menu.
         /// </summary>
-        public override void HandleInput(InputState input)
+        public override void HandleInput(InputHelper input)
         {
             // Move to the previous menu entry?
             if (input.MenuUp)

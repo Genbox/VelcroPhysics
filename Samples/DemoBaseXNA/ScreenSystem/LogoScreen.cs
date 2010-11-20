@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
@@ -17,13 +16,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public LogoScreen()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(.75);
-            TransitionOffTime = TimeSpan.FromSeconds(.75);
+            TransitionOnTime = TimeSpan.FromSeconds(0.75f);
+            TransitionOffTime = TimeSpan.FromSeconds(1.5f);
         }
 
         public override void LoadContent()
         {
-            _farseerLogoTexture = ScreenManager.ContentManager.Load<Texture2D>("Content/Common/logo");
+            _farseerLogoTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/logo");
             _origin = new Vector2(_farseerLogoTexture.Width / 2f, _farseerLogoTexture.Height / 2f);
         }
 
@@ -34,11 +33,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 ExitScreen();
             }
-            if (ScreenState == ScreenState.TransitionOff && TransitionPosition > .9f)
-            {
-                ScreenManager.RemoveScreen(this);
-                ScreenManager.GoToMainMenu();
-            }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -47,19 +41,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ScreenManager.GraphicsDevice.Clear(Color.White);
 
-            const byte fade = 255; // TransitionAlpha;               
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            Color tint = new Color(fade, fade, fade, fade);
-            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.ScreenCenter, null, tint, 0, _origin,
+            Color tint = new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha, TransitionAlpha);
+            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.Camera.ScreenCenter, null, tint, 0, _origin,
                                            Vector2.One, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.End();
-        }
-
-        public override void HandleInput(InputState input)
-        {
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Escape)) ScreenManager.Game.Exit();
-
-            base.HandleInput(input);
         }
     }
 }

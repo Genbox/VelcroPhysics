@@ -324,6 +324,11 @@ namespace FarseerPhysics.Collision
         /// </summary>
         public Vector2 UpperBound;
 
+        public AABB(Vector2 min, Vector2 max)
+            : this(ref min, ref max)
+        {
+        }
+
         public AABB(ref Vector2 min, ref Vector2 max)
         {
             LowerBound = min;

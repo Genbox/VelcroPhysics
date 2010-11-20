@@ -30,10 +30,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
-        public MainMenuScreen MainMenuScreen = new MainMenuScreen();
         private Texture2D _blankTexture;
         private IGraphicsDeviceService _graphicsDeviceService;
-        private InputState _input = new InputState();
+        public InputHelper Input = new InputHelper();
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private SpriteFonts _spriteFonts;
@@ -73,25 +72,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public SpriteBatch SpriteBatch { get; private set; }
 
-        public Vector2 ScreenCenter
-        {
-            get
-            {
-                return new Vector2(_graphicsDeviceService.GraphicsDevice.Viewport.Width / 2f,
-                                   _graphicsDeviceService.GraphicsDevice.Viewport.Height / 2f);
-            }
-        }
-
-        public int ScreenWidth
-        {
-            get { return _graphicsDeviceService.GraphicsDevice.Viewport.Width; }
-        }
-
-        public int ScreenHeight
-        {
-            get { return _graphicsDeviceService.GraphicsDevice.Viewport.Height; }
-        }
-
         /// <summary>
         /// If true, the manager prints out a list of all the screens
         /// each time it is updated. This can be useful for making sure
@@ -103,12 +83,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// Goes to main menu.
         /// Removes all active screens and add a main menu
         /// </summary>
-        public void GoToMainMenu()
+        public void ClearScreens()
         {
             _screens.Clear();
             _screensToUpdate.Clear();
-
-            AddScreen(MainMenuScreen);
         }
 
         private void Game_Exiting(object sender, EventArgs e)
@@ -131,7 +109,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public override void Initialize()
         {
             _spriteFonts = new SpriteFonts(ContentManager);
+
             base.Initialize();
+
+            Camera = new Camera2D(_graphicsDeviceService.GraphicsDevice);
         }
 
         /// <summary>
@@ -164,13 +145,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
+        public Camera2D Camera;
+
         /// <summary>
         /// Allows each screen to run logic.
         /// </summary>
         public override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
-            _input.Update();
+            Input.Update();
+            Camera.Update(Input);
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
@@ -200,7 +184,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     // give it a chance to handle _input.
                     if (!otherScreenHasFocus)
                     {
-                        screen.HandleInput(_input);
+                        screen.HandleInput(Input);
 
                         otherScreenHasFocus = true;
                     }
@@ -267,10 +251,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _screens.Add(screen);
 
             IDemoScreen demoScreen = screen as IDemoScreen;
-            if (demoScreen != null && screen.firstRun)
+            if (demoScreen != null && screen.FirstRun)
             {
                 AddScreen(new PauseScreen(demoScreen.GetTitle(), demoScreen.GetDetails()));
-                screen.firstRun = false;
+                screen.FirstRun = false;
             }
         }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,8 +18,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public MainMenuScreen()
         {
             LeftBorder = 100;
-            TransitionOnTime = TimeSpan.FromSeconds(0.5f);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5f);
         }
 
         public void AddMainMenuItem(string name, GameScreen screen)
@@ -54,10 +51,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "1) Toggle between debug and normal view using either F1 on the keyboard or 'Y' on the controller",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 116), Color.White);
+                                                 new Vector2(100, ScreenManager.Camera.ScreenHeight - 116), Color.White);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DiagnosticSpriteFont,
                                                  "2) Keyboard users, use arrows and enter to navigate menus",
-                                                 new Vector2(100, ScreenManager.ScreenHeight - 100), Color.White);
+                                                 new Vector2(100, ScreenManager.Camera.ScreenHeight - 100), Color.White);
             base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
         }

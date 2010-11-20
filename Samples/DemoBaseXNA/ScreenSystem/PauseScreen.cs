@@ -48,7 +48,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     break;
                 case 1:
                     //also remove the screen that called this pausescreen
-                    ScreenManager.GoToMainMenu();
+                    ScreenManager.RemoveScreen(this);
                     break;
             }
         }
@@ -57,7 +57,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, panelWidth, panelHeight,
                                                                  _panelColor);
-            LeftBorder = ScreenManager.ScreenCenter.X - panelWidth / 2f + leftBorder;
+            LeftBorder = ScreenManager.Camera.ScreenCenter.X - panelWidth / 2f + leftBorder;
 
             _textPanelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, textPanelWidth,
                                                                      textPanelHeight, _textPanelColor);
@@ -69,12 +69,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             Vector2 panelOrigin = new Vector2(_panelTexture.Width / 2f, _panelTexture.Height / 2f);
-            ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.ScreenCenter, null, _panelColor, 0, panelOrigin,
+            ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.Camera.ScreenCenter, null, _panelColor, 0, panelOrigin,
                                            Vector2.One, SpriteEffects.None, 0);
 
             Vector2 textPanelTexturePosition =
-                new Vector2(ScreenManager.ScreenCenter.X - panelWidth / 2f + textPanelLeftBorder,
-                            ScreenManager.ScreenCenter.Y - textPanelHeight / 2f);
+                new Vector2(ScreenManager.Camera.ScreenCenter.X - panelWidth / 2f + textPanelLeftBorder,
+                            ScreenManager.Camera.ScreenCenter.Y - textPanelHeight / 2f);
             ScreenManager.SpriteBatch.Draw(_textPanelTexture, textPanelTexturePosition, null, _textPanelColor, 0,
                                            Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 

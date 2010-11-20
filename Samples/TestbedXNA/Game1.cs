@@ -25,6 +25,7 @@
 
 using System;
 using FarseerPhysics.Common;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.TestBed.Framework;
 using FarseerPhysics.TestBed.Tests;
 using Microsoft.Xna.Framework;
@@ -136,7 +137,7 @@ namespace FarseerPhysics.TestBed
         /// </summary>
         protected override void LoadContent()
         {
-            DebugViewXNA.DebugViewXNA.LoadContent(GraphicsDevice, Content);
+            DebugViewXNA.LoadContent(GraphicsDevice, Content);
 
             _keyboardManager._oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
