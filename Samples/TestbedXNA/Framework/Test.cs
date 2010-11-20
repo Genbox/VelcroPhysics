@@ -63,14 +63,8 @@ namespace FarseerPhysics.TestBed.Framework
 
     public class GameSettings
     {
-        public float Hz;
         public bool Pause;
         public bool SingleStep;
-
-        public GameSettings()
-        {
-            Hz = 60.0f;
-        }
     }
 
     public struct TestEntry
@@ -124,8 +118,6 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
-            //float timeStep = settings.Hz > 0.0f ? 1.0f / settings.Hz : 0.0f;
-
             if (GameInstance.DebugViewEnabled)
             {
                 DebugView.AppendFlags(DebugViewFlags.DebugPanel);

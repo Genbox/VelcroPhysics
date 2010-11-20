@@ -28,8 +28,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             IsPopup = true;
             _title = title;
             _details = details;
-            TransitionOnTime = TimeSpan.FromSeconds(0.5f);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5f);
         }
 
         public override void Initialize()

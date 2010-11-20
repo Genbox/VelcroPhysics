@@ -48,7 +48,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ContentManager.RootDirectory = "Content";
             _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
                 typeof(IGraphicsDeviceService));
-            game.Exiting += Game_Exiting;
+            game.Exiting += GameExiting;
 
             if (_graphicsDeviceService == null)
                 throw new InvalidOperationException("No graphics device service.");
@@ -89,7 +89,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _screensToUpdate.Clear();
         }
 
-        private void Game_Exiting(object sender, EventArgs e)
+        private void GameExiting(object sender, EventArgs e)
         {
             //Make sure to dispose ALL screens when the game is forcefully closed
             //We do this to ensure that open resources and threads created by screens are closed.
@@ -111,8 +111,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _spriteFonts = new SpriteFonts(ContentManager);
 
             base.Initialize();
-
-            Camera = new Camera2D(_graphicsDeviceService.GraphicsDevice);
         }
 
         /// <summary>
@@ -122,6 +120,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             // Load content belonging to the screen manager.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+            Camera = new Camera2D(_graphicsDeviceService.GraphicsDevice);
+
             _blankTexture = ContentManager.Load<Texture2D>("Common/blank");
 
             // Tell each of the _screens to load their content.

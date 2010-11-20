@@ -65,11 +65,20 @@ namespace FarseerPhysics.TestBed.Tests
             _verts.Scale(ref scale);
 
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
-            _list = CDTDecomposer.ConvexPartition(_verts);
+
+            Vertices verts = new Vertices(5);
+
+            verts.Add(new Vector2(-5, 5));
+            verts.Add(new Vector2(-3, 0));
+            verts.Add(new Vector2(-5, -5));
+            verts.Add(new Vector2(5, -5));
+            verts.Add(new Vector2(5, 5));
+
+            _list = SeidelDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
-            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);
-            compund[0].Body.BodyType = BodyType.Dynamic;
+            //List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);
+            //compund[0].Body.BodyType = BodyType.Dynamic;
 
             List<Fixture> fixtures = FixtureFactory.CreateCapsule(World, 3, 1, 1);
             fixtures[0].Body.Position = new Vector2(-10, 15);
@@ -78,6 +87,16 @@ namespace FarseerPhysics.TestBed.Tests
             FixtureFactory.CreateRoundedRectangle(World, 3, 3, 0.25F, 0.25F, 2, 1, new Vector2(-10, 10));
 
             base.Initialize();
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            foreach (Vertices vertices in _list)
+            {
+                DebugView.DrawSolidPolygon(vertices.ToArray(), vertices.Count, Color.Red);
+            }
+
+            base.Update(settings, gameTime);
         }
 
         public static Test Create()

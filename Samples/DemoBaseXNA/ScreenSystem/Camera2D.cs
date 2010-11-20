@@ -51,6 +51,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ResetCamera = input => input.IsCurPress(Buttons.RightStick);
             RotateRight = input => false;
             _graphics = graphics;
+
+            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-20 * _graphics.Viewport.AspectRatio,
+                                                      20 * _graphics.Viewport.AspectRatio, 20, -20, 0, 1);
         }
 
         /// <summary>
@@ -243,8 +246,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </param>
         public void Update(InputHelper input)
         {
-            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(-20 * _graphics.Viewport.AspectRatio,
-                                                                  20 * _graphics.Viewport.AspectRatio, 20, -20, 0, 1);
             ViewMatrix = Matrix.CreateScale(_zoom) * Matrix.CreateRotationZ(_rotation);
 
             if (!_transitioning)

@@ -64,30 +64,29 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
-        private const float SettingsHz = 60.0f;
         public bool DebugViewEnabled = true;
         private TestEntry _entry;
         private GraphicsDeviceManager _graphics;
-        private int _height = 480;
         private KeyboardManager _keyboardManager = new KeyboardManager();
         private Vector2 _lower;
         private GamePadState _oldGamePad;
         private MouseState _oldMouseState;
         private Matrix _projection;
+        private Matrix _view;
         private GameSettings _settings = new GameSettings();
         private Test _test;
         private int _testCount;
         private int _testIndex;
         private int _testSelection;
         private Vector2 _upper;
-        private Vector2 _viewCenter = new Vector2(0.0f, 20.0f);
-        private float _viewZoom = 1.0f;
-        private int _viewportHeight;
-        private int _viewportWidth;
-        private int _width = 640;
 
         public Game1()
         {
+            //Default view
+            _viewCenter = new Vector2(0.0f, 20.0f);
+            _viewZoom = 1.0f;
+            Resize();
+
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
             Content.RootDirectory = "Content";
@@ -96,6 +95,28 @@ namespace FarseerPhysics.TestBed
             IsFixedTimeStep = true;
 
             _graphics.SynchronizeWithVerticalRetrace = false;
+        }
+
+        private float _viewZoom;
+        public float ViewZoom
+        {
+            get { return _viewZoom; }
+            set
+            {
+                _viewZoom = value;
+                Resize();
+            }
+        }
+
+        private Vector2 _viewCenter;
+        public Vector2 ViewCenter
+        {
+            get { return _viewCenter; }
+            set
+            {
+                _viewCenter = value;
+                Resize();
+            }
         }
 
         /// <summary>
@@ -112,6 +133,8 @@ namespace FarseerPhysics.TestBed
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowClientSizeChanged;
 
+            CreateProjection();
+
             _testCount = 0;
             while (TestEntries.TestList[_testCount].CreateFcn != null)
             {
@@ -121,6 +144,15 @@ namespace FarseerPhysics.TestBed
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
             _testSelection = _testIndex;
             StartTest(_testIndex);
+        }
+
+        private void CreateProjection()
+        {
+            _lower = -new Vector2(25.0f * GraphicsDevice.Viewport.AspectRatio, 25.0f);
+            _upper = new Vector2(25.0f * GraphicsDevice.Viewport.AspectRatio, 25.0f);
+
+            // L/R/B/T
+            _projection = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
         }
 
         private void StartTest(int index)
@@ -142,9 +174,6 @@ namespace FarseerPhysics.TestBed
             _keyboardManager._oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
             _oldGamePad = GamePad.GetState(PlayerIndex.One);
-
-            Resize(GraphicsDevice.PresentationParameters.BackBufferWidth,
-                   GraphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
         /// <summary>
@@ -165,14 +194,12 @@ namespace FarseerPhysics.TestBed
             // Press 'z' to zoom out.
             if (_keyboardManager.IsKeyDown(Keys.Z))
             {
-                _viewZoom = Math.Min(1.1f * _viewZoom, 20.0f);
-                Resize(_width, _height);
+                ViewZoom = Math.Min(1.1f * ViewZoom, 20.0f);
             }
             // Press 'x' to zoom in.
             else if (_keyboardManager.IsKeyDown(Keys.X))
             {
-                _viewZoom = Math.Max(0.9f * _viewZoom, 0.02f);
-                Resize(_width, _height);
+                ViewZoom = Math.Max(0.9f * ViewZoom, 0.02f);
             }
             // Press 'r' to reset.
             else if (_keyboardManager.IsNewKeyPress(Keys.R))
@@ -207,33 +234,27 @@ namespace FarseerPhysics.TestBed
             // Press left to pan left.
             else if (_keyboardManager.IsKeyDown(Keys.Left))
             {
-                _viewCenter.X -= 0.5f;
-                Resize(_width, _height);
+                ViewCenter = new Vector2(ViewCenter.X - 0.5f, ViewCenter.Y); ;
             }
             // Press right to pan right.
             else if (_keyboardManager.IsKeyDown(Keys.Right))
             {
-                _viewCenter.X += 0.5f;
-                Resize(_width, _height);
+                ViewCenter = new Vector2(ViewCenter.X + 0.5f, ViewCenter.Y); ;
             }
             // Press down to pan down.
             else if (_keyboardManager.IsKeyDown(Keys.Down))
             {
-                _viewCenter.Y -= 0.5f;
-                Resize(_width, _height);
+                ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - 0.5f); ;
             }
             // Press up to pan up.
             else if (_keyboardManager.IsKeyDown(Keys.Up))
             {
-                _viewCenter.Y += 0.5f;
-                Resize(_width, _height);
+                ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + 0.5f); ;
             }
             // Press home to reset the view.
             else if (_keyboardManager.IsNewKeyPress(Keys.Home))
             {
-                _viewZoom = 1.0f;
-                _viewCenter = new Vector2(0.0f, 20.0f);
-                Resize(_width, _height);
+                ResetView();
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F1))
             {
@@ -288,8 +309,6 @@ namespace FarseerPhysics.TestBed
             _oldMouseState = newMouseState;
             _oldGamePad = newGamePad;
 
-            _settings.Hz = SettingsHz;
-
             if (_test != null)
             {
                 _test.TextLine = 30;
@@ -319,48 +338,30 @@ namespace FarseerPhysics.TestBed
             {
                 _testIndex = _testSelection;
                 StartTest(_testIndex);
-                _viewZoom = 1.0f;
-                _viewCenter = new Vector2(0.0f, 20.0f);
-                Resize(_width, _height);
+                ResetView();
             }
 
-            _test.DebugView.RenderDebugData(ref _projection);
+            _test.DebugView.RenderDebugData(ref _projection, ref _view);
 
             base.Draw(gameTime);
         }
 
-        private void Resize(int w, int h)
+        private void ResetView()
         {
-            _width = w;
-            _height = h;
+            _viewZoom = 1.0f;
+            _viewCenter = new Vector2(0.0f, 20.0f);
+            Resize();
+        }
 
-            _viewportWidth = GraphicsDevice.Viewport.Width;
-            _viewportHeight = GraphicsDevice.Viewport.Height;
-
-            float ratio = _viewportWidth / (float)_viewportHeight;
-
-            Vector2 extents = new Vector2(ratio * 25.0f, 25.0f);
-            extents *= _viewZoom;
-
-            _lower = _viewCenter - extents;
-            _upper = _viewCenter + extents;
-
-            // L/R/B/T
-            _projection = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
+        private void Resize()
+        {
+            _view = Matrix.CreateScale(ViewZoom) * Matrix.CreateTranslation(-ViewCenter.X, -ViewCenter.Y, 0);
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            /*
-            float u = x / (float)_viewportWidth;
-            float v = (_viewportHeight - y) / (float)_viewportHeight;
-
-            Vector2 p = new Vector2();
-            p.X = (1.0f - u) * _lower.X + u * _upper.X;
-            p.Y = (1.0f - v) * _lower.Y + v * _upper.Y;
-             * */
-
-            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), _projection, Matrix.Identity, Matrix.Identity);
+            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), _projection, _view,
+                                                             Matrix.Identity);
 
             return new Vector2(temp.X, temp.Y);
         }
@@ -368,7 +369,6 @@ namespace FarseerPhysics.TestBed
         private void Restart()
         {
             StartTest(_testIndex);
-            Resize(_width, _height);
         }
 
         private void WindowClientSizeChanged(object sender, EventArgs e)
@@ -378,6 +378,9 @@ namespace FarseerPhysics.TestBed
                 _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
                 _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
             }
+
+            //We want to keep aspec ratio. Recalcuate the projection matrix.
+            CreateProjection();
         }
     }
 }
