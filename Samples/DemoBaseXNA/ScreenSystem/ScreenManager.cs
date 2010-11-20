@@ -154,7 +154,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             // Read the keyboard and gamepad.
             Input.Update();
-            Camera.Update(Input);
+            Camera.Update();
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
