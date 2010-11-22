@@ -1,8 +1,9 @@
 using System;
+using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DemoBaseXNA.Screens
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.
@@ -43,7 +44,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             Color tint = new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha, TransitionAlpha);
-            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.Camera.ScreenCenter, null, tint, 0, _origin,
+            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, ScreenManager.Camera.ScreenCenter, null, tint, 0,
+                                           _origin,
                                            Vector2.One, SpriteEffects.None, 0);
             ScreenManager.SpriteBatch.End();
         }

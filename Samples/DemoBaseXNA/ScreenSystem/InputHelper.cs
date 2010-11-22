@@ -1,10 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     /// <summary>
-    /// an enum of all available mouse buttons.
+    ///   an enum of all available mouse buttons.
     /// </summary>
     public enum MouseButtons
     {
@@ -17,193 +19,234 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
     public class InputHelper
     {
-        private PlayerIndex _index = PlayerIndex.One;
-        private bool _refreshData;
+        public const int MaxInputs = 4;
+
+        public readonly KeyboardState[] CurrentKeyboardStates;
+        public readonly GamePadState[] CurrentGamePadStates;
+        public MouseState CurrentMouseState;
+
+        public readonly KeyboardState[] LastKeyboardStates;
+        public readonly GamePadState[] LastGamePadStates;
+        public MouseState LastMouseState;
+
+        public readonly bool[] GamePadWasConnected;
+
+        public TouchCollection TouchState;
+
+        public readonly List<GestureSample> Gestures = new List<GestureSample>();
+
+        private PlayerIndex _tmpIndex;
 
         /// <summary>
-        /// Fetches the latest input states.
+        ///   Constructs a new input state.
+        /// </summary>
+        public InputHelper()
+        {
+            CurrentKeyboardStates = new KeyboardState[MaxInputs];
+            CurrentGamePadStates = new GamePadState[MaxInputs];
+
+            LastKeyboardStates = new KeyboardState[MaxInputs];
+            LastGamePadStates = new GamePadState[MaxInputs];
+
+            GamePadWasConnected = new bool[MaxInputs];
+        }
+
+        /// <summary>
+        ///   Reads the latest state of the keyboard and gamepad.
         /// </summary>
         public void Update()
         {
-            if (!_refreshData)
-                _refreshData = true;
-
-            LastGamepadState = CurrentGamepadState;
-            CurrentGamepadState = GamePad.GetState(_index);
-#if (!XBOX)
-            LastKeyboardState = CurrentKeyboardState;
-            CurrentKeyboardState = Keyboard.GetState();
-
-            LastMouseState = CurrentMouseState;
-            CurrentMouseState = Mouse.GetState();
-#endif
-        }
-
-        /// <summary>
-        /// The previous state of the gamepad. 
-        /// Exposed only for convenience.
-        /// </summary>
-        public GamePadState LastGamepadState { get; private set; }
-
-        /// <summary>
-        /// the current state of the gamepad.
-        /// Exposed only for convenience.
-        /// </summary>
-        public GamePadState CurrentGamepadState { get; private set; }
-
-        /// <summary>
-        /// the index that is used to poll the gamepad. 
-        /// </summary>
-        public PlayerIndex Index
-        {
-            get { return _index; }
-            set
+            for (int i = 0; i < MaxInputs; i++)
             {
-                _index = value;
-                if (_refreshData)
+                LastKeyboardStates[i] = CurrentKeyboardStates[i];
+                LastGamePadStates[i] = CurrentGamePadStates[i];
+
+                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
+                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
+
+
+                // Keep track of whether a gamepad has ever been
+                // connected, so we can detect if it is unplugged.
+                if (CurrentGamePadStates[i].IsConnected)
                 {
-                    Update();
-                    Update();
+                    GamePadWasConnected[i] = true;
                 }
             }
-        }
 
 #if (!XBOX)
-        /// <summary>
-        /// The previous keyboard state.
-        /// Exposed only for convenience.
-        /// </summary>
-        public KeyboardState LastKeyboardState { get; private set; }
+            LastMouseState = CurrentMouseState;
 
-        /// <summary>
-        /// The current state of the keyboard.
-        /// Exposed only for convenience.
-        /// </summary>
-        public KeyboardState CurrentKeyboardState { get; private set; }
-
-        /// <summary>
-        /// The previous mouse state.
-        /// Exposed only for convenience.
-        /// </summary>
-        public MouseState LastMouseState { get; private set; }
-
-        /// <summary>
-        /// The current state of the mouse.
-        /// Exposed only for convenience.
-        /// </summary>
-        public MouseState CurrentMouseState { get; private set; }
+            CurrentMouseState = Mouse.GetState();
 #endif
 
-        /// <summary>
-        /// The current position of the left stick. 
-        /// Y is automatically reversed for you.
-        /// </summary>
-        public Vector2 LeftStickPosition
-        {
-            get
+
+            TouchState = TouchPanel.GetState();
+
+            Gestures.Clear();
+            while (TouchPanel.IsGestureAvailable)
             {
-                return new Vector2(
-                    CurrentGamepadState.ThumbSticks.Left.X,
-                    -CurrentGamepadState.ThumbSticks.Left.Y);
+                Gestures.Add(TouchPanel.ReadGesture());
             }
         }
 
-        /// <summary>
-        /// The current position of the right stick.
-        /// Y is automatically reversed for you.
-        /// </summary>
-        public Vector2 RightStickPosition
+        public PlayerIndex DefaultPlayerIndex = PlayerIndex.One;
+
+        public GamePadState CurrentGamepadState
         {
-            get
+            get { return CurrentGamePadStates[(int) DefaultPlayerIndex]; }
+        }
+
+        public KeyboardState CurrentKeyboardState
+        {
+            get { return CurrentKeyboardStates[(int) DefaultPlayerIndex]; }
+        }
+
+        /// <summary>
+        ///   Helper for checking if a key was newly pressed during this update. The
+        ///   controllingPlayer parameter specifies which player to read input for.
+        ///   If this is null, it will accept input from any player. When a keypress
+        ///   is detected, the output playerIndex reports which player pressed it.
+        /// </summary>
+        public bool IsNewKeyPress(Keys key, PlayerIndex? controllingPlayer,
+                                  out PlayerIndex playerIndex)
+        {
+            if (controllingPlayer.HasValue)
             {
-                return new Vector2(
-                    CurrentGamepadState.ThumbSticks.Right.X,
-                    -CurrentGamepadState.ThumbSticks.Right.Y);
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int) playerIndex;
+
+                return (CurrentKeyboardStates[i].IsKeyDown(key) &&
+                        LastKeyboardStates[i].IsKeyUp(key));
+            }
+            else
+            {
+                // Accept input from any player.
+                return (IsNewKeyPress(key, PlayerIndex.One, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Two, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Three, out playerIndex) ||
+                        IsNewKeyPress(key, PlayerIndex.Four, out playerIndex));
             }
         }
 
-        /// <summary>
-        /// The current velocity of the left stick.
-        /// Y is automatically reversed for you.
-        /// expressed as: 
-        /// current stick position - last stick position.
-        /// </summary>
-        public Vector2 LeftStickVelocity
+        public bool IsNewKeyPress(Keys key)
         {
-            get
+            return IsNewKeyPress(key, null, out _tmpIndex);
+        }
+
+        /// <summary>
+        ///   Helper for checking if a button was newly pressed during this update.
+        ///   The controllingPlayer parameter specifies which player to read input for.
+        ///   If this is null, it will accept input from any player. When a button press
+        ///   is detected, the output playerIndex reports which player pressed it.
+        /// </summary>
+        public bool IsNewButtonPress(Buttons button, PlayerIndex? controllingPlayer,
+                                     out PlayerIndex playerIndex)
+        {
+            if (controllingPlayer.HasValue)
             {
-                Vector2 temp =
-                    CurrentGamepadState.ThumbSticks.Left -
-                    LastGamepadState.ThumbSticks.Left;
-                return new Vector2(temp.X, -temp.Y);
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int) playerIndex;
+
+                return (CurrentGamePadStates[i].IsButtonDown(button) &&
+                        LastGamePadStates[i].IsButtonUp(button));
+            }
+            else
+            {
+                // Accept input from any player.
+                return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Two, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Three, out playerIndex) ||
+                        IsNewButtonPress(button, PlayerIndex.Four, out playerIndex));
             }
         }
 
-        /// <summary>
-        /// The current velocity of the right stick.
-        /// Y is automatically reversed for you.
-        /// expressed as: 
-        /// current stick position - last stick position.
-        /// </summary>
-        public Vector2 RightStickVelocity
+        public bool IsNewButtonPress(Buttons button)
         {
-            get
-            {
-                Vector2 temp =
-                    CurrentGamepadState.ThumbSticks.Right -
-                    LastGamepadState.ThumbSticks.Right;
-                return new Vector2(temp.X, -temp.Y);
-            }
+            return IsNewButtonPress(button, null, out _tmpIndex);
         }
 
         /// <summary>
-        /// the current position of the left trigger.
+        ///   Checks for a "menu select" input action.
+        ///   The controllingPlayer parameter specifies which player to read input for.
+        ///   If this is null, it will accept input from any player. When the action
+        ///   is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public float LeftTriggerPosition
+        public bool IsMenuSelect(PlayerIndex? controllingPlayer,
+                                 out PlayerIndex playerIndex)
         {
-            get { return CurrentGamepadState.Triggers.Left; }
+            return IsNewKeyPress(Keys.Space, controllingPlayer, out playerIndex) ||
+                   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.A, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
         }
 
-        /// <summary>
-        /// the current position of the right trigger.
-        /// </summary>
-        public float RightTriggerPosition
-        {
-            get { return CurrentGamepadState.Triggers.Right; }
-        }
 
         /// <summary>
-        /// the velocity of the left trigger.
-        /// expressed as: 
-        /// current trigger position - last trigger position.
+        ///   Checks for a "menu cancel" input action.
+        ///   The controllingPlayer parameter specifies which player to read input for.
+        ///   If this is null, it will accept input from any player. When the action
+        ///   is detected, the output playerIndex reports which player pressed it.
         /// </summary>
-        public float LeftTriggerVelocity
+        public bool IsMenuCancel(PlayerIndex? controllingPlayer,
+                                 out PlayerIndex playerIndex)
         {
-            get
-            {
-                return
-                    CurrentGamepadState.Triggers.Left -
-                    LastGamepadState.Triggers.Left;
-            }
+            return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.B, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex);
         }
 
+
         /// <summary>
-        /// the velocity of the right trigger.
-        /// expressed as: 
-        /// current trigger position - last trigger position.
+        ///   Checks for a "menu up" input action.
+        ///   The controllingPlayer parameter specifies which player to read
+        ///   input for. If this is null, it will accept input from any player.
         /// </summary>
-        public float RightTriggerVelocity
+        public bool IsMenuUp(PlayerIndex? controllingPlayer)
         {
-            get
-            {
-                return CurrentGamepadState.Triggers.Right -
-                       LastGamepadState.Triggers.Right;
-            }
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.DPadUp, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.LeftThumbstickUp, controllingPlayer, out playerIndex);
+        }
+
+
+        /// <summary>
+        ///   Checks for a "menu down" input action.
+        ///   The controllingPlayer parameter specifies which player to read
+        ///   input for. If this is null, it will accept input from any player.
+        /// </summary>
+        public bool IsMenuDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.DPadDown, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.LeftThumbstickDown, controllingPlayer, out playerIndex);
+        }
+
+
+        /// <summary>
+        ///   Checks for a "pause the game" input action.
+        ///   The controllingPlayer parameter specifies which player to read
+        ///   input for. If this is null, it will accept input from any player.
+        /// </summary>
+        public bool IsPauseGame(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+
+            return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Back, controllingPlayer, out playerIndex) ||
+                   IsNewButtonPress(Buttons.Start, controllingPlayer, out playerIndex);
         }
 
 #if (!XBOX)
         /// <summary>
-        /// the current mouse position.
+        ///   The current mouse position.
         /// </summary>
         public Vector2 MousePosition
         {
@@ -211,9 +254,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         /// <summary>
-        /// the current mouse velocity.
-        /// Expressed as: 
-        /// current mouse position - last mouse position.
+        ///   The current mouse velocity.
+        ///   Expressed as: 
+        ///   current mouse position - last mouse position.
         /// </summary>
         public Vector2 MouseVelocity
         {
@@ -227,8 +270,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         /// <summary>
-        /// the current mouse scroll wheel position.
-        /// See the Mouse's ScrollWheel property for details.
+        ///   The current mouse scroll wheel position.
+        ///   See the Mouse's ScrollWheel property for details.
         /// </summary>
         public float MouseScrollWheelPosition
         {
@@ -236,10 +279,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         /// <summary>
-        /// the mouse scroll wheel velocity.
-        /// Expressed as:
-        /// current scroll wheel position - 
-        /// the last scroll wheel position.
+        ///   The mouse scroll wheel velocity.
+        ///   
+        ///   Expressed as:
+        ///   current scroll wheel position - the last scroll wheel position.
         /// </summary>
         public float MouseScrollWheelVelocity
         {
@@ -247,178 +290,18 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 #endif
 
-        /// <summary>
-        /// Checks if the requested button is a new press.
-        /// </summary>
-        /// <param name="button">
-        /// The button to check.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selected button is being 
-        /// pressed in the current state but not the last state.
-        /// </returns>
-        public bool IsNewPress(Buttons button)
-        {
-            return (
-                       LastGamepadState.IsButtonUp(button) &&
-                       CurrentGamepadState.IsButtonDown(button));
-        }
-
-        /// <summary>
-        /// Checks if the requested button is a current press.
-        /// </summary>
-        /// <param name="button">
-        /// the button to check.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selected button is being 
-        /// pressed in the current state and in the last state.
-        /// </returns>
-        public bool IsCurPress(Buttons button)
-        {
-            return (
-                       LastGamepadState.IsButtonDown(button) &&
-                       CurrentGamepadState.IsButtonDown(button));
-        }
-
-        /// <summary>
-        /// Checks if the requested button is an old press.
-        /// </summary>
-        /// <param name="button">
-        /// the button to check.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selected button is not being
-        /// pressed in the current state and is being pressed in the last state.
-        /// </returns>
-        public bool IsOldPress(Buttons button)
-        {
-            return (
-                       LastGamepadState.IsButtonDown(button) &&
-                       CurrentGamepadState.IsButtonUp(button));
-        }
-
-        /// <summary>
-        /// Checks for a "menu up" input action (on either keyboard or gamepad).
-        /// </summary>
-        public bool MenuUp
-        {
-            get
-            {
-                return IsNewPress(Keys.Up) ||
-                       (CurrentGamepadState.DPad.Up == ButtonState.Pressed &&
-                        LastGamepadState.DPad.Up == ButtonState.Released) ||
-                       (CurrentGamepadState.ThumbSticks.Left.Y > 0 &&
-                        LastGamepadState.ThumbSticks.Left.Y <= 0);
-            }
-        }
-
-        /// <summary>
-        /// Checks for a "menu down" input action (on either keyboard or gamepad).
-        /// </summary>
-        public bool MenuDown
-        {
-            get
-            {
-                return IsNewPress(Keys.Down) ||
-                       (CurrentGamepadState.DPad.Down == ButtonState.Pressed &&
-                        LastGamepadState.DPad.Down == ButtonState.Released) ||
-                       (CurrentGamepadState.ThumbSticks.Left.Y < 0 &&
-                        LastGamepadState.ThumbSticks.Left.Y >= 0);
-            }
-        }
-
-        /// <summary>
-        /// Checks for a "menu select" input action (on either keyboard or gamepad).
-        /// </summary>
-        public bool MenuSelect
-        {
-            get
-            {
-                return IsNewPress(Keys.Space) || IsNewPress(Keys.Enter) || IsNewPress(Buttons.A) ||
-                       IsNewPress(Buttons.Start);
-            }
-        }
-
-        /// <summary>
-        /// Checks for a "menu cancel" input action (on either keyboard or gamepad).
-        /// </summary>
-        public bool MenuCancel
-        {
-            get { return IsNewPress(Keys.Escape) || IsNewPress(Buttons.B) || IsNewPress(Buttons.Back); }
-        }
-
-        /// <summary>
-        /// Checks for a "pause the game" input action (on either keyboard or gamepad).
-        /// </summary>
-        public bool PauseGame
-        {
-            get { return IsNewPress(Keys.Escape) || IsNewPress(Buttons.Back) || IsNewPress(Buttons.Start); }
-        }
-
 #if (!XBOX)
         /// <summary>
-        /// Checks if the requested key is a new press.
+        ///   Checks if the requested mosue button is a new press.
         /// </summary>
-        /// <param name="key">
-        /// the key to check.
+        /// <param name = "button">
+        ///   The mouse button to check.
         /// </param>
         /// <returns>
-        /// a bool that indicates whether the selected key is being 
-        /// pressed in the current state and not in the last state.
+        ///   A bool indicating whether the selected mouse button is being
+        ///   pressed in the current state but not in the last state.
         /// </returns>
-        public bool IsNewPress(Keys key)
-        {
-            return (
-                       LastKeyboardState.IsKeyUp(key) &&
-                       CurrentKeyboardState.IsKeyDown(key));
-        }
-
-        /// <summary>
-        /// Checks if the requested key is a current press.
-        /// </summary>
-        /// <param name="key">
-        /// the key to check.
-        /// </param>
-        /// <returns>
-        /// a bool that indicates whether the selected key is being 
-        /// pressed in the current state and in the last state.
-        /// </returns>
-        public bool IsCurPress(Keys key)
-        {
-            return (
-                       LastKeyboardState.IsKeyDown(key) &&
-                       CurrentKeyboardState.IsKeyDown(key));
-        }
-
-        /// <summary>
-        /// Checks if the requested button is an old press.
-        /// </summary>
-        /// <param name="key">
-        /// the key to check.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selectde button is not being
-        /// pressed in the current state and being pressed in the last state.
-        /// </returns>
-        public bool IsOldPress(Keys key)
-        {
-            return (
-                       LastKeyboardState.IsKeyDown(key) &&
-                       CurrentKeyboardState.IsKeyUp(key));
-        }
-
-        /// <summary>
-        /// Checks if the requested mosue button is a new press.
-        /// </summary>
-        /// <param name="button">
-        /// teh mouse button to check.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selected mouse button is being
-        /// pressed in the current state but not in the last state.
-        /// </returns>
-        public bool IsNewPress(MouseButtons button)
+        public bool IsNewButtonPress(MouseButtons button)
         {
             switch (button)
             {
@@ -448,55 +331,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         /// <summary>
-        /// Checks if the requested mosue button is a current press.
-        /// </summary>
-        /// <param name="button">
-        /// the mouse button to be checked.
-        /// </param>
-        /// <returns>
-        /// a bool indicating whether the selected mouse button is being 
-        /// pressed in the current state and in the last state.
-        /// </returns>
-        public bool IsCurPress(MouseButtons button)
-        {
-            switch (button)
-            {
-                case MouseButtons.LeftButton:
-                    return (
-                               LastMouseState.LeftButton == ButtonState.Pressed &&
-                               CurrentMouseState.LeftButton == ButtonState.Pressed);
-                case MouseButtons.MiddleButton:
-                    return (
-                               LastMouseState.MiddleButton == ButtonState.Pressed &&
-                               CurrentMouseState.MiddleButton == ButtonState.Pressed);
-                case MouseButtons.RightButton:
-                    return (
-                               LastMouseState.RightButton == ButtonState.Pressed &&
-                               CurrentMouseState.RightButton == ButtonState.Pressed);
-                case MouseButtons.ExtraButton1:
-                    return (
-                               LastMouseState.XButton1 == ButtonState.Pressed &&
-                               CurrentMouseState.XButton1 == ButtonState.Pressed);
-                case MouseButtons.ExtraButton2:
-                    return (
-                               LastMouseState.XButton2 == ButtonState.Pressed &&
-                               CurrentMouseState.XButton2 == ButtonState.Pressed);
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
         /// Checks if the requested mosue button is an old press.
         /// </summary>
         /// <param name="button">
-        /// the mouse button to check.
+        /// The mouse button to check.
         /// </param>
         /// <returns>
-        /// a bool indicating whether the selected mouse button is not being 
+        /// A bool indicating whether the selected mouse button is not being 
         /// pressed in the current state and is being pressed in the old state.
         /// </returns>
-        public bool IsOldPress(MouseButtons button)
+        public bool IsOldButtonPress(MouseButtons button)
         {
             switch (button)
             {

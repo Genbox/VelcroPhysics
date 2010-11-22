@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    public class Demo6Screen : GameScreen, IDemoScreen
+    public class Demo6Screen : PhysicsGameScreen, IDemoScreen
     {
         private Agent _agent;
         private Spider[] _spiders;
@@ -37,14 +37,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         #endregion
 
-        public override void Initialize()
-        {
-            World = new World(new Vector2(0, -20));
-            base.Initialize();
-        }
-
         public override void LoadContent()
         {
+            World = new World(new Vector2(0, -20));
+
             _agent = new Agent(World, new Vector2(0, -10));
             _spiders = new Spider[8];
 

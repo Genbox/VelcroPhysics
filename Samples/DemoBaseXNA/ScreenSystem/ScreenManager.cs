@@ -9,108 +9,79 @@
 
 #endregion
 
-#region Using Statements
-
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     /// <summary>
-    /// The screen manager is a component which manages one or more <see cref="GameScreen"/>
-    /// instances. It maintains a stack of _screens, calls their Update and Draw
-    /// methods at the appropriate times, and automatically routes _input to the
+    /// The screen manager is a component which manages one or more GameScreen
+    /// instances. It maintains a stack of screens, calls their Update and Draw
+    /// methods at the appropriate times, and automatically routes input to the
     /// topmost active screen.
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
-        private Texture2D _blankTexture;
-        private IGraphicsDeviceService _graphicsDeviceService;
-        public InputHelper Input = new InputHelper();
-        private List<GameScreen> _screens = new List<GameScreen>();
-        private List<GameScreen> _screensToUpdate = new List<GameScreen>();
-        private SpriteFonts _spriteFonts;
+        public Camera2D Camera;
+        public ContentManager ContentManager;
 
         /// <summary>
-        /// Constructs a new screen manager component.
+        /// Contains all the fonts avaliable for use.
         /// </summary>
-        /// <exception cref="InvalidOperationException">No graphics device service.</exception>
-        public ScreenManager(Game game)
-            : base(game)
-        {
-            ContentManager = new ContentManager(game.Services);
-            ContentManager.RootDirectory = "Content";
-            _graphicsDeviceService = (IGraphicsDeviceService)game.Services.GetService(
-                typeof(IGraphicsDeviceService));
-            game.Exiting += GameExiting;
-
-            if (_graphicsDeviceService == null)
-                throw new InvalidOperationException("No graphics device service.");
-        }
-
-        public SpriteFonts SpriteFonts
-        {
-            get { return _spriteFonts; }
-        }
-
-        /// <summary>
-        /// A content manager used to load data that is shared between multiple
-        /// screens. This is never unloaded, so if a screen requires a large amount
-        /// of temporary data, it should create a local content manager instead.
-        /// </summary>
-        public ContentManager ContentManager { get; private set; }
-
-        /// <summary>
-        /// A default SpriteBatch shared by all the screens. This saves
-        /// each screen having to bother creating their own local instance.
-        /// </summary>
-        public SpriteBatch SpriteBatch { get; private set; }
+        public SpriteFonts SpriteFonts;
 
         /// <summary>
         /// If true, the manager prints out a list of all the screens
         /// each time it is updated. This can be useful for making sure
         /// everything is being added and removed at the right times.
         /// </summary>
-        public bool TraceEnabled { get; set; }
+        public bool TraceEnabled;
+
+        private Texture2D _blankTexture;
+        private InputHelper _input = new InputHelper();
+        private bool _isInitialized;
+
+        private List<GameScreen> _screens = new List<GameScreen>();
+        private List<GameScreen> _screensToUpdate = new List<GameScreen>();
+
+        private SpriteBatch _spriteBatch;
 
         /// <summary>
-        /// Goes to main menu.
-        /// Removes all active screens and add a main menu
+        /// Constructs a new screen manager component.
         /// </summary>
-        public void ClearScreens()
+        public ScreenManager(Game game)
+            : base(game)
         {
-            _screens.Clear();
-            _screensToUpdate.Clear();
-        }
+            // we must set EnabledGestures before we can query for them, but
+            // we don't assume the game wants to read them.
+            TouchPanel.EnabledGestures = GestureType.None;
 
-        private void GameExiting(object sender, EventArgs e)
-        {
-            //Make sure to dispose ALL screens when the game is forcefully closed
-            //We do this to ensure that open resources and threads created by screens are closed.
-            foreach (GameScreen screen in _screens)
-            {
-                screen.Dispose();
-            }
-
-            _screens.Clear();
-            _screensToUpdate.Clear();
+            ContentManager = game.Content;
         }
 
         /// <summary>
-        /// Allows the game component to perform any initialization it needs to before starting
-        /// to run.  This is where it can query for any required services and load content.
+        /// A default SpriteBatch shared by all the screens. This saves
+        /// each screen having to bother creating their own local instance.
+        /// </summary>
+        public SpriteBatch SpriteBatch
+        {
+            get { return _spriteBatch; }
+        }
+
+        /// <summary>
+        /// Initializes the screen manager component.
         /// </summary>
         public override void Initialize()
         {
-            _spriteFonts = new SpriteFonts(ContentManager);
+            SpriteFonts = new SpriteFonts(ContentManager);
 
             base.Initialize();
+
+            _isInitialized = true;
         }
 
         /// <summary>
@@ -118,13 +89,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         protected override void LoadContent()
         {
-            // Load content belonging to the screen manager.
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
-            Camera = new Camera2D(_graphicsDeviceService.GraphicsDevice);
-
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _blankTexture = ContentManager.Load<Texture2D>("Common/blank");
+            Camera = new Camera2D(GraphicsDevice);
 
-            // Tell each of the _screens to load their content.
+            // Tell each of the screens to load their content.
             foreach (GameScreen screen in _screens)
             {
                 screen.LoadContent();
@@ -136,16 +105,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         protected override void UnloadContent()
         {
-            ContentManager.Unload();
-
-            // Tell each of the _screens to unload their content.
+            // Tell each of the screens to unload their content.
             foreach (GameScreen screen in _screens)
             {
                 screen.UnloadContent();
             }
         }
-
-        public Camera2D Camera;
 
         /// <summary>
         /// Allows each screen to run logic.
@@ -153,20 +118,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
-            Input.Update();
+            _input.Update();
+
+            // Update the camera
             Camera.Update();
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
             _screensToUpdate.Clear();
 
-            for (int i = 0; i < _screens.Count; i++)
-                _screensToUpdate.Add(_screens[i]);
+            foreach (GameScreen screen in _screens)
+                _screensToUpdate.Add(screen);
 
             bool otherScreenHasFocus = !Game.IsActive;
             bool coveredByOtherScreen = false;
 
-            // Loop as long as there are _screens waiting to be updated.
+            // Loop as long as there are screens waiting to be updated.
             while (_screensToUpdate.Count > 0)
             {
                 // Pop the topmost screen off the waiting list.
@@ -181,30 +148,26 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     screen.ScreenState == ScreenState.Active)
                 {
                     // If this is the first active screen we came across,
-                    // give it a chance to handle _input.
+                    // give it a chance to handle input.
                     if (!otherScreenHasFocus)
                     {
-                        screen.HandleInput(Input);
+                        screen.HandleInput(_input);
 
                         otherScreenHasFocus = true;
                     }
 
                     // If this is an active non-popup, inform any subsequent
-                    // _screens that they are covered by it.
+                    // screens that they are covered by it.
                     if (!screen.IsPopup)
                         coveredByOtherScreen = true;
                 }
             }
 
             // Print debug trace?
-#if (!XBOX360)
             if (TraceEnabled)
                 TraceScreens();
-#endif
         }
 
-#if (!XBOX360)
-        
         /// <summary>
         /// Prints a list of all the screens, for debugging.
         /// </summary>
@@ -215,60 +178,56 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             foreach (GameScreen screen in _screens)
                 screenNames.Add(screen.GetType().Name);
 
-            Trace.WriteLine(string.Join(", ", screenNames.ToArray()));
+            Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
         }
 
-#endif
         /// <summary>
         /// Tells each screen to draw itself.
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            for (int i = 0; i < _screens.Count; i++)
+            foreach (GameScreen screen in _screens)
             {
-                if (_screens[i].ScreenState == ScreenState.Hidden)
+                if (screen.ScreenState == ScreenState.Hidden)
                     continue;
 
-                _screens[i].Draw(gameTime);
+                screen.Draw(gameTime);
             }
         }
 
         /// <summary>
         /// Adds a new screen to the screen manager.
         /// </summary>
-        public void AddScreen(GameScreen screen)
+        public void AddScreen(GameScreen screen, PlayerIndex? controllingPlayer)
         {
+            screen.ControllingPlayer = controllingPlayer;
             screen.ScreenManager = this;
-            screen.Initialize();
+            screen.IsExiting = false;
 
             // If we have a graphics device, tell the screen to load content.
-            if ((_graphicsDeviceService != null) &&
-                (_graphicsDeviceService.GraphicsDevice != null))
+            if (_isInitialized)
             {
                 screen.LoadContent();
             }
 
             _screens.Add(screen);
 
-            IDemoScreen demoScreen = screen as IDemoScreen;
-            if (demoScreen != null && screen.FirstRun)
-            {
-                AddScreen(new PauseScreen(demoScreen.GetTitle(), demoScreen.GetDetails()));
-                screen.FirstRun = false;
-            }
+            // update the TouchPanel to respond to gestures this screen is interested in
+            TouchPanel.EnabledGestures = screen.EnabledGestures;
+
+            screen.FirstRun = false;
         }
 
         /// <summary>
         /// Removes a screen from the screen manager. You should normally
-        /// use <see cref="GameScreen"/>.ExitScreen instead of calling this directly, so
+        /// use GameScreen.ExitScreen instead of calling this directly, so
         /// the screen can gradually transition off rather than just being
         /// instantly removed.
         /// </summary>
         public void RemoveScreen(GameScreen screen)
         {
             // If we have a graphics device, tell the screen to unload content.
-            if ((_graphicsDeviceService != null) &&
-                (_graphicsDeviceService.GraphicsDevice != null))
+            if (_isInitialized)
             {
                 screen.UnloadContent();
             }
@@ -276,24 +235,39 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
 
-            screen.Dispose();
+            // if there is a screen still in the manager, update TouchPanel
+            // to respond to gestures that screen is interested in.
+            if (_screens.Count > 0)
+            {
+                TouchPanel.EnabledGestures = _screens[_screens.Count - 1].EnabledGestures;
+            }
         }
 
         /// <summary>
-        /// Helper draws a translucent black full screen sprite, used for fading
+        /// Expose an array holding all the screens. We return a copy rather
+        /// than the real master list, because screens should only ever be added
+        /// or removed using the AddScreen and RemoveScreen methods.
+        /// </summary>
+        public GameScreen[] GetScreens()
+        {
+            return _screens.ToArray();
+        }
+
+        /// <summary>
+        /// Helper draws a translucent black fullscreen sprite, used for fading
         /// screens in and out, and for darkening the background behind popups.
         /// </summary>
-        public void FadeBackBufferToBlack(int alpha)
+        public void FadeBackBufferToBlack(float alpha)
         {
             Viewport viewport = GraphicsDevice.Viewport;
 
-            SpriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            SpriteBatch.Draw(_blankTexture,
-                             new Rectangle(0, 0, viewport.Width, viewport.Height),
-                             new Color(0, 0, 0, (byte)alpha));
+            _spriteBatch.Draw(_blankTexture,
+                              new Rectangle(0, 0, viewport.Width, viewport.Height),
+                              Color.Black * alpha);
 
-            SpriteBatch.End();
+            _spriteBatch.End();
         }
     }
 }

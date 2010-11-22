@@ -5,44 +5,19 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class SpriteFonts
     {
-        private SpriteFont _detailsFont;
-        private SpriteFont _diagnosticSpriteFont;
-        private SpriteFont _frameRateCounterFont;
-        private SpriteFont _gameSpriteFont;
-        private SpriteFont _menuSpriteFont;
+        public SpriteFont DetailsFont;
+        public SpriteFont DiagnosticSpriteFont;
+        public SpriteFont FrameRateCounterFont;
+        public SpriteFont GameSpriteFont;
+        public SpriteFont MenuSpriteFont;
 
         public SpriteFonts(ContentManager contentManager)
         {
-            _diagnosticSpriteFont = contentManager.Load<SpriteFont>("Fonts/diagnosticFont");
-            _menuSpriteFont = contentManager.Load<SpriteFont>("Fonts/menuFont");
-            _frameRateCounterFont = contentManager.Load<SpriteFont>("Fonts/frameRateCounterFont");
-            _gameSpriteFont = contentManager.Load<SpriteFont>("Fonts/gamefont");
-            _detailsFont = contentManager.Load<SpriteFont>("Fonts/detailsFont");
-        }
-
-        public SpriteFont DetailsFont
-        {
-            get { return _detailsFont; }
-        }
-
-        public SpriteFont DiagnosticSpriteFont
-        {
-            get { return _diagnosticSpriteFont; }
-        }
-
-        public SpriteFont FrameRateCounterFont
-        {
-            get { return _frameRateCounterFont; }
-        }
-
-        public SpriteFont GameSpriteFont
-        {
-            get { return _gameSpriteFont; }
-        }
-
-        public SpriteFont MenuSpriteFont
-        {
-            get { return _menuSpriteFont; }
+            DiagnosticSpriteFont = contentManager.Load<SpriteFont>("Fonts/diagnosticFont");
+            MenuSpriteFont = contentManager.Load<SpriteFont>("Fonts/menuFont");
+            FrameRateCounterFont = contentManager.Load<SpriteFont>("Fonts/frameRateCounterFont");
+            GameSpriteFont = contentManager.Load<SpriteFont>("Fonts/gamefont");
+            DetailsFont = contentManager.Load<SpriteFont>("Fonts/detailsFont");
         }
     }
 }

@@ -1,12 +1,17 @@
+#region File Description
+
+//-----------------------------------------------------------------------------
+// PlayerIndexEventArgs.cs
+//
+// XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+
+#endregion
+
 using System;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
-using FarseerPhysics.DemoBaseXNA.DemoShare;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
@@ -28,23 +33,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     /// want to quit" message box, and the main game itself are all implemented
     /// as screens.
     /// </summary>
-    public abstract class GameScreen : IDisposable
+    public abstract class GameScreen
     {
-        private bool _otherScreenHasFocus;
         public bool FirstRun = true;
-        private FixedMouseJoint _fixedMouseJoint;
-
-        protected GameScreen()
-        {
-            ScreenState = ScreenState.TransitionOn;
-            TransitionPosition = 1;
-        }
-
-        public World World { get; set; }
-
-        public DebugViewXNA DebugView { get; set; }
-
-        public bool DebugViewEnabled { get; set; }
+        private GestureType _enabledGestures = GestureType.None;
+        private bool _isExiting;
+        private bool _otherScreenHasFocus;
+        private ScreenState _screenState = ScreenState.TransitionOn;
+        private TimeSpan _transitionOffTime = TimeSpan.Zero;
+        private TimeSpan _transitionOnTime = TimeSpan.Zero;
+        private float _transitionPosition = 1;
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -59,35 +57,51 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// Indicates how long the screen takes to
         /// transition on when it is activated.
         /// </summary>
-        public TimeSpan TransitionOnTime { get; protected set; }
+        public TimeSpan TransitionOnTime
+        {
+            get { return _transitionOnTime; }
+            protected set { _transitionOnTime = value; }
+        }
 
         /// <summary>
         /// Indicates how long the screen takes to
         /// transition off when it is deactivated.
         /// </summary>
-        public TimeSpan TransitionOffTime { get; protected set; }
+        public TimeSpan TransitionOffTime
+        {
+            get { return _transitionOffTime; }
+            protected set { _transitionOffTime = value; }
+        }
 
         /// <summary>
         /// Gets the current position of the screen transition, ranging
         /// from zero (fully active, no transition) to one (transitioned
         /// fully off to nothing).
         /// </summary>
-        public float TransitionPosition { get; protected set; }
+        public float TransitionPosition
+        {
+            get { return _transitionPosition; }
+            protected set { _transitionPosition = value; }
+        }
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
-        /// from 255 (fully active, no transition) to 0 (transitioned
+        /// from 1 (fully active, no transition) to 0 (transitioned
         /// fully off to nothing).
         /// </summary>
-        public byte TransitionAlpha
+        public float TransitionAlpha
         {
-            get { return (byte)(255 - TransitionPosition * 255); }
+            get { return 1f - TransitionPosition; }
         }
 
         /// <summary>
         /// Gets the current screen transition state.
         /// </summary>
-        public ScreenState ScreenState { get; protected set; }
+        public ScreenState ScreenState
+        {
+            get { return _screenState; }
+            protected set { _screenState = value; }
+        }
 
         /// <summary>
         /// There are two possible reasons why a screen might be transitioning
@@ -97,7 +111,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// if set, the screen will automatically remove itself as soon as the
         /// transition finishes.
         /// </summary>
-        public bool IsExiting { get; protected set; }
+        public bool IsExiting
+        {
+            get { return _isExiting; }
+            protected internal set { _isExiting = value; }
+        }
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
@@ -107,8 +125,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get
             {
                 return !_otherScreenHasFocus &&
-                       (ScreenState == ScreenState.TransitionOn ||
-                        ScreenState == ScreenState.Active);
+                       (_screenState == ScreenState.TransitionOn ||
+                        _screenState == ScreenState.Active);
             }
         }
 
@@ -117,22 +135,38 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public ScreenManager ScreenManager { get; internal set; }
 
-        #region IDisposable Members
+        /// <summary>
+        /// Gets the index of the player who is currently controlling this screen,
+        /// or null if it is accepting input from any player. This is used to lock
+        /// the game to a specific player profile. The main menu responds to input
+        /// from any connected gamepad, but whichever player makes a selection from
+        /// this menu is given control over all subsequent screens, so other gamepads
+        /// are inactive until the controlling player returns to the main menu.
+        /// </summary>
+        public PlayerIndex? ControllingPlayer { get; internal set; }
 
-        public virtual void Dispose()
+        /// <summary>
+        /// Gets the gestures the screen is interested in. Screens should be as specific
+        /// as possible with gestures to increase the accuracy of the gesture engine.
+        /// For example, most menus only need Tap or perhaps Tap and VerticalDrag to operate.
+        /// These gestures are handled by the ScreenManager when screens change and
+        /// all gestures are placed in the InputState passed to the HandleInput method.
+        /// </summary>
+        public GestureType EnabledGestures
         {
-        }
+            get { return _enabledGestures; }
+            protected set
+            {
+                _enabledGestures = value;
 
-        #endregion
-
-        public virtual void Initialize()
-        {
-            if (World == null)
-                return;
-
-            DebugView = new DebugViewXNA(World);
-            DebugView.DefaultShapeColor = Color.White;
-            DebugView.SleepingShapeColor = Color.LightGray;
+                // the screen manager handles this during screen changes, but
+                // if this screen is active and the gesture types are changing,
+                // we have to update the TouchPanel ourself.
+                if (ScreenState == ScreenState.Active)
+                {
+                    TouchPanel.EnabledGestures = value;
+                }
+            }
         }
 
         /// <summary>
@@ -140,12 +174,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void LoadContent()
         {
-            if (World == null)
-                return;
-            
-            DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-            new Border(World, gameWorld.X, -gameWorld.Y, 1);
         }
 
         /// <summary>
@@ -157,63 +185,51 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
-        /// Unlike <see cref="HandleInput"/>, this method is called regardless of whether the screen
+        /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
                                    bool coveredByOtherScreen)
         {
-            _otherScreenHasFocus = otherScreenHasFocus;
+            this._otherScreenHasFocus = otherScreenHasFocus;
 
-            if (IsExiting)
+            if (_isExiting)
             {
                 // If the screen is going away to die, it should transition off.
-                ScreenState = ScreenState.TransitionOff;
+                _screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, TransitionOffTime, 1))
+                if (!UpdateTransition(gameTime, _transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
                     ScreenManager.RemoveScreen(this);
-
-                    IsExiting = false;
                 }
             }
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, TransitionOffTime, 1))
+                if (UpdateTransition(gameTime, _transitionOffTime, 1))
                 {
                     // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOff;
+                    _screenState = ScreenState.TransitionOff;
                 }
                 else
                 {
                     // Transition finished!
-                    ScreenState = ScreenState.Hidden;
+                    _screenState = ScreenState.Hidden;
                 }
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, TransitionOnTime, -1))
+                if (UpdateTransition(gameTime, _transitionOnTime, -1))
                 {
                     // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOn;
+                    _screenState = ScreenState.TransitionOn;
                 }
                 else
                 {
                     // Transition finished!
-                    ScreenState = ScreenState.Active;
-                }
-            }
-
-            if (!coveredByOtherScreen && !otherScreenHasFocus)
-            {
-                if (World != null)
-                {
-                    // variable time step but never less then 30 Hz
-                    World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
-                                        (1f / 30f)));
+                    _screenState = ScreenState.Active;
                 }
             }
         }
@@ -229,18 +245,20 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
+                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds /
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            TransitionPosition += transitionDelta * direction;
+            _transitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if ((TransitionPosition <= 0) || (TransitionPosition >= 1))
+            if (((direction < 0) && (_transitionPosition <= 0)) ||
+                ((direction > 0) && (_transitionPosition >= 1)))
             {
-                TransitionPosition = MathHelper.Clamp(TransitionPosition, 0, 1);
+                _transitionPosition = MathHelper.Clamp(_transitionPosition, 0, 1);
                 return false;
             }
+
             // Otherwise we are still busy transitioning.
             return true;
         }
@@ -252,143 +270,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void HandleInput(InputHelper input)
         {
-            //Xbox
-            if (input.IsNewPress(Buttons.Y))
+            if (input.GamePadWasConnected[0])
             {
-                DebugViewEnabled = !DebugViewEnabled;
-                Settings.EnableDiagnostics = DebugViewEnabled;
+                HandleGamePadInput(input);
             }
-
-            if (input.IsNewPress(Buttons.B))
+            else
             {
-                ScreenManager.RemoveScreen(this);
-            }
-
-            //Windows
-            if (input.IsNewPress(Keys.F1))
-            {
-                DebugViewEnabled = !DebugViewEnabled;
-                Settings.EnableDiagnostics = DebugViewEnabled;
-            }
-
-            if (input.IsNewPress(Keys.Escape))
-            {
-                ScreenManager.RemoveScreen(this);
-            }
-
-#if !XBOX
-            if (World != null)
-            {
-                Mouse(input);
-            }
-#else
-            if (World != null)
-            {
-                GamePad(input.CurrentGamePadState, input.LastGamePadState);
-            }
-#endif
-        }
-
-#if !XBOX
-        private void Mouse(InputHelper state)
-        {
-            Vector2 position = ScreenManager.Camera.ConvertScreenToWorld(state.MousePosition);
-
-            if (state.CurrentMouseState.LeftButton == ButtonState.Released && state.LastMouseState.LeftButton == ButtonState.Pressed)
-            {
-                MouseUp();
-            }
-            else if (state.CurrentMouseState.LeftButton == ButtonState.Pressed && state.LastMouseState.LeftButton == ButtonState.Released)
-            {
-                MouseDown(position);
-            }
-
-            if (_fixedMouseJoint != null)
-            {
-                _fixedMouseJoint.Target = position;
-            }
-        }
-#else
-        private void GamePad(GamePadState state, GamePadState oldState)
-        {
-            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.ThumbSticks.Left.X, state.ThumbSticks.Left.Y, 0),
-                                                                                    Projection, View, Matrix.Identity);
-            Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
-
-            if (state.Buttons.A == ButtonState.Released && oldState.Buttons.A == ButtonState.Pressed)
-            {
-                MouseUp();
-            }
-            else if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
-            {
-                MouseDown(position);
-            }
-
-            GamePadMove(position);
-        }
-
-        private void GamePadMove(Vector2 p)
-        {
-            if (_fixedMouseJoint != null)
-            {
-                _fixedMouseJoint.Target = p;
-            }
-        }
-#endif
-
-        private void MouseDown(Vector2 p)
-        {
-            if (_fixedMouseJoint != null)
-            {
-                return;
-            }
-
-            // Make a small box.
-            AABB aabb;
-            Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.LowerBound = p - d;
-            aabb.UpperBound = p + d;
-
-            Fixture savedFixture = null;
-
-            // Query the world for overlapping shapes.
-            World.QueryAABB(
-                fixture =>
-                {
-                    Body body = fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
-                    {
-                        bool inside = fixture.TestPoint(ref p);
-                        if (inside)
-                        {
-                            savedFixture = fixture;
-
-                            // We are done, terminate the query.
-                            return false;
-                        }
-                    }
-
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
-
-            if (savedFixture != null)
-            {
-                Body body = savedFixture.Body;
-                _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
-                World.AddJoint(_fixedMouseJoint);
-                body.Awake = true;
+                HandleKeyboardInput(input);
             }
         }
 
-        private void MouseUp()
+        public virtual void HandleGamePadInput(InputHelper input)
         {
-            if (_fixedMouseJoint != null)
-            {
-                World.RemoveJoint(_fixedMouseJoint);
-                _fixedMouseJoint = null;
-            }
+        }
+
+        public virtual void HandleKeyboardInput(InputHelper input)
+        {
         }
 
         /// <summary>
@@ -396,14 +293,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public virtual void Draw(GameTime gameTime)
         {
-            if (World != null)
-            {
-                DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
-            }
         }
 
         /// <summary>
-        /// Tells the screen to go away. Unlike <see cref="ScreenManager"/>.RemoveScreen, which
+        /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which
         /// instantly kills the screen, this method respects the transition timings
         /// and will give the screen a chance to gradually transition off.
         /// </summary>
@@ -417,7 +310,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else
             {
                 // Otherwise flag that it should transition off and then exit.
-                IsExiting = true;
+                _isExiting = true;
             }
         }
     }

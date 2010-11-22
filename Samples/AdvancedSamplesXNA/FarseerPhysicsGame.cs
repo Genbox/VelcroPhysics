@@ -1,5 +1,6 @@
 using System;
 using FarseerPhysics.DemoBaseXNA.Components;
+using FarseerPhysics.DemoBaseXNA.Screens;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 
@@ -57,7 +58,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             mainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.AddScreen(mainMenuScreen);
+            ScreenManager.AddScreen(mainMenuScreen, null);
         }
 
         public ScreenManager ScreenManager { get; set; }

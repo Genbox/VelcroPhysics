@@ -1,9 +1,17 @@
-using System;
+#region File Description
+//-----------------------------------------------------------------------------
+// PauseMenuScreen.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+#endregion
+
 using FarseerPhysics.DemoBaseXNA.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DemoBaseXNA.Screens
 {
     public class PauseScreen : MenuScreen
     {
@@ -21,23 +29,18 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private Color _textColor = Color.White;
         private Color _textPanelColor = new Color(100, 100, 100, 220);
         private Texture2D _textPanelTexture;
-        private string _title = "Title";
 
         public PauseScreen(string title, string details)
+            : base(title)
         {
             IsPopup = true;
-            _title = title;
             _details = details;
+
+            MenuEntries.Add(new MenuEntry("Resume Demo"));
+            MenuEntries.Add(new MenuEntry("Quit Demo"));
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-            MenuEntries.Add("Resume Demo");
-            MenuEntries.Add("Quit Demo");
-        }
-
-        protected override void OnSelectEntry(int entryIndex)
+        protected override void OnSelectEntry(int entryIndex, PlayerIndex index)
         {
             switch (entryIndex)
             {
@@ -77,15 +80,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                                            Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 
             Vector2 titlePosition = textPanelTexturePosition + new Vector2(textLeftBorder, textTopBorder);
-            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.MenuSpriteFont, _title, titlePosition,
+            ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.MenuSpriteFont, base.MenuTitle, titlePosition,
                                                  _textColor);
 
             Vector2 detailsPosition = titlePosition + new Vector2(0, 75);
             ScreenManager.SpriteBatch.DrawString(ScreenManager.SpriteFonts.DetailsFont, _details, detailsPosition,
                                                  _textColor);
 
-            base.Draw(gameTime);
             ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
+
         }
     }
 }

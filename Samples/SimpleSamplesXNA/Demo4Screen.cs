@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    internal class Demo4Screen : GameScreen, IDemoScreen
+    internal class Demo4Screen : PhysicsGameScreen, IDemoScreen
     {
 #if XBOX
     //Xbox360 can't handle as many geometries
@@ -21,15 +21,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         private Agent _agent;
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             _agent = new Agent(World, new Vector2(5, 10));
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);

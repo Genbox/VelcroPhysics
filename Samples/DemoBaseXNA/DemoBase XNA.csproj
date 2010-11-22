@@ -82,6 +82,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Graphics.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -120,13 +121,19 @@
     <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
-    <Compile Include="ScreenSystem\LogoScreen.cs" />
-    <Compile Include="ScreenSystem\MainMenuScreen.cs" />
-    <Compile Include="ScreenSystem\MenuItem.cs" />
-    <Compile Include="ScreenSystem\MenuScreen.cs" />
-    <Compile Include="ScreenSystem\PauseScreen.cs" />
+    <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
+    <Compile Include="Screens\BackgroundScreen.cs" />
+    <Compile Include="Screens\LoadingScreen.cs" />
+    <Compile Include="Screens\LogoScreen.cs" />
+    <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\MenuEntry.cs" />
+    <Compile Include="Screens\MenuScreen.cs" />
+    <Compile Include="Screens\MessageBoxScreen.cs" />
+    <Compile Include="Screens\OptionsMenuScreen.cs" />
+    <Compile Include="Screens\PauseScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManager.cs" />
     <Compile Include="ScreenSystem\SpriteFonts.cs" />
+    <Compile Include="Screens\PlayerIndexEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">

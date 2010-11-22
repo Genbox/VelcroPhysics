@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.AdvancedSamplesXNA
 {
-    internal class Demo2Screen : GameScreen, IDemoScreen
+    internal class Demo2Screen : PhysicsGameScreen, IDemoScreen
     {
         #region IDemoScreen Members
 
@@ -30,15 +30,10 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
         #endregion
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(new Vector2(0, -50));
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             LinkFactory.CreateChain(World, new Vector2(-5, 0), new Vector2(15, 0), 0.125f, 0.6f, true, true, 15, 1);
             LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-7, -10), 0.125f, 0.6f, true, false, 15, 1);
 

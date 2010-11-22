@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    internal class Demo3Screen : GameScreen, IDemoScreen
+    internal class Demo3Screen : PhysicsGameScreen, IDemoScreen
     {
         private Agent _agent;
         private Fixture[] _obstacles = new Fixture[5];
@@ -43,15 +43,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         #endregion
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             _agent = new Agent(World, new Vector2(5, 10));
 
             LoadObstacles();

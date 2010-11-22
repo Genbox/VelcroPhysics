@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    internal class Demo2Screen : GameScreen, IDemoScreen
+    internal class Demo2Screen : PhysicsGameScreen, IDemoScreen
     {
         private List<Fixture> _rectangles;
 
@@ -38,15 +38,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         #endregion
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(Vector2.Zero);
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             Vertices rect1 = PolygonTools.CreateRectangle(2, 2);
             Vertices rect2 = PolygonTools.CreateRectangle(2, 2);
 
@@ -65,21 +60,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.LoadContent();
         }
 
-        public override void HandleInput(InputHelper input)
-        {
-            if (input.CurrentGamepadState.IsConnected)
-            {
-                HandleGamePadInput(input);
-            }
-            else
-            {
-                HandleKeyboardInput(input);
-            }
-
-            base.HandleInput(input);
-        }
-
-        private void HandleGamePadInput(InputHelper input)
+        public override void HandleGamePadInput(InputHelper input)
         {
             Vector2 force = 100 * input.CurrentGamepadState.ThumbSticks.Left;
             _rectangles[0].Body.ApplyForce(force);
@@ -91,7 +72,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _rectangles[0].Body.ApplyTorque(rotation);
         }
 
-        private void HandleKeyboardInput(InputHelper input)
+        public override void HandleKeyboardInput(InputHelper input)
         {
             const float forceAmount = 100;
             Vector2 force = Vector2.Zero;
