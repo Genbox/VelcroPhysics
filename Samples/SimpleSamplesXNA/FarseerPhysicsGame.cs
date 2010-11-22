@@ -1,5 +1,6 @@
 using System;
 using FarseerPhysics.DemoBaseXNA.Components;
+using FarseerPhysics.DemoBaseXNA.Screens;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 
@@ -19,6 +20,9 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 600;
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -68,7 +72,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
             mainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
-            ScreenManager.AddScreen(mainMenuScreen);
+            ScreenManager.AddScreen(new BackgroundScreen(), null);
+            ScreenManager.AddScreen(mainMenuScreen, null);
         }
 
         /// <summary>

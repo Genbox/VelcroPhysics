@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.AdvancedSamplesXNA
 {
-    internal class Demo1Screen : GameScreen, IDemoScreen
+    internal class Demo1Screen : PhysicsGameScreen, IDemoScreen
     {
         private List<Vertices> _list;
         private Texture2D _polygonTexture;
@@ -37,15 +37,10 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
         #endregion
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(new Vector2(0, -50));
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             //load texture that will represent the physics body
             _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Texture");
 

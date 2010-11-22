@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    internal class Demo5Screen : GameScreen, IDemoScreen
+    internal class Demo5Screen : PhysicsGameScreen, IDemoScreen
     {
         private Agent _agent;
         private Objects _circles;
@@ -42,15 +42,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         #endregion
 
-        public override void Initialize()
+        public override void LoadContent()
         {
             World = new World(Vector2.Zero);
 
-            base.Initialize();
-        }
-
-        public override void LoadContent()
-        {
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, Vector2.Zero);
 

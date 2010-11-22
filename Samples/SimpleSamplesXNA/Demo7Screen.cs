@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
-    internal class Demo7Screen : GameScreen, IDemoScreen
+    internal class Demo7Screen : PhysicsGameScreen, IDemoScreen
     {
         private Ragdoll _ragdoll;
 
@@ -36,14 +36,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         #endregion
 
-        public override void Initialize()
-        {
-            World = new World(new Vector2(0, -20));
-            base.Initialize();
-        }
-
         public override void LoadContent()
         {
+            World = new World(new Vector2(0, -20));
+            
             _ragdoll = new Ragdoll(World, Vector2.Zero);
             CreateObstacles();
             base.LoadContent();
