@@ -28,8 +28,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             IsFixedTimeStep = true;
 
-            _graphics.SynchronizeWithVerticalRetrace = false;
-
             //new-up components and add to Game.Components
             ScreenManager = new ScreenManager(this);
             Components.Add(ScreenManager);
