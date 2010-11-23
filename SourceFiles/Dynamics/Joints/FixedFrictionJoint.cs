@@ -51,16 +51,14 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _linearImpulse;
         private Mat22 _linearMass;
 
-        public FixedFrictionJoint(Body body, Vector2 bodyAnchor, Vector2 worldAnchor)
+        public FixedFrictionJoint(Body body, Vector2 bodyAnchor)
             : base(body)
         {
             JointType = JointType.FixedFriction;
             LocalAnchorA = bodyAnchor;
-            LocalAnchorB = worldAnchor;
         }
 
         public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
 
         public override Vector2 WorldAnchorA
         {
@@ -69,7 +67,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB; }
+            get { return Vector2.Zero; }
         }
 
         /// <summary>
