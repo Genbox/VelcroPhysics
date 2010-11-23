@@ -4,7 +4,7 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace HelloWorld
+namespace FarseerPhysics.HelloWorld
 {
     /// <summary>
     /// This is the main type for your game

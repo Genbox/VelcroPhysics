@@ -25,26 +25,26 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(edgeShape);
         }
 
+        public static Fixture CreateLoopShape(World world, Vertices vertices, float density)
+        {
+            return CreateLoopShape(world, vertices, density, Vector2.Zero);
+        }
+
+        public static Fixture CreateLoopShape(World world, Vertices vertices, float density, Vector2 position)
+        {
+            Body body = BodyFactory.CreateBody(world, position);
+            return CreateLoopShape(vertices, density, body);
+        }
+
+        public static Fixture CreateLoopShape(Vertices vertices, float density, Body body)
+        {
+            LoopShape shape = new LoopShape(vertices, density);
+            return body.CreateFixture(shape);
+        }
+
         public static Fixture CreateRectangle(World world, float width, float height, float density)
         {
             return CreateRectangle(world, width, height, density, Vector2.Zero);
-        }
-
-        /// <summary>
-        /// Special overload that takes in an existing body.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="density">The density.</param>
-        /// <param name="body">The body.</param>
-        /// <param name="offset">The offset. The new shape is offset by this value</param>
-        /// <returns></returns>
-        public static Fixture CreateRectangle(float width, float height, float density, Body body, Vector2 offset)
-        {
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
-            rectangleVertices.Translate(ref offset);
-            PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
-            return body.CreateFixture(rectangleShape);
         }
 
         public static Fixture CreateRectangle(World world, float width, float height, float density, Vector2 position)
@@ -61,33 +61,52 @@ namespace FarseerPhysics.Factories
             return newBody.CreateFixture(rectangleShape);
         }
 
+        /// <summary>
+        /// Special overload that takes in an existing body.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="density">The density.</param>
+        /// <param name="offset">The offset. The new shape is offset by this value</param>
+        /// <param name="body">The body.</param>
+        /// <returns></returns>
+        public static Fixture CreateRectangle(float width, float height, float density, Vector2 offset, Body body)
+        {
+            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+            rectangleVertices.Translate(ref offset);
+            PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
+            return body.CreateFixture(rectangleShape);
+        }
+
         public static Fixture CreateCircle(World world, float radius, float density)
         {
             return CreateCircle(world, radius, density, Vector2.Zero);
         }
 
-        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset)
+        public static Fixture CreateCircle(World world, float radius, float density, Vector2 position)
         {
-            return CreateCircle(world, radius, density, offset, null);
+
+            Body body = BodyFactory.CreateBody(world, position);
+            return CreateCircle(radius, density, body);
         }
 
-        public static Fixture CreateCircle(World world, float radius, float density, Vector2 offset, Body body)
+        public static Fixture CreateCircle(float radius, float density, Body body)
         {
             if (radius <= 0)
                 throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
 
-            if (body != null)
-            {
-                CircleShape circleShape = new CircleShape(radius, density);
-                circleShape.Position = offset;
-                return body.CreateFixture(circleShape);
-            }
-            else
-            {
-                Body newBody = BodyFactory.CreateBody(world, offset);
-                CircleShape circleShape = new CircleShape(radius, density);
-                return newBody.CreateFixture(circleShape);
-            }
+            CircleShape circleShape = new CircleShape(radius, density);
+            return body.CreateFixture(circleShape);
+        }
+
+        public static Fixture CreateCircle(float radius, float density, Body body, Vector2 offset)
+        {
+            if (radius <= 0)
+                throw new ArgumentOutOfRangeException("radius", "Radius must be more than 0 meters");
+
+            CircleShape circleShape = new CircleShape(radius, density);
+            circleShape.Position = offset;
+            return body.CreateFixture(circleShape);
         }
 
         public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density)
@@ -98,13 +117,18 @@ namespace FarseerPhysics.Factories
         public static Fixture CreateEllipse(World world, float xRadius, float yRadius, int edges, float density,
                                             Vector2 position)
         {
+            Body body = BodyFactory.CreateBody(world, position);
+            return CreateEllipse(xRadius, yRadius, edges, density, body);
+        }
+
+        public static Fixture CreateEllipse(float xRadius, float yRadius, int edges, float density, Body body)
+        {
             if (xRadius <= 0)
                 throw new ArgumentOutOfRangeException("xRadius", "X-radius must be more than 0");
 
             if (yRadius <= 0)
                 throw new ArgumentOutOfRangeException("yRadius", "Y-radius must be more than 0");
 
-            Body body = BodyFactory.CreateBody(world, position);
             Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
             return body.CreateFixture(polygonShape);
@@ -118,29 +142,41 @@ namespace FarseerPhysics.Factories
         public static Fixture CreatePolygon(World world, Vertices vertices, float density, Vector2 position)
         {
             Body body = BodyFactory.CreateBody(world, position);
-            PolygonShape polygonShape = new PolygonShape(vertices, density);
-            return body.CreateFixture(polygonShape);
+            return CreatePolygon(vertices, density, body);
         }
 
-        public static Fixture CreatePolygon(Vertices vertices, float density, Body body, Vector2 offset)
+        public static Fixture CreatePolygon(Vertices vertices, float density, Body body)
         {
-            vertices.Translate(ref offset);
+            if (vertices.Count <= 1)
+                throw new ArgumentOutOfRangeException("vertices", "Too few points to be a polygon");
+
             PolygonShape polygon = new PolygonShape(vertices, density);
             return body.CreateFixture(polygon);
         }
 
+
+
         public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density)
         {
-            //We create a single body
-            Body polygonBody = BodyFactory.CreateBody(world);
+            return CreateCompoundPolygon(world, list, density, Vector2.Zero);
+        }
 
+        public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density, Vector2 position)
+        {
+            //We create a single body
+            Body polygonBody = BodyFactory.CreateBody(world, position);
+            return CreateCompoundPolygon(list, density, polygonBody);
+        }
+
+        public static List<Fixture> CreateCompoundPolygon(List<Vertices> list, float density, Body body)
+        {
             List<Fixture> fixtures = new List<Fixture>(list.Count);
 
             //Then we create several fixtures using the body
             foreach (Vertices vertices in list)
             {
                 PolygonShape shape = new PolygonShape(vertices, density);
-                fixtures.Add(polygonBody.CreateFixture(shape));
+                fixtures.Add(body.CreateFixture(shape));
             }
 
             return fixtures;
@@ -279,18 +315,6 @@ namespace FarseerPhysics.Factories
             world.AddBreakableBody(breakableBody);
 
             return breakableBody;
-        }
-
-        public static Fixture CreateLoopShape(World world, Vertices vertices, Vector2 position, float density)
-        {
-            Body body = BodyFactory.CreateBody(world, position);
-            LoopShape shape = new LoopShape(vertices, density);
-            return body.CreateFixture(shape);
-        }
-
-        public static Fixture CreateLoopShape(World world, Vertices vertices, float density)
-        {
-            return CreateLoopShape(world, vertices, Vector2.Zero, density);
         }
     }
 }
