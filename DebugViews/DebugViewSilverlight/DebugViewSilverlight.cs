@@ -335,11 +335,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                     break;
 
                 case JointType.FixedMouse:
-
-                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint)joint;
-                    p1 = fixedMouseJoint.Target;
-
-                    DrawPoint(p2, 0.5f, Color.FromArgb(255, 0, 255, 0));
+                    DrawPoint(p1, 0.5f, Color.FromArgb(255, 0, 255, 0));
                     DrawSegment(p1, p2, Color.FromArgb(255, 205, 205, 205));
                     break;
                 case JointType.Revolute:

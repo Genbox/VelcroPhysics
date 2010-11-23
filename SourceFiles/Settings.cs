@@ -97,6 +97,13 @@ namespace FarseerPhysics.Common
         public static int MaxPolygonVertices = 8;
 
         /// <summary>
+        /// Farseer Physics Engine has a different way of filtering fixtures than Box2d.
+        /// We have both FPE and Box2D filtering in the engine. If you are upgrading
+        /// from earlier versions of FPE, set this to true.
+        /// </summary>
+        public static bool UseFPECollisionCategories = false;
+
+        /// <summary>
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies
         /// to move by a small amount without triggering a tree adjustment.
         /// This is in meters.

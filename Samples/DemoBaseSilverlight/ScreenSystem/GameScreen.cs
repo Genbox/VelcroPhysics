@@ -338,7 +338,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
         {
             if (_fixedMouseJoint != null)
             {
-                _fixedMouseJoint.Target = p;
+                _fixedMouseJoint.WorldAnchorB = p;
             }
         }
 
