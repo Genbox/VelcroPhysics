@@ -20,23 +20,23 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             _agentBody.BodyType = BodyType.Dynamic;
 
             //Center
-            FixtureFactory.CreateCircle(world, 1, 1, Vector2.Zero, _agentBody);
+            FixtureFactory.CreateCircle(1, 1, _agentBody);
 
             //Left arm
-            FixtureFactory.CreateRectangle(3, 0.8f, 1, _agentBody, new Vector2(-2, 0));
-            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(-4, 0), _agentBody);
+            FixtureFactory.CreateRectangle(3, 0.8f, 1, new Vector2(-2, 0), _agentBody);
+            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(-4, 0));
 
             //Right arm
-            FixtureFactory.CreateRectangle(3, 0.8f, 1, _agentBody, new Vector2(2, 0));
-            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(4, 0), _agentBody);
+            FixtureFactory.CreateRectangle(3, 0.8f, 1, new Vector2(2, 0), _agentBody);
+            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(4, 0));
 
             //Top arm
-            FixtureFactory.CreateRectangle(0.8f, 3, 1, _agentBody, new Vector2(0, 2));
-            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(0, 4), _agentBody);
+            FixtureFactory.CreateRectangle(0.8f, 3, 1, new Vector2(0, 2), _agentBody);
+            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(0, 4));
 
             //Bottom arm
-            FixtureFactory.CreateRectangle(0.8f, 3, 1, _agentBody, new Vector2(0, -2));
-            FixtureFactory.CreateCircle(world, 1, 1, new Vector2(0, -4), _agentBody);
+            FixtureFactory.CreateRectangle(0.8f, 3, 1, new Vector2(0, -2), _agentBody);
+            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(0, -4));
         }
 
         public CollisionCategory CollisionCategories

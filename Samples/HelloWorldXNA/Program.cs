@@ -1,4 +1,4 @@
-namespace HelloWorld
+namespace FarseerPhysics.HelloWorld
 {
     static class Program
     {
