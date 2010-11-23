@@ -251,6 +251,9 @@
     <Compile Include="..\..\sourcefiles\dynamics\joints\FixedDistanceJoint.cs">
       <Link>Dynamics\Joints\FixedDistanceJoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedFrictionJoint.cs">
+      <Link>Dynamics\Joints\FixedFrictionJoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\dynamics\joints\FixedLineJoint.cs">
       <Link>Dynamics\Joints\FixedLineJoint.cs</Link>
     </Compile>
