@@ -220,6 +220,13 @@ namespace FarseerPhysics.Factories
             return frictionJoint;
         }
 
+        public static FixedFrictionJoint CreateFixedFrictionJoint(World world, Body body, Vector2 bodyAnchor)
+        {
+            FixedFrictionJoint frictionJoint = new FixedFrictionJoint(body, bodyAnchor);
+            world.AddJoint(frictionJoint);
+            return frictionJoint;
+        }
+
         #endregion
 
         #region Gear Joint
