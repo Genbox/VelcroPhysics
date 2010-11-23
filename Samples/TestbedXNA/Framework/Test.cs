@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Framework
         /// <returns></returns>
         public static float RandomFloat()
         {
-            return (float) (Random.NextDouble() * 2.0 - 1.0);
+            return (float)(Random.NextDouble() * 2.0 - 1.0);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Framework
         /// <returns></returns>
         public static float RandomFloat(float lo, float hi)
         {
-            float r = (float) Random.NextDouble();
+            float r = (float)Random.NextDouble();
             r = (hi - lo) * r + lo;
             return r;
         }
@@ -128,7 +128,7 @@ namespace FarseerPhysics.TestBed.Framework
             }
 
             // added
-            float timeStep = Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause)
             {
@@ -195,23 +195,23 @@ namespace FarseerPhysics.TestBed.Framework
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
+                {
+                    Body body = fixture.Body;
+                    if (body.BodyType == BodyType.Dynamic)
                     {
-                        Body body = fixture.Body;
-                        if (body.BodyType == BodyType.Dynamic)
+                        bool inside = fixture.TestPoint(ref p);
+                        if (inside)
                         {
-                            bool inside = fixture.TestPoint(ref p);
-                            if (inside)
-                            {
-                                myFixture = fixture;
+                            myFixture = fixture;
 
-                                // We are done, terminate the query.
-                                return false;
-                            }
+                            // We are done, terminate the query.
+                            return false;
                         }
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (myFixture != null)
             {
@@ -236,7 +236,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (_fixedMouseJoint != null)
             {
-                _fixedMouseJoint.Target = p;
+                _fixedMouseJoint.WorldAnchorB = p;
             }
         }
 

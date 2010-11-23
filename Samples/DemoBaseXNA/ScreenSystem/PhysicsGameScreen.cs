@@ -104,7 +104,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (_fixedMouseJoint != null)
             {
-                _fixedMouseJoint.Target = position;
+                _fixedMouseJoint.WorldAnchorB = position;
             }
         }
 #else

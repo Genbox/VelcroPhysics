@@ -123,7 +123,11 @@ namespace FarseerPhysics.Dynamics
             Friction = 0.2f;
             Restitution = 0;
 
-            _collisionCategories = CollisionCategory.Cat1;
+            if (Settings.UseFPECollisionCategories)
+                _collisionCategories = CollisionCategory.All;
+            else
+                _collisionCategories = CollisionCategory.Cat1;
+            
             _collidesWith = CollisionCategory.All;
             _collisionGroup = 0;
 
