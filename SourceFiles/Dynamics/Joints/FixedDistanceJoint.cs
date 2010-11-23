@@ -52,11 +52,17 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedDistanceJoint : Joint
     {
+        /// <summary>
+        /// The local anchor point relative to bodyA's origin.
+        /// </summary>
+        public Vector2 LocalAnchorA;
+
         private float _bias;
         private float _gamma;
         private float _impulse;
         private float _mass;
         private Vector2 _u;
+        private Vector2 _worldAnchorB;
 
         /// <summary>
         /// This requires defining an
@@ -75,7 +81,7 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.FixedDistance;
 
             LocalAnchorA = bodyAnchor;
-            LocalAnchorB = worldAnchor;
+            _worldAnchorB = worldAnchor;
 
             //Calculate the length
             Vector2 d = WorldAnchorB - WorldAnchorA;
@@ -105,18 +111,9 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override sealed Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB; }
+            get { return _worldAnchorB; }
+            set { _worldAnchorB = value; }
         }
-
-        /// <summary>
-        /// The local anchor point relative to bodyA's origin.
-        /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
-
-        /// <summary>
-        /// The local anchor point relative to bodyB's origin.
-        /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -137,7 +134,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Compute the effective mass matrix.
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;
+            Vector2 r2 = _worldAnchorB;
             _u = r2 - b1.Sweep.C - r1;
 
             // Handle singularity.
@@ -230,7 +227,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB;
+            Vector2 r2 = _worldAnchorB;
 
             Vector2 d = r2 - b1.Sweep.C - r1;
 

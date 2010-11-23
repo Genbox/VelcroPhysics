@@ -51,6 +51,7 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _motorMass; // effective mass for motor/limit angular constraint.
         private float _motorSpeed;
         private float _upperAngle;
+        private Vector2 _worldAnchor;
 
         /// <summary>
         /// Initialize the bodies, anchors, and reference angle using the world
@@ -68,16 +69,16 @@ namespace FarseerPhysics.Dynamics.Joints
         /// the joints will be broken.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="bodyanchor">The body anchor.</param>
-        /// <param name="worldanchor">The world anchor.</param>
-        public FixedRevoluteJoint(Body body, Vector2 bodyanchor, Vector2 worldanchor)
+        /// <param name="bodyAnchor">The body anchor.</param>
+        /// <param name="worldAnchor">The world anchor.</param>
+        public FixedRevoluteJoint(Body body, Vector2 bodyAnchor, Vector2 worldAnchor)
             : base(body)
         {
             JointType = JointType.FixedRevolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = bodyanchor;
-            LocalAnchorB = worldanchor;
+            LocalAnchorA = bodyAnchor;
+            _worldAnchor = worldAnchor;
 
             ReferenceAngle = -BodyA.Rotation;
 
@@ -93,12 +94,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB; }
+            get { return _worldAnchor; }
+            set { _worldAnchor = value; }
         }
 
         public Vector2 LocalAnchorA { get; set; }
-
-        public Vector2 LocalAnchorB { get; set; }
 
         public float ReferenceAngle { get; set; }
 
@@ -244,7 +244,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
 
             Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = LocalAnchorB; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r2 = _worldAnchor; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -365,7 +365,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;
+                Vector2 r2 = _worldAnchor;
 
                 // Solve point-to-point constraint
                 Vector2 Cdot1 = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -418,7 +418,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;
+                Vector2 r2 = _worldAnchor;
 
                 // Solve point-to-point constraint
                 Vector2 Cdot = v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1);
@@ -488,7 +488,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
 
                 Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = LocalAnchorB;
+                Vector2 r2 = _worldAnchor;
 
                 Vector2 C = Vector2.Zero + r2 - b1.Sweep.C - r1;
                 positionError = C.Length();

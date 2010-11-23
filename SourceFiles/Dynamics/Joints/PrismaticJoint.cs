@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -100,6 +101,9 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class PrismaticJoint : Joint
     {
+        public Vector2 LocalAnchorA;
+
+        public Vector2 LocalAnchorB;
         private Mat33 _K;
         private float _a1, _a2;
         private Vector2 _axis;
@@ -129,16 +133,16 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="anchorA">The first body anchor.</param>
-        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="localAnchorA">The first body anchor.</param>
+        /// <param name="localAnchorB">The second body anchor.</param>
         /// <param name="axis">The axis.</param>
-        public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
+        public PrismaticJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Prismatic;
 
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
 
             _localXAxis1 = BodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
@@ -146,10 +150,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _limitState = LimitState.Inactive;
         }
-
-        public Vector2 LocalAnchorA { get; set; }
-
-        public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
@@ -159,6 +159,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
@@ -47,6 +48,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.Position; }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)

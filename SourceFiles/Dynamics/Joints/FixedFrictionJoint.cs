@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -47,38 +48,7 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedFrictionJoint : Joint
     {
-        private float _angularImpulse;
-        private float _angularMass;
-        private Vector2 _linearImpulse;
-        private Mat22 _linearMass;
-
-        public FixedFrictionJoint(Body body, Vector2 bodyAnchor)
-            : base(body)
-        {
-            JointType = JointType.FixedFriction;
-            LocalAnchorA = bodyAnchor;
-
-            //Setting default max force and max torque
-            const float gravity = 10.0f;
-
-            // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-            float radius = (float)Math.Sqrt(2.0 * (body.Inertia / body.Mass));
-
-            MaxForce = body.Mass * gravity;
-            MaxTorque = body.Mass * radius * gravity;
-        }
-
         public Vector2 LocalAnchorA;
-
-        public override Vector2 WorldAnchorA
-        {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-        }
-
-        public override Vector2 WorldAnchorB
-        {
-            get { return Vector2.Zero; }
-        }
 
         /// <summary>
         /// The maximum friction force in N.
@@ -89,6 +59,38 @@ namespace FarseerPhysics.Dynamics.Joints
         /// The maximum friction torque in N-m.
         /// </summary>
         public float MaxTorque;
+
+        private float _angularImpulse;
+        private float _angularMass;
+        private Vector2 _linearImpulse;
+        private Mat22 _linearMass;
+
+        public FixedFrictionJoint(Body body, Vector2 localAnchorA)
+            : base(body)
+        {
+            JointType = JointType.FixedFriction;
+            LocalAnchorA = localAnchorA;
+
+            //Setting default max force and max torque
+            const float gravity = 10.0f;
+
+            // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+            float radius = (float) Math.Sqrt(2.0 * (body.Inertia / body.Mass));
+
+            MaxForce = body.Mass * gravity;
+            MaxTorque = body.Mass * radius * gravity;
+        }
+
+        public override Vector2 WorldAnchorA
+        {
+            get { return BodyA.GetWorldPoint(LocalAnchorA); }
+        }
+
+        public override Vector2 WorldAnchorB
+        {
+            get { return Vector2.Zero; }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+        }
 
         public override Vector2 GetReactionForce(float invDT)
         {

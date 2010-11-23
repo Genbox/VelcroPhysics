@@ -349,11 +349,7 @@ namespace FarseerPhysics.DebugViews
                     break;
 
                 case JointType.FixedMouse:
-
-                    FixedMouseJoint fixedMouseJoint = (FixedMouseJoint)joint;
-                    p1 = fixedMouseJoint.Target;
-
-                    DrawPoint(p2, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                    DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
                     DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
                     break;
                 case JointType.Revolute:

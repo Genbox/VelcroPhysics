@@ -52,6 +52,9 @@ namespace FarseerPhysics.Dynamics.Joints
         // K = J * invM * JT
         //   = invMass1 + invI1 * cross(r1, u)^2 + invMass2 + invI2 * cross(r2, u)^2
 
+        public Vector2 LocalAnchorA;
+
+        public Vector2 LocalAnchorB;
         private float _bias;
         private float _gamma;
         private float _impulse;
@@ -64,24 +67,21 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="anchorA">The first body anchor.</param>
-        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="localAnchorA">The first body anchor.</param>
+        /// <param name="localAnchorB">The second body anchor.</param>
         /// <param name="minLength">The minimum length between anchorpoints</param>
         /// <param name="maxlength">The maximum length between anchorpoints.</param>
-        public SliderJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, float minLength, float maxlength)
+        public SliderJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, float minLength,
+                           float maxlength)
             : base(bodyA, bodyB)
         {
             JointType = JointType.MaxDistance;
 
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
             MaxLength = maxlength;
             MinLength = minLength;
         }
-
-        public Vector2 LocalAnchorA { get; set; }
-
-        public Vector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// The maximum length between the anchor points.
@@ -115,6 +115,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)

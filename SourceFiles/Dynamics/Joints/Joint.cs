@@ -157,7 +157,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Gets or sets the type of the joint.
         /// </summary>
         /// <value>The type of the joint.</value>
-        public JointType JointType { get; set; }
+        public JointType JointType { get; protected set; }
 
         /// <summary>
         /// Get the first body attached to this joint.
@@ -181,7 +181,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Get the anchor point on body2 in world coordinates.
         /// </summary>
         /// <value></value>
-        public abstract Vector2 WorldAnchorB { get; }
+        public abstract Vector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Set the user data pointer.

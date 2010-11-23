@@ -52,6 +52,16 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class DistanceJoint : Joint
     {
+        /// <summary>
+        /// The local anchor point relative to bodyA's origin.
+        /// </summary>
+        public Vector2 LocalAnchorA;
+
+        /// <summary>
+        /// The local anchor point relative to bodyB's origin.
+        /// </summary>
+        public Vector2 LocalAnchorB;
+
         private float _bias;
         private float _gamma;
         private float _impulse;
@@ -70,15 +80,15 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        /// <param name="anchorA">The first body anchor</param>
-        /// <param name="anchorB">The second body anchor</param>
-        public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        /// <param name="localAnchorA">The first body anchor</param>
+        /// <param name="localAnchorB">The second body anchor</param>
+        public DistanceJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
 
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
 
             Vector2 d = WorldAnchorB - WorldAnchorA;
             Length = d.Length();
@@ -108,17 +118,8 @@ namespace FarseerPhysics.Dynamics.Joints
         public override sealed Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
-
-        /// <summary>
-        /// The local anchor point relative to bodyA's origin.
-        /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
-
-        /// <summary>
-        /// The local anchor point relative to bodyB's origin.
-        /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
