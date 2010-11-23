@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -37,6 +38,16 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class LineJoint : Joint
     {
+        /// <summary>
+        /// The local anchor point relative to body1's origin.
+        /// </summary>
+        public Vector2 LocalAnchorA;
+
+        /// <summary>
+        /// The local anchor point relative to body2's origin.
+        /// </summary>
+        public Vector2 LocalAnchorB;
+
         private Mat22 _K;
         private float _a1;
         private float _a2;
@@ -69,10 +80,10 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="anchorA">The first body anchor.</param>
-        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="localAnchorA">The first body anchor.</param>
+        /// <param name="localAnchorB">The second body anchor.</param>
         /// <param name="axis">The axis.</param>
-        public LineJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis)
+        public LineJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Line;
@@ -80,8 +91,8 @@ namespace FarseerPhysics.Dynamics.Joints
             BodyA = bodyA;
             BodyB = bodyB;
 
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
 
             _localXAxis1 = bodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
@@ -98,6 +109,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>
@@ -189,16 +201,6 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _motorImpulse; }
             set { _motorImpulse = value; }
         }
-
-        /// <summary>
-        /// The local anchor point relative to body1's origin.
-        /// </summary>
-        public Vector2 LocalAnchorA { get; set; }
-
-        /// <summary>
-        /// The local anchor point relative to body2's origin.
-        /// </summary>
-        public Vector2 LocalAnchorB { get; set; }
 
         /// <summary>
         /// Get the current joint translation, usually in meters.

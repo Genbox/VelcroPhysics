@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -128,17 +129,17 @@ namespace FarseerPhysics.Dynamics.Joints
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="anchor">The anchor.</param>
+        /// <param name="worldAnchor">The anchor.</param>
         /// <param name="axis">The axis.</param>
-        public FixedPrismaticJoint(Body body, Vector2 anchor, Vector2 axis)
+        public FixedPrismaticJoint(Body body, Vector2 worldAnchor, Vector2 axis)
             : base(body)
         {
             JointType = JointType.FixedPrismatic;
 
             BodyB = BodyA;
 
-            LocalAnchorA = anchor;
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = worldAnchor;
+            LocalAnchorB = BodyB.GetLocalPoint(worldAnchor);
 
 
             _localXAxis1 = axis;
@@ -160,6 +161,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>
@@ -185,7 +187,7 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             get
             {
-                Transform  xf2;
+                Transform xf2;
                 BodyB.GetTransform(out xf2);
 
                 Vector2 r1 = LocalAnchorA;
@@ -304,7 +306,7 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _localXAxis1; }
             set
             {
-                _localXAxis1 = value; 
+                _localXAxis1 = value;
                 _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             }
         }
@@ -323,25 +325,25 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body b2 = BodyB;
 
-            LocalCenterA = Vector2.Zero; 
+            LocalCenterA = Vector2.Zero;
             LocalCenterB = b2.LocalCenter;
 
             Transform xf2;
             b2.GetTransform(out xf2);
 
             // Compute the effective masses.
-            Vector2 r1 = LocalAnchorA; 
+            Vector2 r1 = LocalAnchorA;
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
             Vector2 d = b2.Sweep.C + r2 - /* b1._sweep.Center - */ r1;
 
-            InvMassA = 0.0f; 
+            InvMassA = 0.0f;
             InvIA = 0.0f;
             InvMassB = b2.InvMass;
             InvIB = b2.InvI;
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = _localXAxis1; 
+                _axis = _localXAxis1;
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
@@ -355,7 +357,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Prismatic constraint.
             {
-                _perp = _localYAxis1; 
+                _perp = _localYAxis1;
 
                 _s1 = MathUtils.Cross(d + r1, _perp);
                 _s2 = MathUtils.Cross(r2, _perp);

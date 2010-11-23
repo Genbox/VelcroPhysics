@@ -40,58 +40,49 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedMouseJoint : Joint
     {
+        public Vector2 LocalAnchorA;
         private Vector2 _C; // position error
         private float _beta;
         private float _gamma;
         private Vector2 _impulse;
         private Mat22 _mass; // effective mass for point-to-point constraint.
 
+        private Vector2 _worldAnchor;
+
         /// <summary>
         /// This requires a world target point,
         /// tuning parameters, and the time step.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="target">The target.</param>
-        public FixedMouseJoint(Body body, Vector2 target)
+        /// <param name="worldAnchor">The target.</param>
+        public FixedMouseJoint(Body body, Vector2 worldAnchor)
             : base(body)
         {
             JointType = JointType.FixedMouse;
             Frequency = 5.0f;
             DampingRatio = 0.7f;
 
-            Debug.Assert(target.IsValid());
+            Debug.Assert(worldAnchor.IsValid());
 
             Transform xf1;
             BodyA.GetTransform(out xf1);
 
-            LocalAnchorB = target;
-            LocalAnchorA = MathUtils.MultiplyT(ref xf1, LocalAnchorB);
+            _worldAnchor = worldAnchor;
+            LocalAnchorA = BodyA.GetLocalPoint(worldAnchor);
         }
-
-        public Vector2 LocalAnchorA { get; private set; }
-        public Vector2 LocalAnchorB { get; private set; }
 
         public override Vector2 WorldAnchorA
-        {
-            get { return LocalAnchorB; }
-        }
-
-        public override Vector2 WorldAnchorB
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
-        /// <summary>
-        /// The initial world target point. This is assumed
-        /// to coincide with the body anchor initially.
-        /// </summary>
-        public Vector2 Target
+        public override Vector2 WorldAnchorB
         {
-            get { return LocalAnchorB; }
+            get { return _worldAnchor; }
             set
             {
                 BodyA.Awake = true;
-                LocalAnchorB = value;
+                _worldAnchor = value;
             }
         }
 
@@ -173,7 +164,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _mass = K.Inverse;
 
-            _C = b.Sweep.C + r - LocalAnchorB;
+            _C = b.Sweep.C + r - _worldAnchor;
 
             // Cheat with some damping
             b.AngularVelocityInternal *= 0.98f;

@@ -40,6 +40,9 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class RevoluteJoint : Joint
     {
+        public Vector2 LocalAnchorA;
+
+        public Vector2 LocalAnchorB;
         private bool _enableLimit;
         private bool _enableMotor;
         private Vector3 _impulse;
@@ -71,16 +74,16 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="anchorA">The first body anchor.</param>
-        /// <param name="anchorB">The second anchor.</param>
-        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        /// <param name="localAnchorA">The first body anchor.</param>
+        /// <param name="localAnchorB">The second anchor.</param>
+        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
 
             // Changed to local coordinates.
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
 
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
@@ -97,11 +100,8 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
-
-        public Vector2 LocalAnchorA { get; set; }
-
-        public Vector2 LocalAnchorB { get; set; }
 
         public float ReferenceAngle
         {

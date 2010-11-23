@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -46,21 +47,20 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FrictionJoint : Joint
     {
+        public Vector2 LocalAnchorA;
+        public Vector2 LocalAnchorB;
         private float _angularImpulse;
         private float _angularMass;
         private Vector2 _linearImpulse;
         private Mat22 _linearMass;
 
-        public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor1, Vector2 anchor2)
+        public FrictionJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
-            LocalAnchorA = anchor1;
-            LocalAnchorB = anchor2;
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
         }
-
-        public Vector2 LocalAnchorA { get; private set; }
-        public Vector2 LocalAnchorB { get; private set; }
 
         public override Vector2 WorldAnchorA
         {
@@ -70,6 +70,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>

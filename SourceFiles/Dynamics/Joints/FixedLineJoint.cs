@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -68,17 +69,17 @@ namespace FarseerPhysics.Dynamics.Joints
         /// anchors and a local axis helps when saving and loading a game.
         /// </summary>
         /// <param name="bodyA">The first body.</param>
-        /// <param name="anchor">The anchor.</param>
+        /// <param name="worldAnchor">The anchor.</param>
         /// <param name="axis">The axis.</param>
-        public FixedLineJoint(Body bodyA, Vector2 anchor, Vector2 axis)
+        public FixedLineJoint(Body bodyA, Vector2 worldAnchor, Vector2 axis)
             : base(bodyA)
         {
             JointType = JointType.FixedLine;
 
             BodyB = bodyA;
 
-            LocalAnchorA = anchor;
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = worldAnchor;
+            LocalAnchorB = BodyB.GetLocalPoint(worldAnchor);
 
             _localXAxis1 = bodyA.GetLocalVector(axis);
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
@@ -95,6 +96,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>
@@ -266,14 +268,14 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
             Vector2 d = b2.Sweep.C + r2 - r1;
 
-            InvMassA = 0.0f; 
-            InvIA = 0.0f; 
+            InvMassA = 0.0f;
+            InvIA = 0.0f;
             InvMassB = b2.InvMass;
             InvIB = b2.InvI;
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = _localXAxis1; 
+                _axis = _localXAxis1;
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
@@ -369,7 +371,7 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body b2 = BodyB;
 
-            Vector2 v1 = Vector2.Zero; 
+            Vector2 v1 = Vector2.Zero;
             float w1 = 0.0f;
             Vector2 v2 = b2.LinearVelocityInternal;
             float w2 = b2.AngularVelocityInternal;
@@ -470,7 +472,7 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             Body b2 = BodyB;
 
-            Vector2 c1 = Vector2.Zero; 
+            Vector2 c1 = Vector2.Zero;
             float a1 = 0.0f;
 
             Vector2 c2 = b2.Sweep.C;
