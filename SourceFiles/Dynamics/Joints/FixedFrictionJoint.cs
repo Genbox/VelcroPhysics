@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -56,6 +57,15 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.FixedFriction;
             LocalAnchorA = bodyAnchor;
+
+            //Setting default max force and max torque
+            const float gravity = 10.0f;
+
+            // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+            float radius = (float)Math.Sqrt(2.0 * (body.Inertia / body.Mass));
+
+            MaxForce = body.Mass * gravity;
+            MaxTorque = body.Mass * radius * gravity;
         }
 
         public Vector2 LocalAnchorA;
