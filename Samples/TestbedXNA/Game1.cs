@@ -197,12 +197,12 @@ namespace FarseerPhysics.TestBed
             {
                 ViewZoom = Math.Min(1.1f * ViewZoom, 20.0f);
             }
-                // Press 'x' to zoom in.
+            // Press 'x' to zoom in.
             else if (_keyboardManager.IsKeyDown(Keys.X))
             {
                 ViewZoom = Math.Max(0.9f * ViewZoom, 0.02f);
             }
-                // Press 'r' to reset.
+            // Press 'r' to reset.
             else if (_keyboardManager.IsNewKeyPress(Keys.R))
             {
                 Restart();
@@ -212,7 +212,7 @@ namespace FarseerPhysics.TestBed
             {
                 _settings.Pause = !_settings.Pause;
             }
-                // Press I to prev test.
+            // Press I to prev test.
             else if (_keyboardManager.IsNewKeyPress(Keys.I) ||
                      newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
@@ -222,7 +222,7 @@ namespace FarseerPhysics.TestBed
                     _testSelection = _testCount - 1;
                 }
             }
-                // Press O to next test.
+            // Press O to next test.
             else if (_keyboardManager.IsNewKeyPress(Keys.O) ||
                      newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder))
             {
@@ -232,27 +232,27 @@ namespace FarseerPhysics.TestBed
                     _testSelection = 0;
                 }
             }
-                // Press left to pan left.
+            // Press left to pan left.
             else if (_keyboardManager.IsKeyDown(Keys.Left))
             {
                 ViewCenter = new Vector2(ViewCenter.X - 0.5f, ViewCenter.Y);
             }
-                // Press right to pan right.
+            // Press right to pan right.
             else if (_keyboardManager.IsKeyDown(Keys.Right))
             {
                 ViewCenter = new Vector2(ViewCenter.X + 0.5f, ViewCenter.Y);
             }
-                // Press down to pan down.
+            // Press down to pan down.
             else if (_keyboardManager.IsKeyDown(Keys.Down))
             {
                 ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - 0.5f);
             }
-                // Press up to pan up.
+            // Press up to pan up.
             else if (_keyboardManager.IsKeyDown(Keys.Up))
             {
                 ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + 0.5f);
             }
-                // Press home to reset the view.
+            // Press home to reset the view.
             else if (_keyboardManager.IsNewKeyPress(Keys.Home))
             {
                 ResetView();
@@ -356,7 +356,7 @@ namespace FarseerPhysics.TestBed
 
         private void Resize()
         {
-            _view = Matrix.CreateScale(ViewZoom) * Matrix.CreateTranslation(-ViewCenter.X, -ViewCenter.Y, 0);
+            _view = Matrix.CreateTranslation(new Vector3(-ViewCenter.X, -ViewCenter.Y, 0)) * Matrix.CreateScale(ViewZoom);
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)

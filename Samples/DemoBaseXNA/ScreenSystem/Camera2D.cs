@@ -270,17 +270,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void Resize()
         {
-            ViewMatrix = Matrix.CreateScale(_zoom) * Matrix.CreateRotationZ(_rotation) *
-                         Matrix.CreateTranslation(-_position.X, -_position.Y, 0);
+            ViewMatrix = Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom) * Matrix.CreateRotationZ(_rotation);
         }
 
         /// <summary>
         /// Moves the camera forward one timestep.
         /// </summary>
-        /// <param name="input">
-        /// the an InputHelper input representing the current 
-        /// input state.
-        /// </param>
         public void Update()
         {
             if (TrackingBody != null)
