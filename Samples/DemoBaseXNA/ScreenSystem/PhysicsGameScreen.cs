@@ -69,6 +69,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 DebugViewEnabled = !DebugViewEnabled;
                 Settings.EnableDiagnostics = DebugViewEnabled;
+
+                if (DebugViewEnabled)
+                    DebugView.AppendFlags(DebugViewFlags.DebugPanel);
+                else
+                    DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
             }
 
             if (input.IsNewKeyPress(Keys.Escape))
