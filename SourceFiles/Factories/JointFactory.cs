@@ -62,7 +62,6 @@ namespace FarseerPhysics.Factories
         /// <summary>
         /// Creates a weld joint
         /// </summary>
-        /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="localanchorB"></param>
@@ -87,6 +86,13 @@ namespace FarseerPhysics.Factories
             WeldJoint joint = CreateWeldJoint(bodyA, bodyB, localanchorB);
             world.AddJoint(joint);
             return joint;
+        }
+
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
+        {
+            WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, localAnchorA, localAnchorB);
+            world.AddJoint(weldJoint);
+            return weldJoint;
         }
 
         #endregion
@@ -247,17 +253,6 @@ namespace FarseerPhysics.Factories
             PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
             world.AddJoint(pulleyJoint);
             return pulleyJoint;
-        }
-
-        #endregion
-
-        #region Weld Joint
-
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
-        {
-            WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, anchorA, anchorB);
-            world.AddJoint(weldJoint);
-            return weldJoint;
         }
 
         #endregion
