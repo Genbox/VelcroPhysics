@@ -72,7 +72,7 @@ namespace FarseerPhysics.Common
             return vertices;
         }
 
-        //Contributed by Jonathan Smars - jsmars@gmail.com
+        //Rounded rectangle contributed by Jonathan Smars - jsmars@gmail.com
       
         /// <summary>
         /// Creates a rounded rectangle with the specified width and height.
@@ -186,7 +186,7 @@ namespace FarseerPhysics.Common
             return vertices;
         }
 
-        //Contributed by Yobiv
+        //Capsule contributed by Yobiv
       
         /// <summary>
         /// Creates an capsule with the specified height, radius and number of edges.
@@ -323,20 +323,46 @@ namespace FarseerPhysics.Common
             return vertices;
         }
 
+        /// <summary>
+        /// Detects the vertices by analyzing the texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <returns></returns>
         public static Vertices CreatePolygon(uint[] data, int width, int height)
         {
-            return TextureConverter.CreateVertices(data, width, height);
+            return TextureConverter.DetectVertices(data, width, height);
         }
 
+        /// <summary>
+        /// Detects the vertices by analyzing the texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <returns></returns>
         public static Vertices CreatePolygon(uint[] data, int width, int height, bool holeDetection)
         {
-            return TextureConverter.CreateVertices(data, width, height, holeDetection);
+            return TextureConverter.DetectVertices(data, width, height, holeDetection);
         }
 
+        /// <summary>
+        /// Detects the vertices by analyzing the texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <param name="hullTolerance">The hull tolerance.</param>
+        /// <param name="alphaTolerance">The alpha tolerance.</param>
+        /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <returns></returns>
         public static List<Vertices> CreatePolygon(uint[] data, int width, int height, float hullTolerance,
                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            return TextureConverter.CreateVertices(data, width, height, hullTolerance, alphaTolerance,
+            return TextureConverter.DetectVertices(data, width, height, hullTolerance, alphaTolerance,
                                                    multiPartDetection, holeDetection);
         }
     }
