@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -8,35 +9,58 @@ namespace FarseerPhysics.Common
     {
         //User contribution from Sickbattery
 
-        /// <summary>
-        /// TODO:
-        /// 1.) Das Array welches ich bekomme am besten in einen bool array verwandeln. Würde die Geschwindigkeit verbessern
-        /// </summary>
-        private static readonly int[,] ClosePixels = new int[8,2]
+        // Note: A bool array would probably speed up the algorithm.
+        private static readonly int[,] ClosePixels = new int[8, 2]
                                                          {
                                                              {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}
                                                              ,
                                                              {-1, 0}
                                                          };
 
-        public static Vertices CreateVertices(uint[] data, int width, int height)
+        /// <summary>
+        /// Detects the vertices of the supplied texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <returns></returns>
+        public static Vertices DetectVertices(uint[] data, int width, int height)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            List<Vertices> verts = CreateVertices(pca);
+            List<Vertices> verts = DetectVertices(ref pca);
 
             return verts[0];
         }
 
-        public static Vertices CreateVertices(uint[] data, int width, int height, bool holeDetection)
+        /// <summary>
+        /// Detects the vertices of the supplied texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <returns></returns>
+        public static Vertices DetectVertices(uint[] data, int width, int height, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
             pca.HoleDetection = holeDetection;
-            List<Vertices> verts = CreateVertices(pca);
+            List<Vertices> verts = DetectVertices(ref pca);
 
             return verts[0];
         }
 
-        public static List<Vertices> CreateVertices(uint[] data, int width, int height, float hullTolerance,
+        /// <summary>
+        /// Detects the vertices of the supplied texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">The texture height.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <param name="hullTolerance">The hull tolerance.</param>
+        /// <param name="alphaTolerance">The alpha tolerance.</param>
+        /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
+        /// <returns></returns>
+        public static List<Vertices> DetectVertices(uint[] data, int width, int height, float hullTolerance,
                                                     byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
@@ -44,10 +68,10 @@ namespace FarseerPhysics.Common
             pca.AlphaTolerance = alphaTolerance;
             pca.MultipartDetection = multiPartDetection;
             pca.HoleDetection = holeDetection;
-            return CreateVertices(pca);
+            return DetectVertices(ref pca);
         }
 
-        private static List<Vertices> CreateVertices(PolygonCreationAssistance pca)
+        private static List<Vertices> DetectVertices(ref PolygonCreationAssistance pca)
         {
             List<Vertices> polygons = new List<Vertices>();
 
@@ -59,112 +83,106 @@ namespace FarseerPhysics.Common
 
             List<Vector2> blackList = new List<Vector2>();
 
-            // First of all: Check the array you just got.
-            if (pca.IsValid())
+            // Check the array you just got.
+            Debug.Assert(pca.IsValid(), "Sizes don't match: Color array must contain texture width * texture height elements.");
+
+            bool searchOn;
+            do
             {
-                bool searchOn;
-                do
+                if (polygons.Count == 0)
                 {
-                    if (polygons.Count == 0)
-                    {
-                        polygon = CreateSimplePolygon(pca, Vector2.Zero, Vector2.Zero);
-
-                        if (polygon != null && polygon.Count > 2)
-                        {
-                            polygonEntrance = GetTopMostVertex(polygon);
-                        }
-                    }
-                    else if (polygonEntrance.HasValue)
-                    {
-                        polygon = CreateSimplePolygon(pca, polygonEntrance.Value,
-                                                      new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    searchOn = false;
+                    polygon = CreateSimplePolygon(pca, Vector2.Zero, Vector2.Zero);
 
                     if (polygon != null && polygon.Count > 2)
                     {
-                        if (pca.HoleDetection)
+                        polygonEntrance = GetTopMostVertex(polygon);
+                    }
+                }
+                else if (polygonEntrance.HasValue)
+                {
+                    polygon = CreateSimplePolygon(pca, polygonEntrance.Value,
+                                                  new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
+                }
+                else
+                {
+                    break;
+                }
+
+                searchOn = false;
+
+                if (polygon != null && polygon.Count > 2)
+                {
+                    if (pca.HoleDetection)
+                    {
+                        do
                         {
-                            do
+                            holeEntrance = GetHoleHullEntrance(pca, polygon, holeEntrance);
+
+                            if (holeEntrance.HasValue)
                             {
-                                holeEntrance = GetHoleHullEntrance(pca, polygon, holeEntrance);
-
-                                if (holeEntrance.HasValue)
+                                if (!blackList.Contains(holeEntrance.Value))
                                 {
-                                    if (!blackList.Contains(holeEntrance.Value))
-                                    {
-                                        blackList.Add(holeEntrance.Value);
-                                        holePolygon = CreateSimplePolygon(pca, holeEntrance.Value,
-                                                                          new Vector2(holeEntrance.Value.X + 1,
-                                                                                      holeEntrance.Value.Y));
+                                    blackList.Add(holeEntrance.Value);
+                                    holePolygon = CreateSimplePolygon(pca, holeEntrance.Value,
+                                                                      new Vector2(holeEntrance.Value.X + 1,
+                                                                                  holeEntrance.Value.Y));
 
-                                        if (holePolygon != null && holePolygon.Count > 2)
+                                    if (holePolygon != null && holePolygon.Count > 2)
+                                    {
+                                        holePolygon.Add(holePolygon[0]);
+
+                                        int vertex2Index;
+                                        int vertex1Index;
+                                        if (SplitPolygonEdge(polygon, EdgeAlignment.Vertical, holeEntrance.Value,
+                                                             out vertex1Index, out vertex2Index))
                                         {
-                                            holePolygon.Add(holePolygon[0]);
-
-                                            int vertex2Index;
-                                            int vertex1Index;
-                                            if (SplitPolygonEdge(polygon, EdgeAlignment.Vertical, holeEntrance.Value,
-                                                                 out vertex1Index, out vertex2Index))
-                                            {
-                                                polygon.InsertRange(vertex2Index, holePolygon);
-                                            }
+                                            polygon.InsertRange(vertex2Index, holePolygon);
                                         }
-                                    }
-                                    else
-                                    {
-                                        break;
                                     }
                                 }
                                 else
                                 {
                                     break;
                                 }
-                            } while (true);
-                        }
-
-                        polygons.Add(polygon);
-
-                        if (pca.MultipartDetection)
-                        {
-                            // 1:  95 / 151
-                            // 2: 232 / 252
-                            // 
-                            while (GetNextHullEntrance(pca, polygonEntrance.Value, out polygonEntrance))
+                            }
+                            else
                             {
-                                bool inPolygon = false;
+                                break;
+                            }
+                        } while (true);
+                    }
 
-                                for (int i = 0; i < polygons.Count; i++)
+                    polygons.Add(polygon);
+
+                    if (pca.MultipartDetection)
+                    {
+                        // 1:  95 / 151
+                        // 2: 232 / 252
+                        // 
+                        while (GetNextHullEntrance(pca, polygonEntrance.Value, out polygonEntrance))
+                        {
+                            bool inPolygon = false;
+
+                            for (int i = 0; i < polygons.Count; i++)
+                            {
+                                polygon = polygons[i];
+
+                                if (InPolygon(pca, polygon, polygonEntrance.Value))
                                 {
-                                    polygon = polygons[i];
-
-                                    if (InPolygon(pca, ref polygon, polygonEntrance.Value))
-                                    {
-                                        inPolygon = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!inPolygon)
-                                {
-                                    searchOn = true;
+                                    inPolygon = true;
                                     break;
                                 }
                             }
+
+                            if (!inPolygon)
+                            {
+                                searchOn = true;
+                                break;
+                            }
                         }
                     }
-                } while (searchOn);
-            }
-            else
-            {
-                throw new Exception(
-                    "Sizes don't match: Color array must contain texture width * texture height elements.");
-            }
+                }
+            } while (searchOn);
 
             return polygons;
         }
@@ -172,7 +190,7 @@ namespace FarseerPhysics.Common
         private static Vector2? GetHoleHullEntrance(PolygonCreationAssistance pca, Vertices polygon,
                                                     Vector2? startVertex)
         {
-            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
+            List<CrossingEdgeInfo> edges;
             Vector2? entrance;
 
             int startLine;
@@ -186,13 +204,13 @@ namespace FarseerPhysics.Common
             {
                 if (startVertex.HasValue)
                 {
-                    startLine = (int) startVertex.Value.Y;
+                    startLine = (int)startVertex.Value.Y;
                 }
                 else
                 {
-                    startLine = (int) GetTopMostCoord(polygon);
+                    startLine = (int)GetTopMostCoord(polygon);
                 }
-                endLine = (int) GetBottomMostCoord(polygon);
+                endLine = (int)GetBottomMostCoord(polygon);
 
                 if (startLine > 0 && startLine < pca.Height && endLine > 0 && endLine < pca.Height)
                 {
@@ -210,8 +228,8 @@ namespace FarseerPhysics.Common
                                 foundSolid = false;
                                 foundTransparent = false;
 
-                                for (int x = (int) edges[i].CrossingPoint.X;
-                                     x <= (int) edges[i + 1].CrossingPoint.X;
+                                for (int x = (int)edges[i].CrossingPoint.X;
+                                     x <= (int)edges[i + 1].CrossingPoint.X;
                                      x++)
                                 {
                                     if (pca.IsSolid(x, y))
@@ -299,13 +317,13 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool InPolygon(PolygonCreationAssistance pca, ref Vertices polygon, Vector2 point)
+        private static bool InPolygon(PolygonCreationAssistance pca, Vertices polygon, Vector2 point)
         {
             bool inPolygon = !DistanceToHullAcceptable(pca, polygon, point, true);
 
             if (!inPolygon)
             {
-                List<CrossingEdgeInfo> edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) point.Y);
+                List<CrossingEdgeInfo> edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int)point.Y);
 
                 if (edges.Count > 0 && edges.Count % 2 == 0)
                 {
@@ -425,7 +443,7 @@ namespace FarseerPhysics.Common
                                         crossingPoint =
                                             new Vector2((checkLine - edgeVertex1.Y) / slope.Y * slope.X + edgeVertex1.X,
                                                         checkLine);
-                                        edges.Add(new CrossingEdgeInfo(edgeVertex1, edgeVertex2, crossingPoint,
+                                        edges.Add(new CrossingEdgeInfo(crossingPoint,
                                                                        edgeAlign));
                                     }
                                 }
@@ -464,7 +482,7 @@ namespace FarseerPhysics.Common
             switch (edgeAlign)
             {
                 case EdgeAlignment.Vertical:
-                    edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) coordInsideThePolygon.Y);
+                    edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int)coordInsideThePolygon.Y);
 
                     foundEdgeCoord.Y = coordInsideThePolygon.Y;
 
@@ -545,16 +563,16 @@ namespace FarseerPhysics.Common
             bool entranceFound = false;
             bool endOfHull = false;
 
-            Vertices polygon = new Vertices();
-            Vertices hullArea = new Vertices();
-            Vertices endOfHullArea = new Vertices();
+            Vertices polygon = new Vertices(32);
+            Vertices hullArea = new Vertices(32);
+            Vertices endOfHullArea = new Vertices(32);
 
             Vector2 current = Vector2.Zero;
 
             #region Entrance check
 
             // Get the entrance point. //todo: alle möglichkeiten testen
-            if (entrance == Vector2.Zero || !pca.InBounds(entrance))
+            if (entrance == Vector2.Zero || !pca.InBounds(ref entrance))
             {
                 entranceFound = GetHullEntrance(pca, out entrance);
 
@@ -565,9 +583,9 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                if (pca.IsSolid(entrance))
+                if (pca.IsSolid(ref entrance))
                 {
-                    if (IsNearPixel(pca, entrance, last))
+                    if (IsNearPixel(pca, ref entrance, ref last))
                     {
                         current = last;
                         entranceFound = true;
@@ -575,7 +593,7 @@ namespace FarseerPhysics.Common
                     else
                     {
                         Vector2 temp;
-                        if (SearchNearPixels(pca, false, entrance, out temp))
+                        if (SearchNearPixels(pca, false, ref entrance, out temp))
                         {
                             current = temp;
                             entranceFound = true;
@@ -650,16 +668,12 @@ namespace FarseerPhysics.Common
             return polygon;
         }
 
-        private static bool SearchNearPixels(PolygonCreationAssistance pca, bool searchingForSolidPixel, Vector2 current,
-                                             out Vector2 foundPixel)
+        private static bool SearchNearPixels(PolygonCreationAssistance pca, bool searchingForSolidPixel, ref Vector2 current, out Vector2 foundPixel)
         {
-            int x;
-            int y;
-
             for (int i = 0; i < 8; i++)
             {
-                x = (int) current.X + ClosePixels[i, 0];
-                y = (int) current.Y + ClosePixels[i, 1];
+                int x = (int)current.X + ClosePixels[i, 0];
+                int y = (int)current.Y + ClosePixels[i, 1];
 
                 if (!searchingForSolidPixel ^ pca.IsSolid(x, y))
                 {
@@ -673,16 +687,16 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool IsNearPixel(PolygonCreationAssistance pca, Vector2 current, Vector2 near)
+        private static bool IsNearPixel(PolygonCreationAssistance pca, ref Vector2 current, ref Vector2 near)
         {
             for (int i = 0; i < 8; i++)
             {
-                int x = (int) current.X + ClosePixels[i, 0];
-                int y = (int) current.Y + ClosePixels[i, 1];
+                int x = (int)current.X + ClosePixels[i, 0];
+                int y = (int)current.Y + ClosePixels[i, 1];
 
                 if (x >= 0 && x <= pca.Width && y >= 0 && y <= pca.Height)
                 {
-                    if (x == (int) near.X && y == (int) near.Y)
+                    if (x == (int)near.X && y == (int)near.Y)
                     {
                         return true;
                     }
@@ -720,7 +734,7 @@ namespace FarseerPhysics.Common
 
             bool foundTransparent = false;
 
-            for (int i = (int) start.X + (int) start.Y * pca.Width; i <= size; i++)
+            for (int i = (int)start.X + (int)start.Y * pca.Width; i <= size; i++)
             {
                 if (pca.IsSolid(i))
                 {
@@ -728,7 +742,7 @@ namespace FarseerPhysics.Common
                     {
                         x = i % pca.Width;
 
-                        entrance = new Vector2(x, (i - x) / pca.Width);
+                        entrance = new Vector2(x, (i - x) / (float)pca.Width);
                         return true;
                     }
                 }
@@ -749,7 +763,7 @@ namespace FarseerPhysics.Common
             int x;
             int y;
 
-            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(last, current);
+            int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(ref last, ref current);
             int indexOfPixelToCheck;
 
             const int pixelsToCheck = 8; // _closePixels.Length;
@@ -758,8 +772,8 @@ namespace FarseerPhysics.Common
             {
                 indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % pixelsToCheck;
 
-                x = (int) current.X + ClosePixels[indexOfPixelToCheck, 0];
-                y = (int) current.Y + ClosePixels[indexOfPixelToCheck, 1];
+                x = (int)current.X + ClosePixels[indexOfPixelToCheck, 0];
+                y = (int)current.Y + ClosePixels[indexOfPixelToCheck, 1];
 
                 if (x >= 0 && x < pca.Width && y >= 0 && y <= pca.Height)
                 {
@@ -809,7 +823,7 @@ namespace FarseerPhysics.Common
             return found;
         }
 
-        private static int GetIndexOfFirstPixelToCheck(Vector2 last, Vector2 current)
+        private static int GetIndexOfFirstPixelToCheck(ref Vector2 last, ref Vector2 current)
         {
             // .: pixel
             // l: last position
@@ -821,10 +835,10 @@ namespace FarseerPhysics.Common
             // . . .
 
             //Calculate in which direction the last move went and decide over the next first pixel.
-            switch ((int) (current.X - last.X))
+            switch ((int)(current.X - last.X))
             {
                 case 1:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 1;
@@ -838,7 +852,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case 0:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 2;
@@ -849,7 +863,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case -1:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 3;
@@ -865,109 +879,69 @@ namespace FarseerPhysics.Common
 
             return 0;
         }
-    }
 
-    public enum EdgeAlignment
-    {
-        Vertical = 0,
-        Horizontal = 1
-    }
-
-    public sealed class CrossingEdgeInfo : IComparable
-    {
-        #region Attributes
-
-        private EdgeAlignment _alignment;
-        private Vector2 _crossingPoint;
-        private Vector2 _edgeVertex2;
-        private Vector2 _egdeVertex1;
-
-        #endregion
-
-        #region Properties
-
-        public Vector2 EdgeVertex1
+        private enum EdgeAlignment
         {
-            get { return _egdeVertex1; }
-            set { _egdeVertex1 = value; }
+            Vertical = 0,
+            Horizontal = 1
         }
 
-        public Vector2 EdgeVertex2
+        private sealed class CrossingEdgeInfo : IComparable
         {
-            get { return _edgeVertex2; }
-            set { _edgeVertex2 = value; }
-        }
+            private EdgeAlignment _alignment;
 
-        public EdgeAlignment CheckLineAlignment
-        {
-            get { return _alignment; }
-            set { _alignment = value; }
-        }
+            public Vector2 CrossingPoint;
 
-        public Vector2 CrossingPoint
-        {
-            get { return _crossingPoint; }
-            set { _crossingPoint = value; }
-        }
-
-        #endregion
-
-        #region Constructor
-
-        public CrossingEdgeInfo(Vector2 edgeVertex1, Vector2 edgeVertex2, Vector2 crossingPoint,
-                                EdgeAlignment checkLineAlignment)
-        {
-            _egdeVertex1 = edgeVertex1;
-            _edgeVertex2 = edgeVertex2;
-
-            _alignment = checkLineAlignment;
-            _crossingPoint = crossingPoint;
-        }
-
-        #endregion
-
-        #region IComparable Member
-
-        public int CompareTo(object obj)
-        {
-            CrossingEdgeInfo cei = (CrossingEdgeInfo) obj;
-            int result = 0;
-
-            switch (_alignment)
+            public CrossingEdgeInfo(Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
             {
-                case EdgeAlignment.Vertical:
-                    if (_crossingPoint.X < cei.CrossingPoint.X)
-                    {
-                        result = -1;
-                    }
-                    else if (_crossingPoint.X > cei.CrossingPoint.X)
-                    {
-                        result = 1;
-                    }
-                    break;
-
-                case EdgeAlignment.Horizontal:
-                    if (_crossingPoint.Y < cei.CrossingPoint.Y)
-                    {
-                        result = -1;
-                    }
-                    else if (_crossingPoint.Y > cei.CrossingPoint.Y)
-                    {
-                        result = 1;
-                    }
-                    break;
+                _alignment = checkLineAlignment;
+                CrossingPoint = crossingPoint;
             }
 
-            return result;
-        }
 
-        #endregion
+            #region IComparable Member
+
+            public int CompareTo(object obj)
+            {
+                CrossingEdgeInfo cei = (CrossingEdgeInfo)obj;
+                int result = 0;
+
+                switch (_alignment)
+                {
+                    case EdgeAlignment.Vertical:
+                        if (CrossingPoint.X < cei.CrossingPoint.X)
+                        {
+                            result = -1;
+                        }
+                        else if (CrossingPoint.X > cei.CrossingPoint.X)
+                        {
+                            result = 1;
+                        }
+                        break;
+
+                    case EdgeAlignment.Horizontal:
+                        if (CrossingPoint.Y < cei.CrossingPoint.Y)
+                        {
+                            result = -1;
+                        }
+                        else if (CrossingPoint.Y > cei.CrossingPoint.Y)
+                        {
+                            result = 1;
+                        }
+                        break;
+                }
+
+                return result;
+            }
+
+            #endregion
+        }
     }
 
     /// <summary>
     /// Class used as a data container and helper for the texture-to-vertices code.
     /// </summary>
-    public sealed class PolygonCreationAssistance
+    public struct PolygonCreationAssistance
     {
         private byte _alphaTolerance;
         private uint _alphaToleranceRealValue;
@@ -975,6 +949,7 @@ namespace FarseerPhysics.Common
         private float _hullTolerance;
 
         public PolygonCreationAssistance(uint[] data, int width, int height)
+            : this()
         {
             Data = data;
             Width = width;
@@ -989,11 +964,11 @@ namespace FarseerPhysics.Common
             MultipartDetection = false;
         }
 
-        private uint[] Data { get; set; }
+        public uint[] Data;
 
-        public int Width { get; private set; }
+        public int Width;
 
-        public int Height { get; private set; }
+        public int Height;
 
         public byte AlphaTolerance
         {
@@ -1001,7 +976,7 @@ namespace FarseerPhysics.Common
             set
             {
                 _alphaTolerance = value;
-                _alphaToleranceRealValue = (uint) value << 24;
+                _alphaToleranceRealValue = (uint)value << 24;
             }
         }
 
@@ -1042,13 +1017,13 @@ namespace FarseerPhysics.Common
             }
         }
 
-        public bool HoleDetection { get; set; }
+        public bool HoleDetection;
 
-        public bool MultipartDetection { get; set; }
+        public bool MultipartDetection;
 
-        public bool IsSolid(Vector2 pixel)
+        public bool IsSolid(ref Vector2 pixel)
         {
-            return IsSolid((int) pixel.X, (int) pixel.Y);
+            return IsSolid((int)pixel.X, (int)pixel.Y);
         }
 
         public bool IsSolid(int x, int y)
@@ -1067,7 +1042,7 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        public bool InBounds(Vector2 coord)
+        public bool InBounds(ref Vector2 coord)
         {
             return (coord.X >= 0f && coord.X < Width && coord.Y >= 0f && coord.Y < Height);
         }
