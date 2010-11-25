@@ -731,8 +731,29 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Apply an impulse at a point. This immediately modifies the velocity.
+        /// This wakes up the body.
+        /// </summary>
+        /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
+        public void ApplyLinearImpulse(Vector2 impulse)
+        {
+            ApplyLinearImpulse(ref impulse);
+        }
+
+        /// <summary>
+        /// Apply an impulse at a point. This immediately modifies the velocity.
         /// It also modifies the angular velocity if the point of application
         /// is not at the center of mass.
+        /// This wakes up the body.
+        /// </summary>
+        /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
+        /// <param name="point">The world position of the point of application.</param>
+        public void ApplyLinearImpulse(Vector2 impulse, Vector2 point)
+        {
+            ApplyLinearImpulse(ref impulse, ref point);
+        }
+
+        /// <summary>
+        /// Apply an impulse at a point. This immediately modifies the velocity.
         /// This wakes up the body.
         /// </summary>
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
@@ -747,7 +768,6 @@ namespace FarseerPhysics.Dynamics
                 Awake = true;
             }
             LinearVelocityInternal += InvMass * impulse;
-            AngularVelocityInternal += InvI * MathUtils.Cross(Vector2.Zero, impulse);
         }
 
         /// <summary>
@@ -761,13 +781,11 @@ namespace FarseerPhysics.Dynamics
         public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
         {
             if (_bodyType != BodyType.Dynamic)
-            {
                 return;
-            }
+            
             if (Awake == false)
-            {
                 Awake = true;
-            }
+            
             LinearVelocityInternal += InvMass * impulse;
             AngularVelocityInternal += InvI * MathUtils.Cross(point - Sweep.C, impulse);
         }
