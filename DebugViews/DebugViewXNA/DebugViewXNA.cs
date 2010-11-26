@@ -296,7 +296,7 @@ namespace FarseerPhysics.DebugViews
             DrawString(160, 190, "Solve: " + World.SolveUpdateTime);
             DrawString(160, 205, "CCD: " + World.ContinuousPhysicsTime);
             DrawString(160, 220, "Total: " + World.UpdateTime);
-            
+
             if (_stepCount > 150)
             {
                 _min = Math.Min(World.UpdateTime, _min);
@@ -310,12 +310,15 @@ namespace FarseerPhysics.DebugViews
 
         private void DrawJoint(Joint joint)
         {
+            if (!joint.Enabled)
+                return;
+
             Body b1 = joint.BodyA;
             Body b2 = joint.BodyB;
             Transform xf1, xf2;
             b1.GetTransform(out xf1);
 
-            Vector2 x2 = new Vector2();
+            Vector2 x2 = Vector2.Zero;
 
             // WIP David
             if (!joint.IsFixedType())
@@ -323,6 +326,7 @@ namespace FarseerPhysics.DebugViews
                 b2.GetTransform(out xf2);
                 x2 = xf2.Position;
             }
+
             Vector2 p2 = joint.WorldAnchorB;
 
             Vector2 x1 = xf1.Position;
@@ -336,18 +340,14 @@ namespace FarseerPhysics.DebugViews
                 case JointType.Distance:
                     DrawSegment(p1, p2, color);
                     break;
-
                 case JointType.Pulley:
-                    {
-                        PulleyJoint pulley = (PulleyJoint)joint;
-                        Vector2 s1 = pulley.GroundAnchorA;
-                        Vector2 s2 = pulley.GroundAnchorB;
-                        DrawSegment(s1, p1, color);
-                        DrawSegment(s2, p2, color);
-                        DrawSegment(s1, s2, color);
-                    }
+                    PulleyJoint pulley = (PulleyJoint)joint;
+                    Vector2 s1 = pulley.GroundAnchorA;
+                    Vector2 s2 = pulley.GroundAnchorB;
+                    DrawSegment(s1, p1, color);
+                    DrawSegment(s2, p2, color);
+                    DrawSegment(s1, s2, color);
                     break;
-
                 case JointType.FixedMouse:
                     DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
                     DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
@@ -376,9 +376,9 @@ namespace FarseerPhysics.DebugViews
                     break;
                 case JointType.Gear:
                     DrawSegment(x1, x2, color);
-                    //DrawSegment(x1, p1, color);
-                    //DrawSegment(p1, p2, color);
                     break;
+                //case JointType.Weld:
+                //    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
