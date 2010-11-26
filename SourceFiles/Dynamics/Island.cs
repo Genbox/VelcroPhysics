@@ -169,7 +169,8 @@ namespace FarseerPhysics.Dynamics
 
             for (int i = 0; i < JointCount; ++i)
             {
-                _joints[i].InitVelocityConstraints(ref step);
+                if (_joints[i].Enabled)
+                    _joints[i].InitVelocityConstraints(ref step);
             }
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
@@ -178,17 +179,27 @@ namespace FarseerPhysics.Dynamics
             }
 #endif
 
+            for (int i = 0; i < JointCount; i++)
+            {
+            }
+
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
+
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
                 if (Settings.EnableDiagnostics)
                     _watch.Start();
 #endif
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    _joints[j].SolveVelocityConstraints(ref step);
+                    if (_joints[j].Enabled)
+                    {
+                        _joints[j].SolveVelocityConstraints(ref step);
+                        _joints[j].Validate(step.inv_dt);
+                    }
                 }
+
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
                 if (Settings.EnableDiagnostics)
                 {
@@ -200,7 +211,6 @@ namespace FarseerPhysics.Dynamics
 
                 _contactSolver.SolveVelocityConstraints();
             }
-
 
             // Post-solve (store impulses for warm starting).
             _contactSolver.StoreImpulses();
@@ -258,8 +268,11 @@ namespace FarseerPhysics.Dynamics
 #endif
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    bool jointOkay = _joints[j].SolvePositionConstraints();
-                    jointsOkay = jointsOkay && jointOkay;
+                    if (_joints[j].Enabled)
+                    {
+                        bool jointOkay = _joints[j].SolvePositionConstraints();
+                        jointsOkay = jointsOkay && jointOkay;
+                    }
                 }
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
                 if (Settings.EnableDiagnostics)
@@ -275,7 +288,6 @@ namespace FarseerPhysics.Dynamics
                     break;
                 }
             }
-
 
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)

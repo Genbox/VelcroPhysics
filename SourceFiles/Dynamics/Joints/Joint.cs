@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
@@ -82,7 +83,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-            return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
+            return Vector2.Dot(LinearA, x1) + AngularA*a1 + Vector2.Dot(LinearB, x2) + AngularB*a2;
         }
     }
 
@@ -118,8 +119,15 @@ namespace FarseerPhysics.Dynamics.Joints
 
     public abstract class Joint
     {
+        /// <summary>
+        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
+        /// The default value is float.MaxValue
+        /// </summary>
+        public float Breakpoint = float.MaxValue;
+
         internal JointEdge EdgeA;
         internal JointEdge EdgeB;
+        public bool Enabled = true;
         protected float InvIA;
         protected float InvIB;
         protected float InvMassA;
@@ -204,6 +212,11 @@ namespace FarseerPhysics.Dynamics.Joints
         public bool CollideConnected { get; set; }
 
         /// <summary>
+        /// Fires when the joint is broken.
+        /// </summary>
+        public event Action<Joint, float> Broke;
+
+        /// <summary>
         /// Get the reaction force on body2 at the joint anchor in Newtons.
         /// </summary>
         /// <param name="inv_dt">The inv_dt.</param>
@@ -241,6 +254,22 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         internal abstract void InitVelocityConstraints(ref TimeStep step);
+
+        internal void Validate(float invDT)
+        {
+            if (!Enabled)
+                return;
+
+            float jointError = GetReactionForce(invDT).Length();
+            if (Math.Abs(jointError) <= Breakpoint)
+                return;
+
+            Enabled = false;
+
+            if (Broke != null)
+                Broke(this, jointError);
+        }
+
         internal abstract void SolveVelocityConstraints(ref TimeStep step);
 
         /// <summary>
