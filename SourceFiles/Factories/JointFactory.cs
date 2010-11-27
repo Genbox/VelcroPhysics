@@ -64,12 +64,11 @@ namespace FarseerPhysics.Factories
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
+        /// <param name="localAnchor"></param>
         /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localanchorB)
+        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localAnchor)
         {
-            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
-            WeldJoint joint = new WeldJoint(bodyA, bodyB, localanchorA, localanchorB);
+            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(localAnchor), bodyB.GetLocalPoint(localAnchor));
             return joint;
         }
 
