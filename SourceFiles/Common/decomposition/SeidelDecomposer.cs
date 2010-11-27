@@ -7,6 +7,7 @@ namespace FarseerPhysics.Common.Decomposition
 {
     //From the Poly2Tri project http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
 
+#if !WINDOWS_PHONE
     /// <summary>
     /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
     /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
@@ -1324,4 +1325,5 @@ namespace FarseerPhysics.Common.Decomposition
             }
         }
     }
+#endif
 }

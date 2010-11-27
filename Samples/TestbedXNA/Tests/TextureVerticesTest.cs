@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             verts.Add(new Vector2(5, -5));
             verts.Add(new Vector2(5, 5));
 
-            _list = SeidelDecomposer.ConvexPartition(_verts);
+            _list = BayazitDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
             //List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, _list, 1);
