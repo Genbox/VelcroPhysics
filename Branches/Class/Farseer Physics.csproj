@@ -234,6 +234,9 @@
     <Compile Include="..\..\SourceFiles\Common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Controllers\AbstractForceController.cs">
+      <Link>Controllers\AbstractForceController.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
     </Compile>
