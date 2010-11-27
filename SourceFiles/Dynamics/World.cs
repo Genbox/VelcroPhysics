@@ -108,7 +108,7 @@ namespace FarseerPhysics.Dynamics
         private List<Joint> _jointAddList = new List<Joint>(32);
         private List<Joint> _jointRemoveList = new List<Joint>(32);
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
 #endif
 
@@ -524,14 +524,14 @@ namespace FarseerPhysics.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
         {
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
 #endif
 
             ProcessChanges();
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
 #endif
@@ -543,7 +543,7 @@ namespace FarseerPhysics.Dynamics
                 Flags &= ~WorldFlags.NewFixture;
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 NewContactsTime = _watch.ElapsedTicks - AddRemoveTime;
 #endif
@@ -569,7 +569,7 @@ namespace FarseerPhysics.Dynamics
                 Controllers[i].Update(dt);
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ControllersUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime);
 #endif
@@ -577,7 +577,7 @@ namespace FarseerPhysics.Dynamics
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime + ControllersUpdateTime);
 #endif
@@ -587,7 +587,7 @@ namespace FarseerPhysics.Dynamics
                 Solve(ref step);
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 SolveUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime);
 #endif
@@ -598,7 +598,7 @@ namespace FarseerPhysics.Dynamics
                 SolveTOI(ref step);
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks -
                                         (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
@@ -621,7 +621,7 @@ namespace FarseerPhysics.Dynamics
                 BreakableBodyList[i].Update();
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 BreakableBodyTime = _watch.ElapsedTicks -
                                     (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime +

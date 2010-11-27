@@ -73,14 +73,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
             }
 
-#if (!XBOX)
+#if WINDOWS_PHONE
+            TouchState = TouchPanel.GetState();
+            if (TouchState.Count > 0)
+            {
+                TouchLocation location = TouchState[0];
+                CurrentMouseState = new MouseState((int)location.Position.X, (int)location.Position.Y, 0, ButtonState.Pressed, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            }
+            else
+            {
+                CurrentMouseState = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            }
+#elif !XBOX
             LastMouseState = CurrentMouseState;
 
             CurrentMouseState = Mouse.GetState();
 #endif
-
-
-            TouchState = TouchPanel.GetState();
 
             Gestures.Clear();
             while (TouchPanel.IsGestureAvailable)
