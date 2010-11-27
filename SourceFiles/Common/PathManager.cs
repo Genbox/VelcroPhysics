@@ -80,7 +80,6 @@ namespace FarseerPhysics.Factories
         /// <param name="shapes">The shapes.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
-        /// <param name="density">The density you would like to use on each fixture</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
                                                                 BodyType type, int copies)
@@ -152,15 +151,18 @@ namespace FarseerPhysics.Factories
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static void AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA,
+        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA,
                                                          Vector2 localAnchorB, bool connectFirstAndLast,
                                                          bool collideConnected)
         {
+            List<RevoluteJoint> joints = new List<RevoluteJoint>(bodies.Count + 1);
+
             for (int i = 1; i < bodies.Count; i++)
             {
                 RevoluteJoint joint = new RevoluteJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
+                joints.Add(joint);
             }
 
             if (connectFirstAndLast)
@@ -169,7 +171,10 @@ namespace FarseerPhysics.Factories
                                                             localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
+                joints.Add(lastjoint);
             }
+
+            return joints;
         }
 
         /// <summary>
@@ -181,15 +186,21 @@ namespace FarseerPhysics.Factories
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static void AttachBodiesWithSliderJoint(World world, List<Body> bodies, Vector2 localAnchorA,
+        /// <param name="minLength">Minimum length of the slider joint.</param>
+        /// <param name="maxLength">Maximum length of the slider joint.</param>
+        /// <returns></returns>
+        public static List<SliderJoint> AttachBodiesWithSliderJoint(World world, List<Body> bodies, Vector2 localAnchorA,
                                                          Vector2 localAnchorB, bool connectFirstAndLast,
                                                          bool collideConnected, float minLength, float maxLength)
         {
+            List<SliderJoint> joints = new List<SliderJoint>(bodies.Count + 1);
+
             for (int i = 1; i < bodies.Count; i++)
             {
                 SliderJoint joint = new SliderJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB, minLength, maxLength);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
+                joints.Add(joint);
             }
 
             if (connectFirstAndLast)
@@ -197,7 +208,10 @@ namespace FarseerPhysics.Factories
                 SliderJoint lastjoint = new SliderJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB, minLength, maxLength);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
+                joints.Add(lastjoint);
             }
+
+            return joints;
         }
     }
 }
