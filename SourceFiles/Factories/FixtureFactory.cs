@@ -154,8 +154,6 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(polygon);
         }
 
-
-
         public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density)
         {
             return CreateCompoundPolygon(world, list, density, Vector2.Zero);
