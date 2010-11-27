@@ -95,6 +95,15 @@
     <Compile Include="..\..\sourcefiles\common\convexhull\Melkman.cs">
       <Link>Common\ConvexHull\Melkman.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Curve.cs">
+      <Link>Common\Curve.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\CurveKey.cs">
+      <Link>Common\CurveKey.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\CurveKeyCollection.cs">
+      <Link>Common\CurveKeyCollection.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\decomposition\BayazitDecomposer.cs">
       <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
     </Compile>
