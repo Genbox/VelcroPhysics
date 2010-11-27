@@ -252,6 +252,9 @@
     <Compile Include="..\..\SourceFiles\Controllers\GravityController.cs">
       <Link>Controllers\GravityController.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Controllers\SimpleWindForce.cs">
+      <Link>Controllers\SimpleWindForce.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\DebugView.cs">
       <Link>DebugView.cs</Link>
     </Compile>
