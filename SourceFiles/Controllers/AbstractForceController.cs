@@ -118,6 +118,56 @@ namespace FarseerPhysics.Controllers
         public Curve DecayCurve;
 
         /// <summary>
+        /// Calculate the Decay for a given body. Meant to ease force development and stick to
+        /// the DRY principle and provide unified and predictable decay math.
+        /// </summary>
+        /// <param name="Body"></param>
+        /// <returns></returns>
+        protected float GetDecayMultiplier(Body Body)
+        {
+            float Distance = (Body.Position - Position).Length();
+            switch (DecayMode)
+            {
+                case DecayModes.None:
+                    {
+                        return 1.0f;
+                    }
+                case DecayModes.Step:
+                    {
+                        if (Distance < DecayEnd)
+                            return 1.0f; 
+                        else
+                            return 0.0f;
+                    }
+                case DecayModes.Linear:
+                    {
+                        if (Distance < DecayStart)
+                            return 1.0f;
+                        if (Distance > DecayEnd)
+                            return 0.0f;
+                        return (DecayEnd - DecayStart / Distance - DecayStart);
+                    }
+                case DecayModes.InverseSquare:
+                    {
+                        if (Distance < DecayStart)
+                            return 1.0f;
+                        else
+                            return 1.0f / ((Distance - DecayStart)*(Distance - DecayStart));
+                    }
+                case DecayModes.Curve:
+                    {
+                        if (Distance < DecayStart)
+                            return 1.0f;
+                        else
+                            return DecayCurve.Evaluate(Distance - DecayStart);
+                    }
+                default:
+                    return 1.0f;
+            }
+            
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public AbstractForceController()
