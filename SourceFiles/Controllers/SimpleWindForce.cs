@@ -45,7 +45,11 @@ namespace FarseerPhysics.Controllers
             foreach (Body body in this.World.BodyList)
             {
                 //TODO: Consider Divergence;
+                Direction.Normalize();
+
                 Vector2 forceVector = Direction;
+                if (forceVector.Length() == 0)
+                    forceVector = new Vector2(0, 1);
                 float DecayMultiplier = GetDecayMultiplier(body);
 
                 //forceVector = Vector2.Transform(forceVector, Matrix.CreateRotationZ((MathHelper.Pi - MathHelper.Pi/2) * (float)Randomize.NextDouble()));

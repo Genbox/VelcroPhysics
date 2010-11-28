@@ -63,7 +63,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             DebugView.DrawString(50, TextLine, "Note: The left side of the ship has a different density than the right side of the ship");
             TextLine += 15;
-            DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
+            DebugView.DrawString(50, TextLine, "Wind Strength:"+SimpleWind.Strength.ToString());
+            //DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
+            DebugView.DrawArrow(SimpleWind.Position, SimpleWind.Position + SimpleWind.Direction, 2, 1f, true, Color.Red);
             base.Update(settings, gameTime);
         }
 
@@ -71,8 +73,19 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //if (keyboardManager.IsKeyDown(Keys.W))
             //{
-            //    Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
-            //    _body.ApplyForce(f);
+            //    SimpleWind.Position += new Vector2(0, 1);
+            //}
+            //if (keyboardManager.IsKeyDown(Keys.A))
+            //{
+            //    SimpleWind.Position += new Vector2(-1, 0);
+            //}
+            //if (keyboardManager.IsKeyDown(Keys.S))
+            //{
+            //    SimpleWind.Position += new Vector2(0, -1);
+            //}
+            //if (keyboardManager.IsKeyDown(Keys.D))
+            //{
+            //    SimpleWind.Position += new Vector2(1, 0);
             //}
         }
 
@@ -81,8 +94,15 @@ namespace FarseerPhysics.TestBed.Tests
             //base.Mouse(state, oldState);
             Vector2 MouseWorld =GameInstance.ConvertScreenToWorld(state.X, state.Y);
             //SimpleWind.Position = MouseWorld;
-            SimpleWind.Direction = SimpleWind.Position+MouseWorld;
-            SimpleWind.Strength = 50;
+            SimpleWind.Direction = MouseWorld-SimpleWind.Position;
+            SimpleWind.Strength = SimpleWind.Direction.Length();
+
+            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton==ButtonState.Released) 
+            {
+                SimpleWind.Position = MouseWorld;
+                SimpleWind.Direction = MouseWorld + new Vector2(0, 1);
+                Microsoft.Xna.Framework.Input.Mouse.SetPosition(state.X, state.Y + 10);
+            }
         }
 
         internal static Test Create()
