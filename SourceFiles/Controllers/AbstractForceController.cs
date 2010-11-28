@@ -24,21 +24,41 @@ namespace FarseerPhysics.Controllers
         public Vector2 Position { get; set; }
 
         /// <summary>
-        /// Maximum speed of the bodies. Bodies that are travelling faster are supposed to be ignored
+        /// Maximum speed of the bodies. Bodies that are travelling faster are
+        /// supposed to be ignored
         /// </summary>
         public float MaximumSpeed { get; set; }
 
         /// <summary>
-        /// Maximum Force to be applied. As opposed to Maximum Speed this is independent of the velocity of
+        /// Maximum Force to be applied. As opposed to Maximum Speed this is 
+        /// independent of the velocity of
         /// the affected body
         /// </summary>
         public float MaximumForce { get; set; }
 
         /// <summary>
+        /// Forcetypes are used in the decay math to properly get the distance.
+        /// They are also used to draw a representation in DebugView
+        /// </summary>
+        public enum ForceTypes
+        {
+            Point,
+            Line,
+            Area
+        }
+
+        /// <summary>
+        /// The Forcetype of the instance
+        /// </summary>
+        public ForceTypes ForceType;
+
+        /// <summary>
         /// Timing Modes
         /// Switched: Standard on/off mode using the baseclass enabled property
-        /// Triggered: When the Trigger() method is called the force is active for a specified Impulse Length
-        /// Curve: Still to be defined. The basic idea is having a Trigger combined with a curve for the strength
+        /// Triggered: When the Trigger() method is called the force is active 
+        /// for a specified Impulse Length
+        /// Curve: Still to be defined. The basic idea is having a Trigger 
+        /// combined with a curve for the strength
         /// </summary>
         public enum TimingModes
         {
@@ -53,7 +73,8 @@ namespace FarseerPhysics.Controllers
         public TimingModes TimingMode { get; set; }
 
         /// <summary>
-        /// Time of the current impulse. Incremented in update till ImpulseLength is reached
+        /// Time of the current impulse. Incremented in update till 
+        /// ImpulseLength is reached
         /// </summary>
         public float ImpulseTime { get; private set; }
 
@@ -63,14 +84,16 @@ namespace FarseerPhysics.Controllers
         public float ImpulseLength { get; set; }
 
         /// <summary>
-        /// Indicating if we are currently during an Impulse (Triggered and Curve Mode)
+        /// Indicating if we are currently during an Impulse 
+        /// (Triggered and Curve Mode)
         /// </summary>
         public bool Triggered { get; private set; }
 
         /// <summary>
-        /// Curve used by Curve Mode as an animated multiplier for the force strength.
-        /// Only positions between 0 and 1 are considered as that range is stretched to
-        /// have ImpulseLength.
+        /// Curve used by Curve Mode as an animated multiplier for the force 
+        /// strength.
+        /// Only positions between 0 and 1 are considered as that range is 
+        /// stretched to have ImpulseLength.
         /// </summary>
         public Curve StrengthCurve;
 
@@ -81,12 +104,14 @@ namespace FarseerPhysics.Controllers
         public float Variation { get; set; }
 
         /// <summary>
-        /// Provided for reuse to provide Variation functionality in inheriting classes
+        /// Provided for reuse to provide Variation functionality in 
+        /// inheriting classes
         /// </summary>
         protected Random Randomize;
 
         /// <summary>
-        /// Modes for Decay. Actual Decay must be implemented in inheriting classes
+        /// Modes for Decay. Actual Decay must be implemented in inheriting 
+        /// classes
         /// </summary>
         public enum DecayModes
         {
@@ -118,13 +143,16 @@ namespace FarseerPhysics.Controllers
         public Curve DecayCurve;
 
         /// <summary>
-        /// Calculate the Decay for a given body. Meant to ease force development and stick to
-        /// the DRY principle and provide unified and predictable decay math.
+        /// Calculate the Decay for a given body. Meant to ease force 
+        /// development and stick to the DRY principle and provide unified and 
+        /// predictable decay math.
         /// </summary>
-        /// <param name="Body"></param>
-        /// <returns></returns>
+        /// <param name="Body">The body to calculate decay for</param>
+        /// <returns>A multiplier to multiply the force with to add decay 
+        /// support in inheriting classes</returns>
         protected float GetDecayMultiplier(Body Body)
         {
+            //TODO: Consider ForceType in distance calculation!
             float Distance = (Body.Position - Position).Length();
             switch (DecayMode)
             {
@@ -281,7 +309,8 @@ namespace FarseerPhysics.Controllers
         }
 
         /// <summary>
-        /// Apply the force supplying strength (wich is modified in Update() according to the TimingMode
+        /// Apply the force supplying strength (wich is modified in Update() 
+        /// according to the TimingMode
         /// </summary>
         /// <param name="dt"></param>
         public abstract void ApplyForce(float dt, float Strength);
