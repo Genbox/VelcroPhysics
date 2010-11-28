@@ -64,6 +64,9 @@ namespace FarseerPhysics.TestBed.Tests
                 circle.Position = startPosition + offset * i;
                 circle.SleepingAllowed = false;
 
+                if (i == 4)
+                    circle.IgnoreController(IgnoreController.GravityController);
+
                 CircleShape circleShape = new CircleShape(1, 0.1f);
                 circle.CreateFixture(circleShape);
             }

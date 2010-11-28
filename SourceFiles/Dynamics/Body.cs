@@ -29,6 +29,7 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
@@ -78,6 +79,7 @@ namespace FarseerPhysics.Dynamics
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
+        internal IgnoreController ControllerIgnores;
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
@@ -111,7 +113,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float)Math.PI; }
+            get { return Rotation / (float) Math.PI; }
         }
 
         /// <summary>
@@ -528,6 +530,36 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Ignores the controller. The controller has no effect on this body.
+        /// </summary>
+        /// <param name="controller">The flags.</param>
+        public void IgnoreController(IgnoreController controller)
+        {
+            ControllerIgnores |= controller;
+        }
+
+        /// <summary>
+        /// Restore the controller. The controller affects this body.
+        /// </summary>
+        /// <param name="controller">The flags.</param>
+        public void RestoreController(IgnoreController controller)
+        {
+            ControllerIgnores &= ~controller;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="controller">The flags.</param>
+        /// <returns>
+        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsControllerIgnored(IgnoreController controller)
+        {
+            return (ControllerIgnores & controller) == controller;
+        }
+
+        /// <summary>
         /// Resets the dynamics of this body.
         /// Sets torque, force and linear/angular velocity to 0
         /// </summary>
@@ -782,10 +814,10 @@ namespace FarseerPhysics.Dynamics
         {
             if (_bodyType != BodyType.Dynamic)
                 return;
-            
+
             if (Awake == false)
                 Awake = true;
-            
+
             LinearVelocityInternal += InvMass * impulse;
             AngularVelocityInternal += InvI * MathUtils.Cross(point - Sweep.C, impulse);
         }
@@ -1028,7 +1060,9 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.A);
-            Xf.Position = Sweep.C - new Vector2(Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y, Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
+            Xf.Position = Sweep.C -
+                          new Vector2(Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y,
+                                      Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
         }
 
         /// <summary>
