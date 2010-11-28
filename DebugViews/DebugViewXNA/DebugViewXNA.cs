@@ -621,6 +621,59 @@ namespace FarseerPhysics.DebugViews
             _stringData.Add(new StringData(x, y, s, args, TextColor));
         }
 
+        public void DrawArrow(Vector2 start, Vector2 end, float length, float width, bool drawStartIndicator, Color color)
+        {
+            // Draw connection segment between start- and end-point
+            DrawSegment(start, end, color);
+
+            // Precalculate halfwidth
+            float halfWidth = width / 2;
+
+            // Create directional reference
+            Vector2 rotation = (start - end);
+            rotation.Normalize();
+
+            // Calculate angle of directional vector
+            float angle = (float)Math.Atan2(rotation.X, -rotation.Y);
+            // Create matrix for rotation
+            Matrix rotMatrix = Matrix.CreateRotationZ(angle);
+            // Create translation matrix for end-point
+            Matrix endMatrix = Matrix.CreateTranslation(end.X, end.Y, 0);
+
+            // Setup arrow end shape
+            Vector2[] verts = new Vector2[3];
+            verts[0] = new Vector2(0,0);
+            verts[1] = new Vector2(-halfWidth, -length);
+            verts[2] = new Vector2(halfWidth, -length);
+
+            // Rotate end shape
+            Vector2.Transform(verts, ref rotMatrix, verts);
+            // Translate end shape
+            Vector2.Transform(verts, ref endMatrix, verts);
+
+            // Draw arrow end shape
+            DrawSolidPolygon(verts, 3, color, false);
+
+            if (drawStartIndicator)
+            {
+                // Create translation matrix for start
+                Matrix startMatrix = Matrix.CreateTranslation(start.X, start.Y, 0);
+                // Setup arrow start shape
+                Vector2[] baseVerts = new Vector2[4];
+                baseVerts[0] = new Vector2(-halfWidth, length / 4);
+                baseVerts[1] = new Vector2(halfWidth, length / 4);
+                baseVerts[2] = new Vector2(halfWidth, 0);
+                baseVerts[3] = new Vector2(-halfWidth, 0);
+
+                // Rotate start shape
+                Vector2.Transform(baseVerts, ref rotMatrix, baseVerts);
+                // Translate start shape
+                Vector2.Transform(baseVerts, ref startMatrix, baseVerts);            
+                // Draw start shape
+                DrawSolidPolygon(baseVerts, 4, color, false);
+            }
+        }
+
         public void RenderDebugData(ref Matrix projection)
         {
             DrawDebugData();
