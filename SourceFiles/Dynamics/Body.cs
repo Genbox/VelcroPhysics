@@ -945,6 +945,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Get the world coordinates of a vector given the local coordinates.
+        /// Note that the vector only takes the rotation into account, not the position.
         /// </summary>
         /// <param name="localVector">A vector fixed in the body.</param>
         /// <returns>The same vector expressed in world coordinates.</returns>
@@ -965,6 +966,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Gets a local point relative to the body's origin given a world point.
+        /// Note that the vector only takes the rotation into account, not the position.
         /// </summary>
         /// <param name="worldPoint">A point in world coordinates.</param>
         /// <returns>The corresponding local point relative to the body's origin.</returns>
@@ -985,6 +987,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Gets a local vector given a world vector.
+        /// Note that the vector only takes the rotation into account, not the position.
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>
@@ -995,6 +998,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Gets a local vector given a world vector.
+        /// Note that the vector only takes the rotation into account, not the position.
         /// </summary>
         /// <param name="worldVector">A vector in world coordinates.</param>
         /// <returns>The corresponding local vector.</returns>

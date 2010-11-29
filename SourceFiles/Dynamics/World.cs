@@ -108,6 +108,11 @@ namespace FarseerPhysics.Dynamics
         private List<Joint> _jointAddList = new List<Joint>(32);
         private List<Joint> _jointRemoveList = new List<Joint>(32);
 
+        /// <summary>
+        /// If false, the whole simulation stops. It still processes added and removed geometries.
+        /// </summary>
+        public bool Enabled = true;
+
 #if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
 #endif
@@ -535,6 +540,18 @@ namespace FarseerPhysics.Dynamics
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
 #endif
+            //If there is no change in time, no need to calculate anything.
+            if (dt == 0 || !Enabled)
+            {
+#if (!SILVERLIGHT)
+                if (Settings.EnableDiagnostics)
+                {
+                    _watch.Stop();
+                    _watch.Reset();
+                }
+#endif
+                return;
+            }
 
             // If new fixtures were added, we need to find the new contacts.
             if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
@@ -551,16 +568,8 @@ namespace FarseerPhysics.Dynamics
             Flags |= WorldFlags.Locked;
 
             TimeStep step;
+            step.inv_dt = 1.0f / dt;
             step.dt = dt;
-            if (dt > 0.0f)
-            {
-                step.inv_dt = 1.0f / dt;
-            }
-            else
-            {
-                step.inv_dt = 0.0f;
-            }
-
             step.dtRatio = _invDt0 * dt;
 
             //Update controllers
@@ -582,10 +591,7 @@ namespace FarseerPhysics.Dynamics
                 ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime + ControllersUpdateTime);
 #endif
             // Integrate velocities, solve velocity raints, and integrate positions.
-            if (step.dt > 0.0f)
-            {
-                Solve(ref step);
-            }
+            Solve(ref step);
 
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
@@ -593,7 +599,7 @@ namespace FarseerPhysics.Dynamics
 #endif
 
             // Handle TOI events.
-            if (Settings.ContinuousPhysics && step.dt > 0.0f)
+            if (Settings.ContinuousPhysics)
             {
                 SolveTOI(ref step);
             }
@@ -603,10 +609,7 @@ namespace FarseerPhysics.Dynamics
                 ContinuousPhysicsTime = _watch.ElapsedTicks -
                                         (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 #endif
-            if (step.dt > 0.0f)
-            {
-                _invDt0 = step.inv_dt;
-            }
+            _invDt0 = step.inv_dt;
 
             if ((Flags & WorldFlags.ClearForces) != 0)
             {
@@ -630,6 +633,8 @@ namespace FarseerPhysics.Dynamics
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
+                //AddRemoveTime = 1000 * AddRemoveTime / Stopwatch.Frequency;
+
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
@@ -1234,6 +1239,62 @@ namespace FarseerPhysics.Dynamics
             Debug.Assert(BreakableBodyList.Contains(breakableBody));
 
             BreakableBodyList.Remove(breakableBody);
+        }
+
+        public Fixture TestPoint(Vector2 point)
+        {
+            AABB aabb;
+            Vector2 d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            aabb.LowerBound = point - d;
+            aabb.UpperBound = point + d;
+
+            Fixture myFixture = null;
+
+            // Query the world for overlapping shapes.
+            QueryAABB(
+                fixture =>
+                {
+                    bool inside = fixture.TestPoint(ref point);
+                    if (inside)
+                    {
+                        myFixture = fixture;
+                        return false;
+                    }
+
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
+
+            return myFixture;
+        }
+
+        /// <summary>
+        /// Returns a list of fixtures that are at the specified point.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <returns></returns>
+        public List<Fixture> TestPointAll(Vector2 point)
+        {
+            AABB aabb;
+            Vector2 d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            aabb.LowerBound = point - d;
+            aabb.UpperBound = point + d;
+
+            List<Fixture> fixtures = new List<Fixture>();
+
+            // Query the world for overlapping shapes.
+            QueryAABB(
+                fixture =>
+                {
+                    bool inside = fixture.TestPoint(ref point);
+                    if (inside)
+                        fixtures.Add(fixture);
+
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
+            
+            return fixtures;
         }
     }
 }
