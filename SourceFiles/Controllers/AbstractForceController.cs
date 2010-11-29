@@ -274,7 +274,7 @@ namespace FarseerPhysics.Controllers
                     }
                 case TimingModes.Triggered:
                     {
-                        if (Triggered)
+                        if (this.Enabled && Triggered)
                         {
                             if (ImpulseTime < ImpulseLength)
                             {
@@ -290,7 +290,7 @@ namespace FarseerPhysics.Controllers
                     }
                 case TimingModes.Curve:
                     {
-                        if (Triggered)
+                        if (this.Enabled && Triggered)
                         {
                             if (ImpulseTime < ImpulseLength)
                             {

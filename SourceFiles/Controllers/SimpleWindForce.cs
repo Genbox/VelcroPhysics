@@ -44,20 +44,45 @@ namespace FarseerPhysics.Controllers
         {
             foreach (Body body in this.World.BodyList)
             {
-                //TODO: Consider Divergence;
-                Direction.Normalize();
-
-                Vector2 forceVector = Direction;
-                if (forceVector.Length() == 0)
-                    forceVector = new Vector2(0, 1);
+                //TODO: Consider Force Type
                 float DecayMultiplier = GetDecayMultiplier(body);
 
-                //forceVector = Vector2.Transform(forceVector, Matrix.CreateRotationZ((MathHelper.Pi - MathHelper.Pi/2) * (float)Randomize.NextDouble()));
-                float StrengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
+                if (DecayMultiplier != 0)
+                {
+                    Vector2 forceVector;
 
-                forceVector.Normalize();
-                //body.ApplyForce(forceVector * Strength * DecayMultiplier * StrengthVariation);
-                body.ApplyForce(forceVector*Strength);
+                    if (ForceType == ForceTypes.Point)
+                    {
+                        forceVector = body.Position - Position;
+                        
+                    }
+                    else
+                    {
+                        Direction.Normalize();
+
+                        forceVector = Direction;
+
+                        if (forceVector.Length() == 0)
+                            forceVector = new Vector2(0, 1);
+                        
+                    }
+
+                    //TODO: Consider Divergence:
+                    //forceVector = Vector2.Transform(forceVector, Matrix.CreateRotationZ((MathHelper.Pi - MathHelper.Pi/2) * (float)Randomize.NextDouble()));
+
+                    // Calculate random Variation
+                    if (Variation != 0)
+                    {
+                        float StrengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
+                        forceVector.Normalize();
+                        body.ApplyForce(forceVector * Strength * DecayMultiplier * StrengthVariation);
+                    }
+                    else
+                    {
+                        forceVector.Normalize();
+                        body.ApplyForce(forceVector * Strength * DecayMultiplier);
+                    }
+                }
             }
         }
 
