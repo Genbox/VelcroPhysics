@@ -50,7 +50,10 @@ namespace FarseerPhysics.Dynamics
         private Joint[] _joints;
         public float JointUpdateTime;
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+
+#if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
 #endif
 
@@ -99,7 +102,9 @@ namespace FarseerPhysics.Dynamics
                 Body b = Bodies[i];
 
                 if (b.BodyType != BodyType.Dynamic)
+                {
                     continue;
+                }
 
                 // Integrate velocities.
                 // FPE 3 only - Only apply gravity if the body wants it.
@@ -113,7 +118,6 @@ namespace FarseerPhysics.Dynamics
                 {
                     b.LinearVelocityInternal.X += step.dt * (gravity.X + b.InvMass * b.Force.X);
                     b.LinearVelocityInternal.Y += step.dt * (gravity.Y + b.InvMass * b.Force.Y);
-
                     b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
                 }
 
@@ -124,8 +128,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b.LinearVelocityInternal *= Math.Max(0.0f, Math.Min(1.0f - step.dt * b.LinearDamping, 1.0f));
-                b.AngularVelocityInternal *= Math.Max(0.0f, Math.Min(1.0f - step.dt * b.AngularDamping, 1.0f));
+                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.LinearDamping, 0.0f, 1.0f);
+                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.AngularDamping, 0.0f, 1.0f);
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
@@ -136,16 +140,16 @@ namespace FarseerPhysics.Dynamics
                 Fixture fixtureB = _contacts[i2].FixtureB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
+                bool nonStatic = bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static;
+                if (nonStatic)
+                {
+                    ++i1;
 
-                if (!(bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static))
-                    continue;
-
-                ++i1;
-
-                //TODO: Only swap if they are not the same? see http://code.google.com/p/box2d/issues/detail?id=162
-                Contact tmp = _contacts[i1];
-                _contacts[i1] = _contacts[i2];
-                _contacts[i2] = tmp;
+                    //TODO: Only swap if they are not the same? see http://code.google.com/p/box2d/issues/detail?id=162
+                    Contact tmp = _contacts[i1];
+                    _contacts[i1] = _contacts[i2];
+                    _contacts[i2] = tmp;
+                }
             }
 
             // Initialize velocity constraints.
@@ -170,6 +174,7 @@ namespace FarseerPhysics.Dynamics
                 if (_joints[i].Enabled)
                     _joints[i].InitVelocityConstraints(ref step);
             }
+
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
             {
@@ -177,14 +182,9 @@ namespace FarseerPhysics.Dynamics
             }
 #endif
 
-            for (int i = 0; i < JointCount; i++)
-            {
-            }
-
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
-
 #if (!SILVERLIGHT)
                 if (Settings.EnableDiagnostics)
                     _watch.Start();
@@ -224,13 +224,17 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                Vector2 translation = step.dt * b.LinearVelocityInternal;
-                float result;
-                Vector2.Dot(ref translation, ref translation, out result);
+                float translationX = step.dt * b.LinearVelocityInternal.X;
+                float translationY = step.dt * b.LinearVelocityInternal.Y;
+                float result = translationX * translationX + translationY * translationY;
+
                 if (result > Settings.MaxTranslationSquared)
                 {
-                    float ratio = Settings.MaxTranslation / translation.Length();
-                    b.LinearVelocityInternal *= ratio;
+                    float sq = (float) Math.Sqrt(result);
+
+                    float ratio = Settings.MaxTranslation / sq;
+                    b.LinearVelocityInternal.X *= ratio;
+                    b.LinearVelocityInternal.Y *= ratio;
                 }
 
                 float rotation = step.dt * b.AngularVelocityInternal;
@@ -241,11 +245,13 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Store positions for continuous collision.
-                b.Sweep.C0 = b.Sweep.C;
+                b.Sweep.C0.X = b.Sweep.C.X;
+                b.Sweep.C0.Y = b.Sweep.C.Y;
                 b.Sweep.A0 = b.Sweep.A;
 
                 // Integrate
-                b.Sweep.C += step.dt * b.LinearVelocityInternal;
+                b.Sweep.C.X += step.dt * b.LinearVelocityInternal.X;
+                b.Sweep.C.Y += step.dt * b.LinearVelocityInternal.Y;
                 b.Sweep.A += step.dt * b.AngularVelocityInternal;
 
                 // Compute new transform
@@ -260,7 +266,7 @@ namespace FarseerPhysics.Dynamics
                 bool contactsOkay = _contactSolver.SolvePositionConstraints(Settings.ContactBaumgarte);
                 bool jointsOkay = true;
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
                 if (Settings.EnableDiagnostics)
                     _watch.Start();
 #endif
@@ -272,7 +278,8 @@ namespace FarseerPhysics.Dynamics
                         jointsOkay = jointsOkay && jointOkay;
                     }
                 }
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+
+#if (!SILVERLIGHT)
                 if (Settings.EnableDiagnostics)
                 {
                     _watch.Stop();
@@ -287,7 +294,7 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
             {
                 JointUpdateTime = _tmpTime;
@@ -300,9 +307,6 @@ namespace FarseerPhysics.Dynamics
             if (Settings.AllowSleep)
             {
                 float minSleepTime = Settings.MaxFloat;
-
-                const float linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-                const float angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 
                 for (int i = 0; i < BodyCount; ++i)
                 {
@@ -319,8 +323,8 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     if ((b.Flags & BodyFlags.AutoSleep) == 0 ||
-                        b.AngularVelocityInternal * b.AngularVelocityInternal > angTolSqr ||
-                        Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > linTolSqr)
+                        b.AngularVelocityInternal * b.AngularVelocityInternal > AngTolSqr ||
+                        Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > LinTolSqr)
                     {
                         b.SleepTime = 0.0f;
                         minSleepTime = 0.0f;
@@ -343,7 +347,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        internal void SolveTOI(ref TimeStep subStep, Body bodyA, Body bodyB)
+        internal void SolveTOI(ref TimeStep subStep)
         {
             _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio);
 
@@ -362,40 +366,6 @@ namespace FarseerPhysics.Dynamics
                     i += 0;
                 }
             }
-            /*
-            #if 0
-                // Is the new position really safe?
-                for (int32 i = 0; i < m_contactCount; ++i)
-                {
-                    b2Contact* c = m_contacts[i];
-                    b2Fixture* fA = c->GetFixtureA();
-                    b2Fixture* fB = c->GetFixtureB();
-
-                    b2Body* bA = fA->GetBody();
-                    b2Body* bB = fB->GetBody();
-
-                    int32 indexA = c->GetChildIndexA();
-                    int32 indexB = c->GetChildIndexB();
-
-                    b2DistanceInput input;
-                    input.proxyA.Set(fA->GetShape(), indexA);
-                    input.proxyB.Set(fB->GetShape(), indexB);
-                    input.transformA = bA->GetTransform();
-                    input.transformB = bB->GetTransform();
-                    input.useRadii = false;
-
-                    b2DistanceOutput output;
-                    b2SimplexCache cache;
-                    cache.count = 0;
-                    b2Distance(&output, &cache, &input);
-
-                    if (output.distance == 0 || cache.count == 3)
-                    {
-                        cache.count += 0;
-                    }
-                }
-            #endif
-             */
 
             // Leap of faith to new safe state.
             for (int i = 0; i < BodyCount; ++i)
@@ -429,10 +399,11 @@ namespace FarseerPhysics.Dynamics
 
                 // Check for large velocities.
                 Vector2 translation = subStep.dt * b.LinearVelocity;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                float dot = translation.X * translation.X + translation.Y * translation.Y;
+                if (dot > Settings.MaxTranslationSquared)
                 {
-                    translation.Normalize();
-                    b.LinearVelocity = (Settings.MaxTranslation * subStep.inv_dt) * translation;
+                    float norm = 1f / (float) Math.Sqrt(dot);
+                    b.LinearVelocity = (Settings.MaxTranslation * subStep.inv_dt) * (translation * norm);
                 }
 
                 float rotation = subStep.dt * b.AngularVelocity;
@@ -449,8 +420,9 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Integrate
-                b.Sweep.C += subStep.dt * b.LinearVelocity;
-                b.Sweep.A += subStep.dt * b.AngularVelocity;
+                b.Sweep.C.X += subStep.dt * b.LinearVelocityInternal.X;
+                b.Sweep.C.Y += subStep.dt * b.LinearVelocityInternal.Y;
+                b.Sweep.A += subStep.dt * b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();

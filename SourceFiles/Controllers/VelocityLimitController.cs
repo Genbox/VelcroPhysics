@@ -91,14 +91,18 @@ namespace FarseerPhysics.Controllers
                 if (LimitLinearVelocity)
                 {
                     //Translation
-                    Vector2 translation = dt * body.LinearVelocityInternal;
-                    float result;
-                    Vector2.Dot(ref translation, ref translation, out result);
+                    // Check for large velocities.
+                    float translationX = dt * body.LinearVelocityInternal.X;
+                    float translationY = dt * body.LinearVelocityInternal.Y;
+                    float result = translationX * translationX + translationY * translationY;
 
                     if (result > _maxLinearSqared)
                     {
-                        float ratio = _maxLinearVelocity / translation.Length();
-                        body.LinearVelocityInternal *= ratio;
+                        float sq = (float)Math.Sqrt(result);
+
+                        float ratio = _maxLinearVelocity / sq;
+                        body.LinearVelocityInternal.X *= ratio;
+                        body.LinearVelocityInternal.Y *= ratio;
                     }
                 }
 
