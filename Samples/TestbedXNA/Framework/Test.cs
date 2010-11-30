@@ -184,38 +184,11 @@ namespace FarseerPhysics.TestBed.Framework
                 return;
             }
 
-            // Make a small box.
-            AABB aabb;
-            Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.LowerBound = p - d;
-            aabb.UpperBound = p + d;
+            Fixture fixture = World.TestPoint(p);
 
-            Fixture myFixture = null;
-
-            // Query the world for overlapping shapes.
-            World.QueryAABB(
-                fixture =>
-                {
-                    Body body = fixture.Body;
-                    if (body.BodyType == BodyType.Dynamic)
-                    {
-                        bool inside = fixture.TestPoint(ref p);
-                        if (inside)
-                        {
-                            myFixture = fixture;
-
-                            // We are done, terminate the query.
-                            return false;
-                        }
-                    }
-
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
-
-            if (myFixture != null)
+            if (fixture != null)
             {
-                Body body = myFixture.Body;
+                Body body = fixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
                 _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
                 World.AddJoint(_fixedMouseJoint);
