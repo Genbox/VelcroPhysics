@@ -113,7 +113,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -1052,21 +1052,29 @@ namespace FarseerPhysics.Dynamics
         {
             Transform xf1 = new Transform();
             xf1.R.Set(Sweep.A0);
-            xf1.Position = Sweep.C0 - MathUtils.Multiply(ref xf1.R, ref Sweep.LocalCenter);
+
+            float vx = xf1.R.Col1.X * Sweep.LocalCenter.X + xf1.R.Col2.X * Sweep.LocalCenter.Y;
+            float vy = xf1.R.Col1.Y * Sweep.LocalCenter.X + xf1.R.Col2.Y * Sweep.LocalCenter.Y;
+
+            xf1.Position.X = Sweep.C0.X - vx;
+            xf1.Position.Y = Sweep.C0.Y - vy;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
-            foreach (Fixture f in FixtureList)
+            for (int i = 0; i < FixtureList.Count; i++)
             {
-                f.Synchronize(broadPhase, ref xf1, ref Xf);
+                FixtureList[i].Synchronize(broadPhase, ref xf1, ref Xf);
             }
         }
 
         internal void SynchronizeTransform()
         {
             Xf.R.Set(Sweep.A);
-            Xf.Position = Sweep.C -
-                          new Vector2(Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y,
-                                      Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
+
+            float vx = Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y;
+            float vy = Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y;
+
+            Xf.Position.X = Sweep.C.X - vx;
+            Xf.Position.Y = Sweep.C.Y - vy;
         }
 
         /// <summary>

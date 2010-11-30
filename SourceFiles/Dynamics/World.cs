@@ -648,8 +648,9 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public void ClearForces()
         {
-            foreach (Body body in BodyList)
+            for (int i = 0; i < BodyList.Count; i++)
             {
+                Body body = BodyList[i];
                 body.Force = Vector2.Zero;
                 body.Torque = 0.0f;
             }
@@ -1004,13 +1005,10 @@ namespace FarseerPhysics.Dynamics
 
                         Debug.Assert(alpha0 < 1.0f);
 
-                        int indexA = c.ChildIndexA;
-                        int indexB = c.ChildIndexB;
-
                         // Compute the time of impact in interval [0, minTOI]
                         TOIInput input = new TOIInput();
-                        input.ProxyA.Set(fA.Shape, indexA);
-                        input.ProxyB.Set(fB.Shape, indexB);
+                        input.ProxyA.Set(fA.Shape, c.ChildIndexA);
+                        input.ProxyB.Set(fB.Shape, c.ChildIndexB);
                         input.SweepA = bA.Sweep;
                         input.SweepB = bB.Sweep;
                         input.TMax = 1.0f;
@@ -1117,9 +1115,7 @@ namespace FarseerPhysics.Dynamics
                             }
 
                             // Skip sensors.
-                            bool sensorA = contact.FixtureA.IsSensor;
-                            bool sensorB = contact.FixtureB.IsSensor;
-                            if (sensorA || sensorB)
+                            if (contact.FixtureA.IsSensor || contact.FixtureB.IsSensor)
                             {
                                 continue;
                             }
@@ -1293,7 +1289,7 @@ namespace FarseerPhysics.Dynamics
                     // Continue the query.
                     return true;
                 }, ref aabb);
-            
+
             return fixtures;
         }
     }
