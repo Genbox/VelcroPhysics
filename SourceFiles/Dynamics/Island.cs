@@ -191,11 +191,13 @@ namespace FarseerPhysics.Dynamics
 #endif
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    if (_joints[j].Enabled)
-                    {
-                        _joints[j].SolveVelocityConstraints(ref step);
-                        _joints[j].Validate(step.inv_dt);
-                    }
+                    Joint joint = _joints[j];
+
+                    if (!joint.Enabled)
+                        continue;
+
+                    joint.SolveVelocityConstraints(ref step);
+                    joint.Validate(step.inv_dt);
                 }
 
 #if (!SILVERLIGHT)
@@ -230,7 +232,7 @@ namespace FarseerPhysics.Dynamics
 
                 if (result > Settings.MaxTranslationSquared)
                 {
-                    float sq = (float) Math.Sqrt(result);
+                    float sq = (float)Math.Sqrt(result);
 
                     float ratio = Settings.MaxTranslation / sq;
                     b.LinearVelocityInternal.X *= ratio;
@@ -272,11 +274,12 @@ namespace FarseerPhysics.Dynamics
 #endif
                 for (int j = 0; j < JointCount; ++j)
                 {
-                    if (_joints[j].Enabled)
-                    {
-                        bool jointOkay = _joints[j].SolvePositionConstraints();
-                        jointsOkay = jointsOkay && jointOkay;
-                    }
+                    Joint joint = _joints[j];
+                    if (!joint.Enabled)
+                        continue;
+
+                    bool jointOkay = joint.SolvePositionConstraints();
+                    jointsOkay = jointsOkay && jointOkay;
                 }
 
 #if (!SILVERLIGHT)
@@ -370,8 +373,9 @@ namespace FarseerPhysics.Dynamics
             // Leap of faith to new safe state.
             for (int i = 0; i < BodyCount; ++i)
             {
-                Bodies[i].Sweep.A0 = Bodies[i].Sweep.A;
-                Bodies[i].Sweep.C0 = Bodies[i].Sweep.C;
+                Body body = Bodies[i];
+                body.Sweep.A0 = body.Sweep.A;
+                body.Sweep.C0 = body.Sweep.C;
             }
 
             // No warm starting is needed for TOI events because warm
@@ -398,12 +402,15 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                Vector2 translation = subStep.dt * b.LinearVelocity;
-                float dot = translation.X * translation.X + translation.Y * translation.Y;
+                float translationx = subStep.dt * b.LinearVelocity.X;
+                float translationy = subStep.dt * b.LinearVelocity.Y;
+                float dot = translationx * translationx + translationy * translationy;
                 if (dot > Settings.MaxTranslationSquared)
                 {
-                    float norm = 1f / (float) Math.Sqrt(dot);
-                    b.LinearVelocity = (Settings.MaxTranslation * subStep.inv_dt) * (translation * norm);
+                    float norm = 1f / (float)Math.Sqrt(dot);
+                    float value = Settings.MaxTranslation * subStep.inv_dt;
+                    b.LinearVelocityInternal.X = value * (translationx * norm);
+                    b.LinearVelocityInternal.Y = value * (translationy * norm);
                 }
 
                 float rotation = subStep.dt * b.AngularVelocity;
@@ -411,11 +418,11 @@ namespace FarseerPhysics.Dynamics
                 {
                     if (rotation < 0.0)
                     {
-                        b.AngularVelocity = -subStep.inv_dt * Settings.MaxRotation;
+                        b.AngularVelocityInternal = -subStep.inv_dt * Settings.MaxRotation;
                     }
                     else
                     {
-                        b.AngularVelocity = subStep.inv_dt * Settings.MaxRotation;
+                        b.AngularVelocityInternal = subStep.inv_dt * Settings.MaxRotation;
                     }
                 }
 
