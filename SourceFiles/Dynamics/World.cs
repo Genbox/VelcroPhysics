@@ -1176,7 +1176,7 @@ namespace FarseerPhysics.Dynamics
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
                 //subStep.warmStarting = false;
-                Island.SolveTOI(ref subStep, bA1, bB1);
+                Island.SolveTOI(ref subStep);
 
                 // Reset island flags and synchronize broad-phase proxies.
                 for (int i = 0; i < Island.BodyCount; ++i)
