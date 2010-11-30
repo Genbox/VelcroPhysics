@@ -99,20 +99,21 @@ namespace FarseerPhysics.Dynamics
                 Body b = Bodies[i];
 
                 if (b.BodyType != BodyType.Dynamic)
-                {
                     continue;
-                }
 
                 // Integrate velocities.
                 // FPE 3 only - Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
-                    b.LinearVelocityInternal += step.dt * (b.InvMass * b.Force);
+                    b.LinearVelocityInternal.X += step.dt * (b.InvMass * b.Force.X);
+                    b.LinearVelocityInternal.Y += step.dt * (b.InvMass * b.Force.Y);
                     b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
                 }
                 else
                 {
-                    b.LinearVelocityInternal += step.dt * (gravity + b.InvMass * b.Force);
+                    b.LinearVelocityInternal.X += step.dt * (gravity.X + b.InvMass * b.Force.X);
+                    b.LinearVelocityInternal.Y += step.dt * (gravity.Y + b.InvMass * b.Force.Y);
+
                     b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
                 }
 
@@ -123,8 +124,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.LinearDamping, 0.0f, 1.0f);
-                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.AngularDamping, 0.0f, 1.0f);
+                b.LinearVelocityInternal *= Math.Max(0.0f, Math.Min(1.0f - step.dt * b.LinearDamping, 1.0f));
+                b.AngularVelocityInternal *= Math.Max(0.0f, Math.Min(1.0f - step.dt * b.AngularDamping, 1.0f));
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
@@ -135,19 +136,16 @@ namespace FarseerPhysics.Dynamics
                 Fixture fixtureB = _contacts[i2].FixtureB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-                bool nonStatic = bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static;
-                if (nonStatic)
-                {
-                    ++i1;
 
-                    //TODO: Only swap if they are not the same? see http://code.google.com/p/box2d/issues/detail?id=162
-                    //if (i1 != i2)
-                    MathUtils.Swap(ref _contacts[i1], ref _contacts[i2]);
+                if (!(bodyA.BodyType != BodyType.Static && bodyB.BodyType != BodyType.Static))
+                    continue;
 
-                    //Contact temp = _contacts[i1];
-                    //_contacts[i1] = _contacts[i2];
-                    //_contacts[i2] = temp;
-                }
+                ++i1;
+
+                //TODO: Only swap if they are not the same? see http://code.google.com/p/box2d/issues/detail?id=162
+                Contact tmp = _contacts[i1];
+                _contacts[i1] = _contacts[i2];
+                _contacts[i2] = tmp;
             }
 
             // Initialize velocity constraints.
@@ -159,7 +157,7 @@ namespace FarseerPhysics.Dynamics
                 _contactSolver.WarmStart();
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Start();
@@ -172,7 +170,7 @@ namespace FarseerPhysics.Dynamics
                 if (_joints[i].Enabled)
                     _joints[i].InitVelocityConstraints(ref step);
             }
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
             {
                 _tmpTime += _watch.ElapsedTicks;
@@ -187,7 +185,7 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
                 if (Settings.EnableDiagnostics)
                     _watch.Start();
 #endif
@@ -200,7 +198,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
+#if (!SILVERLIGHT)
                 if (Settings.EnableDiagnostics)
                 {
                     _watch.Stop();
@@ -353,7 +351,7 @@ namespace FarseerPhysics.Dynamics
             const float kTOIBaumgarte = 0.75f;
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
             {
-                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(kTOIBaumgarte, bodyA, bodyB);
+                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(kTOIBaumgarte,bodyA,bodyB);
                 if (contactsOkay)
                 {
                     break;
