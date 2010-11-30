@@ -147,34 +147,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 return;
             }
 
-            // Make a small box.
-            AABB aabb;
-            Vector2 d = new Vector2(0.001f, 0.001f);
-            aabb.LowerBound = p - d;
-            aabb.UpperBound = p + d;
-
-            Fixture savedFixture = null;
-
-            // Query the world for overlapping shapes.
-            World.QueryAABB(
-                fixture =>
-                    {
-                        Body body = fixture.Body;
-                        if (body.BodyType == BodyType.Dynamic)
-                        {
-                            bool inside = fixture.TestPoint(ref p);
-                            if (inside)
-                            {
-                                savedFixture = fixture;
-
-                                // We are done, terminate the query.
-                                return false;
-                            }
-                        }
-
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+            Fixture savedFixture = World.TestPoint(p);
 
             if (savedFixture != null)
             {
