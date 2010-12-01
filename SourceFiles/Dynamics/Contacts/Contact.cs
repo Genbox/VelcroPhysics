@@ -29,6 +29,7 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Contacts
 {
@@ -210,15 +211,14 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// <summary>
         /// Gets the world manifold.
         /// </summary>
-        /// <param name="worldManifold">The world manifold.</param>
-        public void GetWorldManifold(out WorldManifold worldManifold)
+        public void GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points)
         {
             Body bodyA = FixtureA.Body;
             Body bodyB = FixtureB.Body;
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
-            worldManifold = new WorldManifold(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius);
+            Collision.Collision.GetWorldManifold(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius, out normal, out points);
         }
 
         /// <summary>
