@@ -148,6 +148,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 cc.NormalMass.SetZero();
             }
         }
+        private FixedArray2<Vector2> points;
+        private Vector2 normal;
 
         public void InitializeVelocityConstraints()
         {
@@ -168,18 +170,17 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 Debug.Assert(manifold.PointCount > 0);
 
-                WorldManifold worldManifold = new WorldManifold(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf, radiusB);
-
-                cc.Normal = worldManifold.Normal;
+                Collision.Collision.GetWorldManifold(ref manifold, ref bodyA.Xf, radiusA, ref bodyB.Xf, radiusB, out normal, out points);
+                cc.Normal = normal;
                 Vector2 tangent = new Vector2(cc.Normal.Y, -cc.Normal.X);
 
                 for (int j = 0; j < cc.PointCount; ++j)
                 {
                     ContactConstraintPoint ccp = cc.Points[j];
 
-                    ccp.rA = worldManifold.Points[j] - bodyA.Sweep.C;
-                    ccp.rB = worldManifold.Points[j] - bodyB.Sweep.C;
-          
+                    ccp.rA = points[j] - bodyA.Sweep.C;
+                    ccp.rB = points[j] - bodyB.Sweep.C;
+
                     float rnA = ccp.rA.X * cc.Normal.Y - ccp.rA.Y * cc.Normal.X;
                     float rnB = ccp.rB.X * cc.Normal.Y - ccp.rB.Y * cc.Normal.X;
                     rnA *= rnA;
@@ -192,7 +193,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                     float rtA = ccp.rA.X * tangent.Y - ccp.rA.Y * tangent.X;
                     float rtB = ccp.rB.X * tangent.Y - ccp.rB.Y * tangent.X;
-      
+
                     rtA *= rtA;
                     rtB *= rtB;
                     float kTangent = bodyA.InvMass + bodyB.InvMass + bodyA.InvI * rtA + bodyB.InvI * rtB;

@@ -78,8 +78,9 @@ namespace FarseerPhysics.DebugViewSilverlight
                 FixedArray2<PointState> state1, state2;
                 Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
-                WorldManifold worldManifold;
-                contact.GetWorldManifold(out worldManifold);
+                Vector2 normal;
+                FixedArray2<Vector2> points;
+                contact.GetWorldManifold(out normal, out points);
 
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
@@ -88,8 +89,8 @@ namespace FarseerPhysics.DebugViewSilverlight
                         _points[i] = new ContactPoint();
                     }
                     ContactPoint cp = _points[_pointCount];
-                    cp.Position = worldManifold.Points[i];
-                    cp.Normal = worldManifold.Normal;
+                    cp.Position = points[i];
+                    cp.Normal = normal;
                     cp.State = state2[i];
                     _points[_pointCount] = cp;
                     ++_pointCount;

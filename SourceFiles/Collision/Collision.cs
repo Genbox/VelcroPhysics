@@ -161,101 +161,6 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// This is used to compute the current state of a contact manifold.
-    /// </summary>
-    public struct WorldManifold
-    {
-        /// <summary>
-        /// world vector pointing from A to B
-        /// </summary>
-        public Vector2 Normal;
-
-        /// <summary>
-        /// world contact point (point of intersection)
-        /// </summary>
-        public FixedArray2<Vector2> Points;
-
-        /// <summary>
-        /// Evaluate the manifold with supplied transforms. This assumes
-        /// modest motion from the original state. This does not change the
-        /// point count, impulses, etc. The radii must come from the Shapes
-        /// that generated the manifold.
-        /// </summary>
-        /// <param name="manifold">The manifold.</param>
-        /// <param name="transformA">The transform for A.</param>
-        /// <param name="radiusA">The radius for A.</param>
-        /// <param name="transformB">The transform for B.</param>
-        /// <param name="radiusB">The radius for B.</param>
-        public WorldManifold(ref Manifold manifold,
-                             ref Transform transformA, float radiusA,
-                             ref Transform transformB, float radiusB)
-        {
-            Points = new FixedArray2<Vector2>();
-
-            if (manifold.PointCount == 0)
-            {
-                Normal = Vector2.UnitY;
-                return;
-            }
-
-            switch (manifold.Type)
-            {
-                case ManifoldType.Circles:
-                    {
-                        Vector2 pointA = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
-                        Vector2 pointB = MathUtils.Multiply(ref transformB, manifold.Points[0].LocalPoint);
-                        Normal = new Vector2(1.0f, 0.0f);
-                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
-                        {
-                            Normal = pointB - pointA;
-                            Normal.Normalize();
-                        }
-
-                        Vector2 cA = pointA + radiusA * Normal;
-                        Vector2 cB = pointB - radiusB * Normal;
-                        Points[0] = 0.5f * (cA + cB);
-                    }
-                    break;
-
-                case ManifoldType.FaceA:
-                    {
-                        Normal = MathUtils.Multiply(ref transformA.R, manifold.LocalNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref transformA, manifold.LocalPoint);
-
-                        for (int i = 0; i < manifold.PointCount; ++i)
-                        {
-                            Vector2 clipPoint = MathUtils.Multiply(ref transformB, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
-                            Vector2 cB = clipPoint - radiusB * Normal;
-                            Points[i] = 0.5f * (cA + cB);
-                        }
-                    }
-                    break;
-
-                case ManifoldType.FaceB:
-                    {
-                        Normal = MathUtils.Multiply(ref transformB.R, manifold.LocalNormal);
-                        Vector2 planePoint = MathUtils.Multiply(ref transformB, manifold.LocalPoint);
-
-                        for (int i = 0; i < manifold.PointCount; ++i)
-                        {
-                            Vector2 clipPoint = MathUtils.Multiply(ref transformA, manifold.Points[i].LocalPoint);
-                            Vector2 cA = clipPoint - radiusA * Normal;
-                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, Normal)) * Normal;
-                            Points[i] = 0.5f * (cA + cB);
-                        }
-                        // Ensure normal points from A to B.
-                        Normal *= -1;
-                    }
-                    break;
-                default:
-                    Normal = Vector2.UnitY;
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
     /// This is used for determining the state of contact points.
     /// </summary>
     public enum PointState
@@ -616,6 +521,143 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
+        /// <summary>
+        /// Evaluate the manifold with supplied transforms. This assumes
+        /// modest motion from the original state. This does not change the
+        /// point count, impulses, etc. The radii must come from the Shapes
+        /// that generated the manifold.
+        /// </summary>
+        /// <param name="manifold">The manifold.</param>
+        /// <param name="transformA">The transform for A.</param>
+        /// <param name="radiusA">The radius for A.</param>
+        /// <param name="transformB">The transform for B.</param>
+        /// <param name="radiusB">The radius for B.</param>
+        /// <param name="normal">World vector pointing from A to B</param>
+        /// <param name="points">Torld contact point (point of intersection).</param>
+        public static void GetWorldManifold(ref Manifold manifold,
+                             ref Transform transformA, float radiusA,
+                             ref Transform transformB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points)
+        {
+            points = new FixedArray2<Vector2>();
+            normal = Vector2.Zero;
+
+            if (manifold.PointCount == 0)
+            {
+                normal = Vector2.UnitY;
+                return;
+            }
+
+            switch (manifold.Type)
+            {
+                case ManifoldType.Circles:
+                    {
+                        Vector2 tmp = manifold.Points[0].LocalPoint;
+                        float pointAx = transformA.Position.X + transformA.R.Col1.X * manifold.LocalPoint.X +
+                                        transformA.R.Col2.X * manifold.LocalPoint.Y;
+                        
+                        float pointAy = transformA.Position.Y + transformA.R.Col1.Y * manifold.LocalPoint.X +
+                                        transformA.R.Col2.Y * manifold.LocalPoint.Y;
+
+                        float pointBx = transformB.Position.X + transformB.R.Col1.X * tmp.X +
+                                        transformB.R.Col2.X * tmp.Y;
+
+                        float pointBy = transformB.Position.Y + transformB.R.Col1.Y * tmp.X +
+                                        transformB.R.Col2.Y * tmp.Y;
+                        
+                        normal.X = 1;
+                        normal.Y = 0;
+
+                        float result = (pointAx - pointBx) * (pointAx - pointBx) + (pointAy - pointBy) * (pointAy - pointBy);
+                        if (result > Settings.Epsilon * Settings.Epsilon)
+                        {
+                            float tmpNormalx = pointBx - pointAx;
+                            float tmpNormaly = pointBy - pointAy;
+                            float factor = 1f / (float)Math.Sqrt(tmpNormalx * tmpNormalx + tmpNormaly * tmpNormaly);
+                            normal.X = tmpNormalx * factor;
+                            normal.Y = tmpNormaly * factor;
+                        }
+
+                        Vector2 c = Vector2.Zero;
+                        c.X = (pointAx + radiusA * normal.X) + (pointBx - radiusB * normal.X);
+                        c.Y = (pointAy + radiusA * normal.Y) + (pointBy - radiusB * normal.Y);
+
+                        points[0] = 0.5f * c;
+                    }
+                    break;
+
+                case ManifoldType.FaceA:
+                    {
+                        normal.X = transformA.R.Col1.X * manifold.LocalNormal.X + transformA.R.Col2.X * manifold.LocalNormal.Y;
+                        normal.Y = transformA.R.Col1.Y * manifold.LocalNormal.X +
+                                   transformA.R.Col2.Y * manifold.LocalNormal.Y;
+
+                        float planePointx = transformA.Position.X + transformA.R.Col1.X * manifold.LocalPoint.X +
+                                            transformA.R.Col2.X * manifold.LocalPoint.Y;
+
+                        float planePointy = transformA.Position.Y + transformA.R.Col1.Y * manifold.LocalPoint.X +
+                                            transformA.R.Col2.Y * manifold.LocalPoint.Y;
+
+                        for (int i = 0; i < manifold.PointCount; ++i)
+                        {
+                            Vector2 tmp = manifold.Points[i].LocalPoint;
+
+                            float clipPointx = transformB.Position.X + transformB.R.Col1.X * tmp.X +
+                                               transformB.R.Col2.X * tmp.Y;
+
+                            float clipPointy = transformB.Position.Y + transformB.R.Col1.Y * tmp.X +
+                                               transformB.R.Col2.Y * tmp.Y;
+
+                            float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
+
+                            Vector2 c = Vector2.Zero;
+                            c.X = (clipPointx + (radiusA - value) * normal.X) + (clipPointx - radiusB * normal.X);
+                            c.Y = (clipPointy + (radiusA - value) * normal.Y) + (clipPointy - radiusB * normal.Y);
+
+                            points[i] = 0.5f * c;
+                        }
+                    }
+                    break;
+
+                case ManifoldType.FaceB:
+                    {
+                        normal.X = transformB.R.Col1.X * manifold.LocalNormal.X + transformB.R.Col2.X * manifold.LocalNormal.Y;
+                        normal.Y = transformB.R.Col1.Y * manifold.LocalNormal.X +
+                                   transformB.R.Col2.Y * manifold.LocalNormal.Y;
+
+                        float planePointx = transformB.Position.X + transformB.R.Col1.X * manifold.LocalPoint.X +
+                                            transformB.R.Col2.X * manifold.LocalPoint.Y;
+
+                        float planePointy = transformB.Position.Y + transformB.R.Col1.Y * manifold.LocalPoint.X +
+                                            transformB.R.Col2.Y * manifold.LocalPoint.Y;
+
+                        for (int i = 0; i < manifold.PointCount; ++i)
+                        {
+                            Vector2 tmp = manifold.Points[i].LocalPoint;
+
+                            float clipPointx = transformA.Position.X + transformA.R.Col1.X * tmp.X +
+                                               transformA.R.Col2.X * tmp.Y;
+
+                            float clipPointy = transformA.Position.Y + transformA.R.Col1.Y * tmp.X +
+                                               transformA.R.Col2.Y * tmp.Y;
+
+                            float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
+
+                            Vector2 c = Vector2.Zero;
+                            c.X = (clipPointx - radiusA * normal.X) + (clipPointx + (radiusB - value) * normal.X);
+                            c.Y = (clipPointy - radiusA * normal.Y) + (clipPointy + (radiusB - value) * normal.Y);
+
+                            points[i] = 0.5f * c;
+                        }
+                        // Ensure normal points from A to B.
+                        normal *= -1;
+                    }
+                    break;
+                default:
+                    normal = Vector2.UnitY;
+                    break;
+            }
+        }
+
         private static FatEdge _edgeA;
 
         private static EPProxy _proxyA = new EPProxy();
