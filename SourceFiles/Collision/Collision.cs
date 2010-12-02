@@ -717,15 +717,13 @@ namespace FarseerPhysics.Collision
         {
             manifold.PointCount = 0;
 
-            Vector2 pA = MathUtils.Multiply(ref xfA, ref circleA.Position);
-            Vector2 pB = MathUtils.Multiply(ref xfB, ref circleB.Position);
+            float pAx = xfA.Position.X + xfA.R.Col1.X * circleA.Position.X + xfA.R.Col2.X * circleA.Position.Y;
+            float pAy = xfA.Position.Y + xfA.R.Col1.Y * circleA.Position.X + xfA.R.Col2.Y * circleA.Position.Y;
+            float pBx = xfB.Position.X + xfB.R.Col1.X * circleB.Position.X + xfB.R.Col2.X * circleB.Position.Y;
+            float pBy = xfB.Position.Y + xfB.R.Col1.Y * circleB.Position.X + xfB.R.Col2.Y * circleB.Position.Y;
 
-            Vector2 d = pB - pA;
-            float distSqr;
-            Vector2.Dot(ref d, ref d, out distSqr);
-            float rA = circleA.Radius;
-            float rB = circleB.Radius;
-            float radius = rA + rB;
+            float distSqr = (pBx - pAx) * (pBx - pAx) + (pBy - pAy) * (pBy - pAy);
+            float radius = circleA.Radius + circleB.Radius;
             if (distSqr > radius * radius)
             {
                 return;
@@ -759,8 +757,8 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vector2 c = MathUtils.Multiply(ref transformB, ref circleB.Position);
-            Vector2 cLocal = MathUtils.MultiplyT(ref transformA, ref c);
+            Vector2 c = new Vector2(transformB.Position.X + transformB.R.Col1.X * circleB.Position.X + transformB.R.Col2.X * circleB.Position.Y, transformB.Position.Y + transformB.R.Col1.Y * circleB.Position.X + transformB.R.Col2.Y * circleB.Position.Y);
+            Vector2 cLocal = new Vector2((c.X - transformA.Position.X) * transformA.R.Col1.X + (c.Y - transformA.Position.Y) * transformA.R.Col1.Y, (c.X - transformA.Position.X) * transformA.R.Col2.X + (c.Y - transformA.Position.Y) * transformA.R.Col2.Y);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -770,7 +768,9 @@ namespace FarseerPhysics.Collision
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                float s = Vector2.Dot(polygonA.Normals[i], cLocal - polygonA.Vertices[i]);
+                Vector2 value1 = polygonA.Normals[i];
+                Vector2 value2 = cLocal - polygonA.Vertices[i];
+                float s = value1.X * value2.X + value1.Y * value2.Y;
 
                 if (s > radius)
                 {
@@ -810,11 +810,13 @@ namespace FarseerPhysics.Collision
             }
 
             // Compute barycentric coordinates
-            float u1 = Vector2.Dot(cLocal - v1, v2 - v1);
-            float u2 = Vector2.Dot(cLocal - v2, v1 - v2);
+            float u1 = (cLocal.X - v1.X) * (v2.X - v1.X) + (cLocal.Y - v1.Y) * (v2.Y - v1.Y);
+            float u2 = (cLocal.X - v2.X) * (v1.X - v2.X) + (cLocal.Y - v2.Y) * (v1.Y - v2.Y);
+            
             if (u1 <= 0.0f)
             {
-                if (Vector2.DistanceSquared(cLocal, v1) > radius * radius)
+                float r = (cLocal.X - v1.X) * (cLocal.X - v1.X) + (cLocal.Y - v1.Y) * (cLocal.Y - v1.Y);
+                if (r > radius * radius)
                 {
                     return;
                 }
@@ -822,7 +824,9 @@ namespace FarseerPhysics.Collision
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
                 manifold.LocalNormal = cLocal - v1;
-                manifold.LocalNormal.Normalize();
+                float factor = 1f / (float)Math.Sqrt(manifold.LocalNormal.X * manifold.LocalNormal.X + manifold.LocalNormal.Y * manifold.LocalNormal.Y);
+                manifold.LocalNormal.X = manifold.LocalNormal.X * factor;
+                manifold.LocalNormal.Y = manifold.LocalNormal.Y * factor;
                 manifold.LocalPoint = v1;
 
                 ManifoldPoint p0b = manifold.Points[0];
@@ -834,7 +838,8 @@ namespace FarseerPhysics.Collision
             }
             else if (u2 <= 0.0f)
             {
-                if (Vector2.DistanceSquared(cLocal, v2) > radius * radius)
+                float r = (cLocal.X - v2.X) * (cLocal.X - v2.X) + (cLocal.Y - v2.Y) * (cLocal.Y - v2.Y);
+                if (r > radius * radius)
                 {
                     return;
                 }
@@ -842,7 +847,9 @@ namespace FarseerPhysics.Collision
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
                 manifold.LocalNormal = cLocal - v2;
-                manifold.LocalNormal.Normalize();
+                float factor = 1f / (float)Math.Sqrt(manifold.LocalNormal.X * manifold.LocalNormal.X + manifold.LocalNormal.Y * manifold.LocalNormal.Y);
+                manifold.LocalNormal.X = manifold.LocalNormal.X * factor;
+                manifold.LocalNormal.Y = manifold.LocalNormal.Y * factor;
                 manifold.LocalPoint = v2;
 
                 ManifoldPoint p0c = manifold.Points[0];
@@ -855,7 +862,9 @@ namespace FarseerPhysics.Collision
             else
             {
                 Vector2 faceCenter = 0.5f * (v1 + v2);
-                float separation2 = Vector2.Dot(cLocal - faceCenter, polygonA.Normals[vertIndex1]);
+                Vector2 value1 = cLocal - faceCenter;
+                Vector2 value2 = polygonA.Normals[vertIndex1];
+                float separation2 = value1.X * value2.X + value1.Y * value2.Y;
                 if (separation2 > radius)
                 {
                     return;
