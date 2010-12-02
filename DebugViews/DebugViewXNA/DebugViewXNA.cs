@@ -41,6 +41,12 @@ namespace FarseerPhysics.DebugViews
         public Color TextColor = Color.White;
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
+        
+#if (XBOX)
+        public const int CircleSegments = 16;
+#else
+        public const int CircleSegments = 32;
+#endif
 
         public DebugViewXNA(World world)
             : base(world)
@@ -517,11 +523,10 @@ namespace FarseerPhysics.DebugViews
 
         public void DrawCircle(Vector2 center, float radius, Color color)
         {
-            const int segments = 32;
-            const double increment = Math.PI * 2.0 / segments;
+            const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 
-            for (int i = 0; i < segments; i++)
+            for (int i = 0; i < CircleSegments; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
@@ -546,8 +551,7 @@ namespace FarseerPhysics.DebugViews
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
         {
-            const int segments = 32;
-            const double increment = Math.PI * 2.0 / segments;
+            const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 
             Color colorFill = color * 0.5f;
@@ -555,7 +559,7 @@ namespace FarseerPhysics.DebugViews
             Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
 
-            for (int i = 1; i < segments - 1; i++)
+            for (int i = 1; i < CircleSegments - 1; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
