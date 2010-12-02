@@ -352,7 +352,14 @@ namespace FarseerPhysics.Common
                     det = 1.0f / det;
                 }
 
-                return new Mat22(new Vector2(det * d, -det * c), new Vector2(-det * b, det * a));
+                Mat22 result = new Mat22();
+                result.Col1.X = det * d;
+                result.Col1.Y = -det * c;
+
+                result.Col2.X = -det * b;
+                result.Col2.Y = det * a;
+
+                return result;
             }
         }
 
@@ -423,7 +430,8 @@ namespace FarseerPhysics.Common
 
         public static void Add(ref Mat22 A, ref Mat22 B, out Mat22 R)
         {
-            R = new Mat22(A.Col1 + B.Col1, A.Col2 + B.Col2);
+            R.Col1 = A.Col1 + B.Col1;
+            R.Col2 = A.Col2 + B.Col2;
         }
     }
 
