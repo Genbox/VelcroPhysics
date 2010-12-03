@@ -59,8 +59,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 Settings.EnableDiagnostics = DebugViewEnabled;
             }
 
-            if (input.IsNewButtonPress(Buttons.B))
-            {
+            PlayerIndex playerIndex;
+            if (input.IsMenuCancel(input.DefaultPlayerIndex, out playerIndex))            {
                 ScreenManager.RemoveScreen(this);
             }
 
@@ -74,11 +74,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     DebugView.AppendFlags(DebugViewFlags.DebugPanel);
                 else
                     DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
-            }
-
-            if (input.IsNewKeyPress(Keys.Escape))
-            {
-                ScreenManager.RemoveScreen(this);
             }
 
             if (World != null)

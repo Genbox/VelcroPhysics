@@ -18,11 +18,15 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Window.Title = "Farseer Physics Engine Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
 
+#if !WINDOWS_PHONE
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
-
+#else
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 480;
+#endif
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
