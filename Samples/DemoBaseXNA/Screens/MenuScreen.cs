@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.DemoBaseXNA.Screens
 {
@@ -48,6 +49,31 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             get { return _menuEntries; }
         }
 
+#if !XBOX
+        /// <summary>
+        /// Returns the index of the menu entry at the position of the given mouse state.
+        /// </summary>
+        /// <param name="state">Mouse state to use for the test</param>
+        /// <returns>Index of menu entry if valid, -1 otherwise</returns>
+        private int GetMenuEntryAt(ref MouseState state)
+        {
+            Point pos = new Point(state.X, state.Y);
+            int index = 0;
+            foreach (MenuEntry entry in _menuEntries)
+            {
+                float width = entry.GetWidth(this);
+                float height = entry.GetHeight(this);
+                Rectangle rect = new Rectangle((int)entry.Position.X, (int)(entry.Position.Y - (height * 0.5f)), (int)width, (int)height);
+                if (rect.Contains(pos))
+                {
+                    return index; 
+                }
+                ++index;
+            }
+            return -1;
+        }
+#endif
+
         /// <summary>
         /// Responds to user input, changing the selected entry and accepting
         /// or cancelling the menu.
@@ -71,6 +97,28 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 if (_selectedEntry >= _menuEntries.Count)
                     _selectedEntry = 0;
             }
+
+#if !XBOX
+            // Mouse or touch on a menu item
+            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                int index = GetMenuEntryAt(ref input.CurrentMouseState);
+                if (index > -1)
+                {
+                    _selectedEntry = index;
+                }
+            }
+
+            if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
+            {
+                int index = GetMenuEntryAt(ref input.LastMouseState);
+                if (index > -1)
+                {
+                    _selectedEntry = index;
+                    OnSelectEntry(_selectedEntry, input.DefaultPlayerIndex);
+                }
+            }
+#endif
 
             // Accept or cancel the menu? We pass in our ControllingPlayer, which may
             // either be null (to accept input from any player) or a specific index.
@@ -124,8 +172,11 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             float transitionOffset = (float) Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
+#if WINDOWS_PHONE
+            Vector2 position = new Vector2(0f, 125f);
+#else
             Vector2 position = new Vector2(0f, 175f);
-
+#endif
             // update each menu entry's location in turn
             for (int i = 0; i < _menuEntries.Count; i++)
             {

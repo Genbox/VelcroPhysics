@@ -44,6 +44,16 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             }
         }
 
+#if WINDOWS_PHONE
+        /// <summary>
+        /// Handler for when the user has cancelled the menu.
+        /// </summary>
+        protected override void OnCancel(PlayerIndex playerIndex)
+        {
+            ScreenManager.Game.Exit();
+        }
+#endif
+
         public void AddMainMenuItem(string name, GameScreen screen)
         {
             AddMainMenuItem(name, screen, false);

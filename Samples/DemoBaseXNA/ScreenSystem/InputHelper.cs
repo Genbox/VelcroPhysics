@@ -19,7 +19,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
     public class InputHelper
     {
+#if WINDOWS_PHONE
+        public const int MaxInputs = 1;
+#else
         public const int MaxInputs = 4;
+#endif
 
         public readonly KeyboardState[] CurrentKeyboardStates;
         public readonly GamePadState[] CurrentGamePadStates;
@@ -61,8 +65,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 LastKeyboardStates[i] = CurrentKeyboardStates[i];
                 LastGamePadStates[i] = CurrentGamePadStates[i];
 
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
-                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
+                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
+                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
 
 
                 // Keep track of whether a gamepad has ever been
@@ -72,7 +76,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     GamePadWasConnected[i] = true;
                 }
             }
-
+#if !XBOX
+            LastMouseState = CurrentMouseState;
+#endif
 #if WINDOWS_PHONE
             TouchState = TouchPanel.GetState();
             if (TouchState.Count > 0)
@@ -85,8 +91,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 CurrentMouseState = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             }
 #elif !XBOX
-            LastMouseState = CurrentMouseState;
-
             CurrentMouseState = Mouse.GetState();
 #endif
 
@@ -101,12 +105,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public GamePadState CurrentGamepadState
         {
-            get { return CurrentGamePadStates[(int) DefaultPlayerIndex]; }
+            get { return CurrentGamePadStates[(int)DefaultPlayerIndex]; }
         }
 
         public KeyboardState CurrentKeyboardState
         {
-            get { return CurrentKeyboardStates[(int) DefaultPlayerIndex]; }
+            get { return CurrentKeyboardStates[(int)DefaultPlayerIndex]; }
         }
 
         /// <summary>
@@ -123,18 +127,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int) playerIndex;
+                int i = (int)playerIndex;
 
                 return (CurrentKeyboardStates[i].IsKeyDown(key) &&
                         LastKeyboardStates[i].IsKeyUp(key));
             }
             else
             {
+#if WINDOWS_PHONE
+                return IsNewKeyPress(key, PlayerIndex.One, out playerIndex);
+#else
                 // Accept input from any player.
                 return (IsNewKeyPress(key, PlayerIndex.One, out playerIndex) ||
                         IsNewKeyPress(key, PlayerIndex.Two, out playerIndex) ||
                         IsNewKeyPress(key, PlayerIndex.Three, out playerIndex) ||
                         IsNewKeyPress(key, PlayerIndex.Four, out playerIndex));
+#endif
             }
         }
 
@@ -157,18 +165,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int) playerIndex;
+                int i = (int)playerIndex;
 
                 return (CurrentGamePadStates[i].IsButtonDown(button) &&
                         LastGamePadStates[i].IsButtonUp(button));
             }
             else
             {
+#if WINDOWS_PHONE
+                return IsNewButtonPress(button, PlayerIndex.One, out playerIndex);
+#else
                 // Accept input from any player.
                 return (IsNewButtonPress(button, PlayerIndex.One, out playerIndex) ||
                         IsNewButtonPress(button, PlayerIndex.Two, out playerIndex) ||
                         IsNewButtonPress(button, PlayerIndex.Three, out playerIndex) ||
                         IsNewButtonPress(button, PlayerIndex.Four, out playerIndex));
+#endif
             }
         }
 
