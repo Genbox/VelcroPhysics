@@ -131,8 +131,6 @@ namespace FarseerPhysics.Dynamics
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
-            new DefaultContactFilter(this);
-
             Controllers = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
