@@ -83,9 +83,11 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
-    public delegate bool CollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
+    public delegate void AfterCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
 
-    public delegate void SeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
+    public delegate bool OnCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
+
+    public delegate void OnSeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
 
     /// <summary>
     /// A fixture is used to attach a Shape to a body for collision detection. A fixture
@@ -99,16 +101,21 @@ namespace FarseerPhysics.Dynamics
         private static int _fixtureIdCounter;
 
         /// <summary>
+        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
+        /// </summary>
+        public AfterCollisionEventHandler AfterCollision;
+
+        /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
         /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
         /// </summary>
-        public CollisionEventHandler OnCollision;
+        public OnCollisionEventHandler OnCollision;
 
         /// <summary>
         /// Fires when two shapes separate and a contact is removed between them.
         /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
         /// </summary>
-        public SeparationEventHandler OnSeparation;
+        public OnSeparationEventHandler OnSeparation;
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;

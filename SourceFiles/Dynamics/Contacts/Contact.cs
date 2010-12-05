@@ -361,13 +361,15 @@ namespace FarseerPhysics.Dynamics.Contacts
                 if (FixtureB.OnCollision != null)
                     Enabled = FixtureB.OnCollision(FixtureB, FixtureA, this);
 
+                //BeginContact can also return false and disable the contact
+                if (contactManager.BeginContact != null)
+                    Enabled = contactManager.BeginContact(this);
+
                 //if the user disabled the contact (needed to exclude it in TOI solver), we also need to mark
                 //it as not touching.
                 if (Enabled == false)
                     Flags &= ~ContactFlags.Touching;
 
-                if (contactManager.BeginContact != null)
-                    contactManager.BeginContact(this);
             }
 
             if (wasTouching && touching == false)

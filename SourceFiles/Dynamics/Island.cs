@@ -304,8 +304,7 @@ namespace FarseerPhysics.Dynamics
             }
 #endif
 
-            if (_contactManager.PostSolve != null)
-                Report(_contactSolver.Constraints);
+            Report(_contactSolver.Constraints);
 
             if (Settings.AllowSleep)
             {
@@ -437,8 +436,7 @@ namespace FarseerPhysics.Dynamics
                 // Note: shapes are synchronized later.
             }
 
-            if (_contactManager.PostSolve != null)
-                Report(_contactSolver.Constraints);
+            Report(_contactSolver.Constraints);
         }
 
         public void Add(Body body)
@@ -462,24 +460,24 @@ namespace FarseerPhysics.Dynamics
         private void Report(ContactConstraint[] constraints)
         {
             if (_contactManager == null)
-            {
                 return;
-            }
 
             for (int i = 0; i < ContactCount; ++i)
             {
                 Contact c = _contacts[i];
 
-                ContactConstraint cc = constraints[i];
+                if (c.FixtureA.AfterCollision != null)
+                    c.FixtureA.AfterCollision(c.FixtureA, c.FixtureB, c);
 
-                ContactImpulse impulse = new ContactImpulse();
-                for (int j = 0; j < cc.PointCount; ++j)
+                if (c.FixtureB.AfterCollision != null)
+                    c.FixtureB.AfterCollision(c.FixtureB, c.FixtureA, c);
+
+                if (_contactManager.PostSolve != null)
                 {
-                    impulse.NormalImpulses[j] = cc.Points[j].NormalImpulse;
-                    impulse.TangentImpulses[j] = cc.Points[j].TangentImpulse;
-                }
+                    ContactConstraint cc = constraints[i];
 
-                _contactManager.PostSolve(c, ref impulse);
+                    _contactManager.PostSolve(c, cc);
+                }
             }
         }
     }
