@@ -24,32 +24,37 @@
 */
 
 using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
 
 namespace FarseerPhysics.Dynamics
 {
-    public delegate void BroadphaseDelegate(ref FixtureProxy proxyA, ref FixtureProxy proxyB);
-
     public class ContactManager
     {
-        /// <summary>
-        /// Fires when a contact is created
-        /// </summary>
-        public BeginContactDelegate BeginContact;
-
         public BroadPhase BroadPhase = new BroadPhase();
 
         public int ContactCount;
 
+        public Contact ContactList;
+
+        /// <summary>
+        /// The filter used by the contact manager.
+        /// </summary>
         public CollisionFilterDelegate ContactFilter;
 
-        public Contact ContactList;
+        /// <summary>
+        /// Fires when a contact is created
+        /// </summary>
+        public BeginContactDelegate BeginContact;
 
         /// <summary>
         /// Fires when a contact is deleted
         /// </summary>
         public EndContactDelegate EndContact;
 
+        /// <summary>
+        /// Fires when the broadphase detects that two Fixtures are close to each other.
+        /// </summary>
         public BroadphaseDelegate OnBroadphaseCollision;
 
         /// <summary>
@@ -117,15 +122,21 @@ namespace FarseerPhysics.Dynamics
 
             // Does a joint override collision? Is at least one body dynamic?
             if (bodyB.ShouldCollide(bodyA) == false)
-            {
                 return;
-            }
+
+            //Check default filter
+            if (ShouldCollide(fixtureA, fixtureB) == false)
+                return;
 
             // Check user filtering.
             if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
-            {
                 return;
-            }
+
+            if (fixtureA.BeforeCollision != null && fixtureA.BeforeCollision(fixtureA, fixtureB) == false)
+                return;
+
+            if (fixtureB.BeforeCollision != null && fixtureB.BeforeCollision(fixtureB, fixtureA) == false)
+                return;
 
             // Call the factory.
             Contact c = Contact.Create(fixtureA, indexA, fixtureB, indexB);
@@ -277,6 +288,15 @@ namespace FarseerPhysics.Dynamics
                         continue;
                     }
 
+                    // Check default filtering
+                    if (ShouldCollide(fixtureA, fixtureB) == false)
+                    {
+                        Contact cNuke = c;
+                        c = cNuke.Next;
+                        Destroy(cNuke);
+                        continue;
+                    }
+
                     // Check user filtering.
                     if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                     {
@@ -308,6 +328,42 @@ namespace FarseerPhysics.Dynamics
                 c.Update(this);
                 c = c.Next;
             }
+        }
+
+        private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
+        {
+            if (Settings.UseFPECollisionCategories)
+            {
+                if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) &&
+                    fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
+                    return false;
+
+                if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) == CollisionCategory.None) &
+                    ((fixtureB.CollisionCategories & fixtureA.CollidesWith) == CollisionCategory.None))
+                    return false;
+
+                if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
+                    return false;
+
+                return true;
+            }
+
+            if (fixtureA.CollisionGroup == fixtureB.CollisionGroup && fixtureA.CollisionGroup != 0)
+            {
+                return fixtureA.CollisionGroup > 0;
+            }
+
+            bool collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 && (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
+
+            if (collide)
+            {
+                if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
+                {
+                    return false;
+                }
+            }
+
+            return collide;
         }
     }
 }

@@ -24,7 +24,6 @@
 */
 
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
@@ -68,47 +67,13 @@ namespace FarseerPhysics.Dynamics
 
     public delegate bool CollisionFilterDelegate(Fixture fixtureA, Fixture fixtureB);
 
-    public sealed class DefaultContactFilter
-    {
-        public DefaultContactFilter(World world)
-        {
-            world.ContactManager.ContactFilter += ShouldCollide;
-        }
+    public delegate void BroadphaseDelegate(ref FixtureProxy proxyA, ref FixtureProxy proxyB);
 
-        private static bool ShouldCollide(Fixture fixtureA, Fixture fixtureB)
-        {
-            if (Settings.UseFPECollisionCategories)
-            {
-                if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) &&
-                    fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
-                    return false;
+    public delegate bool BeforeCollisionEventHandler(Fixture fixtureA, Fixture fixtureB);
 
-                if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) == CollisionCategory.None) &
-                    ((fixtureB.CollisionCategories & fixtureA.CollidesWith) == CollisionCategory.None))
-                    return false;
+    public delegate bool OnCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
 
-                if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
-                    return false;
+    public delegate void AfterCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
 
-                return true;
-            }
-
-            if (fixtureA.CollisionGroup == fixtureB.CollisionGroup && fixtureA.CollisionGroup != 0)
-            {
-                return fixtureA.CollisionGroup > 0;
-            }
-
-            bool collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 && (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
-
-            if (collide)
-            {
-                if (fixtureA.IsFixtureIgnored(fixtureB) || fixtureB.IsFixtureIgnored(fixtureA))
-                {
-                    return false;
-                }
-            }
-
-            return collide;
-        }
-    }
+    public delegate void OnSeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
 }
