@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         // Implement contact listener.
-        protected override void BeginContact(Contact contact)
+        protected override bool BeginContact(Contact contact)
         {
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
@@ -91,6 +91,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _touching[(int)(fixtureA.Body.UserData)] = true;
             }
+
+            return true;
         }
 
         // Implement contact listener.

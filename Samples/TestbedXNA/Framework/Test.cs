@@ -214,8 +214,9 @@ namespace FarseerPhysics.TestBed.Framework
         }
 
         // Callbacks for derived classes.
-        protected virtual void BeginContact(Contact contact)
+        protected virtual bool BeginContact(Contact contact)
         {
+            return true;
         }
 
         protected virtual void EndContact(Contact contact)
@@ -226,7 +227,7 @@ namespace FarseerPhysics.TestBed.Framework
         {
         }
 
-        protected virtual void PostSolve(Contact contact, ref ContactImpulse impulse)
+        protected virtual void PostSolve(Contact contact, ContactConstraint impulse)
         {
         }
     }

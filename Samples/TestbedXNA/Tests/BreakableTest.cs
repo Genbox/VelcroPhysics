@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        protected override void PostSolve(Contact contact, ref ContactImpulse impulse)
+        protected override void PostSolve(Contact contact, ContactConstraint impulse)
         {
             if (_broke)
             {
@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < manifold.PointCount; ++i)
             {
-                maxImpulse = Math.Max(maxImpulse, impulse.NormalImpulses[i]);
+                maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
             }
 
             if (maxImpulse > 40.0f)
