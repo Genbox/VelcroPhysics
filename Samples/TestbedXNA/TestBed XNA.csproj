@@ -120,6 +120,7 @@
     <Compile Include="Tests\ControllerTest.cs" />
     <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\BulletTest.cs" />
+    <Compile Include="Tests\WallHuggingTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
     <Compile Include="Tests\LockTest.cs" />
