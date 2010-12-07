@@ -31,6 +31,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
+                new TestEntry {Name = "EPCollider test", CreateFcn = EPColliderTest.Create},
+
                 //Original tests
                 new TestEntry {Name = "Rope Test", CreateFcn = RopeTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
@@ -55,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Body Types", CreateFcn = BodyTypesTest.Create},
                 new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
                 new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapes.Create},
-                new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
+                //new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
                 new TestEntry {Name = "Polygon Shapes", CreateFcn = PolyShapesTest.Create},
                 new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create},
