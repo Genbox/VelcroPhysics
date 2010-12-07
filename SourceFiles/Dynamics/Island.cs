@@ -153,7 +153,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Initialize velocity constraints.
-            _contactSolver.Reset(_contacts, ContactCount, step.dtRatio);
+            _contactSolver.Reset(_contacts, ContactCount, step.dtRatio, Settings.EnableWarmstarting);
             _contactSolver.InitializeVelocityConstraints();
 
             if (Settings.EnableWarmstarting)
@@ -351,7 +351,7 @@ namespace FarseerPhysics.Dynamics
 
         internal void SolveTOI(ref TimeStep subStep)
         {
-            _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio);
+            _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio, false);
 
             // Solve position constraints.
             const float kTOIBaumgarte = 0.75f;
@@ -401,8 +401,8 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                float translationx = subStep.dt * b.LinearVelocity.X;
-                float translationy = subStep.dt * b.LinearVelocity.Y;
+                float translationx = subStep.dt * b.LinearVelocityInternal.X;
+                float translationy = subStep.dt * b.LinearVelocityInternal.Y;
                 float dot = translationx * translationx + translationy * translationy;
                 if (dot > Settings.MaxTranslationSquared)
                 {

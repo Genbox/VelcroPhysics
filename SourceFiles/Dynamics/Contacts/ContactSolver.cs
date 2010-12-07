@@ -77,7 +77,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         private int _constraintCount; // collection can be bigger.
         private Contact[] _contacts;
 
-        public void Reset(Contact[] contacts, int contactCount, float impulseRatio)
+        public void Reset(Contact[] contacts, int contactCount, float impulseRatio, bool warmstarting)
         {
             _contacts = contacts;
 
@@ -131,8 +131,16 @@ namespace FarseerPhysics.Dynamics.Contacts
                     ManifoldPoint cp = manifold.Points[j];
                     ContactConstraintPoint ccp = cc.Points[j];
 
-                    ccp.NormalImpulse = impulseRatio * cp.NormalImpulse;
-                    ccp.TangentImpulse = impulseRatio * cp.TangentImpulse;
+                    if (warmstarting)
+                    {
+                        ccp.NormalImpulse = impulseRatio * cp.NormalImpulse;
+                        ccp.TangentImpulse = impulseRatio * cp.TangentImpulse;
+                    }
+                    else
+                    {
+                        ccp.NormalImpulse = 0.0f;
+                        ccp.TangentImpulse = 0.0f;
+                    }
 
                     ccp.LocalPoint = cp.LocalPoint;
                     ccp.rA = Vector2.Zero;
@@ -293,7 +301,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 float tangentx = c.Normal.Y;
                 float tangenty = -c.Normal.X;
-
+                
                 float friction = c.Friction;
 
                 Debug.Assert(c.PointCount == 1 || c.PointCount == 2);
@@ -302,7 +310,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                 for (int j = 0; j < c.PointCount; ++j)
                 {
                     ContactConstraintPoint ccp = c.Points[j];
-
                     float lambda = ccp.TangentMass * -((c.BodyB.LinearVelocityInternal.X + (-wB * ccp.rB.Y) - c.BodyA.LinearVelocityInternal.X - (-wA * ccp.rA.Y)) * tangentx + (c.BodyB.LinearVelocityInternal.Y + (wB * ccp.rB.X) - c.BodyA.LinearVelocityInternal.Y - (wA * ccp.rA.X)) * tangenty);
 
                     // MathUtils.Clamp the accumulated force
@@ -723,6 +730,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 point;
                     float separation;
 
+                    //FPE 3 only: Used to be PositionSolverManifold
                     Solve(c, j, out normal, out point, out separation);
 
                     float rax = point.X - bodyA.Sweep.C.X;
@@ -751,12 +759,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                     bodyA.Sweep.C.X -= invMassA * px;
                     bodyA.Sweep.C.Y -= invMassA * py;
                     bodyA.Sweep.A -= invIA * (rax * py - ray * px);
+                    bodyA.SynchronizeTransform();
 
                     bodyB.Sweep.C.X += invMassB * px;
                     bodyB.Sweep.C.Y += invMassB * py;
                     bodyB.Sweep.A += invIB * (rbx * py - rby * px);
-
-                    bodyA.SynchronizeTransform();
                     bodyB.SynchronizeTransform();
                 }
             }
