@@ -31,8 +31,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
-                new TestEntry {Name = "Wallhugging test", CreateFcn = WallHuggingExample.Create},
-
                 //Original tests
                 new TestEntry {Name = "Rope Test", CreateFcn = RopeTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},
@@ -91,6 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Explosion", CreateFcn = ExplosionTest.Create},
                 new TestEntry {Name = "Lock Test", CreateFcn = LockTest.Create},
+                new TestEntry {Name = "Sphere benchmark test", CreateFcn = SphereBenchmarkTest.Create},
 
                 // Forces tests
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
