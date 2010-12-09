@@ -1611,7 +1611,7 @@ namespace FarseerPhysics.Collision
 
             cTemp.V = proxy2.Vertices[i2];
             cTemp.ID.Features.IndexA = (byte)edge1;
-            cTemp.ID.Features.IndexB = (byte)i1;
+            cTemp.ID.Features.IndexB = (byte)i2;
             cTemp.ID.Features.TypeA = (byte)ContactFeatureType.Face;
             cTemp.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
             c[1] = cTemp;
