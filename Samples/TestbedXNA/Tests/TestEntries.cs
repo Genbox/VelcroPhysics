@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Body Types", CreateFcn = BodyTypesTest.Create},
                 new TestEntry {Name = "Prismatic", CreateFcn = PrismaticTest.Create},
                 new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapes.Create},
-                //new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
+                new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
                 new TestEntry {Name = "Polygon Shapes", CreateFcn = PolyShapesTest.Create},
                 new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "Cantilever", CreateFcn = CantileverTest.Create},
@@ -89,12 +89,12 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Explosion", CreateFcn = ExplosionTest.Create},
                 new TestEntry {Name = "Lock Test", CreateFcn = LockTest.Create},
-                new TestEntry {Name = "Sphere benchmark test", CreateFcn = SphereBenchmarkTest.Create},
+                new TestEntry {Name = "Sphere benchmark", CreateFcn = SphereBenchmarkTest.Create},
+                new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmark.Create},
 
                 // Forces tests
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}
-
             };
     }
 }
