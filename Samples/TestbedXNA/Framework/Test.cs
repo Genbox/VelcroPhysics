@@ -101,6 +101,7 @@ namespace FarseerPhysics.TestBed.Framework
         public virtual void Initialize()
         {
             DebugView = new DebugViewXNA(World);
+            DebugView.LoadContent(GameInstance.GraphicsDevice, GameInstance.Content);
         }
 
         protected virtual void JointRemoved(Joint joint)

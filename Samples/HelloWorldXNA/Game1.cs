@@ -35,7 +35,7 @@ namespace FarseerPhysics.HelloWorld
         /// </summary>
         protected override void LoadContent()
         {
-            DebugViewXNA.LoadContent(_graphics.GraphicsDevice, Content);
+            _debugView.LoadContent(_graphics.GraphicsDevice, Content);
 
             _rectangleFixture = FixtureFactory.CreateRectangle(_world, 50, 5, 1, Vector2.Zero);
             _rectangleFixture.Body.IsStatic = true;

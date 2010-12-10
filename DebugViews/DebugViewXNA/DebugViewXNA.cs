@@ -28,7 +28,11 @@ namespace FarseerPhysics.DebugViews
         private static SpriteBatch _batch;
         private static SpriteFont _font;
         private static GraphicsDevice _device;
-        private static Vector2[] _tempVertices;
+        private static Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
+
+        private float _min;
+        private long _stepCount;
+        private int _maxPrimitiveCount;
 
         private static List<StringData> _stringData;
         private static BasicEffect _effect;
@@ -41,7 +45,7 @@ namespace FarseerPhysics.DebugViews
         public Color TextColor = Color.White;
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
-        
+
 #if (XBOX)
         public const int CircleSegments = 16;
 #else
@@ -51,11 +55,6 @@ namespace FarseerPhysics.DebugViews
         public DebugViewXNA(World world)
             : base(world)
         {
-            _vertsLines = new VertexPositionColor[1000000];
-            _vertsFill = new VertexPositionColor[1000000];
-
-            _tempVertices = new Vector2[Settings.MaxPolygonVertices];
-
             world.ContactManager.PreSolve += PreSolve;
 
             //Default flags
@@ -273,9 +272,6 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        private float _min;
-        private long _stepCount;
-
         private void DrawDebugPanel()
         {
             _stepCount++;
@@ -348,7 +344,7 @@ namespace FarseerPhysics.DebugViews
                     DrawSegment(p1, p2, color);
                     break;
                 case JointType.Pulley:
-                    PulleyJoint pulley = (PulleyJoint)joint;
+                    PulleyJoint pulley = (PulleyJoint) joint;
                     Vector2 s1 = pulley.GroundAnchorA;
                     Vector2 s2 = pulley.GroundAnchorB;
                     DrawSegment(s1, p1, color);
@@ -384,8 +380,8 @@ namespace FarseerPhysics.DebugViews
                 case JointType.Gear:
                     DrawSegment(x1, x2, color);
                     break;
-                //case JointType.Weld:
-                //    break;
+                    //case JointType.Weld:
+                    //    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
@@ -400,7 +396,7 @@ namespace FarseerPhysics.DebugViews
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape) fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -412,10 +408,9 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape) fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        //Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
@@ -429,7 +424,7 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
+                        EdgeShape edge = (EdgeShape) fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
@@ -438,7 +433,7 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape)fixture.Shape;
+                        LoopShape loop = (LoopShape) fixture.Shape;
                         int count = loop.Vertices.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
@@ -528,10 +523,10 @@ namespace FarseerPhysics.DebugViews
 
             for (int i = 0; i < CircleSegments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -556,15 +551,15 @@ namespace FarseerPhysics.DebugViews
 
             Color colorFill = color * 0.5f;
 
-            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < CircleSegments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
@@ -626,7 +621,8 @@ namespace FarseerPhysics.DebugViews
             _stringData.Add(new StringData(x, y, s, args, TextColor));
         }
 
-        public void DrawArrow(Vector2 start, Vector2 end, float length, float width, bool drawStartIndicator, Color color)
+        public void DrawArrow(Vector2 start, Vector2 end, float length, float width, bool drawStartIndicator,
+                              Color color)
         {
             // Draw connection segment between start- and end-point
             DrawSegment(start, end, color);
@@ -639,7 +635,7 @@ namespace FarseerPhysics.DebugViews
             rotation.Normalize();
 
             // Calculate angle of directional vector
-            float angle = (float)Math.Atan2(rotation.X, -rotation.Y);
+            float angle = (float) Math.Atan2(rotation.X, -rotation.Y);
             // Create matrix for rotation
             Matrix rotMatrix = Matrix.CreateRotationZ(angle);
             // Create translation matrix for end-point
@@ -647,7 +643,7 @@ namespace FarseerPhysics.DebugViews
 
             // Setup arrow end shape
             Vector2[] verts = new Vector2[3];
-            verts[0] = new Vector2(0,0);
+            verts[0] = new Vector2(0, 0);
             verts[1] = new Vector2(-halfWidth, -length);
             verts[2] = new Vector2(halfWidth, -length);
 
@@ -673,7 +669,7 @@ namespace FarseerPhysics.DebugViews
                 // Rotate start shape
                 Vector2.Transform(baseVerts, ref rotMatrix, baseVerts);
                 // Translate start shape
-                Vector2.Transform(baseVerts, ref startMatrix, baseVerts);            
+                Vector2.Transform(baseVerts, ref startMatrix, baseVerts);
                 // Draw start shape
                 DrawSolidPolygon(baseVerts, 4, color, false);
             }
@@ -694,6 +690,7 @@ namespace FarseerPhysics.DebugViews
             // make sure we have stuff to draw
             if (_fillCount > 0)
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+
             // make sure we have lines to draw
             if (_lineCount > 0)
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
@@ -731,7 +728,7 @@ namespace FarseerPhysics.DebugViews
             DrawPolygon(verts, 4, color);
         }
 
-        public static void LoadContent(GraphicsDevice device, ContentManager content)
+        public void LoadContent(GraphicsDevice device, ContentManager content)
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             _batch = new SpriteBatch(device);
@@ -740,6 +737,10 @@ namespace FarseerPhysics.DebugViews
             _effect = new BasicEffect(device);
             _effect.VertexColorEnabled = true;
             _stringData = new List<StringData>();
+
+            _maxPrimitiveCount = device.GraphicsProfile == GraphicsProfile.Reach ? 65535 : 1048575;
+            _vertsLines = new VertexPositionColor[_maxPrimitiveCount];
+            _vertsFill = new VertexPositionColor[_maxPrimitiveCount];
         }
 
         #region Nested type: ContactPoint

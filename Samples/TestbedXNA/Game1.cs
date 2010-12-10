@@ -170,8 +170,6 @@ namespace FarseerPhysics.TestBed
         /// </summary>
         protected override void LoadContent()
         {
-            DebugViewXNA.LoadContent(GraphicsDevice, Content);
-
             _keyboardManager._oldKeyboardState = Keyboard.GetState();
             _oldMouseState = Mouse.GetState();
             _oldGamePad = GamePad.GetState(PlayerIndex.One);

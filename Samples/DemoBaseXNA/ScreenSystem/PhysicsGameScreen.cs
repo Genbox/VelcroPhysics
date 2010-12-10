@@ -28,7 +28,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             DebugView.DefaultShapeColor = Color.White;
             DebugView.SleepingShapeColor = Color.LightGray;
 
-            DebugViewXNA.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
+            DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
             Vector2 gameWorld =
                 ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth,
                                                                       ScreenManager.Camera.ScreenHeight));
