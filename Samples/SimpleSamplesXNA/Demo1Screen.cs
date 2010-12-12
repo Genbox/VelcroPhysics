@@ -40,11 +40,17 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(Vector2.Zero);
-
-            _rectangle = FixtureFactory.CreateRectangle(World, 5, 5, 1);
-            _rectangle.Body.BodyType = BodyType.Dynamic;
-
             base.LoadContent();
+
+            DemoMaterial material = new DemoMaterial(MaterialType.Circles)
+            {
+                Color1 = Color.Orange,
+                Color2 = Color.Yellow,
+                Scale = 4f
+            };
+
+            _rectangle = FixtureFactory.CreateRectangle(World, 5, 5, 1, material);
+            _rectangle.Body.BodyType = BodyType.Dynamic;
         }
 
         public override void HandleGamePadInput(InputHelper input)

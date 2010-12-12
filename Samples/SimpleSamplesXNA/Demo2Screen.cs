@@ -41,6 +41,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(Vector2.Zero);
+            base.LoadContent();
 
             Vertices rect1 = PolygonTools.CreateRectangle(2, 2);
             Vertices rect2 = PolygonTools.CreateRectangle(2, 2);
@@ -54,10 +55,14 @@ namespace FarseerPhysics.SimpleSamplesXNA
             vertices.Add(rect1);
             vertices.Add(rect2);
 
-            _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1);
-            _rectangles[0].Body.BodyType = BodyType.Dynamic;
+            DemoMaterial material = new DemoMaterial(MaterialType.Circles)
+            {
+                Color = Color.Orange,
+                Scale = 4f
+            };
 
-            base.LoadContent();
+            _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1, material);
+            _rectangles[0].Body.BodyType = BodyType.Dynamic;
         }
 
         public override void HandleGamePadInput(InputHelper input)

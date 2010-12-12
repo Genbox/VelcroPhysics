@@ -46,19 +46,24 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
+            base.LoadContent();
 
             _agent = new Agent(World, new Vector2(5, 10));
 
             LoadObstacles();
-
-            base.LoadContent();
         }
 
         private void LoadObstacles()
         {
+            DemoMaterial material = new DemoMaterial(MaterialType.Dots)
+            {
+                Color = Color.SandyBrown,
+                Scale = 8f
+            };
+
             for (int i = 0; i < 5; i++)
             {
-                _obstacles[i] = FixtureFactory.CreateRectangle(World, 8, 1.5f, 1);
+                _obstacles[i] = FixtureFactory.CreateRectangle(World, 8, 1.5f, 1, material);
                 _obstacles[i].Body.IsStatic = true;
 
                 if (i == 0)

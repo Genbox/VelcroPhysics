@@ -24,6 +24,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
+            base.LoadContent();
 
             _agent = new Agent(World, new Vector2(5, 10));
 
@@ -34,6 +35,12 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Vector2 deltaX = new Vector2(0.5625f, 1.25f);
             Vector2 deltaY = new Vector2(1.125f, 0.0f);
 
+            DemoMaterial matBox = new DemoMaterial(MaterialType.Blank)
+            {
+                Color1 = Color.SaddleBrown,
+                Color2 = Color.BurlyWood
+            };
+
             for (int i = 0; i < PyramidBaseBodyCount; ++i)
             {
                 Vector2 y = x;
@@ -43,15 +50,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape);
+                    body.CreateFixture(shape, matBox);
 
                     y += deltaY;
                 }
 
                 x += deltaX;
             }
-
-            base.LoadContent();
         }
 
         public string GetTitle()

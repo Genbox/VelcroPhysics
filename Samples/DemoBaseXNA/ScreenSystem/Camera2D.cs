@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
+    public delegate void ProjectionUpdateHandler();
+
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
@@ -24,6 +26,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private bool _targetZoomReached = true;
         private Vector2 _upper;
         private float _zoom;
+
+        public ProjectionUpdateHandler ProjectionUpdated;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -217,7 +221,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         /// <value>The max rotation.</value>
         public float MaxRotation { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the minimum rotation in radians.
         /// </summary>
@@ -239,7 +243,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _upper = new Vector2(25.0f * _graphics.Viewport.AspectRatio, 25.0f);
 
             // L/R/B/T
-            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
+            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1f, 1f);
+            if (ProjectionUpdated != null)
+            {
+                ProjectionUpdated();
+            }
         }
 
         /// <summary>

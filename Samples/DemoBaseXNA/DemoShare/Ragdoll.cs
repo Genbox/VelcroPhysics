@@ -2,6 +2,7 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
+using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -40,28 +41,39 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         //Torso
         private void CreateBody(World world, Vector2 position)
         {
+            DemoMaterial matHead = new DemoMaterial(MaterialType.Face)
+            {
+                Color = Color.DeepSkyBlue,
+                Scale = 2f
+            };
+            DemoMaterial matBody = new DemoMaterial(MaterialType.Squares)
+            {
+                Color = Color.DeepSkyBlue,
+                Scale = 8f
+            };
+
             //Head
-            _head = FixtureFactory.CreateCircle(world, .9f, 10);
+            _head = FixtureFactory.CreateCircle(world, .9f, 10, matHead);
             _head.Body.BodyType = BodyType.Dynamic;
             _head.Body.AngularDamping = LimbAngularDamping;
             _head.Body.Mass = 2;
             _head.Body.Position = position;
 
             //Body
-            _body = FixtureFactory.CreateRoundedRectangle(world, 2, 4, .5f, .7f, 2, 10);
+            _body = FixtureFactory.CreateRoundedRectangle(world, 2, 4, .5f, .7f, 2, 10, matBody);
             _body[0].Body.BodyType = BodyType.Dynamic;
             _body[0].Body.Mass = 2;
             _body[0].Body.Position = position + new Vector2(0, -3);
 
             //Left Arm
-            _lowerLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _lowerLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity, matBody);
             _lowerLeftArm[0].Body.BodyType = BodyType.Dynamic;
             _lowerLeftArm[0].Body.AngularDamping = LimbAngularDamping;
             _lowerLeftArm[0].Body.Mass = 2;
             _lowerLeftArm[0].Body.Rotation = -1.4f;
             _lowerLeftArm[0].Body.Position = position + new Vector2(-4, -2.2f);
 
-            _upperLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _upperLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity, matBody);
             _upperLeftArm[0].Body.BodyType = BodyType.Dynamic;
             _upperLeftArm[0].Body.AngularDamping = LimbAngularDamping;
             _upperLeftArm[0].Body.Mass = 2;
@@ -69,14 +81,14 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _upperLeftArm[0].Body.Position = position + new Vector2(-2, -1.8f);
 
             //Right Arm
-            _lowerRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _lowerRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity, matBody);
             _lowerRightArm[0].Body.BodyType = BodyType.Dynamic;
             _lowerRightArm[0].Body.AngularDamping = LimbAngularDamping;
             _lowerRightArm[0].Body.Mass = 2;
             _lowerRightArm[0].Body.Rotation = 1.4f;
             _lowerRightArm[0].Body.Position = position + new Vector2(4, -2.2f);
 
-            _upperRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _upperRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity, matBody);
             _upperRightArm[0].Body.BodyType = BodyType.Dynamic;
             _upperRightArm[0].Body.AngularDamping = LimbAngularDamping;
             _upperRightArm[0].Body.Mass = 2;
@@ -84,26 +96,26 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _upperRightArm[0].Body.Position = position + new Vector2(2, -1.8f);
 
             //Left Leg
-            _lowerLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _lowerLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity, matBody);
             _lowerLeftLeg[0].Body.BodyType = BodyType.Dynamic;
             _lowerLeftLeg[0].Body.AngularDamping = LimbAngularDamping;
             _lowerLeftLeg[0].Body.Mass = 2;
             _lowerLeftLeg[0].Body.Position = position + new Vector2(-0.6f, -8);
 
-            _upperLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _upperLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity, matBody);
             _upperLeftLeg[0].Body.BodyType = BodyType.Dynamic;
             _upperLeftLeg[0].Body.AngularDamping = LimbAngularDamping;
             _upperLeftLeg[0].Body.Mass = 2;
             _upperLeftLeg[0].Body.Position = position + new Vector2(-0.6f, -6);
 
             //Right Leg
-            _lowerRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _lowerRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity, matBody);
             _lowerRightLeg[0].Body.BodyType = BodyType.Dynamic;
             _lowerRightLeg[0].Body.AngularDamping = LimbAngularDamping;
             _lowerRightLeg[0].Body.Mass = 2;
             _lowerRightLeg[0].Body.Position = position + new Vector2(0.6f, -8);
 
-            _upperRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _upperRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity, matBody);
             _upperRightLeg[0].Body.BodyType = BodyType.Dynamic;
             _upperRightLeg[0].Body.AngularDamping = LimbAngularDamping;
             _upperRightLeg[0].Body.Mass = 2;

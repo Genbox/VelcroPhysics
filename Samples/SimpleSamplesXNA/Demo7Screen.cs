@@ -39,19 +39,25 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
-            
+            base.LoadContent();
+
             _ragdoll = new Ragdoll(World, Vector2.Zero);
             CreateObstacles();
-            base.LoadContent();
         }
 
         private void CreateObstacles()
         {
+            DemoMaterial material = new DemoMaterial(MaterialType.Dots)
+            {
+                Color = Color.SandyBrown,
+                Scale = 8f
+            };
+
             Fixture[] rect = new Fixture[4];
 
             for (int i = 0; i < 4; i++)
             {
-                rect[i] = FixtureFactory.CreateRectangle(World, 6, 1.5f, 1);
+                rect[i] = FixtureFactory.CreateRectangle(World, 6, 1.5f, 1, material);
             }
             rect[0].Body.Position = new Vector2(-9, -5);
             rect[1].Body.Position = new Vector2(-8, 7);
