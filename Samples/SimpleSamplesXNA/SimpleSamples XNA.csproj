@@ -114,6 +114,7 @@
     <Compile Include="Demo6Screen.cs" />
     <Compile Include="Demo7Screen.cs" />
     <Compile Include="Demo8Screen.cs" />
+    <Compile Include="Demo9Screen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />

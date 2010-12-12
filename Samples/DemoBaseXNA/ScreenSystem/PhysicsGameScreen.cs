@@ -47,8 +47,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             _shapeFixtures = new Dictionary<MaterialType, List<Fixture>>();
 
-            _vertsLines = new VertexPositionColorTexture[1000000];
-            _vertsFill = new VertexPositionColorTexture[1000000];
+            int _maxPrimitiveCount = ScreenManager.GraphicsDevice.GraphicsProfile == GraphicsProfile.Reach ? 65535 : 1048575;
+            _vertsLines = new VertexPositionColorTexture[_maxPrimitiveCount];
+            _vertsFill = new VertexPositionColorTexture[_maxPrimitiveCount];
 
             _lineTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/line");
             _lineFixtures = new List<Fixture>();

@@ -44,8 +44,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             DemoMaterial material = new DemoMaterial(MaterialType.Circles)
             {
-                Color1 = Color.Orange,
-                Color2 = Color.Yellow,
+                Color = Color.Orange,
                 Scale = 4f
             };
 
