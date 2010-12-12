@@ -24,6 +24,10 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
     /// </summary>
     public class BackgroundScreen : GameScreen
     {
+        private const float LogoScreenHeightRatio = 0.2f;
+        private const float LogoScreenBorderRatio = 0.0375f;
+        private const float LogoWidthHeightRatio = 2f;
+
         private Texture2D _backgroundTexture;
         private ContentManager _content;
 
@@ -48,7 +52,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _backgroundTexture = _content.Load<Texture2D>("Common/background");
+            _backgroundTexture = _content.Load<Texture2D>("Common/logo");
         }
 
         /// <summary>
@@ -77,16 +81,19 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
-            Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            Vector2 logoSize = new Vector2();
+            logoSize.Y = viewport.Height * LogoScreenHeightRatio;
+            logoSize.X = logoSize.Y * LogoWidthHeightRatio;
+            float border = viewport.Height * LogoScreenBorderRatio;
+            Vector2 logoPosition = new Vector2();
+            logoPosition.X = viewport.Width - border - logoSize.X;
+            logoPosition.Y = viewport.Height - border - logoSize.Y;
+            Rectangle destination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
 
-            spriteBatch.Begin();
-
-            spriteBatch.Draw(_backgroundTexture, fullscreen,
-                             new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
-
-            spriteBatch.End();
+            ScreenManager.SpriteBatch.Begin();
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture, destination, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));
+            ScreenManager.SpriteBatch.End();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -22,7 +23,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private List<Fixture> _fixtures;
         private ObjectType _type;
 
-        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
+        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type, DemoMaterial material)
         {
             _fixtures = new List<Fixture>(count);
             _decomposedFixtures = new List<List<Fixture>>(count);
@@ -37,23 +38,23 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 switch (type)
                 {
                     case ObjectType.Circle:
-                        fixture = FixtureFactory.CreateCircle(world, radius, 1);
+                        fixture = FixtureFactory.CreateCircle(world, radius, 1, material);
                         _fixtures.Add(fixture);
                         break;
                     case ObjectType.Rectangle:
-                        fixture = FixtureFactory.CreateRectangle(world, radius, radius, 1);
+                        fixture = FixtureFactory.CreateRectangle(world, radius, radius, 1, material);
                         _fixtures.Add(fixture);
                         break;
                     case ObjectType.Star:
-                        List<Fixture> star = FixtureFactory.CreateGear(world, radius, 10, 0f, 1f, 1);
+                        List<Fixture> star = FixtureFactory.CreateGear(world, radius, 10, 0f, 1f, 1, material);
                         _decomposedFixtures.Add(star);
                         break;
                     case ObjectType.Gear:
-                        List<Fixture> gear = FixtureFactory.CreateGear(world, radius, 10, 100f, 1f, 1);
+                        List<Fixture> gear = FixtureFactory.CreateGear(world, radius, 10, 100f, 1f, 1, material);
                         _decomposedFixtures.Add(gear);
                         break;
                     default:
-                        fixture = FixtureFactory.CreateCircle(world, radius, 1);
+                        fixture = FixtureFactory.CreateCircle(world, radius, 1, material);
                         _fixtures.Add(fixture);
                         break;
                 }

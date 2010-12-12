@@ -104,13 +104,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demo1Screen.cs" />
+    <Compile Include="Demo1Screen.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Demo2Screen.cs" />
     <Compile Include="Demo3Screen.cs" />
     <Compile Include="Demo4Screen.cs" />
     <Compile Include="Demo5Screen.cs" />
     <Compile Include="Demo6Screen.cs" />
     <Compile Include="Demo7Screen.cs" />
+    <Compile Include="Demo8Screen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />

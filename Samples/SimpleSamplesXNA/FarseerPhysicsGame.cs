@@ -3,6 +3,7 @@ using FarseerPhysics.DemoBaseXNA.Components;
 using FarseerPhysics.DemoBaseXNA.Screens;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
@@ -18,15 +19,11 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Window.Title = "Farseer Physics Engine Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
 
-#if !WINDOWS_PHONE
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
-#else
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 480;
-#endif
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -64,6 +61,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Demo5Screen demo5 = new Demo5Screen();
             Demo6Screen demo6 = new Demo6Screen();
             Demo7Screen demo7 = new Demo7Screen();
+            Demo8Screen demo8 = new Demo8Screen();
             MainMenuScreen mainMenuScreen = new MainMenuScreen();
             mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
             mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
@@ -72,10 +70,12 @@ namespace FarseerPhysics.SimpleSamplesXNA
             mainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
             mainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
             mainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
+            mainMenuScreen.AddMainMenuItem(demo8.GetTitle(), demo8);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.AddScreen(new BackgroundScreen(), null);
             ScreenManager.AddScreen(mainMenuScreen, null);
+            ScreenManager.AddScreen(new LogoScreen(), null);
         }
 
         /// <summary>

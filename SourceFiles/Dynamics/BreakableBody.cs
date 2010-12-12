@@ -48,7 +48,9 @@ namespace FarseerPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
-        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density)
+        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density) : this(vertices, world, density, null) { }
+
+        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density, Object userData)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
@@ -58,7 +60,7 @@ namespace FarseerPhysics.Dynamics
             foreach (Vertices part in vertices)
             {
                 PolygonShape polygonShape = new PolygonShape(part, density);
-                Fixture fixture = MainBody.CreateFixture(polygonShape);
+                Fixture fixture = MainBody.CreateFixture(polygonShape, userData);
                 Parts.Add(fixture);
             }
         }

@@ -120,6 +120,7 @@
     <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
+    <Compile Include="ScreenSystem\MaterialManager.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />

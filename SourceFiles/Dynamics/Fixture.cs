@@ -124,7 +124,9 @@ namespace FarseerPhysics.Dynamics
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
-        public Fixture(Body body, Shape shape)
+        public Fixture(Body body, Shape shape) : this(body, shape, null) { }
+
+        public Fixture(Body body, Shape shape, Object userData)
         {
             //Fixture defaults
             Friction = 0.2f;
@@ -134,13 +136,14 @@ namespace FarseerPhysics.Dynamics
                 _collisionCategories = CollisionCategory.All;
             else
                 _collisionCategories = CollisionCategory.Cat1;
-            
+
             _collidesWith = CollisionCategory.All;
             _collisionGroup = 0;
 
             IsSensor = false;
 
             Body = body;
+            UserData = userData;
 
             if (Settings.ConserveMemory)
                 Shape = shape;

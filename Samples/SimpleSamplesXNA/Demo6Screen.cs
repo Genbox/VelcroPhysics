@@ -40,6 +40,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(new Vector2(0, -20));
+            base.LoadContent();
 
             _agent = new Agent(World, new Vector2(0, -10));
             _spiders = new Spider[8];
@@ -48,8 +49,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
             {
                 _spiders[i] = new Spider(World, new Vector2(0, ((i + 1) * 3) - 7));
             }
-
-            base.LoadContent();
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)

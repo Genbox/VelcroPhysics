@@ -89,11 +89,14 @@ namespace FarseerPhysics.Dynamics
         private float _inertia;
         private float _mass;
 
-        public Body(World world)
+        public Body(World world) : this(world, null) { }
+
+        public Body(World world, Object userData)
         {
             FixtureList = new List<Fixture>(32);
 
             World = world;
+            UserData = userData;
 
             FixedRotation = false;
             IsBullet = false;
@@ -582,6 +585,20 @@ namespace FarseerPhysics.Dynamics
         public Fixture CreateFixture(Shape shape)
         {
             return new Fixture(this, shape);
+        }
+
+        /// <summary>
+        /// Creates a fixture and attach it to this body.
+        /// If the density is non-zero, this function automatically updates the mass of the body.
+        /// Contacts are not created until the next time step.
+        /// Warning: This function is locked during callbacks.
+        /// </summary>
+        /// <param name="shape">The shape.</param>
+        /// <param name="userData">Application specific data</param>
+        /// <returns></returns>
+        public Fixture CreateFixture(Shape shape, Object userData)
+        {
+            return new Fixture(this, shape, userData);
         }
 
         /// <summary>

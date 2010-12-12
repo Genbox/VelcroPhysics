@@ -45,6 +45,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
         public override void LoadContent()
         {
             World = new World(Vector2.Zero);
+            base.LoadContent();
 
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, Vector2.Zero);
@@ -53,9 +54,30 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _agent.CollisionCategories = CollisionCategory.All & ~CollisionCategory.Cat4;
             _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4;
 
+            DemoMaterial matCircle = new DemoMaterial(MaterialType.Dots)
+            {
+                Color = Color.DarkRed,
+                Scale = 8f
+            };
+            DemoMaterial matSquare = new DemoMaterial(MaterialType.Squares)
+            {
+                Color = Color.SeaGreen,
+                Scale = 9f
+            };
+            DemoMaterial matGear = new DemoMaterial(MaterialType.Dots)
+            {
+                Color = Color.SkyBlue,
+                Scale = 8f
+            };
+            DemoMaterial matStar = new DemoMaterial(MaterialType.Dots)
+            {
+                Color = Color.Gold,
+                Scale = 8f
+            };
+
             Vector2 startPosition = new Vector2(-20, 16);
             Vector2 endPosition = new Vector2(20, 16);
-            _circles = new Objects(World, startPosition, endPosition, 15, 1, ObjectType.Circle);
+            _circles = new Objects(World, startPosition, endPosition, 15, 1, ObjectType.Circle, matCircle);
 
             //Collide with itself only
             _circles.CollisionCategories = CollisionCategory.Cat1;
@@ -63,7 +85,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             startPosition = new Vector2(-20, -16);
             endPosition = new Vector2(20, -16);
-            _rectangles = new Objects(World, startPosition, endPosition, 15, 2, ObjectType.Rectangle);
+            _rectangles = new Objects(World, startPosition, endPosition, 15, 2, ObjectType.Rectangle, matSquare);
 
             //Collides with itself only
             _rectangles.CollisionCategories = CollisionCategory.Cat2;
@@ -71,7 +93,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             startPosition = new Vector2(-20, -10);
             endPosition = new Vector2(-20, 10);
-            _gears = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Gear);
+            _gears = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Gear, matGear);
 
             //Collides with stars
             _gears.CollisionCategories = CollisionCategory.Cat3;
@@ -79,13 +101,11 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             startPosition = new Vector2(20, -10);
             endPosition = new Vector2(20, 10);
-            _stars = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Star);
+            _stars = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Star, matStar);
 
             //Collides with gears
             _stars.CollisionCategories = CollisionCategory.Cat4;
             _stars.CollidesWith = CollisionCategory.Cat3 | CollisionCategory.Cat4;
-
-            base.LoadContent();
         }
 
         public override void HandleInput(InputHelper input)
