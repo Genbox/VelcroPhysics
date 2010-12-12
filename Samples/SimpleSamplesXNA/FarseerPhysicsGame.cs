@@ -62,6 +62,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Demo6Screen demo6 = new Demo6Screen();
             Demo7Screen demo7 = new Demo7Screen();
             Demo8Screen demo8 = new Demo8Screen();
+            Demo9Screen demo9 = new Demo9Screen();
             MainMenuScreen mainMenuScreen = new MainMenuScreen();
             mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
             mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
@@ -71,6 +72,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             mainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
             mainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
             mainMenuScreen.AddMainMenuItem(demo8.GetTitle(), demo8);
+            mainMenuScreen.AddMainMenuItem(demo9.GetTitle(), demo9);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.AddScreen(new BackgroundScreen(), null);

@@ -20,10 +20,13 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _agentBody = BodyFactory.CreateBody(world, position);
             _agentBody.BodyType = BodyType.Dynamic;
 
-            DemoMaterial matBody = new DemoMaterial(MaterialType.Blank);
+            DemoMaterial matBody = new DemoMaterial(MaterialType.Blank)
+            {
+                Color = Color.LightGray
+            };
             DemoMaterial matHands = new DemoMaterial(MaterialType.Squares)
             {
-                Color = Color.Gray,
+                Color = Color.DarkOrange,
                 Scale = 8f,
                 Depth = .1f
             };
