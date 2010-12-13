@@ -36,7 +36,15 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private Texture2D _lineTexture;
 
+        private RenderTarget2D _fadeBuffer;
+
         private BasicEffect _effect;
+
+        public PhysicsGameScreen()
+        {
+            //TransitionOnTime = TimeSpan.FromSeconds(1.5f);
+            //TransitionOffTime = TimeSpan.FromSeconds(1.5f);
+        }
 
         public override void LoadContent()
         {
@@ -44,6 +52,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             materialManager = new MaterialManager();
             materialManager.LoadContent(ScreenManager.ContentManager);
+
+            _fadeBuffer = new RenderTarget2D(ScreenManager.GraphicsDevice,
+                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
+                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                                             false,
+                                             SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
 
             _shapeFixtures = new Dictionary<MaterialType, List<Fixture>>();
 
@@ -72,16 +86,22 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
             _border = new Border(World, gameWorld.X, -gameWorld.Y, 1);
 
-            ScreenManager.Camera.ProjectionUpdated += UpdateBorders;
+            ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
         }
 
-        private void UpdateBorders()
+        private void UpdateScreen()
         {
-            if (World == null)
-                return;
+            _fadeBuffer = new RenderTarget2D(ScreenManager.GraphicsDevice,
+                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
+                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                                             false,
+                                             SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
 
-            Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-            _border.resetBorder(gameWorld.X, -gameWorld.Y);
+            if (World != null)
+            {
+                Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+                _border.resetBorder(gameWorld.X, -gameWorld.Y);
+            }
         }
 
         private void addFixture(Fixture fixture)
@@ -146,7 +166,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (input.IsNewButtonPress(Buttons.B))
             {
-                ScreenManager.RemoveScreen(this);
+                ExitScreen();
             }
 
             //Windows
@@ -168,7 +188,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (input.IsNewKeyPress(Keys.Escape))
             {
-                ScreenManager.RemoveScreen(this);
+                ExitScreen();
             }
 
             if (World != null)
@@ -262,9 +282,18 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             ScreenManager.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+            ScreenManager.GraphicsDevice.BlendState = BlendState.Opaque;
 
             _effect.Projection = ScreenManager.Camera.ProjectionMatrix;
             _effect.View = ScreenManager.Camera.ViewMatrix;
+
+            if (ScreenState == ScreenSystem.ScreenState.TransitionOn ||
+                ScreenState == ScreenSystem.ScreenState.TransitionOff)
+            {
+                //ScreenManager.GraphicsDevice.SetRenderTarget(_fadeBuffer);
+                ScreenManager.GraphicsDevice.SetRenderTarget(null);
+                //ScreenManager.GraphicsDevice.Clear(Color.Transparent);
+            }
 
             _lineCount = 0;
             foreach (KeyValuePair<MaterialType, List<Fixture>> p in _shapeFixtures)
@@ -314,6 +343,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
             }
 
+            /*if (ScreenState == ScreenSystem.ScreenState.TransitionOn ||
+                ScreenState == ScreenSystem.ScreenState.TransitionOff)
+            {
+                ScreenManager.GraphicsDevice.SetRenderTarget(null);
+                //ScreenManager.SpriteBatch.Begin();
+                //ScreenManager.SpriteBatch.Draw(_fadeBuffer, new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), Color.White);
+                //ScreenManager.SpriteBatch.End();
+            }*/
+
+            //ScreenManager.GraphicsDevice.SetRenderTarget(null);
             base.Draw(gameTime);
         }
 
@@ -390,9 +429,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else if (fixture.ShapeType == ShapeType.Loop)
             {
                 Vertices loopVerts = ((LoopShape)fixture.Shape).Vertices;
-                for (int i = 0; i < loopVerts.Count-1; ++i)
+                for (int i = 0; i < loopVerts.Count - 1; ++i)
                 {
-                    DrawLine(MathUtils.Multiply(ref xf, loopVerts[i]), MathUtils.Multiply(ref xf, loopVerts[i+1]));
+                    DrawLine(MathUtils.Multiply(ref xf, loopVerts[i]), MathUtils.Multiply(ref xf, loopVerts[i + 1]));
                 }
                 DrawLine(MathUtils.Multiply(ref xf, loopVerts[loopVerts.Count - 1]), MathUtils.Multiply(ref xf, loopVerts[0]));
             }

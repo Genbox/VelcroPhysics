@@ -12,8 +12,8 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
     /// </summary>
     public class LogoScreen : GameScreen
     {
-        private const float LogoScreenHeightRatio = 13f / 30f;
-        private const float LogoWidthHeightRatio = 2f;
+        private const float LogoScreenHeightRatio = 4f / 6f;
+        private const float LogoWidthHeightRatio = 1.4625f;
         private Texture2D _farseerLogoTexture;
         private Texture2D _blankTexture;
         private Vector2 _origin;
@@ -55,7 +55,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 ScreenManager.GraphicsDevice.Clear(Color.White);
             }
 
-            ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            ScreenManager.SpriteBatch.Begin();
             if (ScreenState == ScreenSystem.ScreenState.TransitionOff)
             {
                 ScreenManager.SpriteBatch.Draw(_blankTexture, new Rectangle(0, 0, viewport.Width, viewport.Height), Color.White * TransitionAlpha);
