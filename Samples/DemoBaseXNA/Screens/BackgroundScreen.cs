@@ -24,9 +24,9 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
     /// </summary>
     public class BackgroundScreen : GameScreen
     {
-        private const float LogoScreenHeightRatio = 0.2f;
+        private const float LogoScreenHeightRatio = 0.25f;
         private const float LogoScreenBorderRatio = 0.0375f;
-        private const float LogoWidthHeightRatio = 2f;
+        private const float LogoWidthHeightRatio = 1.4625f;
 
         private Texture2D _backgroundTexture;
         private ContentManager _content;
