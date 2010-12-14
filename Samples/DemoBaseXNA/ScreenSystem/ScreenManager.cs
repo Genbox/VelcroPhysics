@@ -47,6 +47,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
+        private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
 
         private SpriteBatch _spriteBatch;
 
@@ -82,6 +83,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             base.Initialize();
 
             _isInitialized = true;
+        }
+
+        public void ResetTargets()
+        {
+            _transitions.Clear();
         }
 
         /// <summary>
@@ -186,12 +192,48 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            int transitionCount = 0;
+            foreach (GameScreen screen in _screens)
+            {
+                if (screen.ScreenState == ScreenState.TransitionOn ||
+                    screen.ScreenState == ScreenState.TransitionOff)
+                {
+                    ++transitionCount;
+                    if (_transitions.Count < transitionCount)
+                    {
+                        PresentationParameters _pp = GraphicsDevice.PresentationParameters;
+                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
+                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8));
+                    }
+                    GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
+                    GraphicsDevice.Clear(Color.Transparent);
+                    screen.Draw(gameTime);
+                    GraphicsDevice.SetRenderTarget(null);
+                }
+            }
+
+            GraphicsDevice.Clear(Color.SteelBlue);
+
+            transitionCount = 0;
             foreach (GameScreen screen in _screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
                     continue;
 
-                screen.Draw(gameTime);
+                if (screen.ScreenState == ScreenState.TransitionOn ||
+                    screen.ScreenState == ScreenState.TransitionOff)
+                {
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(_transitions[transitionCount],
+                                      new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
+                                      Color.White * screen.TransitionAlpha);
+                    _spriteBatch.End();
+                    ++transitionCount;
+                }
+                else
+                {
+                    screen.Draw(gameTime);
+                }
             }
         }
 

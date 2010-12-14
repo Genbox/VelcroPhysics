@@ -136,9 +136,6 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
 
             float scale = 0.7f + pulsate * 0.05f * _selectionFade;
 
-            // Modify the alpha to fade text out during transitions.
-            color *= screen.TransitionAlpha;
-
             // Draw text, centered on the middle of each line.
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
