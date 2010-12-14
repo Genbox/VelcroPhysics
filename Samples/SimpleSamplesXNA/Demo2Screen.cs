@@ -57,8 +57,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             DemoMaterial material = new DemoMaterial(MaterialType.Circles)
             {
-                Color = Color.Orange,
-                Scale = 4f
+                Color = Color.Gold,
+                Scale = 2.5f
             };
 
             _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1, material);

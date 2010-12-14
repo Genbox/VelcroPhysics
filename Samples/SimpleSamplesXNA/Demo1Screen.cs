@@ -44,8 +44,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             DemoMaterial material = new DemoMaterial(MaterialType.Circles)
             {
-                Color = Color.Orange,
-                Scale = 4f
+                Color = Color.Gold,
+                Scale = 2.5f
             };
 
             _rectangle = FixtureFactory.CreateRectangle(World, 5, 5, 1, material);

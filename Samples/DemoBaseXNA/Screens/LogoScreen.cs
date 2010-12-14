@@ -2,6 +2,7 @@ using System;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.DemoBaseXNA.Screens
 {
@@ -41,6 +42,16 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             logoSize.X = logoSize.Y * LogoWidthHeightRatio;
             Vector2 logoPosition = ScreenManager.Camera.ScreenCenter - logoSize / 2f;
             _destination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
+        }
+
+        public override void HandleInput(InputHelper input)
+        {
+            if (input.CurrentKeyboardState.GetPressedKeys().Length > 0 ||
+                input.CurrentGamepadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||
+                input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            {
+                _duration = TimeSpan.Zero;
+            }
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
