@@ -77,7 +77,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             ScreenManager.AddScreen(new BackgroundScreen(), null);
             ScreenManager.AddScreen(mainMenuScreen, null);
-            ScreenManager.AddScreen(new LogoScreen(), null);
+            ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(2.0)), null);
         }
 
         /// <summary>
@@ -86,8 +86,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            ScreenManager.GraphicsDevice.Clear(Color.SteelBlue);
-
             base.Draw(gameTime);
         }
 
@@ -101,6 +99,9 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             //We recreate the projection matrix to keep aspect ratio.
             ScreenManager.Camera.CreateProjection();
+
+            //Reset transition render targets
+            ScreenManager.ResetTargets();
         }
     }
 }

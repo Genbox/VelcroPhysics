@@ -36,14 +36,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private Texture2D _lineTexture;
 
-        private RenderTarget2D _fadeBuffer;
-
         private BasicEffect _effect;
 
         public PhysicsGameScreen()
         {
-            //TransitionOnTime = TimeSpan.FromSeconds(1.5f);
-            //TransitionOffTime = TimeSpan.FromSeconds(1.5f);
+            TransitionOnTime = TimeSpan.FromSeconds(0.75);
+            TransitionOffTime = TimeSpan.FromSeconds(0.75);
         }
 
         public override void LoadContent()
@@ -52,12 +50,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             materialManager = new MaterialManager();
             materialManager.LoadContent(ScreenManager.ContentManager);
-
-            _fadeBuffer = new RenderTarget2D(ScreenManager.GraphicsDevice,
-                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
-                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                                             false,
-                                             SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
 
             _shapeFixtures = new Dictionary<MaterialType, List<Fixture>>();
 
@@ -87,16 +79,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _border = new Border(World, gameWorld.X, -gameWorld.Y, 1);
 
             ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
+
+            // Loading may take a while... so prevent the game from "catching up" once we finished loading
+            ScreenManager.Game.ResetElapsedTime();
         }
 
         private void UpdateScreen()
         {
-            _fadeBuffer = new RenderTarget2D(ScreenManager.GraphicsDevice,
-                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferWidth,
-                                             ScreenManager.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                                             false,
-                                             SurfaceFormat.Color, DepthFormat.Depth24Stencil8);
-
             if (World != null)
             {
                 Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
@@ -162,6 +151,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 DebugPanelEnabled = !DebugPanelEnabled;
                 Settings.EnableDiagnostics = DebugPanelEnabled;
+
+                if (DebugPanelEnabled)
+                    DebugView.AppendFlags(DebugViewFlags.DebugPanel);
+                else
+                    DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
             }
 
             if (input.IsNewButtonPress(Buttons.B))
@@ -282,18 +276,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             ScreenManager.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-            ScreenManager.GraphicsDevice.BlendState = BlendState.Opaque;
 
             _effect.Projection = ScreenManager.Camera.ProjectionMatrix;
             _effect.View = ScreenManager.Camera.ViewMatrix;
-
-            if (ScreenState == ScreenSystem.ScreenState.TransitionOn ||
-                ScreenState == ScreenSystem.ScreenState.TransitionOff)
-            {
-                //ScreenManager.GraphicsDevice.SetRenderTarget(_fadeBuffer);
-                ScreenManager.GraphicsDevice.SetRenderTarget(null);
-                //ScreenManager.GraphicsDevice.Clear(Color.Transparent);
-            }
 
             _lineCount = 0;
             foreach (KeyValuePair<MaterialType, List<Fixture>> p in _shapeFixtures)
@@ -343,16 +328,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
             }
 
-            /*if (ScreenState == ScreenSystem.ScreenState.TransitionOn ||
-                ScreenState == ScreenSystem.ScreenState.TransitionOff)
-            {
-                ScreenManager.GraphicsDevice.SetRenderTarget(null);
-                //ScreenManager.SpriteBatch.Begin();
-                //ScreenManager.SpriteBatch.Draw(_fadeBuffer, new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), Color.White);
-                //ScreenManager.SpriteBatch.End();
-            }*/
-
-            //ScreenManager.GraphicsDevice.SetRenderTarget(null);
             base.Draw(gameTime);
         }
 

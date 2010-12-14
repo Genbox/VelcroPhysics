@@ -246,12 +246,11 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // Draw the menu title centered on the screen
             Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2f, 80);
             Vector2 titleOrigin = font.MeasureString(MenuTitle) / 2;
-            Color titleColor = new Color(255, 255, 255) * TransitionAlpha;
             const float titleScale = 0.9f;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            spriteBatch.DrawString(font, MenuTitle, titlePosition, titleColor, 0,
+            spriteBatch.DrawString(font, MenuTitle, titlePosition, Color.White, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0);
 
             spriteBatch.End();
