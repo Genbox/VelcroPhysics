@@ -21,8 +21,18 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
+#if WINDOWS
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
+#endif
+#if WINDOWS_PHONE
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 480;
+#endif
+#if XBOX
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+#endif
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
