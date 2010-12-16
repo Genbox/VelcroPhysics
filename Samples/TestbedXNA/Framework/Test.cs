@@ -119,15 +119,6 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
-            if (GameInstance.DebugViewEnabled)
-            {
-                DebugView.AppendFlags(DebugViewFlags.DebugPanel);
-            }
-            else
-            {
-                DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
-            }
-
             // added
             float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
