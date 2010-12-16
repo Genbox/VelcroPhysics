@@ -65,7 +65,6 @@ namespace FarseerPhysics.TestBed.Tests
             _verts.Scale(ref scale);
 
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
-
             _list = BayazitDecomposer.ConvexPartition(_verts);
 
             //Create a single body with multiple fixtures
