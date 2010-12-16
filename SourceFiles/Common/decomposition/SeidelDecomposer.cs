@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
 {
-    //From the Poly2Tri project http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
+    //From the Poly2Tri project by Mason Green: http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
 
-#if !WINDOWS_PHONE
     /// <summary>
-    /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
-    /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
+    /// Convex decomposition algorithm based on Raimund Seidel's paper "A simple and fast incremental randomized
+    /// algorithm for computing trapezoidal decompositions and for triangulating polygons"
+    /// See also: "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
+    ///           "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
     /// </summary>
     public static class SeidelDecomposer
     {
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// </summary>
-        /// <param name="vertices"></param>
-        /// <returns></returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        /// <param name="vertices">The polygon to decompose.</param>
+        /// <param name="sheer">The sheer to use. If you get bad results, try using a higher value. The default value is 0.001</param>
+        /// <returns>A list of triangles</returns>
+        public static List<Vertices> ConvexPartition(Vertices vertices, float sheer)
         {
             List<Point> compatList = new List<Point>(vertices.Count);
 
@@ -29,1126 +30,932 @@ namespace FarseerPhysics.Common.Decomposition
                 compatList.Add(new Point(vertex.X, vertex.Y));
             }
 
-            Triangulator t = new Triangulator(compatList);
+            Triangulator t = new Triangulator(compatList, sheer);
 
             List<Vertices> list = new List<Vertices>();
 
-            List<List<Point>> triangles = t.polygons;
-
-            foreach (List<Point> triangle in triangles)
+            foreach (List<Point> triangle in t.Triangles)
             {
                 Vertices verts = new Vertices(triangle.Count);
 
                 foreach (Point point in triangle)
                 {
-                    verts.Add(new Vector2(point.x, point.y));
+                    verts.Add(new Vector2(point.X, point.Y));
                 }
 
                 list.Add(verts);
             }
 
-            //foreach (Trapezoid trapezoid in t.trapezoids)
-            //{
-            //    Vertices verts = new Vertices();
+            return list;
+        }
 
-            //    verts.Add(new Vector2(trapezoid.top.p.x, trapezoid.top.p.y));
-            //    verts.Add(new Vector2(trapezoid.top.q.x, trapezoid.top.q.y));
-            //    verts.Add(new Vector2(trapezoid.bottom.q.x, trapezoid.bottom.q.y));
-            //    verts.Add(new Vector2(trapezoid.bottom.q.x, trapezoid.bottom.q.y));
+        /// <summary>
+        /// Decompose the polygon into several smaller non-concave polygon.
+        /// </summary>
+        /// <param name="vertices">The polygon to decompose.</param>
+        /// <param name="sheer">The sheer to use. If you get bad results, try using a higher value. The default value is 0.001</param>
+        /// <returns>A list of trapezoids</returns>
+        public static List<Vertices> ConvexPartitionTrapezoid(Vertices vertices, float sheer)
+        {
+            List<Point> compatList = new List<Point>(vertices.Count);
 
-            //    list.Add(verts);
-            //}
+            foreach (Vector2 vertex in vertices)
+            {
+                compatList.Add(new Point(vertex.X, vertex.Y));
+            }
+
+            Triangulator t = new Triangulator(compatList, sheer);
+
+            List<Vertices> list = new List<Vertices>();
+
+            foreach (Trapezoid trapezoid in t.Trapezoids)
+            {
+                Vertices verts = new Vertices();
+
+                List<Point> points = trapezoid.Vertices();
+                foreach (Point point in points)
+                {
+                    verts.Add(new Vector2(point.X, point.Y));
+                }
+
+                list.Add(verts);
+            }
 
             return list;
         }
     }
 
-    // Doubly linked list
-    public class MonotoneMountain
+    internal class MonotoneMountain
     {
-        public Point tail, head;
-        public int size;
+        private Point _tail;
+        private Point _head;
+        private int _size;
 
-        public HashSet<Point> convexPoints;
+        private HashSet<Point> _convexPoints;
 
         // Monotone mountain points
-        public List<Point> monoPoly;
+        private List<Point> _monoPoly;
 
         // Triangles that constitute the mountain
-        public List<List<Point>> triangles;
-
-        // Convex polygons that constitute the mountain
-        public List<Point> convexPolies;
+        public List<List<Point>> Triangles;
 
         // Used to track which side of the line we are on
-        public bool positive;
+        private bool _positive;
 
         // Almost Pi!
-        public float PI_SLOP = 3.1f;
+        private const float PiSlop = 3.1f;
 
         public MonotoneMountain()
         {
-            size = 0;
-            tail = null;
-            head = null;
-            positive = false;
-            convexPoints = new HashSet<Point>();
-            monoPoly = new List<Point>();
-            triangles = new List<List<Point>>();
-            convexPolies = new List<Point>();
+            _size = 0;
+            _tail = null;
+            _head = null;
+            _positive = false;
+            _convexPoints = new HashSet<Point>();
+            _monoPoly = new List<Point>();
+            Triangles = new List<List<Point>>();
         }
 
         // Append a point to the list
-        public void add(Point point)
+        public void Add(Point point)
         {
-            if (size == 0)
+            if (_size == 0)
             {
-                head = point;
-                size = 1;
+                _head = point;
+                _size = 1;
             }
-            else if (size == 1)
+            else if (_size == 1)
             {
                 // Keep repeat points out of the list
-                tail = point;
-                tail.prev = head;
-                head.next = tail;
-                size = 2;
+                _tail = point;
+                _tail.Prev = _head;
+                _head.Next = _tail;
+                _size = 2;
             }
             else
             {
                 // Keep repeat points out of the list
-                tail.next = point;
-                point.prev = tail;
-                tail = point;
-                size += 1;
+                _tail.Next = point;
+                point.Prev = _tail;
+                _tail = point;
+                _size += 1;
             }
         }
 
         // Remove a point from the list
-        public void remove(Point point)
+        public void Remove(Point point)
         {
-            Point next = point.next;
-            Point prev = point.prev;
-            point.prev.next = next;
-            point.next.prev = prev;
-            size -= 1;
+            Point next = point.Next;
+            Point prev = point.Prev;
+            point.Prev.Next = next;
+            point.Next.Prev = prev;
+            _size -= 1;
         }
 
         // Partition a x-monotone mountain into triangles O(n)
         // See "Computational Geometry in C", 2nd edition, by Joseph O'Rourke, page 52
-        public void process()
+        public void Process()
         {
             // Establish the proper sign
-            positive = angleSign();
+            _positive = AngleSign();
             // create monotone polygon - for dubug purposes
-            genMonoPoly();
+            GenMonoPoly();
 
             // Initialize internal angles at each nonbase vertex
             // Link strictly convex vertices into a list, ignore reflex vertices
-            Point p = head.next;
-            while (p.neq(tail))
+            Point p = _head.Next;
+            while (p.Neq(_tail))
             {
-                float a = angle(p);
+                float a = Angle(p);
                 // If the point is almost colinear with it's neighbor, remove it!
-                if (a >= PI_SLOP || a <= -PI_SLOP || a == 0.0)
-                    remove(p);
-                else if (is_convex(p))
-                    convexPoints.Add(p);
-                p = p.next;
+                if (a >= PiSlop || a <= -PiSlop || a == 0.0)
+                    Remove(p);
+                else if (IsConvex(p))
+                    _convexPoints.Add(p);
+                p = p.Next;
             }
 
-            triangulate();
+            Triangulate();
         }
 
-        private void triangulate()
+        private void Triangulate()
         {
-            while (convexPoints.Count != 0)
+            while (_convexPoints.Count != 0)
             {
-                IEnumerator<Point> e = convexPoints.GetEnumerator();
+                IEnumerator<Point> e = _convexPoints.GetEnumerator();
                 e.MoveNext();
                 Point ear = e.Current;
 
-                convexPoints.Remove(ear);
-                Point a = ear.prev;
+                _convexPoints.Remove(ear);
+                Point a = ear.Prev;
                 Point b = ear;
-                Point c = ear.next;
+                Point c = ear.Next;
                 List<Point> triangle = new List<Point>(3);
                 triangle.Add(a);
                 triangle.Add(b);
                 triangle.Add(c);
 
-                triangles.Add(triangle);
+                Triangles.Add(triangle);
 
                 // Remove ear, update angles and convex list
-                remove(ear);
-                if (valid(a))
-                    convexPoints.Add(a);
-                if (valid(c))
-                    convexPoints.Add(c);
+                Remove(ear);
+                if (Valid(a))
+                    _convexPoints.Add(a);
+                if (Valid(c))
+                    _convexPoints.Add(c);
             }
 
-            Debug.Assert(size <= 3, "Triangulation bug, please report");
+            Debug.Assert(_size <= 3, "Triangulation bug, please report");
         }
 
-        private bool valid(Point p)
+        private bool Valid(Point p)
         {
-            return p.neq(head) && p.neq(tail) && is_convex(p);
+            return p.Neq(_head) && p.Neq(_tail) && IsConvex(p);
         }
 
         // Create the monotone polygon
-        private void genMonoPoly()
+        private void GenMonoPoly()
         {
-            Point p = head;
+            Point p = _head;
             while (p != null)
             {
-                monoPoly.Add(p);
-                p = p.next;
+                _monoPoly.Add(p);
+                p = p.Next;
             }
         }
 
-        private float angle(Point p)
+        private float Angle(Point p)
         {
-            Point a = (p.next - p);
-            Point b = (p.prev - p);
-            return (float)Math.Atan2(a.cross(b), a.dot(b));
+            Point a = (p.Next - p);
+            Point b = (p.Prev - p);
+            return (float)Math.Atan2(a.Cross(b), a.Dot(b));
         }
 
-        private bool angleSign()
+        private bool AngleSign()
         {
-            Point a = (head.next - head);
-            Point b = (tail - head);
-            return Math.Atan2(a.cross(b), a.dot(b)) >= 0;
+            Point a = (_head.Next - _head);
+            Point b = (_tail - _head);
+            return Math.Atan2(a.Cross(b), a.Dot(b)) >= 0;
         }
 
         // Determines if the inslide angle is convex or reflex
-        private bool is_convex(Point p)
+        private bool IsConvex(Point p)
         {
-            if (positive != (angle(p) >= 0))
+            if (_positive != (Angle(p) >= 0))
                 return false;
             return true;
         }
     }
 
     // Node for a Directed Acyclic graph (DAG)
-    public abstract class Node
+    internal abstract class Node
     {
-        public List<Node> parentList;
-        public Node leftChild;
-        public Node rightChild;
+        public List<Node> ParentList;
+        protected Node LeftChild;
+        protected Node RightChild;
 
-        public Node(Node left, Node right)
+        protected Node(Node left, Node right)
         {
-            parentList = new List<Node>();
-            leftChild = left;
-            rightChild = right;
+            ParentList = new List<Node>();
+            LeftChild = left;
+            RightChild = right;
 
             if (left != null)
-                left.parentList.Add(this);
+                left.ParentList.Add(this);
             if (right != null)
-                right.parentList.Add(this);
+                right.ParentList.Add(this);
         }
 
-        public abstract Sink locate(Edge s);
+        public abstract Sink Locate(Edge s);
 
         // Replace a node in the graph with this node
         // Make sure parent pointers are updated
-        public void replace(Node node)
+        public void Replace(Node node)
         {
-            foreach (Node parent in node.parentList)
+            foreach (Node parent in node.ParentList)
             {
                 // Select the correct node to replace (left or right child)
-                if (parent.leftChild == node)
-                    parent.leftChild = this;
+                if (parent.LeftChild == node)
+                    parent.LeftChild = this;
                 else
-                    parent.rightChild = this;
+                    parent.RightChild = this;
 
             }
-            //NOTE FPE: here is a difference between Scala and Python?
-            parentList.AddRange(node.parentList);
+            ParentList.AddRange(node.ParentList);
         }
     }
 
     // Directed Acyclic graph (DAG)
     // See "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
-    public class QueryGraph
+    internal class QueryGraph
     {
-        public Node head;
+        private Node _head;
 
         public QueryGraph(Node head)
         {
-            this.head = head;
+            _head = head;
         }
 
-        public Trapezoid locate(Edge edge)
+        private Trapezoid Locate(Edge edge)
         {
-            return head.locate(edge).trapezoid;
+            return _head.Locate(edge).Trapezoid;
         }
 
-        public List<Trapezoid> followEdge(Edge edge)
+        public List<Trapezoid> FollowEdge(Edge edge)
         {
             List<Trapezoid> trapezoids = new List<Trapezoid>();
-            trapezoids.Add(locate(edge));
+            trapezoids.Add(Locate(edge));
             int j = 0;
 
-            while (edge.q.x > trapezoids[j].rightPoint.x)
+            while (edge.Q.X > trapezoids[j].RightPoint.X)
             {
-                if (edge.isAbove(trapezoids[j].rightPoint))
+                if (edge.IsAbove(trapezoids[j].RightPoint))
                 {
-                    trapezoids.Add(trapezoids[j].upperRight);
+                    trapezoids.Add(trapezoids[j].UpperRight);
                 }
                 else
                 {
-                    trapezoids.Add(trapezoids[j].lowerRight);
+                    trapezoids.Add(trapezoids[j].LowerRight);
                 }
                 j += 1;
             }
             return trapezoids;
         }
 
-        public void replace(Sink sink, Node node)
+        private void Replace(Sink sink, Node node)
         {
-            //NOTE FPE: Choose Scala here
-            if (sink.parentList.Count == 0)
-                head = node;
+            if (sink.ParentList.Count == 0)
+                _head = node;
             else
-                node.replace(sink);
+                node.Replace(sink);
         }
 
-        public void case1(Sink sink, Edge edge, Trapezoid[] tList)
+        public void Case1(Sink sink, Edge edge, Trapezoid[] tList)
         {
-            YNode yNode = new YNode(edge, Sink.isink(tList[1]), Sink.isink(tList[2]));
-            XNode qNode = new XNode(edge.q, yNode, Sink.isink(tList[3]));
-            XNode pNode = new XNode(edge.p, Sink.isink(tList[0]), qNode);
-            replace(sink, pNode);
+            YNode yNode = new YNode(edge, Sink.Isink(tList[1]), Sink.Isink(tList[2]));
+            XNode qNode = new XNode(edge.Q, yNode, Sink.Isink(tList[3]));
+            XNode pNode = new XNode(edge.P, Sink.Isink(tList[0]), qNode);
+            Replace(sink, pNode);
         }
 
-        public void case2(Sink sink, Edge edge, Trapezoid[] tList)
+        public void Case2(Sink sink, Edge edge, Trapezoid[] tList)
         {
-            YNode yNode = new YNode(edge, Sink.isink(tList[1]), Sink.isink(tList[2]));
-            XNode pNode = new XNode(edge.p, Sink.isink(tList[0]), yNode);
-            replace(sink, pNode);
+            YNode yNode = new YNode(edge, Sink.Isink(tList[1]), Sink.Isink(tList[2]));
+            XNode pNode = new XNode(edge.P, Sink.Isink(tList[0]), yNode);
+            Replace(sink, pNode);
         }
 
-        public void case3(Sink sink, Edge edge, Trapezoid[] tList)
+        public void Case3(Sink sink, Edge edge, Trapezoid[] tList)
         {
-            YNode yNode = new YNode(edge, Sink.isink(tList[0]), Sink.isink(tList[1]));
-            replace(sink, yNode);
+            YNode yNode = new YNode(edge, Sink.Isink(tList[0]), Sink.Isink(tList[1]));
+            Replace(sink, yNode);
         }
 
-        public void case4(Sink sink, Edge edge, Trapezoid[] tList)
+        public void Case4(Sink sink, Edge edge, Trapezoid[] tList)
         {
-            YNode yNode = new YNode(edge, Sink.isink(tList[0]), Sink.isink(tList[1]));
-            XNode qNode = new XNode(edge.q, yNode, Sink.isink(tList[2]));
-            replace(sink, qNode);
+            YNode yNode = new YNode(edge, Sink.Isink(tList[0]), Sink.Isink(tList[1]));
+            XNode qNode = new XNode(edge.Q, yNode, Sink.Isink(tList[2]));
+            Replace(sink, qNode);
         }
     }
 
-    public class Sink : Node
+    internal class Sink : Node
     {
-        public Trapezoid trapezoid;
+        public Trapezoid Trapezoid;
 
-        public Sink(Trapezoid trapezoid)
+        private Sink(Trapezoid trapezoid)
             : base(null, null)
         {
-            this.trapezoid = trapezoid;
-            trapezoid.sink = this;
+            Trapezoid = trapezoid;
+            trapezoid.Sink = this;
         }
 
-        public static Sink isink(Trapezoid trapezoid)
+        public static Sink Isink(Trapezoid trapezoid)
         {
-            //NOTE FPE: Choose Python here
-            if (trapezoid.sink == null)
+            if (trapezoid.Sink == null)
                 return new Sink(trapezoid);
-            return trapezoid.sink;
+            return trapezoid.Sink;
         }
 
-        public override Sink locate(Edge edge)
+        public override Sink Locate(Edge edge)
         {
             return this;
         }
     }
 
     // See "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
-    public class TrapezoidalMap
+    internal class TrapezoidalMap
     {
         // Trapezoid container
-        public HashSet<Trapezoid> map;
+        public HashSet<Trapezoid> Map;
 
         // AABB margin
-        public float margin;
+        private float _margin;
 
         // Bottom segment that spans multiple trapezoids
-        public Edge bCross;
+        private Edge _bCross;
 
         // Top segment that spans multiple trapezoids
-        public Edge tCross;
+        private Edge _cross;
 
         public TrapezoidalMap()
         {
-            map = new HashSet<Trapezoid>();
-            margin = 50.0f;
-            bCross = null;
-            tCross = null;
+            Map = new HashSet<Trapezoid>();
+            _margin = 50.0f;
+            _bCross = null;
+            _cross = null;
         }
 
-        public void clear()
+        public void Clear()
         {
-            bCross = null;
-            tCross = null;
+            _bCross = null;
+            _cross = null;
         }
 
         // Case 1: segment completely enclosed by trapezoid
         //         break trapezoid into 4 smaller trapezoids
-        public Trapezoid[] case1(Trapezoid t, Edge e)
+        public Trapezoid[] Case1(Trapezoid t, Edge e)
         {
             Trapezoid[] trapezoids = new Trapezoid[4];
-            trapezoids[0] = new Trapezoid(t.leftPoint, e.p, t.top, t.bottom);
-            trapezoids[1] = new Trapezoid(e.p, e.q, t.top, e);
-            trapezoids[2] = new Trapezoid(e.p, e.q, e, t.bottom);
-            trapezoids[3] = new Trapezoid(e.q, t.rightPoint, t.top, t.bottom);
+            trapezoids[0] = new Trapezoid(t.LeftPoint, e.P, t.Top, t.Bottom);
+            trapezoids[1] = new Trapezoid(e.P, e.Q, t.Top, e);
+            trapezoids[2] = new Trapezoid(e.P, e.Q, e, t.Bottom);
+            trapezoids[3] = new Trapezoid(e.Q, t.RightPoint, t.Top, t.Bottom);
 
-            trapezoids[0].updateLeft(t.upperLeft, t.lowerLeft);
-            trapezoids[1].updateLeftRight(trapezoids[0], null, trapezoids[3], null);
-            trapezoids[2].updateLeftRight(null, trapezoids[0], null, trapezoids[3]);
-            trapezoids[3].updateRight(t.upperRight, t.lowerRight);
+            trapezoids[0].UpdateLeft(t.UpperLeft, t.LowerLeft);
+            trapezoids[1].UpdateLeftRight(trapezoids[0], null, trapezoids[3], null);
+            trapezoids[2].UpdateLeftRight(null, trapezoids[0], null, trapezoids[3]);
+            trapezoids[3].UpdateRight(t.UpperRight, t.LowerRight);
 
             return trapezoids;
         }
 
         // Case 2: Trapezoid contains point p, q lies outside
         //         break trapezoid into 3 smaller trapezoids
-        public Trapezoid[] case2(Trapezoid t, Edge e)
+        public Trapezoid[] Case2(Trapezoid t, Edge e)
         {
             Point rp;
-            if (e.q.x == t.rightPoint.x)
-                rp = e.q;
+            if (e.Q.X == t.RightPoint.X)
+                rp = e.Q;
             else
-                rp = t.rightPoint;
+                rp = t.RightPoint;
 
             Trapezoid[] trapezoids = new Trapezoid[3];
-            trapezoids[0] = new Trapezoid(t.leftPoint, e.p, t.top, t.bottom);
-            trapezoids[1] = new Trapezoid(e.p, rp, t.top, e);
-            trapezoids[2] = new Trapezoid(e.p, rp, e, t.bottom);
+            trapezoids[0] = new Trapezoid(t.LeftPoint, e.P, t.Top, t.Bottom);
+            trapezoids[1] = new Trapezoid(e.P, rp, t.Top, e);
+            trapezoids[2] = new Trapezoid(e.P, rp, e, t.Bottom);
 
-            trapezoids[0].updateLeft(t.upperLeft, t.lowerLeft);
-            trapezoids[1].updateLeftRight(trapezoids[0], null, t.upperRight, null);
-            trapezoids[2].updateLeftRight(null, trapezoids[0], null, t.lowerRight);
+            trapezoids[0].UpdateLeft(t.UpperLeft, t.LowerLeft);
+            trapezoids[1].UpdateLeftRight(trapezoids[0], null, t.UpperRight, null);
+            trapezoids[2].UpdateLeftRight(null, trapezoids[0], null, t.LowerRight);
 
-            bCross = t.bottom;
-            tCross = t.top;
+            _bCross = t.Bottom;
+            _cross = t.Top;
 
-            e.above = trapezoids[1];
-            e.below = trapezoids[2];
+            e.Above = trapezoids[1];
+            e.Below = trapezoids[2];
 
             return trapezoids;
         }
 
         // Case 3: Trapezoid is bisected
-        public Trapezoid[] case3(Trapezoid t, Edge e)
+        public Trapezoid[] Case3(Trapezoid t, Edge e)
         {
             Point lp;
-            if (e.p.x == t.leftPoint.x)
-                lp = e.p;
+            if (e.P.X == t.LeftPoint.X)
+                lp = e.P;
             else
-                lp = t.leftPoint;
+                lp = t.LeftPoint;
 
             Point rp;
-            if (e.q.x == t.rightPoint.x)
-                rp = e.q;
+            if (e.Q.X == t.RightPoint.X)
+                rp = e.Q;
             else
-                rp = t.rightPoint;
+                rp = t.RightPoint;
 
             Trapezoid[] trapezoids = new Trapezoid[2];
 
-            if (tCross == t.top)
+            if (_cross == t.Top)
             {
-                trapezoids[0] = t.upperLeft;
-                trapezoids[0].updateRight(t.upperRight, null);
-                trapezoids[0].rightPoint = rp;
+                trapezoids[0] = t.UpperLeft;
+                trapezoids[0].UpdateRight(t.UpperRight, null);
+                trapezoids[0].RightPoint = rp;
             }
             else
             {
-                trapezoids[0] = new Trapezoid(lp, rp, t.top, e);
-                trapezoids[0].updateLeftRight(t.upperLeft, e.above, t.upperRight, null);
+                trapezoids[0] = new Trapezoid(lp, rp, t.Top, e);
+                trapezoids[0].UpdateLeftRight(t.UpperLeft, e.Above, t.UpperRight, null);
             }
 
-            if (bCross == t.bottom)
+            if (_bCross == t.Bottom)
             {
-                trapezoids[1] = t.lowerLeft;
-                trapezoids[1].updateRight(null, t.lowerRight);
-                trapezoids[1].rightPoint = rp;
+                trapezoids[1] = t.LowerLeft;
+                trapezoids[1].UpdateRight(null, t.LowerRight);
+                trapezoids[1].RightPoint = rp;
             }
             else
             {
-                trapezoids[1] = new Trapezoid(lp, rp, e, t.bottom);
-                trapezoids[1].updateLeftRight(e.below, t.lowerLeft, null, t.lowerRight);
+                trapezoids[1] = new Trapezoid(lp, rp, e, t.Bottom);
+                trapezoids[1].UpdateLeftRight(e.Below, t.LowerLeft, null, t.LowerRight);
             }
 
-            bCross = t.bottom;
-            tCross = t.top;
+            _bCross = t.Bottom;
+            _cross = t.Top;
 
-            e.above = trapezoids[0];
-            e.below = trapezoids[1];
+            e.Above = trapezoids[0];
+            e.Below = trapezoids[1];
 
             return trapezoids;
         }
 
         // Case 4: Trapezoid contains point q, p lies outside
         //         break trapezoid into 3 smaller trapezoids
-        public Trapezoid[] case4(Trapezoid t, Edge e)
+        public Trapezoid[] Case4(Trapezoid t, Edge e)
         {
             Point lp;
-            if (e.p.x == t.leftPoint.x)
-                lp = e.p;
+            if (e.P.X == t.LeftPoint.X)
+                lp = e.P;
             else
-                lp = t.leftPoint;
+                lp = t.LeftPoint;
 
             Trapezoid[] trapezoids = new Trapezoid[3];
 
-            if (tCross == t.top)
+            if (_cross == t.Top)
             {
-                trapezoids[0] = t.upperLeft;
-                trapezoids[0].rightPoint = e.q;
+                trapezoids[0] = t.UpperLeft;
+                trapezoids[0].RightPoint = e.Q;
             }
             else
             {
-                trapezoids[0] = new Trapezoid(lp, e.q, t.top, e);
-                trapezoids[0].updateLeft(t.upperLeft, e.above);
+                trapezoids[0] = new Trapezoid(lp, e.Q, t.Top, e);
+                trapezoids[0].UpdateLeft(t.UpperLeft, e.Above);
             }
 
-            if (bCross == t.bottom)
+            if (_bCross == t.Bottom)
             {
-                trapezoids[1] = t.lowerLeft;
-                trapezoids[1].rightPoint = e.q;
+                trapezoids[1] = t.LowerLeft;
+                trapezoids[1].RightPoint = e.Q;
             }
             else
             {
-                trapezoids[1] = new Trapezoid(lp, e.q, e, t.bottom);
-                trapezoids[1].updateLeft(e.below, t.lowerLeft);
+                trapezoids[1] = new Trapezoid(lp, e.Q, e, t.Bottom);
+                trapezoids[1].UpdateLeft(e.Below, t.LowerLeft);
             }
 
-            trapezoids[2] = new Trapezoid(e.q, t.rightPoint, t.top, t.bottom);
-            trapezoids[2].updateLeftRight(trapezoids[0], trapezoids[1], t.upperRight, t.lowerRight);
+            trapezoids[2] = new Trapezoid(e.Q, t.RightPoint, t.Top, t.Bottom);
+            trapezoids[2].UpdateLeftRight(trapezoids[0], trapezoids[1], t.UpperRight, t.LowerRight);
 
             return trapezoids;
         }
 
         // Create an AABB around segments
-        public Trapezoid boundingBox(List<Edge> edges)
+        public Trapezoid BoundingBox(List<Edge> edges)
         {
-            Point max = edges[0].p + margin;
-            Point min = edges[0].q - margin;
+            Point max = edges[0].P + _margin;
+            Point min = edges[0].Q - _margin;
 
             foreach (Edge e in edges)
             {
-                if (e.p.x > max.x) max = new Point(e.p.x + margin, max.y);
-                if (e.p.y > max.y) max = new Point(max.x, e.p.y + margin);
-                if (e.q.x > max.x) max = new Point(e.q.x + margin, max.y);
-                if (e.q.y > max.y) max = new Point(max.x, e.q.y + margin);
-                if (e.p.x < min.x) min = new Point(e.p.x - margin, min.y);
-                if (e.p.y < min.y) min = new Point(min.x, e.p.y - margin);
-                if (e.q.x < min.x) min = new Point(e.q.x - margin, min.y);
-                if (e.q.y < min.y) min = new Point(min.x, e.q.y - margin);
+                if (e.P.X > max.X) max = new Point(e.P.X + _margin, max.Y);
+                if (e.P.Y > max.Y) max = new Point(max.X, e.P.Y + _margin);
+                if (e.Q.X > max.X) max = new Point(e.Q.X + _margin, max.Y);
+                if (e.Q.Y > max.Y) max = new Point(max.X, e.Q.Y + _margin);
+                if (e.P.X < min.X) min = new Point(e.P.X - _margin, min.Y);
+                if (e.P.Y < min.Y) min = new Point(min.X, e.P.Y - _margin);
+                if (e.Q.X < min.X) min = new Point(e.Q.X - _margin, min.Y);
+                if (e.Q.Y < min.Y) min = new Point(min.X, e.Q.Y - _margin);
             }
 
-            Edge top = new Edge(new Point(min.x, max.y), new Point(max.x, max.y));
-            Edge bottom = new Edge(new Point(min.x, min.y), new Point(max.x, min.y));
-            Point left = bottom.p;
-            Point right = top.q;
+            Edge top = new Edge(new Point(min.X, max.Y), new Point(max.X, max.Y));
+            Edge bottom = new Edge(new Point(min.X, min.Y), new Point(max.X, min.Y));
+            Point left = bottom.P;
+            Point right = top.Q;
 
-            //TODO??
-            //self.map[trap.key] = trap
             return new Trapezoid(left, right, top, bottom);
         }
     }
 
-    public class Point
+    internal class Point
     {
-        public float x, y;
+        public float X, Y;
 
         // Pointers to next and previous points in Monontone Mountain
-        public Point next, prev;
-        // The setment this point belongs to
-        public Edge Edge;
-        // List of edges this point constitutes an upper ending point (CDT)
-        public List<Edge> edges = new List<Edge>();
+        public Point Next, Prev;
 
         public Point(float x, float y)
         {
-            this.x = x;
-            this.y = y;
-            next = null;
-            prev = null;
+            X = x;
+            Y = y;
+            Next = null;
+            Prev = null;
         }
 
         public static Point operator -(Point p1, Point p2)
         {
-            return new Point(p1.x - p2.x, p1.y - p2.y);
+            return new Point(p1.X - p2.X, p1.Y - p2.Y);
         }
 
         public static Point operator +(Point p1, Point p2)
         {
-            return new Point(p1.x + p2.x, p1.y + p2.y);
+            return new Point(p1.X + p2.X, p1.Y + p2.Y);
         }
 
         public static Point operator -(Point p1, float f)
         {
-            return new Point(p1.x - f, p1.y - f);
+            return new Point(p1.X - f, p1.Y - f);
         }
 
         public static Point operator +(Point p1, float f)
         {
-            return new Point(p1.x + f, p1.y + f);
+            return new Point(p1.X + f, p1.Y + f);
         }
 
-        public static Point operator *(Point p1, float c1)
+        public float Cross(Point p)
         {
-            return new Point(p1.x * c1, p1.y * c1);
+            return X * p.Y - Y * p.X;
         }
 
-        public static Point operator /(Point p1, float c1)
+        public float Dot(Point p)
         {
-            return new Point(p1.x / c1, p1.y / c1);
+            return X * p.X + Y * p.Y;
         }
 
-        public static bool operator <(Point p1, Point p2)
+        public bool Neq(Point p)
         {
-            return p1.x < p2.x;
+            return p.X != X || p.Y != Y;
         }
 
-        public static bool operator >(Point p1, Point p2)
+        public float Orient2D(Point pb, Point pc)
         {
-            if (p1.y < p2.y)
-                return true;
-            else if (p1.y > p2.y)
-                return false;
-            else
-            {
-                if (p1.x < p2.x)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        public float cross(Point p)
-        {
-            return x * p.y - y * p.x;
-        }
-
-        public float dot(Point p)
-        {
-            return x * p.x + y * p.y;
-        }
-
-        public float length()
-        {
-            return (float)Math.Sqrt(x * x + y * y);
-        }
-
-        public Point normalize()
-        {
-            return this / length();
-        }
-
-        public bool less(Point p)
-        {
-            return x < p.x;
-        }
-
-        public bool neq(Point p)
-        {
-            return p.x != x || p.y != y;
-        }
-
-        public Point clone()
-        {
-            return new Point(x, y);
-        }
-
-        public static float orient2d(Point pa, Point pb, Point pc)
-        {
-            float acx = pa.x - pc.x;
-            float bcx = pb.x - pc.x;
-            float acy = pa.y - pc.y;
-            float bcy = pb.y - pc.y;
+            float acx = X - pc.X;
+            float bcx = pb.X - pc.X;
+            float acy = Y - pc.Y;
+            float bcy = pb.Y - pc.Y;
             return acx * bcy - acy * bcx;
         }
     }
 
-    // Represents a simple polygon's edge
-    public class Edge
+    internal class Edge
     {
-        public Point p;
-        public Point q;
+        public Point P;
+        public Point Q;
 
         // Pointers used for building trapezoidal map
-        public Trapezoid above, below;
+        public Trapezoid Above, Below;
 
         // Equation of a line: y = m*x + b
         // Slope of the line (m)
-        public float slope;
+        public float Slope;
 
         // Montone mountain points
-        public HashSet<Point> mPoints;
+        public HashSet<Point> MPoints;
 
         // Y intercept
-        public float b;
+        public float B;
 
         public Edge(Point p, Point q)
         {
-            this.p = p;
-            this.q = q;
+            P = p;
+            Q = q;
 
-            if (q.x - p.x != 0)
-                slope = (q.y - p.y) / (q.x - p.x);
+            if (q.X - p.X != 0)
+                Slope = (q.Y - p.Y) / (q.X - p.X);
             else
-                slope = 0;
+                Slope = 0;
 
-            b = p.y - (p.x * slope);
-            above = null;
-            below = null;
-            mPoints = new HashSet<Point>();
-            mPoints.Add(p);
-            mPoints.Add(q);
+            B = p.Y - (p.X * Slope);
+            Above = null;
+            Below = null;
+            MPoints = new HashSet<Point>();
+            MPoints.Add(p);
+            MPoints.Add(q);
         }
 
-        // Determines if this segment lies above the given point
-        public bool isAbove(Point point)
+        public bool IsAbove(Point point)
         {
-            return Point.orient2d(p, q, point) < 0;
+            return P.Orient2D(Q, point) < 0;
         }
 
-        // Determines if this segment lies below the given point
-        public bool isBelow(Point point)
+        public bool IsBelow(Point point)
         {
-            return Point.orient2d(p, q, point) > 0;
+            return P.Orient2D(Q, point) > 0;
         }
 
-        public void add_mpoint(Point point)
+        public void AddMpoint(Point point)
         {
-            foreach (Point mp in mPoints)
-                if (!mp.neq(point))
+            foreach (Point mp in MPoints)
+                if (!mp.Neq(point))
                     return;
 
-            mPoints.Add(point);
+            MPoints.Add(point);
         }
-
-        //private float signedArea(Point a, Point b, Point c)
-        //{
-        //    return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
-        //}
-
-        //public Point intersect(Point c, Point d)
-        //{
-        //    Point a = p;
-        //    Point b = q;
-
-        //    float a1 = signedArea(a, b, d);
-        //    float a2 = signedArea(a, b, c);
-
-        //    if (a1 != 0.0f && a2 != 0.0f && a1 * a2 < 0.0f)
-        //    {
-        //        float a3 = signedArea(c, d, a);
-        //        float a4 = a3 + a2 - a1;
-        //        if (a3 * a4 < 0.0f)
-        //        {
-        //            float t = a3 / (a3 - a4);
-        //            return a + ((b - a) * t);
-        //        }
-        //    }
-
-        //    throw new Exception("Error");
-        //}
     }
 
-    public class Trapezoid
+    internal class Trapezoid
     {
-        public Sink sink;
-        public bool inside;
+        public Sink Sink;
+        public bool Inside;
 
         // Neighbor pointers
-        public Trapezoid upperLeft;
-        public Trapezoid lowerLeft;
-        public Trapezoid upperRight;
-        public Trapezoid lowerRight;
+        public Trapezoid UpperLeft;
+        public Trapezoid LowerLeft;
+        public Trapezoid UpperRight;
+        public Trapezoid LowerRight;
 
-        public Point leftPoint;
-        public Point rightPoint;
+        public Point LeftPoint;
+        public Point RightPoint;
 
-        public Edge top;
-        public Edge bottom;
+        public Edge Top;
+        public Edge Bottom;
 
         public Trapezoid(Point leftPoint, Point rightPoint, Edge top, Edge bottom)
         {
-            this.leftPoint = leftPoint;
-            this.rightPoint = rightPoint;
-            this.top = top;
-            this.bottom = bottom;
-            upperLeft = null;
-            upperRight = null;
-            lowerLeft = null;
-            lowerRight = null;
-            inside = true;
-            sink = null;
-
-            //TODO??
-            //key = hash(self)
+            LeftPoint = leftPoint;
+            RightPoint = rightPoint;
+            Top = top;
+            Bottom = bottom;
+            UpperLeft = null;
+            UpperRight = null;
+            LowerLeft = null;
+            LowerRight = null;
+            Inside = true;
+            Sink = null;
         }
 
         // Update neighbors to the left
-        public void updateLeft(Trapezoid ul, Trapezoid ll)
+        public void UpdateLeft(Trapezoid ul, Trapezoid ll)
         {
-            upperLeft = ul; if (ul != null) ul.upperRight = this;
-            lowerLeft = ll; if (ll != null) ll.lowerRight = this;
+            UpperLeft = ul; if (ul != null) ul.UpperRight = this;
+            LowerLeft = ll; if (ll != null) ll.LowerRight = this;
         }
 
         // Update neighbors to the right
-        public void updateRight(Trapezoid ur, Trapezoid lr)
+        public void UpdateRight(Trapezoid ur, Trapezoid lr)
         {
-            upperRight = ur; if (ur != null) ur.upperLeft = this;
-            lowerRight = lr; if (lr != null) lr.lowerLeft = this;
+            UpperRight = ur; if (ur != null) ur.UpperLeft = this;
+            LowerRight = lr; if (lr != null) lr.LowerLeft = this;
         }
 
         // Update neighbors on both sides
-        public void updateLeftRight(Trapezoid ul, Trapezoid ll, Trapezoid ur, Trapezoid lr)
+        public void UpdateLeftRight(Trapezoid ul, Trapezoid ll, Trapezoid ur, Trapezoid lr)
         {
-            upperLeft = ul; if (ul != null) ul.upperRight = this;
-            lowerLeft = ll; if (ll != null) ll.lowerRight = this;
-            upperRight = ur; if (ur != null) ur.upperLeft = this;
-            lowerRight = lr; if (lr != null) lr.lowerLeft = this;
+            UpperLeft = ul; if (ul != null) ul.UpperRight = this;
+            LowerLeft = ll; if (ll != null) ll.LowerRight = this;
+            UpperRight = ur; if (ur != null) ur.UpperLeft = this;
+            LowerRight = lr; if (lr != null) lr.LowerLeft = this;
         }
 
         // Recursively trim outside neighbors
-        public void trimNeighbors()
+        public void TrimNeighbors()
         {
-            if (inside)
+            if (Inside)
             {
-                inside = false;
-                if (upperLeft != null) upperLeft.trimNeighbors();
-                if (lowerLeft != null) lowerLeft.trimNeighbors();
-                if (upperRight != null) upperRight.trimNeighbors();
-                if (lowerRight != null) lowerRight.trimNeighbors();
+                Inside = false;
+                if (UpperLeft != null) UpperLeft.TrimNeighbors();
+                if (LowerLeft != null) LowerLeft.TrimNeighbors();
+                if (UpperRight != null) UpperRight.TrimNeighbors();
+                if (LowerRight != null) LowerRight.TrimNeighbors();
             }
         }
 
         // Determines if this point lies inside the trapezoid
-        public bool contains(Point point)
+        public bool Contains(Point point)
         {
-            return (point.x > leftPoint.x && point.x < rightPoint.x && top.isAbove(point) && bottom.isBelow(point));
+            return (point.X > LeftPoint.X && point.X < RightPoint.X && Top.IsAbove(point) && Bottom.IsBelow(point));
         }
 
-        public List<Point> vertices()
+        public List<Point> Vertices()
         {
             List<Point> verts = new List<Point>(4);
-            verts.Add(lineIntersect(top, leftPoint.x));
-            verts.Add(lineIntersect(bottom, leftPoint.x));
-            verts.Add(lineIntersect(bottom, rightPoint.x));
-            verts.Add(lineIntersect(top, rightPoint.x));
+            verts.Add(LineIntersect(Top, LeftPoint.X));
+            verts.Add(LineIntersect(Bottom, LeftPoint.X));
+            verts.Add(LineIntersect(Bottom, RightPoint.X));
+            verts.Add(LineIntersect(Top, RightPoint.X));
             return verts;
         }
 
-        public Point lineIntersect(Edge edge, float x)
+        private Point LineIntersect(Edge edge, float x)
         {
-            float y = edge.slope * x + edge.b;
+            float y = edge.Slope * x + edge.B;
             return new Point(x, y);
         }
 
         // Add points to monotone mountain
-        public void addPoints()
+        public void AddPoints()
         {
-            if (leftPoint != bottom.p)
+            if (LeftPoint != Bottom.P)
             {
-                bottom.add_mpoint(leftPoint);
+                Bottom.AddMpoint(LeftPoint);
             }
-            if (rightPoint != bottom.q)
+            if (RightPoint != Bottom.Q)
             {
-                bottom.add_mpoint(rightPoint);
+                Bottom.AddMpoint(RightPoint);
             }
-            if (leftPoint != top.p)
+            if (LeftPoint != Top.P)
             {
-                top.add_mpoint(leftPoint);
+                Top.AddMpoint(LeftPoint);
             }
-            if (rightPoint != top.q)
+            if (RightPoint != Top.Q)
             {
-                top.add_mpoint(rightPoint);
+                Top.AddMpoint(RightPoint);
             }
         }
     }
 
-    public class XNode : Node
+    internal class XNode : Node
     {
-        private Point point;
+        private Point _point;
 
         public XNode(Point point, Node lChild, Node rChild)
             : base(lChild, rChild)
         {
-            this.point = point;
+            _point = point;
         }
 
-        public override Sink locate(Edge edge)
+        public override Sink Locate(Edge edge)
         {
-            if (edge.p.x >= point.x)
+            if (edge.P.X >= _point.X)
                 // Move to the right in the graph
-                return rightChild.locate(edge);
+                return RightChild.Locate(edge);
             // Move to the left in the graph
-            return leftChild.locate(edge);
+            return LeftChild.Locate(edge);
         }
     }
 
-    public class YNode : Node
+    internal class YNode : Node
     {
-        private Edge edge;
+        private Edge _edge;
 
         public YNode(Edge edge, Node lChild, Node rChild)
             : base(lChild, rChild)
         {
-            this.edge = edge;
+            _edge = edge;
         }
 
-        public override Sink locate(Edge edge)
+        public override Sink Locate(Edge edge)
         {
-            if (this.edge.isAbove(edge.p))
+            if (_edge.IsAbove(edge.P))
                 // Move down the graph
-                return rightChild.locate(edge);
+                return RightChild.Locate(edge);
 
-            if (this.edge.isBelow(edge.p))
+            if (_edge.IsBelow(edge.P))
                 // Move up the graph
-                return leftChild.locate(edge);
+                return LeftChild.Locate(edge);
 
             // s and segment share the same endpoint, p
-            if (edge.slope < this.edge.slope)
+            if (edge.Slope < _edge.Slope)
                 // Move down the graph
-                return rightChild.locate(edge);
+                return RightChild.Locate(edge);
 
             // Move up the graph
-            return leftChild.locate(edge);
+            return LeftChild.Locate(edge);
         }
     }
 
-    // Based on Raimund Seidel's paper "A simple and fast incremental randomized
-    // algorithm for computing trapezoidal decompositions and for triangulating polygons"
-    // See also: "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
-    //           "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
-    public class Triangulator
+    internal class Triangulator
     {
-        public const float SHEER = 0.001f;
+        private float _sheer = 0.001f;
 
         // Convex polygon list
-        public List<List<Point>> polygons;
+        public List<List<Point>> Triangles;
 
         // Order and randomize the segments
-        public List<Edge> edgeList;
+        private List<Edge> _edgeList;
 
         // Trapezoid decomposition list
-        public List<Trapezoid> trapezoids;
+        public List<Trapezoid> Trapezoids;
 
         // Initialize trapezoidal map and query structure
-        public TrapezoidalMap trapezoidalMap;
-        public Trapezoid boundingBox;
-        public QueryGraph queryGraph;
-        public List<MonotoneMountain> xMonoPoly;
+        private TrapezoidalMap _trapezoidalMap;
+        private Trapezoid _boundingBox;
+        private QueryGraph _queryGraph;
+        private List<MonotoneMountain> _xMonoPoly;
 
-        public Triangulator(List<Point> polyLine)
+        public Triangulator(List<Point> polyLine, float sheer)
         {
-            polygons = new List<List<Point>>();
-            trapezoids = new List<Trapezoid>();
-            xMonoPoly = new List<MonotoneMountain>();
-            edgeList = initEdges(polyLine);
-            trapezoidalMap = new TrapezoidalMap();
-            boundingBox = trapezoidalMap.boundingBox(edgeList);
-            queryGraph = new QueryGraph(Sink.isink(boundingBox));
+            _sheer = sheer;
+            Triangles = new List<List<Point>>();
+            Trapezoids = new List<Trapezoid>();
+            _xMonoPoly = new List<MonotoneMountain>();
+            _edgeList = InitEdges(polyLine);
+            _trapezoidalMap = new TrapezoidalMap();
+            _boundingBox = _trapezoidalMap.BoundingBox(_edgeList);
+            _queryGraph = new QueryGraph(Sink.Isink(_boundingBox));
 
-            process();
-        }
-
-        public List<List<Point>> triangles()
-        {
-            List<List<Point>> triangles = new List<List<Point>>();
-            foreach (List<Point> polygon in polygons)
-            {
-                List<Point> verts = new List<Point>();
-                foreach (Point point in polygon)
-                    verts.Add(point);
-
-                triangles.Add(verts);
-            }
-            return triangles;
-        }
-
-        public HashSet<Trapezoid> trapezoidMap()
-        {
-            return trapezoidalMap.map;
+            Process();
         }
 
         // Build the trapezoidal map and query graph
-        private void process()
+        private void Process()
         {
-            //NOTE FPE: Python here
-            foreach (Edge edge in edgeList)
+            foreach (Edge edge in _edgeList)
             {
-                List<Trapezoid> traps = queryGraph.followEdge(edge);
+                List<Trapezoid> traps = _queryGraph.FollowEdge(edge);
 
                 // Remove trapezoids from trapezoidal Map
                 foreach (Trapezoid t in traps)
                 {
-                    //TODO??
-                    //del self.trapezoidal_map.map[t.key]
+                    _trapezoidalMap.Map.Remove(t);
 
-                    trapezoidalMap.map.Remove(t);
-
-                    bool cp = t.contains(edge.p);
-                    bool cq = t.contains(edge.q);
+                    bool cp = t.Contains(edge.P);
+                    bool cq = t.Contains(edge.Q);
                     Trapezoid[] tList;
 
                     if (cp && cq)
                     {
-                        tList = trapezoidalMap.case1(t, edge);
-                        queryGraph.case1(t.sink, edge, tList);
+                        tList = _trapezoidalMap.Case1(t, edge);
+                        _queryGraph.Case1(t.Sink, edge, tList);
                     }
                     else if (cp && !cq)
                     {
-                        tList = trapezoidalMap.case2(t, edge);
-                        queryGraph.case2(t.sink, edge, tList);
+                        tList = _trapezoidalMap.Case2(t, edge);
+                        _queryGraph.Case2(t.Sink, edge, tList);
                     }
                     else if (!cp && !cq)
                     {
-                        tList = trapezoidalMap.case3(t, edge);
-                        queryGraph.case3(t.sink, edge, tList);
+                        tList = _trapezoidalMap.Case3(t, edge);
+                        _queryGraph.Case3(t.Sink, edge, tList);
                     }
                     else
                     {
-                        tList = trapezoidalMap.case4(t, edge);
-                        queryGraph.case4(t.sink, edge, tList);
+                        tList = _trapezoidalMap.Case4(t, edge);
+                        _queryGraph.Case4(t.Sink, edge, tList);
                     }
                     // Add new trapezoids to map
                     foreach (Trapezoid y in tList)
                     {
-                        trapezoidalMap.map.Add(y);
+                        _trapezoidalMap.Map.Add(y);
                     }
                 }
-                trapezoidalMap.clear();
+                _trapezoidalMap.Clear();
             }
 
             // Mark outside trapezoids
-            foreach (Trapezoid t in trapezoidalMap.map)
+            foreach (Trapezoid t in _trapezoidalMap.Map)
             {
-                markOutside(t);
+                MarkOutside(t);
             }
 
             // Collect interior trapezoids
-            foreach (Trapezoid t in trapezoidalMap.map)
+            foreach (Trapezoid t in _trapezoidalMap.Map)
             {
-                if (t.inside)
+                if (t.Inside)
                 {
-                    trapezoids.Add(t);
-                    t.addPoints();
+                    Trapezoids.Add(t);
+                    t.AddPoints();
                 }
             }
 
             // Generate the triangles
-            createMountains();
-
-
-            //NOTE FPE: Scala here - seems to be a bug in this code
-            //int i = 0;
-            //while (i < edgeList.Count)
-            //{
-            //    Edge s = edgeList[i];
-            //    List<Trapezoid> traps = queryGraph.followEdge(s);
-
-            //    // Remove trapezoids from trapezoidal Map
-            //    int j = 0;
-            //    while (j < traps.Count)
-            //    {
-            //        trapezoidalMap.map.Remove(traps[j]);
-            //        j += 1;
-            //    }
-
-            //    j = 0;
-            //    while (j < traps.Count)
-            //    {
-            //        Trapezoid t = traps[j];
-            //        Trapezoid[] tList;
-            //        bool containsP = t.contains(s.p);
-            //        bool containsQ = t.contains(s.q);
-            //        if (containsP && containsQ)
-            //        {
-            //            // Case 1
-            //            tList = trapezoidalMap.case1(t, s);
-            //            queryGraph.case1(t.sink, s, tList);
-            //        }
-            //        else if (containsP && !containsQ)
-            //        {
-            //            // Case 2
-            //            tList = trapezoidalMap.case2(t, s);
-            //            queryGraph.case2(t.sink, s, tList);
-            //        }
-            //        else if (!containsP && !containsQ)
-            //        {
-            //            // Case 3
-            //            tList = trapezoidalMap.case3(t, s);
-            //            queryGraph.case3(t.sink, s, tList);
-            //        }
-            //        else
-            //        {
-            //            // Case 4
-            //            tList = trapezoidalMap.case4(t, s);
-            //            queryGraph.case4(t.sink, s, tList);
-            //        }
-
-            //        // Add new trapezoids to map
-            //        int k = 0;
-            //        while (k < tList.Length)
-            //        {
-            //            trapezoidalMap.map.Add(tList[k]);
-            //            k += 1;
-            //        }
-            //        j += 1;
-            //    }
-
-            //    trapezoidalMap.clear();
-            //    i += 1;
-            //}
-
-            //// Mark outside trapezoids
-            //foreach (Trapezoid t in trapezoidalMap.map)
-            //{
-            //    markOutside(t);
-            //}
-
-            //// Collect interior trapezoids
-            //foreach (Trapezoid t in trapezoidalMap.map)
-            //{
-            //    if (t.inside)
-            //    {
-            //        trapezoids.Add(t);
-            //        t.addPoints();
-            //    }
-
-            //    // Generate the triangles
-            //    createMountains();
-
-            //    //println("# triangles = " + triangles.size)
-            //}
-        }
-
-        // Monotone polygons - these are monotone mountains
-        List<List<Point>> monoPolies()
-        {
-            List<List<Point>> polies = new List<List<Point>>();
-            foreach (MonotoneMountain x in xMonoPoly)
-                polies.Add(x.monoPoly);
-            return polies;
+            CreateMountains();
         }
 
         // Build a list of x-monotone mountains
-        private void createMountains()
+        private void CreateMountains()
         {
-            //NOTE FPE: Python here
-            foreach (Edge edge in edgeList)
+            foreach (Edge edge in _edgeList)
             {
-                if (edge.mPoints.Count > 2)
+                if (edge.MPoints.Count > 2)
                 {
                     MonotoneMountain mountain = new MonotoneMountain();
 
@@ -1159,132 +966,62 @@ namespace FarseerPhysics.Common.Decomposition
                     // Insertion sort is one of the fastest algorithms for sorting arrays containing 
                     // fewer than ten elements, or for lists that are already mostly sorted.
 
-                    List<Point> points = new List<Point>(edge.mPoints);
-                    points.Sort(new sorter());
+                    List<Point> points = new List<Point>(edge.MPoints);
+                    points.Sort((p1, p2) => p1.X.CompareTo(p2.X));
 
                     foreach (Point p in points)
-                        mountain.add(p);
+                        mountain.Add(p);
 
                     // Triangulate monotone mountain
-                    mountain.process();
+                    mountain.Process();
 
                     // Extract the triangles into a single list
-                    foreach (List<Point> t in mountain.triangles)
+                    foreach (List<Point> t in mountain.Triangles)
                     {
-                        polygons.Add(t);
+                        Triangles.Add(t);
                     }
 
-                    xMonoPoly.Add(mountain);
+                    _xMonoPoly.Add(mountain);
                 }
             }
-
-            //NOTE FPE: Scala here
-            //int i = 0;
-            //while (i < edgeList.Count)
-            //{
-            //    Edge s = edgeList[i];
-
-            //    //NOTE FPE: > 0 in scala and > 2 in python?
-            //    if (s.mPoints.Count > 0)
-            //    {
-            //        MonotoneMountain mountain = new MonotoneMountain();
-            //        List<Point> k;
-
-            //        // Sorting is a perfromance hit. Literature says this can be accomplised in
-            //        // linear time, although I don't see a way around using traditional methods
-            //        // when using a randomized incremental algorithm
-            //        //if(s.mPoints.Count < 10) 
-            //        // Insertion sort is one of the fastest algorithms for sorting arrays containing 
-            //        // fewer than ten elements, or for lists that are already mostly sorted.
-            //        //k = Util.insertSort((p1: Point, p2: Point) => p1 < p2)(s.mPoints).toList
-            //        //else 
-            //        //k = Util.msort((p1: Point, p2: Point) => p1 < p2)(s.mPoints.toList)
-
-            //        k = new List<Point>(s.mPoints);
-            //        k.Sort(new sort());
-
-            //        //val points = s.p :: k ::: List(s.q)
-            //        List<Point> points = new List<Point>();
-            //        points.Add(s.p);
-            //        points.AddRange(k);
-            //        points.Add(s.q);
-
-            //        int j = 0;
-            //        while (j < points.Count)
-            //        {
-            //            mountain.add(points[j]);
-            //            j += 1;
-            //        }
-
-            //        // Triangulate monotone mountain
-            //        mountain.process();
-
-            //        // Extract the triangles into a single list
-            //        j = 0;
-            //        while (j < mountain.triangles.Count)
-            //        {
-            //            polygons.Add(mountain.triangles[j]);
-            //            j += 1;
-            //        }
-
-            //        xMonoPoly.Add(mountain);
-            //    }
-            //    i += 1;
-            //}
         }
 
         // Mark the outside trapezoids surrounding the polygon
-        private void markOutside(Trapezoid t)
+        private void MarkOutside(Trapezoid t)
         {
-            if (t.top == boundingBox.top || t.bottom == boundingBox.bottom)
-                t.trimNeighbors();
+            if (t.Top == _boundingBox.Top || t.Bottom == _boundingBox.Bottom)
+                t.TrimNeighbors();
         }
 
         // Create segments and connect end points; update edge event pointer
-        private List<Edge> initEdges(List<Point> points)
+        private List<Edge> InitEdges(List<Point> points)
         {
             List<Edge> edges = new List<Edge>();
 
-            //NOTE FPE: Python
-            //for (int i = 0; i < points.Count; i++)
-            //{
-            //    int j;
-            //    if (i < points.Count - 1)
-            //        j = i + 1;
-            //    else
-            //        j = 0;
-
-            //    Point p = new Point(points[i].x, points[i].y);
-            //    Point q = new Point(points[j].x, points[j].y);
-            //    edges.Add(new Edge(p, q));
-            //}
-            //return orderSegments(edges);
-
-            //NOTE FPE: Scala
             for (int i = 0; i < points.Count - 1; i++)
             {
                 edges.Add(new Edge(points[i], points[i + 1]));
             }
             edges.Add(new Edge(points[0], points[points.Count - 1]));
-            return orderSegments(edges);
+            return OrderSegments(edges);
         }
 
-        private List<Edge> orderSegments(List<Edge> edgeInput)
+        private List<Edge> OrderSegments(List<Edge> edgeInput)
         {
             // Ignore vertical segments!
             List<Edge> edges = new List<Edge>();
 
             foreach (Edge e in edgeInput)
             {
-                Point p = shearTransform(e.p);
-                Point q = shearTransform(e.q);
+                Point p = ShearTransform(e.P);
+                Point q = ShearTransform(e.Q);
 
                 // Point p must be to the left of point q
-                if (p.x > q.x)
+                if (p.X > q.X)
                 {
                     edges.Add(new Edge(q, p));
                 }
-                else if (p.x < q.x)
+                else if (p.X < q.X)
                 {
                     edges.Add(new Edge(p, q));
                 }
@@ -1312,25 +1049,9 @@ namespace FarseerPhysics.Common.Decomposition
 
         // Prevents any two distinct endpoints from lying on a common vertical line, and avoiding
         // the degenerate case. See Mark de Berg et al, Chapter 6.3
-        private Point shearTransform(Point point)
+        private Point ShearTransform(Point point)
         {
-            return new Point(point.x + SHEER * point.y, point.y);
-        }
-
-        private class sorter : IComparer<Point>
-        {
-            //NOTE FPE: Correct??
-            public int Compare(Point p1, Point p2)
-            {
-                if (p1.x < p2.x)
-                    return -1;
-
-                if (p1.x == p2.x)
-                    return 0;
-
-                return 1;
-            }
+            return new Point(point.X + _sheer * point.Y, point.Y);
         }
     }
-#endif
 }
