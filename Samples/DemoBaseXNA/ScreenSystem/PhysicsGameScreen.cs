@@ -67,7 +67,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             World.FixtureAdded += AddFixture;
             World.FixtureRemoved += RemoveFixture;
 
+            //We enable diagnostics to show get values for our performance counters.
+            Settings.EnableDiagnostics = true;
+
             DebugView = new DebugViewXNA(World);
+            DebugView.RemoveFlags(DebugViewFlags.Shape);
+            DebugView.RemoveFlags(DebugViewFlags.Joint);
+
             DebugView.DefaultShapeColor = Color.White;
             DebugView.SleepingShapeColor = Color.LightGray;
 

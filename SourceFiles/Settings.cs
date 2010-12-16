@@ -37,10 +37,12 @@ namespace FarseerPhysics.Common
 
         /// <summary>
         /// Enabling diagnistics causes the engine to gather timing information.
-        /// You can see how much time it took to solve the contacts, solve CCD and
-        /// even how long it took to update the controllers.
+        /// You can see how much time it took to solve the contacts, solve CCD
+        /// and update the controllers.
+        /// NOTE: If you are using a debug view that shows performance counters,
+        /// you might want to enable this.
         /// </summary>
-        public static bool EnableDiagnostics = true;
+        public static bool EnableDiagnostics = false;
 
         /// <summary>
         /// The number of velocity iterations used in the solver.
