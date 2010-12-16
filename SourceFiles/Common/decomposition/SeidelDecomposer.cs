@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -68,7 +69,7 @@ namespace FarseerPhysics.Common.Decomposition
         public Point tail, head;
         public int size;
 
-        public List<Point> convexPoints;
+        public HashSet<Point> convexPoints;
 
         // Monotone mountain points
         public List<Point> monoPoly;
@@ -91,7 +92,7 @@ namespace FarseerPhysics.Common.Decomposition
             tail = null;
             head = null;
             positive = false;
-            convexPoints = new List<Point>();
+            convexPoints = new HashSet<Point>();
             monoPoly = new List<Point>();
             triangles = new List<List<Point>>();
             convexPolies = new List<Point>();
@@ -108,24 +109,18 @@ namespace FarseerPhysics.Common.Decomposition
             else if (size == 1)
             {
                 // Keep repeat points out of the list
-                if (point.neq(head))
-                {
-                    tail = point;
-                    tail.prev = head;
-                    head.next = tail;
-                    size = 2;
-                }
+                tail = point;
+                tail.prev = head;
+                head.next = tail;
+                size = 2;
             }
             else
             {
                 // Keep repeat points out of the list
-                if (point.neq(tail))
-                {
-                    tail.next = point;
-                    point.prev = tail;
-                    tail = point;
-                    size += 1;
-                }
+                tail.next = point;
+                point.prev = tail;
+                tail = point;
+                size += 1;
             }
         }
 
@@ -151,13 +146,13 @@ namespace FarseerPhysics.Common.Decomposition
             // Initialize internal angles at each nonbase vertex
             // Link strictly convex vertices into a list, ignore reflex vertices
             Point p = head.next;
-            while (p != tail)
+            while (p.neq(tail))
             {
                 float a = angle(p);
                 // If the point is almost colinear with it's neighbor, remove it!
                 if (a >= PI_SLOP || a <= -PI_SLOP || a == 0.0)
                     remove(p);
-                else if (convex(p))
+                else if (is_convex(p))
                     convexPoints.Add(p);
                 p = p.next;
             }
@@ -169,8 +164,11 @@ namespace FarseerPhysics.Common.Decomposition
         {
             while (convexPoints.Count != 0)
             {
-                Point ear = convexPoints[0];
-                convexPoints.RemoveAt(0);
+                IEnumerator<Point> e = convexPoints.GetEnumerator();
+                e.MoveNext();
+                Point ear = e.Current;
+
+                convexPoints.Remove(ear);
                 Point a = ear.prev;
                 Point b = ear;
                 Point c = ear.next;
@@ -194,7 +192,7 @@ namespace FarseerPhysics.Common.Decomposition
 
         private bool valid(Point p)
         {
-            return p != head && p != tail && convex(p);
+            return p.neq(head) && p.neq(tail) && is_convex(p);
         }
 
         // Create the monotone polygon
@@ -223,7 +221,7 @@ namespace FarseerPhysics.Common.Decomposition
         }
 
         // Determines if the inslide angle is convex or reflex
-        private bool convex(Point p)
+        private bool is_convex(Point p)
         {
             if (positive != (angle(p) >= 0))
                 return false;
@@ -692,7 +690,7 @@ namespace FarseerPhysics.Common.Decomposition
         public float slope;
 
         // Montone mountain points
-        public List<Point> mPoints;
+        public HashSet<Point> mPoints;
 
         // Y intercept
         public float b;
@@ -710,7 +708,7 @@ namespace FarseerPhysics.Common.Decomposition
             b = p.y - (p.x * slope);
             above = null;
             below = null;
-            mPoints = new List<Point>();
+            mPoints = new HashSet<Point>();
             mPoints.Add(p);
             mPoints.Add(q);
         }
@@ -725,6 +723,15 @@ namespace FarseerPhysics.Common.Decomposition
         public bool isBelow(Point point)
         {
             return Point.orient2d(p, q, point) > 0;
+        }
+
+        public void add_mpoint(Point point)
+        {
+            foreach (Point mp in mPoints)
+                if (!mp.neq(point))
+                    return;
+
+            mPoints.Add(point);
         }
 
         //private float signedArea(Point a, Point b, Point c)
@@ -852,19 +859,19 @@ namespace FarseerPhysics.Common.Decomposition
         {
             if (leftPoint != bottom.p)
             {
-                bottom.mPoints.Add(leftPoint.clone());
+                bottom.add_mpoint(leftPoint);
             }
             if (rightPoint != bottom.q)
             {
-                bottom.mPoints.Add(rightPoint.clone());
+                bottom.add_mpoint(rightPoint);
             }
             if (leftPoint != top.p)
             {
-                top.mPoints.Add(leftPoint.clone());
+                top.add_mpoint(leftPoint);
             }
             if (rightPoint != top.q)
             {
-                top.mPoints.Add(rightPoint.clone());
+                top.add_mpoint(rightPoint);
             }
         }
     }
@@ -925,7 +932,7 @@ namespace FarseerPhysics.Common.Decomposition
     //           "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
     public class Triangulator
     {
-        public const float SHEER = 0.0001f;
+        public const float SHEER = 0.001f;
 
         // Convex polygon list
         public List<List<Point>> polygons;
@@ -1254,11 +1261,11 @@ namespace FarseerPhysics.Common.Decomposition
             //return orderSegments(edges);
 
             //NOTE FPE: Scala
-            for (int i = 0; i < points.Count-1; i++)
+            for (int i = 0; i < points.Count - 1; i++)
             {
                 edges.Add(new Edge(points[i], points[i + 1]));
             }
-            edges.Add(new Edge(points[0], points[points.Count-1]));
+            edges.Add(new Edge(points[0], points[points.Count - 1]));
             return orderSegments(edges);
         }
 
