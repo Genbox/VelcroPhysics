@@ -288,6 +288,10 @@ namespace FarseerPhysics.TestBed
             {
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
             }
+            else if (_keyboardManager.IsNewKeyPress(Keys.F9))
+            {
+                EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
+            }
             else
             {
                 if (_test != null)

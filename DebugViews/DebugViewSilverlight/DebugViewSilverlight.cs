@@ -284,7 +284,6 @@ namespace FarseerPhysics.DebugViewSilverlight
                 
                 output.AppendLine();
 
-                output.AppendLine("New contacts: " + World.NewContactsTime);
                 output.AppendLine("Controllers: " + World.ControllersUpdateTime);
                 output.AppendLine("Contacts: " + World.ContactsUpdateTime);
                 output.AppendLine("Solve: " + World.SolveUpdateTime);

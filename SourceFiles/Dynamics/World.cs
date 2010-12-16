@@ -44,11 +44,6 @@ namespace FarseerPhysics.Dynamics
         NewFixture = (1 << 0),
 
         /// <summary>
-        /// Flag that determines if the world is locked.
-        /// </summary>
-        Locked = (1 << 1),
-
-        /// <summary>
         /// Flag that clear the forces after each time step.
         /// </summary>
         ClearForces = (1 << 2),
@@ -145,8 +140,6 @@ namespace FarseerPhysics.Dynamics
 
         public float ContinuousPhysicsTime { get; private set; }
 
-        public float NewContactsTime { get; private set; }
-
         public float ControllersUpdateTime { get; private set; }
 
         public float AddRemoveTime { get; private set; }
@@ -154,10 +147,6 @@ namespace FarseerPhysics.Dynamics
         public float ContactsUpdateTime { get; private set; }
 
         public float SolveUpdateTime { get; private set; }
-
-        public float BreakableBodyTime { get; private set; }
-
-        public float JointUpdateTime { get; private set; }
 
         /// <summary>
         /// Get the number of broad-phase proxies.
@@ -558,13 +547,6 @@ namespace FarseerPhysics.Dynamics
                 Flags &= ~WorldFlags.NewFixture;
             }
 
-#if (!SILVERLIGHT)
-            if (Settings.EnableDiagnostics)
-                NewContactsTime = _watch.ElapsedTicks - AddRemoveTime;
-#endif
-
-            Flags |= WorldFlags.Locked;
-
             TimeStep step;
             step.inv_dt = 1.0f / dt;
             step.dt = dt;
@@ -578,7 +560,7 @@ namespace FarseerPhysics.Dynamics
 
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
-                ControllersUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime);
+                ControllersUpdateTime = _watch.ElapsedTicks - AddRemoveTime;
 #endif
 
             // Update contacts. This is where some contacts are destroyed.
@@ -586,14 +568,14 @@ namespace FarseerPhysics.Dynamics
 
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
-                ContactsUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime + ControllersUpdateTime);
+                ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime);
 #endif
             // Integrate velocities, solve velocity raints, and integrate positions.
             Solve(ref step);
 
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
-                SolveUpdateTime = _watch.ElapsedTicks - (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime);
+                SolveUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime);
 #endif
 
             // Handle TOI events.
@@ -605,7 +587,7 @@ namespace FarseerPhysics.Dynamics
 #if (!SILVERLIGHT)
             if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks -
-                                        (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
+                                        (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 #endif
             _invDt0 = step.inv_dt;
 
@@ -614,20 +596,12 @@ namespace FarseerPhysics.Dynamics
                 ClearForces();
             }
 
-            //We have to unlock the world here to support breakable bodies.
-            Flags &= ~WorldFlags.Locked;
-
             for (int i = 0; i < BreakableBodyList.Count; i++)
             {
                 BreakableBodyList[i].Update();
             }
 
 #if (!SILVERLIGHT)
-            if (Settings.EnableDiagnostics)
-                BreakableBodyTime = _watch.ElapsedTicks -
-                                    (NewContactsTime + AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime +
-                                     ContinuousPhysicsTime);
-
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();

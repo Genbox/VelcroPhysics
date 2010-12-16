@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -20,31 +21,51 @@ namespace FarseerPhysics.DebugViews
     /// </summary>
     public class DebugViewXNA : DebugView, IDisposable
     {
-        private const int MaxContactPoints = 2048;
-        private static VertexPositionColor[] _vertsLines;
-        private static VertexPositionColor[] _vertsFill;
-        private static int _lineCount;
-        private static int _fillCount;
-        private static SpriteBatch _batch;
-        private static SpriteFont _font;
-        private static GraphicsDevice _device;
-        private static Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
-
-        private float _min;
-        private long _stepCount;
+        //Drawing
+        private VertexPositionColor[] _vertsLines;
+        private VertexPositionColor[] _vertsFill;
+        private VertexPositionColor[] _localVertsLines;
+        private VertexPositionColor[] _localVertsFill;
+        private int _lineCount;
+        private int _fillCount;
+        private int _localLineCount;
+        private int _localFillCount;
+        private SpriteBatch _batch;
+        private SpriteFont _font;
+        private GraphicsDevice _device;
+        private Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
         private int _maxPrimitiveCount;
+        private List<StringData> _stringData;
+        private BasicEffect _effect;
+        private BasicEffect _localEffect;
 
-        private static List<StringData> _stringData;
-        private static BasicEffect _effect;
+        //Shapes
         public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
-
         public Color InactiveShapeColor = new Color(0.5f, 0.5f, 0.3f);
         public Color KinematicShapeColor = new Color(0.5f, 0.5f, 0.9f);
         public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
         public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
         public Color TextColor = Color.White;
+
+        //Contacts
         private int _pointCount;
+        private const int MaxContactPoints = 2048;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
+
+        //Debug panel
+        public Vector2 DebugPanelPosition = new Vector2(40, 100);
+        private int _max;
+        private int _avg;
+        private int _min;
+
+        //Performance graph
+        public bool AdaptiveLimits = true;
+        public int ValuesToGraph = 500;
+        public int MinimumValue;
+        public int MaximumValue = 1000;
+        private List<float> _graphValues = new List<float>();
+        public Rectangle PerformancePanelBounds = new Rectangle(250, 100, 200, 100);
+        private Vector2[] _background = new Vector2[4];
 
 #if (XBOX)
         public const int CircleSegments = 16;
@@ -107,6 +128,17 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
+        public void DrawAABB(ref AABB aabb, Color color)
+        {
+            Vector2[] verts = new Vector2[4];
+            verts[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
+            verts[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
+            verts[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
+            verts[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
+
+            DrawPolygon(verts, 4, color);
+        }
+
         /// <summary>
         /// Call this to draw shapes and other debug draw data.
         /// </summary>
@@ -167,6 +199,11 @@ namespace FarseerPhysics.DebugViews
             if ((Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel)
             {
                 DrawDebugPanel();
+            }
+
+            if ((Flags & DebugViewFlags.PerformanceGraph) == DebugViewFlags.PerformanceGraph)
+            {
+                DrawPerformanceGraph();
             }
 
             if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
@@ -272,43 +309,92 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
+        private void DrawPerformanceGraph()
+        {
+            _graphValues.Add(World.UpdateTime);
+
+            if (_graphValues.Count > ValuesToGraph + 1)
+                _graphValues.RemoveAt(0);
+
+            float x = PerformancePanelBounds.X;
+            float deltaX = PerformancePanelBounds.Width / (float)ValuesToGraph;
+            float yScale = PerformancePanelBounds.Bottom - (float)PerformancePanelBounds.Top;
+
+            // we must have at least 2 values to start rendering
+            if (_graphValues.Count > 2)
+            {
+                _max = (int)_graphValues.Max();
+                _avg = (int)_graphValues.Average();
+                _min = (int)_graphValues.Min();
+
+                if (AdaptiveLimits)
+                {
+                    MaximumValue = _max;
+                    MinimumValue = 0;
+                }
+
+                // start at last value (newest value added)
+                // continue until no values are left
+                for (int i = _graphValues.Count - 1; i > 0; i--)
+                {
+                    float y1 = PerformancePanelBounds.Bottom - ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
+                    float y2 = PerformancePanelBounds.Bottom - ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
+
+                    Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                                             MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+
+                    Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                                             MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+
+                    DrawLocalSegment(x1, x2, Color.LightGreen);
+
+                    x += deltaX;
+                }
+            }
+
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, "Max: " + _max);
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, "Avg: " + _avg);
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, "Min: " + _min);
+
+            //Draw background.
+            _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
+            _background[1] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y);
+
+            DrawLocalSolidPolygon(_background, 4, Color.DarkGray, true);
+        }
+
         private void DrawDebugPanel()
         {
-            _stepCount++;
-
             int fixtures = 0;
             for (int i = 0; i < World.BodyList.Count; i++)
             {
                 fixtures += World.BodyList[i].FixtureList.Count;
             }
 
-            DrawString(50, 100, "Bodies: " + World.BodyList.Count);
-            DrawString(50, 115, "Fixtures: " + fixtures);
-            DrawString(50, 130, "Contacts: " + World.ContactCount);
-            DrawString(50, 145, "Joints: " + World.JointList.Count);
-            DrawString(50, 160, "Proxies: " + World.ProxyCount);
-            DrawString(50, 175, "Breakable: " + World.BreakableBodyList.Count);
-            DrawString(50, 190, "Controllers: " + World.Controllers.Count);
+            int x = (int)DebugPanelPosition.X;
+            int y = (int)DebugPanelPosition.Y;
+            const int ySize = 15;
 
-            DrawString(160, 100, "New contacts: " + World.NewContactsTime);
-            DrawString(160, 115, "Controllers: " + World.ControllersUpdateTime);
-            DrawString(160, 130, "Add/Remove: " + World.AddRemoveTime);
-            DrawString(160, 145, "Breakable: " + World.BreakableBodyTime);
-            DrawString(160, 160, "Contacts: " + World.ContactsUpdateTime);
-            DrawString(160, 175, "Joints: " + World.Island.JointUpdateTime);
-            DrawString(160, 190, "Solve: " + World.SolveUpdateTime);
-            DrawString(160, 205, "CCD: " + World.ContinuousPhysicsTime);
-            DrawString(160, 220, "Total: " + World.UpdateTime);
+            DrawString(x, y, "Objects: ");
+            DrawString(x, y += ySize, "- Bodies: " + World.BodyList.Count);
+            DrawString(x, y += ySize, "- Fixtures: " + fixtures);
+            DrawString(x, y += ySize, "- Contacts: " + World.ContactCount);
+            DrawString(x, y += ySize, "- Joints: " + World.JointList.Count);
+            DrawString(x, y += ySize, "- Controllers: " + World.Controllers.Count);
+            DrawString(x, y + ySize, "- Proxies: " + World.ProxyCount);
 
-            if (_stepCount > 150)
-            {
-                _min = Math.Min(World.UpdateTime, _min);
-                DrawString(160, 235, "Min: " + _min);
-            }
-            else
-            {
-                _min = World.UpdateTime;
-            }
+
+            y = (int)DebugPanelPosition.Y;
+
+            DrawString(x + 110, y, "Update time: ");
+            DrawString(x + 110, y += ySize, "- Body: " + World.SolveUpdateTime);
+            DrawString(x + 110, y += ySize, "- Contact: " + World.ContactsUpdateTime);
+            DrawString(x + 110, y += ySize, "- CCD: " + World.ContinuousPhysicsTime);
+            DrawString(x + 110, y += ySize, "- Joint: " + World.Island.JointUpdateTime);
+            DrawString(x + 110, y += ySize, "- Controller: " + World.ControllersUpdateTime);
+            DrawString(x + 110, y + ySize, "- Total: " + World.UpdateTime);
         }
 
         private void DrawJoint(Joint joint)
@@ -330,11 +416,9 @@ namespace FarseerPhysics.DebugViews
                 x2 = xf2.Position;
             }
 
-            Vector2 p2 = joint.WorldAnchorB;
-
-            Vector2 x1 = xf1.Position;
-
             Vector2 p1 = joint.WorldAnchorA;
+            Vector2 p2 = joint.WorldAnchorB;
+            Vector2 x1 = xf1.Position;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
@@ -344,7 +428,7 @@ namespace FarseerPhysics.DebugViews
                     DrawSegment(p1, p2, color);
                     break;
                 case JointType.Pulley:
-                    PulleyJoint pulley = (PulleyJoint) joint;
+                    PulleyJoint pulley = (PulleyJoint)joint;
                     Vector2 s1 = pulley.GroundAnchorA;
                     Vector2 s2 = pulley.GroundAnchorB;
                     DrawSegment(s1, p1, color);
@@ -360,6 +444,9 @@ namespace FarseerPhysics.DebugViews
                     DrawSegment(p2, p1, color);
                     DrawSolidCircle(p2, 0.1f, Vector2.Zero, Color.Red);
                     DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
+                    break;
+                case JointType.FixedAngle:
+                    //Should not draw anything.
                     break;
                 case JointType.FixedRevolute:
                     DrawSegment(x1, p1, color);
@@ -380,8 +467,8 @@ namespace FarseerPhysics.DebugViews
                 case JointType.Gear:
                     DrawSegment(x1, x2, color);
                     break;
-                    //case JointType.Weld:
-                    //    break;
+                //case JointType.Weld:
+                //    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);
@@ -396,7 +483,7 @@ namespace FarseerPhysics.DebugViews
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) fixture.Shape;
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
                         Vector2 center = MathUtils.Multiply(ref xf, circle.Position);
                         float radius = circle.Radius;
@@ -408,7 +495,7 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape) fixture.Shape;
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
 
@@ -424,7 +511,7 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape) fixture.Shape;
+                        EdgeShape edge = (EdgeShape)fixture.Shape;
                         Vector2 v1 = MathUtils.Multiply(ref xf, edge.Vertex1);
                         Vector2 v2 = MathUtils.Multiply(ref xf, edge.Vertex2);
                         DrawSegment(v1, v2, color);
@@ -433,7 +520,7 @@ namespace FarseerPhysics.DebugViews
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape) fixture.Shape;
+                        LoopShape loop = (LoopShape)fixture.Shape;
                         int count = loop.Vertices.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
@@ -446,6 +533,62 @@ namespace FarseerPhysics.DebugViews
                     }
                     break;
             }
+        }
+
+        private void DrawLocalSegment(Vector2 start, Vector2 end, Color color)
+        {
+            _localVertsLines[_localLineCount * 2].Position = new Vector3(start, 0);
+            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(end, 0);
+            _localVertsLines[_localLineCount * 2].Color = _localVertsLines[_localLineCount * 2 + 1].Color = color;
+            _localLineCount++;
+        }
+
+        public void DrawLocalSolidPolygon(Vector2[] vertices, int count, Color color, bool outline)
+        {
+            if (count == 2)
+            {
+                DrawLocalPolygon(vertices, count, color);
+                return;
+            }
+
+            Color colorFill = color * (outline ? 0.5f : 1.0f);
+
+            for (int i = 1; i < count - 1; i++)
+            {
+                _localVertsFill[_localFillCount * 3].Position = new Vector3(vertices[0], 0.0f);
+                _localVertsFill[_localFillCount * 3].Color = colorFill;
+
+                _localVertsFill[_localFillCount * 3 + 1].Position = new Vector3(vertices[i], 0.0f);
+                _localVertsFill[_localFillCount * 3 + 1].Color = colorFill;
+
+                _localVertsFill[_localFillCount * 3 + 2].Position = new Vector3(vertices[i + 1], 0.0f);
+                _localVertsFill[_localFillCount * 3 + 2].Color = colorFill;
+
+                _localFillCount++;
+            }
+
+            if (outline)
+            {
+                DrawLocalPolygon(vertices, count, color);
+            }
+        }
+
+        private void DrawLocalPolygon(Vector2[] vertices, int count, Color color)
+        {
+            for (int i = 0; i < count - 1; i++)
+            {
+                _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[i], 0.0f);
+                _localVertsLines[_localLineCount * 2].Color = color;
+                _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[i + 1], 0.0f);
+                _localVertsLines[_localLineCount * 2 + 1].Color = color;
+                _localLineCount++;
+            }
+
+            _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[count - 1], 0.0f);
+            _localVertsLines[_localLineCount * 2].Color = color;
+            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[0], 0.0f);
+            _localVertsLines[_localLineCount * 2 + 1].Color = color;
+            _localLineCount++;
         }
 
         public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
@@ -523,10 +666,10 @@ namespace FarseerPhysics.DebugViews
 
             for (int i = 0; i < CircleSegments; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
                 _vertsLines[_lineCount * 2].Color = color;
@@ -551,15 +694,15 @@ namespace FarseerPhysics.DebugViews
 
             Color colorFill = color * 0.5f;
 
-            Vector2 v0 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
             theta += increment;
 
             for (int i = 1; i < CircleSegments - 1; i++)
             {
-                Vector2 v1 = center + radius * new Vector2((float) Math.Cos(theta), (float) Math.Sin(theta));
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center +
                              radius *
-                             new Vector2((float) Math.Cos(theta + increment), (float) Math.Sin(theta + increment));
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
                 _vertsFill[_fillCount * 3].Color = colorFill;
@@ -635,7 +778,7 @@ namespace FarseerPhysics.DebugViews
             rotation.Normalize();
 
             // Calculate angle of directional vector
-            float angle = (float) Math.Atan2(rotation.X, -rotation.Y);
+            float angle = (float)Math.Atan2(rotation.X, -rotation.Y);
             // Create matrix for rotation
             Matrix rotMatrix = Matrix.CreateRotationZ(angle);
             // Create translation matrix for end-point
@@ -681,6 +824,15 @@ namespace FarseerPhysics.DebugViews
 
             _device.RasterizerState = RasterizerState.CullNone;
 
+            //Graph stuff first
+            _localEffect.Techniques[0].Passes[0].Apply();
+
+            if (_localFillCount > 0)
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, _localVertsFill, 0, _localFillCount);
+
+            if (_localLineCount > 0)
+                _device.DrawUserPrimitives(PrimitiveType.LineList, _localVertsLines, 0, _localLineCount);
+
             // set the effects projection matrix
             _effect.Projection = projection;
 
@@ -708,7 +860,7 @@ namespace FarseerPhysics.DebugViews
             _batch.End();
 
             _stringData.Clear();
-            _lineCount = _fillCount = 0;
+            _lineCount = _fillCount = _localLineCount = _localFillCount = 0;
         }
 
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
@@ -717,30 +869,30 @@ namespace FarseerPhysics.DebugViews
             RenderDebugData(ref projection);
         }
 
-        public void DrawAABB(ref AABB aabb, Color color)
-        {
-            Vector2[] verts = new Vector2[4];
-            verts[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
-            verts[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
-            verts[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
-            verts[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
-
-            DrawPolygon(verts, 4, color);
-        }
-
         public void LoadContent(GraphicsDevice device, ContentManager content)
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             _batch = new SpriteBatch(device);
             _font = content.Load<SpriteFont>("font");
             _device = device;
+
             _effect = new BasicEffect(device);
             _effect.VertexColorEnabled = true;
+
+            _localEffect = new BasicEffect(device);
+            _localEffect.VertexColorEnabled = true;
+            _localEffect.Projection = Matrix.CreateOrthographicOffCenter(0, _device.Viewport.Width,
+                                                                         _device.Viewport.Height, 0, 0, 1);
+
             _stringData = new List<StringData>();
 
             _maxPrimitiveCount = device.GraphicsProfile == GraphicsProfile.Reach ? 65535 : 1048575;
             _vertsLines = new VertexPositionColor[_maxPrimitiveCount];
             _vertsFill = new VertexPositionColor[_maxPrimitiveCount];
+
+            //For now, the local vertices are only used by the graph.
+            _localVertsLines = new VertexPositionColor[10000];
+            _localVertsFill = new VertexPositionColor[10000];
         }
 
         #region Nested type: ContactPoint
