@@ -25,6 +25,7 @@
 
 using System;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
@@ -100,6 +101,7 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Initialize()
         {
+            Settings.EnableDiagnostics = true;
             DebugView = new DebugViewXNA(World);
             DebugView.LoadContent(GameInstance.GraphicsDevice, GameInstance.Content);
         }
