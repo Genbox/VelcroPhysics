@@ -257,15 +257,15 @@ namespace FarseerPhysics.TestBed
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F1))
             {
-                DebugViewEnabled = !DebugViewEnabled;
+                EnableOrDisableFlag(DebugViewFlags.Shape);
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F2))
             {
-                EnableOrDisableFlag(DebugViewFlags.Shape);
+                EnableOrDisableFlag(DebugViewFlags.DebugPanel);
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F3))
             {
-                EnableOrDisableFlag(DebugViewFlags.Joint);
+                EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F4))
             {
@@ -277,7 +277,7 @@ namespace FarseerPhysics.TestBed
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F6))
             {
-                EnableOrDisableFlag(DebugViewFlags.Pair);
+                EnableOrDisableFlag(DebugViewFlags.Joint);
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F7))
             {
@@ -287,10 +287,6 @@ namespace FarseerPhysics.TestBed
             else if (_keyboardManager.IsNewKeyPress(Keys.F8))
             {
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
-            }
-            else if (_keyboardManager.IsNewKeyPress(Keys.F9))
-            {
-                EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
             }
             else
             {

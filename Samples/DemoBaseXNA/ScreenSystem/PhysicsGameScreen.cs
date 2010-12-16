@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
@@ -15,12 +14,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class PhysicsGameScreen : GameScreen
     {
-        public const float lineWidth = .4f;
+        public const float LineWidth = .4f;
 
         public World World;
         public DebugViewXNA DebugView;
-        public bool DebugViewEnabled = false;
-        public bool DebugPanelEnabled = false;
 
         private FixedMouseJoint _fixedMouseJoint;
         private Border _border;
@@ -32,7 +29,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private Dictionary<MaterialType, List<Fixture>> _shapeFixtures;
         private List<Fixture> _lineFixtures;
 
-        public MaterialManager materialManager;
+        public MaterialManager MaterialManager;
 
         private Texture2D _lineTexture;
 
@@ -48,14 +45,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             base.LoadContent();
 
-            materialManager = new MaterialManager();
-            materialManager.LoadContent(ScreenManager.ContentManager);
+            MaterialManager = new MaterialManager();
+            MaterialManager.LoadContent(ScreenManager.ContentManager);
 
             _shapeFixtures = new Dictionary<MaterialType, List<Fixture>>();
 
-            int _maxPrimitiveCount = ScreenManager.GraphicsDevice.GraphicsProfile == GraphicsProfile.Reach ? 65535 : 1048575;
-            _vertsLines = new VertexPositionColorTexture[_maxPrimitiveCount];
-            _vertsFill = new VertexPositionColorTexture[_maxPrimitiveCount];
+            int maxPrimitiveCount = ScreenManager.GraphicsDevice.GraphicsProfile == GraphicsProfile.Reach ? 65535 : 1048575;
+            _vertsLines = new VertexPositionColorTexture[maxPrimitiveCount];
+            _vertsFill = new VertexPositionColorTexture[maxPrimitiveCount];
 
             _lineTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/line");
             _lineFixtures = new List<Fixture>();
@@ -67,8 +64,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (World == null)
                 return;
 
-            World.FixtureAdded += addFixture;
-            World.FixtureRemoved += removeFixture;
+            World.FixtureAdded += AddFixture;
+            World.FixtureRemoved += RemoveFixture;
 
             DebugView = new DebugViewXNA(World);
             DebugView.DefaultShapeColor = Color.White;
@@ -93,7 +90,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
-        private void addFixture(Fixture fixture)
+        private void AddFixture(Fixture fixture)
         {
             if (fixture.ShapeType == ShapeType.Edge || fixture.ShapeType == ShapeType.Loop)
             {
@@ -105,16 +102,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 {
                     fixture.UserData = new DemoMaterial(MaterialType.Blank);
                 }
-                DemoMaterial _tempMat = (DemoMaterial)fixture.UserData;
-                if (!_shapeFixtures.ContainsKey(_tempMat.Type))
+                DemoMaterial tempMat = (DemoMaterial)fixture.UserData;
+                if (!_shapeFixtures.ContainsKey(tempMat.Type))
                 {
-                    _shapeFixtures[_tempMat.Type] = new List<Fixture>();
+                    _shapeFixtures[tempMat.Type] = new List<Fixture>();
                 }
-                _shapeFixtures[_tempMat.Type].Add(fixture);
+                _shapeFixtures[tempMat.Type].Add(fixture);
             }
         }
 
-        private void removeFixture(Fixture fixture)
+        private void RemoveFixture(Fixture fixture)
         {
             _lineFixtures.Remove(fixture);
             foreach (KeyValuePair<MaterialType, List<Fixture>> p in _shapeFixtures)
@@ -133,7 +130,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f,
                                         (1f / 30f)));
                 }
-                materialManager.Update(gameTime);
+                MaterialManager.Update(gameTime);
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -144,18 +141,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             //Xbox
             if (input.IsNewButtonPress(Buttons.X))
             {
-                DebugViewEnabled = !DebugViewEnabled;
+                EnableOrDisableFlag(DebugViewFlags.Shape);
             }
 
             if (input.IsNewButtonPress(Buttons.Y))
             {
-                DebugPanelEnabled = !DebugPanelEnabled;
-                Settings.EnableDiagnostics = DebugPanelEnabled;
-
-                if (DebugPanelEnabled)
-                    DebugView.AppendFlags(DebugViewFlags.DebugPanel);
-                else
-                    DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
+                EnableOrDisableFlag(DebugViewFlags.DebugPanel);
             }
 
             if (input.IsNewButtonPress(Buttons.B))
@@ -166,20 +157,38 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             //Windows
             if (input.IsNewKeyPress(Keys.F1))
             {
-                DebugViewEnabled = !DebugViewEnabled;
+                EnableOrDisableFlag(DebugViewFlags.Shape);
             }
-
-            if (input.IsNewKeyPress(Keys.F2))
+            else if (input.IsNewKeyPress(Keys.F2))
             {
-                DebugPanelEnabled = !DebugPanelEnabled;
-                Settings.EnableDiagnostics = DebugPanelEnabled;
-
-                if (DebugPanelEnabled)
-                    DebugView.AppendFlags(DebugViewFlags.DebugPanel);
-                else
-                    DebugView.RemoveFlags(DebugViewFlags.DebugPanel);
+                EnableOrDisableFlag(DebugViewFlags.DebugPanel);
             }
-
+            else if (input.IsNewKeyPress(Keys.F3))
+            {
+                EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
+            }
+            else if (input.IsNewKeyPress(Keys.F4))
+            {
+                EnableOrDisableFlag(DebugViewFlags.AABB);
+            }
+            else if (input.IsNewKeyPress(Keys.F5))
+            {
+                EnableOrDisableFlag(DebugViewFlags.CenterOfMass);
+            }
+            else if (input.IsNewKeyPress(Keys.F6))
+            {
+                EnableOrDisableFlag(DebugViewFlags.Joint);
+            }
+            else if (input.IsNewKeyPress(Keys.F7))
+            {
+                EnableOrDisableFlag(DebugViewFlags.ContactPoints);
+                EnableOrDisableFlag(DebugViewFlags.ContactNormals);
+            }
+            else if (input.IsNewKeyPress(Keys.F8))
+            {
+                EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
+            }
+        
             if (input.IsNewKeyPress(Keys.Escape))
             {
                 ExitScreen();
@@ -195,6 +204,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
 
             base.HandleInput(input);
+        }
+
+        private void EnableOrDisableFlag(DebugViewFlags flag)
+        {
+            if ((DebugView.Flags & flag) == flag)
+                DebugView.RemoveFlags(flag);
+            else
+                DebugView.AppendFlags(flag);
         }
 
 #if !XBOX
@@ -296,7 +313,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     }
                 }
 
-                if (materialManager.GetMaterialWrap(p.Key))
+                if (MaterialManager.GetMaterialWrap(p.Key))
                 {
                     ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
                 }
@@ -304,7 +321,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 {
                     ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
                 }
-                _effect.Texture = materialManager.GetMaterialTexture(p.Key);
+                _effect.Texture = MaterialManager.GetMaterialTexture(p.Key);
                 _effect.Techniques[0].Passes[0].Apply();
                 if (_fillCount > 0)
                 {
@@ -324,8 +341,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (World != null)
             {
-                if (DebugViewEnabled)
-                    DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
+                DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
             }
 
             base.Draw(gameTime);
@@ -335,60 +351,60 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             Vector2 tang = b - a;
             tang.Normalize();
-            tang *= lineWidth / 2f;
+            tang *= LineWidth / 2f;
             Vector2 norm = new Vector2(-tang.Y, tang.X);
 
             // define vertices
-            VertexPositionColorTexture[] _vertsLine = new VertexPositionColorTexture[8];
-            _vertsLine[0].Position = new Vector3(a - tang + norm, -1f);
-            _vertsLine[0].Color = Color.Black;
-            _vertsLine[0].TextureCoordinate = new Vector2(0f, .25f);
-            _vertsLine[1].Position = new Vector3(a - tang - norm, -1f);
-            _vertsLine[1].Color = Color.Black;
-            _vertsLine[1].TextureCoordinate = new Vector2(0f, .75f);
-            _vertsLine[2].Position = new Vector3(a - norm, -1f);
-            _vertsLine[2].Color = Color.Black;
-            _vertsLine[2].TextureCoordinate = new Vector2(.25f, .75f);
-            _vertsLine[3].Position = new Vector3(b - norm, -1f);
-            _vertsLine[3].Color = Color.Black;
-            _vertsLine[3].TextureCoordinate = new Vector2(.75f, .75f);
-            _vertsLine[4].Position = new Vector3(b + tang - norm, -1f);
-            _vertsLine[4].Color = Color.Black;
-            _vertsLine[4].TextureCoordinate = new Vector2(1f, .75f);
-            _vertsLine[5].Position = new Vector3(b + tang + norm, -1f);
-            _vertsLine[5].Color = Color.Black;
-            _vertsLine[5].TextureCoordinate = new Vector2(1f, .25f);
-            _vertsLine[6].Position = new Vector3(b + norm, -1f);
-            _vertsLine[6].Color = Color.Black;
-            _vertsLine[6].TextureCoordinate = new Vector2(.75f, .25f);
-            _vertsLine[7].Position = new Vector3(a + norm, -1f);
-            _vertsLine[7].Color = Color.Black;
-            _vertsLine[7].TextureCoordinate = new Vector2(.25f, .25f);
+            VertexPositionColorTexture[] vertsLine = new VertexPositionColorTexture[8];
+            vertsLine[0].Position = new Vector3(a - tang + norm, -1f);
+            vertsLine[0].Color = Color.Black;
+            vertsLine[0].TextureCoordinate = new Vector2(0f, .25f);
+            vertsLine[1].Position = new Vector3(a - tang - norm, -1f);
+            vertsLine[1].Color = Color.Black;
+            vertsLine[1].TextureCoordinate = new Vector2(0f, .75f);
+            vertsLine[2].Position = new Vector3(a - norm, -1f);
+            vertsLine[2].Color = Color.Black;
+            vertsLine[2].TextureCoordinate = new Vector2(.25f, .75f);
+            vertsLine[3].Position = new Vector3(b - norm, -1f);
+            vertsLine[3].Color = Color.Black;
+            vertsLine[3].TextureCoordinate = new Vector2(.75f, .75f);
+            vertsLine[4].Position = new Vector3(b + tang - norm, -1f);
+            vertsLine[4].Color = Color.Black;
+            vertsLine[4].TextureCoordinate = new Vector2(1f, .75f);
+            vertsLine[5].Position = new Vector3(b + tang + norm, -1f);
+            vertsLine[5].Color = Color.Black;
+            vertsLine[5].TextureCoordinate = new Vector2(1f, .25f);
+            vertsLine[6].Position = new Vector3(b + norm, -1f);
+            vertsLine[6].Color = Color.Black;
+            vertsLine[6].TextureCoordinate = new Vector2(.75f, .25f);
+            vertsLine[7].Position = new Vector3(a + norm, -1f);
+            vertsLine[7].Color = Color.Black;
+            vertsLine[7].TextureCoordinate = new Vector2(.25f, .25f);
 
             // add triangles
-            _vertsLines[_lineCount * 3] = _vertsLine[0];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[1];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[7];
+            _vertsLines[_lineCount * 3] = vertsLine[0];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[1];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
             _lineCount++;
-            _vertsLines[_lineCount * 3] = _vertsLine[1];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[2];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[7];
+            _vertsLines[_lineCount * 3] = vertsLine[1];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
             _lineCount++;
-            _vertsLines[_lineCount * 3] = _vertsLine[7];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[2];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[6];
+            _vertsLines[_lineCount * 3] = vertsLine[7];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[6];
             _lineCount++;
-            _vertsLines[_lineCount * 3] = _vertsLine[2];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[3];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[6];
+            _vertsLines[_lineCount * 3] = vertsLine[2];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[3];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[6];
             _lineCount++;
-            _vertsLines[_lineCount * 3] = _vertsLine[6];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[3];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[5];
+            _vertsLines[_lineCount * 3] = vertsLine[6];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[3];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[5];
             _lineCount++;
-            _vertsLines[_lineCount * 3] = _vertsLine[3];
-            _vertsLines[_lineCount * 3 + 1] = _vertsLine[4];
-            _vertsLines[_lineCount * 3 + 2] = _vertsLine[5];
+            _vertsLines[_lineCount * 3] = vertsLine[3];
+            _vertsLines[_lineCount * 3 + 1] = vertsLine[4];
+            _vertsLines[_lineCount * 3 + 2] = vertsLine[5];
             _lineCount++;
         }
 
