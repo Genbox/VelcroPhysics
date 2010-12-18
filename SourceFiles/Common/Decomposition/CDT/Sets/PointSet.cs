@@ -29,13 +29,49 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using System.Collections.Generic;
+using Poly2Tri.Triangulation.Delaunay;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation.Sets
 {
-    public class DTSweepConstraint
+    public class PointSet : Triangulatable
     {
-        public PolygonPoint P;
-        public PolygonPoint Q;
+        public IList<TriangulationPoint> Points { get; private set; }
+        public IList<DelaunayTriangle> Triangles { get; private set; }
+
+        public PointSet(List<TriangulationPoint> points)
+        {
+            Points = new List<TriangulationPoint>(points);
+        }
+
+        public virtual TriangulationMode TriangulationMode { get { return TriangulationMode.Unconstrained; } }
+
+        public void AddTriangle(DelaunayTriangle t)
+        {
+            Triangles.Add(t);
+        }
+
+        public void AddTriangles(IEnumerable<DelaunayTriangle> list)
+        {
+            foreach (DelaunayTriangle tri in list) Triangles.Add(tri);
+        }
+
+        public void ClearTriangles()
+        {
+            Triangles.Clear();
+        }
+
+        public virtual void PrepareTriangulation(TriangulationContext tcx)
+        {
+            if (Triangles == null)
+            {
+                Triangles = new List<DelaunayTriangle>(Points.Count);
+            }
+            else
+            {
+                Triangles.Clear();
+            }
+            tcx.Points.AddRange(Points);
+        }
     }
 }

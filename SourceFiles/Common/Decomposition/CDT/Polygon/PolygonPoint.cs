@@ -29,34 +29,18 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
+// Changes from the Java version
+//   Replaced get/set Next/Previous with attributes
+// Future possibilities
+//   Documentation!
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
+namespace Poly2Tri.Triangulation.Polygon
 {
-    public class PolygonPoint
+    public class PolygonPoint : TriangulationPoint
     {
-        // List of edges this point constitutes an upper ending point (CDT)
+        public PolygonPoint(double x, double y) : base(x, y) { }
 
-        public double X, Y;
-
-        public PolygonPoint(double x, double y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public List<DTSweepConstraint> Edges { get; private set; }
-
-        public bool HasEdges
-        {
-            get { return Edges != null; }
-        }
-
-        public void AddEdge(DTSweepConstraint e)
-        {
-            if (Edges == null) Edges = new List<DTSweepConstraint>();
-            Edges.Add(e);
-        }
+        public PolygonPoint Next { get; set; }
+        public PolygonPoint Previous { get; set; }
     }
 }

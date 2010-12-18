@@ -29,62 +29,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace Poly2Tri.Triangulation.Util
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public struct FixedArray3<T> : IEnumerable<T> where T : class
+    public class DTSweepPointComparator : IComparer<TriangulationPoint>
     {
-        public T _0, _1, _2;
-        public T this[int index]
+        public int Compare(TriangulationPoint p1, TriangulationPoint p2)
         {
-            get
+            if (p1.Y < p2.Y)
             {
-                switch (index)
+                return -1;
+            }
+            else if (p1.Y > p2.Y)
+            {
+                return 1;
+            }
+            else
+            {
+                if (p1.X < p2.X)
                 {
-                    case 0: return _0;
-                    case 1: return _1;
-                    case 2: return _2;
-                    default: throw new IndexOutOfRangeException();
+                    return -1;
+                }
+                else if (p1.X > p2.X)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
                 }
             }
-            set
-            {
-                switch (index)
-                {
-                    case 0: _0 = value; break;
-                    case 1: _1 = value; break;
-                    case 2: _2 = value; break;
-                    default: throw new IndexOutOfRangeException();
-                }
-            }
         }
-        public bool Contains(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
-            return false;
-        }
-        public int IndexOf(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
-            return -1;
-        }
-        public void Clear()
-        {
-            _0 = _1 = _2 = null;
-        }
-        public void Clear(T value)
-        {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = null;
-        }
-
-        private IEnumerable<T> Enumerate()
-        {
-            for (int i = 0; i < 3; ++i) yield return this[i];
-        }
-        public IEnumerator<T> GetEnumerator() { return Enumerate().GetEnumerator(); }
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
     }
 }

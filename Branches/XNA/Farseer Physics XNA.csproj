@@ -184,35 +184,32 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDTDecomposer.cs">
       <Link>Common\Decomposition\CDTDecomposer.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\AdvancingFront.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFront.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\AdvancingFrontNode.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\AdvancingFrontNode.cs</Link>
-    </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs">
       <Link>Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweep.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweep.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepBasin.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweepBasin.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepConstraint.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweepConstraint.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepContext.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweepContext.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepEdgeEvent.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweepEdgeEvent.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DTSweepPointComparator.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DTSweepPointComparator.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\PointOnEdgeException.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\PointOnEdgeException.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs">
+      <Link>Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\ITriangulatable.cs">
+      <Link>Common\Decomposition\CDT\ITriangulatable.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Orientation.cs">
       <Link>Common\Decomposition\CDT\Orientation.cs</Link>
@@ -223,6 +220,27 @@
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\PolygonPoint.cs">
       <Link>Common\Decomposition\CDT\Polygon\PolygonPoint.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\PolygonSet.cs">
+      <Link>Common\Decomposition\CDT\Polygon\PolygonSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs">
+      <Link>Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Sets\PointSet.cs">
+      <Link>Common\Decomposition\CDT\Sets\PointSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationConstraint.cs">
+      <Link>Common\Decomposition\CDT\TriangulationConstraint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationContext.cs">
+      <Link>Common\Decomposition\CDT\TriangulationContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationMode.cs">
+      <Link>Common\Decomposition\CDT\TriangulationMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationPoint.cs">
+      <Link>Common\Decomposition\CDT\TriangulationPoint.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationUtil.cs">
       <Link>Common\Decomposition\CDT\TriangulationUtil.cs</Link>
     </Compile>
@@ -231,6 +249,12 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\FixedBitArray3.cs">
       <Link>Common\Decomposition\CDT\Util\FixedBitArray3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\PointGenerator.cs">
+      <Link>Common\Decomposition\CDT\Util\PointGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\PolygonGenerator.cs">
+      <Link>Common\Decomposition\CDT\Util\PolygonGenerator.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\common\decomposition\EarclipDecomposer.cs">
       <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
@@ -399,6 +423,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

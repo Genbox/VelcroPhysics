@@ -29,24 +29,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
-
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public class DTSweepContext
+    /**
+     * 
+     * @author Thomas Åhlén, thahlen@gmail.com
+     *
+     */
+    public class DTSweepContext : TriangulationContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.
         private const float ALPHA = 0.3f;
-        public readonly List<PolygonPoint> Points = new List<PolygonPoint>(200);
-        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
-        public List<DelaunayTriangle> trianglesCleaned = new List<DelaunayTriangle>();
-        private Polygon.Polygon Polygon { get; set; }
+
+        public AdvancingFront aFront;
+        public TriangulationPoint Head { get; set; }
+        public TriangulationPoint Tail { get; set; }
 
         public DTSweepBasin Basin = new DTSweepBasin();
         public DTSweepEdgeEvent EdgeEvent = new DTSweepEdgeEvent();
-        public AdvancingFront Front;
 
         private DTSweepPointComparator _comparator = new DTSweepPointComparator();
 
@@ -54,15 +55,20 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
         {
             Clear();
         }
-        public int StepCount { get; private set; }
 
-        public void Done()
+        public void RemoveFromList(DelaunayTriangle triangle)
         {
-            StepCount++;
+            Triangles.Remove(triangle);
+            // TODO: remove all neighbor pointers to this triangle
+            //        for( int i=0; i<3; i++ )
+            //        {
+            //            if( triangle.neighbors[i] != null )
+            //            {
+            //                triangle.neighbors[i].clearNeighbor( triangle );
+            //            }
+            //        }
+            //        triangle.clearNeighbors();
         }
-
-        public PolygonPoint Head { get; set; }
-        public PolygonPoint Tail { get; set; }
 
         public void MeshClean(DelaunayTriangle triangle)
         {
@@ -74,27 +80,40 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
             if (triangle != null && !triangle.IsInterior)
             {
                 triangle.IsInterior = true;
-                trianglesCleaned.Add(triangle);
-
+                Triangulatable.AddTriangle(triangle);
                 for (int i = 0; i < 3; i++)
+                {
                     if (!triangle.EdgeIsConstrained[i])
                     {
                         MeshCleanReq(triangle.Neighbors[i]);
                     }
+                }
             }
         }
 
-        private void Clear()
+        public override void Clear()
         {
-            Points.Clear();
-            StepCount = 0;
-
+            base.Clear();
             Triangles.Clear();
         }
 
-        public AdvancingFrontNode LocateNode(PolygonPoint point)
+        public void AddNode(AdvancingFrontNode node)
         {
-            return Front.LocateNode(point);
+            //        Console.WriteLine( "add:" + node.key + ":" + System.identityHashCode(node.key));
+            //        m_nodeTree.put( node.getKey(), node );
+            aFront.AddNode(node);
+        }
+
+        public void RemoveNode(AdvancingFrontNode node)
+        {
+            //        Console.WriteLine( "remove:" + node.key + ":" + System.identityHashCode(node.key));
+            //        m_nodeTree.delete( node.getKey() );
+            aFront.RemoveNode(node);
+        }
+
+        public AdvancingFrontNode LocateNode(TriangulationPoint point)
+        {
+            return aFront.LocateNode(point);
         }
 
         public void CreateAdvancingFront()
@@ -110,14 +129,30 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
             middle.Triangle = iTriangle;
             tail = new AdvancingFrontNode(iTriangle.Points[2]);
 
-            Front = new AdvancingFront(head, tail);
+            aFront = new AdvancingFront(head, tail);
+            aFront.AddNode(middle);
 
             // TODO: I think it would be more intuitive if head is middles next and not previous
             //       so swap head and tail
-            Front.Head.Next = middle;
-            middle.Next = Front.Tail;
-            middle.Prev = Front.Head;
-            Front.Tail.Prev = middle;
+            aFront.Head.Next = middle;
+            middle.Next = aFront.Tail;
+            middle.Prev = aFront.Head;
+            aFront.Tail.Prev = middle;
+        }
+
+        public class DTSweepBasin
+        {
+            public AdvancingFrontNode leftNode;
+            public AdvancingFrontNode bottomNode;
+            public AdvancingFrontNode rightNode;
+            public double width;
+            public bool leftHighest;
+        }
+
+        public class DTSweepEdgeEvent
+        {
+            public DTSweepConstraint ConstrainedEdge;
+            public bool Right;
         }
 
         /// <summary>
@@ -126,39 +161,23 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
         /// </summary>
         public void MapTriangleToNodes(DelaunayTriangle t)
         {
+            AdvancingFrontNode n;
             for (int i = 0; i < 3; i++)
+            {
                 if (t.Neighbors[i] == null)
                 {
-                    AdvancingFrontNode n = Front.LocatePoint(t.PointCWFrom(t.Points[i]));
-                    if (n != null) n.Triangle = t;
+                    n = aFront.LocatePoint(t.PointCW(t.Points[i]));
+                    if (n != null)
+                    {
+                        n.Triangle = t;
+                    }
                 }
+            }
         }
 
-        public void PrepareTriangulation(Polygon.Polygon t)
+        public override void PrepareTriangulation(Triangulatable t)
         {
-            Polygon = t;
-
-            // Outer constraints
-            for (int i = 0; i < Polygon.Points.Count - 1; i++)
-            {
-                DTSweep.CreateSweepConstraint(Polygon.Points[i], Polygon.Points[i + 1]);
-            }
-            DTSweep.CreateSweepConstraint(Polygon.Points[0], Polygon.Points[Polygon.Points.Count - 1]);
-
-            Points.AddRange(Polygon.Points);
-
-            // Hole constraints
-            if (Polygon.Holes != null)
-            {
-                foreach (Polygon.Polygon p in Polygon.Holes)
-                {
-                    for (int i = 0; i < p.Points.Count - 1; i++)
-                        DTSweep.CreateSweepConstraint(p.Points[i], p.Points[i + 1]);
-
-                    DTSweep.CreateSweepConstraint(p.Points[0], p.Points[p.Points.Count - 1]);
-                    Points.AddRange(p.Points);
-                }
-            }
+            base.PrepareTriangulation(t);
 
             double xmax, xmin;
             double ymax, ymin;
@@ -167,24 +186,42 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
             ymax = ymin = Points[0].Y;
 
             // Calculate bounds. Should be combined with the sorting
-            foreach (PolygonPoint p in Points)
+            foreach (TriangulationPoint p in Points)
             {
-                if (p.X > xmax) xmax = p.X;
-                if (p.X < xmin) xmin = p.X;
-                if (p.Y > ymax) ymax = p.Y;
-                if (p.Y < ymin) ymin = p.Y;
+                if (p.X > xmax)
+                    xmax = p.X;
+                if (p.X < xmin)
+                    xmin = p.X;
+                if (p.Y > ymax)
+                    ymax = p.Y;
+                if (p.Y < ymin)
+                    ymin = p.Y;
             }
 
             double deltaX = ALPHA * (xmax - xmin);
             double deltaY = ALPHA * (ymax - ymin);
-            PolygonPoint p1 = new PolygonPoint(xmax + deltaX, ymin - deltaY);
-            PolygonPoint p2 = new PolygonPoint(xmin - deltaX, ymin - deltaY);
+            TriangulationPoint p1 = new TriangulationPoint(xmax + deltaX, ymin - deltaY);
+            TriangulationPoint p2 = new TriangulationPoint(xmin - deltaX, ymin - deltaY);
 
             Head = p1;
             Tail = p2;
 
+            //        long time = System.nanoTime();
             // Sort the points along y-axis
             Points.Sort(_comparator);
+            //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
+        }
+
+
+        public void FinalizeTriangulation()
+        {
+            Triangulatable.AddTriangles(Triangles);
+            Triangles.Clear();
+        }
+
+        public override TriangulationConstraint NewConstraint(TriangulationPoint a, TriangulationPoint b)
+        {
+            return new DTSweepConstraint(a, b);
         }
     }
 }
