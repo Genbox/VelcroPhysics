@@ -31,82 +31,84 @@ namespace FarseerPhysics.Common.Decomposition
         }
 
         /// <summary>
-        /// Precondition: Counter Clockwise polygon
         /// Decompose the polygon into several smaller non-concave polygon.
         /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
+        /// Precondition: Counter Clockwise polygon
         /// </summary>
         /// <param name="vertices"></param>
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
+            //We force it to CCW as it is a precondition in this algorithm.
+            vertices.ForceCounterClockWise();
+
             List<Vertices> list = new List<Vertices>();
-            float d, dist1, dist2;
-            Vector2 ip;
-            Vector2 ip1 = new Vector2();
-            Vector2 ip2 = new Vector2(); // intersection points
-            int ind1 = 0, ind2 = 0;
-            Vertices poly1, poly2;
+            float d, lowerDist, upperDist;
+            Vector2 p;
+            Vector2 lowerInt = new Vector2();
+            Vector2 upperInt = new Vector2(); // intersection points
+            int lowerIndex = 0, upperIndex = 0;
+            Vertices lowerPoly, upperPoly;
 
             for (int i = 0; i < vertices.Count; ++i)
             {
                 if (Reflex(i, vertices))
                 {
-                    dist1 = dist2 = float.MaxValue; // std::numeric_limits<qreal>::max();
+                    lowerDist = upperDist = float.MaxValue; // std::numeric_limits<qreal>::max();
                     for (int j = 0; j < vertices.Count; ++j)
                     {
+                        // if line intersects with an edge
                         if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) &&
                             RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
                         {
-                            // if ray (i-1)->(i) intersects with edge (j, j-1)
-                            //QLineF(at(i - 1), at(i)).intersect(QLineF(at(j), at(j - 1)), ip);
-                            ip = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices),
-                                                         At(j - 1, vertices));
-                            if (Right(At(i + 1, vertices), At(i, vertices), ip))
+                            // find the point of intersection
+                            p = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices), At(j - 1, vertices));
+                            if (Right(At(i + 1, vertices), At(i, vertices), p))
                             {
-                                // intersection point isn't caused by backwards ray
-                                d = SquareDist(At(i, vertices), ip);
-                                if (d < dist1)
+                                // make sure it's inside the poly
+                                d = SquareDist(At(i, vertices), p);
+                                if (d < lowerDist)
                                 {
-                                    // take the closest intersection so we know it isn't blocked by another edge
-                                    dist1 = d;
-                                    ind1 = j;
-                                    ip1 = ip;
+                                    // keep only the closest intersection
+                                    lowerDist = d;
+                                    lowerInt = p;
+                                    lowerIndex = j;
                                 }
                             }
                         }
+
                         if (Left(At(i + 1, vertices), At(i, vertices), At(j + 1, vertices)) &&
                             RightOn(At(i + 1, vertices), At(i, vertices), At(j, vertices)))
                         {
-                            // if ray (i+1)->(i) intersects with edge (j+1, j)
-                            //QLineF(at(i + 1), at(i)).intersect(QLineF(at(j), at(j + 1)), ip);
-                            ip = LineTools.LineIntersect(At(i + 1, vertices), At(i, vertices), At(j, vertices),
-                                                         At(j + 1, vertices));
-                            if (Left(At(i - 1, vertices), At(i, vertices), ip))
+                            p = LineTools.LineIntersect(At(i + 1, vertices), At(i, vertices), At(j, vertices), At(j + 1, vertices));
+                            if (Left(At(i - 1, vertices), At(i, vertices), p))
                             {
-                                d = SquareDist(At(i, vertices), ip);
-                                if (d < dist2)
+                                d = SquareDist(At(i, vertices), p);
+                                if (d < upperDist)
                                 {
-                                    dist2 = d;
-                                    ind2 = j;
-                                    ip2 = ip;
+                                    upperDist = d;
+                                    upperIndex = j;
+                                    upperInt = p;
                                 }
                             }
                         }
                     }
-                    if (ind1 == (ind2 + 1) % vertices.Count)
+
+                    // if there are no vertices to connect to, choose a point in the middle
+                    if (lowerIndex == (upperIndex + 1) % vertices.Count)
                     {
-                        // no vertices in range
-                        Vector2 sp = ((ip1 + ip2) / 2);
-                        poly1 = Copy(i, ind2, vertices);
-                        poly1.Add(sp);
-                        poly2 = Copy(ind1, i, vertices);
-                        poly2.Add(sp);
+                        Vector2 sp = ((lowerInt + upperInt) / 2);
+
+                        lowerPoly = Copy(i, upperIndex, vertices);
+                        lowerPoly.Add(sp);
+                        upperPoly = Copy(lowerIndex, i, vertices);
+                        upperPoly.Add(sp);
                     }
                     else
                     {
-                        double highestScore = 0, bestIndex = ind1;
-                        while (ind2 < ind1) ind2 += vertices.Count;
-                        for (int j = ind1; j <= ind2; ++j)
+                        double highestScore = 0, bestIndex = lowerIndex;
+                        while (upperIndex < lowerIndex) upperIndex += vertices.Count;
+                        for (int j = lowerIndex; j <= upperIndex; ++j)
                         {
                             if (CanSee(i, j, vertices))
                             {
@@ -134,11 +136,11 @@ namespace FarseerPhysics.Common.Decomposition
                                 }
                             }
                         }
-                        poly1 = Copy(i, (int) bestIndex, vertices);
-                        poly2 = Copy((int) bestIndex, i, vertices);
+                        lowerPoly = Copy(i, (int)bestIndex, vertices);
+                        upperPoly = Copy((int)bestIndex, i, vertices);
                     }
-                    list.AddRange(ConvexPartition(poly1));
-                    list.AddRange(ConvexPartition(poly2));
+                    list.AddRange(ConvexPartition(lowerPoly));
+                    list.AddRange(ConvexPartition(upperPoly));
                     return list;
                 }
             }
@@ -146,10 +148,10 @@ namespace FarseerPhysics.Common.Decomposition
             // polygon is already convex
             if (vertices.Count > Settings.MaxPolygonVertices)
             {
-                poly1 = Copy(0, vertices.Count / 2, vertices);
-                poly2 = Copy(vertices.Count / 2, 0, vertices);
-                list.AddRange(ConvexPartition(poly1));
-                list.AddRange(ConvexPartition(poly2));
+                lowerPoly = Copy(0, vertices.Count / 2, vertices);
+                upperPoly = Copy(vertices.Count / 2, 0, vertices);
+                list.AddRange(ConvexPartition(lowerPoly));
+                list.AddRange(ConvexPartition(upperPoly));
             }
             else
                 list.Add(vertices);

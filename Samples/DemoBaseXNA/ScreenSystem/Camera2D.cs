@@ -5,16 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
-    public delegate void ProjectionUpdateHandler();
-
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
-        public Matrix ProjectionMatrix;
-        public Matrix ViewMatrix;
+        public static BasicEffect Effect;
 
-        private GraphicsDevice _graphics;
-        private Vector2 _lower;
+        private static GraphicsDevice _graphics;
         private Vector2 _position;
         private float _rotation;
         private Vector2 _targetPosition;
@@ -24,10 +20,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private bool _targetYPositionReached = true;
         private float _targetZoom;
         private bool _targetZoomReached = true;
-        private Vector2 _upper;
         private float _zoom;
 
-        public ProjectionUpdateHandler ProjectionUpdated;
+        public Action ProjectionUpdated;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -36,6 +31,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
+
+            Effect = new BasicEffect(graphics);
+            Effect.TextureEnabled = true;
+            Effect.VertexColorEnabled = true;
 
             CreateProjection();
             ResetCamera();
@@ -234,20 +233,31 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// <value>The move rate.</value>
         public Vector2 MoveRate { get; set; }
 
+        public void ZoomIn(float amount)
+        {
+            Zoom += amount;
+        }
+
+        public void ZoomOut(float amount)
+        {
+            Zoom -= amount;
+        }
+
+        public void MoveCamera(Vector2 amount)
+        {
+            Position += amount;
+        }
+
         /// <summary>
         /// Creates the projection matrix. Call this if the aspect ratio of the screen changes.
         /// </summary>
         public void CreateProjection()
         {
-            _lower = -new Vector2(25.0f * _graphics.Viewport.AspectRatio, 25.0f);
-            _upper = new Vector2(25.0f * _graphics.Viewport.AspectRatio, 25.0f);
-
             // L/R/B/T
-            ProjectionMatrix = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1f, 1f);
+            Effect.Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
+
             if (ProjectionUpdated != null)
-            {
                 ProjectionUpdated();
-            }
         }
 
         /// <summary>
@@ -267,9 +277,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             _targetPosition = Vector2.Zero;
             _targetRotation = 0;
-            _targetZoom = 1;
+            _targetZoom = 1f;
 
-            _zoom = 1.0f;
+            _zoom = 1f;
             _position = Vector2.Zero;
             _rotation = 0;
 
@@ -278,7 +288,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void Resize()
         {
-            ViewMatrix = Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom) * Matrix.CreateRotationZ(_rotation);
+            Effect.View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom);
         }
 
         /// <summary>
@@ -378,20 +388,20 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
-        public Vector2 ConvertScreenToWorld(Vector2 location)
+        public static Vector2 ConvertScreenToWorld(Vector2 location)
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Unproject(t, ProjectionMatrix, ViewMatrix, Matrix.Identity);
+            t = _graphics.Viewport.Unproject(t, Effect.Projection, Effect.View, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }
 
-        public Vector2 ConvertWorldToScreen(Vector2 location)
+        public static Vector2 ConvertWorldToScreen(Vector2 location)
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Project(t, ProjectionMatrix, ViewMatrix, Matrix.Identity);
+            t = _graphics.Viewport.Project(t, Effect.Projection, Effect.View, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }

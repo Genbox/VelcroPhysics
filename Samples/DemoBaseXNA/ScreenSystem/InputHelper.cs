@@ -389,5 +389,67 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 #endif
+
+        public bool IsKeyDown(Keys key, PlayerIndex? controllingPlayer,
+                                  out PlayerIndex playerIndex)
+        {
+            if (controllingPlayer.HasValue)
+            {
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int)playerIndex;
+
+                return (CurrentKeyboardStates[i].IsKeyDown(key));
+            }
+            else
+            {
+#if WINDOWS_PHONE
+                return IsKeyPress(key, PlayerIndex.One, out playerIndex);
+#else
+                // Accept input from any player.
+                return (IsKeyDown(key, PlayerIndex.One, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Two, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Three, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Four, out playerIndex));
+#endif
+            }
+        }
+
+        public bool IsKeyDown(Keys key)
+        {
+            return IsKeyDown(key, null, out _tmpIndex);
+        }
+
+        public bool IsKeyUp(Keys key, PlayerIndex? controllingPlayer,
+                          out PlayerIndex playerIndex)
+        {
+            if (controllingPlayer.HasValue)
+            {
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int)playerIndex;
+
+                return (CurrentKeyboardStates[i].IsKeyUp(key));
+            }
+            else
+            {
+#if WINDOWS_PHONE
+                return IsKeyPress(key, PlayerIndex.One, out playerIndex);
+#else
+                // Accept input from any player.
+                return (IsKeyDown(key, PlayerIndex.One, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Two, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Three, out playerIndex) ||
+                        IsKeyDown(key, PlayerIndex.Four, out playerIndex));
+#endif
+            }
+        }
+
+        public bool IsKeyUp(Keys key)
+        {
+            return IsKeyUp(key, null, out _tmpIndex);
+        }
     }
 }

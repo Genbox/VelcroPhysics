@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -18,10 +19,10 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _world = world;
             _borderWidth = borderWidth;
             _anchor = new Body(_world);
-            resetBorder(width, height);
+            ResetBorder(Math.Abs(width), Math.Abs(height));
         }
 
-        public void resetBorder(float width, float height)
+        public void ResetBorder(float width, float height)
         {
             while (_anchor.FixtureList.Count > 0)
             {
@@ -41,12 +42,12 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             //Right
             borders.Add(PolygonTools.CreateRectangle(_borderWidth, height, new Vector2(width, 0), 0));
 
-            DemoMaterial _material = new DemoMaterial(MaterialType.Dots)
+            DemoMaterial material = new DemoMaterial(MaterialType.Dots)
             {
                 Color = Color.LightGray,
                 Scale = 8f
             };
-            List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(borders, 1, _anchor, _material);
+            List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(borders, 1, _anchor, material);
 
             foreach (Fixture t in fixtures)
             {
