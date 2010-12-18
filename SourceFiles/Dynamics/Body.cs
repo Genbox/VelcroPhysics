@@ -71,7 +71,7 @@ namespace FarseerPhysics.Dynamics
         IgnoreGravity = (1 << 7),
     }
 
-    public class Body
+    public class Body : IDisposable
     {
         internal float AngularVelocityInternal;
         internal BodyFlags Flags;
@@ -1130,6 +1130,11 @@ namespace FarseerPhysics.Dynamics
             Sweep.C = Sweep.C0;
             Sweep.A = Sweep.A0;
             SynchronizeTransform();
+        }
+
+        public void Dispose()
+        {
+            World.RemoveBody(this);
         }
     }
 }
