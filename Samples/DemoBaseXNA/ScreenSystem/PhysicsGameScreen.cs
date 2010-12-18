@@ -33,9 +33,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private Texture2D _lineTexture;
 
-        private BasicEffect _effect;
-
-        public PhysicsGameScreen()
+        protected PhysicsGameScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.75);
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
@@ -57,10 +55,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _lineTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/line");
             _lineFixtures = new List<Fixture>();
 
-            _effect = new BasicEffect(ScreenManager.GraphicsDevice);
-            _effect.VertexColorEnabled = true;
-            _effect.TextureEnabled = true;
-
             if (World == null)
                 return;
 
@@ -78,10 +72,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             DebugView.SleepingShapeColor = Color.LightGray;
 
             DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-            _border = new Border(World, gameWorld.X, -gameWorld.Y, 1);
+            Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+            _border = new Border(World, gameWorld.X, gameWorld.Y, 1);
 
             ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
+            Camera2D.Effect.TextureEnabled = true;
 
             // Loading may take a while... so prevent the game from "catching up" once we finished loading
             ScreenManager.Game.ResetElapsedTime();
@@ -91,8 +86,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                Vector2 gameWorld = ScreenManager.Camera.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-                _border.resetBorder(gameWorld.X, -gameWorld.Y);
+                Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+                _border.ResetBorder(gameWorld.X, gameWorld.Y);
             }
         }
 
@@ -223,7 +218,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 #if !XBOX
         private void Mouse(InputHelper state)
         {
-            Vector2 position = ScreenManager.Camera.ConvertScreenToWorld(state.MousePosition);
+            Vector2 position = Camera2D.ConvertScreenToWorld(state.MousePosition);
 
             if (state.IsOldButtonPress(MouseButtons.LeftButton))
             {
@@ -300,9 +295,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             ScreenManager.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 
-            _effect.Projection = ScreenManager.Camera.ProjectionMatrix;
-            _effect.View = ScreenManager.Camera.ViewMatrix;
-
             _lineCount = 0;
             foreach (KeyValuePair<MaterialType, List<Fixture>> p in _shapeFixtures)
             {
@@ -327,8 +319,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 {
                     ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
                 }
-                _effect.Texture = MaterialManager.GetMaterialTexture(p.Key);
-                _effect.Techniques[0].Passes[0].Apply();
+                Camera2D.Effect.Texture = MaterialManager.GetMaterialTexture(p.Key);
+                Camera2D.Effect.Techniques[0].Passes[0].Apply();
                 if (_fillCount > 0)
                 {
                     ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
@@ -338,8 +330,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 DrawLineShape(f);
             }
-            _effect.Texture = _lineTexture;
-            _effect.Techniques[0].Passes[0].Apply();
+            Camera2D.Effect.Texture = _lineTexture;
+            Camera2D.Effect.Techniques[0].Passes[0].Apply();
             if (_lineCount > 0)
             {
                 ScreenManager.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsLines, 0, _lineCount);
@@ -347,7 +339,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (World != null)
             {
-                DebugView.RenderDebugData(ref ScreenManager.Camera.ProjectionMatrix, ref ScreenManager.Camera.ViewMatrix);
+                Matrix projection = Camera2D.Effect.Projection;
+                Matrix view = Camera2D.Effect.View;
+                DebugView.RenderDebugData(ref projection, ref view);
             }
 
             base.Draw(gameTime);

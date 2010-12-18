@@ -820,6 +820,10 @@ namespace FarseerPhysics.DebugViews
 
         public void RenderDebugData(ref Matrix projection)
         {
+            //Nothing is enabled - don't draw the debug view.
+            if (Flags == 0)
+                return;
+
             DrawDebugData();
 
             _device.RasterizerState = RasterizerState.CullNone;

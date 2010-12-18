@@ -246,7 +246,14 @@ namespace FarseerPhysics.Factories
 
         public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density)
         {
-            return CreateCompoundPolygon(world, list, density, null);
+            return CreateCompoundPolygon(world, list, density, BodyType.Static);
+        }
+
+        public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density, BodyType type)
+        {
+            List<Fixture> fixtures =  CreateCompoundPolygon(world, list, density, null);
+            fixtures[0].Body.BodyType = type;
+            return fixtures;
         }
 
         public static List<Fixture> CreateCompoundPolygon(World world, List<Vertices> list, float density, Object userData)

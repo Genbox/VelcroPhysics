@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
@@ -200,7 +201,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         }
 
         //From Eric Jordan's convex decomposition library
-        
+
         /// <summary>
         /// Merges all parallel edges in the list of vertices
         /// </summary>
@@ -225,8 +226,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 float dy0 = vertices[middle].Y - vertices[lower].Y;
                 float dx1 = vertices[upper].Y - vertices[middle].X;
                 float dy1 = vertices[upper].Y - vertices[middle].Y;
-                float norm0 = (float) Math.Sqrt(dx0 * dx0 + dy0 * dy0);
-                float norm1 = (float) Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+                float norm0 = (float)Math.Sqrt(dx0 * dx0 + dy0 * dy0);
+                float norm1 = (float)Math.Sqrt(dx1 * dx1 + dy1 * dy1);
 
                 if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3)
                 {
@@ -273,7 +274,31 @@ namespace FarseerPhysics.Common.PolygonManipulation
         }
 
         //Misc
-        
+
+        /// <summary>
+        /// Merges the identical points in the polygon.
+        /// </summary>
+        /// <param name="vertices">The vertices.</param>
+        /// <returns></returns>
+        public static Vertices MergeIdenticalPoints(Vertices vertices)
+        {
+            //We use a dictonary here because HashSet is not avaliable on all platforms.
+            Dictionary<Vector2, bool> results = new Dictionary<Vector2, bool>(vertices.Count);
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                results.Add(vertices[i], false);
+            }
+
+            Vertices returnResults = new Vertices();
+            foreach (Vector2 v in results.Keys)
+            {
+                returnResults.Add(v);
+            }
+
+            return returnResults;
+        }
+
         /// <summary>
         /// Reduces the polygon by distance.
         /// </summary>
