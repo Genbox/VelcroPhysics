@@ -16,7 +16,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
     //Xbox360 can't handle as many geometries
         private const int PyramidBaseBodyCount = 10;
 #else
-        private const int PyramidBaseBodyCount = 16;
+        private const int PyramidBaseBodyCount = 14;
 #endif
 
         private Agent _agent;
@@ -28,18 +28,17 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             _agent = new Agent(World, new Vector2(5, 10));
 
-            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
             PolygonShape shape = new PolygonShape(box, 1);
 
-            Vector2 x = new Vector2(-8.0f, -17.0f);
-            Vector2 deltaX = new Vector2(0.5625f, 1.25f);
-            Vector2 deltaY = new Vector2(1.125f, 0.0f);
+            Vector2 x = new Vector2(-14.0f, -23.0f);
+            Vector2 deltaX = new Vector2(1.0f, 1.50f);
+            Vector2 deltaY = new Vector2(2, 0.0f);
 
             DemoMaterial matBox = new DemoMaterial(MaterialType.Blank)
-            {
-                Color1 = Color.SaddleBrown,
-                Color2 = Color.BurlyWood
-            };
+                                      {
+                                          Color = Color.WhiteSmoke
+                                      };
 
             for (int i = 0; i < PyramidBaseBodyCount; ++i)
             {
