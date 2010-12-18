@@ -71,9 +71,9 @@ namespace FarseerPhysics.Dynamics
 
     public delegate bool BeforeCollisionEventHandler(Fixture fixtureA, Fixture fixtureB);
 
-    public delegate bool OnCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
+    public delegate bool OnCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact contact);
 
-    public delegate void AfterCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact manifold);
+    public delegate void AfterCollisionEventHandler(Fixture fixtureA, Fixture fixtureB, Contact contact);
 
     public delegate void OnSeparationEventHandler(Fixture fixtureA, Fixture fixtureB);
 }
