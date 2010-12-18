@@ -29,27 +29,43 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Text;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+// Changes from the Java version
+//   Removed BST code, but not all artifacts of it
+// Future possibilities
+//   Eliminate Add/RemoveNode ?
+//   Comments comments and more comments!
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+using System.Text;
+using System;
+
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
     /**
-	 * @author Thomas Åhlen (thahlen@gmail.com)
-	 */
-
+     * @author Thomas Åhlen (thahlen@gmail.com)
+     */
     public class AdvancingFront
     {
         public AdvancingFrontNode Head;
-        private AdvancingFrontNode Search;
         public AdvancingFrontNode Tail;
+        protected AdvancingFrontNode Search;
 
         public AdvancingFront(AdvancingFrontNode head, AdvancingFrontNode tail)
         {
-            Head = head;
-            Tail = tail;
-            Search = head;
+            this.Head = head;
+            this.Tail = tail;
+            this.Search = head;
+            AddNode(head);
+            AddNode(tail);
+        }
+
+        public void AddNode(AdvancingFrontNode node)
+        {
+            //_searchTree.put(node.key, node);
+        }
+
+        public void RemoveNode(AdvancingFrontNode node)
+        {
+            //_searchTree.delete( node.key );
         }
 
         public override string ToString()
@@ -69,22 +85,23 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
         /// MM:  This seems to be used by LocateNode to guess a position in the implicit linked list of AdvancingFrontNodes near x
         ///      Removed an overload that depended on this being exact
         /// </summary>
-        private AdvancingFrontNode FindSearchNode()
+        private AdvancingFrontNode FindSearchNode(double x)
         {
+            // TODO: implement BST index 
             return Search;
         }
 
         /// <summary>
-        /// We use a balancing tree to locate a node smaller or equal to given key value (in theory)
+        /// We use a balancing tree to locate a node smaller or equal to given key value
         /// </summary>
-        public AdvancingFrontNode LocateNode(PolygonPoint point)
+        public AdvancingFrontNode LocateNode(TriangulationPoint point)
         {
             return LocateNode(point.X);
         }
 
         private AdvancingFrontNode LocateNode(double x)
         {
-            AdvancingFrontNode node = FindSearchNode();
+            AdvancingFrontNode node = FindSearchNode(x);
             if (x < node.Value)
             {
                 while ((node = node.Prev) != null)
@@ -109,10 +126,10 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
         /// <summary>
         /// This implementation will use simple node traversal algorithm to find a point on the front
         /// </summary>
-        public AdvancingFrontNode LocatePoint(PolygonPoint point)
+        public AdvancingFrontNode LocatePoint(TriangulationPoint point)
         {
             double px = point.X;
-            AdvancingFrontNode node = FindSearchNode();
+            AdvancingFrontNode node = FindSearchNode(px);
             double nx = node.Point.X;
 
             if (px == nx)
@@ -131,16 +148,29 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
                     else
                     {
                         throw new Exception("Failed to find Node for given afront point");
+                        //node = null;
                     }
                 }
             }
             else if (px < nx)
             {
-                while ((node = node.Prev) != null) if (point == node.Point) break;
+                while ((node = node.Prev) != null)
+                {
+                    if (point == node.Point)
+                    {
+                        break;
+                    }
+                }
             }
             else
             {
-                while ((node = node.Next) != null) if (point == node.Point) break;
+                while ((node = node.Next) != null)
+                {
+                    if (point == node.Point)
+                    {
+                        break;
+                    }
+                }
             }
             Search = node;
             return node;

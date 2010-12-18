@@ -29,32 +29,32 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+// Changes from the Java version
+//   Replaced getPolygons with attribute
+// Future possibilities
+//   Replace Add(Polygon) with exposed container?
+//   Replace entire class with HashSet<Polygon> ?
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+using System.Collections.Generic;
+
+namespace Poly2Tri.Triangulation.Polygon
 {
-    public class AdvancingFrontNode
+    public class PolygonSet
     {
-        public AdvancingFrontNode Next;
-        public PolygonPoint Point;
-        public AdvancingFrontNode Prev;
-        public DelaunayTriangle Triangle;
-        public double Value;
+        protected List<Polygon> _polygons = new List<Polygon>();
 
-        public AdvancingFrontNode(PolygonPoint point)
+        public PolygonSet() { }
+
+        public PolygonSet(Polygon poly)
         {
-            Point = point;
-            Value = point.X;
+            _polygons.Add(poly);
         }
 
-        public bool HasNext
+        public void Add(Polygon p)
         {
-            get { return Next != null; }
+            _polygons.Add(p);
         }
 
-        public bool HasPrev
-        {
-            get { return Prev != null; }
-        }
+        public IEnumerable<Polygon> Polygons { get { return _polygons; } }
     }
 }

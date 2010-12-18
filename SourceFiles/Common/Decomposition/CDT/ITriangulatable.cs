@@ -29,14 +29,22 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+using System.Collections.Generic;
+using Poly2Tri.Triangulation.Delaunay;
+
+namespace Poly2Tri.Triangulation
 {
-    public class DTSweepBasin
+    public interface Triangulatable
     {
-        public AdvancingFrontNode BottomNode;
-        public bool LeftHighest;
-        public AdvancingFrontNode LeftNode;
-        public AdvancingFrontNode RightNode;
-        public double Width;
+        void PrepareTriangulation(TriangulationContext tcx);
+
+        IList<TriangulationPoint> Points { get; } // MM: Neither of these are used via interface (yet?)
+        IList<DelaunayTriangle> Triangles { get; }
+
+        void AddTriangle(DelaunayTriangle t);
+        void AddTriangles(IEnumerable<DelaunayTriangle> list);
+        void ClearTriangles();
+
+        TriangulationMode TriangulationMode { get; }
     }
 }

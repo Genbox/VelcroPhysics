@@ -29,43 +29,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Poly2Tri.Triangulation;
-using Poly2Tri.Triangulation.Delaunay;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
-using Poly2Tri.Triangulation.Polygon;
+// Changes from the Java version
+//   Removed getters
+//   Has* turned into attributes
+// Future possibilities
+//   Comments!
 
-namespace FarseerPhysics.Common.Decomposition
+namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
-    public static class CDTDecomposer
+    public class AdvancingFrontNode
     {
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        public AdvancingFrontNode Next;
+        public AdvancingFrontNode Prev;
+        public double Value;
+        public TriangulationPoint Point;
+        public DelaunayTriangle Triangle;
+
+        public AdvancingFrontNode(TriangulationPoint point)
         {
-            Polygon poly = new Polygon();
-
-            foreach (Vector2 vertex in vertices)
-            {
-                poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
-            }
-
-            DTSweepContext tcx = new DTSweepContext();
-            tcx.PrepareTriangulation(poly);
-            DTSweep.Triangulate(tcx);
-            
-            List<Vertices> results = new List<Vertices>();
-
-            foreach (DelaunayTriangle triangle in poly.Triangles)
-            {
-                Vertices v = new Vertices();
-                foreach (TriangulationPoint p in triangle.Points)
-                {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
-                }
-                results.Add(v);
-            }
-
-            return results;
+            this.Point = point;
+            Value = point.X;
         }
+
+        public bool HasNext { get { return Next != null; } }
+        public bool HasPrev { get { return Prev != null; } }
     }
 }

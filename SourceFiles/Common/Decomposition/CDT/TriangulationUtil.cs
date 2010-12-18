@@ -29,14 +29,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
-
-namespace FarseerPhysics.Common.Decomposition.CDT
+namespace Poly2Tri.Triangulation
 {
-    public static class TriangulationUtil
+    /**
+     * @author Thomas Åhlén, thahlen@gmail.com
+     */
+    public class TriangulationUtil
     {
-        public const double Epsilon = 1e-12;
-
+        public static double EPSILON = 1e-12;
         /// <summary>
         ///   Requirements:
         /// 1. a,b and c form a triangle.
@@ -61,8 +61,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT
         /// <param name="pc">triangle point</param>
         /// <param name="pd">point opposite a</param>
         /// <returns>true if d is inside circle, false if on circle edge</returns>
-        public static bool SmartIncircle(PolygonPoint pa, PolygonPoint pb, PolygonPoint pc,
-                                         PolygonPoint pd)
+        public static bool SmartIncircle(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc, TriangulationPoint pd)
         {
             double pdx = pd.X;
             double pdy = pd.Y;
@@ -98,8 +97,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT
             return det > 0;
         }
 
-        public static bool InScanArea(PolygonPoint pa, PolygonPoint pb, PolygonPoint pc,
-                                      PolygonPoint pd)
+        public static bool InScanArea(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc, TriangulationPoint pd)
         {
             double pdx = pd.X;
             double pdy = pd.Y;
@@ -137,12 +135,12 @@ namespace FarseerPhysics.Common.Decomposition.CDT
         /// 0 if collinear
         /// A[P1,P2,P3]  =  (x1*y2 - y1*x2) + (x2*y3 - y2*x3) + (x3*y1 - y3*x1)
         ///              =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
-        public static Orientation Orient2D(PolygonPoint pa, PolygonPoint pb, PolygonPoint pc)
+        public static Orientation Orient2d(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc)
         {
             double detleft = (pa.X - pc.X) * (pb.Y - pc.Y);
             double detright = (pa.Y - pc.Y) * (pb.X - pc.X);
             double val = detleft - detright;
-            if (val > -Epsilon && val < Epsilon)
+            if (val > -EPSILON && val < EPSILON)
             {
                 return Orientation.Collinear;
             }

@@ -29,21 +29,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
-
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
+namespace Poly2Tri.Triangulation
 {
-    public class PointOnEdgeException : NotImplementedException
+    public enum TriangulationMode
     {
-        public readonly PolygonPoint A, B, C;
-
-        public PointOnEdgeException(string message, PolygonPoint a, PolygonPoint b, PolygonPoint c)
-            : base(message)
-        {
-            A = a;
-            B = b;
-            C = c;
-        }
+        Unconstrained, Constrained, Polygon
     }
 }
