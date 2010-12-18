@@ -45,9 +45,11 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             Components.Add(frameRateCounter);
 
             Demo1Screen demo1 = new Demo1Screen();
+            Demo2Screen demo2 = new Demo2Screen();
 
             MainMenuScreen mainMenuScreen = new MainMenuScreen();
             mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+            mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.AddScreen(mainMenuScreen, null);
