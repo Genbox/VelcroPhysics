@@ -46,9 +46,6 @@ namespace FarseerPhysics.Controllers
                 if (!FilterData.IsActiveOn(body1))
                     continue;
 
-                if (!body1.Enabled || body1.IsStatic)
-                    continue;
-
                 foreach (Body body2 in Bodies)
                 {
                     if (body1 == body2 || (body1.IsStatic && body2.IsStatic) || !body2.Enabled)
