@@ -1108,6 +1108,7 @@ namespace FarseerPhysics.Dynamics
         public void Dispose()
         {
             World.RemoveBody(this);
+            GC.SuppressFinalize(this);
         }
     }
 }
