@@ -104,13 +104,16 @@ namespace FarseerPhysics.Dynamics
             _collisionGroup = 0;
         }
 
-        //TODO: Write about collision behaviors depending on Settings.UseFPECollisionCategories
-
         /// <summary>
+        /// Defaults to 0
+        /// 
+        /// If Settings.UseFPECollisionCategories is set to false:
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// 
+        /// If Settings.UseFPECollisionCategories is set to true:
+        /// If 2 fixtures are in the same collision group, they will not collide.
         /// </summary>
         public short CollisionGroup
         {
@@ -129,8 +132,10 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
+        /// Defaults to Category.All
+        /// 
         /// The collision mask bits. This states the categories that this
-        /// shape would accept for collision.
+        /// fixture would accept for collision.
         /// Use Settings.UseFPECollisionCategories to change the behavior.
         /// </summary>
         public Category CollidesWith
@@ -152,7 +157,12 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// The collision categories this fixture is a part of.
-        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// 
+        /// If Settings.UseFPECollisionCategories is set to false:
+        /// Defaults to Category.Cat1
+        /// 
+        /// If Settings.UseFPECollisionCategories is set to true:
+        /// Defaults to Category.All
         /// </summary>
         public Category CollisionCategories
         {
