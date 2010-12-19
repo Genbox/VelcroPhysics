@@ -13,8 +13,8 @@ namespace FarseerPhysics.Controllers
 
     public abstract class FilterData
     {
-        public CollisionCategory DisabledOnCategories = CollisionCategory.None;
-        public CollisionCategory EnabledOnCategories = CollisionCategory.All;
+        public Category DisabledOnCategories = Category.None;
+        public Category EnabledOnCategories = Category.All;
 
         public int DisabledOnGroup = 0;
         public int EnabledOnGroup = 0;
@@ -24,19 +24,19 @@ namespace FarseerPhysics.Controllers
             foreach (Fixture fixture in body.FixtureList)
             {
                 //Disable
-                if ((fixture.CollisionGroup == DisabledOnGroup) && fixture.CollisionGroup != 0 && DisabledOnGroup != 0)
+                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
                     return false;
 
-                if ((fixture.CollisionCategories & DisabledOnCategories) != CollisionCategory.None)
+                if ((fixture.CollisionFilter.CollisionCategories & DisabledOnCategories) != Category.None)
                     return false;
 
-                if (EnabledOnGroup != 0 || EnabledOnCategories != CollisionCategory.All)
+                if (EnabledOnGroup != 0 || EnabledOnCategories != Category.All)
                 {
                     //Enable
-                    if ((fixture.CollisionGroup == EnabledOnGroup) && fixture.CollisionGroup != 0 && EnabledOnGroup != 0)
+                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
                         return true;
 
-                    if ((fixture.CollisionCategories & EnabledOnCategories) != CollisionCategory.None && EnabledOnCategories != CollisionCategory.All)
+                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None && EnabledOnCategories != Category.All)
                         return true;
                 }
                 else

@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Controllers;
+﻿using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -50,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
                     currentFixture.Body.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
                     currentFixture.Body.SetTransform(currentFixture.Body.Position, 0.6f);
-                    //currentFixture.CollidesWith = CollisionCategory.Cat10;
+                    //currentFixture.CollidesWith = Category.Cat10;
                 }
             }
 

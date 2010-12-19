@@ -35,7 +35,7 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Dynamics
 {
     [Flags]
-    public enum CollisionCategory
+    public enum Category
     {
         None = 0,
         All = int.MaxValue,
@@ -83,6 +83,220 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
+    public class CollisionFilter
+    {
+        private Category _collidesWith;
+        private Category _collisionCategories;
+        private short _collisionGroup;
+        private Fixture _fixture;
+        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+
+        public CollisionFilter(Fixture fixture)
+        {
+            _fixture = fixture;
+
+            if (Settings.UseFPECollisionCategories)
+                _collisionCategories = Category.All;
+            else
+                _collisionCategories = Category.Cat1;
+
+            _collidesWith = Category.All;
+            _collisionGroup = 0;
+        }
+
+        //TODO: Write about collision behaviors depending on Settings.UseFPECollisionCategories
+
+        /// <summary>
+        /// Collision groups allow a certain group of objects to never collide (negative)
+        /// or always collide (positive). Zero means no collision group. Non-zero group
+        /// filtering always wins against the mask bits.
+        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// </summary>
+        public short CollisionGroup
+        {
+            set
+            {
+                if (_fixture.Body == null)
+                    return;
+
+                if (_collisionGroup == value)
+                    return;
+
+                _collisionGroup = value;
+                FilterChanged();
+            }
+            get { return _collisionGroup; }
+        }
+
+        /// <summary>
+        /// The collision mask bits. This states the categories that this
+        /// shape would accept for collision.
+        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// </summary>
+        public Category CollidesWith
+        {
+            get { return _collidesWith; }
+
+            set
+            {
+                if (_fixture.Body == null)
+                    return;
+
+                if (_collidesWith == value)
+                    return;
+
+                _collidesWith = value;
+                FilterChanged();
+            }
+        }
+
+        /// <summary>
+        /// The collision categories this fixture is a part of.
+        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// </summary>
+        public Category CollisionCategories
+        {
+            get { return _collisionCategories; }
+
+            set
+            {
+                if (_fixture.Body == null)
+                    return;
+
+                if (_collisionCategories == value)
+                    return;
+
+                _collisionCategories = value;
+                FilterChanged();
+            }
+        }
+
+        /// <summary>
+        /// Ignores the controller. The controller has no effect on this body.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void AddCollisionCategory(Category category)
+        {
+            CollisionCategories |= category;
+        }
+
+        /// <summary>
+        /// Restore the controller. The controller affects this body.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void RemoveCollisionCategory(Category category)
+        {
+            CollisionCategories &= ~category;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <returns>
+        /// 	<c>true</c> if the body has the specified category; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInCollisionCategory(Category category)
+        {
+            return (CollisionCategories & category) == category;
+        }
+
+        /// <summary>
+        /// Ignores the controller. The controller has no effect on this body.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void AddCollidesWithCategory(Category category)
+        {
+            CollidesWith |= category;
+        }
+
+        /// <summary>
+        /// Restore the controller. The controller affects this body.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void RemoveCollidesWithCategory(Category category)
+        {
+            CollidesWith &= ~category;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <returns>
+        /// 	<c>true</c> if the body has the specified category; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInCollidesWithCategory(Category category)
+        {
+            return (CollidesWith & category) == category;
+        }
+
+        /// <summary>
+        /// Restores collisions between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
+        public void RestoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+            {
+                _collisionIgnores[fixture.FixtureId] = false;
+                FilterChanged();
+            }
+        }
+
+        /// <summary>
+        /// Ignores collisions between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
+        public void IgnoreCollisionWith(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+                _collisionIgnores[fixture.FixtureId] = true;
+            else
+                _collisionIgnores.Add(fixture.FixtureId, true);
+
+            FilterChanged();
+        }
+
+        /// <summary>
+        /// Determines whether collisions are ignored between this fixture and the provided fixture.
+        /// </summary>
+        /// <param name="fixture">The fixture.</param>
+        /// <returns>
+        /// 	<c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsFixtureIgnored(Fixture fixture)
+        {
+            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+                return _collisionIgnores[fixture.FixtureId];
+
+            return false;
+        }
+
+        /// <summary>
+        /// Contacts are persistant and will keep being persistant unless they are
+        /// flagged for filtering.
+        /// This methods flags all contacts associated with the body for filtering.
+        /// </summary>
+        private void FilterChanged()
+        {
+            // Flag associated contacts for filtering.
+            ContactEdge edge = _fixture.Body.ContactList;
+            while (edge != null)
+            {
+                Contact contact = edge.Contact;
+                Fixture fixtureA = contact.FixtureA;
+                Fixture fixtureB = contact.FixtureB;
+                if (fixtureA == _fixture || fixtureB == _fixture)
+                {
+                    contact.FlagForFiltering();
+                }
+
+                edge = edge.Next;
+            }
+        }
+    }
+
     /// <summary>
     /// A fixture is used to attach a Shape to a body for collision detection. A fixture
     /// inherits its transform from its parent. Fixtures hold additional non-geometric data
@@ -119,26 +333,16 @@ namespace FarseerPhysics.Dynamics
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
-        private CollisionCategory _collidesWith;
-        private CollisionCategory _collisionCategories;
-        private short _collisionGroup;
-        private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
 
         public Fixture(Body body, Shape shape) : this(body, shape, null) { }
 
         public Fixture(Body body, Shape shape, Object userData)
         {
+            CollisionFilter = new CollisionFilter(this);
+
             //Fixture defaults
             Friction = 0.2f;
             Restitution = 0;
-
-            if (Settings.UseFPECollisionCategories)
-                _collisionCategories = CollisionCategory.All;
-            else
-                _collisionCategories = CollisionCategory.Cat1;
-
-            _collidesWith = CollisionCategory.All;
-            _collisionGroup = 0;
 
             IsSensor = false;
 
@@ -187,6 +391,8 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public CollisionFilter CollisionFilter;
+
         /// <summary>
         /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
         /// </summary>
@@ -234,100 +440,10 @@ namespace FarseerPhysics.Dynamics
         public float Restitution { get; set; }
 
         /// <summary>
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// Warning: The filter will not take effect until next step.
+        /// Gets a unique ID for this fixture.
         /// </summary>
-        public short CollisionGroup
-        {
-            set
-            {
-                if (Body == null)
-                    return;
-
-                if (_collisionGroup == value)
-                    return;
-
-                _collisionGroup = value;
-                FilterChanged();
-            }
-            get { return _collisionGroup; }
-        }
-
-        /// <summary>
-        /// The collision mask bits. This states the categories that this
-        /// shape would accept for collision.
-        /// </summary>
-        public CollisionCategory CollidesWith
-        {
-            get { return _collidesWith; }
-
-            set
-            {
-                if (Body == null)
-                    return;
-
-                if (_collidesWith == value)
-                    return;
-
-                _collidesWith = value;
-                FilterChanged();
-            }
-        }
-
+        /// <value>The fixture id.</value>
         public int FixtureId { get; private set; }
-
-        /// <summary>
-        /// The collision category bits. Normally you would just set one bit.
-        /// Only fixtures in the same category collides.
-        /// </summary>
-        public CollisionCategory CollisionCategories
-        {
-            get { return _collisionCategories; }
-
-            set
-            {
-                if (Body == null)
-                    return;
-
-                if (_collisionCategories == value)
-                    return;
-
-                _collisionCategories = value;
-                FilterChanged();
-            }
-        }
-
-        /// <summary>
-        /// Ignores the controller. The controller has no effect on this body.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        public void AddCategory(CollisionCategory category)
-        {
-            CollisionCategories |= category;
-        }
-
-        /// <summary>
-        /// Restore the controller. The controller affects this body.
-        /// </summary>
-        /// <param name="category">The flags.</param>
-        public void RemoveCategory(CollisionCategory category)
-        {
-            CollisionCategories &= ~category;
-        }
-
-        /// <summary>
-        /// Determines whether this body ignores the the specified controller.
-        /// </summary>
-        /// <param name="category">The flags.</param>
-        /// <returns>
-        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsInCategory(CollisionCategory category)
-        {
-            return (CollisionCategories & category) == category;
-        }
 
         /// <summary>
         /// Test a point for containment in this fixture.
@@ -442,66 +558,6 @@ namespace FarseerPhysics.Dynamics
                 Vector2 displacement = transform2.Position - transform1.Position;
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
-            }
-        }
-
-        /// <summary>
-        /// Restores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void RestoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
-            {
-                _collisionIgnores[fixture.FixtureId] = false;
-                FilterChanged();
-            }
-        }
-
-        /// <summary>
-        /// Ignores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void IgnoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
-                _collisionIgnores[fixture.FixtureId] = true;
-            else
-                _collisionIgnores.Add(fixture.FixtureId, true);
-
-            FilterChanged();
-        }
-
-        /// <summary>
-        /// Determines whether collisions are ignored between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        /// <returns>
-        /// 	<c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsFixtureIgnored(Fixture fixture)
-        {
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
-                return _collisionIgnores[fixture.FixtureId];
-
-            return false;
-        }
-
-        private void FilterChanged()
-        {
-            // Flag associated contacts for filtering.
-            ContactEdge edge = Body.ContactList;
-            while (edge != null)
-            {
-                Contact contact = edge.Contact;
-                Fixture fixtureA = contact.FixtureA;
-                Fixture fixtureB = contact.FixtureB;
-                if (fixtureA == this || fixtureB == this)
-                {
-                    contact.FlagForFiltering();
-                }
-
-                edge = edge.Next;
             }
         }
 

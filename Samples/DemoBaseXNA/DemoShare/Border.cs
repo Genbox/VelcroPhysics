@@ -51,8 +51,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
             foreach (Fixture t in fixtures)
             {
-                t.CollisionCategories = CollisionCategory.All;
-                t.CollidesWith = CollisionCategory.All;
+                t.CollisionFilter.CollisionCategories = Category.All;
+                t.CollisionFilter.CollidesWith = Category.All;
             }
         }
     }

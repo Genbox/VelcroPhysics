@@ -15,8 +15,8 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
 
     public class Objects
     {
-        private CollisionCategory _collidesWith;
-        private CollisionCategory _collisionCategories;
+        private Category _collidesWith;
+        private Category _collisionCategories;
         private List<List<Fixture>> _decomposedFixtures;
         private List<Fixture> _fixtures;
         private ObjectType _type;
@@ -26,8 +26,8 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             _fixtures = new List<Fixture>(count);
             _decomposedFixtures = new List<List<Fixture>>(count);
             _type = type;
-            CollidesWith = CollisionCategory.All;
-            CollisionCategories = CollisionCategory.All;
+            CollidesWith = Category.All;
+            CollisionCategories = Category.All;
 
             for (int i = 0; i < count; i++)
             {
@@ -67,8 +67,8 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                     fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i / (float) (count - 1));
                     fixture.Restitution = .7f;
                     fixture.Friction = .2f;
-                    fixture.CollisionCategories = CollisionCategories;
-                    fixture.CollidesWith = CollidesWith;
+                    fixture.CollisionFilter.CollisionCategories = CollisionCategories;
+                    fixture.CollisionFilter.CollidesWith = CollidesWith;
                 }
             }
             else
@@ -82,14 +82,14 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                         fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i / (float) (count - 1));
                         fixture.Restitution = .7f;
                         fixture.Friction = .2f;
-                        fixture.CollisionCategories = CollisionCategories;
-                        fixture.CollidesWith = CollidesWith;
+                        fixture.CollisionFilter.CollisionCategories = CollisionCategories;
+                        fixture.CollisionFilter.CollidesWith = CollidesWith;
                     }
                 }
             }
         }
 
-        public CollisionCategory CollisionCategories
+        public Category CollisionCategories
         {
             get { return _collisionCategories; }
             set
@@ -100,7 +100,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                 {
                     foreach (Fixture fixture in _fixtures)
                     {
-                        fixture.CollisionCategories = _collisionCategories;
+                        fixture.CollisionFilter.CollisionCategories = _collisionCategories;
                     }
                 }
                 else
@@ -109,14 +109,14 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                     {
                         foreach (Fixture fixture in fixtures)
                         {
-                            fixture.CollisionCategories = _collisionCategories;
+                            fixture.CollisionFilter.CollisionCategories = _collisionCategories;
                         }
                     }
                 }
             }
         }
 
-        public CollisionCategory CollidesWith
+        public Category CollidesWith
         {
             get { return _collidesWith; }
             set
@@ -127,7 +127,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                 {
                     foreach (Fixture fixture in _fixtures)
                     {
-                        fixture.CollidesWith = _collidesWith;
+                        fixture.CollisionFilter.CollidesWith = _collidesWith;
                     }
                 }
                 else
@@ -136,7 +136,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
                     {
                         foreach (Fixture fixture in fixtures)
                         {
-                            fixture.CollidesWith = _collidesWith;
+                            fixture.CollisionFilter.CollidesWith = _collidesWith;
                         }
                     }
                 }

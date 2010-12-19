@@ -46,13 +46,13 @@ namespace FarseerPhysics.TestBed.Tests
         private const short SmallGroup = 1;
         private const short LargeGroup = -1;
 
-        private const CollisionCategory TriangleCategory = CollisionCategory.Cat2;
-        private const CollisionCategory BoxCategory = CollisionCategory.Cat3;
-        private const CollisionCategory CircleCategory = CollisionCategory.Cat4;
+        private const Category TriangleCategory = Category.Cat2;
+        private const Category BoxCategory = Category.Cat3;
+        private const Category CircleCategory = Category.Cat4;
 
-        private const CollisionCategory TriangleMask = CollisionCategory.All;
-        private const CollisionCategory BoxMask = CollisionCategory.All ^ TriangleCategory;
-        private const CollisionCategory CircleMask = CollisionCategory.All;
+        private const Category TriangleMask = Category.All;
+        private const Category BoxMask = Category.All ^ TriangleCategory;
+        private const Category CircleMask = Category.All;
 
         private CollisionFilteringTest()
         {
@@ -72,9 +72,9 @@ namespace FarseerPhysics.TestBed.Tests
                 triangleBody.Position = new Vector2(-5.0f, 2.0f);
 
                 Fixture triangleFixture = triangleBody.CreateFixture(polygon);
-                triangleFixture.CollisionGroup = SmallGroup;
-                triangleFixture.CollisionCategories = TriangleCategory;
-                triangleFixture.CollidesWith = TriangleMask;
+                triangleFixture.CollisionFilter.CollisionGroup = SmallGroup;
+                triangleFixture.CollisionFilter.CollisionCategories = TriangleCategory;
+                triangleFixture.CollisionFilter.CollidesWith = TriangleMask;
 
                 // Large triangle (recycle definitions)
                 vertices[0] *= 2.0f;
@@ -88,9 +88,9 @@ namespace FarseerPhysics.TestBed.Tests
                 triangleBody2.FixedRotation = true; // look at me!
 
                 Fixture triangleFixture2 = triangleBody2.CreateFixture(polygon);
-                triangleFixture2.CollisionGroup = LargeGroup;
-                triangleFixture2.CollisionCategories = TriangleCategory;
-                triangleFixture2.CollidesWith = TriangleMask;
+                triangleFixture2.CollisionFilter.CollisionGroup = LargeGroup;
+                triangleFixture2.CollisionFilter.CollisionCategories = TriangleCategory;
+                triangleFixture2.CollisionFilter.CollidesWith = TriangleMask;
 
                 {
                     Body body = BodyFactory.CreateBody(World);
@@ -120,9 +120,9 @@ namespace FarseerPhysics.TestBed.Tests
                 Fixture boxFixture = boxBody.CreateFixture(polygon);
                 boxFixture.Restitution = 0.1f;
 
-                boxFixture.CollisionGroup = SmallGroup;
-                boxFixture.CollisionCategories = BoxCategory;
-                boxFixture.CollidesWith = BoxMask;
+                boxFixture.CollisionFilter.CollisionGroup = SmallGroup;
+                boxFixture.CollisionFilter.CollisionCategories = BoxCategory;
+                boxFixture.CollisionFilter.CollidesWith = BoxMask;
 
                 // Large box (recycle definitions)
                 polygon.SetAsBox(2, 1);
@@ -132,9 +132,9 @@ namespace FarseerPhysics.TestBed.Tests
                 boxBody2.Position = new Vector2(0.0f, 6.0f);
 
                 Fixture boxFixture2 = boxBody2.CreateFixture(polygon);
-                boxFixture2.CollisionGroup = LargeGroup;
-                boxFixture2.CollisionCategories = BoxCategory;
-                boxFixture2.CollidesWith = BoxMask;
+                boxFixture2.CollisionFilter.CollisionGroup = LargeGroup;
+                boxFixture2.CollisionFilter.CollisionCategories = BoxCategory;
+                boxFixture2.CollisionFilter.CollidesWith = BoxMask;
 
                 // Small circle
                 CircleShape circle = new CircleShape(1.0f, 1);
@@ -145,9 +145,9 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Fixture circleFixture = circleBody.CreateFixture(circle);
 
-                circleFixture.CollisionGroup = SmallGroup;
-                circleFixture.CollisionCategories = CircleCategory;
-                circleFixture.CollidesWith = CircleMask;
+                circleFixture.CollisionFilter.CollisionGroup = SmallGroup;
+                circleFixture.CollisionFilter.CollisionCategories = CircleCategory;
+                circleFixture.CollisionFilter.CollidesWith = CircleMask;
 
                 // Large circle
                 circle.Radius *= 2.0f;
@@ -157,9 +157,9 @@ namespace FarseerPhysics.TestBed.Tests
                 circleBody2.Position = new Vector2(5.0f, 6.0f);
 
                 Fixture circleFixture2 = circleBody2.CreateFixture(circle);
-                circleFixture2.CollisionGroup = LargeGroup;
-                circleFixture2.CollisionCategories = CircleCategory;
-                circleFixture2.CollidesWith = CircleMask;
+                circleFixture2.CollisionFilter.CollisionGroup = LargeGroup;
+                circleFixture2.CollisionFilter.CollisionCategories = CircleCategory;
+                circleFixture2.CollisionFilter.CollidesWith = CircleMask;
 
                 // Large circle - Ignore with other large circle
                 Body circleBody3 = BodyFactory.CreateBody(World);
@@ -168,11 +168,11 @@ namespace FarseerPhysics.TestBed.Tests
 
                 //Another large circle. This one uses IgnoreCollisionWith() logic instead of categories.
                 Fixture circleFixture3 = circleBody3.CreateFixture(circle);
-                circleFixture3.CollisionGroup = LargeGroup;
-                circleFixture3.CollisionCategories = CircleCategory;
-                circleFixture3.CollidesWith = CircleMask;
+                circleFixture3.CollisionFilter.CollisionGroup = LargeGroup;
+                circleFixture3.CollisionFilter.CollisionCategories = CircleCategory;
+                circleFixture3.CollisionFilter.CollidesWith = CircleMask;
 
-                circleFixture3.IgnoreCollisionWith(circleFixture2);
+                circleFixture3.CollisionFilter.IgnoreCollisionWith(circleFixture2);
             }
         }
 

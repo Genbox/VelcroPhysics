@@ -8,14 +8,14 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
     public class Agent
     {
         private Body _agentBody;
-        private CollisionCategory _collidesWith;
+        private Category _collidesWith;
 
-        private CollisionCategory _collisionCategories;
+        private Category _collisionCategories;
 
         public Agent(World world, Vector2 position)
         {
-            _collidesWith = CollisionCategory.All;
-            _collisionCategories = CollisionCategory.All;
+            _collidesWith = Category.All;
+            _collisionCategories = Category.All;
 
             _agentBody = BodyFactory.CreateBody(world, position);
             _agentBody.BodyType = BodyType.Dynamic;
@@ -51,7 +51,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(0, -4), matHands);
         }
 
-        public CollisionCategory CollisionCategories
+        public Category CollisionCategories
         {
             get { return _collisionCategories; }
             set
@@ -60,12 +60,12 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
                 foreach (Fixture fixture in _agentBody.FixtureList)
                 {
-                    fixture.CollisionCategories = _collisionCategories;
+                    fixture.CollisionFilter.CollisionCategories = _collisionCategories;
                 }
             }
         }
 
-        public CollisionCategory CollidesWith
+        public Category CollidesWith
         {
             get { return _collidesWith; }
             set
@@ -74,7 +74,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
                 foreach (Fixture fixture in _agentBody.FixtureList)
                 {
-                    fixture.CollidesWith = _collidesWith;
+                    fixture.CollisionFilter.CollidesWith = _collidesWith;
                 }
             }
         }

@@ -86,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _chassis.Position = pivot + _offset;
 
                 Fixture fixture = _chassis.CreateFixture(shape);
-                fixture.CollisionGroup = -1;
+                fixture.CollisionFilter.CollisionGroup = -1;
             }
 
             {
@@ -97,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _wheel.Position = pivot + _offset;
 
                 Fixture fixture = _wheel.CreateFixture(shape);
-                fixture.CollisionGroup = -1;
+                fixture.CollisionFilter.CollisionGroup = -1;
             }
 
             {
@@ -175,10 +175,10 @@ namespace FarseerPhysics.TestBed.Tests
             body2.AngularDamping = 10.0f;
 
             Fixture f1 = body1.CreateFixture(poly1);
-            f1.CollisionGroup = -1;
+            f1.CollisionFilter.CollisionGroup = -1;
 
             Fixture f2 = body2.CreateFixture(poly2);
-            f2.CollisionGroup = -1;
+            f2.CollisionFilter.CollisionGroup = -1;
 
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
