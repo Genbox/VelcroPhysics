@@ -222,6 +222,9 @@
     <Compile Include="..\..\SourceFiles\Common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\HashSet.cs">
+      <Link>Common\HashSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\LineTools.cs">
       <Link>Common\LineTools.cs</Link>
     </Compile>

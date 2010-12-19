@@ -15,22 +15,17 @@ namespace FarseerPhysics.Common.PhysicsLogic
         public float Min; // absolute angles
     }
 
-    internal struct RayData
-    {
-        public float Angle;
-    }
-
     /// <summary>
     /// This is a comprarer used for 
     /// detecting angle difference between rays
     /// </summary>
-    internal class RayDataComparer : IComparer<RayData>
+    internal class RayDataComparer : IComparer<float>
     {
         #region IComparer<RayData> Members
 
-        int IComparer<RayData>.Compare(RayData a, RayData b)
+        int IComparer<float>.Compare(float a, float b)
         {
-            float diff = (a.Angle - b.Angle);
+            float diff = (a - b);
             if (diff > 0)
                 return 1;
             if (diff < 0)
@@ -41,23 +36,57 @@ namespace FarseerPhysics.Common.PhysicsLogic
         #endregion
     }
 
+    /* Methodology:
+     * Force applied at a ray is inversely proportional to the square of distance from source
+     * AABB is used to query for shapes that may be affected
+     * For each RIGID BODY (not shape -- this is an optimization) that is matched, loop through its vertices to determine
+     *		the extreme points -- if there is structure that contains outlining polygon, use that as an additional optimization
+     * Evenly cast a number of rays against the shape - number roughly proportional to the arc coverage
+     *		-Something like every 3 degrees should do the trick although this can be altered depending on the distance (if really close don't need such a high density of rays)
+     *		-There should be a minimum number of rays (3-5?) applied to each body so that small bodies far away are still accurately modeled
+     *		-Be sure to have the forces of each ray be proportional to the average arc length covered by each.
+     * For each ray that actually intersects with the shape (non intersections indicate something blocking the path of explosion):
+     *		> apply the appropriate force dotted with the negative of the collision normal at the collision point
+     *		> optionally apply linear interpolation between aforementioned Normal force and the original explosion force in the direction of ray to simulate "surface friction" of sorts
+     */
+
     /// <summary>
     /// This is an explosive... it explodes.
     /// </summary>
     /// <remarks>
-    /// Original Code by Steven Lu
+    /// Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
     /// Ported to Farseer 3.0 by Nicolás Hormazábal
     /// </remarks>
-    //  (see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688)
     public sealed class Explosive
     {
-        private const int MaxShapes = 100;
-        private const int minRays = 5; // for small arcs -- how many rays per shape/body/segment
-        private const float maxAngle = MathHelper.Pi / 15; // max angle between rays (used when segment is large)
-        private const float edgeRatio = 1.0f / 40.0f; // ratio of arc length to angle from edges to first ray tested
+        /// <summary>
+        /// Maximum number of shapes involved in the explosion.
+        /// Defaults to 100
+        /// </summary>
+        public int MaxShapes = 100;
 
-        private const float maxEdgeOffset = MathHelper.Pi / 90;
-                            // two degrees: maximum angle from edges to first ray tested
+        /// <summary>
+        /// How many rays per shape/body/segment.
+        /// Defaults to 5
+        /// </summary>
+        public int MinRays = 5;
+
+        /// <summary>
+        /// Max angle between rays (used when segment is large).
+        /// Defaults to 15 degrees
+        /// </summary>
+        public float MaxAngle = MathHelper.Pi / 15;
+
+        /// <summary>
+        /// Ratio of arc length to angle from edges to first ray tested.
+        /// Defaults to 1/40.
+        /// </summary>
+        public float EdgeRatio = 1.0f / 40.0f;
+
+        /// <summary>
+        /// Two degrees: maximum angle from edges to first ray tested
+        /// </summary>
+        private const float MaxEdgeOffset = MathHelper.Pi / 90;
 
         private List<ShapeData> _data = new List<ShapeData>();
         private Dictionary<Fixture, List<Vector2>> _exploded;
@@ -111,36 +140,34 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
             int shapeCount = 0;
             int containedShapeCount = 0;
+
             // Query the world for overlapping shapes.
             _world.QueryAABB(
                 fixture =>
+                {
+                    if (fixture.TestPoint(ref pos))
                     {
-                        if (fixture.TestPoint(ref pos))
-                        {
-                            if (IgnoreWhenInsideShape)
-                                exit = true;
-                            else
-                                containedShapes[containedShapeCount++] = fixture;
-                        }
+                        if (IgnoreWhenInsideShape)
+                            exit = true;
                         else
-                        {
-                            shapes[shapeCount++] = fixture;
-                        }
+                            containedShapes[containedShapeCount++] = fixture;
+                    }
+                    else
+                    {
+                        shapes[shapeCount++] = fixture;
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (exit)
             {
                 return _exploded;
             }
 
-            // check if the explosion point is contained inside of a shape
-            //bool isInsideSomething = false;
-
             // per shape max/min angles for now
-            RayData[] vals = new RayData[shapeCount * 2];
+            float[] vals = new float[shapeCount * 2];
             int valIndex = 0;
             for (int i = 0; i < shapeCount; ++i)
             {
@@ -166,22 +193,20 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 if ((shapes[i].Body.BodyType == BodyType.Dynamic) && ps != null)
                 {
                     Vector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
-                    float angleToCentroid = (float) Math.Atan2(toCentroid.Y, toCentroid.X);
+                    float angleToCentroid = (float)Math.Atan2(toCentroid.Y, toCentroid.X);
                     float min = float.MaxValue;
                     float max = float.MinValue;
                     float minAbsolute = 0.0f;
                     float maxAbsolute = 0.0f;
-                    //Vector2 minPt = new Vector2(-1, -1);
-                    //Vector2 maxPt = new Vector2(1, 1);
 
                     for (int j = 0; j < (ps.Vertices.Count()); ++j)
                     {
                         Vector2 toVertex = (shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos);
-                        float newAngle = (float) Math.Atan2(toVertex.Y, toVertex.X);
+                        float newAngle = (float)Math.Atan2(toVertex.Y, toVertex.X);
                         float diff = (newAngle - angleToCentroid);
 
                         diff = (diff - MathHelper.Pi) % (2 * MathHelper.Pi);
-                            // the minus pi is important. It means cutoff for going other direction is at 180 deg where it needs to be
+                        // the minus pi is important. It means cutoff for going other direction is at 180 deg where it needs to be
 
                         if (diff < 0.0f)
                             diff += 2 * MathHelper.Pi; // correction for not handling negs
@@ -190,27 +215,23 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                         if (Math.Abs(diff) > MathHelper.Pi)
                             throw new ArgumentException("OMG!");
-                                // Something's wrong, point not in shape but exists angle diff > 180
+                        // Something's wrong, point not in shape but exists angle diff > 180
 
                         if (diff > max)
                         {
                             max = diff;
                             maxAbsolute = newAngle;
-                            //maxPt = shapes[i].Body.GetWorldPoint(ps.Vertices[j]);
                         }
                         if (diff < min)
                         {
                             min = diff;
                             minAbsolute = newAngle;
-                            //minPt = shapes[i].Body.GetWorldPoint(ps.Vertices[j]);
                         }
                     }
 
-                    vals[valIndex].Angle = minAbsolute;
-                    //vals[valIndex].pos = minPt;
+                    vals[valIndex] = minAbsolute;
                     ++valIndex;
-                    vals[valIndex].Angle = maxAbsolute;
-                    //vals[valIndex].pos = maxPt;
+                    vals[valIndex] = maxAbsolute;
                     ++valIndex;
                 }
             }
@@ -225,26 +246,24 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 float midpt;
 
                 int iplus = (i == valIndex - 1 ? 0 : i + 1);
-                if (vals[i].Angle == vals[iplus].Angle)
+                if (vals[i] == vals[iplus])
                     continue;
 
                 if (i == valIndex - 1)
                 {
                     // the single edgecase
-                    midpt = (vals[0].Angle + MathHelper.Pi * 2 + vals[i].Angle);
+                    midpt = (vals[0] + MathHelper.Pi * 2 + vals[i]);
                 }
                 else
                 {
-                    midpt = (vals[i + 1].Angle + vals[i].Angle);
+                    midpt = (vals[i + 1] + vals[i]);
                 }
 
                 midpt = midpt / 2;
 
                 Vector2 p1 = pos;
-                Vector2 p2 = radius * new Vector2((float) Math.Cos(midpt),
-                                                  (float) Math.Sin(midpt)) + pos;
-
-                //float fraction = 0;
+                Vector2 p2 = radius * new Vector2((float)Math.Cos(midpt),
+                                                  (float)Math.Sin(midpt)) + pos;
 
                 // RaycastOne
                 bool hitClosest = false;
@@ -253,7 +272,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                                        Body body = f.Body;
                                        if (body.UserData != null)
                                        {
-                                           int index = (int) body.UserData;
+                                           int index = (int)body.UserData;
                                            if (index == 0)
                                            {
                                                // filter
@@ -263,7 +282,6 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                                        hitClosest = true;
                                        shape = f;
-                                       //fraction = fr;
                                        return fr;
                                    }, p1, p2);
 
@@ -274,7 +292,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     {
                         int laPos = _data.Count - 1;
                         ShapeData la = _data[laPos];
-                        la.Max = vals[iplus].Angle;
+                        la.Max = vals[iplus];
                         _data[laPos] = la;
                     }
                     else
@@ -282,8 +300,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         // make new
                         ShapeData d;
                         d.Body = shape.Body;
-                        d.Min = vals[i].Angle;
-                        d.Max = vals[iplus].Angle;
+                        d.Min = vals[i];
+                        d.Max = vals[iplus];
                         _data.Add(d);
                     }
 
@@ -315,49 +333,6 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 }
                 else
                 {
-                    // Add entry to data with body = NULL to indicate a lack of objects in this range.
-                    // Useful for drawing/graphical/other purposes.
-                    // Commented for optimization
-
-                    /*if (_data.Count() > 0 && rayMissed && _data.Last().Body == null)
-                    {
-                        int laPos = _data.Count - 1;
-                        ShapeData la = _data[laPos];
-                        la.Max = vals[iplus].Angle;
-                        _data[laPos] = la;
-                    }
-                    else
-                    {
-                        ShapeData d;
-                        d.Body = null;
-                        d.Min = vals[i].Angle;
-                        d.Max = vals[iplus].Angle;
-                        _data.Add(d);
-                    }
-
-                    if ((_data.Count() > 1) && (i == valIndex - 1)
-                        && (_data.First().Body == null)
-                        && (_data.Last().Max == _data.First().Min))
-                    {
-                        ShapeData fi = _data[0];
-                        fi.Min = _data.Last().Min;
-                        _data.RemoveAt(_data.Count() - 1);
-                        while (_data.First().Min >= _data.First().Max)
-                        {
-                            fi.Min -= MathHelper.Pi * 2;
-                            _data[0] = fi;
-                        }
-                    }
-
-                    int lastPos = _data.Count - 1;
-                    ShapeData last = _data[lastPos];
-                    while ((_data.Count() > 0)
-                        && (_data.Last().Min >= _data.Last().Max)) // just making sure min<max
-                    {
-                        last.Min = _data.Last().Min - 2 * MathHelper.Pi;
-                        _data[lastPos] = last;
-                    }*/
-
                     rayMissed = true; // raycast did not find a shape
                 }
             }
@@ -366,31 +341,18 @@ namespace FarseerPhysics.Common.PhysicsLogic
             {
                 float arclen = _data[i].Max - _data[i].Min;
 
-                if (_data[i].Body == null)
-                {
-                    // It should never enter here if we commented
-                    // the part where we add null references
-                    for (float j = _data[i].Min; j <= _data[i].Max; j += maxAngle)
-                    {
-                        // Draw Debug stuff... if you want to.
-                        // Nothing found
-                    }
-                    continue;
-                }
-
-                float first = MathHelper.Min(maxEdgeOffset, edgeRatio * arclen);
-                int insertedRays = (int) Math.Ceiling(((arclen - 2.0f * first) - (minRays - 1) * maxAngle) / maxAngle);
+                float first = MathHelper.Min(MaxEdgeOffset, EdgeRatio * arclen);
+                int insertedRays = (int)Math.Ceiling(((arclen - 2.0f * first) - (MinRays - 1) * MaxAngle) / MaxAngle);
 
                 if (insertedRays < 0)
                     insertedRays = 0;
 
-                float offset = (arclen - first * 2.0f) / ((float) minRays + insertedRays - 1);
+                float offset = (arclen - first * 2.0f) / ((float)MinRays + insertedRays - 1);
 
-                //int jj = 0;
                 for (float j = _data[i].Min + first; j <= _data[i].Max; j += offset)
                 {
                     Vector2 p1 = pos;
-                    Vector2 p2 = pos + radius * new Vector2((float) Math.Cos(j), (float) Math.Sin(j));
+                    Vector2 p2 = pos + radius * new Vector2((float)Math.Cos(j), (float)Math.Sin(j));
                     Vector2 hitpoint = Vector2.Zero;
                     float minlambda = float.MaxValue;
 
@@ -415,14 +377,14 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        float impulse = (arclen / (minRays + insertedRays)) * maxForce * 180.0f / MathHelper.Pi *
+                        float impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / MathHelper.Pi *
                                         (1.0f - Math.Min(1.0f, minlambda));
 
                         // We Apply the impulse!!!
-                        Vector2 vectImp = Vector2.Dot(impulse * new Vector2((float) Math.Cos(j),
-                                                                            (float) Math.Sin(j)), -ro.Normal) *
-                                          new Vector2((float) Math.Cos(j),
-                                                      (float) Math.Sin(j));
+                        Vector2 vectImp = Vector2.Dot(impulse * new Vector2((float)Math.Cos(j),
+                                                                            (float)Math.Sin(j)), -ro.Normal) *
+                                          new Vector2((float)Math.Cos(j),
+                                                      (float)Math.Sin(j));
 
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
@@ -450,8 +412,6 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         {
                             hitpoint = p2;
                         }
-
-                        //++jj;
                     }
                 }
             }
@@ -461,7 +421,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             {
                 Fixture fix = containedShapes[i];
 
-                float impulse = minRays * maxForce * 180.0f / MathHelper.Pi;
+                float impulse = MinRays * maxForce * 180.0f / MathHelper.Pi;
                 Vector2 hitPoint;
 
                 CircleShape circShape = fix.Shape as CircleShape;
@@ -482,7 +442,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 fix.Body.ApplyLinearImpulse(ref vectImp, ref hitPoint);
 
-                _exploded.Add(fix, vectorList);
+                if (!_exploded.ContainsKey(fix))
+                    _exploded.Add(fix, vectorList);
             }
 
             return _exploded;

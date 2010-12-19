@@ -98,10 +98,10 @@ namespace FarseerPhysics.Dynamics
         private Body[] _stack = new Body[64];
         private bool _stepComplete;
         private bool _subStepping;
-        private List<Body> _bodyAddList = new List<Body>(32);
-        private List<Body> _bodyRemoveList = new List<Body>(32);
-        private List<Joint> _jointAddList = new List<Joint>(32);
-        private List<Joint> _jointRemoveList = new List<Joint>(32);
+        private Common.HashSet<Body> _bodyAddList = new Common.HashSet<Body>(32);
+        private Common.HashSet<Body> _bodyRemoveList = new Common.HashSet<Body>(32);
+        private Common.HashSet<Joint> _jointAddList = new Common.HashSet<Joint>(32);
+        private Common.HashSet<Joint> _jointRemoveList = new Common.HashSet<Joint>(32);
 
         /// <summary>
         /// If false, the whole simulation stops. It still processes added and removed geometries.
@@ -286,10 +286,8 @@ namespace FarseerPhysics.Dynamics
 
         private void ProcessRemovedJoints()
         {
-            for (int i = 0; i < _jointRemoveList.Count; i++)
+            foreach (Joint joint in _jointRemoveList)
             {
-                Joint joint = _jointRemoveList[i];
-
                 bool collideConnected = joint.CollideConnected;
 
                 // Remove from the world list.
@@ -382,10 +380,8 @@ namespace FarseerPhysics.Dynamics
 
         private void ProcessAddedJoints()
         {
-            for (int i = 0; i < _jointAddList.Count; i++)
+            foreach (Joint joint in _jointAddList)
             {
-                Joint joint = _jointAddList[i];
-
                 // Connect to the world list.
                 JointList.Add(joint);
 
@@ -445,13 +441,13 @@ namespace FarseerPhysics.Dynamics
 
         private void ProcessAddedBodies()
         {
-            for (int i = 0; i < _bodyAddList.Count; i++)
+            foreach (Body body in _bodyAddList)
             {
                 // Add to world list.
-                BodyList.Add(_bodyAddList[i]);
+                BodyList.Add(body);
 
                 if (BodyAdded != null)
-                    BodyAdded(_bodyAddList[i]);
+                    BodyAdded(body);
             }
 
             _bodyAddList.Clear();
@@ -459,10 +455,8 @@ namespace FarseerPhysics.Dynamics
 
         private void ProcessRemovedBodies()
         {
-            for (int j = 0; j < _bodyRemoveList.Count; j++)
+            foreach (Body body in _bodyRemoveList)
             {
-                Body body = _bodyRemoveList[j];
-
                 Debug.Assert(BodyList.Count > 0);
 
                 // You tried to remove a body that is not contained in the BodyList.
