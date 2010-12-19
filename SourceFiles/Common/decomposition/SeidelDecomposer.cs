@@ -91,7 +91,7 @@ namespace FarseerPhysics.Common.Decomposition
         private Point _head;
         private int _size;
 
-        private Dictionary<Point, bool> _convexPoints;
+        private HashSet<Point> _convexPoints;
 
         // Monotone mountain points
         private List<Point> _monoPoly;
@@ -111,7 +111,7 @@ namespace FarseerPhysics.Common.Decomposition
             _tail = null;
             _head = null;
             _positive = false;
-            _convexPoints = new Dictionary<Point, bool>();
+            _convexPoints = new HashSet<Point>();
             _monoPoly = new List<Point>();
             Triangles = new List<List<Point>>();
         }
@@ -171,7 +171,7 @@ namespace FarseerPhysics.Common.Decomposition
                 if (a >= PiSlop || a <= -PiSlop || a == 0.0)
                     Remove(p);
                 else if (IsConvex(p))
-                    _convexPoints.Add(p, false);
+                    _convexPoints.Add(p);
                 p = p.Next;
             }
 
@@ -182,9 +182,9 @@ namespace FarseerPhysics.Common.Decomposition
         {
             while (_convexPoints.Count != 0)
             {
-                Dictionary<Point, bool>.Enumerator e = _convexPoints.GetEnumerator();
+                IEnumerator<Point> e = _convexPoints.GetEnumerator();
                 e.MoveNext();
-                Point ear = e.Current.Key;
+                Point ear = e.Current;
 
                 _convexPoints.Remove(ear);
                 Point a = ear.Prev;
@@ -200,9 +200,9 @@ namespace FarseerPhysics.Common.Decomposition
                 // Remove ear, update angles and convex list
                 Remove(ear);
                 if (Valid(a))
-                    _convexPoints.Add(a, false);
+                    _convexPoints.Add(a);
                 if (Valid(c))
-                    _convexPoints.Add(c, false);
+                    _convexPoints.Add(c);
             }
 
             Debug.Assert(_size <= 3, "Triangulation bug, please report");
@@ -387,7 +387,7 @@ namespace FarseerPhysics.Common.Decomposition
     internal class TrapezoidalMap
     {
         // Trapezoid container
-        public Dictionary<Trapezoid, bool> Map;
+        public HashSet<Trapezoid> Map;
 
         // AABB margin
         private float _margin;
@@ -400,7 +400,7 @@ namespace FarseerPhysics.Common.Decomposition
 
         public TrapezoidalMap()
         {
-            Map = new Dictionary<Trapezoid, bool>();
+            Map = new HashSet<Trapezoid>();
             _margin = 50.0f;
             _bCross = null;
             _cross = null;
@@ -648,7 +648,7 @@ namespace FarseerPhysics.Common.Decomposition
         public float Slope;
 
         // Montone mountain points
-        public Dictionary<Point, bool> MPoints;
+        public HashSet<Point> MPoints;
 
         // Y intercept
         public float B;
@@ -666,9 +666,9 @@ namespace FarseerPhysics.Common.Decomposition
             B = p.Y - (p.X * Slope);
             Above = null;
             Below = null;
-            MPoints = new Dictionary<Point, bool>();
-            MPoints.Add(p, false);
-            MPoints.Add(q, false);
+            MPoints = new HashSet<Point>();
+            MPoints.Add(p);
+            MPoints.Add(q);
         }
 
         public bool IsAbove(Point point)
@@ -683,11 +683,11 @@ namespace FarseerPhysics.Common.Decomposition
 
         public void AddMpoint(Point point)
         {
-            foreach (Point mp in MPoints.Keys)
+            foreach (Point mp in MPoints)
                 if (!mp.Neq(point))
                     return;
 
-            MPoints.Add(point, false);
+            MPoints.Add(point);
         }
     }
 
@@ -924,20 +924,20 @@ namespace FarseerPhysics.Common.Decomposition
                     // Add new trapezoids to map
                     foreach (Trapezoid y in tList)
                     {
-                        _trapezoidalMap.Map.Add(y, false);
+                        _trapezoidalMap.Map.Add(y);
                     }
                 }
                 _trapezoidalMap.Clear();
             }
 
             // Mark outside trapezoids
-            foreach (Trapezoid t in _trapezoidalMap.Map.Keys)
+            foreach (Trapezoid t in _trapezoidalMap.Map)
             {
                 MarkOutside(t);
             }
 
             // Collect interior trapezoids
-            foreach (Trapezoid t in _trapezoidalMap.Map.Keys)
+            foreach (Trapezoid t in _trapezoidalMap.Map)
             {
                 if (t.Inside)
                 {
@@ -966,7 +966,7 @@ namespace FarseerPhysics.Common.Decomposition
                     // Insertion sort is one of the fastest algorithms for sorting arrays containing 
                     // fewer than ten elements, or for lists that are already mostly sorted.
 
-                    List<Point> points = new List<Point>(edge.MPoints.Keys);
+                    List<Point> points = new List<Point>(edge.MPoints);
                     points.Sort((p1, p2) => p1.X.CompareTo(p2.X));
 
                     foreach (Point p in points)

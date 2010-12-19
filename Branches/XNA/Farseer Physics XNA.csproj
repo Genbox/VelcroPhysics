@@ -268,6 +268,9 @@
     <Compile Include="..\..\sourcefiles\common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\HashSet.cs">
+      <Link>Common\HashSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\LineTools.cs">
       <Link>Common\LineTools.cs</Link>
     </Compile>
