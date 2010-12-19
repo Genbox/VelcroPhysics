@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Ground
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
+            float[] xs = new[] { -10.0f, -5.0f, 0.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -72,6 +72,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.3f;
+
+                    //First column is unaffected by the explosion
+                    if (j == 0)
+                    {
+                        body.PhysicsLogicFilter.IgnorePhysicsLogic(PhysicsLogicType.Explosion);
+                    }
                 }
             }
 

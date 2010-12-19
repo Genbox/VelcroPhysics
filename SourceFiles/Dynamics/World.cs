@@ -48,7 +48,10 @@ namespace FarseerPhysics.Dynamics
 
         public virtual bool IsActiveOn(Body body)
         {
-            if (!body.Enabled || body.IsStatic)
+            if (body == null || !body.Enabled || body.IsStatic)
+                return false;
+
+            if (body.FixtureList == null)
                 return false;
 
             foreach (Fixture fixture in body.FixtureList)

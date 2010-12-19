@@ -98,14 +98,13 @@ namespace FarseerPhysics.Common.PhysicsLogic
             _exploded = new Dictionary<Fixture, List<Vector2>>();
             _rdc = new RayDataComparer();
             _data = new List<ShapeData>();
-            IgnoreWhenInsideShape = false;
         }
 
         /// <summary>
         /// Ignore Explosion if it happens inside a shape.
         /// Default value is false.
         /// </summary>
-        public bool IgnoreWhenInsideShape { get; set; }
+        public bool IgnoreWhenInsideShape = false;
 
         /// <summary>
         /// This makes the explosive explode
@@ -133,7 +132,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             aabb.UpperBound = pos + new Vector2(radius, radius);
             Fixture[] shapes = new Fixture[MaxShapes];
 
-            // More than 5 shapes in an explosion could be possible, but still strange
+            // More than 5 shapes in an explosion could be possible, but still strange.
             Fixture[] containedShapes = new Fixture[5];
             bool exit = false;
 
@@ -165,7 +164,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 return _exploded;
             }
 
-            // per shape max/min angles for now
+            // Per shape max/min angles for now.
             float[] vals = new float[shapeCount * 2];
             int valIndex = 0;
             for (int i = 0; i < shapeCount; ++i)
@@ -269,6 +268,10 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 World.RayCast((f, p, n, fr) =>
                                    {
                                        Body body = f.Body;
+
+                                       if (!FilterData.IsActiveOn(body))
+                                           return 0;
+
                                        if (body.UserData != null)
                                        {
                                            int index = (int)body.UserData;
@@ -338,6 +341,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
             for (int i = 0; i < _data.Count(); ++i)
             {
+                if (!FilterData.IsActiveOn(_data[i].Body))
+                    continue;
+
                 float arclen = _data[i].Max - _data[i].Min;
 
                 float first = MathHelper.Min(MaxEdgeOffset, EdgeRatio * arclen);
@@ -348,7 +354,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 float offset = (arclen - first * 2.0f) / ((float)MinRays + insertedRays - 1);
 
-                for (float j = _data[i].Min + first; j <= _data[i].Max; j += offset)
+                //Note: This loop can go into infinite as it operates on floats.
+                //Added FloatEquals with a large epsilon.
+                for (float j = _data[i].Min + first; j < _data[i].Max || MathUtils.FloatEquals(j, _data[i].Max, 0.0001f); j += offset)
                 {
                     Vector2 p1 = pos;
                     Vector2 p2 = pos + radius * new Vector2((float)Math.Cos(j), (float)Math.Sin(j));
@@ -419,6 +427,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
             for (int i = 0; i < containedShapeCount; ++i)
             {
                 Fixture fix = containedShapes[i];
+
+                if (!FilterData.IsActiveOn(fix.Body))
+                    continue;
 
                 float impulse = MinRays * maxForce * 180.0f / MathHelper.Pi;
                 Vector2 hitPoint;

@@ -30,7 +30,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
     public class PhysicsLogicFilter
     {
-        public PhysicsLogicType ControllerIgnores;
+        public PhysicsLogicType PhysicsLogicFlags;
 
         /// <summary>
         /// Ignores the controller. The controller has no effect on this body.
@@ -38,7 +38,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// <param name="type">The logic type.</param>
         public void IgnorePhysicsLogic(PhysicsLogicType type)
         {
-            ControllerIgnores |= type;
+            PhysicsLogicFlags |= type;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// <param name="type">The logic type.</param>
         public void RestorePhysicsLogic(PhysicsLogicType type)
         {
-            ControllerIgnores &= ~type;
+            PhysicsLogicFlags &= ~type;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// </returns>
         public bool IsPhysicsLogicIgnored(PhysicsLogicType type)
         {
-            return (ControllerIgnores & type) == type;
+            return (PhysicsLogicFlags & type) == type;
         }
     }
 
