@@ -125,7 +125,7 @@ namespace FarseerPhysics.Controllers
         /// <summary>
         /// See DecayModes
         /// </summary>
-        public DecayModes DecayMode {get; set;}
+        public DecayModes DecayMode { get; set; }
 
         /// <summary>
         /// Start of the distance based Decay. To set a non decaying area
@@ -163,7 +163,7 @@ namespace FarseerPhysics.Controllers
                 case DecayModes.Step:
                     {
                         if (Distance < DecayEnd)
-                            return 1.0f; 
+                            return 1.0f;
                         else
                             return 0.0f;
                     }
@@ -180,7 +180,7 @@ namespace FarseerPhysics.Controllers
                         if (Distance < DecayStart)
                             return 1.0f;
                         else
-                            return 1.0f / ((Distance - DecayStart)*(Distance - DecayStart));
+                            return 1.0f / ((Distance - DecayStart) * (Distance - DecayStart));
                     }
                 case DecayModes.Curve:
                     {
@@ -192,13 +192,14 @@ namespace FarseerPhysics.Controllers
                 default:
                     return 1.0f;
             }
-            
+
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public AbstractForceController()
+            : base(ControllerType.AbstractForceController)
         {
 
             Enabled = true;
@@ -230,6 +231,7 @@ namespace FarseerPhysics.Controllers
         /// </summary>
         /// <param name="Mode"></param>
         public AbstractForceController(TimingModes Mode)
+            : base(ControllerType.AbstractForceController)
         {
             this.TimingMode = Mode;
             switch (Mode)

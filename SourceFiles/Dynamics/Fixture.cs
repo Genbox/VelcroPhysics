@@ -163,7 +163,7 @@ namespace FarseerPhysics.Dynamics
 
             FixtureId = _fixtureIdCounter++;
 
-            if ((Body.Flags & BodyFlags.Active) == BodyFlags.Active)
+            if ((Body.Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 BroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
                 CreateProxies(broadPhase, ref Body.Xf);
@@ -297,6 +297,36 @@ namespace FarseerPhysics.Dynamics
                 _collisionCategories = value;
                 FilterChanged();
             }
+        }
+
+        /// <summary>
+        /// Ignores the controller. The controller has no effect on this body.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void AddCategory(CollisionCategory category)
+        {
+            CollisionCategories |= category;
+        }
+
+        /// <summary>
+        /// Restore the controller. The controller affects this body.
+        /// </summary>
+        /// <param name="category">The flags.</param>
+        public void RemoveCategory(CollisionCategory category)
+        {
+            CollisionCategories &= ~category;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="category">The flags.</param>
+        /// <returns>
+        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInCategory(CollisionCategory category)
+        {
+            return (CollisionCategories & category) == category;
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ namespace FarseerPhysics.Controllers
         /// Sets the max angular velocity to Settings.MaxRotation
         /// </summary>
         public VelocityLimitController()
+            : base(ControllerType.VelocityLimitController)
         {
             _maxLinearVelocity = Settings.MaxTranslation;
             _maxAngularVelocity = Settings.MaxRotation;
@@ -39,6 +40,7 @@ namespace FarseerPhysics.Controllers
         /// <param name="maxLinearVelocity">The max linear velocity.</param>
         /// <param name="maxAngularVelocity">The max angular velocity.</param>
         public VelocityLimitController(float maxLinearVelocity, float maxAngularVelocity)
+            : base(ControllerType.VelocityLimitController)
         {
             if (maxLinearVelocity == 0 || maxLinearVelocity == float.MaxValue)
                 LimitLinearVelocity = false;
@@ -82,10 +84,10 @@ namespace FarseerPhysics.Controllers
         {
             foreach (Body body in _bodies)
             {
-                if (body.IsControllerIgnored(IgnoreController.VelocityLimitController))
+                if (FilterData.IsActiveOn(body))
                     continue;
 
-                if (!body.Active || body.IsStatic)
+                if (!body.Enabled || body.IsStatic)
                     continue;
 
                 if (LimitLinearVelocity)

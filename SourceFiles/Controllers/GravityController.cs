@@ -18,12 +18,14 @@ namespace FarseerPhysics.Controllers
         public List<Vector2> Points = new List<Vector2>();
 
         public GravityController(float strength)
+            : base(ControllerType.GravityController)
         {
             Strength = strength;
             MaxRadius = float.MaxValue;
         }
 
         public GravityController(float strength, float maxRadius, float minRadius)
+            : base(ControllerType.GravityController)
         {
             MinRadius = minRadius;
             MaxRadius = maxRadius;
@@ -41,18 +43,15 @@ namespace FarseerPhysics.Controllers
 
             foreach (Body body1 in World.BodyList)
             {
-                if (body1.IsControllerIgnored(IgnoreController.GravityController))
+                if (!FilterData.IsActiveOn(body1))
                     continue;
 
-                if (!body1.Active || body1.IsStatic)
+                if (!body1.Enabled || body1.IsStatic)
                     continue;
 
                 foreach (Body body2 in Bodies)
                 {
-                    if (body2.IsControllerIgnored(IgnoreController.GravityController))
-                        continue;
-
-                    if (body1 == body2 || (body1.IsStatic && body2.IsStatic) || !body2.Active)
+                    if (body1 == body2 || (body1.IsStatic && body2.IsStatic) || !body2.Enabled)
                         continue;
 
                     Vector2 d = body2.Position - body1.Position;

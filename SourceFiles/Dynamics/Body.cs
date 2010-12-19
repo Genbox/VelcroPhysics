@@ -66,7 +66,7 @@ namespace FarseerPhysics.Dynamics
         AutoSleep = (1 << 2),
         Bullet = (1 << 3),
         FixedRotation = (1 << 4),
-        Active = (1 << 5),
+        Enabled = (1 << 5),
         Toi = (1 << 6),
         IgnoreGravity = (1 << 7),
     }
@@ -79,7 +79,6 @@ namespace FarseerPhysics.Dynamics
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
-        internal IgnoreController ControllerIgnores;
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
@@ -103,12 +102,14 @@ namespace FarseerPhysics.Dynamics
             SleepingAllowed = true;
             Awake = true;
             BodyType = BodyType.Static;
-            Active = true;
+            Enabled = true;
 
             Xf.R.Set(0);
 
             world.AddBody(this);
         }
+
+        public ControllerFilter ControllerFilter = new ControllerFilter();
 
         /// <summary>
         /// Gets the total number revolutions the body has made.
@@ -302,18 +303,18 @@ namespace FarseerPhysics.Dynamics
         /// in the body list.
         /// </summary>
         /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
-        public bool Active
+        public bool Enabled
         {
             set
             {
-                if (value == Active)
+                if (value == Enabled)
                 {
                     return;
                 }
 
                 if (value)
                 {
-                    Flags |= BodyFlags.Active;
+                    Flags |= BodyFlags.Enabled;
 
                     // Create all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
@@ -326,7 +327,7 @@ namespace FarseerPhysics.Dynamics
                 }
                 else
                 {
-                    Flags &= ~BodyFlags.Active;
+                    Flags &= ~BodyFlags.Enabled;
 
                     // Destroy all proxies.
                     BroadPhase broadPhase = World.ContactManager.BroadPhase;
@@ -347,7 +348,7 @@ namespace FarseerPhysics.Dynamics
                     ContactList = null;
                 }
             }
-            get { return (Flags & BodyFlags.Active) == BodyFlags.Active; }
+            get { return (Flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
         }
 
         /// <summary>
@@ -533,36 +534,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Ignores the controller. The controller has no effect on this body.
-        /// </summary>
-        /// <param name="controller">The flags.</param>
-        public void IgnoreController(IgnoreController controller)
-        {
-            ControllerIgnores |= controller;
-        }
-
-        /// <summary>
-        /// Restore the controller. The controller affects this body.
-        /// </summary>
-        /// <param name="controller">The flags.</param>
-        public void RestoreController(IgnoreController controller)
-        {
-            ControllerIgnores &= ~controller;
-        }
-
-        /// <summary>
-        /// Determines whether this body ignores the the specified controller.
-        /// </summary>
-        /// <param name="controller">The flags.</param>
-        /// <returns>
-        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsControllerIgnored(IgnoreController controller)
-        {
-            return (ControllerIgnores & controller) == controller;
-        }
-
-        /// <summary>
         /// Resets the dynamics of this body.
         /// Sets torque, force and linear/angular velocity to 0
         /// </summary>
@@ -640,7 +611,7 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-            if ((Flags & BodyFlags.Active) == BodyFlags.Active)
+            if ((Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 BroadPhase broadPhase = World.ContactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
