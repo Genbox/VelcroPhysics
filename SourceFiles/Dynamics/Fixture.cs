@@ -564,6 +564,7 @@ namespace FarseerPhysics.Dynamics
         public void Dispose()
         {
             Body.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
