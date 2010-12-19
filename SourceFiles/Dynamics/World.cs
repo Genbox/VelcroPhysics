@@ -224,7 +224,6 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Create a rigid body.
-        /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <returns></returns>
         public void AddBody(Body body)
@@ -232,12 +231,12 @@ namespace FarseerPhysics.Dynamics
             //You are adding a body that is already in the simulation
             Debug.Assert(!_bodyAddList.Contains(body));
 
-            _bodyAddList.Add(body);
+            if (!_bodyAddList.Contains(body))
+                _bodyAddList.Add(body);
         }
 
         /// <summary>
         /// Destroy a rigid body.
-        /// Warning: This function is locked during callbacks.
         /// Warning: This automatically deletes all associated shapes and joints.
         /// </summary>
         /// <param name="body">The body.</param>
@@ -246,12 +245,12 @@ namespace FarseerPhysics.Dynamics
             //You are removing a body twice?
             Debug.Assert(!_bodyRemoveList.Contains(body));
 
-            _bodyRemoveList.Add(body);
+            if (!_bodyRemoveList.Contains(body))
+                _bodyRemoveList.Add(body);
         }
 
         /// <summary>
         /// Create a joint to constrain bodies together. This may cause the connected bodies to cease colliding.
-        /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <param name="joint">The joint.</param>
         public void AddJoint(Joint joint)
@@ -259,12 +258,12 @@ namespace FarseerPhysics.Dynamics
             //You are adding the same joint twice?
             Debug.Assert(!_jointAddList.Contains(joint));
 
-            _jointAddList.Add(joint);
+            if (!_jointAddList.Contains(joint))
+                _jointAddList.Add(joint);
         }
 
         /// <summary>
         /// Destroy a joint. This may cause the connected bodies to begin colliding.
-        /// Warning: This function is locked during callbacks.
         /// </summary>
         /// <param name="joint">The joint.</param>
         public void RemoveJoint(Joint joint)
@@ -272,7 +271,8 @@ namespace FarseerPhysics.Dynamics
             //You are removing a joint twice?
             Debug.Assert(!_jointRemoveList.Contains(joint));
 
-            _jointRemoveList.Add(joint);
+            if (!_jointRemoveList.Contains(joint))
+                _jointRemoveList.Add(joint);
         }
 
         private void ProcessChanges()
