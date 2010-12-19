@@ -57,7 +57,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
     /// Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
     /// Ported to Farseer 3.0 by Nicolás Hormazábal
     /// </remarks>
-    public sealed class Explosive
+    public sealed class Explosion : PhysicsLogic
     {
         /// <summary>
         /// Maximum number of shapes involved in the explosion.
@@ -91,14 +91,13 @@ namespace FarseerPhysics.Common.PhysicsLogic
         private List<ShapeData> _data = new List<ShapeData>();
         private Dictionary<Fixture, List<Vector2>> _exploded;
         private RayDataComparer _rdc;
-        private World _world;
 
-        public Explosive(World world)
+        public Explosion(World world)
+            : base(world, PhysicsLogicType.Explosion)
         {
             _exploded = new Dictionary<Fixture, List<Vector2>>();
             _rdc = new RayDataComparer();
             _data = new List<ShapeData>();
-            _world = world;
             IgnoreWhenInsideShape = false;
         }
 
@@ -125,7 +124,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// A dictionnary containing all the "exploded" fixtures
         /// with a list of the applied impulses
         /// </returns>
-        public Dictionary<Fixture, List<Vector2>> Explode(Vector2 pos, float radius, float maxForce)
+        public Dictionary<Fixture, List<Vector2>> Activate(Vector2 pos, float radius, float maxForce)
         {
             _exploded.Clear();
 
@@ -142,7 +141,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             int containedShapeCount = 0;
 
             // Query the world for overlapping shapes.
-            _world.QueryAABB(
+            World.QueryAABB(
                 fixture =>
                 {
                     if (fixture.TestPoint(ref pos))
@@ -267,7 +266,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 // RaycastOne
                 bool hitClosest = false;
-                _world.RayCast((f, p, n, fr) =>
+                World.RayCast((f, p, n, fr) =>
                                    {
                                        Body body = f.Body;
                                        if (body.UserData != null)

@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
         private const int ColumnCount = 5;
         private const int RowCount = 16;
         private Body[] _bodies = new Body[RowCount * ColumnCount];
-        private Explosive _explosive;
+        private Explosion _explosion;
         private float _radius;
         private float _power;
         private Vector2 _mousePos;
@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _radius = 5;
             _power = 3;
-            _explosive = new Explosive(World);
+            _explosion = new Explosion(World);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.OemComma))
             {
-                _explosive.Explode(_mousePos, _radius, _power);
+                _explosion.Activate(_mousePos, _radius, _power);
             }
             if (keyboardManager.IsKeyDown(Keys.A))
             {
