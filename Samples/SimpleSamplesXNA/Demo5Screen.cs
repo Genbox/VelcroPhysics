@@ -51,8 +51,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _agent = new Agent(World, Vector2.Zero);
 
             //Collide with all but stars
-            _agent.CollisionCategories = CollisionCategory.All & ~CollisionCategory.Cat4;
-            _agent.CollidesWith = CollisionCategory.All & ~CollisionCategory.Cat4;
+            _agent.CollisionCategories = Category.All & ~Category.Cat4;
+            _agent.CollidesWith = Category.All & ~Category.Cat4;
 
             DemoMaterial matCircle = new DemoMaterial(MaterialType.Dots)
             {
@@ -80,32 +80,32 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _circles = new Objects(World, startPosition, endPosition, 15, 1, ObjectType.Circle, matCircle);
 
             //Collide with itself only
-            _circles.CollisionCategories = CollisionCategory.Cat1;
-            _circles.CollidesWith = CollisionCategory.Cat1;
+            _circles.CollisionCategories = Category.Cat1;
+            _circles.CollidesWith = Category.Cat1;
 
             startPosition = new Vector2(-20, -16);
             endPosition = new Vector2(20, -16);
             _rectangles = new Objects(World, startPosition, endPosition, 15, 2, ObjectType.Rectangle, matSquare);
 
             //Collides with itself only
-            _rectangles.CollisionCategories = CollisionCategory.Cat2;
-            _rectangles.CollidesWith = CollisionCategory.Cat2;
+            _rectangles.CollisionCategories = Category.Cat2;
+            _rectangles.CollidesWith = Category.Cat2;
 
             startPosition = new Vector2(-20, -10);
             endPosition = new Vector2(-20, 10);
             _gears = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Gear, matGear);
 
             //Collides with stars
-            _gears.CollisionCategories = CollisionCategory.Cat3;
-            _gears.CollidesWith = CollisionCategory.Cat3 | CollisionCategory.Cat4;
+            _gears.CollisionCategories = Category.Cat3;
+            _gears.CollidesWith = Category.Cat3 | Category.Cat4;
 
             startPosition = new Vector2(20, -10);
             endPosition = new Vector2(20, 10);
             _stars = new Objects(World, startPosition, endPosition, 5, 1, ObjectType.Star, matStar);
 
             //Collides with gears
-            _stars.CollisionCategories = CollisionCategory.Cat4;
-            _stars.CollidesWith = CollisionCategory.Cat3 | CollisionCategory.Cat4;
+            _stars.CollisionCategories = Category.Cat4;
+            _stars.CollidesWith = Category.Cat3 | Category.Cat4;
         }
 
         public override void HandleInput(InputHelper input)
