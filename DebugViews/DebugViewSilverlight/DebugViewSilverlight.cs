@@ -168,7 +168,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                     b.GetTransform(out xf);
                     foreach (Fixture f in b.FixtureList)
                     {
-                        if (b.Active == false)
+                        if (b.Enabled == false)
                         {
                             DrawShape(f, xf, InactiveShapeColor);
                         }
@@ -227,7 +227,7 @@ namespace FarseerPhysics.DebugViewSilverlight
 
                 foreach (Body b in World.BodyList)
                 {
-                    if (b.Active == false)
+                    if (b.Enabled == false)
                     {
                         continue;
                     }

@@ -41,6 +41,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Create the gravity controller
             GravityController gravity = new GravityController(20);
+            gravity.FilterData.DisabledOnGroup = 3;
+            gravity.FilterData.EnabledOnGroup = 2;
+            gravity.FilterData.DisabledOnCategories = CollisionCategory.Cat2;
+            gravity.FilterData.EnabledOnCategories = CollisionCategory.Cat3;
+
             World.AddController(gravity);
 
             Vector2 startPosition = new Vector2(-10, 2);
@@ -64,11 +69,25 @@ namespace FarseerPhysics.TestBed.Tests
                 circle.Position = startPosition + offset * i;
                 circle.SleepingAllowed = false;
 
-                if (i == 4)
-                    circle.IgnoreController(IgnoreController.GravityController);
-
                 CircleShape circleShape = new CircleShape(1, 0.1f);
-                circle.CreateFixture(circleShape);
+                Fixture fix = circle.CreateFixture(circleShape);
+                fix.CollisionCategories = CollisionCategory.Cat3;
+                fix.CollisionGroup = 2;
+
+                if (i == 4)
+                {
+                    circle.ControllerFilter.IgnoreController(ControllerType.GravityController);
+                }
+
+                if (i == 5)
+                {
+                    fix.CollisionCategories = CollisionCategory.Cat2;
+                }
+                
+                if (i == 6)
+                {
+                    fix.CollisionGroup = 3;
+                }
             }
         }
 

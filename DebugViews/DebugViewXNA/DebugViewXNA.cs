@@ -214,7 +214,7 @@ namespace FarseerPhysics.DebugViews
                     b.GetTransform(out xf);
                     foreach (Fixture f in b.FixtureList)
                     {
-                        if (b.Active == false)
+                        if (b.Enabled == false)
                         {
                             DrawShape(f, xf, InactiveShapeColor);
                         }
@@ -273,7 +273,7 @@ namespace FarseerPhysics.DebugViews
 
                 foreach (Body b in World.BodyList)
                 {
-                    if (b.Active == false)
+                    if (b.Enabled == false)
                     {
                         continue;
                     }
@@ -828,6 +828,9 @@ namespace FarseerPhysics.DebugViews
 
             _device.RasterizerState = RasterizerState.CullNone;
 
+            _localEffect.Projection = Matrix.CreateOrthographicOffCenter(0, _device.Viewport.Width,
+                                                             _device.Viewport.Height, 0, 0, 1);
+
             //Graph stuff first
             _localEffect.Techniques[0].Passes[0].Apply();
 
@@ -852,7 +855,7 @@ namespace FarseerPhysics.DebugViews
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _vertsLines, 0, _lineCount);
 
             // begin the sprite batch effect
-            _batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Matrix.Identity);
+            _batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
@@ -885,8 +888,6 @@ namespace FarseerPhysics.DebugViews
 
             _localEffect = new BasicEffect(device);
             _localEffect.VertexColorEnabled = true;
-            _localEffect.Projection = Matrix.CreateOrthographicOffCenter(0, _device.Viewport.Width,
-                                                                         _device.Viewport.Height, 0, 0, 1);
 
             _stringData = new List<StringData>();
 

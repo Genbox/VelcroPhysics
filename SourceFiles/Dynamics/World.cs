@@ -714,7 +714,7 @@ namespace FarseerPhysics.Dynamics
                     continue;
                 }
 
-                if (seed.Awake == false || seed.Active == false)
+                if (seed.Awake == false || seed.Enabled == false)
                 {
                     continue;
                 }
@@ -736,7 +736,7 @@ namespace FarseerPhysics.Dynamics
                 {
                     // Grab the next body off the stack and add it to the island.
                     Body b = _stack[--stackCount];
-                    Debug.Assert(b.Active);
+                    Debug.Assert(b.Enabled);
                     Island.Add(b);
 
                     // Make sure the body is awake.
@@ -805,7 +805,7 @@ namespace FarseerPhysics.Dynamics
                         if (other != null)
                         {
                             // Don't simulate joints connected to inactive bodies.
-                            if (other.Active == false)
+                            if (other.Enabled == false)
                             {
                                 continue;
                             }
