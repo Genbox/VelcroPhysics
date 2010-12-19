@@ -80,6 +80,66 @@ namespace FarseerPhysics.Dynamics
 
             return false;
         }
+
+        /// <summary>
+        /// Adds the category.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void AddDisabledCategory(Category category)
+        {
+            DisabledOnCategories |= category;
+        }
+
+        /// <summary>
+        /// Removes the category.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void RemoveDisabledCategory(Category category)
+        {
+            DisabledOnCategories &= ~category;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <returns>
+        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInDisabledCategory(Category category)
+        {
+            return (DisabledOnCategories & category) == category;
+        }
+
+        /// <summary>
+        /// Adds the category.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void AddEnabledCategory(Category category)
+        {
+            EnabledOnCategories |= category;
+        }
+
+        /// <summary>
+        /// Removes the category.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        public void RemoveEnabledCategory(Category category)
+        {
+            EnabledOnCategories &= ~category;
+        }
+
+        /// <summary>
+        /// Determines whether this body ignores the the specified controller.
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <returns>
+        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsInEnbledCategory(Category category)
+        {
+            return (EnabledOnCategories & category) == category;
+        }
     }
 
     [Flags]

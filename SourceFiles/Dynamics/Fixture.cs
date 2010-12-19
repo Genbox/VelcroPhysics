@@ -182,7 +182,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Ignores the controller. The controller has no effect on this body.
+        /// Adds the category.
         /// </summary>
         /// <param name="category">The category.</param>
         public void AddCollisionCategory(Category category)
@@ -191,7 +191,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Restore the controller. The controller affects this body.
+        /// Removes the category.
         /// </summary>
         /// <param name="category">The category.</param>
         public void RemoveCollisionCategory(Category category)
@@ -200,11 +200,11 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Determines whether this body ignores the the specified controller.
+        /// Determines whether this object has the specified category.
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns>
-        /// 	<c>true</c> if the body has the specified category; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInCollisionCategory(Category category)
         {
@@ -212,7 +212,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Ignores the controller. The controller has no effect on this body.
+        /// Adds the category.
         /// </summary>
         /// <param name="category">The category.</param>
         public void AddCollidesWithCategory(Category category)
@@ -221,7 +221,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Restore the controller. The controller affects this body.
+        /// Removes the category.
         /// </summary>
         /// <param name="category">The category.</param>
         public void RemoveCollidesWithCategory(Category category)
@@ -230,11 +230,11 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Determines whether this body ignores the the specified controller.
+        /// Determines whether this object has the specified category.
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns>
-        /// 	<c>true</c> if the body has the specified category; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInCollidesWithCategory(Category category)
         {
