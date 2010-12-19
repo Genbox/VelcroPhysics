@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Microsoft.Xna.Framework;
-
-using FarseerPhysics.Common;
+﻿using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Controllers;
 
 namespace FarseerPhysics.Controllers
 {
@@ -40,14 +32,14 @@ namespace FarseerPhysics.Controllers
         {
         }
 
-        public override void ApplyForce(float dt, float Strength)
+        public override void ApplyForce(float dt, float strength)
         {
             foreach (Body body in this.World.BodyList)
             {
                 //TODO: Consider Force Type
-                float DecayMultiplier = GetDecayMultiplier(body);
+                float decayMultiplier = GetDecayMultiplier(body);
 
-                if (DecayMultiplier != 0)
+                if (decayMultiplier != 0)
                 {
                     Vector2 forceVector;
 
@@ -73,18 +65,17 @@ namespace FarseerPhysics.Controllers
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        float StrengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
+                        float strengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector * Strength * DecayMultiplier * StrengthVariation);
+                        body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }
                     else
                     {
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector * Strength * DecayMultiplier);
+                        body.ApplyForce(forceVector * strength * decayMultiplier);
                     }
                 }
             }
         }
-
     }
 }

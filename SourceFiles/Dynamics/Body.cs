@@ -29,6 +29,7 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Common.PhysicsLogic;
 using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
@@ -110,6 +111,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         public ControllerFilter ControllerFilter = new ControllerFilter();
+        public PhysicsLogicFilter PhysicsLogicFilter = new PhysicsLogicFilter();
 
         /// <summary>
         /// Gets the total number revolutions the body has made.
