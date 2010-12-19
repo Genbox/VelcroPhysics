@@ -35,6 +35,50 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
+    /// <summary>
+    /// Contains filter data that can determine whether an object should be processed or not.
+    /// </summary>
+    public abstract class FilterData
+    {
+        public Category DisabledOnCategories = Category.None;
+        public Category EnabledOnCategories = Category.All;
+
+        public int DisabledOnGroup = 0;
+        public int EnabledOnGroup = 0;
+
+        public virtual bool IsActiveOn(Body body)
+        {
+            if (!body.Enabled || body.IsStatic)
+                return false;
+
+            foreach (Fixture fixture in body.FixtureList)
+            {
+                //Disable
+                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
+                    return false;
+
+                if ((fixture.CollisionFilter.CollisionCategories & DisabledOnCategories) != Category.None)
+                    return false;
+
+                if (EnabledOnGroup != 0 || EnabledOnCategories != Category.All)
+                {
+                    //Enable
+                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
+                        return true;
+
+                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None && EnabledOnCategories != Category.All)
+                        return true;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
     [Flags]
     public enum WorldFlags
     {

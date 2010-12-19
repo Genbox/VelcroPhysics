@@ -87,9 +87,6 @@ namespace FarseerPhysics.Controllers
                 if (FilterData.IsActiveOn(body))
                     continue;
 
-                if (!body.Enabled || body.IsStatic)
-                    continue;
-
                 if (LimitLinearVelocity)
                 {
                     //Translation

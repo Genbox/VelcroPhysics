@@ -11,44 +11,6 @@ namespace FarseerPhysics.Controllers
         AbstractForceController = (1 << 2)
     }
 
-    public abstract class FilterData
-    {
-        public Category DisabledOnCategories = Category.None;
-        public Category EnabledOnCategories = Category.All;
-
-        public int DisabledOnGroup = 0;
-        public int EnabledOnGroup = 0;
-
-        public virtual bool IsActiveOn(Body body)
-        {
-            foreach (Fixture fixture in body.FixtureList)
-            {
-                //Disable
-                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
-                    return false;
-
-                if ((fixture.CollisionFilter.CollisionCategories & DisabledOnCategories) != Category.None)
-                    return false;
-
-                if (EnabledOnGroup != 0 || EnabledOnCategories != Category.All)
-                {
-                    //Enable
-                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
-                        return true;
-
-                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None && EnabledOnCategories != Category.All)
-                        return true;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
-
     public class FilterControllerData : FilterData
     {
         private ControllerType _type;
@@ -83,7 +45,7 @@ namespace FarseerPhysics.Controllers
         /// <summary>
         /// Restore the controller. The controller affects this body.
         /// </summary>
-        /// <param name="controller">The flags.</param>
+        /// <param name="controller">The controller.</param>
         public void RestoreController(ControllerType controller)
         {
             ControllerIgnores &= ~controller;
