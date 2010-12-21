@@ -29,6 +29,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using FarseerPhysics.Common.Decomposition.CDT;
+
 namespace Poly2Tri.Triangulation
 {
     /**
