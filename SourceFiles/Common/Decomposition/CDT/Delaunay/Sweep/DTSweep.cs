@@ -48,6 +48,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Common.Decomposition.CDT;
 
 namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
