@@ -33,10 +33,15 @@ namespace FarseerPhysics.AdvancedSamplesXNA
         private List<Fixture> _compund;
         private Vector2 _origin;
         private Vector2 _scale;
+        private BasicEffect Effect;
 
         public override void LoadContent()
         {
             World = new World(Vector2.Zero);
+
+            Effect = new BasicEffect(ScreenManager.GraphicsDevice);
+            Effect.TextureEnabled = true;
+            Effect.VertexColorEnabled = true;
 
             //load texture that will represent the physics body
             _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Texture");
@@ -87,8 +92,10 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, Camera2D.Effect);
-            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund[0].Body.Position, null, Color.White, _compund[0].Body.Rotation, _origin, _scale, SpriteEffects.None, 0f);
+            Effect.Projection = Camera2D.Projection;
+            Effect.View = Camera2D.View;
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, Effect);
+            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund[0].Body.Position, null, Color.Tomato, _compund[0].Body.Rotation, _origin, _scale, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

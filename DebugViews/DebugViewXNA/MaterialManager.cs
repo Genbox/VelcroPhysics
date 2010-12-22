@@ -5,11 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
+namespace FarseerPhysics.DebugViews
 {
     public enum MaterialType
     {
-        Blank, Circles, Dots, Face, Squares, Stars, Tiles, Waves
+        Blank, Circles, Dots, Face, Squares, Stars, Tiles, Waves, Pavement
     }
 
     public class MaterialManager
@@ -24,13 +24,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             faceAnim[1] = contentManager.Load<Texture2D>("Materials/face2");
             timer = 1000.0;
 
-            materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Common/blank");
+            materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Materials/blank");
             materials[MaterialType.Circles] = contentManager.Load<Texture2D>("Materials/circles");
             materials[MaterialType.Dots] = contentManager.Load<Texture2D>("Materials/dots");
             materials[MaterialType.Squares] = contentManager.Load<Texture2D>("Materials/squares");
             materials[MaterialType.Stars] = contentManager.Load<Texture2D>("Materials/stars");
             materials[MaterialType.Tiles] = contentManager.Load<Texture2D>("Materials/tiles");
             materials[MaterialType.Waves] = contentManager.Load<Texture2D>("Materials/waves");
+            materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
             materials[MaterialType.Face] = faceAnim[0];
         }
 
@@ -67,12 +68,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
     }
 
-    public class DemoMaterial
+    public class DebugMaterial
     {
-        public DemoMaterial(MaterialType type)
+        public DebugMaterial(MaterialType type)
         {
-            Color1 = Color.White;
-            Color2 = Color.White;
+            Color = Color.White;
             Depth = 0f;
             Type = type;
             Scale = 1f;
@@ -87,16 +87,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             }
         }
 
-        public Color Color1 { get; set; }
-        public Color Color2 { get; set; }
-        public Color Color
-        {
-            set
-            {
-                Color1 = value;
-                Color2 = value;
-            }
-        }
+        public Color Color { get; set; }
         public float Depth { get; set; }
         public MaterialType Type { get; private set; }
         public bool CenterOnBody { get; set; }

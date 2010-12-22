@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -34,7 +35,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             World = new World(new Vector2(0, -20));
             base.LoadContent();
 
-            DemoMaterial material = new DemoMaterial(MaterialType.Waves)
+            DebugMaterial material = new DebugMaterial(MaterialType.Waves)
             {
                 Color = Color.Chocolate,
                 Scale = 4f

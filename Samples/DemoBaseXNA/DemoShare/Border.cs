@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -42,7 +42,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             //Right
             borders.Add(PolygonTools.CreateRectangle(_borderWidth, height, new Vector2(width, 0), 0));
 
-            DemoMaterial material = new DemoMaterial(MaterialType.Dots)
+            DebugMaterial material = new DebugMaterial(MaterialType.Pavement)
             {
                 Color = Color.LightGray,
                 Scale = 8f

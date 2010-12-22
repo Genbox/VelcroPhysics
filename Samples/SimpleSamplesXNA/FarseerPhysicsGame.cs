@@ -28,10 +28,12 @@ namespace FarseerPhysics.SimpleSamplesXNA
 #if WINDOWS_PHONE
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 480;
+            _graphics.IsFullScreen = true;
 #endif
 #if XBOX
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
+            _graphics.IsFullScreen = true;
 #endif
 
             Content.RootDirectory = "Content";
@@ -60,9 +62,11 @@ namespace FarseerPhysics.SimpleSamplesXNA
         {
             base.Initialize();
 
+#if WINDOWS
             //Set window defaults. Parent game can override in constructor
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowClientSizeChanged;
+#endif
 
             Demo1Screen demo1 = new Demo1Screen();
             Demo2Screen demo2 = new Demo2Screen();
@@ -99,6 +103,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.Draw(gameTime);
         }
 
+#if WINDOWS
         private void WindowClientSizeChanged(object sender, EventArgs e)
         {
             if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
@@ -113,5 +118,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
             //Reset transition render targets
             ScreenManager.ResetTargets();
         }
+#endif
     }
 }
