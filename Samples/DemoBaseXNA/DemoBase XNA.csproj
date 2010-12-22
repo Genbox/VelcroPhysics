@@ -110,17 +110,12 @@
     <Compile Include="DemoShare\Objects.cs" />
     <Compile Include="DemoShare\Ragdoll.cs" />
     <Compile Include="DemoShare\Spider.cs" />
-    <Compile Include="DrawingSystem\CircleBrush.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
-    <Compile Include="DrawingSystem\EllipseBrush.cs" />
-    <Compile Include="DrawingSystem\LineBrush.cs" />
-    <Compile Include="DrawingSystem\RectangleBrush.cs" />
     <Compile Include="IDemoScreen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
-    <Compile Include="ScreenSystem\MaterialManager.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />

@@ -8,7 +8,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
-        public static BasicEffect Effect;
+        //public static BasicEffect Effect;
+        public static Matrix View;
+        public static Matrix Projection;
 
         private static GraphicsDevice _graphics;
         private Vector2 _position;
@@ -32,9 +34,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             _graphics = graphics;
 
-            Effect = new BasicEffect(graphics);
+            /*Effect = new BasicEffect(graphics);
             Effect.TextureEnabled = true;
-            Effect.VertexColorEnabled = true;
+            Effect.VertexColorEnabled = true;*/
+
+            Projection = Matrix.Identity;
+            View = Matrix.Identity;
 
             CreateProjection();
             ResetCamera();
@@ -254,7 +259,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public void CreateProjection()
         {
             // L/R/B/T
-            Effect.Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
+            Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
 
             if (ProjectionUpdated != null)
                 ProjectionUpdated();
@@ -288,7 +293,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void Resize()
         {
-            Effect.View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom);
+            View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom);
         }
 
         /// <summary>
@@ -392,7 +397,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Unproject(t, Effect.Projection, Effect.View, Matrix.Identity);
+            t = _graphics.Viewport.Unproject(t, Projection, View, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }
@@ -401,7 +406,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Project(t, Effect.Projection, Effect.View, Matrix.Identity);
+            t = _graphics.Viewport.Project(t, Projection, View, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }

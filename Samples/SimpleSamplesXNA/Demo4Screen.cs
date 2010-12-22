@@ -4,6 +4,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -35,10 +36,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Vector2 deltaX = new Vector2(1.0f, 1.50f);
             Vector2 deltaY = new Vector2(2, 0.0f);
 
-            DemoMaterial matBox = new DemoMaterial(MaterialType.Blank)
-                                      {
-                                          Color = Color.WhiteSmoke
-                                      };
+            DebugMaterial matBox = new DebugMaterial(MaterialType.Blank)
+            {
+                Color = Color.WhiteSmoke
+            };
 
             for (int i = 0; i < PyramidBaseBodyCount; ++i)
             {

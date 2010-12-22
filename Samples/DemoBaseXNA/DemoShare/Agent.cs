@@ -1,6 +1,6 @@
 ﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -20,11 +20,11 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _agentBody = BodyFactory.CreateBody(world, position);
             _agentBody.BodyType = BodyType.Dynamic;
 
-            DemoMaterial matBody = new DemoMaterial(MaterialType.Blank)
+            DebugMaterial matBody = new DebugMaterial(MaterialType.Blank)
             {
                 Color = Color.LightGray
             };
-            DemoMaterial matHands = new DemoMaterial(MaterialType.Squares)
+            DebugMaterial matHands = new DebugMaterial(MaterialType.Squares)
             {
                 Color = Color.DarkOrange,
                 Scale = 8f,

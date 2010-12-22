@@ -74,14 +74,19 @@ namespace FarseerPhysics
         ContactNormals = (1 << 7),
 
         /// <summary>
-        /// Draws the vertices of polygons
+        /// Draws the vertices of polygons.
         /// </summary>
         PolygonPoints = (1 << 8),
 
         /// <summary>
-        /// Draws the performance graph
+        /// Draws the performance graph.
         /// </summary>
         PerformanceGraph = (1 << 9),
+
+        /// <summary>
+        /// Draws textured shapes.
+        /// </summary>
+        TexturedShape = (1 << 10),
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics

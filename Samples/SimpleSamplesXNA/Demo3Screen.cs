@@ -2,6 +2,7 @@
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -55,7 +56,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         private void LoadObstacles()
         {
-            DemoMaterial material = new DemoMaterial(MaterialType.Dots)
+            DebugMaterial material = new DebugMaterial(MaterialType.Dots)
             {
                 Color = Color.SandyBrown,
                 Scale = 8f

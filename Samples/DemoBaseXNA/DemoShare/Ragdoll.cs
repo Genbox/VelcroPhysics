@@ -2,7 +2,7 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -41,12 +41,12 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         //Torso
         private void CreateBody(World world, Vector2 position)
         {
-            DemoMaterial matHead = new DemoMaterial(MaterialType.Face)
+            DebugMaterial matHead = new DebugMaterial(MaterialType.Face)
             {
                 Color = Color.DeepSkyBlue,
                 Scale = 2f
             };
-            DemoMaterial matBody = new DemoMaterial(MaterialType.Squares)
+            DebugMaterial matBody = new DebugMaterial(MaterialType.Squares)
             {
                 Color = Color.DeepSkyBlue,
                 Scale = 8f

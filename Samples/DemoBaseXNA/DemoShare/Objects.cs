@@ -2,6 +2,7 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -23,7 +24,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private List<Fixture> _fixtures;
         private ObjectType _type;
 
-        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type, DemoMaterial material)
+        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type, DebugMaterial material)
         {
             _fixtures = new List<Fixture>(count);
             _decomposedFixtures = new List<List<Fixture>>(count);
@@ -33,7 +34,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
             for (int i = 0; i < count; i++)
             {
-                Fixture fixture;
+                Fixture fixture = null;
 
                 switch (type)
                 {
@@ -46,11 +47,13 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                         _fixtures.Add(fixture);
                         break;
                     case ObjectType.Star:
-                        List<Fixture> star = FixtureFactory.CreateGear(world, radius, 10, 0f, 1f, 1, material);
+                        List<Fixture> star = null;
+                        star = FixtureFactory.CreateGear(world, radius, 10, 0f, 1f, 1, material);
                         _decomposedFixtures.Add(star);
                         break;
                     case ObjectType.Gear:
-                        List<Fixture> gear = FixtureFactory.CreateGear(world, radius, 10, 100f, 1f, 1, material);
+                        List<Fixture> gear = null;
+                        gear = FixtureFactory.CreateGear(world, radius, 10, 100f, 1f, 1, material);
                         _decomposedFixtures.Add(gear);
                         break;
                     default:

@@ -2,6 +2,7 @@
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
@@ -54,22 +55,22 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _agent.CollisionCategories = Category.All & ~Category.Cat4;
             _agent.CollidesWith = Category.All & ~Category.Cat4;
 
-            DemoMaterial matCircle = new DemoMaterial(MaterialType.Dots)
+            DebugMaterial matCircle = new DebugMaterial(MaterialType.Dots)
             {
                 Color = Color.DarkRed,
                 Scale = 8f
             };
-            DemoMaterial matSquare = new DemoMaterial(MaterialType.Squares)
+            DebugMaterial matSquare = new DebugMaterial(MaterialType.Squares)
             {
                 Color = Color.SeaGreen,
                 Scale = 9f
             };
-            DemoMaterial matGear = new DemoMaterial(MaterialType.Dots)
+            DebugMaterial matGear = new DebugMaterial(MaterialType.Dots)
             {
                 Color = Color.SkyBlue,
                 Scale = 8f
             };
-            DemoMaterial matStar = new DemoMaterial(MaterialType.Dots)
+            DebugMaterial matStar = new DebugMaterial(MaterialType.Dots)
             {
                 Color = Color.Gold,
                 Scale = 8f

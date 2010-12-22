@@ -4,6 +4,7 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -82,7 +83,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
                                                       true);
 
-            DemoMaterial circleMaterial = new DemoMaterial(MaterialType.Blank)
+            DebugMaterial circleMaterial = new DebugMaterial(MaterialType.Blank)
             {
                 Color = Color.LightGray,
                 Scale = 1f

@@ -1,7 +1,7 @@
 ﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
@@ -24,16 +24,16 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
         public Spider(World world, Vector2 position)
         {
-            DemoMaterial matHead = new DemoMaterial(MaterialType.Face)
+            DebugMaterial matHead = new DebugMaterial(MaterialType.Face)
             {
                 Color = Color.ForestGreen,
                 Scale = 2f
             };
-            DemoMaterial matBody = new DemoMaterial(MaterialType.Blank)
+            DebugMaterial matBody = new DebugMaterial(MaterialType.Blank)
             {
                 Color = Color.YellowGreen
             };
-            DemoMaterial matLeg = new DemoMaterial(MaterialType.Blank)
+            DebugMaterial matLeg = new DebugMaterial(MaterialType.Blank)
             {
                 Color = Color.DarkGreen
             };

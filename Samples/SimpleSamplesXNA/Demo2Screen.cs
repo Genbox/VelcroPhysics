@@ -3,6 +3,7 @@ using System.Text;
 using FarseerPhysics.Common;
 using FarseerPhysics.DemoBaseXNA;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -55,7 +56,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             vertices.Add(rect1);
             vertices.Add(rect2);
 
-            DemoMaterial material = new DemoMaterial(MaterialType.Circles)
+            DebugMaterial material = new DebugMaterial(MaterialType.Circles)
             {
                 Color = Color.Gold,
                 Scale = 2.5f
