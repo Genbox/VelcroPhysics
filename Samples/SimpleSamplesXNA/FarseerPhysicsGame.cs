@@ -22,8 +22,9 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
 #if WINDOWS
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 600;
+            _graphics.PreferredBackBufferWidth = 1024;
+            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.IsFullScreen = false;
 #endif
 #if WINDOWS_PHONE
             _graphics.PreferredBackBufferWidth = 800;
@@ -39,6 +40,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
             IsFixedTimeStep = true;
 
             //new-up components and add to Game.Components

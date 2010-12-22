@@ -203,7 +203,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     {
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
                         _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
-                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8));
+                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8, _pp.MultiSampleCount,
+                                                            RenderTargetUsage.DiscardContents));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);

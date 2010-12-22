@@ -332,60 +332,6 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        private void DrawTexturedShapes(ref Matrix projection)
-        {
-            _texturedEffect.Projection = projection;
-            if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
-            {
-                _texturedEffect.Alpha = 0.5f;
-            }
-            else
-            {
-                _texturedEffect.Alpha = 1f;
-            }
-
-            foreach (KeyValuePair<MaterialType, List<Fixture>> pair in _texturedObjects)
-            {
-                foreach (Fixture f in pair.Value)
-                {
-                    if (f.Shape.ShapeType == ShapeType.Circle)
-                    {
-                        DrawTexturedCircle(f);
-                    }
-                    if (f.Shape.ShapeType == ShapeType.Polygon)
-                    {
-                        DrawTexturedPolygon(f);
-                    }
-                }
-                if (_fillCount > 0)
-                {
-                    if (_materialManager.GetMaterialWrap(pair.Key))
-                    {
-                        _device.SamplerStates[0] = SamplerState.LinearWrap;
-                    }
-                    else
-                    {
-                        _device.SamplerStates[0] = SamplerState.LinearClamp;
-                    }
-                    _texturedEffect.Texture = _materialManager.GetMaterialTexture(pair.Key);
-                    _texturedEffect.Techniques[0].Passes[0].Apply();
-                    _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
-                }
-                _fillCount = 0;
-            }
-            foreach (Fixture f in _texturedEdges)
-            {
-                DrawTexturedLineShape(f);
-            }
-            if (_lineCount > 0)
-            {
-                _texturedEffect.Texture = _lineTexture;
-                _texturedEffect.Techniques[0].Passes[0].Apply();
-                _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsLines, 0, _lineCount);
-            }
-            _lineCount = 0;
-        }
-
         private void DrawPerformanceGraph()
         {
             _graphValues.Add(World.UpdateTime);
@@ -622,6 +568,60 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
+        private void DrawTexturedShapes(ref Matrix projection)
+        {
+            _texturedEffect.Projection = projection;
+            if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
+            {
+                _texturedEffect.Alpha = 0.5f;
+            }
+            else
+            {
+                _texturedEffect.Alpha = 1f;
+            }
+
+            foreach (KeyValuePair<MaterialType, List<Fixture>> pair in _texturedObjects)
+            {
+                foreach (Fixture f in pair.Value)
+                {
+                    if (f.Shape.ShapeType == ShapeType.Circle)
+                    {
+                        DrawTexturedCircle(f);
+                    }
+                    if (f.Shape.ShapeType == ShapeType.Polygon)
+                    {
+                        DrawTexturedPolygon(f);
+                    }
+                }
+                if (_fillCount > 0)
+                {
+                    if (_materialManager.GetMaterialWrap(pair.Key))
+                    {
+                        _device.SamplerStates[0] = SamplerState.LinearWrap;
+                    }
+                    else
+                    {
+                        _device.SamplerStates[0] = SamplerState.LinearClamp;
+                    }
+                    _texturedEffect.Texture = _materialManager.GetMaterialTexture(pair.Key);
+                    _texturedEffect.Techniques[0].Passes[0].Apply();
+                    _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsFill, 0, _fillCount);
+                }
+                _fillCount = 0;
+            }
+            foreach (Fixture f in _texturedEdges)
+            {
+                DrawTexturedLineShape(f);
+            }
+            if (_lineCount > 0)
+            {
+                _texturedEffect.Texture = _lineTexture;
+                _texturedEffect.Techniques[0].Passes[0].Apply();
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, _vertsLines, 0, _lineCount);
+            }
+            _lineCount = 0;
+        }
+
         private void DrawTexturedLineShape(Fixture fixture)
         {
             Transform xf;
@@ -644,8 +644,8 @@ namespace FarseerPhysics.DebugViews
 
         private void DrawLocalSegment(Vector2 start, Vector2 end, Color color)
         {
-            _localVertsLines[_localLineCount * 2].Position = new Vector3(start, 0);
-            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(end, 0);
+            _localVertsLines[_localLineCount * 2].Position = new Vector3(start, 0f);
+            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(end, 0f);
             _localVertsLines[_localLineCount * 2].Color = _localVertsLines[_localLineCount * 2 + 1].Color = color;
             _localLineCount++;
         }
@@ -662,13 +662,13 @@ namespace FarseerPhysics.DebugViews
 
             for (int i = 1; i < count - 1; i++)
             {
-                _localVertsFill[_localFillCount * 3].Position = new Vector3(vertices[0], 0.0f);
+                _localVertsFill[_localFillCount * 3].Position = new Vector3(vertices[0], 0f);
                 _localVertsFill[_localFillCount * 3].Color = colorFill;
 
-                _localVertsFill[_localFillCount * 3 + 1].Position = new Vector3(vertices[i], 0.0f);
+                _localVertsFill[_localFillCount * 3 + 1].Position = new Vector3(vertices[i], 0f);
                 _localVertsFill[_localFillCount * 3 + 1].Color = colorFill;
 
-                _localVertsFill[_localFillCount * 3 + 2].Position = new Vector3(vertices[i + 1], 0.0f);
+                _localVertsFill[_localFillCount * 3 + 2].Position = new Vector3(vertices[i + 1], 0f);
                 _localVertsFill[_localFillCount * 3 + 2].Color = colorFill;
 
                 _localFillCount++;
@@ -684,16 +684,16 @@ namespace FarseerPhysics.DebugViews
         {
             for (int i = 0; i < count - 1; i++)
             {
-                _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[i], 0.0f);
+                _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[i], 0f);
                 _localVertsLines[_localLineCount * 2].Color = color;
-                _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[i + 1], 0.0f);
+                _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[i + 1], 0f);
                 _localVertsLines[_localLineCount * 2 + 1].Color = color;
                 _localLineCount++;
             }
 
-            _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[count - 1], 0.0f);
+            _localVertsLines[_localLineCount * 2].Position = new Vector3(vertices[count - 1], 0f);
             _localVertsLines[_localLineCount * 2].Color = color;
-            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[0], 0.0f);
+            _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(vertices[0], 0f);
             _localVertsLines[_localLineCount * 2 + 1].Color = color;
             _localLineCount++;
         }
@@ -707,16 +707,16 @@ namespace FarseerPhysics.DebugViews
         {
             for (int i = 0; i < count - 1; i++)
             {
-                _vertsLines[_lineCount * 2].Position = new Vector3(vertices[i], 0.0f);
+                _vertsLines[_lineCount * 2].Position = new Vector3(vertices[i], -0.1f);
                 _vertsLines[_lineCount * 2].Color = color;
-                _vertsLines[_lineCount * 2 + 1].Position = new Vector3(vertices[i + 1], 0.0f);
+                _vertsLines[_lineCount * 2 + 1].Position = new Vector3(vertices[i + 1], -0.1f);
                 _vertsLines[_lineCount * 2 + 1].Color = color;
                 _lineCount++;
             }
 
-            _vertsLines[_lineCount * 2].Position = new Vector3(vertices[count - 1], 0.0f);
+            _vertsLines[_lineCount * 2].Position = new Vector3(vertices[count - 1], -0.1f);
             _vertsLines[_lineCount * 2].Color = color;
-            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(vertices[0], 0.0f);
+            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(vertices[0], -0.1f);
             _vertsLines[_lineCount * 2 + 1].Color = color;
             _lineCount++;
         }
@@ -729,6 +729,36 @@ namespace FarseerPhysics.DebugViews
         public void DrawSolidPolygon(Vector2[] vertices, int count, Color color)
         {
             DrawSolidPolygon(vertices, count, color, true);
+        }
+
+        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline)
+        {
+            if (count == 2)
+            {
+                DrawPolygon(vertices, count, color);
+                return;
+            }
+
+            Color colorFill = color * (outline ? 0.5f : 1.0f);
+
+            for (int i = 1; i < count - 1; i++)
+            {
+                _vertsFill[_fillCount * 3].Position = new Vector3(vertices[0], -0.1f);
+                _vertsFill[_fillCount * 3].Color = colorFill;
+
+                _vertsFill[_fillCount * 3 + 1].Position = new Vector3(vertices[i], -0.1f);
+                _vertsFill[_fillCount * 3 + 1].Color = colorFill;
+
+                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(vertices[i + 1], -0.1f);
+                _vertsFill[_fillCount * 3 + 2].Color = colorFill;
+
+                _fillCount++;
+            }
+
+            if (outline)
+            {
+                DrawPolygon(vertices, count, color);
+            }
         }
 
         private void DrawTexturedPolygon(Fixture fixture)
@@ -782,36 +812,6 @@ namespace FarseerPhysics.DebugViews
             DrawTexturedLine(MathUtils.Multiply(ref xf, poly.Vertices[count - 1]), v0);
         }
 
-        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline)
-        {
-            if (count == 2)
-            {
-                DrawPolygon(vertices, count, color);
-                return;
-            }
-
-            Color colorFill = color * (outline ? 0.5f : 1.0f);
-
-            for (int i = 1; i < count - 1; i++)
-            {
-                _vertsFill[_fillCount * 3].Position = new Vector3(vertices[0], 0.0f);
-                _vertsFill[_fillCount * 3].Color = colorFill;
-
-                _vertsFill[_fillCount * 3 + 1].Position = new Vector3(vertices[i], 0.0f);
-                _vertsFill[_fillCount * 3 + 1].Color = colorFill;
-
-                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(vertices[i + 1], 0.0f);
-                _vertsFill[_fillCount * 3 + 2].Color = colorFill;
-
-                _fillCount++;
-            }
-
-            if (outline)
-            {
-                DrawPolygon(vertices, count, color);
-            }
-        }
-
         public override void DrawCircle(Vector2 center, float radius, float red, float green, float blue)
         {
             DrawCircle(center, radius, new Color(red, green, blue));
@@ -829,9 +829,9 @@ namespace FarseerPhysics.DebugViews
                              radius *
                              new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
-                _vertsLines[_lineCount * 2].Position = new Vector3(v1, 0.0f);
+                _vertsLines[_lineCount * 2].Position = new Vector3(v1, -0.1f);
                 _vertsLines[_lineCount * 2].Color = color;
-                _vertsLines[_lineCount * 2 + 1].Position = new Vector3(v2, 0.0f);
+                _vertsLines[_lineCount * 2 + 1].Position = new Vector3(v2, -0.1f);
                 _vertsLines[_lineCount * 2 + 1].Color = color;
                 _lineCount++;
 
@@ -843,6 +843,41 @@ namespace FarseerPhysics.DebugViews
                                              float blue)
         {
             DrawSolidCircle(center, radius, axis, new Color(red, green, blue));
+        }
+
+        public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
+        {
+            const double increment = Math.PI * 2.0 / CircleSegments;
+            double theta = 0.0;
+
+            Color colorFill = color * 0.5f;
+
+            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+            theta += increment;
+
+            for (int i = 1; i < CircleSegments - 1; i++)
+            {
+                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
+                Vector2 v2 = center +
+                             radius *
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+
+                _vertsFill[_fillCount * 3].Position = new Vector3(v0, -0.1f);
+                _vertsFill[_fillCount * 3].Color = colorFill;
+
+                _vertsFill[_fillCount * 3 + 1].Position = new Vector3(v1, -0.1f);
+                _vertsFill[_fillCount * 3 + 1].Color = colorFill;
+
+                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(v2, -0.1f);
+                _vertsFill[_fillCount * 3 + 2].Color = colorFill;
+
+                _fillCount++;
+
+                theta += increment;
+            }
+            DrawCircle(center, radius, color);
+
+            DrawSegment(center, center + axis * radius, color);
         }
 
         private void DrawTexturedCircle(Fixture fixture)
@@ -903,41 +938,6 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
-        {
-            const double increment = Math.PI * 2.0 / CircleSegments;
-            double theta = 0.0;
-
-            Color colorFill = color * 0.5f;
-
-            Vector2 v0 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-            theta += increment;
-
-            for (int i = 1; i < CircleSegments - 1; i++)
-            {
-                Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center +
-                             radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
-
-                _vertsFill[_fillCount * 3].Position = new Vector3(v0, 0.0f);
-                _vertsFill[_fillCount * 3].Color = colorFill;
-
-                _vertsFill[_fillCount * 3 + 1].Position = new Vector3(v1, 0.0f);
-                _vertsFill[_fillCount * 3 + 1].Color = colorFill;
-
-                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(v2, 0.0f);
-                _vertsFill[_fillCount * 3 + 2].Color = colorFill;
-
-                _fillCount++;
-
-                theta += increment;
-            }
-            DrawCircle(center, radius, color);
-
-            DrawSegment(center, center + axis * radius, color);
-        }
-
         private void DrawTexturedLine(Vector2 a, Vector2 b)
         {
             Vector2 tang = b - a;
@@ -947,28 +947,28 @@ namespace FarseerPhysics.DebugViews
 
             // define vertices
             VertexPositionColorTexture[] vertsLine = new VertexPositionColorTexture[8];
-            vertsLine[0].Position = new Vector3(a - tang + norm, -1f);
+            vertsLine[0].Position = new Vector3(a - tang + norm, -0.2f);
             vertsLine[0].Color = Color.Black;
             vertsLine[0].TextureCoordinate = new Vector2(0f, .25f);
-            vertsLine[1].Position = new Vector3(a - tang - norm, -1f);
+            vertsLine[1].Position = new Vector3(a - tang - norm, -0.2f);
             vertsLine[1].Color = Color.Black;
             vertsLine[1].TextureCoordinate = new Vector2(0f, .75f);
-            vertsLine[2].Position = new Vector3(a - norm, -1f);
+            vertsLine[2].Position = new Vector3(a - norm, -0.2f);
             vertsLine[2].Color = Color.Black;
             vertsLine[2].TextureCoordinate = new Vector2(.25f, .75f);
-            vertsLine[3].Position = new Vector3(b - norm, -1f);
+            vertsLine[3].Position = new Vector3(b - norm, -0.2f);
             vertsLine[3].Color = Color.Black;
             vertsLine[3].TextureCoordinate = new Vector2(.75f, .75f);
-            vertsLine[4].Position = new Vector3(b + tang - norm, -1f);
+            vertsLine[4].Position = new Vector3(b + tang - norm, -0.2f);
             vertsLine[4].Color = Color.Black;
             vertsLine[4].TextureCoordinate = new Vector2(1f, .75f);
-            vertsLine[5].Position = new Vector3(b + tang + norm, -1f);
+            vertsLine[5].Position = new Vector3(b + tang + norm, -0.2f);
             vertsLine[5].Color = Color.Black;
             vertsLine[5].TextureCoordinate = new Vector2(1f, .25f);
-            vertsLine[6].Position = new Vector3(b + norm, -1f);
+            vertsLine[6].Position = new Vector3(b + norm, -0.2f);
             vertsLine[6].Color = Color.Black;
             vertsLine[6].TextureCoordinate = new Vector2(.75f, .25f);
-            vertsLine[7].Position = new Vector3(a + norm, -1f);
+            vertsLine[7].Position = new Vector3(a + norm, -0.2f);
             vertsLine[7].Color = Color.Black;
             vertsLine[7].TextureCoordinate = new Vector2(.25f, .25f);
 
@@ -1006,8 +1006,8 @@ namespace FarseerPhysics.DebugViews
 
         public void DrawSegment(Vector2 start, Vector2 end, Color color)
         {
-            _vertsLines[_lineCount * 2].Position = new Vector3(start, 0.0f);
-            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(end, 0.0f);
+            _vertsLines[_lineCount * 2].Position = new Vector3(start, -0.1f);
+            _vertsLines[_lineCount * 2 + 1].Position = new Vector3(end, -0.1f);
             _vertsLines[_lineCount * 2].Color = _vertsLines[_lineCount * 2 + 1].Color = color;
             _lineCount++;
         }
@@ -1109,8 +1109,8 @@ namespace FarseerPhysics.DebugViews
 
             DrawDebugData();
 
-            _localEffect.Projection = Matrix.CreateOrthographicOffCenter(0, _device.Viewport.Width,
-                                                             _device.Viewport.Height, 0, 0, 1);
+            _localEffect.Projection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width,
+                                                                         _device.Viewport.Height, 0f, 0f, 1f);
 
             //Graph stuff first
             _localEffect.Techniques[0].Passes[0].Apply();

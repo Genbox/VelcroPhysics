@@ -3,6 +3,7 @@ using FarseerPhysics.DemoBaseXNA.Components;
 using FarseerPhysics.DemoBaseXNA.Screens;
 using FarseerPhysics.DemoBaseXNA.ScreenSystem;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.AdvancedSamplesXNA
 {
@@ -19,22 +20,28 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             _graphics = new GraphicsDeviceManager(this);
 
             _graphics.SynchronizeWithVerticalRetrace = false;
-
-            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
-            IsFixedTimeStep = true;
-
-            Content.RootDirectory = "Content";
-
-            //windowed
+            _graphics.PreferMultiSampling = true;
+#if WINDOWS
             _graphics.PreferredBackBufferWidth = 1024;
             _graphics.PreferredBackBufferHeight = 768;
             _graphics.IsFullScreen = false;
+#endif
+#if WINDOWS_PHONE
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 480;
+            _graphics.IsFullScreen = true;
+#endif
+#if XBOX
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.IsFullScreen = true;
+#endif
 
+            Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            //Set window defaults. Parent game can override in constructor
-            Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += Window_ClientSizeChanged;
+            TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
+            IsFixedTimeStep = true;
 
             //new-up components and add to Game.Components
             ScreenManager = new ScreenManager(this);
@@ -43,16 +50,6 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             FrameRateCounter frameRateCounter = new FrameRateCounter(ScreenManager);
             frameRateCounter.DrawOrder = 101;
             Components.Add(frameRateCounter);
-
-            Demo1Screen demo1 = new Demo1Screen();
-            Demo2Screen demo2 = new Demo2Screen();
-
-            MainMenuScreen mainMenuScreen = new MainMenuScreen();
-            mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
-            mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
-            mainMenuScreen.AddMainMenuItem("Exit", null, true);
-
-            ScreenManager.AddScreen(mainMenuScreen, null);
         }
 
         public ScreenManager ScreenManager { get; set; }
@@ -65,8 +62,24 @@ namespace FarseerPhysics.AdvancedSamplesXNA
         /// </summary>
         protected override void Initialize()
         {
-            _graphics.ApplyChanges();
             base.Initialize();
+
+#if WINDOWS
+            //Set window defaults. Parent game can override in constructor
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += WindowClientSizeChanged;
+#endif
+
+            Demo1Screen demo1 = new Demo1Screen();
+            Demo2Screen demo2 = new Demo2Screen();
+            MainMenuScreen mainMenuScreen = new MainMenuScreen();
+            mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
+            mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            mainMenuScreen.AddMainMenuItem("Exit", null, true);
+
+            ScreenManager.AddScreen(new BackgroundScreen(), null);
+            ScreenManager.AddScreen(mainMenuScreen, null);
+            ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(2.0)), null);
         }
 
         /// <summary>
@@ -75,18 +88,24 @@ namespace FarseerPhysics.AdvancedSamplesXNA
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            ScreenManager.GraphicsDevice.Clear(Color.SteelBlue);
-
             base.Draw(gameTime);
         }
 
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
+#if WINDOWS
+        private void WindowClientSizeChanged(object sender, EventArgs e)
         {
             if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0)
             {
                 _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
                 _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
             }
+
+            //We recreate the projection matrix to keep aspect ratio.
+            ScreenManager.Camera.CreateProjection();
+
+            //Reset transition render targets
+            ScreenManager.ResetTargets();
         }
+#endif
     }
 }

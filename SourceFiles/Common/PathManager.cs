@@ -82,7 +82,7 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                BodyType type, int copies)
+                                                                 BodyType type, int copies, Object userData)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -98,7 +98,7 @@ namespace FarseerPhysics.Factories
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape);
+                    b.CreateFixture(shape, userData);
                 }
 
                 bodyList.Add(b);
@@ -106,6 +106,13 @@ namespace FarseerPhysics.Factories
 
             return bodyList;
         }
+
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
+                                                                 BodyType type, int copies)
+        {
+            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, null);
+        }
+
 
         /// <summary>
         /// Duplicates the given Body along the given path for approximatly the given copies.
@@ -117,12 +124,18 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
-                                                                int copies)
+                                                                 int copies, Object userData)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
 
-            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies);
+            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, userData);
+        }
+
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
+                                                                 int copies)
+        {
+            return EvenlyDistributeShapesAlongPath(world, path, shape, type, copies, null);
         }
 
         /// <summary>
