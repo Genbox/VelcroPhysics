@@ -8,6 +8,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
+        //public static BasicEffect Effect;
         public static Matrix View;
         public static Matrix Projection;
 
@@ -23,7 +24,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private bool _targetZoomReached = true;
         private float _zoom;
 
-        public Action ProjectionUpdated;
+        public Action ProjectionViewUpdated;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -254,10 +255,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public void CreateProjection()
         {
             // L/R/B/T
-            Projection = Matrix.CreateOrthographicOffCenter(-25f * _graphics.Viewport.AspectRatio, 25f * _graphics.Viewport.AspectRatio, -25f, 25f, 0f, 1f);
+            Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
 
-            if (ProjectionUpdated != null)
-                ProjectionUpdated();
+            if (ProjectionViewUpdated != null)
+                ProjectionViewUpdated();
         }
 
         /// <summary>
@@ -268,12 +269,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             ZoomRate = 0.1f;
             MoveRate = new Vector2(1f, 1f);
             RotationRate = 0.1f;
-            MinZoom = 0.25f;
-            MaxZoom = 4;
+            MinZoom = 0.5f;
+            MaxZoom = 2f;
             MinRotation = -(MathHelper.Pi / 2);
             MaxRotation = MathHelper.Pi / 2;
-            MaxPosition = new Vector2(float.MaxValue, float.MaxValue);
-            MinPosition = new Vector2(float.MinValue, float.MinValue);
+            MaxPosition = new Vector2(25f, 25f);
+            MinPosition = new Vector2(-25f, 0f);
 
             _targetPosition = Vector2.Zero;
             _targetRotation = 0;
@@ -289,6 +290,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private void Resize()
         {
             View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom);
+            
+            if (ProjectionViewUpdated != null)
+                ProjectionViewUpdated();
         }
 
         /// <summary>

@@ -63,6 +63,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             rotation = -40 * input.CurrentGamepadState.Triggers.Right;
             _rectangle.Body.ApplyTorque(rotation);
+
+            base.HandleGamePadInput(input);
         }
 
         public override void HandleKeyboardInput(InputHelper input)
@@ -92,16 +94,18 @@ namespace FarseerPhysics.SimpleSamplesXNA
             const float torqueAmount = 40;
             float torque = 0;
 
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Left))
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Q))
             {
                 torque += torqueAmount;
             }
-            if (input.CurrentKeyboardState.IsKeyDown(Keys.Right))
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.E))
             {
                 torque -= torqueAmount;
             }
 
             _rectangle.Body.ApplyTorque(torque);
+
+            base.HandleKeyboardInput(input);
         }
     }
 }

@@ -6,6 +6,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SimpleSamplesXNA
 {
@@ -81,21 +82,59 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _obstacles[4].Body.Position = new Vector2(-17, 0);
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleGamePadInput(InputHelper input)
         {
-            if (input.CurrentGamepadState.IsConnected)
+            Vector2 force = 1000 * input.CurrentGamepadState.ThumbSticks.Left;
+            _agent.Body.ApplyForce(force);
+
+            float rotation = 400 * input.CurrentGamepadState.Triggers.Left;
+            _agent.Body.ApplyTorque(rotation);
+
+            rotation = -400 * input.CurrentGamepadState.Triggers.Right;
+            _agent.Body.ApplyTorque(rotation);
+
+            base.HandleGamePadInput(input);
+        }
+
+        public override void HandleKeyboardInput(InputHelper input)
+        {
+            const float forceAmount = 1000;
+            Vector2 force = Vector2.Zero;
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.A))
             {
-                Vector2 force = 1000 * input.CurrentGamepadState.ThumbSticks.Left;
-                _agent.Body.ApplyForce(force);
-
-                float rotation = 400 * input.CurrentGamepadState.Triggers.Left;
-                _agent.Body.ApplyTorque(rotation);
-
-                rotation = -400 * input.CurrentGamepadState.Triggers.Right;
-                _agent.Body.ApplyTorque(rotation);
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, forceAmount);
             }
 
-            base.HandleInput(input);
+            _agent.Body.ApplyForce(force);
+
+            const float torqueAmount = 400;
+            float torque = 0;
+
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.Q))
+            {
+                torque += torqueAmount;
+            }
+            if (input.CurrentKeyboardState.IsKeyDown(Keys.E))
+            {
+                torque -= torqueAmount;
+            }
+
+            _agent.Body.ApplyTorque(torque);
+
+            base.HandleKeyboardInput(input);
         }
     }
 }
