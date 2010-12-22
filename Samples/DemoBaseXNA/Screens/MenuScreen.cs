@@ -66,7 +66,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 Rectangle rect = new Rectangle((int)entry.Position.X, (int)(entry.Position.Y - (height * 0.5f)), (int)width, (int)height);
                 if (rect.Contains(pos))
                 {
-                    return index; 
+                    return index;
                 }
                 ++index;
             }
@@ -100,12 +100,13 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
 
 #if !XBOX
             // Mouse or touch on a menu item
-            if (input.CurrentMouseState.LeftButton == ButtonState.Pressed)
+            if (input.CurrentMouseState.X != input.LastMouseState.X ||
+                input.CurrentMouseState.Y != input.LastMouseState.Y)
             {
-                int index = GetMenuEntryAt(ref input.CurrentMouseState);
-                if (index > -1)
+                int hoverIndex = GetMenuEntryAt(ref input.CurrentMouseState);
+                if (hoverIndex > -1)
                 {
-                    _selectedEntry = index;
+                    _selectedEntry = hoverIndex;
                 }
             }
 
@@ -169,7 +170,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float) Math.Pow(TransitionPosition, 2);
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
 #if WINDOWS_PHONE
@@ -241,7 +242,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float) Math.Pow(TransitionPosition, 2);
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
             Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2f, 80);

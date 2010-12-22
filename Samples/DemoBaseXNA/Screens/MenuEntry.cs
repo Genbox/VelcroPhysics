@@ -40,6 +40,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
         private float _selectionFade;
+        private float _scale;
 
         /// <summary>
         /// The text rendered for this entry.
@@ -107,12 +108,14 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
-            float fadeSpeed = (float) gameTime.ElapsedGameTime.TotalSeconds * 4;
+            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
                 _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
             else
                 _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
+
+            _scale = 0.7f + 0.1f * _selectionFade;
         }
 
         /// <summary>
@@ -127,24 +130,17 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
 #endif
 
             // Draw the selected entry in yellow, otherwise white.
-            Color color = isSelected ? Color.Yellow : Color.White;
-
-            // Pulsate the size of the selected menu entry.
-            double time = gameTime.TotalGameTime.TotalSeconds;
-
-            float pulsate = (float) Math.Sin(time * 6) + 1;
-
-            float scale = 0.7f + pulsate * 0.05f * _selectionFade;
+            Color color = Color.Lerp(Color.White, new Color(255, 210, 0), _selectionFade);
 
             // Draw text, centered on the middle of each line.
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.SpriteFonts.MenuSpriteFont;
 
-            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+            Vector2 origin = new Vector2((font.MeasureString(Text).X * (_scale - 0.7f)) / 4f, font.LineSpacing / 2f);
 
             spriteBatch.DrawString(font, _text, _position, color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+                                   origin, _scale, SpriteEffects.None, 0);
         }
 
         /// <summary>
@@ -160,7 +156,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         public int GetWidth(MenuScreen screen)
         {
-            return (int) screen.ScreenManager.SpriteFonts.MenuSpriteFont.MeasureString(Text).X;
+            return (int)(screen.ScreenManager.SpriteFonts.MenuSpriteFont.MeasureString(Text).X);
         }
     }
 }

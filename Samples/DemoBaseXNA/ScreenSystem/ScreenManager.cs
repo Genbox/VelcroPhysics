@@ -99,6 +99,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             _blankTexture = ContentManager.Load<Texture2D>("Common/blank");
             Camera = new Camera2D(GraphicsDevice);
 
+
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in _screens)
             {
@@ -203,8 +204,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     {
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
                         _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
-                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8, _pp.MultiSampleCount,
-                                                            RenderTargetUsage.DiscardContents));
+                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);

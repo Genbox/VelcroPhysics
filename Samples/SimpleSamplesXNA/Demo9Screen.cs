@@ -58,10 +58,5 @@ namespace FarseerPhysics.SimpleSamplesXNA
                 _temp.Friction = friction[i];
             }
         }
-
-        public override void HandleInput(InputHelper input)
-        {
-            base.HandleInput(input);
-        }
     }
 }

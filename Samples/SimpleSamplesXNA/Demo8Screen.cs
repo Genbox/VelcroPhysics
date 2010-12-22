@@ -54,10 +54,5 @@ namespace FarseerPhysics.SimpleSamplesXNA
                 _restitution += 0.2f;
             }
         }
-
-        public override void HandleInput(InputHelper input)
-        {
-            base.HandleInput(input);
-        }
     }
 }

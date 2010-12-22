@@ -14,33 +14,24 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private World _world;
         private float _borderWidth;
 
-        public Border(World world, float width, float height, float borderWidth)
+        public Border(World world, float borderWidth)
         {
             _world = world;
             _borderWidth = borderWidth;
             _anchor = new Body(_world);
-            ResetBorder(Math.Abs(width), Math.Abs(height));
-        }
-
-        public void ResetBorder(float width, float height)
-        {
-            while (_anchor.FixtureList.Count > 0)
-            {
-                _anchor.DestroyFixture(_anchor.FixtureList[0]);
-            }
             List<Vertices> borders = new List<Vertices>(4);
 
-            //Bottom
-            borders.Add(PolygonTools.CreateRectangle(width, _borderWidth, new Vector2(0, height), 0));
+            //Top
+            borders.Add(PolygonTools.CreateRectangle(58.5f, _borderWidth, new Vector2(0, 50f), 0));
 
             //Left
-            borders.Add(PolygonTools.CreateRectangle(_borderWidth, height, new Vector2(-width, 0), 0));
+            borders.Add(PolygonTools.CreateRectangle(_borderWidth, 37.5f, new Vector2(-58.5f, 12.5f), 0));
 
-            //Top
-            borders.Add(PolygonTools.CreateRectangle(width, _borderWidth, new Vector2(0, -height), 0));
+            //Bottom
+            borders.Add(PolygonTools.CreateRectangle(58.5f, _borderWidth, new Vector2(0, -25f), 0));
 
             //Right
-            borders.Add(PolygonTools.CreateRectangle(_borderWidth, height, new Vector2(width, 0), 0));
+            borders.Add(PolygonTools.CreateRectangle(_borderWidth, 37.5f, new Vector2(58.5f, 12.5f), 0));
 
             DebugMaterial material = new DebugMaterial(MaterialType.Pavement)
             {
@@ -54,6 +45,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 t.CollisionFilter.CollisionCategories = Category.All;
                 t.CollisionFilter.CollidesWith = Category.All;
             }
+
         }
     }
 }

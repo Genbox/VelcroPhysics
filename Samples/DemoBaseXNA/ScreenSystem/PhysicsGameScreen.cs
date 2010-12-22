@@ -44,10 +44,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             DebugView.SleepingShapeColor = Color.LightGray;
 
             DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
-            _border = new Border(World, gameWorld.X, gameWorld.Y, 1);
+            //Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+            _border = new Border(World, 1f);
 
-            ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
+            ScreenManager.Camera.ProjectionViewUpdated += UpdateScreen;
 
             // Loading may take a while... so prevent the game from "catching up" once we finished loading
             ScreenManager.Game.ResetElapsedTime();
@@ -55,11 +55,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void UpdateScreen()
         {
-            if (World != null)
+            /*if (World != null)
             {
                 Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
                 _border.ResetBorder(gameWorld.X, gameWorld.Y);
-            }
+            }*/
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
