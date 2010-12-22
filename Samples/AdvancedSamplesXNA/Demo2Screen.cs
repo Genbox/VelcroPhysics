@@ -37,6 +37,16 @@ namespace FarseerPhysics.AdvancedSamplesXNA
              * Bridge
              */
 
+            DebugMaterial circleMaterial = new DebugMaterial(MaterialType.Blank)
+            {
+                Color = Color.LightGray
+            };
+
+            DebugMaterial defaultMaterial = new DebugMaterial(MaterialType.Blank)
+            {
+                Color = Color.WhiteSmoke
+            };
+
             //We make a path using 2 points.
             Path bridgePath = new Path();
             bridgePath.Add(new Vector2(-15, -10));
@@ -46,7 +56,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 20);
 
-            List<Body> bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29);
+            List<Body> bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29, defaultMaterial);
 
             foreach (var bridgeBody in bridgeBodies)
             {
@@ -77,26 +87,11 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             shapes.Add(new CircleShape(0.5f, 1));
 
             //We distribute the shapes in the rectangular path.
-            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes, BodyType.Dynamic, 30);
+            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes, BodyType.Dynamic, 30, circleMaterial);
 
             //Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
             PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
                                                       true);
-
-            DebugMaterial circleMaterial = new DebugMaterial(MaterialType.Blank)
-            {
-                Color = Color.LightGray,
-                Scale = 1f
-            };
-
-            //Attach the material to the fixtures.
-            foreach (Body body in bodies)
-            {
-                foreach (Fixture fixture in body.FixtureList)
-                {
-                    fixture.UserData = circleMaterial;
-                }
-            }
         }
     }
 }

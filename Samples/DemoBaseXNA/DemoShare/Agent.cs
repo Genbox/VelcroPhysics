@@ -28,7 +28,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             {
                 Color = Color.DarkOrange,
                 Scale = 8f,
-                Depth = .1f
+                Depth = 0.0f
             };
 
             //Center

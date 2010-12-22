@@ -8,7 +8,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
-        //public static BasicEffect Effect;
         public static Matrix View;
         public static Matrix Projection;
 
@@ -33,10 +32,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-
-            /*Effect = new BasicEffect(graphics);
-            Effect.TextureEnabled = true;
-            Effect.VertexColorEnabled = true;*/
 
             Projection = Matrix.Identity;
             View = Matrix.Identity;
@@ -259,7 +254,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public void CreateProjection()
         {
             // L/R/B/T
-            Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
+            Projection = Matrix.CreateOrthographicOffCenter(-25f * _graphics.Viewport.AspectRatio, 25f * _graphics.Viewport.AspectRatio, -25f, 25f, 0f, 1f);
 
             if (ProjectionUpdated != null)
                 ProjectionUpdated();
