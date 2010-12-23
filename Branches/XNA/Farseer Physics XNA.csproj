@@ -286,6 +286,9 @@
     <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\Explosion.cs">
       <Link>Common\PhysicsLogic\Explosion.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\PhysicsLogic.cs">
+      <Link>Common\PhysicsLogic\PhysicsLogic.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\polygonmanipulation\CuttingTools.cs">
       <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
     </Compile>
@@ -424,7 +427,6 @@
     <Compile Include="..\..\SourceFiles\Settings.cs">
       <Link>Settings.cs</Link>
     </Compile>
-    <Compile Include="Common\PhysicsLogic\PhysicsLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
