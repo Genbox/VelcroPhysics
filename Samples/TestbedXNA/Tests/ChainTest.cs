@@ -65,8 +65,15 @@ namespace FarseerPhysics.TestBed.Tests
             World.AddJoint(fixedJoint);
 
             //Attach all the chainlinks together with a revolute joint
-            PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f),
+            List<RevoluteJoint> joints = PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f),
                                                       false, false);
+
+            //The chain is breakable
+            for (int i = 0; i < joints.Count; i++)
+            {
+                RevoluteJoint r = joints[i];
+                r.Breakpoint = 10000f;
+            }
         }
 
         internal static Test Create()
