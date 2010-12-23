@@ -405,7 +405,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else
             {
 #if WINDOWS_PHONE
-                return IsKeyPress(key, PlayerIndex.One, out playerIndex);
+                return IsKeyDown(key, PlayerIndex.One, out playerIndex);
 #else
                 // Accept input from any player.
                 return (IsKeyDown(key, PlayerIndex.One, out playerIndex) ||
@@ -436,13 +436,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else
             {
 #if WINDOWS_PHONE
-                return IsKeyPress(key, PlayerIndex.One, out playerIndex);
+                return IsKeyUp(key, PlayerIndex.One, out playerIndex);
 #else
                 // Accept input from any player.
-                return (IsKeyDown(key, PlayerIndex.One, out playerIndex) ||
-                        IsKeyDown(key, PlayerIndex.Two, out playerIndex) ||
-                        IsKeyDown(key, PlayerIndex.Three, out playerIndex) ||
-                        IsKeyDown(key, PlayerIndex.Four, out playerIndex));
+                return (IsKeyUp(key, PlayerIndex.One, out playerIndex) ||
+                        IsKeyUp(key, PlayerIndex.Two, out playerIndex) ||
+                        IsKeyUp(key, PlayerIndex.Three, out playerIndex) ||
+                        IsKeyUp(key, PlayerIndex.Four, out playerIndex));
 #endif
             }
         }
