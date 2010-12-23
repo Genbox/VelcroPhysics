@@ -40,6 +40,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 ScreenManager.Game.Exit();
             else
             {
+                ScreenManager.Camera.SmoothResetCamera();
                 ScreenManager.AddScreen(_mainMenuItems[entryIndex].Screen, null);
             }
         }
