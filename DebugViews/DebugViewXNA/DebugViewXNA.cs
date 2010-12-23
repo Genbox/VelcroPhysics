@@ -1218,15 +1218,6 @@ namespace FarseerPhysics.DebugViews
             public string S;
             public int X, Y;
 
-            public StringData(int x, int y, string s, object[] args)
-            {
-                X = x;
-                Y = y;
-                S = s;
-                Args = args;
-                Color = new Color(0.9f, 0.6f, 0.6f);
-            }
-
             public StringData(int x, int y, string s, object[] args, Color color)
             {
                 X = x;

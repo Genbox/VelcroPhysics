@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.DemoBaseXNA.DemoShare;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
@@ -230,9 +227,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                Matrix projection = Camera2D.Projection;
-                Matrix view = Camera2D.View;
-                DebugView.RenderDebugData(ref projection, ref view);
+                DebugView.RenderDebugData(ref Camera2D.Projection, ref Camera2D.View);
             }
 
             base.Draw(gameTime);

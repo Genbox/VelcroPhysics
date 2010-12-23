@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.DebugViews
 {
@@ -14,48 +12,48 @@ namespace FarseerPhysics.DebugViews
 
     public class MaterialManager
     {
-        private Texture2D[] faceAnim = new Texture2D[2];
-        private double timer;
-        private Dictionary<MaterialType, Texture2D> materials = new Dictionary<MaterialType, Texture2D>();
+        private Texture2D[] _faceAnim = new Texture2D[2];
+        private double _timer;
+        private Dictionary<MaterialType, Texture2D> _materials = new Dictionary<MaterialType, Texture2D>();
 
         public void LoadContent(ContentManager contentManager)
         {
-            faceAnim[0] = contentManager.Load<Texture2D>("Materials/face1");
-            faceAnim[1] = contentManager.Load<Texture2D>("Materials/face2");
-            timer = 1000.0;
+            _faceAnim[0] = contentManager.Load<Texture2D>("Materials/face1");
+            _faceAnim[1] = contentManager.Load<Texture2D>("Materials/face2");
+            _timer = 1000.0;
 
-            materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Materials/blank");
-            materials[MaterialType.Circles] = contentManager.Load<Texture2D>("Materials/circles");
-            materials[MaterialType.Dots] = contentManager.Load<Texture2D>("Materials/dots");
-            materials[MaterialType.Squares] = contentManager.Load<Texture2D>("Materials/squares");
-            materials[MaterialType.Stars] = contentManager.Load<Texture2D>("Materials/stars");
-            materials[MaterialType.Tiles] = contentManager.Load<Texture2D>("Materials/tiles");
-            materials[MaterialType.Waves] = contentManager.Load<Texture2D>("Materials/waves");
-            materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
-            materials[MaterialType.Face] = faceAnim[0];
+            _materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Materials/blank");
+            _materials[MaterialType.Circles] = contentManager.Load<Texture2D>("Materials/circles");
+            _materials[MaterialType.Dots] = contentManager.Load<Texture2D>("Materials/dots");
+            _materials[MaterialType.Squares] = contentManager.Load<Texture2D>("Materials/squares");
+            _materials[MaterialType.Stars] = contentManager.Load<Texture2D>("Materials/stars");
+            _materials[MaterialType.Tiles] = contentManager.Load<Texture2D>("Materials/tiles");
+            _materials[MaterialType.Waves] = contentManager.Load<Texture2D>("Materials/waves");
+            _materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
+            _materials[MaterialType.Face] = _faceAnim[0];
         }
 
         public void Update(GameTime gameTime)
         {
-            timer -= gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (timer <= 0.0)
+            _timer -= gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (_timer <= 0.0)
             {
-                if (materials[MaterialType.Face] == faceAnim[0])
+                if (_materials[MaterialType.Face] == _faceAnim[0])
                 {
-                    materials[MaterialType.Face] = faceAnim[1];
-                    timer = 200.0;
+                    _materials[MaterialType.Face] = _faceAnim[1];
+                    _timer = 200.0;
                 }
                 else
                 {
-                    materials[MaterialType.Face] = faceAnim[0];
-                    timer = 5000.0;
+                    _materials[MaterialType.Face] = _faceAnim[0];
+                    _timer = 5000.0;
                 }
             }
         }
 
         public Texture2D GetMaterialTexture(MaterialType type)
         {
-            return materials[type];
+            return _materials[type];
         }
 
         public bool GetMaterialWrap(MaterialType type)

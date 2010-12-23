@@ -1,6 +1,6 @@
-﻿using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.DebugViews;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
