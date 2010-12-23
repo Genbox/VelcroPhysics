@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.DemoBaseXNA.ScreenSystem;
-using FarseerPhysics.DebugViews;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.DemoBaseXNA.DemoShare
