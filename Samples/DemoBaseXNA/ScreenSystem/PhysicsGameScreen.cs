@@ -73,17 +73,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public override void HandleInput(InputHelper input)
         {
             //Xbox
-            if (input.IsNewButtonPress(Buttons.X))
+            if (input.IsNewButtonPress(Buttons.Start))
             {
                 EnableOrDisableFlag(DebugViewFlags.Shape);
-            }
-
-            if (input.IsNewButtonPress(Buttons.Y))
-            {
                 EnableOrDisableFlag(DebugViewFlags.DebugPanel);
+                EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
             }
-
-            if (input.IsNewButtonPress(Buttons.B))
+            if (input.IsNewButtonPress(Buttons.Back))
             {
                 ExitScreen();
             }
