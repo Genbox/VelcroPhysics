@@ -31,7 +31,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             _farseerLogoTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/logo");
             _blankTexture = ScreenManager.ContentManager.Load<Texture2D>("Common/blank");
             UpdateScreen();
-            ScreenManager.Camera.ProjectionViewUpdated += UpdateScreen;
+            ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
         }
 
         private void UpdateScreen()

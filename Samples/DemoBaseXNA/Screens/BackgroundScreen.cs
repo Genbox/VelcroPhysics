@@ -58,7 +58,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             _logoTexture = _content.Load<Texture2D>("Common/logo");
             _backgroundTexture = _content.Load<Texture2D>("Common/gradient");
             UpdateScreen();
-            ScreenManager.Camera.ProjectionViewUpdated += UpdateScreen;
+            ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
         }
 
         private void UpdateScreen()
