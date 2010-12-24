@@ -1,4 +1,6 @@
-﻿#region License
+﻿#if(!XNA)
+
+#region License
 
 /*
 MIT License
@@ -30,16 +32,12 @@ SOFTWARE.
 
 #endregion License
 
-#if(!XNA)
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Microsoft.Xna.Framework
 {
-#if (!SILVERLIGHT)
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector3 : IEquatable<Vector3>
     {
@@ -524,10 +522,9 @@ namespace Microsoft.Xna.Framework
         public static void Transform(ref Vector3 position, ref Matrix matrix, out Vector3 result)
         {
             result =
-                new Vector3(
-                    (position.X*matrix.M11) + (position.Y*matrix.M21) + (position.Z*matrix.M31) + matrix.M41,
-                    (position.X*matrix.M12) + (position.Y*matrix.M22) + (position.Z*matrix.M32) + matrix.M42,
-                    (position.X*matrix.M13) + (position.Y*matrix.M23) + (position.Z*matrix.M33) + matrix.M43);
+                new Vector3((position.X*matrix.M11) + (position.Y*matrix.M21) + (position.Z*matrix.M31) + matrix.M41,
+                            (position.X*matrix.M12) + (position.Y*matrix.M22) + (position.Z*matrix.M32) + matrix.M42,
+                            (position.X*matrix.M13) + (position.Y*matrix.M23) + (position.Z*matrix.M33) + matrix.M43);
         }
 
         public static void Transform(Vector3[] sourceArray, ref Matrix matrix, Vector3[] destinationArray)
