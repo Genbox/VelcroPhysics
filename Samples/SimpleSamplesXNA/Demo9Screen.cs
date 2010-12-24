@@ -10,7 +10,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
 {
     internal class Demo9Screen : PhysicsGameScreen, IDemoScreen
     {
-
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -34,10 +33,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.LoadContent();
 
             DebugMaterial material = new DebugMaterial(MaterialType.Waves)
-            {
-                Color = Color.OliveDrab,
-                Scale = 4f
-            };
+                                         {
+                                             Color = Color.OliveDrab,
+                                             Scale = 4f
+                                         };
 
             Fixture _temp;
             _temp = FixtureFactory.CreateEdge(World, new Vector2(-20f, 17f), new Vector2(10f, 8f));
@@ -48,12 +47,12 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             _temp = FixtureFactory.CreateEdge(World, new Vector2(-20f, -8f), new Vector2(10f, -17f));
 
-            float[] friction = new[] { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };
+            float[] friction = new[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
             for (int i = 0; i < 5; ++i)
             {
                 _temp = FixtureFactory.CreateRectangle(World, 2.5f, 2.5f, 1f, material);
                 _temp.Body.BodyType = BodyType.Dynamic;
-                _temp.Body.Position = new Vector2(-18f + 5.2f * i, 20.0f);
+                _temp.Body.Position = new Vector2(-18f + 5.2f*i, 20.0f);
                 _temp.Friction = friction[i];
             }
         }

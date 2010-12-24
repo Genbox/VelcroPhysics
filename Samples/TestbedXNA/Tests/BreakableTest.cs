@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             _body1 = BodyFactory.CreateBody(World);
             _body1.BodyType = BodyType.Dynamic;
             _body1.Position = new Vector2(0.0f, 40.0f);
-            _body1.Rotation = 0.25f * Settings.Pi;
+            _body1.Rotation = 0.25f*Settings.Pi;
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
@@ -79,7 +79,7 @@ namespace FarseerPhysics.TestBed.Tests
             Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("rock");
 
             //Create an array to hold the data from the texture
-            uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
+            uint[] data = new uint[polygonTexture.Width*polygonTexture.Height];
 
             //Transfer the texture data to the array
             polygonTexture.GetData(data);

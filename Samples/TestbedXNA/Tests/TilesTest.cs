@@ -52,15 +52,15 @@ namespace FarseerPhysics.TestBed.Tests
                 position.Y = 0.0f;
                 for (int j = 0; j < m; ++j)
                 {
-                    position.X = -n * a;
+                    position.X = -n*a;
                     for (int i = 0; i < n; ++i)
                     {
                         PolygonShape shape = new PolygonShape(0);
                         shape.SetAsBox(a, a, position, 0.0f);
                         ground.CreateFixture(shape);
-                        position.X += 2.0f * a;
+                        position.X += 2.0f*a;
                     }
-                    position.Y -= 2.0f * a;
+                    position.Y -= 2.0f*a;
                 }
             }
 
@@ -97,11 +97,13 @@ namespace FarseerPhysics.TestBed.Tests
             ContactManager cm = World.ContactManager;
             int height = cm.BroadPhase.ComputeHeight();
             int leafCount = cm.BroadPhase.ProxyCount;
-            int minimumNodeCount = 2 * leafCount - 1;
-            float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-            DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height, minimumHeight);
+            int minimumNodeCount = 2*leafCount - 1;
+            float minimumHeight = (float) Math.Ceiling(Math.Log(minimumNodeCount)/Math.Log(2.0f));
+            DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
+                                 minimumHeight);
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.", height, minimumHeight);
+            DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.", height,
+                                 minimumHeight);
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
             TextLine += 15;

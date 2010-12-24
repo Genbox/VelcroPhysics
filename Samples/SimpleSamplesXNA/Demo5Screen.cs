@@ -57,25 +57,25 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _agent.CollidesWith = Category.All & ~Category.Cat4;
 
             DebugMaterial matCircle = new DebugMaterial(MaterialType.Dots)
-            {
-                Color = Color.DarkRed,
-                Scale = 8f
-            };
+                                          {
+                                              Color = Color.DarkRed,
+                                              Scale = 8f
+                                          };
             DebugMaterial matSquare = new DebugMaterial(MaterialType.Squares)
-            {
-                Color = Color.SeaGreen,
-                Scale = 9f
-            };
+                                          {
+                                              Color = Color.SeaGreen,
+                                              Scale = 9f
+                                          };
             DebugMaterial matGear = new DebugMaterial(MaterialType.Dots)
-            {
-                Color = Color.SkyBlue,
-                Scale = 8f
-            };
+                                        {
+                                            Color = Color.SkyBlue,
+                                            Scale = 8f
+                                        };
             DebugMaterial matStar = new DebugMaterial(MaterialType.Dots)
-            {
-                Color = Color.Gold,
-                Scale = 8f
-            };
+                                        {
+                                            Color = Color.Gold,
+                                            Scale = 8f
+                                        };
 
             Vector2 startPosition = new Vector2(-20, 16);
             Vector2 endPosition = new Vector2(20, 16);
@@ -112,13 +112,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void HandleGamePadInput(InputHelper input)
         {
-            Vector2 force = 1000 * input.CurrentGamepadState.ThumbSticks.Left;
+            Vector2 force = 1000*input.CurrentGamepadState.ThumbSticks.Left;
             _agent.Body.ApplyForce(force);
 
-            float rotation = 400 * input.CurrentGamepadState.Triggers.Left;
+            float rotation = 400*input.CurrentGamepadState.Triggers.Left;
             _agent.Body.ApplyTorque(rotation);
 
-            rotation = -400 * input.CurrentGamepadState.Triggers.Right;
+            rotation = -400*input.CurrentGamepadState.Triggers.Right;
             _agent.Body.ApplyTorque(rotation);
 
             base.HandleGamePadInput(input);

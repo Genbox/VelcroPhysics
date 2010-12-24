@@ -27,7 +27,7 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture = GameInstance.Content.Load<Texture2D>("Texture");
 
             //Create an array to hold the data from the texture
-            uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
+            uint[] data = new uint[_polygonTexture.Width*_polygonTexture.Height];
 
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);

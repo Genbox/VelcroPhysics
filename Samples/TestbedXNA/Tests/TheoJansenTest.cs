@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
+                body.Position = new Vector2(-40.0f + 2.0f*i, 0.5f);
 
                 body.CreateFixture(shape);
             }
@@ -115,23 +115,23 @@ namespace FarseerPhysics.TestBed.Tests
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.Position, 120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, 120.0f*Settings.Pi/180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.Position, -120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, -120.0f*Settings.Pi/180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
         }
 
         private void CreateLeg(float s, Vector2 wheelAnchor)
         {
-            Vector2 p1 = new Vector2(5.4f * s, -6.1f);
-            Vector2 p2 = new Vector2(7.2f * s, -1.2f);
-            Vector2 p3 = new Vector2(4.3f * s, -1.9f);
-            Vector2 p4 = new Vector2(3.1f * s, 0.8f);
-            Vector2 p5 = new Vector2(6.0f * s, 1.5f);
-            Vector2 p6 = new Vector2(2.5f * s, 3.7f);
+            Vector2 p1 = new Vector2(5.4f*s, -6.1f);
+            Vector2 p2 = new Vector2(7.2f*s, -1.2f);
+            Vector2 p3 = new Vector2(4.3f*s, -1.9f);
+            Vector2 p4 = new Vector2(3.1f*s, 0.8f);
+            Vector2 p5 = new Vector2(6.0f*s, 1.5f);
+            Vector2 p6 = new Vector2(2.5f*s, 3.7f);
 
             PolygonShape poly1 = new PolygonShape(1);
             PolygonShape poly2 = new PolygonShape(2);

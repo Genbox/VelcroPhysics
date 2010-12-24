@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body circle = BodyFactory.CreateBody(World);
                 circle.BodyType = BodyType.Dynamic;
-                circle.Position = startPosition + offset * i;
+                circle.Position = startPosition + offset*i;
                 circle.SleepingAllowed = false;
 
                 CircleShape circleShape = new CircleShape(1, 0.1f);
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     fix.CollisionFilter.CollisionCategories = Category.Cat2;
                 }
-                
+
                 if (i == 6)
                 {
                     fix.CollisionFilter.CollisionGroup = 3;

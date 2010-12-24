@@ -38,14 +38,14 @@ namespace FarseerPhysics.AdvancedSamplesXNA
              */
 
             DebugMaterial circleMaterial = new DebugMaterial(MaterialType.Blank)
-            {
-                Color = Color.LightGray
-            };
+                                               {
+                                                   Color = Color.LightGray
+                                               };
 
             DebugMaterial defaultMaterial = new DebugMaterial(MaterialType.Blank)
-            {
-                Color = Color.WhiteSmoke
-            };
+                                                {
+                                                    Color = Color.WhiteSmoke
+                                                };
 
             //We make a path using 2 points.
             Path bridgePath = new Path();
@@ -56,18 +56,16 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 20);
 
-            List<Body> bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29, defaultMaterial);
-
-            foreach (var bridgeBody in bridgeBodies)
-            {
-                //bridgeBody.BodyType = BodyType.Static;
-            }
+            List<Body> bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
+                                                                                  BodyType.Dynamic, 29, defaultMaterial);
 
             //Attach the first and last fixtures to the world
             JointFactory.CreateFixedRevoluteJoint(World, bridgeBodies[0], new Vector2(0, 0.5f), bridgeBodies[0].Position);
-            JointFactory.CreateFixedRevoluteJoint(World, bridgeBodies[bridgeBodies.Count - 1], new Vector2(0, -0.5f), bridgeBodies[bridgeBodies.Count - 1].Position);
+            JointFactory.CreateFixedRevoluteJoint(World, bridgeBodies[bridgeBodies.Count - 1], new Vector2(0, -0.5f),
+                                                  bridgeBodies[bridgeBodies.Count - 1].Position);
 
-            PathManager.AttachBodiesWithRevoluteJoint(World, bridgeBodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), false, true);
+            PathManager.AttachBodiesWithRevoluteJoint(World, bridgeBodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f),
+                                                      false, true);
 
             /*
              * Soft body
@@ -87,7 +85,8 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             shapes.Add(new CircleShape(0.5f, 1));
 
             //We distribute the shapes in the rectangular path.
-            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes, BodyType.Dynamic, 30, circleMaterial);
+            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes,
+                                                                            BodyType.Dynamic, 30, circleMaterial);
 
             //Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
             PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,

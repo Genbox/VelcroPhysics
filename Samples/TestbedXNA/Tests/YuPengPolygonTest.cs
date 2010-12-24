@@ -183,34 +183,28 @@ namespace FarseerPhysics.TestBed.Tests
             // Perform a Union
             if (keyboardManager.IsNewKeyPress(Keys.Space))
             {
-
-                    if (_subject != null && _clip != null)
-                    {
-                        DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
-                    }
-
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
+                }
             }
 
             // Perform a Subtraction
             if (keyboardManager.IsNewKeyPress(Keys.Back))
             {
-
-                    if (_subject != null && _clip != null)
-                    {
-                        DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
-                    }
-
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
+                }
             }
 
             // Perform a Intersection
             if (keyboardManager.IsNewKeyPress(Keys.LeftShift))
             {
-
-                    if (_subject != null && _clip != null)
-                    {
-                        DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
-                    }
-
+                if (_subject != null && _clip != null)
+                {
+                    DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
+                }
             }
 
             // Select Subject
@@ -272,8 +266,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_selected != null)
             {
-                Vector2 trans = new Vector2((state.X - oldState.X) / 12f,
-                                            (oldState.Y - state.Y) / 12f);
+                Vector2 trans = new Vector2((state.X - oldState.X)/12f,
+                                            (oldState.Y - state.Y)/12f);
                 _selected.Translate(ref trans);
             }
         }

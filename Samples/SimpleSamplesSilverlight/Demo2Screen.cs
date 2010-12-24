@@ -64,7 +64,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
         public override void HandleInput(InputState input)
         {
             HandleKeyboardInput(input);
-            
+
             base.HandleInput(input);
         }
 

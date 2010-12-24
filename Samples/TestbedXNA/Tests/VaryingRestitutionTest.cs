@@ -41,13 +41,13 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape shape = new CircleShape(1.0f, 1);
 
-                float[] restitution = new[] { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
+                float[] restitution = new[] {0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f};
 
                 for (int i = 0; i < 7; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    body.Position = new Vector2(-10.0f + 3.0f*i, 20.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Restitution = restitution[i];

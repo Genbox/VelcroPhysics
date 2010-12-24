@@ -89,6 +89,5 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 
             base.HandleInput(input);
         }
-
     }
 }

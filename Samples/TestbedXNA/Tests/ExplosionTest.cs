@@ -1,11 +1,11 @@
 using System.Diagnostics;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common.PhysicsLogic;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Common.PhysicsLogic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -13,19 +13,19 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int ColumnCount = 5;
         private const int RowCount = 16;
-        private Body[] _bodies = new Body[RowCount * ColumnCount];
+        private Body[] _bodies = new Body[RowCount*ColumnCount];
         private Explosion _explosion;
-        private float _radius;
-        private float _power;
+        private int[] _indices = new int[RowCount*ColumnCount];
         private Vector2 _mousePos;
-        private int[] _indices = new int[RowCount * ColumnCount];
+        private float _power;
+        private float _radius;
 
         private ExplosionTest()
         {
             //Ground
             FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            float[] xs = new[] { -10.0f, -5.0f, 0.0f, 5.0f, 10.0f };
+            float[] xs = new[] {-10.0f, -5.0f, 0.0f, 5.0f, 10.0f};
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -34,14 +34,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    int n = j * RowCount + i;
-                    Debug.Assert(n < RowCount * ColumnCount);
+                    int n = j*RowCount + i;
+                    Debug.Assert(n < RowCount*ColumnCount);
                     _indices[n] = n;
 
                     const float x = 0.0f;
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f*i);
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 
@@ -102,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Press: (D) to decrease the explosion power, (F) to increase it.");
             TextLine += 15;
             // Fighting against float decimals
-            float powernumber = (float)((int)(_power * 10)) / 10;
+            float powernumber = (float) ((int) (_power*10))/10;
             DebugView.DrawString(50, TextLine, "Power: " + powernumber);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);

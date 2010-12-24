@@ -76,15 +76,15 @@ namespace FarseerPhysics.HelloWorld
                 if (gamepad.Buttons.Back == ButtonState.Pressed)
                     Exit();
 
-                float rotation = 40 * gamepad.Triggers.Left;
+                float rotation = 40*gamepad.Triggers.Left;
                 _circleFixture.Body.ApplyTorque(rotation);
 
-                rotation = -40 * gamepad.Triggers.Right;
+                rotation = -40*gamepad.Triggers.Right;
                 _circleFixture.Body.ApplyTorque(rotation);
             }
 
             //We update the world
-            _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+            _world.Step((float) gameTime.ElapsedGameTime.TotalMilliseconds*0.001f);
 
             base.Update(gameTime);
         }
@@ -97,7 +97,7 @@ namespace FarseerPhysics.HelloWorld
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Matrix proj = Matrix.CreateOrthographic(50 * _graphics.GraphicsDevice.Viewport.AspectRatio, 50, 0, 1);
+            Matrix proj = Matrix.CreateOrthographic(50*_graphics.GraphicsDevice.Viewport.AspectRatio, 50, 0, 1);
             Matrix view = Matrix.Identity;
 
             _debugView.RenderDebugData(ref proj, ref view);
