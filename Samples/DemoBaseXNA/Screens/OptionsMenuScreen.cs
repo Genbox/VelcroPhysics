@@ -91,7 +91,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         private void LanguageMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            _currentLanguage = (_currentLanguage + 1) % _languages.Length;
+            _currentLanguage = (_currentLanguage + 1)%_languages.Length;
 
             SetMenuEntryText();
         }

@@ -30,15 +30,15 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
 
             int y = -1;
             int j;
-            int count = width * height;
+            int count = width*height;
             Color[] colorArray = new Color[count];
             Color[] shellColor = new Color[borderWidth + borderOuterTransitionWidth + borderInnerTransitionWidth];
             float transitionAmount;
 
             for (j = 0; j < borderOuterTransitionWidth; j++)
             {
-                transitionAmount = (j) / (float)(borderOuterTransitionWidth);
-                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte)(255 * transitionAmount));
+                transitionAmount = (j)/(float) (borderOuterTransitionWidth);
+                shellColor[j] = new Color(borderColor.R, borderColor.G, borderColor.B, (byte) (255*transitionAmount));
             }
             for (j = borderOuterTransitionWidth; j < borderWidth + borderOuterTransitionWidth; j++)
             {
@@ -49,21 +49,21 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
                  j++)
             {
                 transitionAmount = 1 -
-                                   (j - (borderWidth + borderOuterTransitionWidth) + 1) /
-                                   (float)(borderInnerTransitionWidth + 1);
-                shellColor[j] = new Color((byte)MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
-                                          (byte)MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
+                                   (j - (borderWidth + borderOuterTransitionWidth) + 1)/
+                                   (float) (borderInnerTransitionWidth + 1);
+                shellColor[j] = new Color((byte) MathHelper.Lerp(color.R, borderColor.R, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.G, borderColor.G, transitionAmount),
+                                          (byte) MathHelper.Lerp(color.B, borderColor.B, transitionAmount));
             }
 
 
             for (int i = 0; i < count; i++)
             {
-                if (i % width == 0)
+                if (i%width == 0)
                 {
                     y += 1;
                 }
-                int x = i % width;
+                int x = i%width;
 
                 //check if pixel is in one of the rectangular border shells
                 bool isInShell = false;

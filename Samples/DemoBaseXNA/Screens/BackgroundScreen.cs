@@ -28,10 +28,10 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         private const float LogoScreenBorderRatio = 0.0375f;
         private const float LogoWidthHeightRatio = 1.4625f;
 
-        private Texture2D _logoTexture;
         private Texture2D _backgroundTexture;
         private ContentManager _content;
         private Rectangle _logoDestination;
+        private Texture2D _logoTexture;
         private Rectangle _viewport;
 
         /// <summary>
@@ -65,11 +65,13 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         {
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 logoSize = new Vector2();
-            logoSize.Y = viewport.Height * LogoScreenHeightRatio;
-            logoSize.X = logoSize.Y * LogoWidthHeightRatio;
-            float border = viewport.Height * LogoScreenBorderRatio;
-            Vector2 logoPosition = new Vector2(viewport.Width - border - logoSize.X, viewport.Height - border - logoSize.Y);
-            _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
+            logoSize.Y = viewport.Height*LogoScreenHeightRatio;
+            logoSize.X = logoSize.Y*LogoWidthHeightRatio;
+            float border = viewport.Height*LogoScreenBorderRatio;
+            Vector2 logoPosition = new Vector2(viewport.Width - border - logoSize.X,
+                                               viewport.Height - border - logoSize.Y);
+            _logoDestination = new Rectangle((int) logoPosition.X, (int) logoPosition.Y, (int) logoSize.X,
+                                             (int) logoSize.Y);
             _viewport = new Rectangle(0, 0, viewport.Width, viewport.Height);
         }
 
@@ -101,7 +103,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         {
             ScreenManager.SpriteBatch.Begin();
             ScreenManager.SpriteBatch.Draw(_backgroundTexture, _viewport, Color.White);
-            ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White * 0.6f);
+            ScreenManager.SpriteBatch.Draw(_logoTexture, _logoDestination, Color.White*0.6f);
             ScreenManager.SpriteBatch.End();
         }
     }

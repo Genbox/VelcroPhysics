@@ -246,11 +246,11 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (time == TimeSpan.Zero)
                 transitionDelta = 1;
             else
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
+                transitionDelta = (float) (gameTime.ElapsedGameTime.TotalMilliseconds/
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            _transitionPosition += transitionDelta * direction;
+            _transitionPosition += transitionDelta*direction;
 
             // Did we reach the end of the transition?
             if (((direction < 0) && (_transitionPosition <= 0)) ||
@@ -282,12 +282,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         public virtual void HandleGamePadInput(InputHelper input)
-        {            
+        {
             if (input.CurrentGamepadState.Buttons.RightShoulder == ButtonState.Pressed)
                 ScreenManager.Camera.Zoom += 0.02f;
             if (input.CurrentGamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
                 ScreenManager.Camera.Zoom -= 0.02f;
-            ScreenManager.Camera.MoveCamera(input.CurrentGamepadState.ThumbSticks.Right / 2f);
+            ScreenManager.Camera.MoveCamera(input.CurrentGamepadState.ThumbSticks.Right/2f);
             if (input.CurrentGamepadState.Buttons.RightStick == ButtonState.Pressed)
                 ScreenManager.Camera.ResetCamera();
         }

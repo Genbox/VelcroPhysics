@@ -1,10 +1,12 @@
 #region File Description
+
 //-----------------------------------------------------------------------------
 // PauseMenuScreen.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
+
 #endregion
 
 using FarseerPhysics.DemoBaseXNA.DrawingSystem;
@@ -58,7 +60,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         {
             _panelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, panelWidth, panelHeight,
                                                                  _panelColor);
-            LeftBorder = ScreenManager.Camera.ScreenCenter.X - panelWidth / 2f + leftBorder;
+            LeftBorder = ScreenManager.Camera.ScreenCenter.X - panelWidth/2f + leftBorder;
 
             _textPanelTexture = DrawingHelper.CreateRectangleTexture(ScreenManager.GraphicsDevice, textPanelWidth,
                                                                      textPanelHeight, _textPanelColor);
@@ -69,13 +71,14 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            Vector2 panelOrigin = new Vector2(_panelTexture.Width / 2f, _panelTexture.Height / 2f);
-            ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.Camera.ScreenCenter, null, _panelColor, 0, panelOrigin,
+            Vector2 panelOrigin = new Vector2(_panelTexture.Width/2f, _panelTexture.Height/2f);
+            ScreenManager.SpriteBatch.Draw(_panelTexture, ScreenManager.Camera.ScreenCenter, null, _panelColor, 0,
+                                           panelOrigin,
                                            Vector2.One, SpriteEffects.None, 0);
 
             Vector2 textPanelTexturePosition =
-                new Vector2(ScreenManager.Camera.ScreenCenter.X - panelWidth / 2f + textPanelLeftBorder,
-                            ScreenManager.Camera.ScreenCenter.Y - textPanelHeight / 2f);
+                new Vector2(ScreenManager.Camera.ScreenCenter.X - panelWidth/2f + textPanelLeftBorder,
+                            ScreenManager.Camera.ScreenCenter.Y - textPanelHeight/2f);
             ScreenManager.SpriteBatch.Draw(_textPanelTexture, textPanelTexturePosition, null, _textPanelColor, 0,
                                            Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
 
@@ -89,7 +92,6 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
 
             ScreenManager.SpriteBatch.End();
             base.Draw(gameTime);
-
         }
     }
 }

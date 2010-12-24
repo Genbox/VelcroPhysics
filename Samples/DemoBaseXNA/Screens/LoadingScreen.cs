@@ -43,8 +43,8 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         private LoadingScreen(bool loadingIsSlow,
                               GameScreen[] screensToLoad)
         {
-            this._loadingIsSlow = loadingIsSlow;
-            this._screensToLoad = screensToLoad;
+            _loadingIsSlow = loadingIsSlow;
+            _screensToLoad = screensToLoad;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
@@ -129,9 +129,9 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
                 Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
                 Vector2 textSize = font.MeasureString(message);
-                Vector2 textPosition = (viewportSize - textSize) / 2;
+                Vector2 textPosition = (viewportSize - textSize)/2;
 
-                Color color = Color.White * TransitionAlpha;
+                Color color = Color.White*TransitionAlpha;
 
                 // Draw the text.
                 spriteBatch.Begin();

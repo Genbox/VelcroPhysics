@@ -65,8 +65,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 LastKeyboardStates[i] = CurrentKeyboardStates[i];
                 LastGamePadStates[i] = CurrentGamePadStates[i];
 
-                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex)i);
-                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex)i);
+                CurrentKeyboardStates[i] = Keyboard.GetState((PlayerIndex) i);
+                CurrentGamePadStates[i] = GamePad.GetState((PlayerIndex) i);
 
 
                 // Keep track of whether a gamepad has ever been
@@ -105,12 +105,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public GamePadState CurrentGamepadState
         {
-            get { return CurrentGamePadStates[(int)DefaultPlayerIndex]; }
+            get { return CurrentGamePadStates[(int) DefaultPlayerIndex]; }
         }
 
         public KeyboardState CurrentKeyboardState
         {
-            get { return CurrentKeyboardStates[(int)DefaultPlayerIndex]; }
+            get { return CurrentKeyboardStates[(int) DefaultPlayerIndex]; }
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int)playerIndex;
+                int i = (int) playerIndex;
 
                 return (CurrentKeyboardStates[i].IsKeyDown(key) &&
                         LastKeyboardStates[i].IsKeyUp(key));
@@ -165,7 +165,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int)playerIndex;
+                int i = (int) playerIndex;
 
                 return (CurrentGamePadStates[i].IsButtonDown(button) &&
                         LastGamePadStates[i].IsButtonUp(button));
@@ -391,14 +391,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 #endif
 
         public bool IsKeyDown(Keys key, PlayerIndex? controllingPlayer,
-                                  out PlayerIndex playerIndex)
+                              out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)
             {
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int)playerIndex;
+                int i = (int) playerIndex;
 
                 return (CurrentKeyboardStates[i].IsKeyDown(key));
             }
@@ -422,14 +422,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         }
 
         public bool IsKeyUp(Keys key, PlayerIndex? controllingPlayer,
-                          out PlayerIndex playerIndex)
+                            out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)
             {
                 // Read input from the specified player.
                 playerIndex = controllingPlayer.Value;
 
-                int i = (int)playerIndex;
+                int i = (int) playerIndex;
 
                 return (CurrentKeyboardStates[i].IsKeyUp(key));
             }

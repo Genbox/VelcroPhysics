@@ -27,7 +27,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         public PlayerIndexEventArgs(PlayerIndex playerIndex)
         {
-            this._playerIndex = playerIndex;
+            _playerIndex = playerIndex;
         }
 
         /// <summary>

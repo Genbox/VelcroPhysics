@@ -1,10 +1,12 @@
 ﻿#region File Description
+
 //-----------------------------------------------------------------------------
 // MenuScreen.cs
 //
 // XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
+
 #endregion
 
 using System;
@@ -44,9 +46,9 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                                      "\nB button, Esc = cancel";
 
             if (includeUsageText)
-                this._message = message + usageText;
+                _message = message + usageText;
             else
-                this._message = message;
+                _message = message;
 
             IsPopup = true;
 
@@ -112,13 +114,13 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             SpriteFont font = ScreenManager.SpriteFonts.MenuSpriteFont;
 
             // Darken down any other screens that were drawn beneath the popup.
-            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            ScreenManager.FadeBackBufferToBlack(TransitionAlpha*2/3);
 
             // Center the message text in the viewport.
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
             Vector2 textSize = font.MeasureString(_message);
-            Vector2 textPosition = (viewportSize - textSize) / 2;
+            Vector2 textPosition = (viewportSize - textSize)/2;
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
@@ -126,11 +128,11 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
 
             Rectangle backgroundRectangle = new Rectangle((int) textPosition.X - hPad,
                                                           (int) textPosition.Y - vPad,
-                                                          (int) textSize.X + hPad * 2,
-                                                          (int) textSize.Y + vPad * 2);
+                                                          (int) textSize.X + hPad*2,
+                                                          (int) textSize.Y + vPad*2);
 
             // Fade the popup alpha during transitions.
-            Color color = Color.White * TransitionAlpha;
+            Color color = Color.White*TransitionAlpha;
 
             spriteBatch.Begin();
 

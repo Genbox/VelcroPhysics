@@ -21,15 +21,15 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             _agentBody.BodyType = BodyType.Dynamic;
 
             DebugMaterial matBody = new DebugMaterial(MaterialType.Blank)
-            {
-                Color = Color.LightGray
-            };
+                                        {
+                                            Color = Color.LightGray
+                                        };
             DebugMaterial matHands = new DebugMaterial(MaterialType.Squares)
-            {
-                Color = Color.DarkOrange,
-                Scale = 8f,
-                Depth = 0.0f
-            };
+                                         {
+                                             Color = Color.DarkOrange,
+                                             Scale = 8f,
+                                             Depth = 0.0f
+                                         };
 
             //Center
             FixtureFactory.CreateCircle(1, 1, _agentBody, matBody);
