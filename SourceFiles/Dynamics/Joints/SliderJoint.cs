@@ -120,7 +120,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 F = (inv_dt * _impulse) * _u;
+            Vector2 F = (inv_dt*_impulse)*_u;
             return F;
         }
 
@@ -153,7 +153,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (length > Settings.LinearSlop)
             {
-                _u *= 1.0f / length;
+                _u *= 1.0f/length;
             }
             else
             {
@@ -162,30 +162,30 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float cr1u = MathUtils.Cross(r1, _u);
             float cr2u = MathUtils.Cross(r2, _u);
-            float invMass = b1.InvMass + b1.InvI * cr1u * cr1u + b2.InvMass + b2.InvI * cr2u * cr2u;
+            float invMass = b1.InvMass + b1.InvI*cr1u*cr1u + b2.InvMass + b2.InvI*cr2u*cr2u;
             Debug.Assert(invMass > Settings.Epsilon);
-            _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
+            _mass = invMass != 0.0f ? 1.0f/invMass : 0.0f;
 
             if (Frequency > 0.0f)
             {
                 float C = length - MaxLength;
 
                 // Frequency
-                float omega = 2.0f * Settings.Pi * Frequency;
+                float omega = 2.0f*Settings.Pi*Frequency;
 
                 // Damping coefficient
-                float d = 2.0f * _mass * DampingRatio * omega;
+                float d = 2.0f*_mass*DampingRatio*omega;
 
                 // Spring stiffness
-                float k = _mass * omega * omega;
+                float k = _mass*omega*omega;
 
                 // magic formulas
-                _gamma = step.dt * (d + step.dt * k);
-                _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
-                _bias = C * step.dt * k * _gamma;
+                _gamma = step.dt*(d + step.dt*k);
+                _gamma = _gamma != 0.0f ? 1.0f/_gamma : 0.0f;
+                _bias = C*step.dt*k*_gamma;
 
                 _mass = invMass + _gamma;
-                _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
+                _mass = _mass != 0.0f ? 1.0f/_mass : 0.0f;
             }
 
             if (Settings.EnableWarmstarting)
@@ -193,11 +193,11 @@ namespace FarseerPhysics.Dynamics.Joints
                 // Scale the impulse to support a variable time step.
                 _impulse *= step.dtRatio;
 
-                Vector2 P = _impulse * _u;
-                b1.LinearVelocityInternal -= b1.InvMass * P;
-                b1.AngularVelocityInternal -= b1.InvI * MathUtils.Cross(r1, P);
-                b2.LinearVelocityInternal += b2.InvMass * P;
-                b2.AngularVelocityInternal += b2.InvI * MathUtils.Cross(r2, P);
+                Vector2 P = _impulse*_u;
+                b1.LinearVelocityInternal -= b1.InvMass*P;
+                b1.AngularVelocityInternal -= b1.InvI*MathUtils.Cross(r1, P);
+                b2.LinearVelocityInternal += b2.InvMass*P;
+                b2.AngularVelocityInternal += b2.InvI*MathUtils.Cross(r2, P);
             }
             else
             {
@@ -231,14 +231,14 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 v2 = b2.LinearVelocityInternal + MathUtils.Cross(b2.AngularVelocityInternal, r2);
             float Cdot = Vector2.Dot(_u, v2 - v1);
 
-            float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);
+            float impulse = -_mass*(Cdot + _bias + _gamma*_impulse);
             _impulse += impulse;
 
-            Vector2 P = impulse * _u;
-            b1.LinearVelocityInternal -= b1.InvMass * P;
-            b1.AngularVelocityInternal -= b1.InvI * MathUtils.Cross(r1, P);
-            b2.LinearVelocityInternal += b2.InvMass * P;
-            b2.AngularVelocityInternal += b2.InvI * MathUtils.Cross(r2, P);
+            Vector2 P = impulse*_u;
+            b1.LinearVelocityInternal -= b1.InvMass*P;
+            b1.AngularVelocityInternal -= b1.InvI*MathUtils.Cross(r1, P);
+            b2.LinearVelocityInternal += b2.InvMass*P;
+            b2.AngularVelocityInternal += b2.InvI*MathUtils.Cross(r2, P);
         }
 
         internal override bool SolvePositionConstraints()
@@ -275,14 +275,14 @@ namespace FarseerPhysics.Dynamics.Joints
             float C = length - MaxLength;
             C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
-            float impulse = -_mass * C;
+            float impulse = -_mass*C;
             _u = d;
-            Vector2 P = impulse * _u;
+            Vector2 P = impulse*_u;
 
-            b1.Sweep.C -= b1.InvMass * P;
-            b1.Sweep.A -= b1.InvI * MathUtils.Cross(r1, P);
-            b2.Sweep.C += b2.InvMass * P;
-            b2.Sweep.A += b2.InvI * MathUtils.Cross(r2, P);
+            b1.Sweep.C -= b1.InvMass*P;
+            b1.Sweep.A -= b1.InvI*MathUtils.Cross(r1, P);
+            b2.Sweep.C += b2.InvMass*P;
+            b2.Sweep.A += b2.InvI*MathUtils.Cross(r2, P);
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();

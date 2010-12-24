@@ -36,9 +36,11 @@ namespace Poly2Tri.Triangulation
     /**
      * @author Thomas Åhlén, thahlen@gmail.com
      */
+
     public class TriangulationUtil
     {
         public static double EPSILON = 1e-12;
+
         /// <summary>
         ///   Requirements:
         /// 1. a,b and c form a triangle.
@@ -63,7 +65,8 @@ namespace Poly2Tri.Triangulation
         /// <param name="pc">triangle point</param>
         /// <param name="pd">point opposite a</param>
         /// <returns>true if d is inside circle, false if on circle edge</returns>
-        public static bool SmartIncircle(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc, TriangulationPoint pd)
+        public static bool SmartIncircle(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc,
+                                         TriangulationPoint pd)
         {
             double pdx = pd.X;
             double pdy = pd.Y;
@@ -72,8 +75,8 @@ namespace Poly2Tri.Triangulation
             double bdx = pb.X - pdx;
             double bdy = pb.Y - pdy;
 
-            double adxbdy = adx * bdy;
-            double bdxady = bdx * ady;
+            double adxbdy = adx*bdy;
+            double bdxady = bdx*ady;
             double oabd = adxbdy - bdxady;
             //        oabd = orient2d(pa,pb,pd);
             if (oabd <= 0) return false;
@@ -81,25 +84,26 @@ namespace Poly2Tri.Triangulation
             double cdx = pc.X - pdx;
             double cdy = pc.Y - pdy;
 
-            double cdxady = cdx * ady;
-            double adxcdy = adx * cdy;
+            double cdxady = cdx*ady;
+            double adxcdy = adx*cdy;
             double ocad = cdxady - adxcdy;
             //      ocad = orient2d(pc,pa,pd);
             if (ocad <= 0) return false;
 
-            double bdxcdy = bdx * cdy;
-            double cdxbdy = cdx * bdy;
+            double bdxcdy = bdx*cdy;
+            double cdxbdy = cdx*bdy;
 
-            double alift = adx * adx + ady * ady;
-            double blift = bdx * bdx + bdy * bdy;
-            double clift = cdx * cdx + cdy * cdy;
+            double alift = adx*adx + ady*ady;
+            double blift = bdx*bdx + bdy*bdy;
+            double clift = cdx*cdx + cdy*cdy;
 
-            double det = alift * (bdxcdy - cdxbdy) + blift * ocad + clift * oabd;
+            double det = alift*(bdxcdy - cdxbdy) + blift*ocad + clift*oabd;
 
             return det > 0;
         }
 
-        public static bool InScanArea(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc, TriangulationPoint pd)
+        public static bool InScanArea(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc,
+                                      TriangulationPoint pd)
         {
             double pdx = pd.X;
             double pdy = pd.Y;
@@ -108,8 +112,8 @@ namespace Poly2Tri.Triangulation
             double bdx = pb.X - pdx;
             double bdy = pb.Y - pdy;
 
-            double adxbdy = adx * bdy;
-            double bdxady = bdx * ady;
+            double adxbdy = adx*bdy;
+            double bdxady = bdx*ady;
             double oabd = adxbdy - bdxady;
             //        oabd = orient2d(pa,pb,pd);
             if (oabd <= 0)
@@ -120,8 +124,8 @@ namespace Poly2Tri.Triangulation
             double cdx = pc.X - pdx;
             double cdy = pc.Y - pdy;
 
-            double cdxady = cdx * ady;
-            double adxcdy = adx * cdy;
+            double cdxady = cdx*ady;
+            double adxcdy = adx*cdy;
             double ocad = cdxady - adxcdy;
             //      ocad = orient2d(pc,pa,pd);
             if (ocad <= 0)
@@ -139,8 +143,8 @@ namespace Poly2Tri.Triangulation
         ///              =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
         public static Orientation Orient2d(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc)
         {
-            double detleft = (pa.X - pc.X) * (pb.Y - pc.Y);
-            double detright = (pa.Y - pc.Y) * (pb.X - pc.X);
+            double detleft = (pa.X - pc.X)*(pb.Y - pc.Y);
+            double detright = (pa.Y - pc.Y)*(pb.X - pc.X);
             double val = detleft - detright;
             if (val > -EPSILON && val < EPSILON)
             {

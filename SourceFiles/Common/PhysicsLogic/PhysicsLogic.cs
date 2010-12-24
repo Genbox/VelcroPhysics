@@ -64,8 +64,8 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
     public abstract class PhysicsLogic
     {
-        public World World;
         public FilterPhysicsLogicData FilterData;
+        public World World;
 
         public PhysicsLogic(World world, PhysicsLogicType type)
         {

@@ -35,25 +35,26 @@
 //   Eliminate Add/RemoveNode ?
 //   Comments comments and more comments!
 
-using System.Text;
 using System;
+using System.Text;
 
 namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)
      */
+
     public class AdvancingFront
     {
         public AdvancingFrontNode Head;
-        public AdvancingFrontNode Tail;
         protected AdvancingFrontNode Search;
+        public AdvancingFrontNode Tail;
 
         public AdvancingFront(AdvancingFrontNode head, AdvancingFrontNode tail)
         {
-            this.Head = head;
-            this.Tail = tail;
-            this.Search = head;
+            Head = head;
+            Tail = tail;
+            Search = head;
             AddNode(head);
             AddNode(tail);
         }

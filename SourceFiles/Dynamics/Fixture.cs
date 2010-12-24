@@ -88,8 +88,8 @@ namespace FarseerPhysics.Dynamics
         private Category _collidesWith;
         private Category _collisionCategories;
         private short _collisionGroup;
-        private Fixture _fixture;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
+        private Fixture _fixture;
 
         public CollisionFilter(Fixture fixture)
         {
@@ -319,21 +319,23 @@ namespace FarseerPhysics.Dynamics
         private static int _fixtureIdCounter;
 
         /// <summary>
+        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
+        /// </summary>
+        public AfterCollisionEventHandler AfterCollision;
+
+        /// <summary>
         /// Fires when two fixtures are close to each other.
         /// Due to how the broadphase works, this can be quite inaccurate as shapes are approximated using AABBs.
         /// </summary>
         public BeforeCollisionEventHandler BeforeCollision;
+
+        public CollisionFilter CollisionFilter;
 
         /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
         /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
         /// </summary>
         public OnCollisionEventHandler OnCollision;
-
-        /// <summary>
-        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
-        /// </summary>
-        public AfterCollisionEventHandler AfterCollision;
 
         /// <summary>
         /// Fires when two shapes separate and a contact is removed between them.
@@ -344,7 +346,9 @@ namespace FarseerPhysics.Dynamics
         public FixtureProxy[] Proxies;
         public int ProxyCount;
 
-        public Fixture(Body body, Shape shape) : this(body, shape, null) { }
+        public Fixture(Body body, Shape shape) : this(body, shape, null)
+        {
+        }
 
         public Fixture(Body body, Shape shape, Object userData)
         {
@@ -401,8 +405,6 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public CollisionFilter CollisionFilter;
-
         /// <summary>
         /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
         /// </summary>
@@ -454,6 +456,16 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <value>The fixture id.</value>
         public int FixtureId { get; private set; }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Body.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
 
         /// <summary>
         /// Test a point for containment in this fixture.
@@ -569,12 +581,6 @@ namespace FarseerPhysics.Dynamics
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }
-        }
-
-        public void Dispose()
-        {
-            Body.Dispose();
-            GC.SuppressFinalize(this);
         }
     }
 }

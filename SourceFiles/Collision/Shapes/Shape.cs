@@ -34,6 +34,11 @@ namespace FarseerPhysics.Collision.Shapes
     public struct MassData
     {
         /// <summary>
+        /// The area of the shape
+        /// </summary>
+        public float Area;
+
+        /// <summary>
         /// The position of the shape's centroid relative to the shape's origin.
         /// </summary>
         public Vector2 Centroid;
@@ -47,11 +52,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// The mass of the shape, usually in kilograms.
         /// </summary>
         public float Mass;
-
-        /// <summary>
-        /// The area of the shape
-        /// </summary>
-        public float Area;
     }
 
     public enum ShapeType

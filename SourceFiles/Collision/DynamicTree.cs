@@ -82,6 +82,7 @@ namespace FarseerPhysics.Collision
         /// This is used incrementally traverse the tree for re-balancing.
         /// </summary>
         private int _path;
+
         private int _root;
 
         /// <summary>
@@ -168,7 +169,7 @@ namespace FarseerPhysics.Collision
             b.UpperBound = b.UpperBound + r;
 
             // Predict AABB displacement.
-            Vector2 d = Settings.AABBMultiplier * displacement;
+            Vector2 d = Settings.AABBMultiplier*displacement;
 
             if (d.X < 0.0f)
             {
@@ -239,7 +240,7 @@ namespace FarseerPhysics.Collision
         public T GetUserData(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T)_nodes[proxyId].UserData;
+            return (T) _nodes[proxyId].UserData;
         }
 
         /// <summary>
@@ -331,7 +332,7 @@ namespace FarseerPhysics.Collision
             // Build a bounding box for the segment.
             AABB segmentAABB = new AABB();
             {
-                Vector2 t = p1 + maxFraction * (p2 - p1);
+                Vector2 t = p1 + maxFraction*(p2 - p1);
                 Vector2.Min(ref p1, ref t, out segmentAABB.LowerBound);
                 Vector2.Max(ref p1, ref t, out segmentAABB.UpperBound);
             }
@@ -383,7 +384,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Update segment bounding box.
                         maxFraction = value;
-                        Vector2 t = p1 + maxFraction * (p2 - p1);
+                        Vector2 t = p1 + maxFraction*(p2 - p1);
                         segmentAABB.LowerBound = Vector2.Min(p1, t);
                         segmentAABB.UpperBound = Vector2.Max(p1, t);
                     }
@@ -492,11 +493,11 @@ namespace FarseerPhysics.Collision
 
                 float siblingArea = _nodes[sibling].AABB.Perimeter;
                 AABB parentAABB = new AABB();
-                parentAABB.Combine(ref _nodes[sibling].AABB, ref  leafAABB);
+                parentAABB.Combine(ref _nodes[sibling].AABB, ref leafAABB);
                 float parentArea = parentAABB.Perimeter;
-                float cost1 = 2.0f * parentArea;
+                float cost1 = 2.0f*parentArea;
 
-                float inheritanceCost = 2.0f * (parentArea - siblingArea);
+                float inheritanceCost = 2.0f*(parentArea - siblingArea);
 
                 float cost2;
                 if (_nodes[child1].IsLeaf())
@@ -624,7 +625,8 @@ namespace FarseerPhysics.Collision
                 parent = grandParent;
                 while (parent != NullNode)
                 {
-                    _nodes[parent].AABB.Combine(ref _nodes[_nodes[parent].Child1].AABB, ref _nodes[_nodes[parent].Child2].AABB);
+                    _nodes[parent].AABB.Combine(ref _nodes[_nodes[parent].Child1].AABB,
+                                                ref _nodes[_nodes[parent].Child2].AABB);
 
                     Debug.Assert(_nodes[parent].LeafCount > 0);
                     _nodes[parent].LeafCount -= 1;

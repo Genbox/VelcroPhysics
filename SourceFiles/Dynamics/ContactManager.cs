@@ -31,21 +31,21 @@ namespace FarseerPhysics.Dynamics
 {
     public class ContactManager
     {
+        /// <summary>
+        /// Fires when a contact is created
+        /// </summary>
+        public BeginContactDelegate BeginContact;
+
         public BroadPhase BroadPhase = new BroadPhase();
 
         public int ContactCount;
-
-        public Contact ContactList;
 
         /// <summary>
         /// The filter used by the contact manager.
         /// </summary>
         public CollisionFilterDelegate ContactFilter;
 
-        /// <summary>
-        /// Fires when a contact is created
-        /// </summary>
-        public BeginContactDelegate BeginContact;
+        public Contact ContactList;
 
         /// <summary>
         /// Fires when a contact is deleted
@@ -338,26 +338,32 @@ namespace FarseerPhysics.Dynamics
                     fixtureA.CollisionFilter.CollisionGroup != 0 && fixtureB.CollisionFilter.CollisionGroup != 0)
                     return false;
 
-                if (((fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) == Category.None) &
-                    ((fixtureB.CollisionFilter.CollisionCategories & fixtureA.CollisionFilter.CollidesWith) == Category.None))
+                if (((fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) ==
+                     Category.None) &
+                    ((fixtureB.CollisionFilter.CollisionCategories & fixtureA.CollisionFilter.CollidesWith) ==
+                     Category.None))
                     return false;
 
-                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) || fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
+                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) ||
+                    fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
                     return false;
 
                 return true;
             }
 
-            if (fixtureA.CollisionFilter.CollisionGroup == fixtureB.CollisionFilter.CollisionGroup && fixtureA.CollisionFilter.CollisionGroup != 0)
+            if (fixtureA.CollisionFilter.CollisionGroup == fixtureB.CollisionFilter.CollisionGroup &&
+                fixtureA.CollisionFilter.CollisionGroup != 0)
             {
                 return fixtureA.CollisionFilter.CollisionGroup > 0;
             }
 
-            bool collide = (fixtureA.CollisionFilter.CollidesWith & fixtureB.CollisionFilter.CollisionCategories) != 0 && (fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) != 0;
+            bool collide = (fixtureA.CollisionFilter.CollidesWith & fixtureB.CollisionFilter.CollisionCategories) != 0 &&
+                           (fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) != 0;
 
             if (collide)
             {
-                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) || fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
+                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) ||
+                    fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
                 {
                     return false;
                 }

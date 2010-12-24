@@ -76,7 +76,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius * Radius;
+            return Vector2.Dot(d, d) <= Radius*Radius;
         }
 
         /// <summary>
@@ -99,13 +99,13 @@ namespace FarseerPhysics.Collision.Shapes
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius * Radius;
+            float b = Vector2.Dot(s, s) - Radius*Radius;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
-            float sigma = c * c - rr * b;
+            float sigma = c*c - rr*b;
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.Epsilon)
@@ -114,14 +114,14 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt(sigma));
+            float a = -(c + (float) Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction * rr)
+            if (0.0f <= a && a <= input.MaxFraction*rr)
             {
                 a /= rr;
                 output.Fraction = a;
-                Vector2 norm = (s + a * r);
+                Vector2 norm = (s + a*r);
                 norm.Normalize();
                 output.Normal = norm;
                 return true;
@@ -147,15 +147,15 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        public sealed override void ComputeProperties()
+        public override sealed void ComputeProperties()
         {
-            float area = Settings.Pi * Radius * Radius;
+            float area = Settings.Pi*Radius*Radius;
             MassData.Area = area;
-            MassData.Mass = _density * area;
+            MassData.Mass = _density*area;
             MassData.Centroid = Position;
 
             // inertia about the local origin
-            MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass*(0.5f*Radius*Radius + Vector2.Dot(Position, Position));
         }
     }
 }

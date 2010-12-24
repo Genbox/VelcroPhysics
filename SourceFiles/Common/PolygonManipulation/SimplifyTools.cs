@@ -111,7 +111,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         {
             double dx = p.X - p2.X;
             double dy = p.Y - p2.X;
-            return Math.Sqrt(dx * dx + dy * dy);
+            return Math.Sqrt(dx*dx + dy*dy);
         }
 
         private static double DistancePointLine(Vector2 p, Vector2 A, Vector2 B)
@@ -133,9 +133,9 @@ namespace FarseerPhysics.Common.PolygonManipulation
 		                0<r<1 Point is interior to AB
 	        */
 
-            double r = ((p.X - A.X) * (B.X - A.X) + (p.Y - A.Y) * (B.Y - A.Y))
+            double r = ((p.X - A.X)*(B.X - A.X) + (p.Y - A.Y)*(B.Y - A.Y))
                        /
-                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
+                       ((B.X - A.X)*(B.X - A.X) + (B.Y - A.Y)*(B.Y - A.Y));
 
             if (r <= 0.0) return DistancePointPoint(p, A);
             if (r >= 1.0) return DistancePointPoint(p, B);
@@ -149,11 +149,11 @@ namespace FarseerPhysics.Common.PolygonManipulation
 		                Then the distance from C to Point = |s|*Curve.
 	        */
 
-            double s = ((A.Y - p.Y) * (B.X - A.X) - (A.X - p.X) * (B.Y - A.Y))
+            double s = ((A.Y - p.Y)*(B.X - A.X) - (A.X - p.X)*(B.Y - A.Y))
                        /
-                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
+                       ((B.X - A.X)*(B.X - A.X) + (B.Y - A.Y)*(B.Y - A.Y));
 
-            return Math.Abs(s) * Math.Sqrt(((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y)));
+            return Math.Abs(s)*Math.Sqrt(((B.X - A.X)*(B.X - A.X) + (B.Y - A.Y)*(B.Y - A.Y)));
         }
 
         //From physics2d.net
@@ -225,8 +225,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 float dy0 = vertices[middle].Y - vertices[lower].Y;
                 float dx1 = vertices[upper].Y - vertices[middle].X;
                 float dy1 = vertices[upper].Y - vertices[middle].Y;
-                float norm0 = (float)Math.Sqrt(dx0 * dx0 + dy0 * dy0);
-                float norm1 = (float)Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+                float norm0 = (float) Math.Sqrt(dx0*dx0 + dy0*dy0);
+                float norm1 = (float) Math.Sqrt(dx1*dx1 + dy1*dy1);
 
                 if (!(norm0 > 0.0f && norm1 > 0.0f) && newNVertices > 3)
                 {
@@ -239,8 +239,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 dy0 /= norm0;
                 dx1 /= norm1;
                 dy1 /= norm1;
-                float cross = dx0 * dy1 - dx1 * dy0;
-                float dot = dx0 * dx1 + dy0 * dy1;
+                float cross = dx0*dy1 - dx1*dy0;
+                float dot = dx0*dx1 + dy0*dy1;
 
                 if (Math.Abs(cross) < tolerance && dot > 0 && newNVertices > 3)
                 {
@@ -350,7 +350,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                if (i % nth == 0)
+                if (i%nth == 0)
                     continue;
 
                 result.Add(vertices[i]);

@@ -1,4 +1,5 @@
-#region License
+﻿#region License
+
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team
@@ -26,10 +27,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion License
 
 using System;
-using System.ComponentModel;
 
 namespace Microsoft.Xna.Framework
 {
@@ -65,43 +66,40 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-
         #region Public Properties
 
         public bool IsConstant
         {
-            get { return this.keys.Count <= 1; }
+            get { return keys.Count <= 1; }
         }
 
         public CurveKeyCollection Keys
         {
-            get { return this.keys; }
+            get { return keys; }
         }
 
         public CurveLoopType PostLoop
         {
-            get { return this.postLoop; }
-            set { this.postLoop = value; }
+            get { return postLoop; }
+            set { postLoop = value; }
         }
 
         public CurveLoopType PreLoop
         {
-            get { return this.preLoop; }
-            set { this.preLoop = value; }
+            get { return preLoop; }
+            set { preLoop = value; }
         }
 
         #endregion Public Properties
-
 
         #region Public Constructors
 
         public Curve()
         {
-            this.keys = new CurveKeyCollection();
+            keys = new CurveKeyCollection();
         }
 
         #endregion Public Constructors
-
 
         #region Public Methods
 
@@ -112,7 +110,7 @@ namespace Microsoft.Xna.Framework
 
         public void ComputeTangent(int keyIndex, CurveTangent tangentType)
         {
-            this.ComputeTangent(keyIndex, tangentType, tangentType);
+            ComputeTangent(keyIndex, tangentType, tangentType);
         }
 
         public void ComputeTangents(CurveTangent tangentInType, CurveTangent tangentOutType)
@@ -122,16 +120,16 @@ namespace Microsoft.Xna.Framework
 
         public void ComputeTangents(CurveTangent tangentType)
         {
-            this.ComputeTangents(tangentType, tangentType);
+            ComputeTangents(tangentType, tangentType);
         }
 
         public Curve Clone()
         {
             Curve curve = new Curve();
 
-            curve.keys = this.keys.Clone();
-            curve.preLoop = this.preLoop;
-            curve.postLoop = this.postLoop;
+            curve.keys = keys.Clone();
+            curve.preLoop = preLoop;
+            curve.postLoop = postLoop;
 
             return curve;
         }
@@ -143,7 +141,7 @@ namespace Microsoft.Xna.Framework
 
             if (position < first.Position)
             {
-                switch (this.PreLoop)
+                switch (PreLoop)
                 {
                     case CurveLoopType.Constant:
                         //constant
@@ -151,35 +149,36 @@ namespace Microsoft.Xna.Framework
 
                     case CurveLoopType.Linear:
                         // linear y = a*x +b with a tangeant of last point
-                        return first.Value - first.TangentIn * (first.Position - position);
+                        return first.Value - first.TangentIn*(first.Position - position);
 
                     case CurveLoopType.Cycle:
                         //start -> end / start -> end
                         int cycle = GetNumberOfCycle(position);
-                        float virtualPos = position - (cycle * (last.Position - first.Position));
+                        float virtualPos = position - (cycle*(last.Position - first.Position));
                         return GetCurvePosition(virtualPos);
 
                     case CurveLoopType.CycleOffset:
                         //make the curve continue (with no step) so must up the curve each cycle of delta(value)
                         cycle = GetNumberOfCycle(position);
-                        virtualPos = position - (cycle * (last.Position - first.Position));
-                        return (GetCurvePosition(virtualPos) + cycle * (last.Value - first.Value));
+                        virtualPos = position - (cycle*(last.Position - first.Position));
+                        return (GetCurvePosition(virtualPos) + cycle*(last.Value - first.Value));
 
                     case CurveLoopType.Oscillate:
                         //go back on curve from end and target start 
                         // start-> end / end -> start
                         cycle = GetNumberOfCycle(position);
-                        if (0 == cycle % 2f)//if pair
-                            virtualPos = position - (cycle * (last.Position - first.Position));
+                        if (0 == cycle%2f) //if pair
+                            virtualPos = position - (cycle*(last.Position - first.Position));
                         else
-                            virtualPos = last.Position - position + first.Position + (cycle * (last.Position - first.Position));
+                            virtualPos = last.Position - position + first.Position +
+                                         (cycle*(last.Position - first.Position));
                         return GetCurvePosition(virtualPos);
                 }
             }
             else if (position > last.Position)
             {
                 int cycle;
-                switch (this.PostLoop)
+                switch (PostLoop)
                 {
                     case CurveLoopType.Constant:
                         //constant
@@ -187,29 +186,30 @@ namespace Microsoft.Xna.Framework
 
                     case CurveLoopType.Linear:
                         // linear y = a*x +b with a tangeant of last point
-                        return last.Value + first.TangentOut * (position - last.Position);
+                        return last.Value + first.TangentOut*(position - last.Position);
 
                     case CurveLoopType.Cycle:
                         //start -> end / start -> end
                         cycle = GetNumberOfCycle(position);
-                        float virtualPos = position - (cycle * (last.Position - first.Position));
+                        float virtualPos = position - (cycle*(last.Position - first.Position));
                         return GetCurvePosition(virtualPos);
 
                     case CurveLoopType.CycleOffset:
                         //make the curve continue (with no step) so must up the curve each cycle of delta(value)
                         cycle = GetNumberOfCycle(position);
-                        virtualPos = position - (cycle * (last.Position - first.Position));
-                        return (GetCurvePosition(virtualPos) + cycle * (last.Value - first.Value));
+                        virtualPos = position - (cycle*(last.Position - first.Position));
+                        return (GetCurvePosition(virtualPos) + cycle*(last.Value - first.Value));
 
                     case CurveLoopType.Oscillate:
                         //go back on curve from end and target start 
                         // start-> end / end -> start
                         cycle = GetNumberOfCycle(position);
-                        virtualPos = position - (cycle * (last.Position - first.Position));
-                        if (0 == cycle % 2f)//if pair
-                            virtualPos = position - (cycle * (last.Position - first.Position));
+                        virtualPos = position - (cycle*(last.Position - first.Position));
+                        if (0 == cycle%2f) //if pair
+                            virtualPos = position - (cycle*(last.Position - first.Position));
                         else
-                            virtualPos = last.Position - position + first.Position + (cycle * (last.Position - first.Position));
+                            virtualPos = last.Position - position + first.Position +
+                                         (cycle*(last.Position - first.Position));
                         return GetCurvePosition(virtualPos);
                 }
             }
@@ -220,25 +220,24 @@ namespace Microsoft.Xna.Framework
 
         #endregion Public Methods
 
-
         #region Private Methods
 
         private int GetNumberOfCycle(float position)
         {
-            float cycle = (position - keys[0].Position) / (keys[keys.Count - 1].Position - keys[0].Position);
+            float cycle = (position - keys[0].Position)/(keys[keys.Count - 1].Position - keys[0].Position);
             if (cycle < 0f)
                 cycle--;
-            return (int)cycle;
+            return (int) cycle;
         }
 
         private float GetCurvePosition(float position)
         {
             //only for position in curve
-            CurveKey prev = this.keys[0];
+            CurveKey prev = keys[0];
             CurveKey next;
-            for (int i = 1; i < this.keys.Count; i++)
+            for (int i = 1; i < keys.Count; i++)
             {
-                next = this.Keys[i];
+                next = Keys[i];
                 if (next.Position >= position)
                 {
                     if (prev.Continuity == CurveContinuity.Step)
@@ -249,15 +248,16 @@ namespace Microsoft.Xna.Framework
                         }
                         return prev.Value;
                     }
-                    float t = (position - prev.Position) / (next.Position - prev.Position);//to have t in [0,1]
-                    float ts = t * t;
-                    float tss = ts * t;
+                    float t = (position - prev.Position)/(next.Position - prev.Position); //to have t in [0,1]
+                    float ts = t*t;
+                    float tss = ts*t;
                     //After a lot of search on internet I have found all about spline function
                     // and bezier (phi'sss ancien) but finaly use hermite curve 
                     //http://en.wikipedia.org/wiki/Cubic_Hermite_spline
                     //P(t) = (2*t^3 - 3t^2 + 1)*P0 + (t^3 - 2t^2 + t)m0 + (-2t^3 + 3t^2)P1 + (t^3-t^2)m1
                     //with P0.value = prev.value , m0 = prev.tangentOut, P1= next.value, m1 = next.TangentIn
-                    return (2 * tss - 3 * ts + 1f) * prev.Value + (tss - 2 * ts + t) * prev.TangentOut + (3 * ts - 2 * tss) * next.Value + (tss - ts) * next.TangentIn;
+                    return (2*tss - 3*ts + 1f)*prev.Value + (tss - 2*ts + t)*prev.TangentOut + (3*ts - 2*tss)*next.Value +
+                           (tss - ts)*next.TangentIn;
                 }
                 prev = next;
             }

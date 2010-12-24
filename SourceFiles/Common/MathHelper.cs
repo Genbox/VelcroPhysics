@@ -8,25 +8,25 @@ namespace Microsoft.Xna.Framework
         public const float Log10E = 0.4342945f;
         public const float Log2E = 1.442695f;
         public const float Pi = (float) Math.PI;
-        public const float PiOver2 = (float) (Math.PI / 2.0);
-        public const float PiOver4 = (float) (Math.PI / 4.0);
-        public const float TwoPi = (float) (Math.PI * 2.0);
+        public const float PiOver2 = (float) (Math.PI/2.0);
+        public const float PiOver4 = (float) (Math.PI/4.0);
+        public const float TwoPi = (float) (Math.PI*2.0);
 
         public static float Barycentric(float value1, float value2, float value3, float amount1, float amount2)
         {
-            return value1 + (value2 - value1) * amount1 + (value3 - value1) * amount2;
+            return value1 + (value2 - value1)*amount1 + (value3 - value1)*amount2;
         }
 
         public static float CatmullRom(float value1, float value2, float value3, float value4, float amount)
         {
             // Using formula from http://www.mvps.org/directx/articles/catmull/
             // Internally using doubles not to lose precission
-            double amountSquared = amount * amount;
-            double amountCubed = amountSquared * amount;
-            return (float) (0.5 * (2.0 * value2 +
-                                   (value3 - value1) * amount +
-                                   (2.0 * value1 - 5.0 * value2 + 4.0 * value3 - value4) * amountSquared +
-                                   (3.0 * value2 - value1 - 3.0 * value3 + value4) * amountCubed));
+            double amountSquared = amount*amount;
+            double amountCubed = amountSquared*amount;
+            return (float) (0.5*(2.0*value2 +
+                                 (value3 - value1)*amount +
+                                 (2.0*value1 - 5.0*value2 + 4.0*value3 - value4)*amountSquared +
+                                 (3.0*value2 - value1 - 3.0*value3 + value4)*amountCubed));
         }
 
         public static float Clamp(float value, float min, float max)
@@ -51,17 +51,17 @@ namespace Microsoft.Xna.Framework
             // All transformed to double not to lose precission
             // Otherwise, for high numbers of param:amount the result is NaN instead of Infinity
             double v1 = value1, v2 = value2, t1 = tangent1, t2 = tangent2, s = amount, result;
-            double sCubed = s * s * s;
-            double sSquared = s * s;
+            double sCubed = s*s*s;
+            double sSquared = s*s;
 
             if (amount == 0f)
                 result = value1;
             else if (amount == 1f)
                 result = value2;
             else
-                result = (2 * v1 - 2 * v2 + t2 + t1) * sCubed +
-                         (3 * v2 - 3 * v1 - 2 * t1 - t2) * sSquared +
-                         t1 * s +
+                result = (2*v1 - 2*v2 + t2 + t1)*sCubed +
+                         (3*v2 - 3*v1 - 2*t1 - t2)*sSquared +
+                         t1*s +
                          v1;
             return (float) result;
         }
@@ -69,7 +69,7 @@ namespace Microsoft.Xna.Framework
 
         public static float Lerp(float value1, float value2, float amount)
         {
-            return value1 + (value2 - value1) * amount;
+            return value1 + (value2 - value1)*amount;
         }
 
         public static float Max(float value1, float value2)
@@ -97,7 +97,7 @@ namespace Microsoft.Xna.Framework
             // This method uses double precission internally,
             // though it returns single float
             // Factor = 180 / pi
-            return (float) (radians * 57.295779513082320876798154814105);
+            return (float) (radians*57.295779513082320876798154814105);
         }
 
         public static float ToRadians(float degrees)
@@ -105,7 +105,7 @@ namespace Microsoft.Xna.Framework
             // This method uses double precission internally,
             // though it returns single float
             // Factor = pi / 180
-            return (float) (degrees * 0.017453292519943295769236907684886);
+            return (float) (degrees*0.017453292519943295769236907684886);
         }
     }
 }

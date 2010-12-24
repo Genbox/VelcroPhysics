@@ -35,6 +35,8 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
     public class DTSweepPointComparator : IComparer<TriangulationPoint>
     {
+        #region IComparer<TriangulationPoint> Members
+
         public int Compare(TriangulationPoint p1, TriangulationPoint p2)
         {
             if (p1.Y < p2.Y)
@@ -61,5 +63,7 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
                 }
             }
         }
+
+        #endregion
     }
 }

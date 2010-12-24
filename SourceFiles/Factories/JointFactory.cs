@@ -48,7 +48,8 @@ namespace FarseerPhysics.Factories
         /// <param name="bodyAnchor">The body anchor.</param>
         /// <param name="worldAnchor">The world anchor.</param>
         /// <returns></returns>
-        public static FixedRevoluteJoint CreateFixedRevoluteJoint(World world, Body body, Vector2 bodyAnchor, Vector2 worldAnchor)
+        public static FixedRevoluteJoint CreateFixedRevoluteJoint(World world, Body body, Vector2 bodyAnchor,
+                                                                  Vector2 worldAnchor)
         {
             FixedRevoluteJoint fixedRevoluteJoint = new FixedRevoluteJoint(body, bodyAnchor, worldAnchor);
             world.AddJoint(fixedRevoluteJoint);
@@ -68,7 +69,8 @@ namespace FarseerPhysics.Factories
         /// <returns></returns>
         public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localAnchor)
         {
-            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(localAnchor), bodyB.GetLocalPoint(localAnchor));
+            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(localAnchor),
+                                            bodyB.GetLocalPoint(localAnchor));
             return joint;
         }
 
@@ -87,7 +89,8 @@ namespace FarseerPhysics.Factories
             return joint;
         }
 
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorA,
+                                                Vector2 localAnchorB)
         {
             WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, localAnchorA, localAnchorB);
             world.AddJoint(weldJoint);
@@ -168,6 +171,7 @@ namespace FarseerPhysics.Factories
         #endregion
 
         #region Angle Joint
+
         /// <summary>
         /// Creates an angle joint.
         /// </summary>
@@ -196,18 +200,21 @@ namespace FarseerPhysics.Factories
 
             return angleJoint;
         }
+
         #endregion
 
         #region Distance Joint
 
-        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
+                                                        Vector2 anchorB)
         {
             DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB);
             world.AddJoint(distanceJoint);
             return distanceJoint;
         }
 
-        public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor, Vector2 worldAnchor)
+        public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor,
+                                                                  Vector2 worldAnchor)
         {
             FixedDistanceJoint distanceJoint = new FixedDistanceJoint(body, localAnchor, worldAnchor);
             world.AddJoint(distanceJoint);
@@ -218,7 +225,8 @@ namespace FarseerPhysics.Factories
 
         #region Friction Joint
 
-        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
+                                                        Vector2 anchorB)
         {
             FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchorA, anchorB);
             world.AddJoint(frictionJoint);
@@ -246,10 +254,12 @@ namespace FarseerPhysics.Factories
         #endregion
 
         #region Pulley Joint
-        
-        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
+
+        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA,
+                                                    Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
         {
-            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
+            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB,
+                                                      ratio);
             world.AddJoint(pulleyJoint);
             return pulleyJoint;
         }
@@ -258,7 +268,8 @@ namespace FarseerPhysics.Factories
 
         #region Slider Joint
 
-        public static SliderJoint CreateSliderJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, float minLength, float maxLength)
+        public static SliderJoint CreateSliderJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
+                                                    Vector2 anchorB, float minLength, float maxLength)
         {
             SliderJoint sliderJoint = new SliderJoint(bodyA, bodyB, anchorA, anchorB, minLength, maxLength);
             world.AddJoint(sliderJoint);

@@ -1,11 +1,137 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Controllers
 {
     public abstract class AbstractForceController : Controller
     {
+        #region DecayModes enum
+
+        /// <summary>
+        /// Modes for Decay. Actual Decay must be implemented in inheriting 
+        /// classes
+        /// </summary>
+        public enum DecayModes
+        {
+            None,
+            Step,
+            Linear,
+            InverseSquare,
+            Curve
+        }
+
+        #endregion
+
+        #region ForceTypes enum
+
+        /// <summary>
+        /// Forcetypes are used in the decay math to properly get the distance.
+        /// They are also used to draw a representation in DebugView
+        /// </summary>
+        public enum ForceTypes
+        {
+            Point,
+            Line,
+            Area
+        }
+
+        #endregion
+
+        #region TimingModes enum
+
+        /// <summary>
+        /// Timing Modes
+        /// Switched: Standard on/off mode using the baseclass enabled property
+        /// Triggered: When the Trigger() method is called the force is active 
+        /// for a specified Impulse Length
+        /// Curve: Still to be defined. The basic idea is having a Trigger 
+        /// combined with a curve for the strength
+        /// </summary>
+        public enum TimingModes
+        {
+            Switched,
+            Triggered,
+            Curve
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Curve to be used for Decay in Curve mode
+        /// </summary>
+        public Curve DecayCurve;
+
+        /// <summary>
+        /// The Forcetype of the instance
+        /// </summary>
+        public ForceTypes ForceType;
+
+        /// <summary>
+        /// Provided for reuse to provide Variation functionality in 
+        /// inheriting classes
+        /// </summary>
+        protected Random Randomize;
+
+        /// <summary>
+        /// Curve used by Curve Mode as an animated multiplier for the force 
+        /// strength.
+        /// Only positions between 0 and 1 are considered as that range is 
+        /// stretched to have ImpulseLength.
+        /// </summary>
+        public Curve StrengthCurve;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public AbstractForceController()
+            : base(ControllerType.AbstractForceController)
+        {
+            Enabled = true;
+
+            Strength = 1.0f;
+            Position = new Vector2(0, 0);
+            MaximumSpeed = 100.0f;
+            TimingMode = TimingModes.Switched;
+            ImpulseTime = 0.0f;
+            ImpulseLength = 1.0f;
+            Triggered = false;
+            StrengthCurve = new Curve();
+            Variation = 0.0f;
+            Randomize = new Random(1234);
+            DecayMode = DecayModes.None;
+            DecayCurve = new Curve();
+            DecayStart = 0.0f;
+            DecayEnd = 0.0f;
+
+            StrengthCurve.Keys.Add(new CurveKey(0, 5));
+            StrengthCurve.Keys.Add(new CurveKey(0.1f, 5));
+            StrengthCurve.Keys.Add(new CurveKey(0.2f, -4));
+            StrengthCurve.Keys.Add(new CurveKey(1f, 0));
+        }
+
+        /// <summary>
+        /// Overloaded Contstructor with supplying Timing Mode
+        /// </summary>
+        /// <param name="mode"></param>
+        public AbstractForceController(TimingModes mode)
+            : base(ControllerType.AbstractForceController)
+        {
+            TimingMode = mode;
+            switch (mode)
+            {
+                case TimingModes.Switched:
+                    Enabled = true;
+                    break;
+                case TimingModes.Triggered:
+                    Enabled = false;
+                    break;
+                case TimingModes.Curve:
+                    Enabled = false;
+                    break;
+            }
+        }
+
         /// <summary>
         /// Global Strength of the force to be applied
         /// </summary>
@@ -31,37 +157,6 @@ namespace FarseerPhysics.Controllers
         public float MaximumForce { get; set; }
 
         /// <summary>
-        /// Forcetypes are used in the decay math to properly get the distance.
-        /// They are also used to draw a representation in DebugView
-        /// </summary>
-        public enum ForceTypes
-        {
-            Point,
-            Line,
-            Area
-        }
-
-        /// <summary>
-        /// The Forcetype of the instance
-        /// </summary>
-        public ForceTypes ForceType;
-
-        /// <summary>
-        /// Timing Modes
-        /// Switched: Standard on/off mode using the baseclass enabled property
-        /// Triggered: When the Trigger() method is called the force is active 
-        /// for a specified Impulse Length
-        /// Curve: Still to be defined. The basic idea is having a Trigger 
-        /// combined with a curve for the strength
-        /// </summary>
-        public enum TimingModes
-        {
-            Switched,
-            Triggered,
-            Curve
-        }
-
-        /// <summary>
         /// Timing Mode of the force instance
         /// </summary>
         public TimingModes TimingMode { get; set; }
@@ -84,37 +179,10 @@ namespace FarseerPhysics.Controllers
         public bool Triggered { get; private set; }
 
         /// <summary>
-        /// Curve used by Curve Mode as an animated multiplier for the force 
-        /// strength.
-        /// Only positions between 0 and 1 are considered as that range is 
-        /// stretched to have ImpulseLength.
-        /// </summary>
-        public Curve StrengthCurve;
-
-        /// <summary>
         /// Variation of the force applied to each body affected
         /// !! Must be used in inheriting classes properly !!
         /// </summary>
         public float Variation { get; set; }
-
-        /// <summary>
-        /// Provided for reuse to provide Variation functionality in 
-        /// inheriting classes
-        /// </summary>
-        protected Random Randomize;
-
-        /// <summary>
-        /// Modes for Decay. Actual Decay must be implemented in inheriting 
-        /// classes
-        /// </summary>
-        public enum DecayModes
-        {
-            None,
-            Step,
-            Linear,
-            InverseSquare,
-            Curve
-        }
 
         /// <summary>
         /// See DecayModes
@@ -130,11 +198,6 @@ namespace FarseerPhysics.Controllers
         /// Maximum distance a force should be applied
         /// </summary>
         public float DecayEnd { get; set; }
-
-        /// <summary>
-        /// Curve to be used for Decay in Curve mode
-        /// </summary>
-        public Curve DecayCurve;
 
         /// <summary>
         /// Calculate the Decay for a given body. Meant to ease force 
@@ -167,14 +230,14 @@ namespace FarseerPhysics.Controllers
                             return 1.0f;
                         if (distance > DecayEnd)
                             return 0.0f;
-                        return (DecayEnd - DecayStart / distance - DecayStart);
+                        return (DecayEnd - DecayStart/distance - DecayStart);
                     }
                 case DecayModes.InverseSquare:
                     {
                         if (distance < DecayStart)
                             return 1.0f;
                         else
-                            return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
+                            return 1.0f/((distance - DecayStart)*(distance - DecayStart));
                     }
                 case DecayModes.Curve:
                     {
@@ -185,60 +248,6 @@ namespace FarseerPhysics.Controllers
                     }
                 default:
                     return 1.0f;
-            }
-
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public AbstractForceController()
-            : base(ControllerType.AbstractForceController)
-        {
-
-            Enabled = true;
-
-            Strength = 1.0f;
-            Position = new Vector2(0, 0);
-            MaximumSpeed = 100.0f;
-            TimingMode = TimingModes.Switched;
-            ImpulseTime = 0.0f;
-            ImpulseLength = 1.0f;
-            Triggered = false;
-            StrengthCurve = new Curve();
-            Variation = 0.0f;
-            Randomize = new Random(1234);
-            DecayMode = DecayModes.None;
-            DecayCurve = new Curve();
-            DecayStart = 0.0f;
-            DecayEnd = 0.0f;
-
-            StrengthCurve.Keys.Add(new CurveKey(0, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.1f, 5));
-            StrengthCurve.Keys.Add(new CurveKey(0.2f, -4));
-            StrengthCurve.Keys.Add(new CurveKey(1f, 0));
-
-        }
-
-        /// <summary>
-        /// Overloaded Contstructor with supplying Timing Mode
-        /// </summary>
-        /// <param name="mode"></param>
-        public AbstractForceController(TimingModes mode)
-            : base(ControllerType.AbstractForceController)
-        {
-            TimingMode = mode;
-            switch (mode)
-            {
-                case TimingModes.Switched:
-                    Enabled = true;
-                    break;
-                case TimingModes.Triggered:
-                    Enabled = false;
-                    break;
-                case TimingModes.Curve:
-                    Enabled = false;
-                    break;
             }
         }
 
@@ -290,7 +299,7 @@ namespace FarseerPhysics.Controllers
                         {
                             if (ImpulseTime < ImpulseLength)
                             {
-                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
+                                ApplyForce(dt, Strength*StrengthCurve.Evaluate(ImpulseTime));
                                 ImpulseTime += dt;
                             }
                             else
@@ -300,7 +309,6 @@ namespace FarseerPhysics.Controllers
                         }
                         break;
                     }
-
             }
         }
 
@@ -311,6 +319,5 @@ namespace FarseerPhysics.Controllers
         /// <param name="dt"></param>
         /// <param name="strength">The strength</param>
         public abstract void ApplyForce(float dt, float strength);
-
     }
 }

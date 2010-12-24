@@ -71,9 +71,9 @@ namespace FarseerPhysics.Common
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
+                int j = (i + 1)%Count;
+                area += this[i].X*this[j].Y;
+                area -= this[i].Y*this[j].X;
             }
             area /= 2.0f;
             return area;
@@ -90,9 +90,9 @@ namespace FarseerPhysics.Common
 
             for (i = 0; i < Count; i++)
             {
-                int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
+                int j = (i + 1)%Count;
+                area += this[i].X*this[j].Y;
+                area -= this[i].Y*this[j].X;
             }
             area /= 2.0f;
             return (area < 0 ? -area : area);
@@ -109,7 +109,7 @@ namespace FarseerPhysics.Common
             Vector2 c = Vector2.Zero;
             float area = 0.0f;
 
-            const float inv3 = 1.0f / 3.0f;
+            const float inv3 = 1.0f/3.0f;
             Vector2 pRef = Vector2.Zero;
             for (int i = 0; i < Count; ++i)
             {
@@ -123,15 +123,15 @@ namespace FarseerPhysics.Common
 
                 float D = MathUtils.Cross(e1, e2);
 
-                float triangleArea = 0.5f * D;
+                float triangleArea = 0.5f*D;
                 area += triangleArea;
 
                 // Area weighted centroid
-                c += triangleArea * inv3 * (p1 + p2 + p3);
+                c += triangleArea*inv3*(p1 + p2 + p3);
             }
 
             // Centroid
-            c *= 1.0f / area;
+            c *= 1.0f/area;
             return c;
         }
 
@@ -143,13 +143,13 @@ namespace FarseerPhysics.Common
         {
             float area = GetSignedArea();
 
-            double radiusSqrd = (double)area / MathHelper.Pi;
+            double radiusSqrd = (double) area/MathHelper.Pi;
             if (radiusSqrd < 0)
             {
                 radiusSqrd *= -1;
             }
 
-            return (float)Math.Sqrt(radiusSqrd);
+            return (float) Math.Sqrt(radiusSqrd);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace FarseerPhysics.Common
                 float dx1 = this[upper].X - this[middle].X;
                 float dy1 = this[upper].Y - this[middle].Y;
 
-                float cross = dx0 * dy1 - dx1 * dy0;
+                float cross = dx0*dy1 - dx1*dy0;
                 // Cross product should have same sign
                 // for each vertex if poly is convex.
                 bool newIsP = (cross >= 0) ? true : false;
@@ -325,13 +325,13 @@ namespace FarseerPhysics.Common
                     }
                 }
 
-                int j = (i + 1) % Count;
+                int j = (i + 1)%Count;
                 Vector2 iToj = this[j] - this[i];
                 Vector2 iTojNormal = new Vector2(iToj.Y, -iToj.X);
 
                 // i is the first vertex and j is the second
-                int startK = (j + 1) % Count;
-                int endK = (i - 1 + Count) % Count;
+                int startK = (j + 1)%Count;
+                int endK = (i - 1 + Count)%Count;
                 endK += startK < endK ? 0 : startK + 1;
                 int k = startK;
                 Vector2 iTok = this[k] - this[i];
@@ -340,13 +340,14 @@ namespace FarseerPhysics.Common
                 ++k;
                 for (; k <= endK; ++k)
                 {
-                    int modK = k % Count;
+                    int modK = k%Count;
                     iTok = this[modK] - this[i];
                     if (onLeftSide != Vector2.Dot(iTok, iTojNormal) >= 0)
                     {
                         Vector2 prevKtoK = this[modK] - prevK;
                         Vector2 prevKtoKNormal = new Vector2(prevKtoK.Y, -prevKtoK.X);
-                        if ((Vector2.Dot(this[i] - prevK, prevKtoKNormal) >= 0) != (Vector2.Dot(this[j] - prevK, prevKtoKNormal) >= 0))
+                        if ((Vector2.Dot(this[i] - prevK, prevKtoKNormal) >= 0) !=
+                            (Vector2.Dot(this[j] - prevK, prevKtoKNormal) >= 0))
                         {
                             return true;
                         }
@@ -412,7 +413,7 @@ namespace FarseerPhysics.Common
                 //Parallel sides check
                 float cross = MathUtils.Cross(normals[iminus], normals[i]);
                 cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
-                float angle = (float)Math.Asin(cross);
+                float angle = (float) Math.Asin(cross);
                 if (angle <= Settings.AngularSlop)
                 {
                     error = 4;
@@ -422,7 +423,7 @@ namespace FarseerPhysics.Common
                 //Too skinny check
                 for (int j = 0; j < Count; ++j)
                 {
-                    if (j == i || j == (i + 1) % Count)
+                    if (j == i || j == (i + 1)%Count)
                     {
                         continue;
                     }
@@ -507,7 +508,7 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public Vertices TraceEdge(Vertices verts)
         {
-            PolyNode[] nodes = new PolyNode[verts.Count * verts.Count];
+            PolyNode[] nodes = new PolyNode[verts.Count*verts.Count];
             //overkill, but sufficient (order of mag. is right)
             int nNodes = 0;
 
@@ -573,7 +574,7 @@ namespace FarseerPhysics.Common
                         }
                     }
                 }
-            SkipOut:
+                SkipOut:
                 ++counter;
             }
 
@@ -590,7 +591,7 @@ namespace FarseerPhysics.Common
                     {
                         if (nodes[j].NConnected == 0) continue;
                         Vector2 diff = nodes[i].Position - nodes[j].Position;
-                        if (diff.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
+                        if (diff.LengthSquared() <= Settings.Epsilon*Settings.Epsilon)
                         {
                             if (nActive <= 3)
                                 return new Vertices();
@@ -641,7 +642,7 @@ namespace FarseerPhysics.Common
             }
 
             Vector2 origDir = new Vector2(1.0f, 0.0f);
-            Vector2[] resultVecs = new Vector2[4 * nNodes];
+            Vector2[] resultVecs = new Vector2[4*nNodes];
             // nodes may be visited more than once, unfortunately - change to growable array!
             int nResultVecs = 0;
             PolyNode currentNode = nodes[minYIndex];
@@ -665,7 +666,7 @@ namespace FarseerPhysics.Common
             ++nResultVecs;
             while (nextNode != startNode)
             {
-                if (nResultVecs > 4 * nNodes)
+                if (nResultVecs > 4*nNodes)
                 {
                     Debug.Assert(false);
                 }
@@ -780,7 +781,7 @@ namespace FarseerPhysics.Common
                     Vector2 testDir = Connected[i].Position - Position;
                     float testLengthSqr = testDir.LengthSquared();
                     testDir.Normalize();
-                    Debug.Assert(testLengthSqr >= Settings.Epsilon * Settings.Epsilon);
+                    Debug.Assert(testLengthSqr >= Settings.Epsilon*Settings.Epsilon);
                     float myCos = Vector2.Dot(inDir, testDir);
                     float mySin = MathUtils.Cross(inDir, testDir);
                     if (result != null)

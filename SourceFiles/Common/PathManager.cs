@@ -150,7 +150,7 @@ namespace FarseerPhysics.Factories
         {
             Vector2 destination = path.GetPosition(time);
             Vector2 positionDelta = body.Position - destination;
-            Vector2 velocity = (positionDelta / timeStep) * strength;
+            Vector2 velocity = (positionDelta/timeStep)*strength;
 
             body.LinearVelocity = -velocity;
         }
@@ -164,9 +164,10 @@ namespace FarseerPhysics.Factories
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA,
-                                                         Vector2 localAnchorB, bool connectFirstAndLast,
-                                                         bool collideConnected)
+        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies,
+                                                                        Vector2 localAnchorA,
+                                                                        Vector2 localAnchorB, bool connectFirstAndLast,
+                                                                        bool collideConnected)
         {
             List<RevoluteJoint> joints = new List<RevoluteJoint>(bodies.Count + 1);
 
@@ -203,14 +204,16 @@ namespace FarseerPhysics.Factories
         /// <param name="maxLength">Maximum length of the slider joint.</param>
         /// <returns></returns>
         public static List<SliderJoint> AttachBodiesWithSliderJoint(World world, List<Body> bodies, Vector2 localAnchorA,
-                                                         Vector2 localAnchorB, bool connectFirstAndLast,
-                                                         bool collideConnected, float minLength, float maxLength)
+                                                                    Vector2 localAnchorB, bool connectFirstAndLast,
+                                                                    bool collideConnected, float minLength,
+                                                                    float maxLength)
         {
             List<SliderJoint> joints = new List<SliderJoint>(bodies.Count + 1);
 
             for (int i = 1; i < bodies.Count; i++)
             {
-                SliderJoint joint = new SliderJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB, minLength, maxLength);
+                SliderJoint joint = new SliderJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB, minLength,
+                                                    maxLength);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
                 joints.Add(joint);
@@ -218,7 +221,8 @@ namespace FarseerPhysics.Factories
 
             if (connectFirstAndLast)
             {
-                SliderJoint lastjoint = new SliderJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB, minLength, maxLength);
+                SliderJoint lastjoint = new SliderJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB,
+                                                        minLength, maxLength);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
                 joints.Add(lastjoint);

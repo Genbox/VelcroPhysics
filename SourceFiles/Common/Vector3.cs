@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 /*
 MIT License
@@ -228,9 +228,9 @@ namespace Microsoft.Xna.Framework
 
         public static void Cross(ref Vector3 vector1, ref Vector3 vector2, out Vector3 result)
         {
-            result = new Vector3(vector1.Y * vector2.Z - vector2.Y * vector1.Z,
-                                 -(vector1.X * vector2.Z - vector2.X * vector1.Z),
-                                 vector1.X * vector2.Y - vector2.X * vector1.Y);
+            result = new Vector3(vector1.Y*vector2.Z - vector2.Y*vector1.Z,
+                                 -(vector1.X*vector2.Z - vector2.X*vector1.Z),
+                                 vector1.X*vector2.Y - vector2.X*vector1.Y);
         }
 
         public static float Distance(Vector3 vector1, Vector3 vector2)
@@ -255,9 +255,9 @@ namespace Microsoft.Xna.Framework
 
         public static void DistanceSquared(ref Vector3 value1, ref Vector3 value2, out float result)
         {
-            result = (value1.X - value2.X) * (value1.X - value2.X) +
-                     (value1.Y - value2.Y) * (value1.Y - value2.Y) +
-                     (value1.Z - value2.Z) * (value1.Z - value2.Z);
+            result = (value1.X - value2.X)*(value1.X - value2.X) +
+                     (value1.Y - value2.Y)*(value1.Y - value2.Y) +
+                     (value1.Z - value2.Z)*(value1.Z - value2.Z);
         }
 
         public static Vector3 Divide(Vector3 value1, Vector3 value2)
@@ -270,7 +270,7 @@ namespace Microsoft.Xna.Framework
 
         public static Vector3 Divide(Vector3 value1, float value2)
         {
-            float factor = 1 / value2;
+            float factor = 1/value2;
             value1.X *= factor;
             value1.Y *= factor;
             value1.Z *= factor;
@@ -279,27 +279,27 @@ namespace Microsoft.Xna.Framework
 
         public static void Divide(ref Vector3 value1, float divisor, out Vector3 result)
         {
-            float factor = 1 / divisor;
-            result.X = value1.X * factor;
-            result.Y = value1.Y * factor;
-            result.Z = value1.Z * factor;
+            float factor = 1/divisor;
+            result.X = value1.X*factor;
+            result.Y = value1.Y*factor;
+            result.Z = value1.Z*factor;
         }
 
         public static void Divide(ref Vector3 value1, ref Vector3 value2, out Vector3 result)
         {
-            result.X = value1.X / value2.X;
-            result.Y = value1.Y / value2.Y;
-            result.Z = value1.Z / value2.Z;
+            result.X = value1.X/value2.X;
+            result.Y = value1.Y/value2.Y;
+            result.Z = value1.Z/value2.Z;
         }
 
         public static float Dot(Vector3 vector1, Vector3 vector2)
         {
-            return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+            return vector1.X*vector2.X + vector1.Y*vector2.Y + vector1.Z*vector2.Z;
         }
 
         public static void Dot(ref Vector3 vector1, ref Vector3 vector2, out float result)
         {
-            result = vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+            result = vector1.X*vector2.X + vector1.Y*vector2.Y + vector1.Z*vector2.Z;
         }
 
         public override bool Equals(object obj)
@@ -412,16 +412,16 @@ namespace Microsoft.Xna.Framework
 
         public static void Multiply(ref Vector3 value1, float scaleFactor, out Vector3 result)
         {
-            result.X = value1.X * scaleFactor;
-            result.Y = value1.Y * scaleFactor;
-            result.Z = value1.Z * scaleFactor;
+            result.X = value1.X*scaleFactor;
+            result.Y = value1.Y*scaleFactor;
+            result.Z = value1.Z*scaleFactor;
         }
 
         public static void Multiply(ref Vector3 value1, ref Vector3 value2, out Vector3 result)
         {
-            result.X = value1.X * value2.X;
-            result.Y = value1.Y * value2.Y;
-            result.Z = value1.Z * value2.Z;
+            result.X = value1.X*value2.X;
+            result.Y = value1.Y*value2.Y;
+            result.Z = value1.Z*value2.Z;
         }
 
         public static Vector3 Negate(Vector3 value)
@@ -450,10 +450,10 @@ namespace Microsoft.Xna.Framework
         {
             float factor;
             Distance(ref value, ref zero, out factor);
-            factor = 1f / factor;
-            result.X = value.X * factor;
-            result.Y = value.Y * factor;
-            result.Z = value.Z * factor;
+            factor = 1f/factor;
+            result.X = value.X*factor;
+            result.Y = value.Y*factor;
+            result.Z = value.Z*factor;
         }
 
         public static Vector3 Reflect(Vector3 vector, Vector3 normal)
@@ -466,9 +466,9 @@ namespace Microsoft.Xna.Framework
         public static void Reflect(ref Vector3 vector, ref Vector3 normal, out Vector3 result)
         {
             float dot = Dot(vector, normal);
-            result.X = vector.X - ((2f * dot) * normal.X);
-            result.Y = vector.Y - ((2f * dot) * normal.Y);
-            result.Z = vector.Z - ((2f * dot) * normal.Z);
+            result.X = vector.X - ((2f*dot)*normal.X);
+            result.Y = vector.Y - ((2f*dot)*normal.Y);
+            result.Z = vector.Z - ((2f*dot)*normal.Z);
         }
 
         public static Vector3 SmoothStep(Vector3 value1, Vector3 value2, float amount)
@@ -525,9 +525,9 @@ namespace Microsoft.Xna.Framework
         {
             result =
                 new Vector3(
-                    (position.X * matrix.M11) + (position.Y * matrix.M21) + (position.Z * matrix.M31) + matrix.M41,
-                    (position.X * matrix.M12) + (position.Y * matrix.M22) + (position.Z * matrix.M32) + matrix.M42,
-                    (position.X * matrix.M13) + (position.Y * matrix.M23) + (position.Z * matrix.M33) + matrix.M43);
+                    (position.X*matrix.M11) + (position.Y*matrix.M21) + (position.Z*matrix.M31) + matrix.M41,
+                    (position.X*matrix.M12) + (position.Y*matrix.M22) + (position.Z*matrix.M32) + matrix.M42,
+                    (position.X*matrix.M13) + (position.Y*matrix.M23) + (position.Z*matrix.M33) + matrix.M43);
         }
 
         public static void Transform(Vector3[] sourceArray, ref Matrix matrix, Vector3[] destinationArray)
@@ -560,9 +560,9 @@ namespace Microsoft.Xna.Framework
 
         public static void TransformNormal(ref Vector3 normal, ref Matrix matrix, out Vector3 result)
         {
-            result = new Vector3((normal.X * matrix.M11) + (normal.Y * matrix.M21) + (normal.Z * matrix.M31),
-                                 (normal.X * matrix.M12) + (normal.Y * matrix.M22) + (normal.Z * matrix.M32),
-                                 (normal.X * matrix.M13) + (normal.Y * matrix.M23) + (normal.Z * matrix.M33));
+            result = new Vector3((normal.X*matrix.M11) + (normal.Y*matrix.M21) + (normal.Z*matrix.M31),
+                                 (normal.X*matrix.M12) + (normal.Y*matrix.M22) + (normal.Z*matrix.M32),
+                                 (normal.X*matrix.M13) + (normal.Y*matrix.M23) + (normal.Z*matrix.M33));
         }
 
         #endregion Public methods
@@ -637,7 +637,7 @@ namespace Microsoft.Xna.Framework
 
         public static Vector3 operator /(Vector3 value, float divider)
         {
-            float factor = 1 / divider;
+            float factor = 1/divider;
             value.X *= factor;
             value.Y *= factor;
             value.Z *= factor;

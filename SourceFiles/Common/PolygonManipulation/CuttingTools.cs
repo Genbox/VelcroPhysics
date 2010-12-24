@@ -43,7 +43,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 newPolygon[i] = new Vertices(vertices.Count);
             }
 
-            int[] cutAdded = { -1, -1 };
+            int[] cutAdded = {-1, -1};
             int last = -1;
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -104,7 +104,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
                 offset.Normalize();
 
-                newPolygon[n][cutAdded[n]] += splitSize * offset;
+                newPolygon[n][cutAdded[n]] += splitSize*offset;
 
                 if (cutAdded[n] < newPolygon[n].Count - 2)
                 {
@@ -116,7 +116,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
                 offset.Normalize();
 
-                newPolygon[n][cutAdded[n] + 1] += splitSize * offset;
+                newPolygon[n][cutAdded[n] + 1] += splitSize*offset;
             }
 
             first = newPolygon[0];
@@ -226,7 +226,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
                     // Your polygon is non-convex (it has an indentation) or
                     // has colinear edges.
-                    float s = edge.X * r.Y - edge.Y * r.X;
+                    float s = edge.X*r.Y - edge.Y*r.X;
 
                     if (s < 0.0f)
                         return false;

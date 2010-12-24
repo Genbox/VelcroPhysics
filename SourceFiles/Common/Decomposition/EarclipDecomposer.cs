@@ -70,7 +70,7 @@ namespace FarseerPhysics.Common.Decomposition
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys, float tolerance)
         {
             if (vertices.Count < 3)
-                return new List<Vertices> { vertices };
+                return new List<Vertices> {vertices};
 
             List<Triangle> triangulated;
 
@@ -175,7 +175,7 @@ namespace FarseerPhysics.Common.Decomposition
 
                     covered[currTri] = true;
                     int index = 0;
-                    for (int i = 0; i < 2 * triangulated.Count; ++i, ++index)
+                    for (int i = 0; i < 2*triangulated.Count; ++i, ++index)
                     {
                         while (index >= triangulated.Count) index -= triangulated.Count;
                         if (covered[index])
@@ -441,7 +441,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns></returns>
         private static int Remainder(int x, int modulus)
         {
-            int rem = x % modulus;
+            int rem = x%modulus;
             while (rem < 0)
             {
                 rem += modulus;
@@ -575,7 +575,7 @@ namespace FarseerPhysics.Common.Decomposition
                 dx1 = xv[i + 1] - xv[i];
                 dy1 = yv[i + 1] - yv[i];
             }
-            float cross = dx0 * dy1 - dx1 * dy0;
+            float cross = dx0*dy1 - dx1*dy0;
             if (cross > 0)
                 return false;
             Triangle myTri = new Triangle(xv[i], yv[i], xv[upper], yv[upper],
@@ -605,7 +605,7 @@ namespace FarseerPhysics.Common.Decomposition
             float dx2 = x3 - x1;
             float dy1 = y2 - y1;
             float dy2 = y3 - y1;
-            float cross = dx1 * dy2 - dx2 * dy1;
+            float cross = dx1*dy2 - dx2*dy1;
             bool ccw = (cross > 0);
             if (ccw)
             {
@@ -654,14 +654,14 @@ namespace FarseerPhysics.Common.Decomposition
             float vx0 = X[2] - X[0];
             float vy0 = Y[2] - Y[0];
 
-            float dot00 = vx0 * vx0 + vy0 * vy0;
-            float dot01 = vx0 * vx1 + vy0 * vy1;
-            float dot02 = vx0 * vx2 + vy0 * vy2;
-            float dot11 = vx1 * vx1 + vy1 * vy1;
-            float dot12 = vx1 * vx2 + vy1 * vy2;
-            float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
-            float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-            float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+            float dot00 = vx0*vx0 + vy0*vy0;
+            float dot01 = vx0*vx1 + vy0*vy1;
+            float dot02 = vx0*vx2 + vy0*vy2;
+            float dot11 = vx1*vx1 + vy1*vy1;
+            float dot12 = vx1*vx2 + vy1*vy2;
+            float invDenom = 1.0f/(dot00*dot11 - dot01*dot01);
+            float u = (dot11*dot02 - dot01*dot12)*invDenom;
+            float v = (dot00*dot12 - dot01*dot02)*invDenom;
 
             return ((u > 0) && (v > 0) && (u + v < 1));
         }
