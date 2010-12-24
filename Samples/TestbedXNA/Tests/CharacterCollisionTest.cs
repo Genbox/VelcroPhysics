@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
-            LoopShape loopShape = new LoopShape(vertices,0);
+            LoopShape loopShape = new LoopShape(vertices, 0);
             ground.Body.CreateFixture(loopShape);
 
             // Edge loop.
@@ -103,12 +103,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Hexagon character
             float angle = 0.0f;
-            const float delta = Settings.Pi / 3.0f;
+            const float delta = Settings.Pi/3.0f;
             vertices = new Vertices(6);
 
             for (int i = 0; i < 6; ++i)
             {
-                vertices.Add(new Vector2(0.5f * (float)Math.Cos(angle), 0.5f * (float)Math.Sin(angle)));
+                vertices.Add(new Vector2(0.5f*(float) Math.Cos(angle), 0.5f*(float) Math.Sin(angle)));
                 angle += delta;
             }
 

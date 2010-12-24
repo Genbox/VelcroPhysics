@@ -39,7 +39,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Pinball", CreateFcn = PinballTest.Create},
                 new TestEntry {Name = "Bullet Test", CreateFcn = BulletTest.Create},
                 new TestEntry {Name = "Continuous Test", CreateFcn = ContinuousTest.Create},
-
                 //Can crash the application on Xbox360
 #if (!XBOX360)
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
@@ -76,7 +75,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
-
                 //FPE tests
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
@@ -92,7 +90,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Sphere benchmark", CreateFcn = CircleBenchmarkTest.Create},
                 new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmark.Create},
                 new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
-
                 // Forces tests
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
                 new TestEntry {Name = null, CreateFcn = null}

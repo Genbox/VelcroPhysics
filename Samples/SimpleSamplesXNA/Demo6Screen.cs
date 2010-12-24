@@ -48,7 +48,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             for (int i = 0; i < _spiders.Length; i++)
             {
-                _spiders[i] = new Spider(World, new Vector2(0, ((i + 1) * 3) - 7));
+                _spiders[i] = new Spider(World, new Vector2(0, ((i + 1)*3) - 7));
             }
         }
 
@@ -67,13 +67,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void HandleGamePadInput(InputHelper input)
         {
-            Vector2 force = 1000 * input.CurrentGamepadState.ThumbSticks.Left;
+            Vector2 force = 1000*input.CurrentGamepadState.ThumbSticks.Left;
             _agent.Body.ApplyForce(force);
 
-            float rotation = 400 * input.CurrentGamepadState.Triggers.Left;
+            float rotation = 400*input.CurrentGamepadState.Triggers.Left;
             _agent.Body.ApplyTorque(rotation);
 
-            rotation = -400 * input.CurrentGamepadState.Triggers.Right;
+            rotation = -400*input.CurrentGamepadState.Triggers.Right;
             _agent.Body.ApplyTorque(rotation);
 
             base.HandleGamePadInput(input);

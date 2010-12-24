@@ -14,6 +14,12 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 {
     internal class Demo1Screen : PhysicsGameScreen, IDemoScreen
     {
+        private BasicEffect Effect;
+        private List<Fixture> _compund;
+        private Vector2 _origin;
+        private Texture2D _polygonTexture;
+        private Vector2 _scale;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -29,12 +35,6 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
         #endregion
 
-        private Texture2D _polygonTexture;
-        private List<Fixture> _compund;
-        private Vector2 _origin;
-        private Vector2 _scale;
-        private BasicEffect Effect;
-
         public override void LoadContent()
         {
             World = new World(Vector2.Zero);
@@ -47,13 +47,14 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Texture");
 
             //Create an array to hold the data from the texture
-            uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
+            uint[] data = new uint[_polygonTexture.Width*_polygonTexture.Height];
 
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            Vertices textureVertices = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, false);
+            Vertices textureVertices = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height,
+                                                                  false);
 
             //The tool return vertices as they were found in the texture.
             //We need to find the real center (centroid) of the vertices for 2 reasons:
@@ -74,7 +75,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             //Now we need to scale the vertices (result is in pixels, we use meters)
             //At the same time we flip the y-axis.
             _scale = new Vector2(0.05f, -0.05f);
-            
+
             foreach (Vertices vertices in list)
             {
                 vertices.Scale(ref _scale);
@@ -95,7 +96,8 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             Effect.Projection = Camera2D.Projection;
             Effect.View = Camera2D.View;
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, Effect);
-            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund[0].Body.Position, null, Color.Tomato, _compund[0].Body.Rotation, _origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund[0].Body.Position, null, Color.Tomato,
+                                           _compund[0].Body.Rotation, _origin, _scale, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

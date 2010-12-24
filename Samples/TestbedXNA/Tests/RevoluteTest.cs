@@ -58,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(shape);
 
                 _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
-                _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
+                _fixedJoint.MotorSpeed = 0.25f*Settings.Pi;
                 _fixedJoint.MaxMotorTorque = 5000.0f;
                 _fixedJoint.MotorEnabled = true;
                 World.AddJoint(_fixedJoint);
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _joint = new RevoluteJoint(body, fixtures[0].Body, body.GetLocalPoint(fixtures[0].Body.Position),
                                            Vector2.Zero);
-                _joint.MotorSpeed = 1.0f * Settings.Pi;
+                _joint.MotorSpeed = 1.0f*Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
                 _joint.CollideConnected = false;

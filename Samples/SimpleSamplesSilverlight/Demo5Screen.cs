@@ -91,7 +91,6 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             _stars.CollidesWith = Category.Cat3 | Category.Cat4;
 
             base.LoadContent();
-
         }
     }
 }

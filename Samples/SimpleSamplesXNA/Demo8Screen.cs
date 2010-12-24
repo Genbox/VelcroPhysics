@@ -35,10 +35,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
             base.LoadContent();
 
             DebugMaterial material = new DebugMaterial(MaterialType.Waves)
-            {
-                Color = Color.Chocolate,
-                Scale = 4f
-            };
+                                         {
+                                             Color = Color.Chocolate,
+                                             Scale = 4f
+                                         };
 
             _circle = new Fixture[6];
             Vector2 _position = new Vector2(-14f, 0f);

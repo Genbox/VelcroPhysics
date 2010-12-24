@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    class SimpleWindForceTest:Test
+    internal class SimpleWindForceTest : Test
     {
         private SimpleWindForce _simpleWind;
 
@@ -37,7 +37,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int y = 0; y < countY; y++)
                 {
-                    Fixture currentFixture = FixtureFactory.CreateRectangle(World, 1f, 1f, 5f, new Vector2(x * 2 - countX, y * 2 + 5));
+                    Fixture currentFixture = FixtureFactory.CreateRectangle(World, 1f, 1f, 5f,
+                                                                            new Vector2(x*2 - countX, y*2 + 5));
                     //Fixture currentFixture = FixtureFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
                     currentFixture.Body.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
@@ -80,9 +81,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "SimpleWindForce | Mouse: Direction | Left-Click: Position | W/S: Variation");
+            DebugView.DrawString(50, TextLine,
+                                 "SimpleWindForce | Mouse: Direction | Left-Click: Position | W/S: Variation");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Wind Strength:"+_simpleWind.Strength.ToString());
+            DebugView.DrawString(50, TextLine, "Wind Strength:" + _simpleWind.Strength.ToString());
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Variation:" + _simpleWind.Variation.ToString());
             //DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
@@ -114,12 +116,12 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Mouse(MouseState state, MouseState oldState)
         {
             //base.Mouse(state, oldState);
-            Vector2 MouseWorld =GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 MouseWorld = GameInstance.ConvertScreenToWorld(state.X, state.Y);
             //SimpleWind.Position = MouseWorld;
-            _simpleWind.Direction = MouseWorld-_simpleWind.Position;
+            _simpleWind.Direction = MouseWorld - _simpleWind.Position;
             _simpleWind.Strength = _strength;
 
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton==ButtonState.Released) 
+            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
                 _simpleWind.Position = MouseWorld;
                 _simpleWind.Direction = MouseWorld + new Vector2(0, 1);

@@ -90,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vector2 position = _character.Body.Position;
 
-            if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
+            if (position.Y < _top + _radius - 3.0f*Settings.LinearSlop)
             {
                 contact.Enabled = false;
             }

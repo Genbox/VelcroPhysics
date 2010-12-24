@@ -57,10 +57,10 @@ namespace FarseerPhysics.SimpleSamplesXNA
             vertices.Add(rect2);
 
             DebugMaterial material = new DebugMaterial(MaterialType.Circles)
-            {
-                Color = Color.Gold,
-                Scale = 2.5f
-            };
+                                         {
+                                             Color = Color.Gold,
+                                             Scale = 2.5f
+                                         };
 
             _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1, material);
             _rectangles[0].Body.BodyType = BodyType.Dynamic;
@@ -68,13 +68,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void HandleGamePadInput(InputHelper input)
         {
-            Vector2 force = 100 * input.CurrentGamepadState.ThumbSticks.Left;
+            Vector2 force = 100*input.CurrentGamepadState.ThumbSticks.Left;
             _rectangles[0].Body.ApplyForce(force);
 
-            float rotation = 200 * input.CurrentGamepadState.Triggers.Left;
+            float rotation = 200*input.CurrentGamepadState.Triggers.Left;
             _rectangles[0].Body.ApplyTorque(rotation);
 
-            rotation = -200 * input.CurrentGamepadState.Triggers.Right;
+            rotation = -200*input.CurrentGamepadState.Triggers.Right;
             _rectangles[0].Body.ApplyTorque(rotation);
 
             base.HandleGamePadInput(input);

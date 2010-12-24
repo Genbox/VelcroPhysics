@@ -11,7 +11,8 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
     /// </summary>
     public class FarseerPhysicsGame : Game
     {
-        public FarseerPhysicsGame(UserControl userControl, Canvas drawingCanvas, Canvas debugCanvas, TextBlock txtFPS, TextBlock txtDebug)
+        public FarseerPhysicsGame(UserControl userControl, Canvas drawingCanvas, Canvas debugCanvas, TextBlock txtFPS,
+                                  TextBlock txtDebug)
             : base(userControl, drawingCanvas, debugCanvas, txtDebug)
         {
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
@@ -41,7 +42,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo5.GetTitle(), demo5);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo6.GetTitle(), demo6);
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
-            
+
             ScreenManager.GoToMainMenu();
 
             //ScreenManager.AddScreen(demo7);

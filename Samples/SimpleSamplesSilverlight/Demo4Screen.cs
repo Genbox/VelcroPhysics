@@ -75,6 +75,5 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             sb.AppendLine("  -Hold down left button and drag");
             return sb.ToString();
         }
-
     }
 }

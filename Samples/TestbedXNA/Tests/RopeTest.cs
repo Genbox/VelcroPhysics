@@ -47,8 +47,8 @@ namespace FarseerPhysics.TestBed.Tests
     public class RopeTest : Test
     {
         private const int Count = 10;
-        RopeJoint _rj;
-        bool _useRopeJoint = true;
+        private RopeJoint _rj;
+        private bool _useRopeJoint = true;
 
         private RopeTest()
         {
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + 1.0f * i, y);
+                    body.Position = new Vector2(0.5f + 1.0f*i, y);
 
                     if (i == Count - 1)
                     {
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                         fixture.Friction = 0.2f;
                         fixture.CollisionFilter.CollisionCategories = Category.Cat2;
                         fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
-                        body.Position = new Vector2(1.0f * i, y);
+                        body.Position = new Vector2(1.0f*i, y);
                         body.AngularDamping = 0.4f;
                     }
                     else
@@ -96,7 +96,8 @@ namespace FarseerPhysics.TestBed.Tests
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor), body.GetLocalPoint(ref anchor));
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor),
+                                                         body.GetLocalPoint(ref anchor));
                     jd.CollideConnected = false;
 
                     World.AddJoint(jd);

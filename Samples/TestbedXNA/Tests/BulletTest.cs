@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
             _body = FixtureFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f)).Body;
             _body.Position = new Vector2(0, 4);
             _body.BodyType = BodyType.Dynamic;
-            
+
             //Bullet
             _bullet = FixtureFactory.CreateRectangle(World, 0.5f, 0.5f, 100).Body;
             _bullet.IsBullet = true;
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (Distance.GJKCalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}",
-                                     Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls,
+                                     Distance.GJKCalls, Distance.GJKIters/(float) Distance.GJKCalls,
                                      Distance.GJKMaxIters);
                 TextLine += 15;
             }
@@ -72,23 +72,23 @@ namespace FarseerPhysics.TestBed.Tests
             if (TimeOfImpact.TOICalls > 0)
             {
                 DebugView.DrawString(50, TextLine, "TOI calls = {0:n}, Ave TOI iters = {1:n}, Max TOI iters = {2:n}",
-                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOICalls, TimeOfImpact.TOIIters/(float) TimeOfImpact.TOICalls,
                                      TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
 
                 DebugView.DrawString(50, TextLine, "Ave TOI root iters = {0:n}, Max TOI root iters = {1:n}",
-                                     TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls,
+                                     TimeOfImpact.TOIRootIters/(float) TimeOfImpact.TOICalls,
                                      TimeOfImpact.TOIMaxRootIters);
                 TextLine += 15;
             }
 
-            if (StepCount % 60 == 0)
+            if (StepCount%60 == 0)
             {
                 Launch();
             }
         }
 
-        void Launch()
+        private void Launch()
         {
             _body.SetTransform(new Vector2(0.0f, 4.0f), 0.0f);
             _body.LinearVelocity = Vector2.Zero;

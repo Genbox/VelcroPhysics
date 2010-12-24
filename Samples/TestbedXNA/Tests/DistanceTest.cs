@@ -132,11 +132,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
-                _angleB += 0.1f * Settings.Pi;
+                _angleB += 0.1f*Settings.Pi;
             }
             if (keyboardManager.IsNewKeyPress(Keys.E))
             {
-                _angleB -= 0.1f * Settings.Pi;
+                _angleB -= 0.1f*Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);

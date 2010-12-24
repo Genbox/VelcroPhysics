@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 normal;
             FixedArray2<Vector2> points;
             Collision.Collision.GetWorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
-                                                            ref _transformB, _polygonB.Radius, out normal, out points);
+                                                 ref _transformB, _polygonB.Radius, out normal, out points);
 
             DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);
             TextLine += 15;
@@ -117,11 +117,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (keyboardManager.IsKeyDown(Keys.Q))
             {
-                _angleB += 0.1f * Settings.Pi;
+                _angleB += 0.1f*Settings.Pi;
             }
             if (keyboardManager.IsKeyDown(Keys.E))
             {
-                _angleB -= 0.1f * Settings.Pi;
+                _angleB -= 0.1f*Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);

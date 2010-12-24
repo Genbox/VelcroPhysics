@@ -7,7 +7,6 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 {
     public partial class App : Application
     {
-
         public App()
         {
             Startup += Application_Startup;
@@ -24,7 +23,6 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 
         private void Application_Exit(object sender, EventArgs e)
         {
-
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
@@ -34,7 +32,6 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             // icon in the status bar and Firefox will display a script error.
             if (!Debugger.IsAttached)
             {
-
                 // NOTE: This will allow the application to continue running after an exception has been thrown
                 // but not handled. 
                 // For production applications this error handling should be replaced with something that will 

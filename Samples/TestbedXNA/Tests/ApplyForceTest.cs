@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * Settings.Pi);
+                xf1.R.Set(0.3524f*Settings.Pi);
                 xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
                 Vertices vertices = new Vertices(3);
@@ -87,7 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape poly1 = new PolygonShape(vertices, 4);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * Settings.Pi);
+                xf2.R.Set(-0.3524f*Settings.Pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
                 vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
@@ -115,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 10; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
-                    body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
+                    body.Position = new Vector2(0.0f, 5.0f + 1.54f*i);
                     body.BodyType = BodyType.Dynamic;
 
                     Fixture fixture = body.CreateFixture(shape);
@@ -126,12 +126,12 @@ namespace FarseerPhysics.TestBed.Tests
                     float mass = body.Mass;
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float)Math.Sqrt(2.0 * (I / mass));
+                    float radius = (float) Math.Sqrt(2.0*(I/mass));
 
                     FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero, Vector2.Zero);
                     jd.CollideConnected = true;
-                    jd.MaxForce = mass * gravity;
-                    jd.MaxTorque = mass * radius * gravity;
+                    jd.MaxForce = mass*gravity;
+                    jd.MaxTorque = mass*radius*gravity;
 
                     World.AddJoint(jd);
                 }
@@ -140,7 +140,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Note: The left side of the ship has a different density than the right side of the ship");
+            DebugView.DrawString(50, TextLine,
+                                 "Note: The left side of the ship has a different density than the right side of the ship");
             TextLine += 15;
 
             base.Update(settings, gameTime);
