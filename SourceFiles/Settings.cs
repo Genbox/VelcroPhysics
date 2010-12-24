@@ -36,6 +36,123 @@ namespace FarseerPhysics.Common
         // Common
 
         /// <summary>
+        /// Conserve memory makes sure that objects are used by reference instead of cloned.
+        /// When you give a vertices collection to a PolygonShape, it will by default copy the vertices
+        /// instead of using the original reference. This is to ensure that objects modified outside the engine
+        /// does not affect the engine itself. However, this uses extra memory and on small deviccs, this behavior
+        /// can be turned off by setting ConserveMemory to true.
+        /// </summary>
+        public const bool ConserveMemory = false;
+
+        /// <summary>
+        /// The maximum number of contact points between two convex shapes.
+        /// </summary>
+        public const int MaxManifoldPoints = 2;
+
+        /// <summary>
+        /// This is used to fatten AABBs in the dynamic tree. This allows proxies
+        /// to move by a small amount without triggering a tree adjustment.
+        /// This is in meters.
+        /// </summary>
+        public const float AABBExtension = 0.1f;
+
+        /// <summary>
+        /// This is used to fatten AABBs in the dynamic tree. This is used to predict
+        /// the future position based on the current displacement.
+        /// This is a dimensionless multiplier.
+        /// </summary>
+        public const float AABBMultiplier = 2.0f;
+
+        /// <summary>
+        /// A small length used as a collision and constraint tolerance. Usually it is
+        /// chosen to be numerically significant, but visually insignificant.
+        /// </summary>
+        public const float LinearSlop = 0.005f;
+
+        /// <summary>
+        /// A small angle used as a collision and constraint tolerance. Usually it is
+        /// chosen to be numerically significant, but visually insignificant.
+        /// </summary>
+        public const float AngularSlop = (2.0f/180.0f*Pi);
+
+        /// <summary>
+        /// The radius of the polygon/edge shape skin. This should not be modified. Making
+        /// this smaller means polygons will have an insufficient buffer for continuous collision.
+        /// Making it larger may create artifacts for vertex collision.
+        /// </summary>
+        public const float PolygonRadius = (2.0f*LinearSlop);
+
+        // Dynamics
+
+        /// <summary>
+        /// Maximum number of contacts to be handled to solve a TOI impact.
+        /// </summary>
+        public const int MaxTOIContacts = 32;
+
+        /// <summary>
+        /// A velocity threshold for elastic collisions. Any collision with a relative linear
+        /// velocity below this threshold will be treated as inelastic.
+        /// </summary>
+        public const float VelocityThreshold = 1.0f;
+
+        /// <summary>
+        /// The maximum linear position correction used when solving constraints. This helps to
+        /// prevent overshoot.
+        /// </summary>
+        public const float MaxLinearCorrection = 0.2f;
+
+        /// <summary>
+        /// The maximum angular position correction used when solving constraints. This helps to
+        /// prevent overshoot.
+        /// </summary>
+        public const float MaxAngularCorrection = (8.0f/180.0f*Pi);
+
+        /// <summary>
+        /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
+        /// that overlap is removed in one time step. However using values close to 1 often lead
+        /// to overshoot.
+        /// </summary>
+        public const float ContactBaumgarte = 0.2f;
+
+        // Sleep
+
+        /// <summary>
+        /// The time that a body must be still before it will go to sleep.
+        /// </summary>
+        public const float TimeToSleep = 0.5f;
+
+        /// <summary>
+        /// A body cannot sleep if its linear velocity is above this tolerance.
+        /// </summary>
+        public const float LinearSleepTolerance = 0.01f;
+
+        /// <summary>
+        /// A body cannot sleep if its angular velocity is above this tolerance.
+        /// </summary>
+        public const float AngularSleepTolerance = (2.0f/180.0f*Pi);
+
+        /// <summary>
+        /// The maximum linear velocity of a body. This limit is very large and is used
+        /// to prevent numerical problems. You shouldn't need to adjust this.
+        /// </summary>
+        public const float MaxTranslation = 2.0f;
+
+        public const float MaxTranslationSquared = (MaxTranslation*MaxTranslation);
+
+        /// <summary>
+        /// The maximum angular velocity of a body. This limit is very large and is used
+        /// to prevent numerical problems. You shouldn't need to adjust this.
+        /// </summary>
+        public const float MaxRotation = (0.5f*Pi);
+
+        public const float MaxRotationSquared = (MaxRotation*MaxRotation);
+
+        /// <summary>
+        /// Maximum number of sub-steps per contact in continuous physics simulation.
+        /// </summary>
+        public const int MaxSubSteps = 8;
+
+        /// <summary>
         /// Enabling diagnistics causes the engine to gather timing information.
         /// You can see how much time it took to solve the contacts, solve CCD
         /// and update the controllers.
@@ -80,20 +197,6 @@ namespace FarseerPhysics.Common
         public static bool AllowSleep = true;
 
         /// <summary>
-        /// Conserve memory makes sure that objects are used by reference instead of cloned.
-        /// When you give a vertices collection to a PolygonShape, it will by default copy the vertices
-        /// instead of using the original reference. This is to ensure that objects modified outside the engine
-        /// does not affect the engine itself. However, this uses extra memory and on small deviccs, this behavior
-        /// can be turned off by setting ConserveMemory to true.
-        /// </summary>
-        public const bool ConserveMemory = false;
-
-        /// <summary>
-        /// The maximum number of contact points between two convex shapes.
-        /// </summary>
-        public const int MaxManifoldPoints = 2;
-
-        /// <summary>
         /// The maximum number of vertices on a convex polygon.
         /// </summary>
         public static int MaxPolygonVertices = 8;
@@ -106,109 +209,6 @@ namespace FarseerPhysics.Common
         public static bool UseFPECollisionCategories = false;
 
         /// <summary>
-        /// This is used to fatten AABBs in the dynamic tree. This allows proxies
-        /// to move by a small amount without triggering a tree adjustment.
-        /// This is in meters.
-        /// </summary>
-        public const float AABBExtension = 0.1f;
-
-        /// <summary>
-        /// This is used to fatten AABBs in the dynamic tree. This is used to predict
-        /// the future position based on the current displacement.
-        /// This is a dimensionless multiplier.
-        /// </summary>
-        public const float AABBMultiplier = 2.0f;
-
-        /// <summary>
-        /// A small length used as a collision and constraint tolerance. Usually it is
-        /// chosen to be numerically significant, but visually insignificant.
-        /// </summary>
-        public const float LinearSlop = 0.005f;
-
-        /// <summary>
-        /// A small angle used as a collision and constraint tolerance. Usually it is
-        /// chosen to be numerically significant, but visually insignificant.
-        /// </summary>
-        public const float AngularSlop = (2.0f / 180.0f * Pi);
-
-        /// <summary>
-        /// The radius of the polygon/edge shape skin. This should not be modified. Making
-        /// this smaller means polygons will have an insufficient buffer for continuous collision.
-        /// Making it larger may create artifacts for vertex collision.
-        /// </summary>
-        public const float PolygonRadius = (2.0f * LinearSlop);
-
-        // Dynamics
-
-        /// <summary>
-        /// Maximum number of contacts to be handled to solve a TOI impact.
-        /// </summary>
-        public const int MaxTOIContacts = 32;
-
-        /// <summary>
-        /// A velocity threshold for elastic collisions. Any collision with a relative linear
-        /// velocity below this threshold will be treated as inelastic.
-        /// </summary>
-        public const float VelocityThreshold = 1.0f;
-
-        /// <summary>
-        /// The maximum linear position correction used when solving constraints. This helps to
-        /// prevent overshoot.
-        /// </summary>
-        public const float MaxLinearCorrection = 0.2f;
-
-        /// <summary>
-        /// The maximum angular position correction used when solving constraints. This helps to
-        /// prevent overshoot.
-        /// </summary>
-        public const float MaxAngularCorrection = (8.0f / 180.0f * Pi);
-
-        /// <summary>
-        /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
-        /// that overlap is removed in one time step. However using values close to 1 often lead
-        /// to overshoot.
-        /// </summary>
-        public const float ContactBaumgarte = 0.2f;
-
-        // Sleep
-
-        /// <summary>
-        /// The time that a body must be still before it will go to sleep.
-        /// </summary>
-        public const float TimeToSleep = 0.5f;
-
-        /// <summary>
-        /// A body cannot sleep if its linear velocity is above this tolerance.
-        /// </summary>
-        public const float LinearSleepTolerance = 0.01f;
-
-        /// <summary>
-        /// A body cannot sleep if its angular velocity is above this tolerance.
-        /// </summary>
-        public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
-
-        /// <summary>
-        /// The maximum linear velocity of a body. This limit is very large and is used
-        /// to prevent numerical problems. You shouldn't need to adjust this.
-        /// </summary>
-        public const float MaxTranslation = 2.0f;
-
-        public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
-
-        /// <summary>
-        /// The maximum angular velocity of a body. This limit is very large and is used
-        /// to prevent numerical problems. You shouldn't need to adjust this.
-        /// </summary>
-        public const float MaxRotation = (0.5f * Pi);
-
-        public const float MaxRotationSquared = (MaxRotation * MaxRotation);
-
-        /// <summary>
-        /// Maximum number of sub-steps per contact in continuous physics simulation.
-        /// </summary>
-        public const int MaxSubSteps = 8;
-
-        /// <summary>
         /// Friction mixing law. Feel free to customize this.
         /// </summary>
         /// <param name="friction1">The friction1.</param>
@@ -216,7 +216,7 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public static float MixFriction(float friction1, float friction2)
         {
-            return (float) Math.Sqrt(friction1 * friction2);
+            return (float) Math.Sqrt(friction1*friction2);
         }
 
         /// <summary>

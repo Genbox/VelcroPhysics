@@ -19,6 +19,9 @@ namespace FarseerPhysics.Common
         }
 
         // Methods
+
+        #region ICollection<T> Members
+
         public void Add(T item)
         {
             // We don't care for the value in dictionary, Keys matter.
@@ -65,5 +68,7 @@ namespace FarseerPhysics.Common
         {
             get { return false; }
         }
+
+        #endregion
     }
 }

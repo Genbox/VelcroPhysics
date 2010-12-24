@@ -87,23 +87,22 @@ namespace FarseerPhysics.Common.Decomposition
 
     internal class MonotoneMountain
     {
-        private Point _tail;
-        private Point _head;
-        private int _size;
-
+        private const float PiSlop = 3.1f;
+        public List<List<Point>> Triangles;
         private HashSet<Point> _convexPoints;
+        private Point _head;
 
         // Monotone mountain points
         private List<Point> _monoPoly;
 
         // Triangles that constitute the mountain
-        public List<List<Point>> Triangles;
 
         // Used to track which side of the line we are on
         private bool _positive;
+        private int _size;
+        private Point _tail;
 
         // Almost Pi!
-        private const float PiSlop = 3.1f;
 
         public MonotoneMountain()
         {
@@ -228,7 +227,7 @@ namespace FarseerPhysics.Common.Decomposition
         {
             Point a = (p.Next - p);
             Point b = (p.Prev - p);
-            return (float)Math.Atan2(a.Cross(b), a.Dot(b));
+            return (float) Math.Atan2(a.Cross(b), a.Dot(b));
         }
 
         private bool AngleSign()
@@ -250,8 +249,8 @@ namespace FarseerPhysics.Common.Decomposition
     // Node for a Directed Acyclic graph (DAG)
     internal abstract class Node
     {
-        public List<Node> ParentList;
         protected Node LeftChild;
+        public List<Node> ParentList;
         protected Node RightChild;
 
         protected Node(Node left, Node right)
@@ -279,7 +278,6 @@ namespace FarseerPhysics.Common.Decomposition
                     parent.LeftChild = this;
                 else
                     parent.RightChild = this;
-
             }
             ParentList.AddRange(node.ParentList);
         }
@@ -390,13 +388,13 @@ namespace FarseerPhysics.Common.Decomposition
         public HashSet<Trapezoid> Map;
 
         // AABB margin
-        private float _margin;
 
         // Bottom segment that spans multiple trapezoids
         private Edge _bCross;
 
         // Top segment that spans multiple trapezoids
         private Edge _cross;
+        private float _margin;
 
         public TrapezoidalMap()
         {
@@ -577,10 +575,9 @@ namespace FarseerPhysics.Common.Decomposition
 
     internal class Point
     {
-        public float X, Y;
-
         // Pointers to next and previous points in Monontone Mountain
         public Point Next, Prev;
+        public float X, Y;
 
         public Point(float x, float y)
         {
@@ -612,12 +609,12 @@ namespace FarseerPhysics.Common.Decomposition
 
         public float Cross(Point p)
         {
-            return X * p.Y - Y * p.X;
+            return X*p.Y - Y*p.X;
         }
 
         public float Dot(Point p)
         {
-            return X * p.X + Y * p.Y;
+            return X*p.X + Y*p.Y;
         }
 
         public bool Neq(Point p)
@@ -631,27 +628,27 @@ namespace FarseerPhysics.Common.Decomposition
             float bcx = pb.X - pc.X;
             float acy = Y - pc.Y;
             float bcy = pb.Y - pc.Y;
-            return acx * bcy - acy * bcx;
+            return acx*bcy - acy*bcx;
         }
     }
 
     internal class Edge
     {
-        public Point P;
-        public Point Q;
-
         // Pointers used for building trapezoidal map
-        public Trapezoid Above, Below;
+        public Trapezoid Above;
+        public float B;
+        public Trapezoid Below;
 
         // Equation of a line: y = m*x + b
         // Slope of the line (m)
-        public float Slope;
 
         // Montone mountain points
         public HashSet<Point> MPoints;
+        public Point P;
+        public Point Q;
+        public float Slope;
 
         // Y intercept
-        public float B;
 
         public Edge(Point p, Point q)
         {
@@ -659,11 +656,11 @@ namespace FarseerPhysics.Common.Decomposition
             Q = q;
 
             if (q.X - p.X != 0)
-                Slope = (q.Y - p.Y) / (q.X - p.X);
+                Slope = (q.Y - p.Y)/(q.X - p.X);
             else
                 Slope = 0;
 
-            B = p.Y - (p.X * Slope);
+            B = p.Y - (p.X*Slope);
             Above = null;
             Below = null;
             MPoints = new HashSet<Point>();
@@ -693,20 +690,20 @@ namespace FarseerPhysics.Common.Decomposition
 
     internal class Trapezoid
     {
-        public Sink Sink;
+        public Edge Bottom;
         public bool Inside;
+        public Point LeftPoint;
 
         // Neighbor pointers
-        public Trapezoid UpperLeft;
         public Trapezoid LowerLeft;
-        public Trapezoid UpperRight;
         public Trapezoid LowerRight;
 
-        public Point LeftPoint;
         public Point RightPoint;
+        public Sink Sink;
 
         public Edge Top;
-        public Edge Bottom;
+        public Trapezoid UpperLeft;
+        public Trapezoid UpperRight;
 
         public Trapezoid(Point leftPoint, Point rightPoint, Edge top, Edge bottom)
         {
@@ -725,24 +722,32 @@ namespace FarseerPhysics.Common.Decomposition
         // Update neighbors to the left
         public void UpdateLeft(Trapezoid ul, Trapezoid ll)
         {
-            UpperLeft = ul; if (ul != null) ul.UpperRight = this;
-            LowerLeft = ll; if (ll != null) ll.LowerRight = this;
+            UpperLeft = ul;
+            if (ul != null) ul.UpperRight = this;
+            LowerLeft = ll;
+            if (ll != null) ll.LowerRight = this;
         }
 
         // Update neighbors to the right
         public void UpdateRight(Trapezoid ur, Trapezoid lr)
         {
-            UpperRight = ur; if (ur != null) ur.UpperLeft = this;
-            LowerRight = lr; if (lr != null) lr.LowerLeft = this;
+            UpperRight = ur;
+            if (ur != null) ur.UpperLeft = this;
+            LowerRight = lr;
+            if (lr != null) lr.LowerLeft = this;
         }
 
         // Update neighbors on both sides
         public void UpdateLeftRight(Trapezoid ul, Trapezoid ll, Trapezoid ur, Trapezoid lr)
         {
-            UpperLeft = ul; if (ul != null) ul.UpperRight = this;
-            LowerLeft = ll; if (ll != null) ll.LowerRight = this;
-            UpperRight = ur; if (ur != null) ur.UpperLeft = this;
-            LowerRight = lr; if (lr != null) lr.LowerLeft = this;
+            UpperLeft = ul;
+            if (ul != null) ul.UpperRight = this;
+            LowerLeft = ll;
+            if (ll != null) ll.LowerRight = this;
+            UpperRight = ur;
+            if (ur != null) ur.UpperLeft = this;
+            LowerRight = lr;
+            if (lr != null) lr.LowerLeft = this;
         }
 
         // Recursively trim outside neighbors
@@ -776,7 +781,7 @@ namespace FarseerPhysics.Common.Decomposition
 
         private Point LineIntersect(Edge edge, float x)
         {
-            float y = edge.Slope * x + edge.B;
+            float y = edge.Slope*x + edge.B;
             return new Point(x, y);
         }
 
@@ -854,21 +859,16 @@ namespace FarseerPhysics.Common.Decomposition
 
     internal class Triangulator
     {
-        private float _sheer = 0.001f;
-
-        // Convex polygon list
-        public List<List<Point>> Triangles;
-
-        // Order and randomize the segments
-        private List<Edge> _edgeList;
-
         // Trapezoid decomposition list
         public List<Trapezoid> Trapezoids;
+        public List<List<Point>> Triangles;
 
         // Initialize trapezoidal map and query structure
-        private TrapezoidalMap _trapezoidalMap;
         private Trapezoid _boundingBox;
+        private List<Edge> _edgeList;
         private QueryGraph _queryGraph;
+        private float _sheer = 0.001f;
+        private TrapezoidalMap _trapezoidalMap;
         private List<MonotoneMountain> _xMonoPoly;
 
         public Triangulator(List<Point> polyLine, float sheer)
@@ -1051,7 +1051,7 @@ namespace FarseerPhysics.Common.Decomposition
         // the degenerate case. See Mark de Berg et al, Chapter 6.3
         private Point ShearTransform(Point point)
         {
-            return new Point(point.X + _sheer * point.Y, point.Y);
+            return new Point(point.X + _sheer*point.Y, point.Y);
         }
     }
 }

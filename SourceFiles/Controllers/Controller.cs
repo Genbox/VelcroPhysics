@@ -66,9 +66,8 @@ namespace FarseerPhysics.Controllers
 
     public abstract class Controller
     {
-        public FilterControllerData FilterData;
-
         public bool Enabled;
+        public FilterControllerData FilterData;
 
         public World World;
 

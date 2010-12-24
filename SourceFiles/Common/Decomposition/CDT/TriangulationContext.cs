@@ -37,15 +37,8 @@ namespace Poly2Tri.Triangulation
 {
     public abstract class TriangulationContext
     {
-        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
-
         public readonly List<TriangulationPoint> Points = new List<TriangulationPoint>(200);
-        public TriangulationMode TriangulationMode { get; protected set; }
-        public Triangulatable Triangulatable { get; private set; }
-
-        public bool WaitUntilNotified { get; private set; }
-        public bool Terminated { get; set; }
-
+        public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
         private int _stepTime = -1;
 
         public TriangulationContext()
@@ -53,7 +46,14 @@ namespace Poly2Tri.Triangulation
             Terminated = false;
         }
 
+        public TriangulationMode TriangulationMode { get; protected set; }
+        public Triangulatable Triangulatable { get; private set; }
+
+        public bool WaitUntilNotified { get; private set; }
+        public bool Terminated { get; set; }
+
         public int StepCount { get; private set; }
+        public virtual bool IsDebugEnabled { get; protected set; }
 
         public void Done()
         {
@@ -80,7 +80,5 @@ namespace Poly2Tri.Triangulation
             Terminated = false;
             StepCount = 0;
         }
-
-        public virtual bool IsDebugEnabled { get; protected set; }
     }
 }

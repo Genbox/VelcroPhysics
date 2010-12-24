@@ -52,7 +52,7 @@ namespace FarseerPhysics.Common.Decomposition
             DTSweepContext tcx = new DTSweepContext();
             tcx.PrepareTriangulation(poly);
             DTSweep.Triangulate(tcx);
-            
+
             List<Vertices> results = new List<Vertices>();
 
             foreach (DelaunayTriangle triangle in poly.Triangles)
@@ -60,7 +60,7 @@ namespace FarseerPhysics.Common.Decomposition
                 Vertices v = new Vertices();
                 foreach (TriangulationPoint p in triangle.Points)
                 {
-                    v.Add(new Vector2((float)p.X, (float)p.Y));
+                    v.Add(new Vector2((float) p.X, (float) p.Y));
                 }
                 results.Add(v);
             }

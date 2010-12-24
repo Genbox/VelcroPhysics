@@ -1,5 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Controllers
 {
@@ -9,8 +9,12 @@ namespace FarseerPhysics.Controllers
     /// usage as an easy to understand example.
     /// As a side-effect it is a nice and easy to use wind force for your projects
     /// </summary>
-    public class SimpleWindForce:AbstractForceController
+    public class SimpleWindForce : AbstractForceController
     {
+        public SimpleWindForce() : base()
+        {
+        }
+
         /// <summary>
         /// Direction of the windforce
         /// </summary>
@@ -28,13 +32,9 @@ namespace FarseerPhysics.Controllers
         public bool IgnorePosition { get; set; }
 
 
-        public SimpleWindForce(): base()
-        {
-        }
-
         public override void ApplyForce(float dt, float strength)
         {
-            foreach (Body body in this.World.BodyList)
+            foreach (Body body in World.BodyList)
             {
                 //TODO: Consider Force Type
                 float decayMultiplier = GetDecayMultiplier(body);
@@ -46,7 +46,6 @@ namespace FarseerPhysics.Controllers
                     if (ForceType == ForceTypes.Point)
                     {
                         forceVector = body.Position - Position;
-                        
                     }
                     else
                     {
@@ -56,7 +55,6 @@ namespace FarseerPhysics.Controllers
 
                         if (forceVector.Length() == 0)
                             forceVector = new Vector2(0, 1);
-                        
                     }
 
                     //TODO: Consider Divergence:
@@ -65,14 +63,14 @@ namespace FarseerPhysics.Controllers
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        float strengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
+                        float strengthVariation = (float) Randomize.NextDouble()*MathHelper.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
+                        body.ApplyForce(forceVector*strength*decayMultiplier*strengthVariation);
                     }
                     else
                     {
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector * strength * decayMultiplier);
+                        body.ApplyForce(forceVector*strength*decayMultiplier);
                     }
                 }
             }

@@ -36,25 +36,26 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
      * @author Thomas Åhlén, thahlen@gmail.com
      *
      */
+
     public class DTSweepContext : TriangulationContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.
         private const float ALPHA = 0.3f;
 
-        public AdvancingFront aFront;
-        public TriangulationPoint Head { get; set; }
-        public TriangulationPoint Tail { get; set; }
-
         public DTSweepBasin Basin = new DTSweepBasin();
         public DTSweepEdgeEvent EdgeEvent = new DTSweepEdgeEvent();
 
         private DTSweepPointComparator _comparator = new DTSweepPointComparator();
+        public AdvancingFront aFront;
 
         public DTSweepContext()
         {
             Clear();
         }
+
+        public TriangulationPoint Head { get; set; }
+        public TriangulationPoint Tail { get; set; }
 
         public void RemoveFromList(DelaunayTriangle triangle)
         {
@@ -140,21 +141,6 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
             aFront.Tail.Prev = middle;
         }
 
-        public class DTSweepBasin
-        {
-            public AdvancingFrontNode leftNode;
-            public AdvancingFrontNode bottomNode;
-            public AdvancingFrontNode rightNode;
-            public double width;
-            public bool leftHighest;
-        }
-
-        public class DTSweepEdgeEvent
-        {
-            public DTSweepConstraint ConstrainedEdge;
-            public bool Right;
-        }
-
         /// <summary>
         /// Try to map a node to all sides of this triangle that don't have 
         /// a neighbor.
@@ -198,8 +184,8 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
                     ymin = p.Y;
             }
 
-            double deltaX = ALPHA * (xmax - xmin);
-            double deltaY = ALPHA * (ymax - ymin);
+            double deltaX = ALPHA*(xmax - xmin);
+            double deltaY = ALPHA*(ymax - ymin);
             TriangulationPoint p1 = new TriangulationPoint(xmax + deltaX, ymin - deltaY);
             TriangulationPoint p2 = new TriangulationPoint(xmin - deltaX, ymin - deltaY);
 
@@ -223,5 +209,28 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
         {
             return new DTSweepConstraint(a, b);
         }
+
+        #region Nested type: DTSweepBasin
+
+        public class DTSweepBasin
+        {
+            public AdvancingFrontNode bottomNode;
+            public bool leftHighest;
+            public AdvancingFrontNode leftNode;
+            public AdvancingFrontNode rightNode;
+            public double width;
+        }
+
+        #endregion
+
+        #region Nested type: DTSweepEdgeEvent
+
+        public class DTSweepEdgeEvent
+        {
+            public DTSweepConstraint ConstrainedEdge;
+            public bool Right;
+        }
+
+        #endregion
     }
 }

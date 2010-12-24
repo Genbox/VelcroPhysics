@@ -65,10 +65,10 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
+                            f = Strength/r2/(float) Math.Sqrt(r2)*body1.Mass*body2.Mass*d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / r2 * body1.Mass * body2.Mass * d;
+                            f = Strength/r2*body1.Mass*body2.Mass*d;
                             break;
                     }
 
@@ -93,10 +93,10 @@ namespace FarseerPhysics.Controllers
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * d;
+                            f = Strength/r2/(float) Math.Sqrt(r2)*body1.Mass*d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / r2 * body1.Mass * d;
+                            f = Strength/r2*body1.Mass*d;
                             break;
                     }
 

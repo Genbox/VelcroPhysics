@@ -25,7 +25,6 @@
 
 using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
@@ -48,7 +47,10 @@ namespace FarseerPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
-        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density) : this(vertices, world, density, null) { }
+        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density)
+            : this(vertices, world, density, null)
+        {
+        }
 
         public BreakableBody(IEnumerable<Vertices> vertices, World world, float density, Object userData)
         {

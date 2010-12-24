@@ -400,7 +400,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             if (PoinOnLineSegment(Vector2.Zero, e.EdgeStart, point) ||
                 PoinOnLineSegment(Vector2.Zero, e.EdgeEnd, point))
             {
-                result = .5f * coefficient;
+                result = .5f*coefficient;
             }
             return result;
         }
@@ -411,7 +411,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <remarks>Used by method <c>CalculateIntersections()</c>.</remarks>
         private static float GetAlpha(Vector2 start, Vector2 end, Vector2 point)
         {
-            return (point - start).LengthSquared() / (end - start).LengthSquared();
+            return (point - start).LengthSquared()/(end - start).LengthSquared();
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             public Vector2 GetCenter()
             {
-                return (EdgeStart + EdgeEnd) / 2f;
+                return (EdgeStart + EdgeEnd)/2f;
             }
 
             public static Edge operator -(Edge e)

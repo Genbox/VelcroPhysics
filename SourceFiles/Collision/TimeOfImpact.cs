@@ -114,7 +114,7 @@ namespace FarseerPhysics.Collision
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfB.R, _axis);
 
-                _localPoint = 0.5f * (localPointB1 + localPointB2);
+                _localPoint = 0.5f*(localPointB1 + localPointB2);
                 Vector2 pointB = MathUtils.Multiply(ref xfB, _localPoint);
 
                 Vector2 localPointA = proxyA.GetVertex(cache.IndexA[0]);
@@ -140,7 +140,7 @@ namespace FarseerPhysics.Collision
                 _axis.Normalize();
                 Vector2 normal = MathUtils.Multiply(ref xfA.R, _axis);
 
-                _localPoint = 0.5f * (localPointA1 + localPointA2);
+                _localPoint = 0.5f*(localPointA1 + localPointA2);
                 Vector2 pointA = MathUtils.Multiply(ref xfA, _localPoint);
 
                 Vector2 localPointB = _proxyB.GetVertex(cache.IndexB[0]);
@@ -319,8 +319,8 @@ namespace FarseerPhysics.Collision
             float tMax = input.TMax;
 
             float totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
-            float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
-            const float tolerance = 0.25f * Settings.LinearSlop;
+            float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f*Settings.LinearSlop);
+            const float tolerance = 0.25f*Settings.LinearSlop;
             Debug.Assert(target > tolerance);
 
             float t1 = 0.0f;
@@ -431,12 +431,12 @@ namespace FarseerPhysics.Collision
                         if ((rootIterCount & 1) != 0)
                         {
                             // Secant rule to improve convergence.
-                            t = a1 + (target - s1) * (a2 - a1) / (s2 - s1);
+                            t = a1 + (target - s1)*(a2 - a1)/(s2 - s1);
                         }
                         else
                         {
                             // Bisection to guarantee progress.
-                            t = 0.5f * (a1 + a2);
+                            t = 0.5f*(a1 + a2);
                         }
 
                         float s = fcn.Evaluate(indexA, indexB, t);

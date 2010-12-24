@@ -1,4 +1,5 @@
-#region License
+﻿#region License
+
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team
@@ -26,10 +27,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion License
 
 using System;
-using System.ComponentModel;
 
 namespace Microsoft.Xna.Framework
 {
@@ -45,53 +46,49 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-
         #region Properties
 
         public CurveContinuity Continuity
         {
-            get { return this.continuity; }
-            set { this.continuity = value; }
+            get { return continuity; }
+            set { continuity = value; }
         }
 
         public float Position
         {
-            get { return this.position; }
+            get { return position; }
         }
 
         public float TangentIn
         {
-            get { return this.tangentIn; }
-            set { this.tangentIn = value; }
+            get { return tangentIn; }
+            set { tangentIn = value; }
         }
 
         public float TangentOut
         {
-            get { return this.tangentOut; }
-            set { this.tangentOut = value; }
+            get { return tangentOut; }
+            set { tangentOut = value; }
         }
 
         public float Value
         {
-            get { return this.value; }
+            get { return value; }
             set { this.value = value; }
         }
 
         #endregion
-
 
         #region Constructors
 
         public CurveKey(float position, float value)
             : this(position, value, 0, 0, CurveContinuity.Smooth)
         {
-
         }
 
         public CurveKey(float position, float value, float tangentIn, float tangentOut)
             : this(position, value, tangentIn, tangentOut, CurveContinuity.Smooth)
         {
-
         }
 
         public CurveKey(float position, float value, float tangentIn, float tangentOut, CurveContinuity continuity)
@@ -105,8 +102,25 @@ namespace Microsoft.Xna.Framework
 
         #endregion Constructors
 
-
         #region Public Methods
+
+        #region IComparable<CurveKey> Members
+
+        public int CompareTo(CurveKey other)
+        {
+            return position.CompareTo(other.position);
+        }
+
+        #endregion
+
+        #region IEquatable<CurveKey> Members
+
+        public bool Equals(CurveKey other)
+        {
+            return (this == other);
+        }
+
+        #endregion
 
         public static bool operator !=(CurveKey a, CurveKey b)
         {
@@ -115,44 +129,34 @@ namespace Microsoft.Xna.Framework
 
         public static bool operator ==(CurveKey a, CurveKey b)
         {
-            if (object.Equals(a, null))
-                return object.Equals(b, null);
+            if (Equals(a, null))
+                return Equals(b, null);
 
-            if (object.Equals(b, null))
-                return object.Equals(a, null);
+            if (Equals(b, null))
+                return Equals(a, null);
 
             return (a.position == b.position)
-                && (a.value == b.value)
-                && (a.tangentIn == b.tangentIn)
-                && (a.tangentOut == b.tangentOut)
-                && (a.continuity == b.continuity);
+                   && (a.value == b.value)
+                   && (a.tangentIn == b.tangentIn)
+                   && (a.tangentOut == b.tangentOut)
+                   && (a.continuity == b.continuity);
         }
 
         public CurveKey Clone()
         {
-            return new CurveKey(this.position, this.value, this.tangentIn, this.tangentOut, this.continuity);
-        }
-
-        public int CompareTo(CurveKey other)
-        {
-            return this.position.CompareTo(other.position);
-        }
-
-        public bool Equals(CurveKey other)
-        {
-            return (this == other);
+            return new CurveKey(position, value, tangentIn, tangentOut, continuity);
         }
 
         public override bool Equals(object obj)
         {
-            return (obj is CurveKey) ? ((CurveKey)obj) == this : false;
+            return (obj is CurveKey) ? ((CurveKey) obj) == this : false;
         }
 
         public override int GetHashCode()
         {
-            return this.position.GetHashCode() ^ this.value.GetHashCode() ^ this.tangentIn.GetHashCode() ^
-                this.tangentOut.GetHashCode() ^ this.continuity.GetHashCode();
-       } 
+            return position.GetHashCode() ^ value.GetHashCode() ^ tangentIn.GetHashCode() ^
+                   tangentOut.GetHashCode() ^ continuity.GetHashCode();
+        }
 
         #endregion
     }

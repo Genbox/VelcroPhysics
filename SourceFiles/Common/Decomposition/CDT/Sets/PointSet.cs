@@ -36,15 +36,20 @@ namespace Poly2Tri.Triangulation.Sets
 {
     public class PointSet : Triangulatable
     {
-        public IList<TriangulationPoint> Points { get; private set; }
-        public IList<DelaunayTriangle> Triangles { get; private set; }
-
         public PointSet(List<TriangulationPoint> points)
         {
             Points = new List<TriangulationPoint>(points);
         }
 
-        public virtual TriangulationMode TriangulationMode { get { return TriangulationMode.Unconstrained; } }
+        #region Triangulatable Members
+
+        public IList<TriangulationPoint> Points { get; private set; }
+        public IList<DelaunayTriangle> Triangles { get; private set; }
+
+        public virtual TriangulationMode TriangulationMode
+        {
+            get { return TriangulationMode.Unconstrained; }
+        }
 
         public void AddTriangle(DelaunayTriangle t)
         {
@@ -73,5 +78,7 @@ namespace Poly2Tri.Triangulation.Sets
             }
             tcx.Points.AddRange(Points);
         }
+
+        #endregion
     }
 }

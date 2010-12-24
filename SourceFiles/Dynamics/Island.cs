@@ -50,8 +50,8 @@ namespace FarseerPhysics.Dynamics
         private Joint[] _joints;
         public float JointUpdateTime;
 
-        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private const float LinTolSqr = Settings.LinearSleepTolerance*Settings.LinearSleepTolerance;
+        private const float AngTolSqr = Settings.AngularSleepTolerance*Settings.AngularSleepTolerance;
 
 #if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
@@ -76,12 +76,12 @@ namespace FarseerPhysics.Dynamics
 
             if (_contacts == null || _contacts.Length < contactCapacity)
             {
-                _contacts = new Contact[contactCapacity * 2];
+                _contacts = new Contact[contactCapacity*2];
             }
 
             if (_joints == null || _joints.Length < jointCapacity)
             {
-                _joints = new Joint[jointCapacity * 2];
+                _joints = new Joint[jointCapacity*2];
             }
         }
 
@@ -110,15 +110,15 @@ namespace FarseerPhysics.Dynamics
                 // FPE 3 only - Only apply gravity if the body wants it.
                 if (b.IgnoreGravity)
                 {
-                    b.LinearVelocityInternal.X += step.dt * (b.InvMass * b.Force.X);
-                    b.LinearVelocityInternal.Y += step.dt * (b.InvMass * b.Force.Y);
-                    b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
+                    b.LinearVelocityInternal.X += step.dt*(b.InvMass*b.Force.X);
+                    b.LinearVelocityInternal.Y += step.dt*(b.InvMass*b.Force.Y);
+                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
                 }
                 else
                 {
-                    b.LinearVelocityInternal.X += step.dt * (gravity.X + b.InvMass * b.Force.X);
-                    b.LinearVelocityInternal.Y += step.dt * (gravity.Y + b.InvMass * b.Force.Y);
-                    b.AngularVelocityInternal += step.dt * b.InvI * b.Torque;
+                    b.LinearVelocityInternal.X += step.dt*(gravity.X + b.InvMass*b.Force.X);
+                    b.LinearVelocityInternal.Y += step.dt*(gravity.Y + b.InvMass*b.Force.Y);
+                    b.AngularVelocityInternal += step.dt*b.InvI*b.Torque;
                 }
 
                 // Apply damping.
@@ -128,8 +128,8 @@ namespace FarseerPhysics.Dynamics
                 // v2 = exp(-c * dt) * v1
                 // Taylor expansion:
                 // v2 = (1.0f - c * dt) * v1
-                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.LinearDamping, 0.0f, 1.0f);
-                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt * b.AngularDamping, 0.0f, 1.0f);
+                b.LinearVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.LinearDamping, 0.0f, 1.0f);
+                b.AngularVelocityInternal *= MathUtils.Clamp(1.0f - step.dt*b.AngularDamping, 0.0f, 1.0f);
             }
 
             // Partition contacts so that contacts with static bodies are solved last.
@@ -226,23 +226,23 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                float translationX = step.dt * b.LinearVelocityInternal.X;
-                float translationY = step.dt * b.LinearVelocityInternal.Y;
-                float result = translationX * translationX + translationY * translationY;
+                float translationX = step.dt*b.LinearVelocityInternal.X;
+                float translationY = step.dt*b.LinearVelocityInternal.Y;
+                float result = translationX*translationX + translationY*translationY;
 
                 if (result > Settings.MaxTranslationSquared)
                 {
-                    float sq = (float)Math.Sqrt(result);
+                    float sq = (float) Math.Sqrt(result);
 
-                    float ratio = Settings.MaxTranslation / sq;
+                    float ratio = Settings.MaxTranslation/sq;
                     b.LinearVelocityInternal.X *= ratio;
                     b.LinearVelocityInternal.Y *= ratio;
                 }
 
-                float rotation = step.dt * b.AngularVelocityInternal;
-                if (rotation * rotation > Settings.MaxRotationSquared)
+                float rotation = step.dt*b.AngularVelocityInternal;
+                if (rotation*rotation > Settings.MaxRotationSquared)
                 {
-                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
+                    float ratio = Settings.MaxRotation/Math.Abs(rotation);
                     b.AngularVelocityInternal *= ratio;
                 }
 
@@ -252,9 +252,9 @@ namespace FarseerPhysics.Dynamics
                 b.Sweep.A0 = b.Sweep.A;
 
                 // Integrate
-                b.Sweep.C.X += step.dt * b.LinearVelocityInternal.X;
-                b.Sweep.C.Y += step.dt * b.LinearVelocityInternal.Y;
-                b.Sweep.A += step.dt * b.AngularVelocityInternal;
+                b.Sweep.C.X += step.dt*b.LinearVelocityInternal.X;
+                b.Sweep.C.Y += step.dt*b.LinearVelocityInternal.Y;
+                b.Sweep.A += step.dt*b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();
@@ -325,7 +325,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     if ((b.Flags & BodyFlags.AutoSleep) == 0 ||
-                        b.AngularVelocityInternal * b.AngularVelocityInternal > AngTolSqr ||
+                        b.AngularVelocityInternal*b.AngularVelocityInternal > AngTolSqr ||
                         Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > LinTolSqr)
                     {
                         b.SleepTime = 0.0f;
@@ -401,34 +401,34 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 // Check for large velocities.
-                float translationx = subStep.dt * b.LinearVelocityInternal.X;
-                float translationy = subStep.dt * b.LinearVelocityInternal.Y;
-                float dot = translationx * translationx + translationy * translationy;
+                float translationx = subStep.dt*b.LinearVelocityInternal.X;
+                float translationy = subStep.dt*b.LinearVelocityInternal.Y;
+                float dot = translationx*translationx + translationy*translationy;
                 if (dot > Settings.MaxTranslationSquared)
                 {
-                    float norm = 1f / (float)Math.Sqrt(dot);
-                    float value = Settings.MaxTranslation * subStep.inv_dt;
-                    b.LinearVelocityInternal.X = value * (translationx * norm);
-                    b.LinearVelocityInternal.Y = value * (translationy * norm);
+                    float norm = 1f/(float) Math.Sqrt(dot);
+                    float value = Settings.MaxTranslation*subStep.inv_dt;
+                    b.LinearVelocityInternal.X = value*(translationx*norm);
+                    b.LinearVelocityInternal.Y = value*(translationy*norm);
                 }
 
-                float rotation = subStep.dt * b.AngularVelocity;
-                if (rotation * rotation > Settings.MaxRotationSquared)
+                float rotation = subStep.dt*b.AngularVelocity;
+                if (rotation*rotation > Settings.MaxRotationSquared)
                 {
                     if (rotation < 0.0)
                     {
-                        b.AngularVelocityInternal = -subStep.inv_dt * Settings.MaxRotation;
+                        b.AngularVelocityInternal = -subStep.inv_dt*Settings.MaxRotation;
                     }
                     else
                     {
-                        b.AngularVelocityInternal = subStep.inv_dt * Settings.MaxRotation;
+                        b.AngularVelocityInternal = subStep.inv_dt*Settings.MaxRotation;
                     }
                 }
 
                 // Integrate
-                b.Sweep.C.X += subStep.dt * b.LinearVelocityInternal.X;
-                b.Sweep.C.Y += subStep.dt * b.LinearVelocityInternal.Y;
-                b.Sweep.A += subStep.dt * b.AngularVelocityInternal;
+                b.Sweep.C.X += subStep.dt*b.LinearVelocityInternal.X;
+                b.Sweep.C.Y += subStep.dt*b.LinearVelocityInternal.Y;
+                b.Sweep.A += subStep.dt*b.AngularVelocityInternal;
 
                 // Compute new transform
                 b.SynchronizeTransform();

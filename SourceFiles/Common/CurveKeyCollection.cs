@@ -1,4 +1,5 @@
-#region License
+﻿#region License
+
 /*
 MIT License
 Copyright © 2006 The Mono.Xna Team
@@ -26,12 +27,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion License
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace Microsoft.Xna.Framework
 {
@@ -39,23 +40,12 @@ namespace Microsoft.Xna.Framework
     {
         #region Private Fields
 
-        private bool isReadOnly = false;
         private List<CurveKey> innerlist;
+        private bool isReadOnly = false;
 
         #endregion Private Fields
 
-
         #region Properties
-
-        public int Count
-        {
-            get { return innerlist.Count; }
-        }
-
-        public bool IsReadOnly
-        {
-            get { return this.isReadOnly; }
-        }
 
         public CurveKey this[int index]
         {
@@ -78,8 +68,17 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-        #endregion Properties
+        public int Count
+        {
+            get { return innerlist.Count; }
+        }
 
+        public bool IsReadOnly
+        {
+            get { return isReadOnly; }
+        }
+
+        #endregion Properties
 
         #region Constructors
 
@@ -90,84 +89,84 @@ namespace Microsoft.Xna.Framework
 
         #endregion Constructors
 
-
         #region Public Methods
 
         public void Add(CurveKey item)
         {
             if (item == null)
-                throw new ArgumentNullException("Value cannot be null.",(Exception)null);
+                throw new ArgumentNullException("Value cannot be null.", (Exception) null);
 
             if (innerlist.Count == 0)
             {
-                this.innerlist.Add(item);
+                innerlist.Add(item);
                 return;
             }
 
-            for (int i = 0; i < this.innerlist.Count; i++)
+            for (int i = 0; i < innerlist.Count; i++)
             {
-                if (item.Position < this.innerlist[i].Position)
+                if (item.Position < innerlist[i].Position)
                 {
-                    this.innerlist.Insert(i, item);
+                    innerlist.Insert(i, item);
                     return;
                 }
             }
 
-            this.innerlist.Add(item);
+            innerlist.Add(item);
         }
 
         public void Clear()
         {
             innerlist.Clear();
         }
-        
-        public CurveKeyCollection Clone()
-        {
-            CurveKeyCollection ckc = new CurveKeyCollection();
-            foreach (CurveKey key in this.innerlist)
-                ckc.Add(key);
-            return ckc;
-        }
-        
+
         public bool Contains(CurveKey item)
         {
             return innerlist.Contains(item);
         }
-        
+
         public void CopyTo(CurveKey[] array, int arrayIndex)
         {
             innerlist.CopyTo(array, arrayIndex);
         }
-        
+
         public IEnumerator<CurveKey> GetEnumerator()
         {
             return innerlist.GetEnumerator();
         }
-        
-        public int IndexOf(CurveKey item)
-        {
-            return innerlist.IndexOf(item);
-        }
-        
+
         public bool Remove(CurveKey item)
         {
             return innerlist.Remove(item);
         }
-        
-        public void RemoveAt(int index)
-        {
-		if (index != this.Count && index > -1)
-			innerlist.RemoveAt(index);
-		else throw new ArgumentOutOfRangeException("Index was out of range. Must be non-negative and less than the size of the collection.\r\nParameter name: index",(Exception)null);
-				
-		}
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return innerlist.GetEnumerator();
         }
 
+        public CurveKeyCollection Clone()
+        {
+            CurveKeyCollection ckc = new CurveKeyCollection();
+            foreach (CurveKey key in innerlist)
+                ckc.Add(key);
+            return ckc;
+        }
+
+        public int IndexOf(CurveKey item)
+        {
+            return innerlist.IndexOf(item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index != Count && index > -1)
+                innerlist.RemoveAt(index);
+            else
+                throw new ArgumentOutOfRangeException(
+                    "Index was out of range. Must be non-negative and less than the size of the collection.\r\nParameter name: index",
+                    (Exception) null);
+        }
+
         #endregion Public Methods
     }
 }
-

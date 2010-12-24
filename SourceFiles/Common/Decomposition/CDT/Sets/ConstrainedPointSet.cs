@@ -42,10 +42,10 @@ namespace Poly2Tri.Triangulation.Sets
      * 
      * @author Thomas Åhlén, thahlen@gmail.com
      */
+
     public class ConstrainedPointSet : PointSet
     {
-        public int[] EdgeIndex { get; private set; }
-        List<TriangulationPoint> _constrainedPointList = null;
+        private List<TriangulationPoint> _constrainedPointList = null;
 
         public ConstrainedPointSet(List<TriangulationPoint> points, int[] index)
             : base(points)
@@ -58,6 +58,7 @@ namespace Poly2Tri.Triangulation.Sets
          * @param points - A list of all points in PointSet
          * @param constraints - Pairs of two points defining a constraint, all points <b>must</b> be part of given PointSet!
          */
+
         public ConstrainedPointSet(List<TriangulationPoint> points, IEnumerable<TriangulationPoint> constraints)
             : base(points)
         {
@@ -65,7 +66,12 @@ namespace Poly2Tri.Triangulation.Sets
             _constrainedPointList.AddRange(constraints);
         }
 
-        public override TriangulationMode TriangulationMode { get { return TriangulationMode.Constrained; } }
+        public int[] EdgeIndex { get; private set; }
+
+        public override TriangulationMode TriangulationMode
+        {
+            get { return TriangulationMode.Constrained; }
+        }
 
         public override void PrepareTriangulation(TriangulationContext tcx)
         {
@@ -99,6 +105,7 @@ namespace Poly2Tri.Triangulation.Sets
          * 2. 
          * @return
          */
+
         public bool isValid()
         {
             return true;

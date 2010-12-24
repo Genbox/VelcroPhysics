@@ -41,9 +41,9 @@ namespace FarseerPhysics.Dynamics
     public abstract class FilterData
     {
         public Category DisabledOnCategories = Category.None;
-        public Category EnabledOnCategories = Category.All;
 
         public int DisabledOnGroup = 0;
+        public Category EnabledOnCategories = Category.All;
         public int EnabledOnGroup = 0;
 
         public virtual bool IsActiveOn(Body body)
@@ -57,7 +57,8 @@ namespace FarseerPhysics.Dynamics
             foreach (Fixture fixture in body.FixtureList)
             {
                 //Disable
-                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
+                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) &&
+                    fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
                     return false;
 
                 if ((fixture.CollisionFilter.CollisionCategories & DisabledOnCategories) != Category.None)
@@ -66,10 +67,12 @@ namespace FarseerPhysics.Dynamics
                 if (EnabledOnGroup != 0 || EnabledOnCategories != Category.All)
                 {
                     //Enable
-                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) && fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
+                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) &&
+                        fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
                         return true;
 
-                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None && EnabledOnCategories != Category.All)
+                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None &&
+                        EnabledOnCategories != Category.All)
                         return true;
                 }
                 else
@@ -327,7 +330,11 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Enable/disable single stepped continuous physics. For testing.
         /// </summary>
-        public bool EnableSubStepping { get { return _subStepping; } set { _subStepping = value; } }
+        public bool EnableSubStepping
+        {
+            get { return _subStepping; }
+            set { _subStepping = value; }
+        }
 
         /// <summary>
         /// Create a rigid body.
@@ -653,9 +660,9 @@ namespace FarseerPhysics.Dynamics
             }
 
             TimeStep step;
-            step.inv_dt = 1.0f / dt;
+            step.inv_dt = 1.0f/dt;
             step.dt = dt;
-            step.dtRatio = _invDt0 * dt;
+            step.dtRatio = _invDt0*dt;
 
             //Update controllers
             for (int i = 0; i < Controllers.Count; i++)
@@ -783,7 +790,7 @@ namespace FarseerPhysics.Dynamics
             if (hit)
             {
                 float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
+                Vector2 point = (1.0f - fraction)*input.Point1 + fraction*input.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -794,9 +801,9 @@ namespace FarseerPhysics.Dynamics
         {
             // Size the island for the worst case.
             Island.Reset(BodyList.Count,
-                          ContactManager.ContactCount,
-                          JointList.Count,
-                          ContactManager);
+                         ContactManager.ContactCount,
+                         JointList.Count,
+                         ContactManager);
 
             // Clear all the island flags.
             foreach (Body b in BodyList)
@@ -815,7 +822,7 @@ namespace FarseerPhysics.Dynamics
             // Build and simulate all awake islands.
             int stackSize = BodyList.Count;
             if (stackSize > _stack.Length)
-                _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
+                _stack = new Body[Math.Max(_stack.Length*2, stackSize)];
 
             for (int index = BodyList.Count - 1; index >= 0; index--)
             {
@@ -983,7 +990,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="step">The step.</param>
         private void SolveTOI(ref TimeStep step)
         {
-            Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
+            Island.Reset(2*Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
             if (_stepComplete)
             {
@@ -1003,7 +1010,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Find TOI events and solve them.
-            for (; ; )
+            for (;;)
             {
                 // Find the first TOI.
                 Contact minContact = null;
@@ -1097,7 +1104,7 @@ namespace FarseerPhysics.Dynamics
                         float beta = output.T;
                         if (output.State == TOIOutputState.Touching)
                         {
-                            alpha = Math.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
+                            alpha = Math.Min(alpha0 + (1.0f - alpha0)*beta, 1.0f);
                         }
                         else
                         {
@@ -1116,7 +1123,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-                if (minContact == null || 1.0f - 10.0f * Settings.Epsilon < minAlpha)
+                if (minContact == null || 1.0f - 10.0f*Settings.Epsilon < minAlpha)
                 {
                     // No more TOI events. Done!
                     _stepComplete = true;
@@ -1166,7 +1173,7 @@ namespace FarseerPhysics.Dynamics
                 minContact.Flags |= ContactFlags.Island;
 
                 // Get contacts on bodyA and bodyB.
-                Body[] bodies = { bA1, bB1 };
+                Body[] bodies = {bA1, bB1};
                 for (int i = 0; i < 2; ++i)
                 {
                     Body body = bodies[i];
@@ -1247,8 +1254,8 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 TimeStep subStep;
-                subStep.dt = (1.0f - minAlpha) * step.dt;
-                subStep.inv_dt = 1.0f / subStep.dt;
+                subStep.dt = (1.0f - minAlpha)*step.dt;
+                subStep.inv_dt = 1.0f/subStep.dt;
                 subStep.dtRatio = 1.0f;
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
@@ -1326,17 +1333,17 @@ namespace FarseerPhysics.Dynamics
             // Query the world for overlapping shapes.
             QueryAABB(
                 fixture =>
-                {
-                    bool inside = fixture.TestPoint(ref point);
-                    if (inside)
                     {
-                        myFixture = fixture;
-                        return false;
-                    }
+                        bool inside = fixture.TestPoint(ref point);
+                        if (inside)
+                        {
+                            myFixture = fixture;
+                            return false;
+                        }
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             return myFixture;
         }
@@ -1358,14 +1365,14 @@ namespace FarseerPhysics.Dynamics
             // Query the world for overlapping shapes.
             QueryAABB(
                 fixture =>
-                {
-                    bool inside = fixture.TestPoint(ref point);
-                    if (inside)
-                        fixtures.Add(fixture);
+                    {
+                        bool inside = fixture.TestPoint(ref point);
+                        if (inside)
+                            fixtures.Add(fixture);
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+                        // Continue the query.
+                        return true;
+                    }, ref aabb);
 
             return fixtures;
         }

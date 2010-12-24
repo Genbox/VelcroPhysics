@@ -74,8 +74,8 @@ namespace FarseerPhysics.Common.ConvexHull
                 Vector2 nextPt = vertices[i];
 
                 //Ignore if it is already within the convex hull we have constructed
-                if (MathUtils.Area(ref deque[qfm1],ref  deque[qf],ref  nextPt) > 0 &&
-                    MathUtils.Area(ref deque[qb],ref  deque[qbm1],ref  nextPt) > 0)
+                if (MathUtils.Area(ref deque[qfm1], ref deque[qf], ref nextPt) > 0 &&
+                    MathUtils.Area(ref deque[qb], ref deque[qbm1], ref nextPt) > 0)
                     continue;
 
                 //Pop front until convex
@@ -91,7 +91,7 @@ namespace FarseerPhysics.Common.ConvexHull
                 deque[qf] = nextPt;
 
                 //Pop back until convex
-                while (!(MathUtils.Area(ref deque[qb], ref deque[qbm1], ref  nextPt) > 0))
+                while (!(MathUtils.Area(ref deque[qb], ref deque[qbm1], ref nextPt) > 0))
                 {
                     //Pop the back element from the queue
                     qb = qbm1; //qb++;

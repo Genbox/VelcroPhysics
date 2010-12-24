@@ -148,7 +148,7 @@ namespace FarseerPhysics.Dynamics.Joints
                     break;
             }
 
-            _ant = coordinate1 + Ratio * coordinate2;
+            _ant = coordinate1 + Ratio*coordinate2;
         }
 
         public override Vector2 WorldAnchorA
@@ -182,8 +182,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            Vector2 P = _impulse * _J.LinearB;
-            return inv_dt * P;
+            Vector2 P = _impulse*_J.LinearB;
+            return inv_dt*P;
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -192,9 +192,9 @@ namespace FarseerPhysics.Dynamics.Joints
             BodyB.GetTransform(out xf1);
 
             Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.LocalCenter);
-            Vector2 P = _impulse * _J.LinearB;
-            float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
-            return inv_dt * L;
+            Vector2 P = _impulse*_J.LinearB;
+            float L = _impulse*_J.AngularB - MathUtils.Cross(r, P);
+            return inv_dt*L;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
@@ -227,13 +227,13 @@ namespace FarseerPhysics.Dynamics.Joints
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
-                K += b1.InvMass + b1.InvI * crug * crug;
+                K += b1.InvMass + b1.InvI*crug*crug;
             }
 
             if (_revolute2 != null || _fixedRevolute2 != null)
             {
                 _J.AngularB = -Ratio;
-                K += Ratio * Ratio * b2.InvI;
+                K += Ratio*Ratio*b2.InvI;
             }
             else
             {
@@ -249,22 +249,22 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
-                _J.LinearB = -Ratio * ug;
-                _J.AngularB = -Ratio * crug;
-                K += Ratio * Ratio * (b2.InvMass + b2.InvI * crug * crug);
+                _J.LinearB = -Ratio*ug;
+                _J.AngularB = -Ratio*crug;
+                K += Ratio*Ratio*(b2.InvMass + b2.InvI*crug*crug);
             }
 
             // Compute effective mass.
             Debug.Assert(K > 0.0f);
-            _mass = K > 0.0f ? 1.0f / K : 0.0f;
+            _mass = K > 0.0f ? 1.0f/K : 0.0f;
 
             if (Settings.EnableWarmstarting)
             {
                 // Warm starting.
-                b1.LinearVelocityInternal += b1.InvMass * _impulse * _J.LinearA;
-                b1.AngularVelocityInternal += b1.InvI * _impulse * _J.AngularA;
-                b2.LinearVelocityInternal += b2.InvMass * _impulse * _J.LinearB;
-                b2.AngularVelocityInternal += b2.InvI * _impulse * _J.AngularB;
+                b1.LinearVelocityInternal += b1.InvMass*_impulse*_J.LinearA;
+                b1.AngularVelocityInternal += b1.InvI*_impulse*_J.AngularA;
+                b2.LinearVelocityInternal += b2.InvMass*_impulse*_J.LinearB;
+                b2.AngularVelocityInternal += b2.InvI*_impulse*_J.AngularB;
             }
             else
             {
@@ -280,13 +280,13 @@ namespace FarseerPhysics.Dynamics.Joints
             float Cdot = _J.Compute(b1.LinearVelocityInternal, b1.AngularVelocityInternal,
                                     b2.LinearVelocityInternal, b2.AngularVelocityInternal);
 
-            float impulse = _mass * (-Cdot);
+            float impulse = _mass*(-Cdot);
             _impulse += impulse;
 
-            b1.LinearVelocityInternal += b1.InvMass * impulse * _J.LinearA;
-            b1.AngularVelocityInternal += b1.InvI * impulse * _J.AngularA;
-            b2.LinearVelocityInternal += b2.InvMass * impulse * _J.LinearB;
-            b2.AngularVelocityInternal += b2.InvI * impulse * _J.AngularB;
+            b1.LinearVelocityInternal += b1.InvMass*impulse*_J.LinearA;
+            b1.AngularVelocityInternal += b1.InvI*impulse*_J.AngularA;
+            b2.LinearVelocityInternal += b2.InvMass*impulse*_J.LinearB;
+            b2.AngularVelocityInternal += b2.InvI*impulse*_J.AngularB;
         }
 
         internal override bool SolvePositionConstraints()
@@ -331,14 +331,14 @@ namespace FarseerPhysics.Dynamics.Joints
                 coordinate2 = _fixedPrismatic2.JointTranslation;
             }
 
-            float C = _ant - (coordinate1 + Ratio * coordinate2);
+            float C = _ant - (coordinate1 + Ratio*coordinate2);
 
-            float impulse = _mass * (-C);
+            float impulse = _mass*(-C);
 
-            b1.Sweep.C += b1.InvMass * impulse * _J.LinearA;
-            b1.Sweep.A += b1.InvI * impulse * _J.AngularA;
-            b2.Sweep.C += b2.InvMass * impulse * _J.LinearB;
-            b2.Sweep.A += b2.InvI * impulse * _J.AngularB;
+            b1.Sweep.C += b1.InvMass*impulse*_J.LinearA;
+            b1.Sweep.A += b1.InvI*impulse*_J.AngularA;
+            b2.Sweep.C += b2.InvMass*impulse*_J.LinearB;
+            b2.Sweep.A += b2.InvI*impulse*_J.AngularB;
 
             b1.SynchronizeTransform();
             b2.SynchronizeTransform();
