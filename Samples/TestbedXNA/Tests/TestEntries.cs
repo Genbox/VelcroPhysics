@@ -89,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
                 new TestEntry {Name = "Explosion", CreateFcn = ExplosionTest.Create},
                 new TestEntry {Name = "Lock Test", CreateFcn = LockTest.Create},
-                new TestEntry {Name = "Sphere benchmark", CreateFcn = SphereBenchmarkTest.Create},
+                new TestEntry {Name = "Sphere benchmark", CreateFcn = CircleBenchmarkTest.Create},
                 new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmark.Create},
                 new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
 

@@ -151,7 +151,7 @@
     <Compile Include="Tests\SensorTest.cs" />
     <Compile Include="Tests\ShapeEditingTest.cs" />
     <Compile Include="Tests\SliderCrankTest.cs" />
-    <Compile Include="Tests\SphereBenchmarkTest.cs" />
+    <Compile Include="Tests\CircleBenchmarkTest.cs" />
     <Compile Include="Tests\SphereStackTest.cs" />
     <Compile Include="Tests\TestEntries.cs">
       <SubType>Code</SubType>
