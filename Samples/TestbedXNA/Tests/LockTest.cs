@@ -20,7 +20,7 @@ namespace FarseerPhysics.TestBed.Tests
             _rectangle.OnCollision += OnCollision;
 
             //Properties and methods that were checking for lock before
-            //Body.Active
+            //Body.Enabled
             //Body.LocalCenter
             //Body.Mass
             //Body.Inertia
@@ -31,13 +31,13 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool OnCollision(Fixture fixturea, Fixture fixtureb, Contact manifold)
         {
-            _rectangle.Body.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
-            _rectangle.Body.DestroyFixture(_rectangle);
+            //_rectangle.Body.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
+            //_rectangle.Body.DestroyFixture(_rectangle);
             //_rectangle.Body.Inertia = 40;
             //_rectangle.Body.LocalCenter = new Vector2(-1,-1);
             //_rectangle.Body.Mass = 10;
-            //_rectangle.Body.Active = false;);)
-            return true;
+            _rectangle.Body.Enabled = false;
+            return false;
         }
 
         internal static Test Create()
