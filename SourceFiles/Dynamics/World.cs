@@ -382,7 +382,11 @@ namespace FarseerPhysics.Dynamics
                 _jointRemoveList.Add(joint);
         }
 
-        private void ProcessChanges()
+        /// <summary>
+        /// All adds and removes are cached by the World duing a World step.
+        /// To process the changes before the world updates again, call this method.
+        /// </summary>
+        public void ProcessChanges()
         {
             ProcessAddedBodies();
             ProcessAddedJoints();

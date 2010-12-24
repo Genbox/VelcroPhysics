@@ -24,7 +24,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         private bool _targetZoomReached = true;
         private float _zoom;
 
-        public Action ProjectionViewUpdated;
+        public Action ProjectionUpdated;
+        public Action ViewUpdated;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -257,8 +258,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             // L/R/B/T
             Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio, 25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
 
-            if (ProjectionViewUpdated != null)
-                ProjectionViewUpdated();
+            if (ProjectionUpdated != null)
+                ProjectionUpdated();
         }
 
         /// <summary>
@@ -311,8 +312,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) * Matrix.CreateScale(_zoom);
 
-            if (ProjectionViewUpdated != null)
-                ProjectionViewUpdated();
+            if (ViewUpdated != null)
+                ViewUpdated();
         }
 
         /// <summary>
