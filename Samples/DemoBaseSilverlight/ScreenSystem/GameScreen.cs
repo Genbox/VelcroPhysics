@@ -9,7 +9,6 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Border = FarseerPhysics.DemoBaseSilverlight.DemoShare.Border;
-using Matrix = Microsoft.Xna.Framework.Matrix;
 
 namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 {
@@ -33,12 +32,8 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
     /// </summary>
     public abstract class GameScreen : IDisposable
     {
-        public Matrix Projection;
-
-        public Matrix View = Matrix.Identity;
         private FixedMouseJoint _fixedMouseJoint;
         private bool _otherScreenHasFocus;
-        private Vector2 _viewCenter = Vector2.Zero;
         public bool firstRun = true;
 
         protected GameScreen()
@@ -156,28 +151,6 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
                 DebugView.SleepingShapeColor = Colors.LightGray;
                 DebugView.Transform = Transform;
             }
-        }
-
-        public Vector2 ConvertScreenToWorld(int x, int y)
-        {
-            float viewportWidth = ScreenManager.ScreenWidth;
-            float viewportHeight = ScreenManager.ScreenHeight;
-
-            float aspectRatio = ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
-
-            Vector2 extents = new Vector2(aspectRatio * 40, 40);
-
-            Vector2 lower = _viewCenter - extents;
-            Vector2 upper = _viewCenter + extents;
-
-            float u = x / viewportWidth;
-            float v = (viewportHeight - y) / viewportHeight;
-
-            Vector2 p = new Vector2();
-            p.X = (1.0f - u) * lower.X + u * upper.X;
-            p.Y = (1.0f - v) * lower.Y + v * upper.Y;
-
-            return p;
         }
 
         /// <summary>
@@ -404,8 +377,6 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
         {
             if (World != null)
             {
-                float aspect = (float)ScreenManager.ScreenWidth / ScreenManager.ScreenHeight;
-
                 if (DebugView != null)
                 {
                     DebugView.DrawDebugData();

@@ -44,8 +44,6 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             ScreenManager.MainMenuScreen.AddMainMenuItem(demo7.GetTitle(), demo7);
 
             ScreenManager.GoToMainMenu();
-
-            //ScreenManager.AddScreen(demo7);
         }
 
         public ScreenManager ScreenManager { get; set; }
