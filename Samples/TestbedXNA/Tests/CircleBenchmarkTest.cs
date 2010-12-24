@@ -23,7 +23,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -33,12 +32,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SphereBenchmarkTest : Test
+    public class CircleBenchmarkTest : Test
     {
         private const int XCount = 30;
         private const int YCount = 15;
 
-        private SphereBenchmarkTest()
+        private CircleBenchmarkTest()
         {
             Body ground = BodyFactory.CreateBody(World);
 
@@ -77,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public static Test Create()
         {
-            return new SphereBenchmarkTest();
+            return new CircleBenchmarkTest();
         }
     }
 }
