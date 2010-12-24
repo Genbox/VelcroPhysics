@@ -1,4 +1,6 @@
-﻿#region License
+﻿#if (!XNA)
+
+#region License
 
 /*
 MIT License
@@ -161,3 +163,5 @@ namespace Microsoft.Xna.Framework
         #endregion
     }
 }
+
+#endif

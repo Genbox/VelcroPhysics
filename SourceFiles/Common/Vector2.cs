@@ -1,4 +1,6 @@
-﻿#region License
+﻿#if(!XNA)
+
+#region License
 
 /*
 MIT License
@@ -30,17 +32,12 @@ SOFTWARE.
 
 #endregion License
 
-#if(!XNA)
-
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Microsoft.Xna.Framework
 {
-#if (!SILVERLIGHT)
-    [Serializable]
-#endif
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2 : IEquatable<Vector2>
     {
