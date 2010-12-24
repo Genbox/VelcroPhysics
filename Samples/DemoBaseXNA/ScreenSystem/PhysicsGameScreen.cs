@@ -41,7 +41,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             DebugView.SleepingShapeColor = Color.LightGray;
 
             DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.ContentManager);
-            Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+            Vector2 gameWorld =
+                Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth,
+                                                          ScreenManager.Camera.ScreenHeight));
             _border = new Border(World, gameWorld.X, gameWorld.Y, 1f);
 
             ScreenManager.Camera.ProjectionUpdated += UpdateScreen;
@@ -54,7 +56,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             if (World != null)
             {
-                Vector2 gameWorld = Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth, ScreenManager.Camera.ScreenHeight));
+                Vector2 gameWorld =
+                    Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth,
+                                                              ScreenManager.Camera.ScreenHeight));
                 _border.ResetBorder(gameWorld.X, gameWorld.Y, 1f);
             }
         }
@@ -64,7 +68,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (!coveredByOtherScreen && !otherScreenHasFocus && World != null)
             {
                 // variable time step but never less then 30 Hz
-                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+                World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds*0.001f, (1f/30f)));
                 DebugView.Update(gameTime);
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -204,7 +208,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 Body body = savedFixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
+                _fixedMouseJoint.MaxForce = 1000.0f*body.Mass;
                 World.AddJoint(_fixedMouseJoint);
                 body.Awake = true;
             }

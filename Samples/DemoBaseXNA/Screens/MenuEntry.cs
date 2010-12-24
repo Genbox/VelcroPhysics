@@ -33,6 +33,8 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         private Vector2 _position;
 
+        private float _scale;
+
         /// <summary>
         /// Tracks a fading selection effect on the entry.
         /// </summary>
@@ -40,7 +42,6 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
         private float _selectionFade;
-        private float _scale;
 
         /// <summary>
         /// The text rendered for this entry.
@@ -108,14 +109,14 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // When the menu selection changes, entries gradually fade between
             // their selected and deselected appearance, rather than instantly
             // popping to the new state.
-            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
+            float fadeSpeed = (float) gameTime.ElapsedGameTime.TotalSeconds*4;
 
             if (isSelected)
                 _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
             else
                 _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
 
-            _scale = 0.7f + 0.1f * _selectionFade;
+            _scale = 0.7f + 0.1f*_selectionFade;
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.SpriteFonts.MenuSpriteFont;
 
-            Vector2 origin = new Vector2((font.MeasureString(Text).X * (_scale - 0.7f)) / 4f, font.LineSpacing / 2f);
+            Vector2 origin = new Vector2((font.MeasureString(Text).X*(_scale - 0.7f))/4f, font.LineSpacing/2f);
 
             spriteBatch.DrawString(font, _text, _position, color, 0,
                                    origin, _scale, SpriteEffects.None, 0);
@@ -156,7 +157,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         public int GetWidth(MenuScreen screen)
         {
-            return (int)(screen.ScreenManager.SpriteFonts.MenuSpriteFont.MeasureString(Text).X);
+            return (int) (screen.ScreenManager.SpriteFonts.MenuSpriteFont.MeasureString(Text).X);
         }
     }
 }

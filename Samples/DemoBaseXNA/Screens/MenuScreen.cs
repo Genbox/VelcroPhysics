@@ -34,7 +34,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         /// </summary>
         public MenuScreen(string menuTitle)
         {
-            this.MenuTitle = menuTitle;
+            MenuTitle = menuTitle;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -63,7 +63,8 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             {
                 float width = entry.GetWidth(this);
                 float height = entry.GetHeight(this);
-                Rectangle rect = new Rectangle((int)entry.Position.X, (int)(entry.Position.Y - (height * 0.5f)), (int)width, (int)height);
+                Rectangle rect = new Rectangle((int) entry.Position.X, (int) (entry.Position.Y - (height*0.5f)),
+                                               (int) width, (int) height);
                 if (rect.Contains(pos))
                 {
                     return index;
@@ -110,7 +111,8 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 }
             }
 
-            if (input.CurrentMouseState.LeftButton == ButtonState.Released && input.LastMouseState.LeftButton == ButtonState.Pressed)
+            if (input.CurrentMouseState.LeftButton == ButtonState.Released &&
+                input.LastMouseState.LeftButton == ButtonState.Pressed)
             {
                 int index = GetMenuEntryAt(ref input.LastMouseState);
                 if (index > -1)
@@ -170,7 +172,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            float transitionOffset = (float) Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
 #if WINDOWS_PHONE
@@ -187,9 +189,9 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 position.X = LeftBorder;
 
                 if (ScreenState == ScreenState.TransitionOn)
-                    position.X -= transitionOffset * 256;
+                    position.X -= transitionOffset*256;
                 else
-                    position.X += transitionOffset * 512;
+                    position.X += transitionOffset*512;
 
                 // set the entry's position
                 menuEntry.Position = position;
@@ -215,6 +217,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
                 _menuEntries[i].Update(isSelected, gameTime);
             }
         }
+
         /// <summary>
         /// Draws the menu.
         /// </summary>
@@ -242,14 +245,14 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            float transitionOffset = (float) Math.Pow(TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2f, 80);
-            Vector2 titleOrigin = font.MeasureString(MenuTitle) / 2;
+            Vector2 titlePosition = new Vector2(graphics.Viewport.Width/2f, 80);
+            Vector2 titleOrigin = font.MeasureString(MenuTitle)/2;
             const float titleScale = 0.9f;
 
-            titlePosition.Y -= transitionOffset * 100;
+            titlePosition.Y -= transitionOffset*100;
 
             spriteBatch.DrawString(font, MenuTitle, titlePosition, Color.White, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0);

@@ -41,10 +41,10 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2(width, 0), 0));
 
             DebugMaterial material = new DebugMaterial(MaterialType.Pavement)
-            {
-                Color = Color.LightGray,
-                Scale = 8f
-            };
+                                         {
+                                             Color = Color.LightGray,
+                                             Scale = 8f
+                                         };
             List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(borders, 1, _anchor, material);
 
             foreach (Fixture t in fixtures)

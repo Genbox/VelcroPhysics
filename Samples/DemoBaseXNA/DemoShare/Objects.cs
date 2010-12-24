@@ -23,7 +23,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private List<Fixture> _fixtures;
         private ObjectType _type;
 
-        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type, DebugMaterial material)
+        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type,
+                       DebugMaterial material)
         {
             _fixtures = new List<Fixture>(count);
             _decomposedFixtures = new List<List<Fixture>>(count);
@@ -68,7 +69,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 {
                     Fixture fixture = _fixtures[i];
                     fixture.Body.BodyType = BodyType.Dynamic;
-                    fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i / (float) (count - 1));
+                    fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
                     fixture.Restitution = .7f;
                     fixture.Friction = .2f;
                     fixture.CollisionFilter.CollisionCategories = CollisionCategories;
@@ -83,7 +84,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                     foreach (Fixture fixture in fixtures)
                     {
                         fixture.Body.BodyType = BodyType.Dynamic;
-                        fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i / (float) (count - 1));
+                        fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
                         fixture.Restitution = .7f;
                         fixture.Friction = .2f;
                         fixture.CollisionFilter.CollisionCategories = CollisionCategories;

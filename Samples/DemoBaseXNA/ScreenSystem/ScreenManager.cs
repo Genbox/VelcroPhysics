@@ -47,9 +47,9 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private List<GameScreen> _screens = new List<GameScreen>();
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
-        private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
 
         private SpriteBatch _spriteBatch;
+        private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
 
         /// <summary>
         /// Constructs a new screen manager component.
@@ -203,7 +203,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     if (_transitions.Count < transitionCount)
                     {
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
-                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
+                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight,
+                                                            false,
                                                             SurfaceFormat.Color, DepthFormat.Depth24Stencil8));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
@@ -227,7 +228,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     _spriteBatch.Begin();
                     _spriteBatch.Draw(_transitions[transitionCount],
                                       new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
-                                      Color.White * screen.TransitionAlpha);
+                                      Color.White*screen.TransitionAlpha);
                     _spriteBatch.End();
                     ++transitionCount;
                 }
@@ -308,7 +309,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             _spriteBatch.Draw(_blankTexture,
                               new Rectangle(0, 0, viewport.Width, viewport.Height),
-                              Color.Black * alpha);
+                              Color.Black*alpha);
 
             _spriteBatch.End();
         }

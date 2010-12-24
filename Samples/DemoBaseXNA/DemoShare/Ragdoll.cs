@@ -42,15 +42,15 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
         private void CreateBody(World world, Vector2 position)
         {
             DebugMaterial matHead = new DebugMaterial(MaterialType.Face)
-            {
-                Color = Color.DeepSkyBlue,
-                Scale = 2f
-            };
+                                        {
+                                            Color = Color.DeepSkyBlue,
+                                            Scale = 2f
+                                        };
             DebugMaterial matBody = new DebugMaterial(MaterialType.Squares)
-            {
-                Color = Color.DeepSkyBlue,
-                Scale = 8f
-            };
+                                        {
+                                            Color = Color.DeepSkyBlue,
+                                            Scale = 8f
+                                        };
 
             //Head
             _head = FixtureFactory.CreateCircle(world, .9f, 10, matHead);

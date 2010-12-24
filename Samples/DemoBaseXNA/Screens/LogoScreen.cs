@@ -13,12 +13,12 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
     /// </summary>
     public class LogoScreen : GameScreen
     {
-        private const float LogoScreenHeightRatio = 4f / 6f;
+        private const float LogoScreenHeightRatio = 4f/6f;
         private const float LogoWidthHeightRatio = 1.4625f;
-        private Texture2D _farseerLogoTexture;
         private Texture2D _blankTexture;
         private Rectangle _destination;
         private TimeSpan _duration;
+        private Texture2D _farseerLogoTexture;
 
         public LogoScreen(TimeSpan duration)
         {
@@ -38,10 +38,10 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         {
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Vector2 logoSize = new Vector2();
-            logoSize.Y = viewport.Height * LogoScreenHeightRatio;
-            logoSize.X = logoSize.Y * LogoWidthHeightRatio;
-            Vector2 logoPosition = ScreenManager.Camera.ScreenCenter - logoSize / 2f;
-            _destination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
+            logoSize.Y = viewport.Height*LogoScreenHeightRatio;
+            logoSize.X = logoSize.Y*LogoWidthHeightRatio;
+            Vector2 logoPosition = ScreenManager.Camera.ScreenCenter - logoSize/2f;
+            _destination = new Rectangle((int) logoPosition.X, (int) logoPosition.Y, (int) logoSize.X, (int) logoSize.Y);
         }
 
         public override void HandleInput(InputHelper input)
