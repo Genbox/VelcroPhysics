@@ -205,7 +205,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
                         _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight,
                                                             false,
-                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8));
+                                                            SurfaceFormat.Color, DepthFormat.Depth24Stencil8, _pp.MultiSampleCount,
+                                                            RenderTargetUsage.DiscardContents));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);
@@ -228,7 +229,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                     _spriteBatch.Begin();
                     _spriteBatch.Draw(_transitions[transitionCount],
                                       new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
-                                      Color.White*screen.TransitionAlpha);
+                                      Color.White * screen.TransitionAlpha);
                     _spriteBatch.End();
                     ++transitionCount;
                 }
@@ -309,7 +310,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             _spriteBatch.Draw(_blankTexture,
                               new Rectangle(0, 0, viewport.Width, viewport.Height),
-                              Color.Black*alpha);
+                              Color.Black * alpha);
 
             _spriteBatch.End();
         }
