@@ -103,7 +103,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public PlayerIndex DefaultPlayerIndex = PlayerIndex.One;
 
-        public GamePadState CurrentGamepadState
+        public GamePadState CurrentGamePadState
         {
             get { return CurrentGamePadStates[(int) DefaultPlayerIndex]; }
         }
@@ -111,6 +111,16 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public KeyboardState CurrentKeyboardState
         {
             get { return CurrentKeyboardStates[(int) DefaultPlayerIndex]; }
+        }
+
+        public GamePadState LastGamePadState
+        {
+            get { return LastGamePadStates[(int)DefaultPlayerIndex]; }
+        }
+
+        public KeyboardState LastKeyboardState
+        {
+            get { return LastKeyboardStates[(int)DefaultPlayerIndex]; }
         }
 
         /// <summary>
