@@ -68,13 +68,13 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
         public override void HandleGamePadInput(InputHelper input)
         {
-            Vector2 force = 100*input.CurrentGamepadState.ThumbSticks.Left;
+            Vector2 force = 100*input.CurrentGamePadState.ThumbSticks.Left;
             _rectangles[0].Body.ApplyForce(force);
 
-            float rotation = 200*input.CurrentGamepadState.Triggers.Left;
+            float rotation = 200*input.CurrentGamePadState.Triggers.Left;
             _rectangles[0].Body.ApplyTorque(rotation);
 
-            rotation = -200*input.CurrentGamepadState.Triggers.Right;
+            rotation = -200*input.CurrentGamePadState.Triggers.Right;
             _rectangles[0].Body.ApplyTorque(rotation);
 
             base.HandleGamePadInput(input);

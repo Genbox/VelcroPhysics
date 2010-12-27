@@ -47,7 +47,7 @@ namespace FarseerPhysics.DemoBaseXNA.Screens
         public override void HandleInput(InputHelper input)
         {
             if (input.CurrentKeyboardState.GetPressedKeys().Length > 0 ||
-                input.CurrentGamepadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||
+                input.CurrentGamePadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||
                 input.CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 _duration = TimeSpan.Zero;

@@ -68,7 +68,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             if (!coveredByOtherScreen && !otherScreenHasFocus && World != null)
             {
                 // variable time step but never less then 30 Hz
-                World.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalMilliseconds*0.001f, (1f/30f)));
+                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
                 DebugView.Update(gameTime);
             }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -130,10 +130,10 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
             if (World != null)
             {
-#if !XBOX
-                Mouse(input);
-#else
+#if XBOX
                 GamePad(input.CurrentGamePadState, input.LastGamePadState);
+#else
+                Mouse(input);
 #endif
             }
 
@@ -148,7 +148,32 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 DebugView.AppendFlags(flag);
         }
 
-#if !XBOX
+#if XBOX
+        private void GamePad(GamePadState state, GamePadState oldState)
+        {
+            Vector2 worldPosition = Camera2D.ConvertScreenToWorld(new Vector2(state.ThumbSticks.Left.X, state.ThumbSticks.Left.Y));
+
+            if (state.Buttons.A == ButtonState.Released && oldState.Buttons.A == ButtonState.Pressed)
+            {
+                MouseUp();
+            }
+            else if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
+            {
+                MouseDown(worldPosition);
+            }
+
+            GamePadMove(worldPosition);
+        }
+
+        private void GamePadMove(Vector2 p)
+        {
+            if (_fixedMouseJoint != null)
+            {
+                _fixedMouseJoint.WorldAnchorB = p;
+            }
+        }
+
+#else
         private void Mouse(InputHelper state)
         {
             Vector2 position = Camera2D.ConvertScreenToWorld(state.MousePosition);
@@ -167,32 +192,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 _fixedMouseJoint.WorldAnchorB = position;
             }
         }
-#else
-        private void GamePad(GamePadState state, GamePadState oldState)
-        {
-            Vector3 worldPosition = ScreenManager.GraphicsDevice.Viewport.Unproject(new Vector3(state.ThumbSticks.Left.X, state.ThumbSticks.Left.Y, 0),
-                                                                                    Projection, View, Matrix.Identity);
-            Vector2 position = new Vector2(worldPosition.X, worldPosition.Y);
-
-            if (state.Buttons.A == ButtonState.Released && oldState.Buttons.A == ButtonState.Pressed)
-            {
-                MouseUp();
-            }
-            else if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
-            {
-                MouseDown(position);
-            }
-
-            GamePadMove(position);
-        }
-
-        private void GamePadMove(Vector2 p)
-        {
-            if (_fixedMouseJoint != null)
-            {
-                _fixedMouseJoint.Target = p;
-            }
-        }
 #endif
 
         private void MouseDown(Vector2 p)
@@ -208,7 +207,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             {
                 Body body = savedFixture.Body;
                 _fixedMouseJoint = new FixedMouseJoint(body, p);
-                _fixedMouseJoint.MaxForce = 1000.0f*body.Mass;
+                _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
                 World.AddJoint(_fixedMouseJoint);
                 body.Awake = true;
             }

@@ -283,12 +283,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public virtual void HandleGamePadInput(InputHelper input)
         {
-            if (input.CurrentGamepadState.Buttons.RightShoulder == ButtonState.Pressed)
+            if (input.CurrentGamePadState.Buttons.RightShoulder == ButtonState.Pressed)
                 ScreenManager.Camera.Zoom += 0.02f;
-            if (input.CurrentGamepadState.Buttons.LeftShoulder == ButtonState.Pressed)
+            if (input.CurrentGamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
                 ScreenManager.Camera.Zoom -= 0.02f;
-            ScreenManager.Camera.MoveCamera(input.CurrentGamepadState.ThumbSticks.Right/2f);
-            if (input.CurrentGamepadState.Buttons.RightStick == ButtonState.Pressed)
+            ScreenManager.Camera.MoveCamera(input.CurrentGamePadState.ThumbSticks.Right/2f);
+            if (input.CurrentGamePadState.Buttons.RightStick == ButtonState.Pressed)
                 ScreenManager.Camera.ResetCamera();
         }
 
