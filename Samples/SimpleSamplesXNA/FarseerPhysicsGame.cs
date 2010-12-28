@@ -35,7 +35,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.IsFullScreen = true;
 #endif
-
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -92,15 +91,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
             ScreenManager.AddScreen(new BackgroundScreen(), null);
             ScreenManager.AddScreen(mainMenuScreen, null);
             ScreenManager.AddScreen(new LogoScreen(TimeSpan.FromSeconds(2.0)), null);
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
         }
 
 #if WINDOWS

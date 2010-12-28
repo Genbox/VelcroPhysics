@@ -16,6 +16,7 @@ namespace FarseerPhysics.DemoBaseXNA.Components
         private int _frameCounter;
         private int _frameRate;
         private ScreenManager _screenManager;
+        private Vector2 _position;
 
         public FrameRateCounter(ScreenManager screenManager)
             : base(screenManager.Game)
@@ -23,8 +24,13 @@ namespace FarseerPhysics.DemoBaseXNA.Components
             _screenManager = screenManager;
             _format = new NumberFormatInfo();
             _format.NumberDecimalSeparator = ".";
-        }
 
+#if XBOX
+            _position = new Vector2(55, 35);
+#else
+            _position = new Vector2(30, 25);
+#endif
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -45,7 +51,7 @@ namespace FarseerPhysics.DemoBaseXNA.Components
 
             _screenManager.SpriteBatch.Begin();
             _screenManager.SpriteBatch.DrawString(_screenManager.SpriteFonts.FrameRateCounterFont, fps,
-                                                  new Vector2(30, 25), Color.Black, 0, Vector2.Zero, 1.0f,
+                                                  _position, Color.Black, 0, Vector2.Zero, 1.0f,
                                                   SpriteEffects.None, 1);
             _screenManager.SpriteBatch.End();
         }
