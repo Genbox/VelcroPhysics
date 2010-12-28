@@ -84,10 +84,12 @@ namespace FarseerPhysics.DebugViews
 #endif
         private Vector2[] _background = new Vector2[4];
 
-#if XBOX
+#if XBOX || WINDOWS_PHONE
         public const int CircleSegments = 16;
+        public const bool simpleLines = true;
 #else
         public const int CircleSegments = 32;
+        public const bool simpleLines = false;
 #endif
 
         public DebugViewXNA(World world)
@@ -898,8 +900,7 @@ namespace FarseerPhysics.DebugViews
             Vector2 center = circle.Position;
             float radius = circle.Radius;
 
-            const int segments = 32;
-            const double increment = Math.PI * 2.0 / segments;
+            const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = increment;
 
             Color colorFill = material.Color;
@@ -911,7 +912,7 @@ namespace FarseerPhysics.DebugViews
                 texCoordCenter += center / material.Scale;
             }
 
-            for (int i = 1; i < segments - 1; i++)
+            for (int i = 1; i < CircleSegments - 1; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
                 Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
@@ -940,7 +941,7 @@ namespace FarseerPhysics.DebugViews
                 {
                     DrawTexturedLine(MathUtils.Multiply(ref xf, v0), MathUtils.Multiply(ref xf, v1));
                 }
-                if (i == segments - 2)
+                if (i == CircleSegments - 2)
                 {
                     DrawTexturedLine(MathUtils.Multiply(ref xf, v2), MathUtils.Multiply(ref xf, v0));
                 }
@@ -954,58 +955,90 @@ namespace FarseerPhysics.DebugViews
             tang *= DefaultLineWidth / 2f;
             Vector2 norm = new Vector2(-tang.Y, tang.X);
 
+            VertexPositionColorTexture[] vertsLine;
             // define vertices
-            VertexPositionColorTexture[] vertsLine = new VertexPositionColorTexture[8];
+            if (simpleLines)
+            {
+                vertsLine = new VertexPositionColorTexture[4];
+            }
+            else
+            {
+                vertsLine = new VertexPositionColorTexture[8];
+            }
             vertsLine[0].Position = new Vector3(a - tang + norm, -0.2f);
             vertsLine[0].Color = Color.Black;
-            vertsLine[0].TextureCoordinate = new Vector2(0f, .25f);
             vertsLine[1].Position = new Vector3(a - tang - norm, -0.2f);
             vertsLine[1].Color = Color.Black;
-            vertsLine[1].TextureCoordinate = new Vector2(0f, .75f);
-            vertsLine[2].Position = new Vector3(a - norm, -0.2f);
+            vertsLine[2].Position = new Vector3(b + tang - norm, -0.2f);
             vertsLine[2].Color = Color.Black;
-            vertsLine[2].TextureCoordinate = new Vector2(.25f, .75f);
-            vertsLine[3].Position = new Vector3(b - norm, -0.2f);
+            vertsLine[3].Position = new Vector3(b + tang + norm, -0.2f);
             vertsLine[3].Color = Color.Black;
-            vertsLine[3].TextureCoordinate = new Vector2(.75f, .75f);
-            vertsLine[4].Position = new Vector3(b + tang - norm, -0.2f);
-            vertsLine[4].Color = Color.Black;
-            vertsLine[4].TextureCoordinate = new Vector2(1f, .75f);
-            vertsLine[5].Position = new Vector3(b + tang + norm, -0.2f);
-            vertsLine[5].Color = Color.Black;
-            vertsLine[5].TextureCoordinate = new Vector2(1f, .25f);
-            vertsLine[6].Position = new Vector3(b + norm, -0.2f);
-            vertsLine[6].Color = Color.Black;
-            vertsLine[6].TextureCoordinate = new Vector2(.75f, .25f);
-            vertsLine[7].Position = new Vector3(a + norm, -0.2f);
-            vertsLine[7].Color = Color.Black;
-            vertsLine[7].TextureCoordinate = new Vector2(.25f, .25f);
+            if (simpleLines)
+            {
+                vertsLine[0].TextureCoordinate = new Vector2(.25f, .25f);
+                vertsLine[1].TextureCoordinate = new Vector2(.25f, .75f);
+                vertsLine[2].TextureCoordinate = new Vector2(.75f, .75f);
+                vertsLine[3].TextureCoordinate = new Vector2(.75f, .25f);
+            }
+            else
+            {
+                vertsLine[0].TextureCoordinate = new Vector2(0f, .25f);
+                vertsLine[1].TextureCoordinate = new Vector2(0f, .75f);
+                vertsLine[2].TextureCoordinate = new Vector2(1f, .75f);
+                vertsLine[3].TextureCoordinate = new Vector2(1f, .25f);
+                vertsLine[4].Position = new Vector3(a + norm, -0.2f);
+                vertsLine[4].Color = Color.Black;
+                vertsLine[4].TextureCoordinate = new Vector2(.25f, .25f);
+                vertsLine[5].Position = new Vector3(a - norm, -0.2f);
+                vertsLine[5].Color = Color.Black;
+                vertsLine[5].TextureCoordinate = new Vector2(.25f, .75f);
+                vertsLine[6].Position = new Vector3(b - norm, -0.2f);
+                vertsLine[6].Color = Color.Black;
+                vertsLine[6].TextureCoordinate = new Vector2(.75f, .75f);
+                vertsLine[7].Position = new Vector3(b + norm, -0.2f);
+                vertsLine[7].Color = Color.Black;
+                vertsLine[7].TextureCoordinate = new Vector2(.75f, .25f);
+            }
 
             // add triangles
-            _vertsLines[_lineCount * 3] = vertsLine[0];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[1];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
-            _lineCount++;
-            _vertsLines[_lineCount * 3] = vertsLine[1];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
-            _lineCount++;
-            _vertsLines[_lineCount * 3] = vertsLine[7];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[6];
-            _lineCount++;
-            _vertsLines[_lineCount * 3] = vertsLine[2];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[3];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[6];
-            _lineCount++;
-            _vertsLines[_lineCount * 3] = vertsLine[6];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[3];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[5];
-            _lineCount++;
-            _vertsLines[_lineCount * 3] = vertsLine[3];
-            _vertsLines[_lineCount * 3 + 1] = vertsLine[4];
-            _vertsLines[_lineCount * 3 + 2] = vertsLine[5];
-            _lineCount++;
+            if (simpleLines)
+            {
+                _vertsLines[_lineCount * 3] = vertsLine[0];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[1];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[3];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[1];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[3];
+                _lineCount++;
+            }
+            else
+            {
+                _vertsLines[_lineCount * 3] = vertsLine[0];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[1];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[4];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[1];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[5];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[4];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[4];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[5];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[5];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[6];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[7];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[7];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[6];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[3];
+                _lineCount++;
+                _vertsLines[_lineCount * 3] = vertsLine[6];
+                _vertsLines[_lineCount * 3 + 1] = vertsLine[2];
+                _vertsLines[_lineCount * 3 + 2] = vertsLine[3];
+                _lineCount++;
+            }
         }
 
         public override void DrawSegment(Vector2 start, Vector2 end, float red, float green, float blue)
