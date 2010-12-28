@@ -163,9 +163,9 @@
       <Project>{FB9FD837-9D1C-4878-B5F6-E79A44F46E7E}</Project>
       <Name>Farseer Physics WP7</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\Windows Phone Copy (2) of DebugView XNA.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
-      <Name>Windows Phone Copy (2) of DebugView XNA</Name>
+      <Name>Windows Phone Copy %282%29 of DebugView XNA</Name>
     </ProjectReference>
     <ProjectReference Include="Content\DemoBase XNA Content.contentproj">
       <Project>{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}</Project>
