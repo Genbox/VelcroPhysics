@@ -8,7 +8,6 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     public class Camera2D
     {
         private const float SmoothingSpeed = 0.15f;
-        //public static BasicEffect Effect;
         public static Matrix View;
         public static Matrix Projection;
 
@@ -49,7 +48,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get { return _position; }
             set
             {
-                _position = Vector2.Clamp(value, MinPosition*Zoom, MaxPosition*Zoom);
+                _position = Vector2.Clamp(value, MinPosition * Zoom, MaxPosition * Zoom);
 
                 Resize();
             }
@@ -115,8 +114,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             get
             {
-                return new Vector2(_graphics.Viewport.Width/2f,
-                                   _graphics.Viewport.Height/2f);
+                return new Vector2(_graphics.Viewport.Width / 2f,
+                                   _graphics.Viewport.Height / 2f);
             }
         }
 
@@ -144,7 +143,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public Vector2 CurrentSize
         {
-            get { return Vector2.Multiply(new Vector2(_graphics.Viewport.Width, _graphics.Viewport.Height), 1/_zoom); }
+            get { return Vector2.Multiply(new Vector2(_graphics.Viewport.Width, _graphics.Viewport.Height), 1 / _zoom); }
         }
 
         /// <summary>
@@ -255,8 +254,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public void CreateProjection()
         {
             // L/R/B/T
-            Projection = Matrix.CreateOrthographicOffCenter(-25*_graphics.Viewport.AspectRatio,
-                                                            25*_graphics.Viewport.AspectRatio, -25, 25, -1, 1);
+            Projection = Matrix.CreateOrthographicOffCenter(-25 * _graphics.Viewport.AspectRatio,
+                                                            25 * _graphics.Viewport.AspectRatio, -25, 25, -1, 1);
 
             if (ProjectionUpdated != null)
                 ProjectionUpdated();
@@ -272,8 +271,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             RotationRate = 0.1f;
             MinZoom = 0.5f;
             MaxZoom = 2f;
-            MinRotation = -(MathHelper.Pi/2);
-            MaxRotation = MathHelper.Pi/2;
+            MinRotation = -(MathHelper.Pi / 2);
+            MaxRotation = MathHelper.Pi / 2;
             MaxPosition = new Vector2(25f, 25f);
             MinPosition = new Vector2(-25f, 0f);
 
@@ -298,8 +297,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             RotationRate = 0.1f;
             MinZoom = 0.5f;
             MaxZoom = 2f;
-            MinRotation = -(MathHelper.Pi/2);
-            MaxRotation = MathHelper.Pi/2;
+            MinRotation = -(MathHelper.Pi / 2);
+            MaxRotation = MathHelper.Pi / 2;
             MaxPosition = new Vector2(25f, 25f);
             MinPosition = new Vector2(-25f, 0f);
 
@@ -310,7 +309,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         private void Resize()
         {
-            View = Matrix.CreateRotationZ(_rotation)*Matrix.CreateTranslation(-_position.X, -_position.Y, 0)*
+            View = Matrix.CreateRotationZ(_rotation) * Matrix.CreateTranslation(-_position.X, -_position.Y, 0) *
                    Matrix.CreateScale(_zoom);
 
             if (ViewUpdated != null)
@@ -331,7 +330,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
                 if (TargetPosition.X > Position.X)
                 {
-                    value = Math.Min(MaxPosition.X*Zoom, _position.X + MoveRate.X);
+                    value = Math.Min(MaxPosition.X * Zoom, _position.X + MoveRate.X);
                     Position = new Vector2(MathHelper.SmoothStep(_position.X, value, SmoothingSpeed), Position.Y);
 
                     if (Position.X >= TargetPosition.X)
@@ -339,7 +338,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
                 else if (TargetPosition.X < Position.X)
                 {
-                    value = Math.Max(MinPosition.X*Zoom, _position.X - MoveRate.X);
+                    value = Math.Max(MinPosition.X * Zoom, _position.X - MoveRate.X);
                     Position = new Vector2(MathHelper.SmoothStep(_position.X, value, SmoothingSpeed), Position.Y);
 
                     if (Position.X <= TargetPosition.X)
@@ -353,7 +352,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
                 if (TargetPosition.Y > Position.Y)
                 {
-                    value = Math.Min(MaxPosition.Y*Zoom, _position.Y + MoveRate.Y);
+                    value = Math.Min(MaxPosition.Y * Zoom, _position.Y + MoveRate.Y);
                     Position = new Vector2(Position.X, MathHelper.SmoothStep(_position.Y, value, SmoothingSpeed));
 
                     if (Position.Y >= TargetPosition.Y)
@@ -361,7 +360,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 }
                 else if (TargetPosition.Y < Position.Y)
                 {
-                    value = Math.Max(MinPosition.Y*Zoom, _position.Y - MoveRate.Y);
+                    value = Math.Max(MinPosition.Y * Zoom, _position.Y - MoveRate.Y);
                     Position = new Vector2(Position.X, MathHelper.SmoothStep(_position.Y, value, SmoothingSpeed));
 
                     if (Position.Y <= TargetPosition.Y)

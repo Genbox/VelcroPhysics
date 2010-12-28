@@ -61,7 +61,11 @@ namespace FarseerPhysics.DebugViews
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
 
         //Debug panel
+#if XBOX
+        public Vector2 DebugPanelPosition = new Vector2(55, 100);
+#else
         public Vector2 DebugPanelPosition = new Vector2(40, 100);
+#endif
         private int _max;
         private int _avg;
         private int _min;
@@ -72,10 +76,15 @@ namespace FarseerPhysics.DebugViews
         public int MinimumValue;
         public int MaximumValue = 1000;
         private List<float> _graphValues = new List<float>();
+
+#if XBOX
+        public Rectangle PerformancePanelBounds = new Rectangle(265, 100, 200, 100);
+#else
         public Rectangle PerformancePanelBounds = new Rectangle(250, 100, 200, 100);
+#endif
         private Vector2[] _background = new Vector2[4];
 
-#if (XBOX)
+#if XBOX
         public const int CircleSegments = 16;
 #else
         public const int CircleSegments = 32;

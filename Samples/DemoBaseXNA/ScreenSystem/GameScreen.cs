@@ -283,6 +283,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public virtual void HandleGamePadInput(InputHelper input)
         {
+            //Disabled in release versions of FPE
             if (input.CurrentGamePadState.Buttons.RightShoulder == ButtonState.Pressed)
                 ScreenManager.Camera.Zoom += 0.02f;
             if (input.CurrentGamePadState.Buttons.LeftShoulder == ButtonState.Pressed)
@@ -294,24 +295,25 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 
         public virtual void HandleKeyboardInput(InputHelper input)
         {
-            if (input.IsKeyDown(Keys.PageUp))
-                ScreenManager.Camera.Zoom += 0.02f;
-            if (input.IsKeyDown(Keys.PageDown))
-                ScreenManager.Camera.Zoom -= 0.02f;
-            /*if (input.IsKeyDown(Keys.Delete))
-                ScreenManager.Camera.Rotation += 0.01f;
-            if (input.IsKeyDown(Keys.End))
-                ScreenManager.Camera.Rotation -= 0.01f;*/
-            if (input.IsKeyDown(Keys.Left))
-                ScreenManager.Camera.MoveCamera(new Vector2(-0.5f, 0));
-            if (input.IsKeyDown(Keys.Right))
-                ScreenManager.Camera.MoveCamera(new Vector2(+0.5f, 0));
-            if (input.IsKeyDown(Keys.Down))
-                ScreenManager.Camera.MoveCamera(new Vector2(0, -0.5f));
-            if (input.IsKeyDown(Keys.Up))
-                ScreenManager.Camera.MoveCamera(new Vector2(0, +0.5f));
-            if (input.IsNewKeyPress(Keys.Home))
-                ScreenManager.Camera.ResetCamera();
+            //Disabled in release versions of FPE
+            //if (input.IsKeyDown(Keys.PageUp))
+            //    ScreenManager.Camera.Zoom += 0.02f;
+            //if (input.IsKeyDown(Keys.PageDown))
+            //    ScreenManager.Camera.Zoom -= 0.02f;
+            //if (input.IsKeyDown(Keys.Delete))
+            //    ScreenManager.Camera.Rotation += 0.01f;
+            //if (input.IsKeyDown(Keys.End))
+            //    ScreenManager.Camera.Rotation -= 0.01f;
+            //if (input.IsKeyDown(Keys.Left))
+            //    ScreenManager.Camera.MoveCamera(new Vector2(-0.5f, 0));
+            //if (input.IsKeyDown(Keys.Right))
+            //    ScreenManager.Camera.MoveCamera(new Vector2(+0.5f, 0));
+            //if (input.IsKeyDown(Keys.Down))
+            //    ScreenManager.Camera.MoveCamera(new Vector2(0, -0.5f));
+            //if (input.IsKeyDown(Keys.Up))
+            //    ScreenManager.Camera.MoveCamera(new Vector2(0, +0.5f));
+            //if (input.IsNewKeyPress(Keys.Home))
+            //    ScreenManager.Camera.ResetCamera();
         }
 
         /// <summary>
