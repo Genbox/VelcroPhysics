@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.0">
-  <App xmlns="" ProductID="{fb9fd837-9d1c-4878-b5f6-e79a44f46e7e}" Title="Farseer Physics 3.0 XNA" RuntimeType="XNA" Version="1.0.0.0" Genre="Apps.Normal" Author="" Description="" Publisher="">
+  <App xmlns="" ProductID="{fb9fd837-9d1c-4878-b5f6-e79a44f46e7e}" Title="Farseer Physics Engine 3.2 XNA" RuntimeType="XNA" Version="1.0.0.0" Genre="Apps.Normal" Author="" Description="" Publisher="">
     <IconPath IsRelative="true" IsResource="false"></IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -19,7 +19,7 @@
       <DefaultTask Name="_default"/>
     </Tasks>
     <Tokens>
-      <PrimaryToken TokenID="Farseer Physics 3.0 XNAToken" TaskName="_default">
+      <PrimaryToken TokenID="Farseer Physics Engine 3.2 XNAToken" TaskName="_default">
         <TemplateType5>
           <BackgroundImageURI IsRelative="true" IsResource="false"></BackgroundImageURI>
           <Count>0</Count>
