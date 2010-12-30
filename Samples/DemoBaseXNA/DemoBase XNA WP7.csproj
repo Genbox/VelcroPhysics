@@ -165,7 +165,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
-      <Name>Windows Phone Copy %282%29 of DebugView XNA</Name>
+      <Name>DebugView XNA WP7</Name>
     </ProjectReference>
     <ProjectReference Include="Content\DemoBase XNA Content.contentproj">
       <Project>{9E6F45A4-EA9B-4568-A48F-090CAAD036F6}</Project>
@@ -195,7 +195,6 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
