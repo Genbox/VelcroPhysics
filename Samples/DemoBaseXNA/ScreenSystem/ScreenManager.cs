@@ -226,11 +226,27 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                 if (screen.ScreenState == ScreenState.TransitionOn ||
                     screen.ScreenState == ScreenState.TransitionOff)
                 {
-                    _spriteBatch.Begin();
-                    _spriteBatch.Draw(_transitions[transitionCount],
-                                      new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height),
-                                      Color.White * screen.TransitionAlpha);
-                    _spriteBatch.End();
+                    if (screen.ScreenState == ScreenState.TransitionOff && screen is PhysicsGameScreen)
+                    {
+                        Vector2 _translate = Camera.ScreenCenter +
+                                             (new Vector2(64, Camera.ScreenHeight - 64) - Camera.ScreenCenter) *
+                                             screen.TransitionPosition * screen.TransitionPosition;
+                        float rotation = -4f * screen.TransitionPosition * screen.TransitionPosition;
+                        float scale = screen.TransitionAlpha * screen.TransitionAlpha;
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(_transitions[transitionCount],
+                                          _translate, null,
+                                          Color.White * screen.TransitionAlpha,
+                                          rotation, Camera.ScreenCenter, scale, 0, 0);
+                        _spriteBatch.End();
+                    }
+                    else
+                    {
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
+                        _spriteBatch.End();
+
+                    }
                     ++transitionCount;
                 }
                 else
