@@ -20,6 +20,8 @@ namespace FarseerPhysics.SimpleSamplesXNA
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             _graphics.PreferMultiSampling = true;
+            IsFixedTimeStep = true;
+
 #if WINDOWS
             _graphics.PreferredBackBufferWidth = 1024;
             _graphics.PreferredBackBufferHeight = 768;
@@ -29,6 +31,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 480;
             _graphics.IsFullScreen = true;
+            IsFixedTimeStep = false;
 #endif
 #if XBOX
             _graphics.PreferredBackBufferWidth = 1280;
@@ -37,8 +40,6 @@ namespace FarseerPhysics.SimpleSamplesXNA
 #endif
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            IsFixedTimeStep = true;
 
             //new-up components and add to Game.Components
             ScreenManager = new ScreenManager(this);
