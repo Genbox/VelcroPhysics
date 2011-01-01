@@ -25,7 +25,7 @@
 
 using System;
 
-namespace FarseerPhysics.Common
+namespace FarseerPhysics
 {
     public static class Settings
     {
@@ -34,6 +34,62 @@ namespace FarseerPhysics.Common
         public const float Pi = 3.14159265359f;
 
         // Common
+
+        /// <summary>
+        /// Enabling diagnistics causes the engine to gather timing information.
+        /// You can see how much time it took to solve the contacts, solve CCD
+        /// and update the controllers.
+        /// NOTE: If you are using a debug view that shows performance counters,
+        /// you might want to enable this.
+        /// </summary>
+        public static bool EnableDiagnostics = false;
+
+        /// <summary>
+        /// The number of velocity iterations used in the solver.
+        /// </summary>
+        public static int VelocityIterations = 8;
+
+        /// <summary>
+        /// The number of position iterations used in the solver.
+        /// </summary>
+        public static int PositionIterations = 3;
+
+        /// <summary>
+        /// Enable/Disable Continuous Collision Detection (CCD)
+        /// </summary>
+        public static bool ContinuousPhysics = true;
+
+        /// <summary>
+        /// The number of velocity iterations in the TOI solver
+        /// </summary>
+        public static int TOIVelocityIterations = 8;
+
+        /// <summary>
+        /// The number of position iterations in the TOI solver
+        /// </summary>
+        public static int TOIPositionIterations = 20;
+
+        /// <summary>
+        /// Enable/Disable warmstarting
+        /// </summary>
+        public static bool EnableWarmstarting = true;
+
+        /// <summary>
+        /// Enable/Disable sleeping
+        /// </summary>
+        public static bool AllowSleep = true;
+
+        /// <summary>
+        /// The maximum number of vertices on a convex polygon.
+        /// </summary>
+        public static int MaxPolygonVertices = 8;
+
+        /// <summary>
+        /// Farseer Physics Engine has a different way of filtering fixtures than Box2d.
+        /// We have both FPE and Box2D filtering in the engine. If you are upgrading
+        /// from earlier versions of FPE, set this to true.
+        /// </summary>
+        public static bool UseFPECollisionCategories = false;
 
         /// <summary>
         /// Conserve memory makes sure that objects are used by reference instead of cloned.
@@ -151,62 +207,6 @@ namespace FarseerPhysics.Common
         /// Maximum number of sub-steps per contact in continuous physics simulation.
         /// </summary>
         public const int MaxSubSteps = 8;
-
-        /// <summary>
-        /// Enabling diagnistics causes the engine to gather timing information.
-        /// You can see how much time it took to solve the contacts, solve CCD
-        /// and update the controllers.
-        /// NOTE: If you are using a debug view that shows performance counters,
-        /// you might want to enable this.
-        /// </summary>
-        public static bool EnableDiagnostics = false;
-
-        /// <summary>
-        /// The number of velocity iterations used in the solver.
-        /// </summary>
-        public static int VelocityIterations = 8;
-
-        /// <summary>
-        /// The number of position iterations used in the solver.
-        /// </summary>
-        public static int PositionIterations = 3;
-
-        /// <summary>
-        /// Enable/Disable Continuous Collision Detection (CCD)
-        /// </summary>
-        public static bool ContinuousPhysics = true;
-
-        /// <summary>
-        /// The number of velocity iterations in the TOI solver
-        /// </summary>
-        public static int TOIVelocityIterations = 8;
-
-        /// <summary>
-        /// The number of position iterations in the TOI solver
-        /// </summary>
-        public static int TOIPositionIterations = 20;
-
-        /// <summary>
-        /// Enable/Disable warmstarting
-        /// </summary>
-        public static bool EnableWarmstarting = true;
-
-        /// <summary>
-        /// Enable/Disable sleeping
-        /// </summary>
-        public static bool AllowSleep = true;
-
-        /// <summary>
-        /// The maximum number of vertices on a convex polygon.
-        /// </summary>
-        public static int MaxPolygonVertices = 8;
-
-        /// <summary>
-        /// Farseer Physics Engine has a different way of filtering fixtures than Box2d.
-        /// We have both FPE and Box2D filtering in the engine. If you are upgrading
-        /// from earlier versions of FPE, set this to true.
-        /// </summary>
-        public static bool UseFPECollisionCategories = false;
 
         /// <summary>
         /// Friction mixing law. Feel free to customize this.
