@@ -329,7 +329,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public BeforeCollisionEventHandler BeforeCollision;
 
-        public CollisionFilter CollisionFilter;
+        public CollisionFilter CollisionFilter { get; private set; }
 
         /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
@@ -346,7 +346,8 @@ namespace FarseerPhysics.Dynamics
         public FixtureProxy[] Proxies;
         public int ProxyCount;
 
-        public Fixture(Body body, Shape shape) : this(body, shape, null)
+        public Fixture(Body body, Shape shape)
+            : this(body, shape, null)
         {
         }
 
