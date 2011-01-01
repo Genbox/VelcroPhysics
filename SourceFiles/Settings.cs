@@ -95,7 +95,7 @@ namespace FarseerPhysics
         /// Conserve memory makes sure that objects are used by reference instead of cloned.
         /// When you give a vertices collection to a PolygonShape, it will by default copy the vertices
         /// instead of using the original reference. This is to ensure that objects modified outside the engine
-        /// does not affect the engine itself. However, this uses extra memory and on small deviccs, this behavior
+        /// does not affect the engine itself, however, this uses extra memory. This behavior
         /// can be turned off by setting ConserveMemory to true.
         /// </summary>
         public const bool ConserveMemory = false;
