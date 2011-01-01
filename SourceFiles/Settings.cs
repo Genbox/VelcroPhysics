@@ -42,7 +42,7 @@ namespace FarseerPhysics
         /// NOTE: If you are using a debug view that shows performance counters,
         /// you might want to enable this.
         /// </summary>
-        public static bool EnableDiagnostics = false;
+        public static bool EnableDiagnostics = true;
 
         /// <summary>
         /// The number of velocity iterations used in the solver.
