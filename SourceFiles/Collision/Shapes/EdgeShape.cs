@@ -153,13 +153,13 @@ namespace FarseerPhysics.Collision.Shapes
                 return false;
             }
 
-            float t = numerator/denominator;
+            float t = numerator / denominator;
             if (t < 0.0f || 1.0f < t)
             {
                 return false;
             }
 
-            Vector2 q = p1 + t*d;
+            Vector2 q = p1 + t * d;
 
             // q = v1 + s * r
             // s = dot(q - v1, r) / dot(r, r)
@@ -170,7 +170,7 @@ namespace FarseerPhysics.Collision.Shapes
                 return false;
             }
 
-            float s = Vector2.Dot(q - v1, r)/rr;
+            float s = Vector2.Dot(q - v1, r) / rr;
             if (s < 0.0f || 1.0f < s)
             {
                 return false;
@@ -214,7 +214,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Centroid = 0.5f*(Vertex1 + Vertex2);
+            MassData.Centroid = 0.5f * (Vertex1 + Vertex2);
         }
     }
 }
