@@ -65,30 +65,28 @@ namespace FarseerPhysics.TestBed.Tests
                 const float y = 15;
 
                 Body prevBody = ground;
+                Vertices largeBox = PolygonTools.CreateRectangle(1.5f, 1.5f);
+                Vertices smallBox = PolygonTools.CreateRectangle(0.5f, 0.125f);
 
                 for (int i = 0; i < Count; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + 1.0f*i, y);
+                    body.Position = new Vector2(0.5f + 1.0f * i, y);
 
                     if (i == Count - 1)
                     {
-                        Vertices box = PolygonTools.CreateRectangle(1.5f, 1.5f);
-                        PolygonShape shape = new PolygonShape(box, 1);
-                        shape.Density = 100;
+                        PolygonShape shape = new PolygonShape(largeBox, 100);
                         Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;
                         fixture.CollisionFilter.CollisionCategories = Category.Cat2;
                         fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
-                        body.Position = new Vector2(1.0f*i, y);
+                        body.Position = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
                     else
                     {
-                        Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
-                        PolygonShape shape = new PolygonShape(box, 1);
-                        shape.Density = 20;
+                        PolygonShape shape = new PolygonShape(smallBox, 20);
                         Fixture fixture = body.CreateFixture(shape);
                         fixture.Friction = 0.2f;
                         fixture.CollisionFilter.CollisionCategories = Category.Cat1;
@@ -106,7 +104,6 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
-
                 const float extraLength = 0.01f;
                 _rj.MaxLength = Count - 1.0f + extraLength;
 

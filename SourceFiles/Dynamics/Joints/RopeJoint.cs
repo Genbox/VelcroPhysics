@@ -57,6 +57,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {
+            JointType = JointType.Rope;
             LocalAnchorA = localAnchorA;
             LocalAnchorB = localAnchorB;
 
@@ -74,7 +75,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public LimitState State
         {
-            get { return State; }
+            get { return _state; }
         }
 
         public override sealed Vector2 WorldAnchorA
