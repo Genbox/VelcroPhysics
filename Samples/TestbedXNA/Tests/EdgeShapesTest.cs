@@ -59,8 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
                     float x2 = x1 + 0.5f;
                     float y2 = 2.0f*(float) Math.Cos(x2/10.0f*(float) Math.PI);
 
-                    PolygonShape shape = new PolygonShape(0);
-                    shape.SetAsEdge(new Vector2(x1, y1), new Vector2(x2, y2));
+                    EdgeShape shape = new EdgeShape(new Vector2(x1, y1), new Vector2(x2, y2));
                     ground.CreateFixture(shape);
 
                     x1 = x2;

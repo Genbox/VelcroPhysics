@@ -53,14 +53,13 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape = new PolygonShape(0);
-                shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
+                EdgeShape shape = new EdgeShape(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
                 ground.CreateFixture(shape);
 
-                shape.SetAsEdge(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
+                shape = new EdgeShape(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
                 ground.CreateFixture(shape);
 
-                shape.SetAsEdge(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
+                shape = new EdgeShape(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
                 ground.CreateFixture(shape);
             }
 

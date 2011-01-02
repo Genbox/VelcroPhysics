@@ -44,12 +44,11 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Collinear edges
-            PolygonShape shape = new PolygonShape(1);
-            shape.SetAsEdge(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
+            EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
             ground.Body.CreateFixture(shape);
-            shape.SetAsEdge(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
+            shape = new EdgeShape(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
             ground.Body.CreateFixture(shape);
-            shape.SetAsEdge(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
+            shape = new EdgeShape(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
             ground.Body.CreateFixture(shape);
 
             // Square tiles
@@ -103,12 +102,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Hexagon character
             float angle = 0.0f;
-            const float delta = Settings.Pi/3.0f;
+            const float delta = Settings.Pi / 3.0f;
             vertices = new Vertices(6);
 
             for (int i = 0; i < 6; ++i)
             {
-                vertices.Add(new Vector2(0.5f*(float) Math.Cos(angle), 0.5f*(float) Math.Sin(angle)));
+                vertices.Add(new Vector2(0.5f * (float)Math.Cos(angle), 0.5f * (float)Math.Sin(angle)));
                 angle += delta;
             }
 

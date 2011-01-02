@@ -44,8 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 ground = BodyFactory.CreateBody(World);
 
-                PolygonShape shape3 = new PolygonShape(0);
-                shape3.SetAsEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                EdgeShape shape3 = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape3);
             }
 
