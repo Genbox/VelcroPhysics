@@ -129,18 +129,24 @@ namespace FarseerPhysics.Dynamics
 
                 Shape shape = fixture.Shape.Clone();
 
+                object userdata = fixture.UserData;
                 MainBody.DestroyFixture(fixture);
 
                 Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = MainBody.Position;
                 body.Rotation = MainBody.Rotation;
+                body.UserData = MainBody.UserData;
 
-                body.CreateFixture(shape);
+                Fixture newFixture = body.CreateFixture(shape);
+                newFixture.UserData = userdata;
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];
             }
+
+            _world.RemoveBody(MainBody);
+            _world.RemoveBreakableBody(this);
         }
 
         public void Break()
