@@ -50,27 +50,22 @@ namespace FarseerPhysics.TestBed.Tests
                 ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(0.0f, 20.0f);
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
-
-                PolygonShape shape = new PolygonShape(edge, 0);
+                EdgeShape shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
 
                 // Left vertical
                 Fixture fixture = ground.CreateFixture(shape);
                 fixture.Restitution = restitution;
 
                 // Right vertical
-                edge = PolygonTools.CreateEdge(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
-                shape.Set(edge);
+                shape = new EdgeShape(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Top horizontal
-                edge = PolygonTools.CreateEdge(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
-                shape.Set(edge);
+                shape =new EdgeShape(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Bottom horizontal
-                edge = PolygonTools.CreateEdge(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
-                shape.Set(edge);
+                shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
                 ground.CreateFixture(shape);
             }
 

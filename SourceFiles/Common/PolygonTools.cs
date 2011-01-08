@@ -120,7 +120,7 @@ namespace FarseerPhysics.Common
         /// </summary>
         /// <param name="start">The first point.</param>
         /// <param name="end">The second point.</param>
-        public static Vertices CreateEdge(Vector2 start, Vector2 end)
+        public static Vertices CreateLine(Vector2 start, Vector2 end)
         {
             Vertices vertices = new Vertices(2);
             vertices.Add(start);
