@@ -601,10 +601,8 @@ namespace FarseerPhysics.Dynamics
             // Remove the fixture from this body's singly linked list.
             Debug.Assert(FixtureList.Count > 0);
 
-#if DEBUG
             // You tried to remove a fixture that not present in the fixturelist.
             Debug.Assert(FixtureList.Contains(fixture));
-#endif
 
             // Destroy any contacts associated with the fixture.
             ContactEdge edge = ContactList;

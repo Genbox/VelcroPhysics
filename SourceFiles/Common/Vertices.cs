@@ -37,6 +37,11 @@ namespace FarseerPhysics.Common
             }
         }
 
+        /// <summary>
+        /// Nexts the index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns></returns>
         public int NextIndex(int index)
         {
             if (index == Count - 1)
@@ -44,6 +49,11 @@ namespace FarseerPhysics.Common
                 return 0;
             }
             return index + 1;
+        }
+
+        public Vector2 NextVertex(int index)
+        {
+            return this[NextIndex(index)];
         }
 
         /// <summary>
@@ -58,6 +68,11 @@ namespace FarseerPhysics.Common
                 return Count - 1;
             }
             return index - 1;
+        }
+
+        public Vector2 PreviousVertex(int index)
+        {
+            return this[PreviousIndex(index)];
         }
 
         /// <summary>

@@ -149,9 +149,9 @@ namespace FarseerPhysics.Common
         /// </summary>
         /// <param name="divisions">Number of divisions between each control point.</param>
         /// <returns></returns>
-        public List<Vector2> GetVertices(int divisions)
+        public Vertices GetVertices(int divisions)
         {
-            List<Vector2> verts = new List<Vector2>();
+            Vertices verts = new Vertices();
 
             float timeStep = 1f/divisions;
 
