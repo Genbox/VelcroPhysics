@@ -44,21 +44,19 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 // Floor
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
-
+                EdgeShape shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
                 ground.CreateFixture(shape);
 
                 // Left wall
-                shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f)));
+                shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Right wall
-                shape.Set(PolygonTools.CreateEdge(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f)));
+                shape = new EdgeShape(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Roof
-                shape.Set(PolygonTools.CreateEdge(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f)));
+                shape = new EdgeShape(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
                 ground.CreateFixture(shape);
             }
 

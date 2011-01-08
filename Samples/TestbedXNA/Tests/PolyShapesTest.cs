@@ -135,8 +135,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body ground = BodyFactory.CreateBody(World);
 
-                Vertices edge = PolygonTools.CreateEdge(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                PolygonShape shape = new PolygonShape(edge, 0);
+                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape);
             }
 

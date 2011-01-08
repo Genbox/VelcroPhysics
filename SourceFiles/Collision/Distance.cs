@@ -37,7 +37,6 @@ namespace FarseerPhysics.Collision
     /// </summary>
     public struct DistanceProxy
     {
-        internal FixedArray2<Vector2> Buffer;
         internal float Radius;
         internal Vertices Vertices;
 
@@ -73,19 +72,10 @@ namespace FarseerPhysics.Collision
                         LoopShape loop = (LoopShape) shape;
                         Debug.Assert(0 <= index && index < loop.Vertices.Count);
 
-                        Buffer[0] = loop.Vertices[index];
-                        if (index + 1 < loop.Vertices.Count)
-                        {
-                            Buffer[1] = loop.Vertices[index + 1];
-                        }
-                        else
-                        {
-                            Buffer[1] = loop.Vertices[0];
-                        }
-
                         Vertices = new Vertices(2);
-                        Vertices.Add(Buffer[0]);
-                        Vertices.Add(Buffer[1]);
+                        Vertices.Add(loop.Vertices[index]);
+                        Vertices.Add(index + 1 < loop.Vertices.Count ? loop.Vertices[index + 1] : loop.Vertices[0]);
+
                         Radius = loop.Radius;
                     }
                     break;
