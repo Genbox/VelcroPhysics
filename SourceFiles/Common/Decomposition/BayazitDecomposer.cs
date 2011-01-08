@@ -15,7 +15,7 @@ namespace FarseerPhysics.Common.Decomposition
         private static Vector2 At(int i, Vertices vertices)
         {
             int s = vertices.Count;
-            return vertices[i < 0 ? s - (-i%s) : i%s];
+            return vertices[i < 0 ? s - (-i % s) : i % s];
         }
 
         private static Vertices Copy(int i, int j, Vertices vertices)
@@ -97,9 +97,9 @@ namespace FarseerPhysics.Common.Decomposition
                     }
 
                     // if there are no vertices to connect to, choose a point in the middle
-                    if (lowerIndex == (upperIndex + 1)%vertices.Count)
+                    if (lowerIndex == (upperIndex + 1) % vertices.Count)
                     {
-                        Vector2 sp = ((lowerInt + upperInt)/2);
+                        Vector2 sp = ((lowerInt + upperInt) / 2);
 
                         lowerPoly = Copy(i, upperIndex, vertices);
                         lowerPoly.Add(sp);
@@ -114,7 +114,7 @@ namespace FarseerPhysics.Common.Decomposition
                         {
                             if (CanSee(i, j, vertices))
                             {
-                                double score = 1/(SquareDist(At(i, vertices), At(j, vertices)) + 1);
+                                double score = 1 / (SquareDist(At(i, vertices), At(j, vertices)) + 1);
                                 if (Reflex(j, vertices))
                                 {
                                     if (RightOn(At(j - 1, vertices), At(j, vertices), At(i, vertices)) &&
@@ -138,8 +138,8 @@ namespace FarseerPhysics.Common.Decomposition
                                 }
                             }
                         }
-                        lowerPoly = Copy(i, (int) bestIndex, vertices);
-                        upperPoly = Copy((int) bestIndex, i, vertices);
+                        lowerPoly = Copy(i, (int)bestIndex, vertices);
+                        upperPoly = Copy((int)bestIndex, i, vertices);
                     }
                     list.AddRange(ConvexPartition(lowerPoly));
                     list.AddRange(ConvexPartition(upperPoly));
@@ -150,8 +150,8 @@ namespace FarseerPhysics.Common.Decomposition
             // polygon is already convex
             if (vertices.Count > Settings.MaxPolygonVertices)
             {
-                lowerPoly = Copy(0, vertices.Count/2, vertices);
-                upperPoly = Copy(vertices.Count/2, 0, vertices);
+                lowerPoly = Copy(0, vertices.Count / 2, vertices);
+                upperPoly = Copy(vertices.Count / 2, 0, vertices);
                 list.AddRange(ConvexPartition(lowerPoly));
                 list.AddRange(ConvexPartition(upperPoly));
             }
@@ -162,7 +162,14 @@ namespace FarseerPhysics.Common.Decomposition
             //them to be sure.
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = SimplifyTools.CollinearSimplify(list[i], 0);
+                list[i] = SimplifyTools.CollinearSimplify(list[i], Settings.AngularSlop);
+            }
+
+            //Remove empty vertice collections
+            for (int i = list.Count -1; i >= 0; i--)
+            {
+                if (list[i].Count == 0)
+                    list.RemoveAt(i);
             }
 
             return list;
@@ -192,7 +199,7 @@ namespace FarseerPhysics.Common.Decomposition
             }
             for (int k = 0; k < vertices.Count; ++k)
             {
-                if ((k + 1)%vertices.Count == i || k == i || (k + 1)%vertices.Count == j || k == j)
+                if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
                 {
                     continue; // ignore incident edges
                 }
@@ -241,7 +248,7 @@ namespace FarseerPhysics.Common.Decomposition
         {
             float dx = b.X - a.X;
             float dy = b.Y - a.Y;
-            return dx*dx + dy*dy;
+            return dx * dx + dy * dy;
         }
     }
 }
