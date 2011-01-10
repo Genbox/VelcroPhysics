@@ -49,7 +49,7 @@ namespace FarseerPhysics.Collision.Shapes
             : base(density)
         {
             ShapeType = ShapeType.Polygon;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
 
             Set(vertices);
         }
@@ -58,7 +58,7 @@ namespace FarseerPhysics.Collision.Shapes
             : base(density)
         {
             ShapeType = ShapeType.Polygon;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
             Normals = new Vertices();
             Vertices = new Vertices();
         }
@@ -67,7 +67,7 @@ namespace FarseerPhysics.Collision.Shapes
             : base(0)
         {
             ShapeType = ShapeType.Polygon;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
             Normals = new Vertices();
             Vertices = new Vertices();
         }
@@ -81,7 +81,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
-            clone.Radius = _radius;
+            clone._radius = _radius;
             clone._density = _density;
 
             if (Settings.ConserveMemory)
