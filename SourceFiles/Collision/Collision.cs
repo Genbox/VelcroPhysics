@@ -1067,7 +1067,7 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle in frame of edge
-            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, ref circleB.Position));
+            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, ref circleB._position));
 
             Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;

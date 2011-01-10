@@ -31,23 +31,23 @@ namespace FarseerPhysics.Collision.Shapes
 {
     public class CircleShape : Shape
     {
-        public Vector2 Position;
+        internal Vector2 _position;
 
         public CircleShape(float radius, float density)
             : base(density)
         {
             ShapeType = ShapeType.Circle;
-            Radius = radius;
-            Position = Vector2.Zero;
+            _radius = radius;
+            _position = Vector2.Zero;
             ComputeProperties();
         }
 
-        internal CircleShape()
+        private CircleShape()
             : base(0)
         {
             ShapeType = ShapeType.Circle;
-            Radius = 0.0f;
-            Position = Vector2.Zero;
+            _radius = 0.0f;
+            _position = Vector2.Zero;
         }
 
         public override int ChildCount
@@ -55,13 +55,23 @@ namespace FarseerPhysics.Collision.Shapes
             get { return 1; }
         }
 
+        public Vector2 Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                ComputeProperties();
+            }
+        }
+
         public override Shape Clone()
         {
             CircleShape shape = new CircleShape();
-            shape.ShapeType = ShapeType;
-            shape.Radius = Radius;
-            shape.Position = Position;
+            shape._radius = Radius;
             shape._density = _density;
+            shape._position = _position;
+            shape.ShapeType = ShapeType;
             shape.MassData = MassData;
             return shape;
         }
@@ -76,7 +86,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 center = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius*Radius;
+            return Vector2.Dot(d, d) <= Radius * Radius;
         }
 
         /// <summary>
@@ -99,13 +109,13 @@ namespace FarseerPhysics.Collision.Shapes
 
             Vector2 position = transform.Position + MathUtils.Multiply(ref transform.R, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius*Radius;
+            float b = Vector2.Dot(s, s) - Radius * Radius;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
             float c = Vector2.Dot(s, r);
             float rr = Vector2.Dot(r, r);
-            float sigma = c*c - rr*b;
+            float sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.Epsilon)
@@ -114,14 +124,14 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float) Math.Sqrt(sigma));
+            float a = -(c + (float)Math.Sqrt(sigma));
 
             // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction*rr)
+            if (0.0f <= a && a <= input.MaxFraction * rr)
             {
                 a /= rr;
                 output.Fraction = a;
-                Vector2 norm = (s + a*r);
+                Vector2 norm = (s + a * r);
                 norm.Normalize();
                 output.Normal = norm;
                 return true;
@@ -149,13 +159,13 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override sealed void ComputeProperties()
         {
-            float area = Settings.Pi*Radius*Radius;
+            float area = Settings.Pi * Radius * Radius;
             MassData.Area = area;
-            MassData.Mass = _density*area;
+            MassData.Mass = Density * area;
             MassData.Centroid = Position;
 
             // inertia about the local origin
-            MassData.Inertia = MassData.Mass*(0.5f*Radius*Radius + Vector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
     }
 }

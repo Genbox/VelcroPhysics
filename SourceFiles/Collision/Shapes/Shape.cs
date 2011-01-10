@@ -73,11 +73,7 @@ namespace FarseerPhysics.Collision.Shapes
     {
         public MassData MassData;
 
-        /// <summary>
-        /// Radius of the Shape
-        /// </summary>
-        public float Radius;
-
+        internal float _radius;
         internal float _density;
 
         protected Shape(float density)
@@ -98,12 +94,29 @@ namespace FarseerPhysics.Collision.Shapes
         /// <value></value>
         public abstract int ChildCount { get; }
 
+        /// <summary>
+        /// Gets or sets the density.
+        /// </summary>
+        /// <value>The density.</value>
         public float Density
         {
             get { return _density; }
             set
             {
                 _density = value;
+                ComputeProperties();
+            }
+        }
+
+        /// <summary>
+        /// Radius of the Shape
+        /// </summary>
+        public float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
                 ComputeProperties();
             }
         }

@@ -59,13 +59,17 @@ namespace FarseerPhysics.Collision.Shapes
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
+            Normals = new Vertices();
+            Vertices = new Vertices();
         }
 
-        internal PolygonShape()
-            : base(1)
+        private PolygonShape()
+            : base(0)
         {
             ShapeType = ShapeType.Polygon;
             Radius = Settings.PolygonRadius;
+            Normals = new Vertices();
+            Vertices = new Vertices();
         }
 
         public override int ChildCount
@@ -77,15 +81,20 @@ namespace FarseerPhysics.Collision.Shapes
         {
             PolygonShape clone = new PolygonShape();
             clone.ShapeType = ShapeType;
-            clone.Radius = Radius;
+            clone.Radius = _radius;
+            clone._density = _density;
 
             if (Settings.ConserveMemory)
+            {
                 clone.Vertices = Vertices;
+                clone.Normals = Normals;
+            }
             else
+            {
                 clone.Vertices = new Vertices(Vertices);
+                clone.Normals = new Vertices(Normals);
+            }
 
-            clone.Normals = Normals;
-            clone._density = _density;
             clone.MassData = MassData;
             return clone;
         }
@@ -184,15 +193,16 @@ namespace FarseerPhysics.Collision.Shapes
 
             Debug.Assert(Vertices.Count >= 3);
 
-            if (_density > 0)
-            {
-                Vector2 center = Vector2.Zero;
-                float area = 0.0f;
-                float I = 0.0f;
+            if (_density <= 0)
+                return;
 
-                // pRef is the reference point for forming triangles.
-                // It's location doesn't change the result (except for rounding error).
-                Vector2 pRef = Vector2.Zero;
+            Vector2 center = Vector2.Zero;
+            float area = 0.0f;
+            float I = 0.0f;
+
+            // pRef is the reference point for forming triangles.
+            // It's location doesn't change the result (except for rounding error).
+            Vector2 pRef = Vector2.Zero;
 
 #if false
     // This code would put the reference point inside the polygon.
@@ -203,55 +213,54 @@ namespace FarseerPhysics.Collision.Shapes
 	        pRef *= 1.0f / count;
 #endif
 
-                const float inv3 = 1.0f / 3.0f;
+            const float inv3 = 1.0f / 3.0f;
 
-                for (int i = 0; i < Vertices.Count; ++i)
-                {
-                    // Triangle vertices.
-                    Vector2 p1 = pRef;
-                    Vector2 p2 = Vertices[i];
-                    Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                // Triangle vertices.
+                Vector2 p1 = pRef;
+                Vector2 p2 = Vertices[i];
+                Vector2 p3 = i + 1 < Vertices.Count ? Vertices[i + 1] : Vertices[0];
 
-                    Vector2 e1 = p2 - p1;
-                    Vector2 e2 = p3 - p1;
+                Vector2 e1 = p2 - p1;
+                Vector2 e2 = p3 - p1;
 
-                    float d;
-                    MathUtils.Cross(ref e1, ref e2, out d);
+                float d;
+                MathUtils.Cross(ref e1, ref e2, out d);
 
-                    float triangleArea = 0.5f * d;
-                    area += triangleArea;
+                float triangleArea = 0.5f * d;
+                area += triangleArea;
 
-                    // Area weighted centroid
-                    center += triangleArea * inv3 * (p1 + p2 + p3);
+                // Area weighted centroid
+                center += triangleArea * inv3 * (p1 + p2 + p3);
 
-                    float px = p1.X, py = p1.Y;
-                    float ex1 = e1.X, ey1 = e1.Y;
-                    float ex2 = e2.X, ey2 = e2.Y;
+                float px = p1.X, py = p1.Y;
+                float ex1 = e1.X, ey1 = e1.Y;
+                float ex2 = e2.X, ey2 = e2.Y;
 
-                    float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
-                                  0.5f * px * px;
-                    float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
-                                  0.5f * py * py;
+                float intx2 = inv3 * (0.25f * (ex1 * ex1 + ex2 * ex1 + ex2 * ex2) + (px * ex1 + px * ex2)) +
+                              0.5f * px * px;
+                float inty2 = inv3 * (0.25f * (ey1 * ey1 + ey2 * ey1 + ey2 * ey2) + (py * ey1 + py * ey2)) +
+                              0.5f * py * py;
 
-                    I += d * (intx2 + inty2);
-                }
-
-                Debug.Assert(area > Settings.Epsilon);
-
-                // We save the area
-                MassData.Area = area;
-
-                // Total mass
-                MassData.Mass = _density * area;
-
-                // Center of mass
-                Debug.Assert(area > Settings.Epsilon);
-                center *= 1.0f / area;
-                MassData.Centroid = center;
-
-                // Inertia tensor relative to the local origin.
-                MassData.Inertia = _density * I;
+                I += d * (intx2 + inty2);
             }
+
+            //The area is too small for the engine to handle.
+            Debug.Assert(area > Settings.Epsilon);
+
+            // We save the area
+            MassData.Area = area;
+
+            // Total mass
+            MassData.Mass = _density * area;
+
+            // Center of mass
+            center *= 1.0f / area;
+            MassData.Centroid = center;
+
+            // Inertia tensor relative to the local origin.
+            MassData.Inertia = _density * I;
         }
 
         /// <summary>

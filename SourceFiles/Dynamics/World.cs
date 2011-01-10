@@ -199,6 +199,10 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public JointDelegate JointRemoved;
 
+        public ControllerDelegate ControllerAdded;
+
+        public ControllerDelegate ControllerRemoved;
+
         private float _invDt0;
         public Island Island = new Island();
         private Func<Fixture, bool> _queryAABBCallback;
@@ -207,7 +211,6 @@ namespace FarseerPhysics.Dynamics
         private RayCastCallbackInternal _rayCastCallbackWrapper;
         private Body[] _stack = new Body[64];
         private bool _stepComplete;
-        private bool _subStepping;
         private Common.HashSet<Body> _bodyAddList = new Common.HashSet<Body>(32);
         private Common.HashSet<Body> _bodyRemoveList = new Common.HashSet<Body>(32);
         private Common.HashSet<Joint> _jointAddList = new Common.HashSet<Joint>(32);
@@ -330,11 +333,7 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Enable/disable single stepped continuous physics. For testing.
         /// </summary>
-        public bool EnableSubStepping
-        {
-            get { return _subStepping; }
-            set { _subStepping = value; }
-        }
+        public bool EnableSubStepping { get; set; }
 
         /// <summary>
         /// Create a rigid body.
@@ -1286,7 +1285,7 @@ namespace FarseerPhysics.Dynamics
                 // Also, some contacts can be destroyed.
                 ContactManager.FindNewContacts();
 
-                if (_subStepping)
+                if (EnableSubStepping)
                 {
                     _stepComplete = false;
                     break;
@@ -1300,12 +1299,20 @@ namespace FarseerPhysics.Dynamics
 
             controller.World = this;
             Controllers.Add(controller);
+
+            if (ControllerAdded != null)
+                ControllerAdded(controller);
         }
 
         public void RemoveController(Controller controller)
         {
             if (Controllers.Contains(controller))
+            {
                 Controllers.Remove(controller);
+
+                if (ControllerRemoved != null)
+                    ControllerRemoved(controller);
+            }
         }
 
         public void AddBreakableBody(BreakableBody breakableBody)

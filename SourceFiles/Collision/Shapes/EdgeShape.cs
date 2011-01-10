@@ -43,9 +43,14 @@ namespace FarseerPhysics.Collision.Shapes
         public Vector2 Vertex0;
 
         /// <summary>
-        /// These are the edge vertices
+        /// Edge start vertex
         /// </summary>
-        public Vector2 Vertex1, Vertex2;
+        private Vector2 _vertex1;
+
+        /// <summary>
+        /// Edge end vertex
+        /// </summary>
+        private Vector2 _vertex2;
 
         /// <summary>
         /// Optional adjacent vertices. These are used for smooth collision.
@@ -73,14 +78,40 @@ namespace FarseerPhysics.Collision.Shapes
         }
 
         /// <summary>
+        /// These are the edge vertices
+        /// </summary>
+        public Vector2 Vertex1
+        {
+            get { return _vertex1; }
+            set
+            {
+                _vertex1 = value;
+                ComputeProperties();
+            }
+        }
+
+        /// <summary>
+        /// These are the edge vertices
+        /// </summary>
+        public Vector2 Vertex2
+        {
+            get { return _vertex2; }
+            set
+            {
+                _vertex2 = value;
+                ComputeProperties();
+            }
+        }
+
+        /// <summary>
         /// Set this as an isolated edge.
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         public void Set(Vector2 start, Vector2 end)
         {
-            Vertex1 = start;
-            Vertex2 = end;
+            _vertex1 = start;
+            _vertex2 = end;
             HasVertex0 = false;
             HasVertex3 = false;
 
@@ -90,14 +121,14 @@ namespace FarseerPhysics.Collision.Shapes
         public override Shape Clone()
         {
             EdgeShape edge = new EdgeShape();
+            edge._radius = _radius;
+            edge._density = _density;
             edge.HasVertex0 = HasVertex0;
             edge.HasVertex3 = HasVertex3;
-            edge.Radius = Radius;
             edge.Vertex0 = Vertex0;
-            edge.Vertex1 = Vertex1;
-            edge.Vertex2 = Vertex2;
+            edge._vertex1 = _vertex1;
+            edge._vertex2 = _vertex2;
             edge.Vertex3 = Vertex3;
-            edge._density = _density;
             edge.MassData = MassData;
             return edge;
         }
@@ -136,8 +167,8 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 p2 = MathUtils.MultiplyT(ref transform.R, input.Point2 - transform.Position);
             Vector2 d = p2 - p1;
 
-            Vector2 v1 = Vertex1;
-            Vector2 v2 = Vertex2;
+            Vector2 v1 = _vertex1;
+            Vector2 v2 = _vertex2;
             Vector2 e = v2 - v1;
             Vector2 normal = new Vector2(e.Y, -e.X);
             normal.Normalize();
@@ -196,9 +227,8 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            aabb = new AABB();
-            Vector2 v1 = MathUtils.Multiply(ref transform, Vertex1);
-            Vector2 v2 = MathUtils.Multiply(ref transform, Vertex2);
+            Vector2 v1 = MathUtils.Multiply(ref transform, _vertex1);
+            Vector2 v2 = MathUtils.Multiply(ref transform, _vertex2);
 
             Vector2 lower = Vector2.Min(v1, v2);
             Vector2 upper = Vector2.Max(v1, v2);
@@ -214,7 +244,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public override void ComputeProperties()
         {
-            MassData.Centroid = 0.5f * (Vertex1 + Vertex2);
+            MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
     }
 }
