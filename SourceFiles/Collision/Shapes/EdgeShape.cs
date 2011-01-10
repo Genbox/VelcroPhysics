@@ -61,14 +61,14 @@ namespace FarseerPhysics.Collision.Shapes
             : base(0)
         {
             ShapeType = ShapeType.Edge;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
         }
 
         public EdgeShape(Vector2 start, Vector2 end)
             : base(0)
         {
             ShapeType = ShapeType.Edge;
-            Radius = Settings.PolygonRadius;
+            _radius = Settings.PolygonRadius;
             Set(start, end);
         }
 

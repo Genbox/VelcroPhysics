@@ -162,7 +162,7 @@ namespace FarseerPhysics.Common.Decomposition
             //them to be sure.
             for (int i = 0; i < list.Count; i++)
             {
-                list[i] = SimplifyTools.CollinearSimplify(list[i], Settings.AngularSlop);
+                list[i] = SimplifyTools.CollinearSimplify(list[i], 0);
             }
 
             //Remove empty vertice collections

@@ -96,7 +96,7 @@ namespace FarseerPhysics.Common.Decomposition
             //them to be sure.
             for (int i = 0; i < polygonizedTriangles.Count; i++)
             {
-                polygonizedTriangles[i] = SimplifyTools.CollinearSimplify(polygonizedTriangles[i], Settings.AngularSlop);
+                polygonizedTriangles[i] = SimplifyTools.CollinearSimplify(polygonizedTriangles[i], 0);
             }
 
             //Remove empty vertice collections
