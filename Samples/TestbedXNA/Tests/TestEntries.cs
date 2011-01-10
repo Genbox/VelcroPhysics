@@ -31,10 +31,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
-                new TestEntry {Name = "Texture to Vertices", CreateFcn = TextureVerticesTest.Create},
-
-                new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
-
                 //Original tests
                 new TestEntry {Name = "Rope Test", CreateFcn = RopeTest.Create},
                 new TestEntry {Name = "Character collision", CreateFcn = CharacterCollisionTest.Create},

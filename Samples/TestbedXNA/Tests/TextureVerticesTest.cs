@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
