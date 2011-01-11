@@ -91,11 +91,17 @@ namespace FarseerPhysics.Dynamics
         private float _inertia;
         private float _mass;
 
-        public Body(World world) : this(world, null)
+        private Body()
+        {
+            FixtureList = new List<Fixture>(32);
+        }
+
+        public Body(World world)
+            : this(world, null)
         {
         }
 
-        public Body(World world, Object userData)
+        public Body(World world, object userData)
         {
             FixtureList = new List<Fixture>(32);
 
@@ -120,7 +126,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation/(float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -196,7 +202,7 @@ namespace FarseerPhysics.Dynamics
                     return;
                 }
 
-                if (value*value > 0.0f)
+                if (value * value > 0.0f)
                 {
                     Awake = true;
                 }
@@ -485,7 +491,7 @@ namespace FarseerPhysics.Dynamics
 
                 // Update center of mass velocity.
                 Vector2 a = Sweep.C - oldCenter;
-                LinearVelocityInternal += new Vector2(-AngularVelocityInternal*a.Y, AngularVelocityInternal*a.X);
+                LinearVelocityInternal += new Vector2(-AngularVelocityInternal * a.Y, AngularVelocityInternal * a.X);
             }
         }
 
@@ -509,7 +515,7 @@ namespace FarseerPhysics.Dynamics
                     _mass = 1.0f;
                 }
 
-                InvMass = 1.0f/_mass;
+                InvMass = 1.0f / _mass;
             }
         }
 
@@ -519,7 +525,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The inertia.</value>
         public float Inertia
         {
-            get { return _inertia + Mass*Vector2.Dot(Sweep.LocalCenter, Sweep.LocalCenter); }
+            get { return _inertia + Mass * Vector2.Dot(Sweep.LocalCenter, Sweep.LocalCenter); }
             set
             {
                 if (_bodyType != BodyType.Dynamic)
@@ -529,9 +535,9 @@ namespace FarseerPhysics.Dynamics
 
                 if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
                 {
-                    _inertia = value - Mass*Vector2.Dot(LocalCenter, LocalCenter);
+                    _inertia = value - Mass * Vector2.Dot(LocalCenter, LocalCenter);
                     Debug.Assert(_inertia > 0.0f);
-                    InvI = 1.0f/_inertia;
+                    InvI = 1.0f / _inertia;
                 }
             }
         }
@@ -673,8 +679,8 @@ namespace FarseerPhysics.Dynamics
 
             Sweep.C0 =
                 Sweep.C =
-                new Vector2(Xf.Position.X + Xf.R.Col1.X*Sweep.LocalCenter.X + Xf.R.Col2.X*Sweep.LocalCenter.Y,
-                            Xf.Position.Y + Xf.R.Col1.Y*Sweep.LocalCenter.X + Xf.R.Col2.Y*Sweep.LocalCenter.Y);
+                new Vector2(Xf.Position.X + Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y,
+                            Xf.Position.Y + Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
             Sweep.A0 = Sweep.A = angle;
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
@@ -740,7 +746,7 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 Force += force;
-                Torque += (point.X - Sweep.C.X)*force.Y - (point.Y - Sweep.C.Y)*force.X;
+                Torque += (point.X - Sweep.C.X) * force.Y - (point.Y - Sweep.C.Y) * force.X;
             }
         }
 
@@ -801,7 +807,7 @@ namespace FarseerPhysics.Dynamics
             {
                 Awake = true;
             }
-            LinearVelocityInternal += InvMass*impulse;
+            LinearVelocityInternal += InvMass * impulse;
         }
 
         /// <summary>
@@ -820,8 +826,8 @@ namespace FarseerPhysics.Dynamics
             if (Awake == false)
                 Awake = true;
 
-            LinearVelocityInternal += InvMass*impulse;
-            AngularVelocityInternal += InvI*((point.X - Sweep.C.X)*impulse.Y - (point.Y - Sweep.C.Y)*impulse.X);
+            LinearVelocityInternal += InvMass * impulse;
+            AngularVelocityInternal += InvI * ((point.X - Sweep.C.X) * impulse.Y - (point.Y - Sweep.C.Y) * impulse.X);
         }
 
         /// <summary>
@@ -840,7 +846,7 @@ namespace FarseerPhysics.Dynamics
                 Awake = true;
             }
 
-            AngularVelocityInternal += InvI*impulse;
+            AngularVelocityInternal += InvI * impulse;
         }
 
         /// <summary>
@@ -877,7 +883,7 @@ namespace FarseerPhysics.Dynamics
 
                 MassData massData = f.Shape.MassData;
                 _mass += massData.Mass;
-                center += massData.Mass*massData.Centroid;
+                center += massData.Mass * massData.Centroid;
                 _inertia += massData.Inertia;
             }
 
@@ -891,7 +897,7 @@ namespace FarseerPhysics.Dynamics
             // Compute center of mass.
             if (_mass > 0.0f)
             {
-                InvMass = 1.0f/_mass;
+                InvMass = 1.0f / _mass;
                 center *= InvMass;
             }
             else
@@ -904,10 +910,10 @@ namespace FarseerPhysics.Dynamics
             if (_inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                _inertia -= _mass*Vector2.Dot(center, center);
+                _inertia -= _mass * Vector2.Dot(center, center);
 
                 Debug.Assert(_inertia > 0.0f);
-                InvI = 1.0f/_inertia;
+                InvI = 1.0f / _inertia;
             }
             else
             {
@@ -922,7 +928,7 @@ namespace FarseerPhysics.Dynamics
 
             // Update center of mass velocity.
             Vector2 a = Sweep.C - oldCenter;
-            LinearVelocityInternal += new Vector2(-AngularVelocityInternal*a.Y, AngularVelocityInternal*a.X);
+            LinearVelocityInternal += new Vector2(-AngularVelocityInternal * a.Y, AngularVelocityInternal * a.X);
         }
 
         /// <summary>
@@ -932,8 +938,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(ref Vector2 localPoint)
         {
-            return new Vector2(Xf.Position.X + Xf.R.Col1.X*localPoint.X + Xf.R.Col2.X*localPoint.Y,
-                               Xf.Position.Y + Xf.R.Col1.Y*localPoint.X + Xf.R.Col2.Y*localPoint.Y);
+            return new Vector2(Xf.Position.X + Xf.R.Col1.X * localPoint.X + Xf.R.Col2.X * localPoint.Y,
+                               Xf.Position.Y + Xf.R.Col1.Y * localPoint.X + Xf.R.Col2.Y * localPoint.Y);
         }
 
         /// <summary>
@@ -954,8 +960,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(ref Vector2 localVector)
         {
-            return new Vector2(Xf.R.Col1.X*localVector.X + Xf.R.Col2.X*localVector.Y,
-                               Xf.R.Col1.Y*localVector.X + Xf.R.Col2.Y*localVector.Y);
+            return new Vector2(Xf.R.Col1.X * localVector.X + Xf.R.Col2.X * localVector.Y,
+                               Xf.R.Col1.Y * localVector.X + Xf.R.Col2.Y * localVector.Y);
         }
 
         /// <summary>
@@ -976,8 +982,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local point relative to the body's origin.</returns>
         public Vector2 GetLocalPoint(ref Vector2 worldPoint)
         {
-            return new Vector2((worldPoint.X - Xf.Position.X)*Xf.R.Col1.X + (worldPoint.Y - Xf.Position.Y)*Xf.R.Col1.Y,
-                               (worldPoint.X - Xf.Position.X)*Xf.R.Col2.X + (worldPoint.Y - Xf.Position.Y)*Xf.R.Col2.Y);
+            return new Vector2((worldPoint.X - Xf.Position.X) * Xf.R.Col1.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col1.Y,
+                               (worldPoint.X - Xf.Position.X) * Xf.R.Col2.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col2.Y);
         }
 
         /// <summary>
@@ -998,8 +1004,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local vector.</returns>
         public Vector2 GetLocalVector(ref Vector2 worldVector)
         {
-            return new Vector2(worldVector.X*Xf.R.Col1.X + worldVector.Y*Xf.R.Col1.Y,
-                               worldVector.X*Xf.R.Col2.X + worldVector.Y*Xf.R.Col2.Y);
+            return new Vector2(worldVector.X * Xf.R.Col1.X + worldVector.Y * Xf.R.Col1.Y,
+                               worldVector.X * Xf.R.Col2.X + worldVector.Y * Xf.R.Col2.Y);
         }
 
         /// <summary>
@@ -1031,8 +1037,8 @@ namespace FarseerPhysics.Dynamics
         public Vector2 GetLinearVelocityFromWorldPoint(ref Vector2 worldPoint)
         {
             return LinearVelocityInternal +
-                   new Vector2(-AngularVelocityInternal*(worldPoint.Y - Sweep.C.Y),
-                               AngularVelocityInternal*(worldPoint.X - Sweep.C.X));
+                   new Vector2(-AngularVelocityInternal * (worldPoint.Y - Sweep.C.Y),
+                               AngularVelocityInternal * (worldPoint.X - Sweep.C.X));
         }
 
         /// <summary>
@@ -1055,17 +1061,36 @@ namespace FarseerPhysics.Dynamics
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
 
+        public Body Clone()
+        {
+            Body body = new Body();
+            body.World = World;
+            body.UserData = UserData;
+            body.LinearDamping = LinearDamping;
+            body.LinearVelocityInternal = LinearVelocityInternal;
+            body.AngularDamping = AngularDamping;
+            body.AngularVelocityInternal = AngularVelocityInternal;
+            body.Position = Position;
+            body.Rotation = Rotation;
+            body._bodyType = _bodyType;
+            body.Flags = Flags;
+            
+            World.AddBody(body);
+            
+            return body;
+        }
+
         internal void SynchronizeFixtures()
         {
             Transform xf1 = new Transform();
-            float c = (float) Math.Cos(Sweep.A0), s = (float) Math.Sin(Sweep.A0);
+            float c = (float)Math.Cos(Sweep.A0), s = (float)Math.Sin(Sweep.A0);
             xf1.R.Col1.X = c;
             xf1.R.Col2.X = -s;
             xf1.R.Col1.Y = s;
             xf1.R.Col2.Y = c;
 
-            xf1.Position.X = Sweep.C0.X - (xf1.R.Col1.X*Sweep.LocalCenter.X + xf1.R.Col2.X*Sweep.LocalCenter.Y);
-            xf1.Position.Y = Sweep.C0.Y - (xf1.R.Col1.Y*Sweep.LocalCenter.X + xf1.R.Col2.Y*Sweep.LocalCenter.Y);
+            xf1.Position.X = Sweep.C0.X - (xf1.R.Col1.X * Sweep.LocalCenter.X + xf1.R.Col2.X * Sweep.LocalCenter.Y);
+            xf1.Position.Y = Sweep.C0.Y - (xf1.R.Col1.Y * Sweep.LocalCenter.X + xf1.R.Col2.Y * Sweep.LocalCenter.Y);
 
             BroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
@@ -1078,8 +1103,8 @@ namespace FarseerPhysics.Dynamics
         {
             Xf.R.Set(Sweep.A);
 
-            float vx = Xf.R.Col1.X*Sweep.LocalCenter.X + Xf.R.Col2.X*Sweep.LocalCenter.Y;
-            float vy = Xf.R.Col1.Y*Sweep.LocalCenter.X + Xf.R.Col2.Y*Sweep.LocalCenter.Y;
+            float vx = Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y;
+            float vy = Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y;
 
             Xf.Position.X = Sweep.C.X - vx;
             Xf.Position.Y = Sweep.C.Y - vy;

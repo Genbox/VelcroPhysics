@@ -305,6 +305,16 @@ namespace FarseerPhysics.Dynamics
                 edge = edge.Next;
             }
         }
+
+        public CollisionFilter Clone()
+        {
+            CollisionFilter filter = new CollisionFilter(_fixture);
+            filter._collidesWith = _collidesWith;
+            filter._collisionCategories = _collisionCategories;
+            filter._collisionGroup = _collisionGroup;
+            filter._collisionIgnores = new Dictionary<int, bool>(filter._collisionIgnores);
+            return filter;
+        }
     }
 
     /// <summary>
@@ -346,12 +356,16 @@ namespace FarseerPhysics.Dynamics
         public FixtureProxy[] Proxies;
         public int ProxyCount;
 
+        private Fixture()
+        {
+        }
+
         public Fixture(Body body, Shape shape)
             : this(body, shape, null)
         {
         }
 
-        public Fixture(Body body, Shape shape, Object userData)
+        public Fixture(Body body, Shape shape, object userData)
         {
             CollisionFilter = new CollisionFilter(this);
 
@@ -369,6 +383,11 @@ namespace FarseerPhysics.Dynamics
             else
                 Shape = shape.Clone();
 
+            RegisterFixture();
+        }
+
+        private void RegisterFixture()
+        {
             // Reserve proxy space
             int childCount = Shape.ChildCount;
             Proxies = new FixtureProxy[childCount];
@@ -510,6 +529,25 @@ namespace FarseerPhysics.Dynamics
         {
             Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
             aabb = Proxies[childIndex].AABB;
+        }
+
+        public Fixture Clone()
+        {
+            Fixture fixture = new Fixture();
+            fixture.Body = Body.Clone();
+            
+            if (Settings.ConserveMemory)
+                fixture.Shape = Shape;
+            else
+                fixture.Shape = Shape.Clone();
+
+            fixture.UserData = UserData;
+            fixture.Restitution = Restitution;
+            fixture.Friction = Friction;
+            fixture.IsSensor = IsSensor;
+            fixture.CollisionFilter = CollisionFilter.Clone();
+            fixture.RegisterFixture();
+            return fixture;
         }
 
         internal void Destroy()
