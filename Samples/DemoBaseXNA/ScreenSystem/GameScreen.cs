@@ -38,12 +38,15 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
     {
         public bool FirstRun = true;
         private GestureType _enabledGestures = GestureType.None;
-        private bool _isExiting;
         private bool _otherScreenHasFocus;
-        private ScreenState _screenState = ScreenState.TransitionOn;
-        private TimeSpan _transitionOffTime = TimeSpan.Zero;
-        private TimeSpan _transitionOnTime = TimeSpan.Zero;
-        private float _transitionPosition = 1;
+
+        public GameScreen()
+        {
+            ScreenState = ScreenState.TransitionOn;
+            TransitionPosition = 1;
+            TransitionOffTime = TimeSpan.Zero;
+            TransitionOnTime = TimeSpan.Zero;
+        }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -58,32 +61,20 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// Indicates how long the screen takes to
         /// transition on when it is activated.
         /// </summary>
-        public TimeSpan TransitionOnTime
-        {
-            get { return _transitionOnTime; }
-            protected set { _transitionOnTime = value; }
-        }
+        public TimeSpan TransitionOnTime { get; protected set; }
 
         /// <summary>
         /// Indicates how long the screen takes to
         /// transition off when it is deactivated.
         /// </summary>
-        public TimeSpan TransitionOffTime
-        {
-            get { return _transitionOffTime; }
-            protected set { _transitionOffTime = value; }
-        }
+        public TimeSpan TransitionOffTime { get; protected set; }
 
         /// <summary>
         /// Gets the current position of the screen transition, ranging
         /// from zero (fully active, no transition) to one (transitioned
         /// fully off to nothing).
         /// </summary>
-        public float TransitionPosition
-        {
-            get { return _transitionPosition; }
-            protected set { _transitionPosition = value; }
-        }
+        public float TransitionPosition { get; protected set; }
 
         /// <summary>
         /// Gets the current alpha of the screen transition, ranging
@@ -98,11 +89,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// <summary>
         /// Gets the current screen transition state.
         /// </summary>
-        public ScreenState ScreenState
-        {
-            get { return _screenState; }
-            protected set { _screenState = value; }
-        }
+        public ScreenState ScreenState { get; protected set; }
 
         /// <summary>
         /// There are two possible reasons why a screen might be transitioning
@@ -112,11 +99,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// if set, the screen will automatically remove itself as soon as the
         /// transition finishes.
         /// </summary>
-        public bool IsExiting
-        {
-            get { return _isExiting; }
-            protected internal set { _isExiting = value; }
-        }
+        public bool IsExiting { get; protected internal set; }
 
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
@@ -126,8 +109,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get
             {
                 return !_otherScreenHasFocus &&
-                       (_screenState == ScreenState.TransitionOn ||
-                        _screenState == ScreenState.Active);
+                       (ScreenState == ScreenState.TransitionOn ||
+                        ScreenState == ScreenState.Active);
             }
         }
 
@@ -194,12 +177,12 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         {
             _otherScreenHasFocus = otherScreenHasFocus;
 
-            if (_isExiting)
+            if (IsExiting)
             {
                 // If the screen is going away to die, it should transition off.
-                _screenState = ScreenState.TransitionOff;
+                ScreenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, _transitionOffTime, 1))
+                if (!UpdateTransition(gameTime, TransitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
                     ScreenManager.RemoveScreen(this);
@@ -208,29 +191,29 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, _transitionOffTime, 1))
+                if (UpdateTransition(gameTime, TransitionOffTime, 1))
                 {
                     // Still busy transitioning.
-                    _screenState = ScreenState.TransitionOff;
+                    ScreenState = ScreenState.TransitionOff;
                 }
                 else
                 {
                     // Transition finished!
-                    _screenState = ScreenState.Hidden;
+                    ScreenState = ScreenState.Hidden;
                 }
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, _transitionOnTime, -1))
+                if (UpdateTransition(gameTime, TransitionOnTime, -1))
                 {
                     // Still busy transitioning.
-                    _screenState = ScreenState.TransitionOn;
+                    ScreenState = ScreenState.TransitionOn;
                 }
                 else
                 {
                     // Transition finished!
-                    _screenState = ScreenState.Active;
+                    ScreenState = ScreenState.Active;
                 }
             }
         }
@@ -250,13 +233,13 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
                                            time.TotalMilliseconds);
 
             // Update the transition position.
-            _transitionPosition += transitionDelta*direction;
+            TransitionPosition += transitionDelta*direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (_transitionPosition <= 0)) ||
-                ((direction > 0) && (_transitionPosition >= 1)))
+            if (((direction < 0) && (TransitionPosition <= 0)) ||
+                ((direction > 0) && (TransitionPosition >= 1)))
             {
-                _transitionPosition = MathHelper.Clamp(_transitionPosition, 0, 1);
+                TransitionPosition = MathHelper.Clamp(TransitionPosition, 0, 1);
                 return false;
             }
 
@@ -296,24 +279,24 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         public virtual void HandleKeyboardInput(InputHelper input)
         {
             //Disabled in release versions of FPE
-            //if (input.IsKeyDown(Keys.PageUp))
-            //    ScreenManager.Camera.Zoom += 0.02f;
-            //if (input.IsKeyDown(Keys.PageDown))
-            //    ScreenManager.Camera.Zoom -= 0.02f;
-            //if (input.IsKeyDown(Keys.Delete))
-            //    ScreenManager.Camera.Rotation += 0.01f;
-            //if (input.IsKeyDown(Keys.End))
-            //    ScreenManager.Camera.Rotation -= 0.01f;
-            //if (input.IsKeyDown(Keys.Left))
-            //    ScreenManager.Camera.MoveCamera(new Vector2(-0.5f, 0));
-            //if (input.IsKeyDown(Keys.Right))
-            //    ScreenManager.Camera.MoveCamera(new Vector2(+0.5f, 0));
-            //if (input.IsKeyDown(Keys.Down))
-            //    ScreenManager.Camera.MoveCamera(new Vector2(0, -0.5f));
-            //if (input.IsKeyDown(Keys.Up))
-            //    ScreenManager.Camera.MoveCamera(new Vector2(0, +0.5f));
-            //if (input.IsNewKeyPress(Keys.Home))
-            //    ScreenManager.Camera.ResetCamera();
+            if (input.IsKeyDown(Keys.PageUp))
+                ScreenManager.Camera.Zoom += 0.02f;
+            if (input.IsKeyDown(Keys.PageDown))
+                ScreenManager.Camera.Zoom -= 0.02f;
+            if (input.IsKeyDown(Keys.Delete))
+                ScreenManager.Camera.Rotation += 0.01f;
+            if (input.IsKeyDown(Keys.End))
+                ScreenManager.Camera.Rotation -= 0.01f;
+            if (input.IsKeyDown(Keys.Left))
+                ScreenManager.Camera.MoveCamera(new Vector2(-0.5f, 0));
+            if (input.IsKeyDown(Keys.Right))
+                ScreenManager.Camera.MoveCamera(new Vector2(+0.5f, 0));
+            if (input.IsKeyDown(Keys.Down))
+                ScreenManager.Camera.MoveCamera(new Vector2(0, -0.5f));
+            if (input.IsKeyDown(Keys.Up))
+                ScreenManager.Camera.MoveCamera(new Vector2(0, +0.5f));
+            if (input.IsNewKeyPress(Keys.Home))
+                ScreenManager.Camera.ResetCamera();
         }
 
         /// <summary>
@@ -338,7 +321,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             else
             {
                 // Otherwise flag that it should transition off and then exit.
-                _isExiting = true;
+                IsExiting = true;
             }
         }
     }

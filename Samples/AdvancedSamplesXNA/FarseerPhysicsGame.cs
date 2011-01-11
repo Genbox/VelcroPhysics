@@ -71,9 +71,13 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
             Demo1Screen demo1 = new Demo1Screen();
             Demo2Screen demo2 = new Demo2Screen();
+            Demo3Screen demo3 = new Demo3Screen();
+            Demo4Screen demo4 = new Demo4Screen();
             MainMenuScreen mainMenuScreen = new MainMenuScreen();
             mainMenuScreen.AddMainMenuItem(demo1.GetTitle(), demo1);
             mainMenuScreen.AddMainMenuItem(demo2.GetTitle(), demo2);
+            mainMenuScreen.AddMainMenuItem(demo3.GetTitle(), demo3);
+            mainMenuScreen.AddMainMenuItem(demo4.GetTitle(), demo4);
             mainMenuScreen.AddMainMenuItem("Exit", null, true);
 
             ScreenManager.AddScreen(new BackgroundScreen(), null);

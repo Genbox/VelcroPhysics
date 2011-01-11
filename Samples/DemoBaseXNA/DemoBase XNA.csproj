@@ -108,8 +108,11 @@
     <Compile Include="DemoShare\Agent.cs" />
     <Compile Include="DemoShare\Border.cs" />
     <Compile Include="DemoShare\Objects.cs" />
+    <Compile Include="DemoShare\Pyramid.cs" />
     <Compile Include="DemoShare\Ragdoll.cs" />
     <Compile Include="DemoShare\Spider.cs" />
+    <Compile Include="DemoShare\Spiderweb.cs" />
+    <Compile Include="DemoShare\TheoJansen.cs" />
     <Compile Include="DrawingSystem\DrawingHelper.cs" />
     <Compile Include="IDemoScreen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
