@@ -104,6 +104,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Demo4Screen.cs" />
+    <Compile Include="Demo3Screen.cs" />
     <Compile Include="Demo2Screen.cs" />
     <Compile Include="Demo1Screen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -80,9 +80,10 @@ namespace FarseerPhysics.Factories
         /// <param name="shapes">The shapes.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
+        /// <param name="userData"></param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                 BodyType type, int copies, Object userData)
+                                                                 BodyType type, int copies, object userData)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -122,9 +123,10 @@ namespace FarseerPhysics.Factories
         /// <param name="shape">The shape.</param>
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
+        /// <param name="userData">The user data.</param>
         /// <returns></returns>
         public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
-                                                                 int copies, Object userData)
+                                                                 int copies, object userData)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
