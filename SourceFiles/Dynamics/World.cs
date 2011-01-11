@@ -139,7 +139,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns>
         /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsInEnbledCategory(Category category)
+        public bool IsInEnabledCategory(Category category)
         {
             return (EnabledOnCategories & category) == category;
         }
@@ -341,8 +341,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public void AddBody(Body body)
         {
-            //You are adding a body that is already in the simulation
-            Debug.Assert(!_bodyAddList.Contains(body));
+            Debug.Assert(!_bodyAddList.Contains(body), "You are adding the same body more than once.");
 
             if (!_bodyAddList.Contains(body))
                 _bodyAddList.Add(body);
@@ -355,8 +354,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="body">The body.</param>
         public void RemoveBody(Body body)
         {
-            //You are removing a body twice?
-            Debug.Assert(!_bodyRemoveList.Contains(body));
+            Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
 
             if (!_bodyRemoveList.Contains(body))
                 _bodyRemoveList.Add(body);
@@ -368,8 +366,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="joint">The joint.</param>
         public void AddJoint(Joint joint)
         {
-            //You are adding the same joint twice?
-            Debug.Assert(!_jointAddList.Contains(joint));
+            Debug.Assert(!_jointAddList.Contains(joint), "You are adding the same joint more than once.");
 
             if (!_jointAddList.Contains(joint))
                 _jointAddList.Add(joint);
@@ -381,8 +378,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="joint">The joint.</param>
         public void RemoveJoint(Joint joint)
         {
-            //You are removing a joint twice?
-            Debug.Assert(!_jointRemoveList.Contains(joint));
+            Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
 
             if (!_jointRemoveList.Contains(joint))
                 _jointRemoveList.Add(joint);
@@ -659,9 +655,9 @@ namespace FarseerPhysics.Dynamics
             }
 
             TimeStep step;
-            step.inv_dt = 1.0f/dt;
+            step.inv_dt = 1.0f / dt;
             step.dt = dt;
-            step.dtRatio = _invDt0*dt;
+            step.dtRatio = _invDt0 * dt;
 
             //Update controllers
             for (int i = 0; i < Controllers.Count; i++)
@@ -789,7 +785,7 @@ namespace FarseerPhysics.Dynamics
             if (hit)
             {
                 float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction)*input.Point1 + fraction*input.Point2;
+                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
                 return _rayCastCallback(fixture, point, output.Normal, fraction);
             }
 
@@ -821,7 +817,7 @@ namespace FarseerPhysics.Dynamics
             // Build and simulate all awake islands.
             int stackSize = BodyList.Count;
             if (stackSize > _stack.Length)
-                _stack = new Body[Math.Max(_stack.Length*2, stackSize)];
+                _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
             for (int index = BodyList.Count - 1; index >= 0; index--)
             {
@@ -989,7 +985,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="step">The step.</param>
         private void SolveTOI(ref TimeStep step)
         {
-            Island.Reset(2*Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
+            Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
             if (_stepComplete)
             {
@@ -1009,7 +1005,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Find TOI events and solve them.
-            for (;;)
+            for (; ; )
             {
                 // Find the first TOI.
                 Contact minContact = null;
@@ -1103,7 +1099,7 @@ namespace FarseerPhysics.Dynamics
                         float beta = output.T;
                         if (output.State == TOIOutputState.Touching)
                         {
-                            alpha = Math.Min(alpha0 + (1.0f - alpha0)*beta, 1.0f);
+                            alpha = Math.Min(alpha0 + (1.0f - alpha0) * beta, 1.0f);
                         }
                         else
                         {
@@ -1122,7 +1118,7 @@ namespace FarseerPhysics.Dynamics
                     }
                 }
 
-                if (minContact == null || 1.0f - 10.0f*Settings.Epsilon < minAlpha)
+                if (minContact == null || 1.0f - 10.0f * Settings.Epsilon < minAlpha)
                 {
                     // No more TOI events. Done!
                     _stepComplete = true;
@@ -1172,7 +1168,7 @@ namespace FarseerPhysics.Dynamics
                 minContact.Flags |= ContactFlags.Island;
 
                 // Get contacts on bodyA and bodyB.
-                Body[] bodies = {bA1, bB1};
+                Body[] bodies = { bA1, bB1 };
                 for (int i = 0; i < 2; ++i)
                 {
                     Body body = bodies[i];
@@ -1253,8 +1249,8 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 TimeStep subStep;
-                subStep.dt = (1.0f - minAlpha)*step.dt;
-                subStep.inv_dt = 1.0f/subStep.dt;
+                subStep.dt = (1.0f - minAlpha) * step.dt;
+                subStep.inv_dt = 1.0f / subStep.dt;
                 subStep.dtRatio = 1.0f;
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
@@ -1295,7 +1291,7 @@ namespace FarseerPhysics.Dynamics
 
         public void AddController(Controller controller)
         {
-            Debug.Assert(!Controllers.Contains(controller));
+            Debug.Assert(!Controllers.Contains(controller), "You are adding the same controller more than once.");
 
             controller.World = this;
             Controllers.Add(controller);
@@ -1306,6 +1302,8 @@ namespace FarseerPhysics.Dynamics
 
         public void RemoveController(Controller controller)
         {
+            Debug.Assert(Controllers.Contains(controller), "You are removing a controller that is not in the simulation.");
+
             if (Controllers.Contains(controller))
             {
                 Controllers.Remove(controller);
@@ -1340,17 +1338,17 @@ namespace FarseerPhysics.Dynamics
             // Query the world for overlapping shapes.
             QueryAABB(
                 fixture =>
+                {
+                    bool inside = fixture.TestPoint(ref point);
+                    if (inside)
                     {
-                        bool inside = fixture.TestPoint(ref point);
-                        if (inside)
-                        {
-                            myFixture = fixture;
-                            return false;
-                        }
+                        myFixture = fixture;
+                        return false;
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             return myFixture;
         }
@@ -1372,14 +1370,14 @@ namespace FarseerPhysics.Dynamics
             // Query the world for overlapping shapes.
             QueryAABB(
                 fixture =>
-                    {
-                        bool inside = fixture.TestPoint(ref point);
-                        if (inside)
-                            fixtures.Add(fixture);
+                {
+                    bool inside = fixture.TestPoint(ref point);
+                    if (inside)
+                        fixtures.Add(fixture);
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             return fixtures;
         }
