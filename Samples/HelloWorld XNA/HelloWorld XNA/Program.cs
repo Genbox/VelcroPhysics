@@ -1,5 +1,3 @@
-using System;
-
 namespace FarseerPhysics.HelloWorld
 {
 #if WINDOWS || XBOX
