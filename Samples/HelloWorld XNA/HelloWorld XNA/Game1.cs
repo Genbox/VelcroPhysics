@@ -22,10 +22,6 @@ namespace FarseerPhysics.HelloWorld
         private World _world;
         private DebugViewXNA _debugView;
 
-        // Usage:
-        // Press A or D to rotate the ball
-        // Alternative controls: Left or Right cursor
-        //                       Left or Right trigger on Xbox360 controller
         private Fixture _circleFixture;
         private Fixture _groundFixture;
 
@@ -33,9 +29,18 @@ namespace FarseerPhysics.HelloWorld
         private Texture2D _groundSprite;
         private Matrix _projection;
 
+        // Simple camera controls
+        private Matrix _view;
+        private Matrix _viewDebug;
+        private Vector2 _cameraPosition;
+        private Vector2 _screenCenter;
+        private float _cameraRotation;
+
         const string Text = "Press F1 to toogle the DebugView\n" +
                             "Press A or D to rotate the ball\n" +
-                            "Press Space to jump";
+                            "Press Space to jump\n" +
+                            "Press Shift + W/S/A/D to move the camera\n" +
+                            "Press Shift + Q/E to rotate the camera";
 
         // Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
         // 1m equals 64px here
@@ -64,8 +69,13 @@ namespace FarseerPhysics.HelloWorld
             // The DebugView needs a projection matrix with the screen size in meters
             _projection = Matrix.CreateOrthographicOffCenter(0f, _graphics.GraphicsDevice.Viewport.Width / MeterInPx,
                                                              _graphics.GraphicsDevice.Viewport.Height / MeterInPx, 0f, 0f, 1f);
+            // Initialize camera controls
+            _view = Matrix.Identity;
+            _viewDebug = Matrix.Identity;
+            _cameraPosition = Vector2.Zero;
+            _cameraRotation = 0f;
 
-            Vector2 screenCenter = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2f,
+            _screenCenter = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2f,
                                                 _graphics.GraphicsDevice.Viewport.Height / 2f);
 
             _batch = new SpriteBatch(_graphics.GraphicsDevice);
@@ -79,7 +89,7 @@ namespace FarseerPhysics.HelloWorld
 
             /* Circle Fixture: */
             // Convert screen center from pixels to meters
-            Vector2 circlePosition = screenCenter / MeterInPx;
+            Vector2 circlePosition = _screenCenter / MeterInPx;
             // Add circle 1.5 meters above the screen center
             circlePosition -= Vector2.UnitY * 1.5f;
 
@@ -92,7 +102,7 @@ namespace FarseerPhysics.HelloWorld
             _circleFixture.Friction = 0.5f;
 
             /* Ground Fixture: */
-            Vector2 groundPosition = screenCenter / MeterInPx + Vector2.UnitY * 1.25f;
+            Vector2 groundPosition = _screenCenter / MeterInPx + Vector2.UnitY * 1.25f;
 
             // Create the ground fixture
             _groundFixture = FixtureFactory.CreateRectangle(_world, 512f / MeterInPx, 64f / MeterInPx, 1f, groundPosition);
@@ -111,15 +121,48 @@ namespace FarseerPhysics.HelloWorld
         {
             KeyboardState state = Keyboard.GetState();
 
-            // We make it possible to rotate the circle body
-            if (state.IsKeyDown(Keys.A) || state.IsKeyDown(Keys.Left))
-                _circleFixture.Body.ApplyTorque(-10);
+            // Switch between circle body and camera control
+            if (state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift))
+            {
+                // Move camera
+                if (state.IsKeyDown(Keys.A))
+                    _cameraPosition.X += 1.5f;
 
-            if (state.IsKeyDown(Keys.D) || state.IsKeyDown(Keys.Right))
-                _circleFixture.Body.ApplyTorque(10);
+                if (state.IsKeyDown(Keys.D))
+                    _cameraPosition.X -= 1.5f;
 
-            if (state.IsKeyDown(Keys.Space) && _oldState.IsKeyUp(Keys.Space))
-                _circleFixture.Body.ApplyLinearImpulse(new Vector2(0, -10));
+                if (state.IsKeyDown(Keys.W))
+                    _cameraPosition.Y += 1.5f;
+
+                if (state.IsKeyDown(Keys.S))
+                    _cameraPosition.Y -= 1.5f;
+
+                // Rotate camera
+                if (state.IsKeyDown(Keys.Q))
+                    _cameraRotation -= 0.05f;
+
+                if (state.IsKeyDown(Keys.E))
+                    _cameraRotation += 0.05f;
+
+                _view = Matrix.CreateTranslation(new Vector3(_cameraPosition - _screenCenter, 0f)) *
+                        Matrix.CreateRotationZ(_cameraRotation) *
+                        Matrix.CreateTranslation(new Vector3(_screenCenter, 0f));
+                _viewDebug = Matrix.CreateTranslation(new Vector3((_cameraPosition - _screenCenter) / MeterInPx, 0f)) *
+                             Matrix.CreateRotationZ(_cameraRotation) *
+                             Matrix.CreateTranslation(new Vector3(_screenCenter / MeterInPx, 0f));
+            }
+            else
+            {
+                // We make it possible to rotate the circle body
+                if (state.IsKeyDown(Keys.A))
+                    _circleFixture.Body.ApplyTorque(-10);
+
+                if (state.IsKeyDown(Keys.D))
+                    _circleFixture.Body.ApplyTorque(10);
+
+                if (state.IsKeyDown(Keys.Space) && _oldState.IsKeyUp(Keys.Space))
+                    _circleFixture.Body.ApplyLinearImpulse(new Vector2(0, -10));
+            }
 
             // Toggle DebugView
             if (state.IsKeyUp(Keys.F1) && _oldState.IsKeyDown(Keys.F1))
@@ -127,21 +170,6 @@ namespace FarseerPhysics.HelloWorld
 
             if (state.IsKeyDown(Keys.Escape))
                 Exit();
-
-            // You can rotate the circle using the triggers on the Xbox360 controller.
-            GamePadState gamepad = GamePad.GetState(PlayerIndex.One);
-
-            if (gamepad.IsConnected)
-            {
-                if (gamepad.Buttons.Back == ButtonState.Pressed)
-                    Exit();
-
-                float rotation = -4 * gamepad.Triggers.Left;
-                _circleFixture.Body.ApplyTorque(rotation);
-
-                rotation = 4 * gamepad.Triggers.Right;
-                _circleFixture.Body.ApplyTorque(rotation);
-            }
 
             _oldState = state;
 
@@ -171,13 +199,17 @@ namespace FarseerPhysics.HelloWorld
             // Align sprite center to body position
             Vector2 circleOrigin = new Vector2(_circleSprite.Width / 2f, _circleSprite.Height / 2f);
 
-            _batch.Begin();
+            _batch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _view);
 
             //Draw circle
             _batch.Draw(_circleSprite, circlePos, null, Color.White, circleRotation, circleOrigin, 1f, SpriteEffects.None, 0f);
 
             //Draw ground
             _batch.Draw(_groundSprite, groundPos, null, Color.White, 0f, groundOrigin, 1f, SpriteEffects.None, 0f);
+
+            _batch.End();
+
+            _batch.Begin();
 
             // Display instructions
             _batch.DrawString(_font, Text, new Vector2(14f, 14f), Color.Black);
@@ -187,7 +219,7 @@ namespace FarseerPhysics.HelloWorld
 
             if (_showDebug)
             {
-                _debugView.RenderDebugData(ref _projection);
+                _debugView.RenderDebugData(ref _projection, ref _viewDebug);
             }
 
             base.Draw(gameTime);
