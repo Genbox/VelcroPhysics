@@ -26,6 +26,7 @@
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -194,9 +195,25 @@ namespace FarseerPhysics.TestBed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(5.9f + 2.0f*radius*i, 2.4f);
 
-                    body.CreateFixture(shape);
+                    Fixture fix = body.CreateFixture(shape);
+                    fix.OnCollision += BallCollision;
+
                 }
             }
+        }
+
+        private bool BallCollision(Fixture fixturea, Fixture fixtureb, Contact contact)
+        {
+            if (fixtureb.ShapeType == ShapeType.Edge)
+            {
+                //Remove everything from the world
+                World.Clear();
+
+                //Add a rectangle
+                FixtureFactory.CreateRectangle(World, 5, 5, 1);
+            }
+
+            return false;
         }
 
         internal static Test Create()

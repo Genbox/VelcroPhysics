@@ -240,13 +240,13 @@ namespace FarseerPhysics.Dynamics
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
-            Controllers = new List<Controller>();
+            ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
             JointList = new List<Joint>(32);
         }
 
-        public List<Controller> Controllers { get; private set; }
+        public List<Controller> ControllerList { get; private set; }
 
         public List<BreakableBody> BreakableBodyList { get; private set; }
 
@@ -313,12 +313,15 @@ namespace FarseerPhysics.Dynamics
         public ContactManager ContactManager { get; private set; }
 
         /// <summary>
-        /// Get the world body list. With the returned body, use Body.Next to get
-        /// the next body in the world list. A null body indicates the end of the list.
+        /// Get the world body list.
         /// </summary>
         /// <value>Thehead of the world body list.</value>
         public List<Body> BodyList { get; private set; }
 
+        /// <summary>
+        /// Get the world joint list. 
+        /// </summary>
+        /// <value>The joint list.</value>
         public List<Joint> JointList { get; private set; }
 
         /// <summary>
@@ -373,16 +376,24 @@ namespace FarseerPhysics.Dynamics
                 _jointAddList.Add(joint);
         }
 
+        private void RemoveJoint(Joint joint, bool doCheck)
+        {
+            if (doCheck)
+            {
+                Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
+            }
+
+            if (!_jointRemoveList.Contains(joint))
+                _jointRemoveList.Add(joint);
+        }
+
         /// <summary>
         /// Destroy a joint. This may cause the connected bodies to begin colliding.
         /// </summary>
         /// <param name="joint">The joint.</param>
         public void RemoveJoint(Joint joint)
         {
-            Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
-
-            if (!_jointRemoveList.Contains(joint))
-                _jointRemoveList.Add(joint);
+            RemoveJoint(joint, true);
         }
 
         /// <summary>
@@ -595,7 +606,7 @@ namespace FarseerPhysics.Dynamics
                         JointEdge je0 = je;
                         je = je.Next;
 
-                        RemoveJoint(je0.Joint);
+                        RemoveJoint(je0.Joint, false);
                     }
                     body.JointList = null;
 
@@ -673,9 +684,9 @@ namespace FarseerPhysics.Dynamics
             step.dtRatio = _invDt0 * dt;
 
             //Update controllers
-            for (int i = 0; i < Controllers.Count; i++)
+            for (int i = 0; i < ControllerList.Count; i++)
             {
-                Controllers[i].Update(dt);
+                ControllerList[i].Update(dt);
             }
 
 #if (!SILVERLIGHT)
@@ -1103,7 +1114,7 @@ namespace FarseerPhysics.Dynamics
                         _input.SweepA = bA.Sweep;
                         _input.SweepB = bB.Sweep;
                         _input.TMax = 1.0f;
-                        
+
                         TOIOutput output;
                         TimeOfImpact.CalculateTimeOfImpact(out output, _input);
 
@@ -1303,10 +1314,10 @@ namespace FarseerPhysics.Dynamics
 
         public void AddController(Controller controller)
         {
-            Debug.Assert(!Controllers.Contains(controller), "You are adding the same controller more than once.");
+            Debug.Assert(!ControllerList.Contains(controller), "You are adding the same controller more than once.");
 
             controller.World = this;
-            Controllers.Add(controller);
+            ControllerList.Add(controller);
 
             if (ControllerAdded != null)
                 ControllerAdded(controller);
@@ -1314,11 +1325,11 @@ namespace FarseerPhysics.Dynamics
 
         public void RemoveController(Controller controller)
         {
-            Debug.Assert(Controllers.Contains(controller), "You are removing a controller that is not in the simulation.");
+            Debug.Assert(ControllerList.Contains(controller), "You are removing a controller that is not in the simulation.");
 
-            if (Controllers.Contains(controller))
+            if (ControllerList.Contains(controller))
             {
-                Controllers.Remove(controller);
+                ControllerList.Remove(controller);
 
                 if (ControllerRemoved != null)
                     ControllerRemoved(controller);
@@ -1392,6 +1403,26 @@ namespace FarseerPhysics.Dynamics
                 }, ref aabb);
 
             return fixtures;
+        }
+
+        public void Clear()
+        {
+            ProcessChanges();
+
+            for (int i = BodyList.Count - 1; i >= 0; i--)
+            {
+                RemoveBody(BodyList[i]);
+            }
+
+            for (int i = ControllerList.Count - 1; i >= 0; i--)
+            {
+                RemoveController(ControllerList[i]);
+            }
+
+            for (int i = BreakableBodyList.Count - 1; i >= 0; i--)
+            {
+                RemoveBreakableBody(BreakableBodyList[i]);
+            }
         }
     }
 }

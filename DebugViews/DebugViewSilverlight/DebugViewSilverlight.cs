@@ -280,7 +280,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                 output.AppendLine("Joints: " + World.JointList.Count);
                 output.AppendLine("Proxies: " + World.ProxyCount);
                 output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
-                output.AppendLine("Controllers: " + World.Controllers.Count);
+                output.AppendLine("Controllers: " + World.ControllerList.Count);
                 
                 output.AppendLine();
 
