@@ -416,7 +416,7 @@ namespace FarseerPhysics.DebugViews
             DrawString(x, y += ySize, "- Fixtures: " + fixtures);
             DrawString(x, y += ySize, "- Contacts: " + World.ContactCount);
             DrawString(x, y += ySize, "- Joints: " + World.JointList.Count);
-            DrawString(x, y += ySize, "- Controllers: " + World.Controllers.Count);
+            DrawString(x, y += ySize, "- Controllers: " + World.ControllerList.Count);
             DrawString(x, y + ySize, "- Proxies: " + World.ProxyCount);
 
             y = (int)DebugPanelPosition.Y;
