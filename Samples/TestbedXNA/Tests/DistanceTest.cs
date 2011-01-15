@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
             SimplexCache cache;
             cache.Count = 0;
             DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, ref input);
+            Distance.ComputeDistance(out output, out cache, input);
 
             DebugView.DrawString(50, TextLine, "Distance = {0:n7}", output.Distance);
             TextLine += 15;

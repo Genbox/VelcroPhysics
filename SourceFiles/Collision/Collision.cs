@@ -376,21 +376,21 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
+        private static DistanceInput  _input = new DistanceInput();
 
         public static bool TestOverlap(Shape shapeA, int indexA,
                                        Shape shapeB, int indexB,
                                        ref Transform xfA, ref Transform xfB)
         {
-            DistanceInput input = new DistanceInput();
-            input.ProxyA.Set(shapeA, indexA);
-            input.ProxyB.Set(shapeB, indexB);
-            input.TransformA = xfA;
-            input.TransformB = xfB;
-            input.UseRadii = true;
+            _input.ProxyA.Set(shapeA, indexA);
+            _input.ProxyB.Set(shapeB, indexB);
+            _input.TransformA = xfA;
+            _input.TransformB = xfB;
+            _input.UseRadii = true;
 
             SimplexCache cache;
             DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, ref input);
+            Distance.ComputeDistance(out output, out cache, _input);
 
             return output.Distance < 10.0f*Settings.Epsilon;
         }

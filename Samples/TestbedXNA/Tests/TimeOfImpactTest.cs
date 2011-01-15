@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
             input.TMax = 1.0f;
 
             TOIOutput output;
-            TimeOfImpact.CalculateTimeOfImpact(out output, ref input);
+            TimeOfImpact.CalculateTimeOfImpact(out output, input);
 
             DebugView.DrawString(50, TextLine, "TOI = {0:n}", output.T);
             TextLine += 15;
