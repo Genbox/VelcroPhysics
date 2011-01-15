@@ -25,7 +25,6 @@
 
 using System;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
