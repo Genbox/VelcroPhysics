@@ -64,7 +64,6 @@ namespace FarseerPhysics.TestBed
     /// </summary>
     public class Game1 : Game
     {
-        public bool DebugViewEnabled = true;
         private TestEntry _entry;
         private GraphicsDeviceManager _graphics;
         private KeyboardManager _keyboardManager = new KeyboardManager();
