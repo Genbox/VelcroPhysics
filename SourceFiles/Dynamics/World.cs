@@ -215,6 +215,7 @@ namespace FarseerPhysics.Dynamics
         private Common.HashSet<Body> _bodyRemoveList = new Common.HashSet<Body>(32);
         private Common.HashSet<Joint> _jointAddList = new Common.HashSet<Joint>(32);
         private Common.HashSet<Joint> _jointRemoveList = new Common.HashSet<Joint>(32);
+        private TOIInput _input = new TOIInput();
 
         /// <summary>
         /// If false, the whole simulation stops. It still processes added and removed geometries.
@@ -399,221 +400,233 @@ namespace FarseerPhysics.Dynamics
 
         private void ProcessRemovedJoints()
         {
-            foreach (Joint joint in _jointRemoveList)
+            if (_jointRemoveList.Count > 0)
             {
-                bool collideConnected = joint.CollideConnected;
-
-                // Remove from the world list.
-                JointList.Remove(joint);
-
-                // Disconnect from island graph.
-                Body bodyA = joint.BodyA;
-                Body bodyB = joint.BodyB;
-
-                // Wake up connected bodies.
-                bodyA.Awake = true;
-
-                // WIP David
-                if (!joint.IsFixedType())
+                foreach (Joint joint in _jointRemoveList)
                 {
-                    bodyB.Awake = true;
-                }
+                    bool collideConnected = joint.CollideConnected;
 
-                // Remove from body 1.
-                if (joint.EdgeA.Prev != null)
-                {
-                    joint.EdgeA.Prev.Next = joint.EdgeA.Next;
-                }
+                    // Remove from the world list.
+                    JointList.Remove(joint);
 
-                if (joint.EdgeA.Next != null)
-                {
-                    joint.EdgeA.Next.Prev = joint.EdgeA.Prev;
-                }
+                    // Disconnect from island graph.
+                    Body bodyA = joint.BodyA;
+                    Body bodyB = joint.BodyB;
 
-                if (joint.EdgeA == bodyA.JointList)
-                {
-                    bodyA.JointList = joint.EdgeA.Next;
-                }
+                    // Wake up connected bodies.
+                    bodyA.Awake = true;
 
-                joint.EdgeA.Prev = null;
-                joint.EdgeA.Next = null;
-
-                // WIP David
-                if (!joint.IsFixedType())
-                {
-                    // Remove from body 2
-                    if (joint.EdgeB.Prev != null)
+                    // WIP David
+                    if (!joint.IsFixedType())
                     {
-                        joint.EdgeB.Prev.Next = joint.EdgeB.Next;
+                        bodyB.Awake = true;
                     }
 
-                    if (joint.EdgeB.Next != null)
+                    // Remove from body 1.
+                    if (joint.EdgeA.Prev != null)
                     {
-                        joint.EdgeB.Next.Prev = joint.EdgeB.Prev;
+                        joint.EdgeA.Prev.Next = joint.EdgeA.Next;
                     }
 
-                    if (joint.EdgeB == bodyB.JointList)
+                    if (joint.EdgeA.Next != null)
                     {
-                        bodyB.JointList = joint.EdgeB.Next;
+                        joint.EdgeA.Next.Prev = joint.EdgeA.Prev;
                     }
 
-                    joint.EdgeB.Prev = null;
-                    joint.EdgeB.Next = null;
-                }
-
-                // WIP David
-                if (!joint.IsFixedType())
-                {
-                    // If the joint prevents collisions, then flag any contacts for filtering.
-                    if (collideConnected == false)
+                    if (joint.EdgeA == bodyA.JointList)
                     {
-                        ContactEdge edge = bodyB.ContactList;
-                        while (edge != null)
+                        bodyA.JointList = joint.EdgeA.Next;
+                    }
+
+                    joint.EdgeA.Prev = null;
+                    joint.EdgeA.Next = null;
+
+                    // WIP David
+                    if (!joint.IsFixedType())
+                    {
+                        // Remove from body 2
+                        if (joint.EdgeB.Prev != null)
                         {
-                            if (edge.Other == bodyA)
-                            {
-                                // Flag the contact for filtering at the next time step (where either
-                                // body is awake).
-                                edge.Contact.FlagForFiltering();
-                            }
+                            joint.EdgeB.Prev.Next = joint.EdgeB.Next;
+                        }
 
-                            edge = edge.Next;
+                        if (joint.EdgeB.Next != null)
+                        {
+                            joint.EdgeB.Next.Prev = joint.EdgeB.Prev;
+                        }
+
+                        if (joint.EdgeB == bodyB.JointList)
+                        {
+                            bodyB.JointList = joint.EdgeB.Next;
+                        }
+
+                        joint.EdgeB.Prev = null;
+                        joint.EdgeB.Next = null;
+                    }
+
+                    // WIP David
+                    if (!joint.IsFixedType())
+                    {
+                        // If the joint prevents collisions, then flag any contacts for filtering.
+                        if (collideConnected == false)
+                        {
+                            ContactEdge edge = bodyB.ContactList;
+                            while (edge != null)
+                            {
+                                if (edge.Other == bodyA)
+                                {
+                                    // Flag the contact for filtering at the next time step (where either
+                                    // body is awake).
+                                    edge.Contact.FlagForFiltering();
+                                }
+
+                                edge = edge.Next;
+                            }
                         }
                     }
+
+                    if (JointRemoved != null)
+                    {
+                        JointRemoved(joint);
+                    }
                 }
 
-                if (JointRemoved != null)
-                {
-                    JointRemoved(joint);
-                }
+                _jointRemoveList.Clear();
             }
-
-            _jointRemoveList.Clear();
         }
 
         private void ProcessAddedJoints()
         {
-            foreach (Joint joint in _jointAddList)
+            if (_jointAddList.Count > 0)
             {
-                // Connect to the world list.
-                JointList.Add(joint);
-
-                // Connect to the bodies' doubly linked lists.
-                joint.EdgeA.Joint = joint;
-                joint.EdgeA.Other = joint.BodyB;
-                joint.EdgeA.Prev = null;
-                joint.EdgeA.Next = joint.BodyA.JointList;
-
-                if (joint.BodyA.JointList != null)
-                    joint.BodyA.JointList.Prev = joint.EdgeA;
-
-                joint.BodyA.JointList = joint.EdgeA;
-
-                // WIP David
-                if (!joint.IsFixedType())
+                foreach (Joint joint in _jointAddList)
                 {
-                    joint.EdgeB.Joint = joint;
-                    joint.EdgeB.Other = joint.BodyA;
-                    joint.EdgeB.Prev = null;
-                    joint.EdgeB.Next = joint.BodyB.JointList;
+                    // Connect to the world list.
+                    JointList.Add(joint);
 
-                    if (joint.BodyB.JointList != null)
-                        joint.BodyB.JointList.Prev = joint.EdgeB;
+                    // Connect to the bodies' doubly linked lists.
+                    joint.EdgeA.Joint = joint;
+                    joint.EdgeA.Other = joint.BodyB;
+                    joint.EdgeA.Prev = null;
+                    joint.EdgeA.Next = joint.BodyA.JointList;
 
-                    joint.BodyB.JointList = joint.EdgeB;
+                    if (joint.BodyA.JointList != null)
+                        joint.BodyA.JointList.Prev = joint.EdgeA;
 
-                    Body bodyA = joint.BodyA;
-                    Body bodyB = joint.BodyB;
+                    joint.BodyA.JointList = joint.EdgeA;
 
-                    // If the joint prevents collisions, then flag any contacts for filtering.
-                    if (joint.CollideConnected == false)
+                    // WIP David
+                    if (!joint.IsFixedType())
                     {
-                        ContactEdge edge = bodyB.ContactList;
-                        while (edge != null)
-                        {
-                            if (edge.Other == bodyA)
-                            {
-                                // Flag the contact for filtering at the next time step (where either
-                                // body is awake).
-                                edge.Contact.FlagForFiltering();
-                            }
+                        joint.EdgeB.Joint = joint;
+                        joint.EdgeB.Other = joint.BodyA;
+                        joint.EdgeB.Prev = null;
+                        joint.EdgeB.Next = joint.BodyB.JointList;
 
-                            edge = edge.Next;
+                        if (joint.BodyB.JointList != null)
+                            joint.BodyB.JointList.Prev = joint.EdgeB;
+
+                        joint.BodyB.JointList = joint.EdgeB;
+
+                        Body bodyA = joint.BodyA;
+                        Body bodyB = joint.BodyB;
+
+                        // If the joint prevents collisions, then flag any contacts for filtering.
+                        if (joint.CollideConnected == false)
+                        {
+                            ContactEdge edge = bodyB.ContactList;
+                            while (edge != null)
+                            {
+                                if (edge.Other == bodyA)
+                                {
+                                    // Flag the contact for filtering at the next time step (where either
+                                    // body is awake).
+                                    edge.Contact.FlagForFiltering();
+                                }
+
+                                edge = edge.Next;
+                            }
                         }
                     }
+
+                    if (JointAdded != null)
+                        JointAdded(joint);
+
+                    // Note: creating a joint doesn't wake the bodies.
                 }
 
-                if (JointAdded != null)
-                    JointAdded(joint);
-
-                // Note: creating a joint doesn't wake the bodies.
+                _jointAddList.Clear();
             }
-
-            _jointAddList.Clear();
         }
 
         private void ProcessAddedBodies()
         {
-            foreach (Body body in _bodyAddList)
+            if (_bodyAddList.Count > 0)
             {
-                // Add to world list.
-                BodyList.Add(body);
+                foreach (Body body in _bodyAddList)
+                {
+                    // Add to world list.
+                    BodyList.Add(body);
 
-                if (BodyAdded != null)
-                    BodyAdded(body);
+                    if (BodyAdded != null)
+                        BodyAdded(body);
+                }
+
+                _bodyAddList.Clear();
             }
-
-            _bodyAddList.Clear();
         }
 
         private void ProcessRemovedBodies()
         {
-            foreach (Body body in _bodyRemoveList)
+            if (_bodyRemoveList.Count > 0)
             {
-                Debug.Assert(BodyList.Count > 0);
-
-                // You tried to remove a body that is not contained in the BodyList.
-                // Are you removing the body more than once?
-                Debug.Assert(BodyList.Contains(body));
-
-                // Delete the attached joints.
-                JointEdge je = body.JointList;
-                while (je != null)
+                foreach (Body body in _bodyRemoveList)
                 {
-                    JointEdge je0 = je;
-                    je = je.Next;
+                    Debug.Assert(BodyList.Count > 0);
 
-                    RemoveJoint(je0.Joint);
+                    // You tried to remove a body that is not contained in the BodyList.
+                    // Are you removing the body more than once?
+                    Debug.Assert(BodyList.Contains(body));
+
+                    // Delete the attached joints.
+                    JointEdge je = body.JointList;
+                    while (je != null)
+                    {
+                        JointEdge je0 = je;
+                        je = je.Next;
+
+                        RemoveJoint(je0.Joint);
+                    }
+                    body.JointList = null;
+
+                    // Delete the attached contacts.
+                    ContactEdge ce = body.ContactList;
+                    while (ce != null)
+                    {
+                        ContactEdge ce0 = ce;
+                        ce = ce.Next;
+                        ContactManager.Destroy(ce0.Contact);
+                    }
+                    body.ContactList = null;
+
+                    // Delete the attached fixtures. This destroys broad-phase proxies.
+                    for (int i = 0; i < body.FixtureList.Count; i++)
+                    {
+                        body.FixtureList[i].DestroyProxies(ContactManager.BroadPhase);
+                        body.FixtureList[i].Destroy();
+                    }
+
+                    body.FixtureList = null;
+
+                    // Remove world body list.
+                    BodyList.Remove(body);
+
+                    if (BodyRemoved != null)
+                        BodyRemoved(body);
                 }
-                body.JointList = null;
 
-                // Delete the attached contacts.
-                ContactEdge ce = body.ContactList;
-                while (ce != null)
-                {
-                    ContactEdge ce0 = ce;
-                    ce = ce.Next;
-                    ContactManager.Destroy(ce0.Contact);
-                }
-                body.ContactList = null;
-
-                // Delete the attached fixtures. This destroys broad-phase proxies.
-                for (int i = 0; i < body.FixtureList.Count; i++)
-                {
-                    body.FixtureList[i].DestroyProxies(ContactManager.BroadPhase);
-                    body.FixtureList[i].Destroy();
-                }
-
-                body.FixtureList = null;
-
-                // Remove world body list.
-                BodyList.Remove(body);
-
-                if (BodyRemoved != null)
-                    BodyRemoved(body);
+                _bodyRemoveList.Clear();
             }
-
-            _bodyRemoveList.Clear();
         }
 
         /// <summary>
@@ -1085,15 +1098,14 @@ namespace FarseerPhysics.Dynamics
                         Debug.Assert(alpha0 < 1.0f);
 
                         // Compute the time of impact in interval [0, minTOI]
-                        TOIInput input = new TOIInput();
-                        input.ProxyA.Set(fA.Shape, c.ChildIndexA);
-                        input.ProxyB.Set(fB.Shape, c.ChildIndexB);
-                        input.SweepA = bA.Sweep;
-                        input.SweepB = bB.Sweep;
-                        input.TMax = 1.0f;
-
+                        _input.ProxyA.Set(fA.Shape, c.ChildIndexA);
+                        _input.ProxyB.Set(fB.Shape, c.ChildIndexB);
+                        _input.SweepA = bA.Sweep;
+                        _input.SweepB = bB.Sweep;
+                        _input.TMax = 1.0f;
+                        
                         TOIOutput output;
-                        TimeOfImpact.CalculateTimeOfImpact(out output, ref input);
+                        TimeOfImpact.CalculateTimeOfImpact(out output, _input);
 
                         // Beta is the fraction of the remaining portion of the .
                         float beta = output.T;

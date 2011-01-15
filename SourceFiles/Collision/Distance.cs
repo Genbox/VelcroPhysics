@@ -35,10 +35,10 @@ namespace FarseerPhysics.Collision
     /// A distance proxy is used by the GJK algorithm.
     /// It encapsulates any shape.
     /// </summary>
-    public struct DistanceProxy
+    public class DistanceProxy
     {
         internal float Radius;
-        internal Vertices Vertices;
+        internal Vertices Vertices = new Vertices();
 
         /// <summary>
         /// Initialize the proxy using the given shape. The shape
@@ -52,8 +52,8 @@ namespace FarseerPhysics.Collision
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape) shape;
-                        Vertices = new Vertices(1);
+                        CircleShape circle = (CircleShape)shape;
+                        Vertices.Clear();
                         Vertices.Add(circle.Position);
                         Radius = circle.Radius;
                     }
@@ -61,18 +61,21 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape polygon = (PolygonShape) shape;
-                        Vertices = polygon.Vertices;
+                        PolygonShape polygon = (PolygonShape)shape;
+                        Vertices.Clear();
+                        for (int i = 0; i < polygon.Vertices.Count; i++)
+                        {
+                            Vertices.Add(polygon.Vertices[i]);
+                        }
                         Radius = polygon.Radius;
                     }
                     break;
 
                 case ShapeType.Loop:
                     {
-                        LoopShape loop = (LoopShape) shape;
+                        LoopShape loop = (LoopShape)shape;
                         Debug.Assert(0 <= index && index < loop.Vertices.Count);
-
-                        Vertices = new Vertices(2);
+                        Vertices.Clear();
                         Vertices.Add(loop.Vertices[index]);
                         Vertices.Add(index + 1 < loop.Vertices.Count ? loop.Vertices[index + 1] : loop.Vertices[0]);
 
@@ -82,8 +85,8 @@ namespace FarseerPhysics.Collision
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape) shape;
-                        Vertices = new Vertices(2);
+                        EdgeShape edge = (EdgeShape)shape;
+                        Vertices.Clear();
                         Vertices.Add(edge.Vertex1);
                         Vertices.Add(edge.Vertex2);
                         Radius = edge.Radius;
@@ -139,17 +142,6 @@ namespace FarseerPhysics.Collision
 
             return Vertices[bestIndex];
         }
-
-        /// <summary>
-        /// Get a vertex by index. Used by b2Distance.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
-        public Vector2 GetVertex(int index)
-        {
-            Debug.Assert(0 <= index && index < Vertices.Count);
-            return Vertices[index];
-        }
     }
 
     /// <summary>
@@ -181,10 +173,10 @@ namespace FarseerPhysics.Collision
     /// You have to option to use the shape radii
     /// in the computation. 
     /// </summary>
-    public struct DistanceInput
+    public class DistanceInput
     {
-        public DistanceProxy ProxyA;
-        public DistanceProxy ProxyB;
+        public DistanceProxy ProxyA = new DistanceProxy();
+        public DistanceProxy ProxyB = new DistanceProxy();
         public Transform TransformA;
         public Transform TransformB;
         public bool UseRadii;
@@ -252,8 +244,8 @@ namespace FarseerPhysics.Collision
         internal FixedArray3<SimplexVertex> V;
 
         internal void ReadCache(ref SimplexCache cache,
-                                ref DistanceProxy proxyA, ref Transform transformA,
-                                ref DistanceProxy proxyB, ref Transform transformB)
+                                DistanceProxy proxyA, ref Transform transformA,
+                                DistanceProxy proxyB, ref Transform transformB)
         {
             Debug.Assert(cache.Count <= 3);
 
@@ -264,8 +256,8 @@ namespace FarseerPhysics.Collision
                 SimplexVertex v = V[i];
                 v.IndexA = cache.IndexA[i];
                 v.IndexB = cache.IndexB[i];
-                Vector2 wALocal = proxyA.GetVertex(v.IndexA);
-                Vector2 wBLocal = proxyB.GetVertex(v.IndexB);
+                Vector2 wALocal = proxyA.Vertices[v.IndexA];
+                Vector2 wBLocal = proxyB.Vertices[v.IndexB];
                 v.WA = MathUtils.Multiply(ref transformA, wALocal);
                 v.WB = MathUtils.Multiply(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
@@ -279,7 +271,7 @@ namespace FarseerPhysics.Collision
             {
                 float metric1 = cache.Metric;
                 float metric2 = GetMetric();
-                if (metric2 < 0.5f*metric1 || 2.0f*metric1 < metric2 || metric2 < Settings.Epsilon)
+                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
                 {
                     // Reset the simplex.
                     Count = 0;
@@ -292,8 +284,8 @@ namespace FarseerPhysics.Collision
                 SimplexVertex v = V[0];
                 v.IndexA = 0;
                 v.IndexB = 0;
-                Vector2 wALocal = proxyA.GetVertex(0);
-                Vector2 wBLocal = proxyB.GetVertex(0);
+                Vector2 wALocal = proxyA.Vertices[0];
+                Vector2 wBLocal = proxyB.Vertices[0];
                 v.WA = MathUtils.Multiply(ref transformA, wALocal);
                 v.WB = MathUtils.Multiply(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
@@ -305,11 +297,11 @@ namespace FarseerPhysics.Collision
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.Metric = GetMetric();
-            cache.Count = (UInt16) Count;
+            cache.Count = (UInt16)Count;
             for (int i = 0; i < Count; ++i)
             {
-                cache.IndexA[i] = (byte) (V[i].IndexA);
-                cache.IndexB[i] = (byte) (V[i].IndexB);
+                cache.IndexA[i] = (byte)(V[i].IndexA);
+                cache.IndexB[i] = (byte)(V[i].IndexB);
             }
         }
 
@@ -354,7 +346,7 @@ namespace FarseerPhysics.Collision
                     return V[0].W;
 
                 case 2:
-                    return V[0].A*V[0].W + V[1].A*V[1].W;
+                    return V[0].A * V[0].W + V[1].A * V[1].W;
 
                 case 3:
                     return Vector2.Zero;
@@ -381,12 +373,12 @@ namespace FarseerPhysics.Collision
                     break;
 
                 case 2:
-                    pA = V[0].A*V[0].WA + V[1].A*V[1].WA;
-                    pB = V[0].A*V[0].WB + V[1].A*V[1].WB;
+                    pA = V[0].A * V[0].WA + V[1].A * V[1].WA;
+                    pB = V[0].A * V[0].WB + V[1].A * V[1].WB;
                     break;
 
                 case 3:
-                    pA = V[0].A*V[0].WA + V[1].A*V[1].WA + V[2].A*V[2].WA;
+                    pA = V[0].A * V[0].WA + V[1].A * V[1].WA + V[2].A * V[2].WA;
                     pB = pA;
                     break;
 
@@ -474,11 +466,11 @@ namespace FarseerPhysics.Collision
             }
 
             // Must be in e12 region.
-            float inv_d12 = 1.0f/(d12_1 + d12_2);
+            float inv_d12 = 1.0f / (d12_1 + d12_2);
             SimplexVertex v0_2 = V[0];
             SimplexVertex v1_2 = V[1];
-            v0_2.A = d12_1*inv_d12;
-            v1_2.A = d12_2*inv_d12;
+            v0_2.A = d12_1 * inv_d12;
+            v1_2.A = d12_2 * inv_d12;
             V[0] = v0_2;
             V[1] = v1_2;
             Count = 2;
@@ -528,9 +520,9 @@ namespace FarseerPhysics.Collision
             // Triangle123
             float n123 = MathUtils.Cross(e12, e13);
 
-            float d123_1 = n123*MathUtils.Cross(w2, w3);
-            float d123_2 = n123*MathUtils.Cross(w3, w1);
-            float d123_3 = n123*MathUtils.Cross(w1, w2);
+            float d123_1 = n123 * MathUtils.Cross(w2, w3);
+            float d123_2 = n123 * MathUtils.Cross(w3, w1);
+            float d123_3 = n123 * MathUtils.Cross(w1, w2);
 
             // w1 region
             if (d12_2 <= 0.0f && d13_2 <= 0.0f)
@@ -545,11 +537,11 @@ namespace FarseerPhysics.Collision
             // e12
             if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
             {
-                float inv_d12 = 1.0f/(d12_1 + d12_2);
+                float inv_d12 = 1.0f / (d12_1 + d12_2);
                 SimplexVertex v0_2 = V[0];
                 SimplexVertex v1_2 = V[1];
-                v0_2.A = d12_1*inv_d12;
-                v1_2.A = d12_2*inv_d12;
+                v0_2.A = d12_1 * inv_d12;
+                v1_2.A = d12_2 * inv_d12;
                 V[0] = v0_2;
                 V[1] = v1_2;
                 Count = 2;
@@ -559,11 +551,11 @@ namespace FarseerPhysics.Collision
             // e13
             if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
             {
-                float inv_d13 = 1.0f/(d13_1 + d13_2);
+                float inv_d13 = 1.0f / (d13_1 + d13_2);
                 SimplexVertex v0_3 = V[0];
                 SimplexVertex v2_3 = V[2];
-                v0_3.A = d13_1*inv_d13;
-                v2_3.A = d13_2*inv_d13;
+                v0_3.A = d13_1 * inv_d13;
+                v2_3.A = d13_2 * inv_d13;
                 V[0] = v0_3;
                 V[2] = v2_3;
                 Count = 2;
@@ -596,11 +588,11 @@ namespace FarseerPhysics.Collision
             // e23
             if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
             {
-                float inv_d23 = 1.0f/(d23_1 + d23_2);
+                float inv_d23 = 1.0f / (d23_1 + d23_2);
                 SimplexVertex v1_6 = V[1];
                 SimplexVertex v2_6 = V[2];
-                v1_6.A = d23_1*inv_d23;
-                v2_6.A = d23_2*inv_d23;
+                v1_6.A = d23_1 * inv_d23;
+                v2_6.A = d23_2 * inv_d23;
                 V[1] = v1_6;
                 V[2] = v2_6;
                 Count = 2;
@@ -609,13 +601,13 @@ namespace FarseerPhysics.Collision
             }
 
             // Must be in triangle123
-            float inv_d123 = 1.0f/(d123_1 + d123_2 + d123_3);
+            float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
             SimplexVertex v0_7 = V[0];
             SimplexVertex v1_7 = V[1];
             SimplexVertex v2_7 = V[2];
-            v0_7.A = d123_1*inv_d123;
-            v1_7.A = d123_2*inv_d123;
-            v2_7.A = d123_3*inv_d123;
+            v0_7.A = d123_1 * inv_d123;
+            v1_7.A = d123_2 * inv_d123;
+            v2_7.A = d123_3 * inv_d123;
             V[0] = v0_7;
             V[1] = v1_7;
             V[2] = v2_7;
@@ -629,14 +621,14 @@ namespace FarseerPhysics.Collision
 
         public static void ComputeDistance(out DistanceOutput output,
                                            out SimplexCache cache,
-                                           ref DistanceInput input)
+                                           DistanceInput input)
         {
             cache = new SimplexCache();
             ++GJKCalls;
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
-            simplex.ReadCache(ref cache, ref input.ProxyA, ref input.TransformA, ref input.ProxyB, ref input.TransformB);
+            simplex.ReadCache(ref cache, input.ProxyA, ref input.TransformA, input.ProxyB, ref input.TransformB);
 
             // Get simplex vertices as an array.
             const int k_maxIters = 20;
@@ -701,7 +693,7 @@ namespace FarseerPhysics.Collision
                 Vector2 d = simplex.GetSearchDirection();
 
                 // Ensure the search direction is numerically fit.
-                if (d.LengthSquared() < Settings.Epsilon*Settings.Epsilon)
+                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
                 {
                     // The origin is probably contained by a line segment
                     // or triangle. Thus the shapes are overlapped.
@@ -715,10 +707,10 @@ namespace FarseerPhysics.Collision
                 // Compute a tentative new simplex vertex using support points.
                 SimplexVertex vertex = simplex.V[simplex.Count];
                 vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MultiplyT(ref input.TransformA.R, -d));
-                vertex.WA = MathUtils.Multiply(ref input.TransformA, input.ProxyA.GetVertex(vertex.IndexA));
+                vertex.WA = MathUtils.Multiply(ref input.TransformA, input.ProxyA.Vertices[vertex.IndexA]);
 
                 vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MultiplyT(ref input.TransformB.R, d));
-                vertex.WB = MathUtils.Multiply(ref input.TransformB, input.ProxyB.GetVertex(vertex.IndexB));
+                vertex.WB = MathUtils.Multiply(ref input.TransformB, input.ProxyB.Vertices[vertex.IndexB]);
                 vertex.W = vertex.WB - vertex.WA;
                 simplex.V[simplex.Count] = vertex;
 
@@ -770,14 +762,14 @@ namespace FarseerPhysics.Collision
                     output.Distance -= rA + rB;
                     Vector2 normal = output.PointB - output.PointA;
                     normal.Normalize();
-                    output.PointA += rA*normal;
-                    output.PointB -= rB*normal;
+                    output.PointA += rA * normal;
+                    output.PointB -= rB * normal;
                 }
                 else
                 {
                     // Shapes are overlapped when radii are considered.
                     // Move the witness points to the middle.
-                    Vector2 p = 0.5f*(output.PointA + output.PointB);
+                    Vector2 p = 0.5f * (output.PointA + output.PointB);
                     output.PointA = p;
                     output.PointB = p;
                     output.Distance = 0.0f;
