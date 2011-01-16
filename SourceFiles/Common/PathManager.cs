@@ -140,6 +140,7 @@ namespace FarseerPhysics.Factories
             return EvenlyDistributeShapesAlongPath(world, path, shape, type, copies, null);
         }
 
+        //TODO: Comment better
         /// <summary>
         /// Moves the body on the path.
         /// </summary>
