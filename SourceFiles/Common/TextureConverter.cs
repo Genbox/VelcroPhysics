@@ -5,48 +5,317 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
-    public static class TextureConverter
-    {
-        //User contribution from Sickbattery
+    // User contribution from Sickbattery aka David Reschke :).
 
-        // Note: A bool array would probably speed up the algorithm.
-        private static readonly int[,] ClosePixels = new int[8,2]
-                                                         {
-                                                             {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}
-                                                             ,
-                                                             {-1, 0}
-                                                         };
+    #region ToDo: Create a new file for each ...
+    /// <summary>
+    /// The detection type affects the resulting polygon data.
+    /// </summary>
+    public enum VerticesDetectionType
+    {
+        /// <summary>
+        /// Holes are integrated into the main polygon.
+        /// </summary>
+        Integrated = 0,
 
         /// <summary>
-        /// Detects the vertices of the supplied texture data.
+        /// The data of the main polygon and hole polygons is returned separately.
         /// </summary>
-        /// <param name="data">The texture data.</param>
-        /// <param name="width">The texture width.</param>
-        /// <param name="height">The texture height.</param>
-        /// <returns></returns>
-        public static Vertices DetectVertices(uint[] data, int width, int height)
-        {
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            List<Vertices> verts = DetectVertices(ref pca);
+        Separated = 1
+    }
 
-            return verts[0];
+    /// <summary>
+    /// Detected vertices of a single polygon.
+    /// </summary>
+    public class DetectedVertices : Vertices
+    {
+        private List<Vertices> _holes;
+
+        public List<Vertices> Holes
+        {
+            get { return _holes; }
+            set { _holes = value; }
+        }
+
+        public DetectedVertices()
+            : base()
+        {
+        }
+
+        public DetectedVertices(Vertices vertices)
+            : base(vertices)
+        {
+        }
+    }
+    #endregion
+
+    public sealed class TextureConverter
+    {
+        private const int _CLOSEPIXELS_LENGTH = 8;
+
+        /// <summary>
+        /// This array is ment to be readonly.
+        /// It's not because it is accessed very frequently.
+        /// </summary>
+        private static /*readonly*/ int[,] ClosePixels =
+            new int[_CLOSEPIXELS_LENGTH, 2] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+
+        private uint[] _data;
+        private int _dataLength;
+        private int _width;
+        private int _height;
+
+        private VerticesDetectionType _polygonDetectionType;
+
+        private uint _alphaTolerance;
+        private float _hullTolerance;
+
+        private bool _holeDetection;
+        private bool _multipartDetection;
+        private bool _pixelOffsetOptimization;
+        private bool _resultScaling;
+
+        private Vector2 _resultSizeTarget;
+
+        #region Properties
+        /// <summary>
+        /// Get or set the polygon detection type.
+        /// </summary>
+        public VerticesDetectionType PolygonDetectionType
+        {
+            get { return _polygonDetectionType; }
+            set { _polygonDetectionType = value; }
         }
 
         /// <summary>
-        /// Detects the vertices of the supplied texture data.
+        /// Will detect texture 'holes' if set to true. Slows down the detection. Default is false.
+        /// </summary>
+        public bool HoleDetection
+        {
+            get { return _holeDetection; }
+            set { _holeDetection = value; }
+        }
+
+        /// <summary>
+        /// Will detect texture multiple 'solid' isles if set to true. Slows down the detection. Default is false.
+        /// </summary>
+        public bool MultipartDetection
+        {
+            get { return _multipartDetection; }
+            set { _multipartDetection = value; }
+        }
+        
+        /// <summary>
+        /// Will optimize the vertex positions along the interpolated normal between two edges about a half pixel (post processing). Default is false.
+        /// </summary>
+        public bool PixelOffsetOptimization
+        {
+            get { return _pixelOffsetOptimization; }
+            set { _pixelOffsetOptimization = value; }
+        }
+
+        /// <summary>
+        /// Will use 'ResultSizeTarget' to scale the resulting polygon data (post processing). Default is false.
+        /// </summary>
+        public bool ResultScaling
+        {
+            get { return _resultScaling; }
+            set { _resultScaling = value; }
+        }
+
+        /// <summary>
+        /// Target size of the polygon. Sizes the polygon regarding the aspect ratio of the texture data to X or Y size (whichever is matched first). Default is X=1f and Y=1f.
+        /// </summary>
+        public Vector2 ResultSizeTarget
+        {
+            get { return _resultSizeTarget; }
+            set { _resultSizeTarget = value; }
+        }
+
+        /// <summary>
+        /// Alpha (coverage) tolerance. Default is 20: Every pixel with a coverage value equal or greater to 20 will be counts as solid.
+        /// </summary>
+        public byte AlphaTolerance
+        {
+            get { return (byte)(_alphaTolerance >> 24); }
+            set { _alphaTolerance = (uint)value << 24; }
+        }
+
+        /// <summary>
+        /// Default is 1.5f.
+        /// </summary>
+        public float HullTolerance
+        {
+            get { return _hullTolerance; }
+            set
+            {
+                if (value > 4f)
+                {
+                    _hullTolerance = 4f;
+                }
+                else if (value < 0.9f)
+                {
+                    _hullTolerance = 0.9f;
+                }
+                else
+                {
+                    _hullTolerance = value;
+                }
+            }
+        }
+        #endregion
+
+        #region Constructors
+        public TextureConverter()
+        {
+            Initialize(null, null, null, null, null, null, null, null, null);
+        }
+
+        public TextureConverter(byte? alphaTolerance, float? hullTolerance, 
+            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, 
+            bool? resultScaling, Vector2? resultSizeTarget)
+        {
+            Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
+                multipartDetection, pixelOffsetOptimization, resultScaling, resultSizeTarget);
+        }
+
+        public TextureConverter(uint[] data, int width)
+        {
+            Initialize(data, width, null, null, null, null, null, null, null);
+        }
+
+        public TextureConverter(uint[] data, int width, byte? alphaTolerance,
+            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+            bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
+        {
+            Initialize(data, width, alphaTolerance, hullTolerance, holeDetection, 
+                multipartDetection, pixelOffsetOptimization, resultScaling, resultSizeTarget);
+        }
+        #endregion
+
+        #region Initialization
+        private void Initialize(uint[] data, int? width, byte? alphaTolerance, 
+            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+            bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
+        {
+            if (data != null && !width.HasValue)
+                throw new ArgumentNullException("'width' can't be null if 'data' is set.");
+
+            if (data == null && width.HasValue)
+                throw new ArgumentNullException("'data' can't be null if 'width' is set.");
+
+            if (data != null && width.HasValue)
+                SetTextureData(data, width.Value);
+
+            if (alphaTolerance.HasValue)
+                AlphaTolerance = alphaTolerance.Value;
+            else
+                AlphaTolerance = 20;
+
+            if (hullTolerance.HasValue)
+                HullTolerance = hullTolerance.Value;
+            else
+                HullTolerance = 1.5f;
+
+            if (holeDetection.HasValue)
+                HoleDetection = holeDetection.Value;
+            else
+                HoleDetection = false;
+
+            if (multipartDetection.HasValue)
+                MultipartDetection = multipartDetection.Value;
+            else
+                MultipartDetection = false;
+
+            if (pixelOffsetOptimization.HasValue)
+                PixelOffsetOptimization = pixelOffsetOptimization.Value;
+            else
+                PixelOffsetOptimization = false;
+
+            if (resultScaling.HasValue)
+                ResultScaling = resultScaling.Value;
+            else
+                ResultScaling = false;
+
+            if (resultSizeTarget.HasValue)
+                ResultSizeTarget = resultSizeTarget.Value;
+            else
+                ResultSizeTarget = new Vector2(1f, 1f);
+        }
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="width"></param>
+        private void SetTextureData(uint[] data, int width)
+        {
+            if (data == null)
+                throw new ArgumentNullException("'data' can't be null.");
+
+            if (data.Length < 4)
+                throw new ArgumentOutOfRangeException("'data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size.");
+
+            if (width < 2)
+                throw new ArgumentOutOfRangeException("'width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size.");
+
+            if (data.Length % width != 0)
+                throw new ArgumentException("'width' has an invalid value.");
+
+            _data = data;
+            _dataLength = _data.Length;
+            _width = width;
+            _height = _dataLength / width;
+        }
+
+
+        /// <summary>
+        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
         /// </summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
-        /// <param name="height">The texture height.</param>
+        /// <param name="height">(Irrelevant) The texture height.</param>
+        /// <returns></returns>
+        public static Vertices DetectVertices(uint[] data, int width, int height)
+        {
+            Debug.Assert(false, "This function is obsolete.", 
+                "You are using an obsolete function, which might be removed in the next release. " + 
+                "Use DetectVertices(uint[] data, int width) instead.");
+
+            return DetectVertices(data, width);
+        }
+
+        /// <summary>
+        /// Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <returns></returns>
+        public static Vertices DetectVertices(uint[] data, int width)
+        {
+            TextureConverter tc = new TextureConverter(data, width);
+
+            List<DetectedVertices> detectedVerticesList = tc.DetectVertices();
+
+            return detectedVerticesList[0];
+        }
+
+        /// <summary>
+        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">(Irrelevant) The texture height.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
         /// <returns></returns>
         public static Vertices DetectVertices(uint[] data, int width, int height, bool holeDetection)
         {
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            pca.HoleDetection = holeDetection;
-            List<Vertices> verts = DetectVertices(ref pca);
+            Debug.Assert(false, "This function is obsolete.", 
+                "You are using an obsolete function, which might be removed in the next release. " +
+                "Use DetectVertices(uint[] data, int width, bool holeDetection) instead.");
 
-            return verts[0];
+            return DetectVertices(data, width, holeDetection);
         }
 
         /// <summary>
@@ -54,7 +323,27 @@ namespace FarseerPhysics.Common
         /// </summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
-        /// <param name="height">The texture height.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <returns></returns>
+        public static Vertices DetectVertices(uint[] data, int width, bool holeDetection)
+        {
+            TextureConverter tc =
+                new TextureConverter(data, width) 
+                { 
+                    HoleDetection = holeDetection
+                };
+
+            List<DetectedVertices> detectedVerticesList = tc.DetectVertices();
+
+            return detectedVerticesList[0];
+        }
+
+        /// <summary>
+        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="height">(Irrelevant) The texture height.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
         /// <param name="hullTolerance">The hull tolerance.</param>
         /// <param name="alphaTolerance">The alpha tolerance.</param>
@@ -63,19 +352,69 @@ namespace FarseerPhysics.Common
         public static List<Vertices> DetectVertices(uint[] data, int width, int height, float hullTolerance,
                                                     byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            PolygonCreationAssistance pca = new PolygonCreationAssistance(data, width, height);
-            pca.HullTolerance = hullTolerance;
-            pca.AlphaTolerance = alphaTolerance;
-            pca.MultipartDetection = multiPartDetection;
-            pca.HoleDetection = holeDetection;
-            return DetectVertices(ref pca);
+            Debug.Assert(false, "This function is obsolete.", 
+                "You are using an obsolete function, which might be removed in the next release. " + 
+                "Use DetectVertices(uint[] data, int width, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection) instead.");
+
+            return DetectVertices(data, width, hullTolerance, alphaTolerance, multiPartDetection, holeDetection);
         }
 
-        private static List<Vertices> DetectVertices(ref PolygonCreationAssistance pca)
+        /// <summary>
+        /// Detects the vertices of the supplied texture data.
+        /// </summary>
+        /// <param name="data">The texture data.</param>
+        /// <param name="width">The texture width.</param>
+        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
+        /// <param name="hullTolerance">The hull tolerance.</param>
+        /// <param name="alphaTolerance">The alpha tolerance.</param>
+        /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
+        /// <returns></returns>
+        public static List<Vertices> DetectVertices(uint[] data, int width, float hullTolerance,
+                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            List<Vertices> polygons = new List<Vertices>();
+            TextureConverter tc =
+                new TextureConverter(data, width)
+                {
+                    HullTolerance = hullTolerance,
+                    AlphaTolerance = alphaTolerance,
+                    MultipartDetection = multiPartDetection,
+                    HoleDetection = holeDetection
+                };
 
-            Vertices polygon;
+            List<DetectedVertices> detectedVerticesList = tc.DetectVertices();
+            List<Vertices> result = new List<Vertices>(detectedVerticesList);
+
+            return result;
+        }
+
+        public List<DetectedVertices> DetectVertices()
+        {
+            #region Check TextureConverter setup.
+
+            if (_data == null)
+                throw new Exception(
+                    "'_data' can't be null. You have to use SetTextureData(uint[] data, int width) before calling this method.");
+
+            if (_data.Length < 4)
+                throw new Exception(
+                    "'_data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size. " +
+                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
+
+            if (_width < 2)
+                throw new Exception(
+                    "'_width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size. " +
+                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
+
+            if (_data.Length % _width != 0)
+                throw new Exception(
+                    "'_width' has an invalid value. You have to use SetTextureData(uint[] data, int width) before calling this method.");
+
+            #endregion
+
+
+            List<DetectedVertices> detectedPolygons = new List<DetectedVertices>();
+
+            DetectedVertices polygon;
             Vertices holePolygon;
 
             Vector2? holeEntrance = null;
@@ -83,268 +422,369 @@ namespace FarseerPhysics.Common
 
             List<Vector2> blackList = new List<Vector2>();
 
-            // Check the array you just got.
-            Debug.Assert(pca.IsValid(),
-                         "Sizes don't match: Color array must contain texture width * texture height elements.");
-
             bool searchOn;
             do
             {
-                if (polygons.Count == 0)
+                if (detectedPolygons.Count == 0)
                 {
-                    polygon = CreateSimplePolygon(pca, Vector2.Zero, Vector2.Zero);
+                    // First pass / single polygon
+                    polygon = new DetectedVertices(CreateSimplePolygon(Vector2.Zero, Vector2.Zero));
 
                     if (polygon != null && polygon.Count > 2)
-                    {
                         polygonEntrance = GetTopMostVertex(polygon);
-                    }
                 }
                 else if (polygonEntrance.HasValue)
                 {
-                    polygon = CreateSimplePolygon(pca, polygonEntrance.Value,
-                                                  new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y));
+                    // Multi pass / multiple polygons
+                    polygon = new DetectedVertices(CreateSimplePolygon(
+                        polygonEntrance.Value, new Vector2(polygonEntrance.Value.X - 1f, polygonEntrance.Value.Y)));
                 }
                 else
-                {
                     break;
-                }
 
                 searchOn = false;
 
                 if (polygon != null && polygon.Count > 2)
                 {
-                    if (pca.HoleDetection)
+                    if (_holeDetection)
                     {
                         do
                         {
-                            holeEntrance = GetHoleHullEntrance(pca, polygon, holeEntrance);
+                            holeEntrance = SearchHoleEntrance(polygon, holeEntrance);
 
                             if (holeEntrance.HasValue)
                             {
                                 if (!blackList.Contains(holeEntrance.Value))
                                 {
                                     blackList.Add(holeEntrance.Value);
-                                    holePolygon = CreateSimplePolygon(pca, holeEntrance.Value,
-                                                                      new Vector2(holeEntrance.Value.X + 1,
-                                                                                  holeEntrance.Value.Y));
+                                    holePolygon = CreateSimplePolygon(holeEntrance.Value,
+                                        new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
 
                                     if (holePolygon != null && holePolygon.Count > 2)
                                     {
-                                        holePolygon.Add(holePolygon[0]);
+                                        switch (_polygonDetectionType)
+                                        { 
+                                            case VerticesDetectionType.Integrated:
 
-                                        int vertex2Index;
-                                        int vertex1Index;
-                                        if (SplitPolygonEdge(polygon, EdgeAlignment.Vertical, holeEntrance.Value,
-                                                             out vertex1Index, out vertex2Index))
-                                        {
-                                            polygon.InsertRange(vertex2Index, holePolygon);
+                                                // Add first hole polygon vertex to close the hole polygon.
+                                                holePolygon.Add(holePolygon[0]);
+
+                                                int vertex1Index, vertex2Index;
+                                                if (SplitPolygonEdge(polygon, holeEntrance.Value, out vertex1Index, out vertex2Index))
+                                                    polygon.InsertRange(vertex2Index, holePolygon);
+
+                                                break;
+
+                                            case VerticesDetectionType.Separated:
+                                                if (polygon.Holes == null)
+                                                    polygon.Holes = new List<Vertices>();
+
+                                                polygon.Holes.Add(holePolygon);
+                                                break;
                                         }
                                     }
                                 }
                                 else
-                                {
                                     break;
-                                }
                             }
                             else
-                            {
                                 break;
-                            }
-                        } while (true);
+                        } 
+                        while (true);
                     }
 
-                    polygons.Add(polygon);
+                    detectedPolygons.Add(polygon);
 
-                    if (pca.MultipartDetection)
+                    if (_multipartDetection)
                     {
-                        // 1:  95 / 151
-                        // 2: 232 / 252
-                        // 
-                        while (GetNextHullEntrance(pca, polygonEntrance.Value, out polygonEntrance))
-                        {
-                            bool inPolygon = false;
-
-                            for (int i = 0; i < polygons.Count; i++)
-                            {
-                                polygon = polygons[i];
-
-                                if (InPolygon(pca, polygon, polygonEntrance.Value))
-                                {
-                                    inPolygon = true;
-                                    break;
-                                }
-                            }
-
-                            if (!inPolygon)
-                            {
-                                searchOn = true;
-                                break;
-                            }
-                        }
+                        if (SearchNextHullEntrance(detectedPolygons, polygonEntrance.Value, out polygonEntrance))
+                            searchOn = true;
                     }
                 }
-            } while (searchOn);
+            } 
+            while (searchOn);
 
-            return polygons;
+            if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
+                throw new Exception("Couldn't detect any vertices.");
+
+            // Revert the order of vetrices in the main polygons.
+            for (int i = 0; i < detectedPolygons.Count; i++)
+                detectedPolygons[i].Reverse();
+
+            #region Post processing.
+
+            if (_pixelOffsetOptimization)
+                ApplyPixelOffsetOptimization(ref detectedPolygons);
+
+            if (_resultScaling)
+                ApplyTargetSize(ref detectedPolygons);
+
+            #endregion
+
+            return detectedPolygons;
         }
 
-        private static Vector2? GetHoleHullEntrance(PolygonCreationAssistance pca, Vertices polygon,
-                                                    Vector2? startVertex)
+        private void ApplyPixelOffsetOptimization(ref List<DetectedVertices> detectedPolygons)
         {
-            List<CrossingEdgeInfo> edges;
+            throw new NotImplementedException();
+        }
+
+        private void ApplyTargetSize(ref List<DetectedVertices> detectedPolygons)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Data[] functions
+        private int _tempIsSolidX;
+        private int _tempIsSolidY;
+        public bool IsSolid(ref Vector2 v)
+        {
+            _tempIsSolidX = (int)v.X;
+            _tempIsSolidY = (int)v.Y;
+
+            if (_tempIsSolidX >= 0 && _tempIsSolidX < _width && _tempIsSolidY >= 0 && _tempIsSolidY < _height)
+                return (_data[_tempIsSolidX + _tempIsSolidY * _width] >= _alphaTolerance);
+                //return ((_data[_tempIsSolidX + _tempIsSolidY * _width] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool IsSolid(ref int x, ref int y)
+        {
+            if (x >= 0 && x < _width && y >= 0 && y < _height)
+                return (_data[x + y * _width] >= _alphaTolerance);
+                //return ((_data[x + y * _width] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool IsSolid(ref int index)
+        {
+            if (index >= 0 && index < _dataLength)
+                return (_data[index] >= _alphaTolerance);
+                //return ((_data[index] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool InBounds(ref Vector2 coord)
+        {
+            return (coord.X >= 0f && coord.X < _width && coord.Y >= 0f && coord.Y < _height);
+        }
+        #endregion
+
+        /// <summary>
+        /// Function to search for an entrance point of a hole in a polygon. It searches the polygon from top to bottom between the polygon edges.
+        /// </summary>
+        /// <param name="polygon">The polygon to search in.</param>
+        /// <param name="lastHoleEntrance">The last entrance point.</param>
+        /// <returns>The next holes entrance point. Null if ther are no holes.</returns>
+        private Vector2? SearchHoleEntrance(Vertices polygon, Vector2? lastHoleEntrance)
+        {
+            if (polygon == null)
+                throw new ArgumentNullException("'polygon' can't be null.");
+
+            if (polygon.Count < 3)
+                throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
+
+
+            List<float> xCoords;
             Vector2? entrance;
 
-            int startLine;
-            int endLine;
+            int startY;
+            int endY;
 
             int lastSolid = 0;
             bool foundSolid;
             bool foundTransparent;
 
-            if (polygon != null && polygon.Count > 0)
+            // Set start y coordinate.
+            if (lastHoleEntrance.HasValue)
             {
-                if (startVertex.HasValue)
-                {
-                    startLine = (int) startVertex.Value.Y;
-                }
-                else
-                {
-                    startLine = (int) GetTopMostCoord(polygon);
-                }
-                endLine = (int) GetBottomMostCoord(polygon);
+                // We need the y coordinate only.
+                startY = (int)lastHoleEntrance.Value.Y; 
+            }
+            else
+            {
+                // Start from the top of the polygon if last entrance == null.
+                startY = (int)GetTopMostCoord(polygon);
+            }
 
-                if (startLine > 0 && startLine < pca.Height && endLine > 0 && endLine < pca.Height)
+            // Set the end y coordinate.
+            endY = (int) GetBottomMostCoord(polygon);
+
+            if (startY > 0 && startY < _height && endY > 0 && endY < _height)
+            {
+                // go from top to bottom of the polygon
+                for (int y = startY; y <= endY; y++)
                 {
-                    // go from top to bottom of the polygon
-                    for (int y = startLine; y <= endLine; y += pca.HoleDetectionLineStepSize)
+                    // get x-coord of every polygon edge which crosses y
+                    xCoords = SearchCrossingEdges(polygon, y);
+
+                    // We need an even number of crossing edges. 
+                    // It's always a pair of start and end edge: nothing | polygon | hole | polygon | nothing ...
+                    // If it's not then don't bother, it's probably a peak ...
+                    // ...which should be filtered out by SearchCrossingEdges() anyway.
+                    if (xCoords.Count > 1 && xCoords.Count % 2 == 0)
                     {
-                        // get x-coord of every polygon edge which crosses y
-                        edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, y);
-
-                        // we need an even number of crossing edges
-                        if (edges.Count > 1 && edges.Count%2 == 0)
+                        // Ok, this is short, but probably a little bit confusing.
+                        // This part searches from left to right between the edges inside the polygon.
+                        // The problem: We are using the polygon data to search in the texture data.
+                        // That's simply not accurate, but necessary because of performance.
+                        for (int i = 0; i < xCoords.Count; i += 2)
                         {
-                            for (int i = 0; i < edges.Count; i += 2)
+                            foundSolid = false;
+                            foundTransparent = false;
+
+                            // We search between the edges inside the polygon.
+                            for (int x = (int)xCoords[i]; x <= (int)xCoords[i + 1]; x++)
                             {
-                                foundSolid = false;
-                                foundTransparent = false;
+                                // First pass: IsSolid might return false.
+                                // In that case the polygon edge doesn't lie on the texture's solid pixel, because of the hull tolearance.
+                                // If the edge lies before the first solid pixel then we need to skip our transparent pixel finds.
 
-                                for (int x = (int) edges[i].CrossingPoint.X;
-                                     x <= (int) edges[i + 1].CrossingPoint.X;
-                                     x++)
+                                // The algorithm starts to search for a relevant transparent pixel (which indicates a possible hole) 
+                                // after it has found a solid pixel.
+
+                                // After we've found a solid and a transparent pixel (a hole's left edge) 
+                                // we search for a solid pixel again (a hole's right edge).
+                                // When found the distance of that coodrinate has to be greater then the hull tolerance.
+
+                                if (IsSolid(ref x, ref y))
                                 {
-                                    if (pca.IsSolid(x, y))
+                                    if (!foundTransparent)
                                     {
-                                        if (!foundTransparent)
-                                        {
-                                            foundSolid = true;
-                                            lastSolid = x;
-                                        }
-
-                                        if (foundSolid && foundTransparent)
-                                        {
-                                            entrance = new Vector2(lastSolid, y);
-
-                                            if (DistanceToHullAcceptable(pca, polygon, entrance.Value, true))
-                                            {
-                                                return entrance;
-                                            }
-                                            entrance = null;
-                                            break;
-                                        }
+                                        foundSolid = true;
+                                        lastSolid = x;
                                     }
-                                    else
+
+                                    if (foundSolid && foundTransparent)
                                     {
-                                        if (foundSolid)
-                                        {
-                                            foundTransparent = true;
-                                        }
+                                        entrance = new Vector2(lastSolid, y);
+
+                                        if (DistanceToHullAcceptable(polygon, entrance.Value, true))
+                                            return entrance;
+
+                                        entrance = null;
+                                        break;
                                     }
+                                }
+                                else
+                                {
+                                    if (foundSolid)
+                                        foundTransparent = true;
                                 }
                             }
                         }
                     }
+                    else
+                        Debug.WriteLineIf(xCoords.Count % 2 == 0, "SearchCrossingEdges() % 2 != 0");
                 }
             }
 
             return null;
         }
 
-        private static bool DistanceToHullAcceptable(PolygonCreationAssistance pca, Vertices polygon, Vector2 point,
-                                                     bool higherDetail)
+        private bool DistanceToHullAcceptable(DetectedVertices polygon, Vector2 point, bool higherDetail)
         {
-            if (polygon != null && polygon.Count > 2)
+            if (polygon == null)
+                throw new ArgumentNullException("'polygon' can't be null.");
+
+            if (polygon.Count < 3)
+                throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
+
+            // Check the distance to main polygon.
+            if (DistanceToHullAcceptable((Vertices)polygon, point, higherDetail))
             {
-                Vector2 edgeVertex2 = polygon[polygon.Count - 1];
-
-                Vector2 edgeVertex1;
-                if (higherDetail)
+                if (polygon.Holes != null)
                 {
-                    for (int i = 0; i < polygon.Count; i++)
+                    for (int i = 0; i < polygon.Holes.Count; i++)
                     {
-                        edgeVertex1 = polygon[i];
-
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <=
-                            pca.HullTolerance ||
-                            LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= pca.HullTolerance)
-                        {
+                        // If there is one distance not acceptable then return false.
+                        if (!DistanceToHullAcceptable(polygon.Holes[i], point, higherDetail))
                             return false;
-                        }
-
-                        edgeVertex2 = polygon[i];
                     }
-
-                    return true;
                 }
-                else
-                {
-                    for (int i = 0; i < polygon.Count; i++)
-                    {
-                        edgeVertex1 = polygon[i];
-
-                        if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <=
-                            pca.HullTolerance)
-                        {
-                            return false;
-                        }
-
-                        edgeVertex2 = polygon[i];
-                    }
-
-                    return true;
-                }
+                
+                // All distances are larger then _hullTolerance.
+                return true;
             }
 
+            // Default to false.
             return false;
         }
 
-        private static bool InPolygon(PolygonCreationAssistance pca, Vertices polygon, Vector2 point)
+        private bool DistanceToHullAcceptable(Vertices polygon, Vector2 point, bool higherDetail)
         {
-            bool inPolygon = !DistanceToHullAcceptable(pca, polygon, point, true);
+            if (polygon == null)
+                throw new ArgumentNullException("'polygon' can't be null.");
+
+            if (polygon.Count < 3)
+                throw new ArgumentException("'polygon.Count' can't be less then 3.");
+
+            
+            Vector2 edgeVertex2 = polygon[polygon.Count - 1];
+            Vector2 edgeVertex1;
+
+            if (higherDetail)
+            {
+                for (int i = 0; i < polygon.Count; i++)
+                {
+                    edgeVertex1 = polygon[i];
+
+                    if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= _hullTolerance ||
+                        LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= _hullTolerance)
+                    {
+                        return false;
+                    }
+
+                    edgeVertex2 = polygon[i];
+                }
+
+                return true;
+            }
+            else
+            {
+                for (int i = 0; i < polygon.Count; i++)
+                {
+                    edgeVertex1 = polygon[i];
+
+                    if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= _hullTolerance)
+                    {
+                        return false;
+                    }
+
+                    edgeVertex2 = polygon[i];
+                }
+
+                return true;
+            }
+        }
+
+        private bool InPolygon(DetectedVertices polygon, Vector2 point)
+        {
+            bool inPolygon = !DistanceToHullAcceptable(polygon, point, true);
 
             if (!inPolygon)
             {
-                List<CrossingEdgeInfo> edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) point.Y);
+                List<float> xCoords = SearchCrossingEdges(polygon, (int) point.Y);
 
-                if (edges.Count > 0 && edges.Count%2 == 0)
+                if (xCoords.Count > 0 && xCoords.Count % 2 == 0)
                 {
-                    for (int i = 0; i < edges.Count; i += 2)
+                    for (int i = 0; i < xCoords.Count; i += 2)
                     {
-                        if (edges[i].CrossingPoint.X <= point.X && edges[i + 1].CrossingPoint.X >= point.X)
-                        {
+                        if (xCoords[i] <= point.X && xCoords[i + 1] >= point.X)
                             return true;
-                        }
                     }
-
-                    return false;
                 }
+
                 return false;
             }
 
             return true;
         }
 
-        private static Vector2? GetTopMostVertex(Vertices vertices)
+        private Vector2? GetTopMostVertex(Vertices vertices)
         {
             float topMostValue = float.MaxValue;
             Vector2? topMost = null;
@@ -361,7 +801,7 @@ namespace FarseerPhysics.Common
             return topMost;
         }
 
-        private static float GetTopMostCoord(Vertices vertices)
+        private float GetTopMostCoord(Vertices vertices)
         {
             float returnValue = float.MaxValue;
 
@@ -376,7 +816,7 @@ namespace FarseerPhysics.Common
             return returnValue;
         }
 
-        private static float GetBottomMostCoord(Vertices vertices)
+        private float GetBottomMostCoord(Vertices vertices)
         {
             float returnValue = float.MinValue;
 
@@ -391,70 +831,98 @@ namespace FarseerPhysics.Common
             return returnValue;
         }
 
-        private static List<CrossingEdgeInfo> GetCrossingEdges(Vertices polygon, EdgeAlignment edgeAlign, int checkLine)
+        private List<float> SearchCrossingEdges(DetectedVertices polygon, int y)
         {
-            List<CrossingEdgeInfo> edges = new List<CrossingEdgeInfo>();
+            if (polygon == null)
+                throw new ArgumentNullException("'polygon' can't be null.");
 
-            Vector2 slope;
-            Vector2 edgeVertex1;
-            Vector2 edgeVertex2;
+            if (polygon.Count < 3)
+                throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
 
-            Vector2 slopePreview;
-            Vector2 edgeVertexPreview;
-
-            Vector2 crossingPoint;
-            bool addCrossingPoint;
-
-            if (polygon.Count > 1)
+            List<float> result = SearchCrossingEdges((Vertices)polygon, y);
+            
+            if (polygon.Holes != null)
             {
-                edgeVertex2 = polygon[polygon.Count - 1];
-
-                switch (edgeAlign)
+                for (int i = 0; i < polygon.Holes.Count; i++)
                 {
-                    case EdgeAlignment.Vertical:
-                        for (int i = 0; i < polygon.Count; i++)
+                    result.AddRange(SearchCrossingEdges(polygon.Holes[i], y));
+                }
+            }
+
+            result.Sort();
+            return result;
+        }
+
+        /// <summary>
+        /// Searches the polygon for the x coordinates of the edges that cross the specified y coordinate.
+        /// </summary>
+        /// <param name="polygon">Polygon to search in.</param>
+        /// <param name="y">Y coordinate to check for edges.</param>
+        /// <returns>Descending sorted list of x coordinates of edges that cross the specified y coordinate.</returns>
+        private List<float> SearchCrossingEdges(Vertices polygon, int y)
+        {
+            // sick-o-note:
+            // Used to search the x coordinates of edges in the polygon for a specific y coordinate.
+            // (Usualy comming from the texture data, that's why it's an int and not a float.)
+
+            List<float> edges = new List<float>();
+
+            // current edge
+            Vector2 slope;
+            Vector2 vertex1;    // i
+            Vector2 vertex2;    // i - 1
+
+            // next edge
+            Vector2 nextSlope;
+            Vector2 nextVertex; // i + 1
+
+            bool addFind;
+
+            if (polygon.Count > 2)
+            {
+                // There is a gap between the last and the first vertex in the vertex list.
+                // We will bridge that by setting the last vertex (vertex2) to the last 
+                // vertex in the list.
+                vertex2 = polygon[polygon.Count - 1];
+
+                // We are moving along the polygon edges.
+                for (int i = 0; i < polygon.Count; i++)
+                {
+                    vertex1 = polygon[i];
+
+                    // Approx. check if the edge crosses our y coord.
+                    if ((vertex1.Y >= y && vertex2.Y <= y) ||
+                        (vertex1.Y <= y && vertex2.Y >= y))
+                    {
+                        // Ignore edges that are parallel to y.
+                        if (vertex1.Y != vertex2.Y)
                         {
-                            edgeVertex1 = polygon[i];
+                            addFind = true;
+                            slope = vertex2 - vertex1;
 
-                            if ((edgeVertex1.Y >= checkLine && edgeVertex2.Y <= checkLine) ||
-                                (edgeVertex1.Y <= checkLine && edgeVertex2.Y >= checkLine))
+                            // Special threatment for edges that end at the y coord.
+                            if (vertex1.Y == y)
                             {
-                                if (edgeVertex1.Y != edgeVertex2.Y)
-                                {
-                                    addCrossingPoint = true;
-                                    slope = edgeVertex2 - edgeVertex1;
+                                // Create preview of the next edge.
+                                nextVertex = polygon[(i + 1) % polygon.Count];
+                                nextSlope = vertex1 - nextVertex;
 
-                                    if (edgeVertex1.Y == checkLine)
-                                    {
-                                        edgeVertexPreview = polygon[(i + 1)%polygon.Count];
-                                        slopePreview = edgeVertex1 - edgeVertexPreview;
-
-                                        if (slope.Y > 0)
-                                        {
-                                            addCrossingPoint = (slopePreview.Y <= 0);
-                                        }
-                                        else
-                                        {
-                                            addCrossingPoint = (slopePreview.Y >= 0);
-                                        }
-                                    }
-
-                                    if (addCrossingPoint)
-                                    {
-                                        crossingPoint =
-                                            new Vector2((checkLine - edgeVertex1.Y)/slope.Y*slope.X + edgeVertex1.X,
-                                                        checkLine);
-                                        edges.Add(new CrossingEdgeInfo(crossingPoint,
-                                                                       edgeAlign));
-                                    }
-                                }
+                                // Ignore peaks. 
+                                // If thwo edges are aligned like this: /\ and the y coordinate lies on the top,
+                                // then we get the same x coord twice and we don't need that.
+                                if (slope.Y > 0)
+                                    addFind = (nextSlope.Y <= 0);
+                                else
+                                    addFind = (nextSlope.Y >= 0);
                             }
-                            edgeVertex2 = edgeVertex1;
-                        }
-                        break;
 
-                    case EdgeAlignment.Horizontal:
-                        throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
+                            if (addFind)
+                                edges.Add((y - vertex1.Y) / slope.Y * slope.X + vertex1.X); // Calculate and add the x coord.
+                        }
+                    }
+
+                    // vertex1 becomes vertex2 :).
+                    vertex2 = vertex1;
                 }
             }
 
@@ -462,11 +930,9 @@ namespace FarseerPhysics.Common
             return edges;
         }
 
-        private static bool SplitPolygonEdge(Vertices polygon, EdgeAlignment edgeAlign, Vector2 coordInsideThePolygon,
+        private bool SplitPolygonEdge(Vertices polygon, Vector2 coordInsideThePolygon,
                                              out int vertex1Index, out int vertex2Index)
         {
-            List<CrossingEdgeInfo> edges;
-
             Vector2 slope;
             int nearestEdgeVertex1Index = 0;
             int nearestEdgeVertex2Index = 0;
@@ -477,89 +943,87 @@ namespace FarseerPhysics.Common
             bool edgeCoordFound = false;
             Vector2 foundEdgeCoord = Vector2.Zero;
 
+            List<float> xCoords = SearchCrossingEdges(polygon, (int) coordInsideThePolygon.Y);
+
             vertex1Index = 0;
             vertex2Index = 0;
 
-            switch (edgeAlign)
+            foundEdgeCoord.Y = coordInsideThePolygon.Y;
+
+            if (xCoords != null && xCoords.Count > 1 && xCoords.Count % 2 == 0)
             {
-                case EdgeAlignment.Vertical:
-                    edges = GetCrossingEdges(polygon, EdgeAlignment.Vertical, (int) coordInsideThePolygon.Y);
-
-                    foundEdgeCoord.Y = coordInsideThePolygon.Y;
-
-                    if (edges != null && edges.Count > 1 && edges.Count%2 == 0)
+                float distance;
+                for (int i = 0; i < xCoords.Count; i++)
+                {
+                    if (xCoords[i] < coordInsideThePolygon.X)
                     {
-                        float distance;
-                        for (int i = 0; i < edges.Count; i++)
+                        distance = coordInsideThePolygon.X - xCoords[i];
+
+                        if (distance < shortestDistance)
                         {
-                            if (edges[i].CrossingPoint.X < coordInsideThePolygon.X)
-                            {
-                                distance = coordInsideThePolygon.X - edges[i].CrossingPoint.X;
+                            shortestDistance = distance;
+                            foundEdgeCoord.X = xCoords[i];
 
-                                if (distance < shortestDistance)
-                                {
-                                    shortestDistance = distance;
-                                    foundEdgeCoord.X = edges[i].CrossingPoint.X;
-
-                                    edgeCoordFound = true;
-                                }
-                            }
-                        }
-
-                        if (edgeCoordFound)
-                        {
-                            shortestDistance = float.MaxValue;
-
-                            int edgeVertex2Index = polygon.Count - 1;
-
-                            int edgeVertex1Index;
-                            for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
-                            {
-                                Vector2 tempVector1 = polygon[edgeVertex1Index];
-                                Vector2 tempVector2 = polygon[edgeVertex2Index];
-                                distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord,
-                                                                                        ref tempVector1, ref tempVector2);
-                                if (distance < shortestDistance)
-                                {
-                                    shortestDistance = distance;
-
-                                    nearestEdgeVertex1Index = edgeVertex1Index;
-                                    nearestEdgeVertex2Index = edgeVertex2Index;
-
-                                    edgeFound = true;
-                                }
-
-                                edgeVertex2Index = edgeVertex1Index;
-                            }
-
-                            if (edgeFound)
-                            {
-                                slope = polygon[nearestEdgeVertex2Index] - polygon[nearestEdgeVertex1Index];
-                                slope.Normalize();
-
-                                Vector2 tempVector = polygon[nearestEdgeVertex1Index];
-                                distance = LineTools.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
-
-                                vertex1Index = nearestEdgeVertex1Index;
-                                vertex2Index = nearestEdgeVertex1Index + 1;
-
-                                polygon.Insert(nearestEdgeVertex1Index, distance*slope + polygon[vertex1Index]);
-                                polygon.Insert(nearestEdgeVertex1Index, distance*slope + polygon[vertex2Index]);
-
-                                return true;
-                            }
+                            edgeCoordFound = true;
                         }
                     }
-                    break;
+                }
 
-                case EdgeAlignment.Horizontal:
-                    throw new Exception("EdgeAlignment.Horizontal isn't implemented yet. Sorry.");
+                if (edgeCoordFound)
+                {
+                    shortestDistance = float.MaxValue;
+
+                    int edgeVertex2Index = polygon.Count - 1;
+
+                    int edgeVertex1Index;
+                    for (edgeVertex1Index = 0; edgeVertex1Index < polygon.Count; edgeVertex1Index++)
+                    {
+                        Vector2 tempVector1 = polygon[edgeVertex1Index];
+                        Vector2 tempVector2 = polygon[edgeVertex2Index];
+                        distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord,
+                                                                                ref tempVector1, ref tempVector2);
+                        if (distance < shortestDistance)
+                        {
+                            shortestDistance = distance;
+
+                            nearestEdgeVertex1Index = edgeVertex1Index;
+                            nearestEdgeVertex2Index = edgeVertex2Index;
+
+                            edgeFound = true;
+                        }
+
+                        edgeVertex2Index = edgeVertex1Index;
+                    }
+
+                    if (edgeFound)
+                    {
+                        slope = polygon[nearestEdgeVertex2Index] - polygon[nearestEdgeVertex1Index];
+                        slope.Normalize();
+
+                        Vector2 tempVector = polygon[nearestEdgeVertex1Index];
+                        distance = LineTools.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
+
+                        vertex1Index = nearestEdgeVertex1Index;
+                        vertex2Index = nearestEdgeVertex1Index + 1;
+
+                        polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex1Index]);
+                        polygon.Insert(nearestEdgeVertex1Index, distance * slope + polygon[vertex2Index]);
+
+                        return true;
+                    }
+                }
             }
 
             return false;
         }
 
-        private static Vertices CreateSimplePolygon(PolygonCreationAssistance pca, Vector2 entrance, Vector2 last)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entrance"></param>
+        /// <param name="last"></param>
+        /// <returns></returns>
+        private Vertices CreateSimplePolygon(Vector2 entrance, Vector2 last)
         {
             bool entranceFound = false;
             bool endOfHull = false;
@@ -573,9 +1037,9 @@ namespace FarseerPhysics.Common
             #region Entrance check
 
             // Get the entrance point. //todo: alle möglichkeiten testen
-            if (entrance == Vector2.Zero || !pca.InBounds(ref entrance))
+            if (entrance == Vector2.Zero || !InBounds(ref entrance))
             {
-                entranceFound = GetHullEntrance(pca, out entrance);
+                entranceFound = SearchHullEntrance(out entrance);
 
                 if (entranceFound)
                 {
@@ -584,9 +1048,9 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                if (pca.IsSolid(ref entrance))
+                if (IsSolid(ref entrance))
                 {
-                    if (IsNearPixel(pca, ref entrance, ref last))
+                    if (IsNearPixel(ref entrance, ref last))
                     {
                         current = last;
                         entranceFound = true;
@@ -594,7 +1058,7 @@ namespace FarseerPhysics.Common
                     else
                     {
                         Vector2 temp;
-                        if (SearchNearPixels(pca, false, ref entrance, out temp))
+                        if (SearchNearPixels(false, ref entrance, out temp))
                         {
                             current = temp;
                             entranceFound = true;
@@ -620,7 +1084,7 @@ namespace FarseerPhysics.Common
                 {
                     // Search in the pre vision list for an outstanding point.
                     Vector2 outstanding;
-                    if (SearchForOutstandingVertex(hullArea, pca.HullTolerance, out outstanding))
+                    if (SearchForOutstandingVertex(hullArea, out outstanding))
                     {
                         if (endOfHull)
                         {
@@ -646,7 +1110,7 @@ namespace FarseerPhysics.Common
                     current = next;
 
                     // Get the next point on hull.
-                    if (GetNextHullPoint(pca, ref last, ref current, out next))
+                    if (GetNextHullPoint(ref last, ref current, out next))
                     {
                         // Add the vertex to a hull pre vision list.
                         hullArea.Add(next);
@@ -669,15 +1133,14 @@ namespace FarseerPhysics.Common
             return polygon;
         }
 
-        private static bool SearchNearPixels(PolygonCreationAssistance pca, bool searchingForSolidPixel,
-                                             ref Vector2 current, out Vector2 foundPixel)
+        private bool SearchNearPixels(bool searchingForSolidPixel, ref Vector2 current, out Vector2 foundPixel)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < _CLOSEPIXELS_LENGTH; i++)
             {
                 int x = (int) current.X + ClosePixels[i, 0];
                 int y = (int) current.Y + ClosePixels[i, 1];
 
-                if (!searchingForSolidPixel ^ pca.IsSolid(x, y))
+                if (!searchingForSolidPixel ^ IsSolid(ref x, ref y))
                 {
                     foundPixel = new Vector2(x, y);
                     return true;
@@ -689,14 +1152,14 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool IsNearPixel(PolygonCreationAssistance pca, ref Vector2 current, ref Vector2 near)
+        private bool IsNearPixel(ref Vector2 current, ref Vector2 near)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < _CLOSEPIXELS_LENGTH; i++)
             {
                 int x = (int) current.X + ClosePixels[i, 0];
                 int y = (int) current.Y + ClosePixels[i, 1];
 
-                if (x >= 0 && x <= pca.Width && y >= 0 && y <= pca.Height)
+                if (x >= 0 && x <= _width && y >= 0 && y <= _height)
                 {
                     if (x == (int) near.X && y == (int) near.Y)
                     {
@@ -708,14 +1171,14 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool GetHullEntrance(PolygonCreationAssistance pca, out Vector2 entrance)
+        private bool SearchHullEntrance(out Vector2 entrance)
         {
             // Search for first solid pixel.
-            for (int y = 0; y <= pca.Height; y++)
+            for (int y = 0; y <= _height; y++)
             {
-                for (int x = 0; x <= pca.Width; x++)
+                for (int x = 0; x <= _width; x++)
                 {
-                    if (pca.IsSolid(x, y))
+                    if (IsSolid(ref x, ref y))
                     {
                         entrance = new Vector2(x, y);
                         return true;
@@ -728,39 +1191,54 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool GetNextHullEntrance(PolygonCreationAssistance pca, Vector2 start, out Vector2? entrance)
+        /// <summary>
+        /// Searches for the next shape.
+        /// </summary>
+        /// <param name="detectedPolygons">Already detected polygons.</param>
+        /// <param name="start">Search start coordinate.</param>
+        /// <param name="entrance">Returns the found entrance coordinate. Null if no other shapes found.</param>
+        /// <returns>True if a new shape was found.</returns>
+        private bool SearchNextHullEntrance(List<DetectedVertices> detectedPolygons, Vector2 start, out Vector2? entrance)
         {
-            // Search for first solid pixel.
-            int size = pca.Height*pca.Width;
             int x;
 
             bool foundTransparent = false;
+            bool inPolygon = false;
 
-            for (int i = (int) start.X + (int) start.Y*pca.Width; i <= size; i++)
+            for (int i = (int) start.X + (int) start.Y * _width; i <= _dataLength; i++)
             {
-                if (pca.IsSolid(i))
+                if (IsSolid(ref i))
                 {
                     if (foundTransparent)
                     {
-                        x = i%pca.Width;
+                        x = i % _width;
+                        entrance = new Vector2(x, (i - x) / (float)_width);
+                        
+                        inPolygon = false;
+                        for (int polygonIdx = 0; polygonIdx < detectedPolygons.Count; polygonIdx++)
+                        {
+                            if (InPolygon(detectedPolygons[polygonIdx], entrance.Value))
+                            {
+                                inPolygon = true;
+                                break;
+                            }
+                        }
 
-                        entrance = new Vector2(x, (i - x)/(float) pca.Width);
-                        return true;
+                        if (inPolygon)
+                            foundTransparent = false;
+                        else
+                            return true;
                     }
                 }
                 else
-                {
                     foundTransparent = true;
-                }
             }
 
-            // If there are no solid pixels.
             entrance = null;
             return false;
         }
 
-        private static bool GetNextHullPoint(PolygonCreationAssistance pca, ref Vector2 last, ref Vector2 current,
-                                             out Vector2 next)
+        private bool GetNextHullPoint(ref Vector2 last, ref Vector2 current, out Vector2 next)
         {
             int x;
             int y;
@@ -768,18 +1246,16 @@ namespace FarseerPhysics.Common
             int indexOfFirstPixelToCheck = GetIndexOfFirstPixelToCheck(ref last, ref current);
             int indexOfPixelToCheck;
 
-            const int pixelsToCheck = 8; // _closePixels.Length;
-
-            for (int i = 0; i < pixelsToCheck; i++)
+            for (int i = 0; i < _CLOSEPIXELS_LENGTH; i++)
             {
-                indexOfPixelToCheck = (indexOfFirstPixelToCheck + i)%pixelsToCheck;
+                indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % _CLOSEPIXELS_LENGTH;
 
                 x = (int) current.X + ClosePixels[indexOfPixelToCheck, 0];
                 y = (int) current.Y + ClosePixels[indexOfPixelToCheck, 1];
 
-                if (x >= 0 && x < pca.Width && y >= 0 && y <= pca.Height)
+                if (x >= 0 && x < _width && y >= 0 && y <= _height)
                 {
-                    if (pca.IsSolid(x, y)) //todo
+                    if (IsSolid(ref x, ref y))
                     {
                         next = new Vector2(x, y);
                         return true;
@@ -791,7 +1267,7 @@ namespace FarseerPhysics.Common
             return false;
         }
 
-        private static bool SearchForOutstandingVertex(Vertices hullArea, float hullTolerance, out Vector2 outstanding)
+        private bool SearchForOutstandingVertex(Vertices hullArea, out Vector2 outstanding)
         {
             Vector2 outstandingResult = Vector2.Zero;
             bool found = false;
@@ -810,9 +1286,7 @@ namespace FarseerPhysics.Common
                     tempVector1 = hullArea[i];
 
                     // Check if the distance is over the one that's tolerable.
-                    if (
-                        LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref tempVector2, ref tempVector3) >=
-                        hullTolerance)
+                    if (LineTools.DistanceBetweenPointAndLineSegment(ref tempVector1, ref tempVector2, ref tempVector3) >= _hullTolerance)
                     {
                         outstandingResult = hullArea[i];
                         found = true;
@@ -825,7 +1299,7 @@ namespace FarseerPhysics.Common
             return found;
         }
 
-        private static int GetIndexOfFirstPixelToCheck(ref Vector2 last, ref Vector2 current)
+        private int GetIndexOfFirstPixelToCheck(ref Vector2 last, ref Vector2 current)
         {
             // .: pixel
             // l: last position
@@ -836,7 +1310,7 @@ namespace FarseerPhysics.Common
             // l c .
             // . . .
 
-            //Calculate in which direction the last move went and decide over the next first pixel.
+            //Calculate in which direction the last move went and decide over the next pixel to check.
             switch ((int) (current.X - last.X))
             {
                 case 1:
@@ -880,183 +1354,6 @@ namespace FarseerPhysics.Common
             }
 
             return 0;
-        }
-
-        #region Nested type: CrossingEdgeInfo
-
-        private sealed class CrossingEdgeInfo : IComparable
-        {
-            public Vector2 CrossingPoint;
-            private EdgeAlignment _alignment;
-
-            public CrossingEdgeInfo(Vector2 crossingPoint, EdgeAlignment checkLineAlignment)
-            {
-                _alignment = checkLineAlignment;
-                CrossingPoint = crossingPoint;
-            }
-
-            #region IComparable Member
-
-            public int CompareTo(object obj)
-            {
-                CrossingEdgeInfo cei = (CrossingEdgeInfo) obj;
-                int result = 0;
-
-                switch (_alignment)
-                {
-                    case EdgeAlignment.Vertical:
-                        if (CrossingPoint.X < cei.CrossingPoint.X)
-                        {
-                            result = -1;
-                        }
-                        else if (CrossingPoint.X > cei.CrossingPoint.X)
-                        {
-                            result = 1;
-                        }
-                        break;
-
-                    case EdgeAlignment.Horizontal:
-                        if (CrossingPoint.Y < cei.CrossingPoint.Y)
-                        {
-                            result = -1;
-                        }
-                        else if (CrossingPoint.Y > cei.CrossingPoint.Y)
-                        {
-                            result = 1;
-                        }
-                        break;
-                }
-
-                return result;
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region Nested type: EdgeAlignment
-
-        private enum EdgeAlignment
-        {
-            Vertical = 0,
-            Horizontal = 1
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Class used as a data container and helper for the texture-to-vertices code.
-    /// </summary>
-    public struct PolygonCreationAssistance
-    {
-        public uint[] Data;
-        public int Height;
-        public bool HoleDetection;
-
-        public bool MultipartDetection;
-        public int Width;
-        private byte _alphaTolerance;
-        private uint _alphaToleranceRealValue;
-        private int _holeDetectionLineStepSize;
-        private float _hullTolerance;
-
-        public PolygonCreationAssistance(uint[] data, int width, int height)
-            : this()
-        {
-            Data = data;
-            Width = width;
-            Height = height;
-
-            AlphaTolerance = 20;
-            HullTolerance = 1.5f;
-
-            HoleDetectionLineStepSize = 1;
-
-            HoleDetection = false;
-            MultipartDetection = false;
-        }
-
-        public byte AlphaTolerance
-        {
-            get { return _alphaTolerance; }
-            set
-            {
-                _alphaTolerance = value;
-                _alphaToleranceRealValue = (uint) value << 24;
-            }
-        }
-
-        public float HullTolerance
-        {
-            get { return _hullTolerance; }
-            set
-            {
-                float hullTolerance = value;
-
-                if (hullTolerance > 4f) hullTolerance = 4f;
-                if (hullTolerance < 0.9f) hullTolerance = 0.9f;
-
-                _hullTolerance = hullTolerance;
-            }
-        }
-
-        public int HoleDetectionLineStepSize
-        {
-            get { return _holeDetectionLineStepSize; }
-            private set
-            {
-                if (value < 1)
-                {
-                    _holeDetectionLineStepSize = 1;
-                }
-                else
-                {
-                    if (value > 10)
-                    {
-                        _holeDetectionLineStepSize = 10;
-                    }
-                    else
-                    {
-                        _holeDetectionLineStepSize = value;
-                    }
-                }
-            }
-        }
-
-        public bool IsSolid(ref Vector2 pixel)
-        {
-            return IsSolid((int) pixel.X, (int) pixel.Y);
-        }
-
-        public bool IsSolid(int x, int y)
-        {
-            if (x >= 0 && x < Width && y >= 0 && y < Height)
-                return ((Data[x + y*Width] & 0xFF000000) >= _alphaToleranceRealValue);
-
-            return false;
-        }
-
-        public bool IsSolid(int index)
-        {
-            if (index >= 0 && index < Width*Height)
-                return ((Data[index] & 0xFF000000) >= _alphaToleranceRealValue);
-
-            return false;
-        }
-
-        public bool InBounds(ref Vector2 coord)
-        {
-            return (coord.X >= 0f && coord.X < Width && coord.Y >= 0f && coord.Y < Height);
-        }
-
-        public bool IsValid()
-        {
-            if (Data != null && Data.Length > 0)
-                return Data.Length == Width*Height;
-
-            return false;
         }
     }
 }
