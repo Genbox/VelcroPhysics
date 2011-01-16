@@ -211,10 +211,10 @@ namespace FarseerPhysics.Dynamics
         private RayCastCallbackInternal _rayCastCallbackWrapper;
         private Body[] _stack = new Body[64];
         private bool _stepComplete;
-        private Common.HashSet<Body> _bodyAddList = new Common.HashSet<Body>(32);
-        private Common.HashSet<Body> _bodyRemoveList = new Common.HashSet<Body>(32);
-        private Common.HashSet<Joint> _jointAddList = new Common.HashSet<Joint>(32);
-        private Common.HashSet<Joint> _jointRemoveList = new Common.HashSet<Joint>(32);
+        private HashSet<Body> _bodyAddList = new HashSet<Body>();
+        private HashSet<Body> _bodyRemoveList = new HashSet<Body>();
+        private HashSet<Joint> _jointAddList = new HashSet<Joint>();
+        private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
         private TOIInput _input = new TOIInput();
 
         /// <summary>

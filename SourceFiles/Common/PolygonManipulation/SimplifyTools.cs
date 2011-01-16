@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
@@ -282,7 +283,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         public static Vertices MergeIdenticalPoints(Vertices vertices)
         {
             //We use a dictonary here because HashSet is not avaliable on all platforms.
-            HashSet<Vector2> results = new HashSet<Vector2>(vertices.Count);
+            HashSet<Vector2> results = new HashSet<Vector2>();
 
             for (int i = 0; i < vertices.Count; i++)
             {
