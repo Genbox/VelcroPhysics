@@ -41,7 +41,13 @@ namespace FarseerPhysics.Dynamics
         public bool Broken;
         public Body MainBody;
         public List<Fixture> Parts = new List<Fixture>(8);
+        
+        /// <summary>
+        /// The force needed to break the body apart.
+        /// Default: 500
+        /// </summary>
         public float Strength = 500.0f;
+        
         private float[] _angularVelocitiesCache = new float[8];
         private bool _break;
         private Vector2[] _velocitiesCache = new Vector2[8];
@@ -52,7 +58,7 @@ namespace FarseerPhysics.Dynamics
         {
         }
 
-        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density, Object userData)
+        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density, object userData)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
@@ -138,8 +144,7 @@ namespace FarseerPhysics.Dynamics
                 body.Rotation = MainBody.Rotation;
                 body.UserData = MainBody.UserData;
 
-                Fixture newFixture = body.CreateFixture(shape);
-                newFixture.UserData = userdata;
+                body.CreateFixture(shape, userdata);
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

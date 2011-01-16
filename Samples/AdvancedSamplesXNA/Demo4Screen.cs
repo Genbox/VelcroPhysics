@@ -31,7 +31,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
             DebugView.AppendFlags(DebugViewFlags.Joint);
 
-            new Spiderweb(World, Vector2.Zero, new Vector2(0.2f, 0.2f));
+            new Spiderweb(World, Vector2.Zero, 0.2f, 5, 12);
         }
     }
 }
