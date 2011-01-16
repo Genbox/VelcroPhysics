@@ -586,7 +586,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="shape">The shape.</param>
         /// <param name="userData">Application specific data</param>
         /// <returns></returns>
-        public Fixture CreateFixture(Shape shape, Object userData)
+        public Fixture CreateFixture(Shape shape, object userData)
         {
             return new Fixture(this, shape, userData);
         }

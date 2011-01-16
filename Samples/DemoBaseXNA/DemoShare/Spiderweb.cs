@@ -15,12 +15,10 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             Color = Color.LightGray,
         };
 
-        public Spiderweb(World world, Vector2 position, Vector2 boxSize)
+        public Spiderweb(World world, Vector2 position, float boxSize, int rings, int sides)
         {
-            Vertices box = PolygonTools.CreateRectangle(boxSize.X, boxSize.Y);
+            Vertices box = PolygonTools.CreateRectangle(boxSize, boxSize);
 
-            const int rings = 5;
-            const int sides = 12;
             List<List<Fixture>> ringFixtures = new List<List<Fixture>>(rings);
 
             for (int i = 1; i < rings; i++)
