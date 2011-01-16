@@ -507,9 +507,20 @@ namespace FarseerPhysics.Common
             if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
                 throw new Exception("Couldn't detect any vertices.");
 
-            // Revert the order of vetrices in the main polygons.
-            for (int i = 0; i < detectedPolygons.Count; i++)
-                detectedPolygons[i].Reverse();
+            // Revert the order of vetrices. Temporary solution.
+            if (PolygonDetectionType == VerticesDetectionType.Separated)
+            {
+                for (int i = 0; i < detectedPolygons.Count; i++)
+                {
+                    detectedPolygons[i].Reverse();
+
+                    if (detectedPolygons[i].Holes != null && detectedPolygons[i].Holes.Count > 0)
+                    {
+                        for (int j = 0; j < detectedPolygons[i].Holes.Count; j++)
+                            detectedPolygons[i].Holes[j].Reverse();
+                    }
+                }
+            }
 
             #region Post processing.
 
