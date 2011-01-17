@@ -47,14 +47,13 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             _polygonTexture = ScreenManager.ContentManager.Load<Texture2D>("Texture");
 
             //Create an array to hold the data from the texture
-            uint[] data = new uint[_polygonTexture.Width*_polygonTexture.Height];
+            uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
 
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            Vertices textureVertices = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height,
-                                                                  false);
+            Vertices textureVertices = PolygonTools.CreatePolygon(data, _polygonTexture.Width, false);
 
             //The tool return vertices as they were found in the texture.
             //We need to find the real center (centroid) of the vertices for 2 reasons:

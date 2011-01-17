@@ -27,13 +27,13 @@ namespace FarseerPhysics.TestBed.Tests
             _polygonTexture = GameInstance.Content.Load<Texture2D>("Texture");
 
             //Create an array to hold the data from the texture
-            uint[] data = new uint[_polygonTexture.Width*_polygonTexture.Height];
+            uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
 
             //Transfer the texture data to the array
             _polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            _verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, _polygonTexture.Height, false);
+            _verts = PolygonTools.CreatePolygon(data, _polygonTexture.Width, false);
 
             //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, 0.07f);

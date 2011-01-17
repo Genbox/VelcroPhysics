@@ -104,7 +104,7 @@ namespace FarseerPhysics.Common
             get { return _multipartDetection; }
             set { _multipartDetection = value; }
         }
-        
+
         /// <summary>
         /// Will optimize the vertex positions along the interpolated normal between two edges about a half pixel (post processing). Default is false.
         /// </summary>
@@ -171,8 +171,8 @@ namespace FarseerPhysics.Common
             Initialize(null, null, null, null, null, null, null, null, null);
         }
 
-        public TextureConverter(byte? alphaTolerance, float? hullTolerance, 
-            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, 
+        public TextureConverter(byte? alphaTolerance, float? hullTolerance,
+            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization,
             bool? resultScaling, Vector2? resultSizeTarget)
         {
             Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
@@ -188,21 +188,21 @@ namespace FarseerPhysics.Common
             float? hullTolerance, bool? holeDetection, bool? multipartDetection,
             bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
         {
-            Initialize(data, width, alphaTolerance, hullTolerance, holeDetection, 
+            Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
                 multipartDetection, pixelOffsetOptimization, resultScaling, resultSizeTarget);
         }
         #endregion
 
         #region Initialization
-        private void Initialize(uint[] data, int? width, byte? alphaTolerance, 
+        private void Initialize(uint[] data, int? width, byte? alphaTolerance,
             float? hullTolerance, bool? holeDetection, bool? multipartDetection,
             bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
         {
             if (data != null && !width.HasValue)
-                throw new ArgumentNullException("'width' can't be null if 'data' is set.");
+                throw new ArgumentNullException("width", "'width' can't be null if 'data' is set.");
 
             if (data == null && width.HasValue)
-                throw new ArgumentNullException("'data' can't be null if 'width' is set.");
+                throw new ArgumentNullException("data", "'data' can't be null if 'width' is set.");
 
             if (data != null && width.HasValue)
                 SetTextureData(data, width.Value);
@@ -252,13 +252,13 @@ namespace FarseerPhysics.Common
         private void SetTextureData(uint[] data, int width)
         {
             if (data == null)
-                throw new ArgumentNullException("'data' can't be null.");
+                throw new ArgumentNullException("data", "'data' can't be null.");
 
             if (data.Length < 4)
-                throw new ArgumentOutOfRangeException("'data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size.");
+                throw new ArgumentOutOfRangeException("data", "'data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size.");
 
             if (width < 2)
-                throw new ArgumentOutOfRangeException("'width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size.");
+                throw new ArgumentOutOfRangeException("width", "'width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size.");
 
             if (data.Length % width != 0)
                 throw new ArgumentException("'width' has an invalid value.");
@@ -267,23 +267,6 @@ namespace FarseerPhysics.Common
             _dataLength = _data.Length;
             _width = width;
             _height = _dataLength / width;
-        }
-
-
-        /// <summary>
-        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
-        /// </summary>
-        /// <param name="data">The texture data.</param>
-        /// <param name="width">The texture width.</param>
-        /// <param name="height">(Irrelevant) The texture height.</param>
-        /// <returns></returns>
-        public static Vertices DetectVertices(uint[] data, int width, int height)
-        {
-            Debug.Assert(false, "This function is obsolete.", 
-                "You are using an obsolete function, which might be removed in the next release. " + 
-                "Use DetectVertices(uint[] data, int width) instead.");
-
-            return DetectVertices(data, width);
         }
 
         /// <summary>
@@ -302,23 +285,6 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
-        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
-        /// </summary>
-        /// <param name="data">The texture data.</param>
-        /// <param name="width">The texture width.</param>
-        /// <param name="height">(Irrelevant) The texture height.</param>
-        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
-        /// <returns></returns>
-        public static Vertices DetectVertices(uint[] data, int width, int height, bool holeDetection)
-        {
-            Debug.Assert(false, "This function is obsolete.", 
-                "You are using an obsolete function, which might be removed in the next release. " +
-                "Use DetectVertices(uint[] data, int width, bool holeDetection) instead.");
-
-            return DetectVertices(data, width, holeDetection);
-        }
-
-        /// <summary>
         /// Detects the vertices of the supplied texture data.
         /// </summary>
         /// <param name="data">The texture data.</param>
@@ -328,35 +294,14 @@ namespace FarseerPhysics.Common
         public static Vertices DetectVertices(uint[] data, int width, bool holeDetection)
         {
             TextureConverter tc =
-                new TextureConverter(data, width) 
-                { 
+                new TextureConverter(data, width)
+                {
                     HoleDetection = holeDetection
                 };
 
             List<DetectedVertices> detectedVerticesList = tc.DetectVertices();
 
             return detectedVerticesList[0];
-        }
-
-        /// <summary>
-        /// (Obsolete) Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
-        /// </summary>
-        /// <param name="data">The texture data.</param>
-        /// <param name="width">The texture width.</param>
-        /// <param name="height">(Irrelevant) The texture height.</param>
-        /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
-        /// <param name="hullTolerance">The hull tolerance.</param>
-        /// <param name="alphaTolerance">The alpha tolerance.</param>
-        /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
-        /// <returns></returns>
-        public static List<Vertices> DetectVertices(uint[] data, int width, int height, float hullTolerance,
-                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
-        {
-            Debug.Assert(false, "This function is obsolete.", 
-                "You are using an obsolete function, which might be removed in the next release. " + 
-                "Use DetectVertices(uint[] data, int width, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection) instead.");
-
-            return DetectVertices(data, width, hullTolerance, alphaTolerance, multiPartDetection, holeDetection);
         }
 
         /// <summary>
@@ -435,7 +380,7 @@ namespace FarseerPhysics.Common
                     // First pass / single polygon
                     polygon = new DetectedVertices(CreateSimplePolygon(Vector2.Zero, Vector2.Zero));
 
-                    if (polygon != null && polygon.Count > 2)
+                    if (polygon.Count > 2)
                         polygonEntrance = GetTopMostVertex(polygon);
                 }
                 else if (polygonEntrance.HasValue)
@@ -449,7 +394,7 @@ namespace FarseerPhysics.Common
 
                 searchOn = false;
 
-                if (polygon != null && polygon.Count > 2)
+                if (polygon.Count > 2)
                 {
                     if (_holeDetection)
                     {
@@ -468,7 +413,7 @@ namespace FarseerPhysics.Common
                                     if (holePolygon != null && holePolygon.Count > 2)
                                     {
                                         switch (_polygonDetectionType)
-                                        { 
+                                        {
                                             case VerticesDetectionType.Integrated:
 
                                                 // Add first hole polygon vertex to close the hole polygon.
@@ -494,7 +439,7 @@ namespace FarseerPhysics.Common
                             }
                             else
                                 break;
-                        } 
+                        }
                         while (true);
                     }
 
@@ -506,7 +451,7 @@ namespace FarseerPhysics.Common
                             searchOn = true;
                     }
                 }
-            } 
+            }
             while (searchOn);
 
             if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
@@ -560,7 +505,7 @@ namespace FarseerPhysics.Common
 
             if (_tempIsSolidX >= 0 && _tempIsSolidX < _width && _tempIsSolidY >= 0 && _tempIsSolidY < _height)
                 return (_data[_tempIsSolidX + _tempIsSolidY * _width] >= _alphaTolerance);
-                //return ((_data[_tempIsSolidX + _tempIsSolidY * _width] & 0xFF000000) >= _alphaTolerance);
+            //return ((_data[_tempIsSolidX + _tempIsSolidY * _width] & 0xFF000000) >= _alphaTolerance);
 
             return false;
         }
@@ -569,7 +514,7 @@ namespace FarseerPhysics.Common
         {
             if (x >= 0 && x < _width && y >= 0 && y < _height)
                 return (_data[x + y * _width] >= _alphaTolerance);
-                //return ((_data[x + y * _width] & 0xFF000000) >= _alphaTolerance);
+            //return ((_data[x + y * _width] & 0xFF000000) >= _alphaTolerance);
 
             return false;
         }
@@ -578,7 +523,7 @@ namespace FarseerPhysics.Common
         {
             if (index >= 0 && index < _dataLength)
                 return (_data[index] >= _alphaTolerance);
-                //return ((_data[index] & 0xFF000000) >= _alphaTolerance);
+            //return ((_data[index] & 0xFF000000) >= _alphaTolerance);
 
             return false;
         }
@@ -618,7 +563,7 @@ namespace FarseerPhysics.Common
             if (lastHoleEntrance.HasValue)
             {
                 // We need the y coordinate only.
-                startY = (int)lastHoleEntrance.Value.Y; 
+                startY = (int)lastHoleEntrance.Value.Y;
             }
             else
             {
@@ -627,7 +572,7 @@ namespace FarseerPhysics.Common
             }
 
             // Set the end y coordinate.
-            endY = (int) GetBottomMostCoord(polygon);
+            endY = (int)GetBottomMostCoord(polygon);
 
             if (startY > 0 && startY < _height && endY > 0 && endY < _height)
             {
@@ -707,7 +652,7 @@ namespace FarseerPhysics.Common
         private bool DistanceToHullAcceptable(DetectedVertices polygon, Vector2 point, bool higherDetail)
         {
             if (polygon == null)
-                throw new ArgumentNullException("'polygon' can't be null.");
+                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
@@ -724,7 +669,7 @@ namespace FarseerPhysics.Common
                             return false;
                     }
                 }
-                
+
                 // All distances are larger then _hullTolerance.
                 return true;
             }
@@ -736,12 +681,12 @@ namespace FarseerPhysics.Common
         private bool DistanceToHullAcceptable(Vertices polygon, Vector2 point, bool higherDetail)
         {
             if (polygon == null)
-                throw new ArgumentNullException("'polygon' can't be null.");
+                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.Count' can't be less then 3.");
 
-            
+
             Vector2 edgeVertex2 = polygon[polygon.Count - 1];
             Vector2 edgeVertex1;
 
@@ -786,7 +731,7 @@ namespace FarseerPhysics.Common
 
             if (!inPolygon)
             {
-                List<float> xCoords = SearchCrossingEdges(polygon, (int) point.Y);
+                List<float> xCoords = SearchCrossingEdges(polygon, (int)point.Y);
 
                 if (xCoords.Count > 0 && xCoords.Count % 2 == 0)
                 {
@@ -853,13 +798,13 @@ namespace FarseerPhysics.Common
         private List<float> SearchCrossingEdges(DetectedVertices polygon, int y)
         {
             if (polygon == null)
-                throw new ArgumentNullException("'polygon' can't be null.");
+                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
 
             List<float> result = SearchCrossingEdges((Vertices)polygon, y);
-            
+
             if (polygon.Holes != null)
             {
                 for (int i = 0; i < polygon.Holes.Count; i++)
@@ -962,7 +907,7 @@ namespace FarseerPhysics.Common
             bool edgeCoordFound = false;
             Vector2 foundEdgeCoord = Vector2.Zero;
 
-            List<float> xCoords = SearchCrossingEdges(polygon, (int) coordInsideThePolygon.Y);
+            List<float> xCoords = SearchCrossingEdges(polygon, (int)coordInsideThePolygon.Y);
 
             vertex1Index = 0;
             vertex2Index = 0;
@@ -1156,8 +1101,8 @@ namespace FarseerPhysics.Common
         {
             for (int i = 0; i < _CLOSEPIXELS_LENGTH; i++)
             {
-                int x = (int) current.X + ClosePixels[i, 0];
-                int y = (int) current.Y + ClosePixels[i, 1];
+                int x = (int)current.X + ClosePixels[i, 0];
+                int y = (int)current.Y + ClosePixels[i, 1];
 
                 if (!searchingForSolidPixel ^ IsSolid(ref x, ref y))
                 {
@@ -1175,12 +1120,12 @@ namespace FarseerPhysics.Common
         {
             for (int i = 0; i < _CLOSEPIXELS_LENGTH; i++)
             {
-                int x = (int) current.X + ClosePixels[i, 0];
-                int y = (int) current.Y + ClosePixels[i, 1];
+                int x = (int)current.X + ClosePixels[i, 0];
+                int y = (int)current.Y + ClosePixels[i, 1];
 
                 if (x >= 0 && x <= _width && y >= 0 && y <= _height)
                 {
-                    if (x == (int) near.X && y == (int) near.Y)
+                    if (x == (int)near.X && y == (int)near.Y)
                     {
                         return true;
                     }
@@ -1224,7 +1169,7 @@ namespace FarseerPhysics.Common
             bool foundTransparent = false;
             bool inPolygon = false;
 
-            for (int i = (int) start.X + (int) start.Y * _width; i <= _dataLength; i++)
+            for (int i = (int)start.X + (int)start.Y * _width; i <= _dataLength; i++)
             {
                 if (IsSolid(ref i))
                 {
@@ -1232,7 +1177,7 @@ namespace FarseerPhysics.Common
                     {
                         x = i % _width;
                         entrance = new Vector2(x, (i - x) / (float)_width);
-                        
+
                         inPolygon = false;
                         for (int polygonIdx = 0; polygonIdx < detectedPolygons.Count; polygonIdx++)
                         {
@@ -1269,8 +1214,8 @@ namespace FarseerPhysics.Common
             {
                 indexOfPixelToCheck = (indexOfFirstPixelToCheck + i) % _CLOSEPIXELS_LENGTH;
 
-                x = (int) current.X + ClosePixels[indexOfPixelToCheck, 0];
-                y = (int) current.Y + ClosePixels[indexOfPixelToCheck, 1];
+                x = (int)current.X + ClosePixels[indexOfPixelToCheck, 0];
+                y = (int)current.Y + ClosePixels[indexOfPixelToCheck, 1];
 
                 if (x >= 0 && x < _width && y >= 0 && y <= _height)
                 {
@@ -1330,10 +1275,10 @@ namespace FarseerPhysics.Common
             // . . .
 
             //Calculate in which direction the last move went and decide over the next pixel to check.
-            switch ((int) (current.X - last.X))
+            switch ((int)(current.X - last.X))
             {
                 case 1:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 1;
@@ -1347,7 +1292,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case 0:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 2;
@@ -1358,7 +1303,7 @@ namespace FarseerPhysics.Common
                     break;
 
                 case -1:
-                    switch ((int) (current.Y - last.Y))
+                    switch ((int)(current.Y - last.Y))
                     {
                         case 1:
                             return 3;

@@ -49,7 +49,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             uint[] data = new uint[alphabet.Width * alphabet.Height];
             alphabet.GetData(data);
 
-            List<Vertices> list = PolygonTools.CreatePolygon(data, alphabet.Width, alphabet.Height, 3.5f, 20, true, true);
+            List<Vertices> list = PolygonTools.CreatePolygon(data, alphabet.Width, 3.5f, 20, true, true);
 
             float yOffset = 0;
             float xOffset = -30;
