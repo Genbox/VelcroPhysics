@@ -17,6 +17,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
         public Spiderweb(World world, Vector2 position, float boxSize, int rings, int sides)
         {
+            const float breakpoint = 100;
             Vertices box = PolygonTools.CreateRectangle(boxSize, boxSize);
 
             List<List<Fixture>> ringFixtures = new List<List<Fixture>>(rings);
@@ -45,6 +46,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                     DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prev.Body, fix.Body, Vector2.Zero, Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
+                    dj.Breakpoint = breakpoint;
 
                     prev = fix;
                     fixtures.Add(fix);
@@ -54,6 +56,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, fixtures[0].Body, fixtures[fixtures.Count - 1].Body, Vector2.Zero, Vector2.Zero);
                 djEnd.Frequency = 4.0f;
                 djEnd.DampingRatio = 0.5f;
+                djEnd.Breakpoint = breakpoint;
 
                 ringFixtures.Add(fixtures);
             }
@@ -70,6 +73,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 FixedDistanceJoint fdj = JointFactory.CreateFixedDistanceJoint(world, lastRingFixtures[j].Body, Vector2.Zero, lastRing[j]);
                 fdj.Frequency = 4.0f;
                 fdj.DampingRatio = 0.5f;
+                fdj.Breakpoint = breakpoint;
             }
 
             //Interconnect the rings
