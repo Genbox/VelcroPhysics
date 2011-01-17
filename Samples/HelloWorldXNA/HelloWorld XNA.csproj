@@ -128,8 +128,9 @@
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HelloWorld XNAContent\HelloWorld XNAContent.contentproj">
-      <Name>HelloWorld_XNAContent</Name>
+    <ProjectReference Include="Content\HelloWorld XNA Content.contentproj">
+      <Project>{1999498C-698A-41C7-8C90-DD4D3B353D5B}</Project>
+      <Name>HelloWorld XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
