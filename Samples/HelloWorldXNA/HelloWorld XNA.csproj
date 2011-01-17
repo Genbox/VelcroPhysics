@@ -120,11 +120,11 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Branches\XNA\Farseer Physics XNA.csproj">
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA.csproj">
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics XNA</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
     </ProjectReference>
