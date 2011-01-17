@@ -382,7 +382,12 @@ namespace FarseerPhysics.Common
                 };
 
             List<DetectedVertices> detectedVerticesList = tc.DetectVertices();
-            List<Vertices> result = new List<Vertices>(detectedVerticesList);
+            List<Vertices> result = new List<Vertices>();
+
+            for (int i = 0; i < detectedVerticesList.Count; i++)
+            {
+                result.Add(detectedVerticesList[i]);
+            }
 
             return result;
         }
@@ -689,7 +694,10 @@ namespace FarseerPhysics.Common
                         }
                     }
                     else
-                        Debug.WriteLineIf(xCoords.Count % 2 == 0, "SearchCrossingEdges() % 2 != 0");
+                    {
+                        if (xCoords.Count % 2 == 0)
+                            Debug.WriteLine("SearchCrossingEdges() % 2 != 0");
+                    }
                 }
             }
 
