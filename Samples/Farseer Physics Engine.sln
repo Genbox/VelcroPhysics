@@ -31,9 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamples Silverlight",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView Silverlight", "..\DebugViews\DebugViewSilverlight\DebugView Silverlight.csproj", "{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA", "HelloWorld XNA\HelloWorld XNA\HelloWorld XNA.csproj", "{6AC89BBA-31DB-462D-ACD0-3E828594939E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA", "HelloWorldXNA\HelloWorld XNA.csproj", "{6AC89BBA-31DB-462D-ACD0-3E828594939E}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "HelloWorld XNAContent", "HelloWorld XNA\HelloWorld XNAContent\HelloWorld XNAContent.contentproj", "{1999498C-698A-41C7-8C90-DD4D3B353D5B}"
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "HelloWorld XNA Content", "HelloWorldXNA\Content\HelloWorld XNA Content.contentproj", "{1999498C-698A-41C7-8C90-DD4D3B353D5B}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -86,12 +86,12 @@ Global
 		SccProjectUniqueName15 = ..\\DebugViews\\DebugViewSilverlight\\DebugView\u0020Silverlight.csproj
 		SccProjectName15 = ../DebugViews/DebugViewSilverlight
 		SccLocalPath15 = ..\\DebugViews\\DebugViewSilverlight
-		SccProjectUniqueName16 = HelloWorld\u0020XNA\\HelloWorld\u0020XNA\\HelloWorld\u0020XNA.csproj
-		SccProjectName16 = HelloWorld\u0020XNA/HelloWorld\u0020XNA
-		SccLocalPath16 = HelloWorld\u0020XNA\\HelloWorld\u0020XNA
-		SccProjectUniqueName17 = HelloWorld\u0020XNA\\HelloWorld\u0020XNAContent\\HelloWorld\u0020XNAContent.contentproj
-		SccProjectName17 = HelloWorld\u0020XNA/HelloWorld\u0020XNAContent
-		SccLocalPath17 = HelloWorld\u0020XNA\\HelloWorld\u0020XNAContent
+		SccProjectUniqueName16 = HelloWorldXNA\\HelloWorld\u0020XNA.csproj
+		SccProjectName16 = HelloWorldXNA
+		SccLocalPath16 = HelloWorldXNA
+		SccProjectUniqueName17 = HelloWorldXNA\\Content\\HelloWorld\u0020XNA\u0020Content.contentproj
+		SccProjectName17 = HelloWorldXNA/Content
+		SccLocalPath17 = HelloWorldXNA\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
