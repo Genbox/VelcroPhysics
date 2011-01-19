@@ -157,6 +157,8 @@ namespace FarseerPhysics.Dynamics
         /// Flag that clear the forces after each time step.
         /// </summary>
         ClearForces = (1 << 2),
+
+        SubStepping = (1 << 4),
     }
 
     /// <summary>
@@ -225,6 +227,11 @@ namespace FarseerPhysics.Dynamics
 #if (!SILVERLIGHT)
         private Stopwatch _watch = new Stopwatch();
 #endif
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="World"/> class.
+        /// </summary>
+        public World() : this(Vector2.Zero) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
@@ -337,7 +344,21 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Enable/disable single stepped continuous physics. For testing.
         /// </summary>
-        public bool EnableSubStepping { get; set; }
+        public bool EnableSubStepping
+        {
+            set
+            {
+                if (value)
+                {
+                    Flags |= WorldFlags.SubStepping;
+                }
+                else
+                {
+                    Flags &= ~WorldFlags.SubStepping;
+                }
+            }
+            get { return (Flags & WorldFlags.SubStepping) == WorldFlags.SubStepping; }
+        }
 
         /// <summary>
         /// Create a rigid body.
