@@ -267,7 +267,7 @@
     <Compile Include="..\..\sourcefiles\common\texturetools\MarchingSquares.cs">
       <Link>Common\TextureTools\MarchingSquares.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\common\texturetools\TextureConverter.cs">
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
       <Link>Common\TextureTools\TextureConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Vector2.cs">
