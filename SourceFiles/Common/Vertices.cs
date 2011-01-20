@@ -239,36 +239,35 @@ namespace FarseerPhysics.Common
 
         /// <summary>
         /// Assuming the polygon is simple; determines whether the polygon is convex.
+        /// NOTE: It will also return false if the input contains colinear edges.
         /// </summary>
         /// <returns>
         /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
         /// </returns>
         public bool IsConvex()
         {
-            bool isPositive = false;
-
+            // Ensure the polygon is convex and the interior
+            // is to the left of each edge.
             for (int i = 0; i < Count; ++i)
             {
-                int lower = (i == 0) ? (Count - 1) : (i - 1);
-                int middle = i;
-                int upper = (i == Count - 1) ? (0) : (i + 1);
+                int i1 = i;
+                int i2 = i + 1 < Count ? i + 1 : 0;
+                Vector2 edge = this[i2] - this[i1];
 
-                float dx0 = this[middle].X - this[lower].X;
-                float dy0 = this[middle].Y - this[lower].Y;
-                float dx1 = this[upper].X - this[middle].X;
-                float dy1 = this[upper].Y - this[middle].Y;
+                for (int j = 0; j < Count; ++j)
+                {
+                    // Don't check vertices on the current edge.
+                    if (j == i1 || j == i2)
+                    {
+                        continue;
+                    }
 
-                float cross = dx0*dy1 - dx1*dy0;
-                // Cross product should have same sign
-                // for each vertex if poly is convex.
-                bool newIsP = (cross >= 0) ? true : false;
-                if (i == 0)
-                {
-                    isPositive = newIsP;
-                }
-                else if (isPositive != newIsP)
-                {
-                    return false;
+                    Vector2 r = this[j] - this[i1];
+
+                    float s = edge.X * r.Y - edge.Y * r.X;
+
+                    if (s <= 0.0f)
+                        return false;
                 }
             }
             return true;

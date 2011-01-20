@@ -304,8 +304,11 @@
     <Compile Include="..\..\SourceFiles\Common\Serialization.cs">
       <Link>Common\Serialization.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\common\TextureConverter.cs">
-      <Link>Common\TextureConverter.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\MarchingSquares.cs">
+      <Link>Common\TextureTools\MarchingSquares.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
+      <Link>Common\TextureTools\TextureConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>

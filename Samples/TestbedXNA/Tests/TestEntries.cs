@@ -92,6 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
                 new TestEntry {Name = "Clone Test", CreateFcn = CloneTest.Create},
                 new TestEntry {Name = "Serialization Test", CreateFcn = SerilizationTest.Create},
+                new TestEntry {Name = "Marching squares test", CreateFcn = MarchingSquaresTest.Create},
 
                 // Forces tests
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
