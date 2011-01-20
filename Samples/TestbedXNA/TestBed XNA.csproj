@@ -123,7 +123,7 @@
     <Compile Include="Tests\CirclePenetrationTest.cs" />
     <Compile Include="Tests\CloneTest.cs" />
     <Compile Include="Tests\MarchingSquaresTest.cs" />
-    <Compile Include="Tests\SerilizationTest.cs" />
+    <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmark.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
