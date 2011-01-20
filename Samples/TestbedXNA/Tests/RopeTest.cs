@@ -125,6 +125,8 @@ namespace FarseerPhysics.TestBed.Tests
                     World.AddJoint(_rj);
                 }
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

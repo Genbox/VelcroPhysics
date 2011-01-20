@@ -54,6 +54,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _linearImpulse;
         private Mat22 _linearMass;
 
+        internal FrictionJoint() { JointType = JointType.Friction; }
+
         public FrictionJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {

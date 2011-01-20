@@ -68,6 +68,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _s2;
         private float _upperLimit;
 
+        internal LineJoint() { JointType = JointType.Line; }
+
         /// <summary>
         /// Initialize the bodies, anchors, axis, and reference angle using the local
         /// anchor and world axis.

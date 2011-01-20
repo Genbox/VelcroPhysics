@@ -58,6 +58,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _tmpVector1, _tmpVector2;
         private float _upperAngle;
 
+        internal RevoluteJoint() { JointType = JointType.Revolute; }
+
         /// <summary>
         /// Initialize the bodies and local anchor.
         /// This requires defining an

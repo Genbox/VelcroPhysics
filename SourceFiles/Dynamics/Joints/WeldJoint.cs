@@ -51,10 +51,11 @@ namespace FarseerPhysics.Dynamics.Joints
     public class WeldJoint : Joint
     {
         public Vector2 LocalAnchorA;
-
         public Vector2 LocalAnchorB;
         private Vector3 _impulse;
         private Mat33 _mass;
+
+        internal WeldJoint() { JointType = JointType.Weld; }
 
         /// <summary>
         /// You need to specify a local anchor point

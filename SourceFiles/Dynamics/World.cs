@@ -1444,6 +1444,8 @@ namespace FarseerPhysics.Dynamics
             {
                 RemoveBreakableBody(BreakableBodyList[i]);
             }
+
+            ProcessChanges();
         }
     }
 }

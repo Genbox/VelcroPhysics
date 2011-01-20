@@ -84,7 +84,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
         {
-            return Vector2.Dot(LinearA, x1) + AngularA*a1 + Vector2.Dot(LinearB, x2) + AngularB*a2;
+            return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
         }
     }
 
@@ -126,8 +126,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         public float Breakpoint = float.MaxValue;
 
-        internal JointEdge EdgeA;
-        internal JointEdge EdgeB;
+        internal JointEdge EdgeA = new JointEdge();
+        internal JointEdge EdgeB = new JointEdge();
         public bool Enabled = true;
         protected float InvIA;
         protected float InvIB;
@@ -136,14 +136,14 @@ namespace FarseerPhysics.Dynamics.Joints
         internal bool IslandFlag;
         protected Vector2 LocalCenterA, LocalCenterB;
 
+        protected Joint() { }
+
         protected Joint(Body body, Body bodyB)
         {
             Debug.Assert(body != bodyB);
 
             BodyA = body;
-            EdgeA = new JointEdge();
             BodyB = bodyB;
-            EdgeB = new JointEdge();
 
             //Connected bodies should not collide by default
             CollideConnected = false;
@@ -158,8 +158,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
             //Connected bodies should not collide by default
             CollideConnected = false;
-
-            EdgeA = new JointEdge();
         }
 
         /// <summary>
