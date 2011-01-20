@@ -4,13 +4,12 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SerilizationTest : Test
+    public class SerializationTest : Test
     {
-        private SerilizationTest()
+        private SerializationTest()
         {
             FixtureFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
 
@@ -59,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new SerilizationTest();
+            return new SerializationTest();
         }
     }
 }
