@@ -24,7 +24,9 @@
 */
 
 using System;
+using System.IO;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
@@ -148,6 +150,23 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Keyboard(KeyboardManager keyboardManager)
         {
+            if (keyboardManager.IsNewKeyPress(Keys.F11))
+            {
+                using (FileStream fs = new FileStream("out.xml", FileMode.Create))
+                {
+                    WorldXmlSerializer serializer = new WorldXmlSerializer();
+                    serializer.Serialize(World, fs);
+                }
+            }
+
+            if (keyboardManager.IsNewKeyPress(Keys.F12))
+            {
+                using (FileStream fs = new FileStream("out.xml", FileMode.Open))
+                {
+                    WorldXmlDeserializer deserializer = new WorldXmlDeserializer();
+                    deserializer.Deserialize(World, fs);
+                }
+            }
         }
 
         public virtual void Gamepad(GamePadState state, GamePadState oldState)

@@ -80,6 +80,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -299,6 +300,9 @@
     </Compile>
     <Compile Include="..\..\sourcefiles\common\PolygonTools.cs">
       <Link>Common\PolygonTools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\Serialization.cs">
+      <Link>Common\Serialization.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\common\TextureConverter.cs">
       <Link>Common\TextureConverter.cs</Link>

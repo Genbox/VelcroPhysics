@@ -123,6 +123,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _s1, _s2;
         private float _upperTranslation;
 
+        internal PrismaticJoint() { JointType = JointType.Prismatic; }
+
         /// <summary>
         /// This requires defining a line of
         /// motion using an axis and an anchor point. The definition uses local
