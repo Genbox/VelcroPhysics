@@ -264,8 +264,11 @@
     <Compile Include="..\..\SourceFiles\Common\PolygonTools.cs">
       <Link>Common\PolygonTools.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Common\TextureConverter.cs">
-      <Link>Common\TextureConverter.cs</Link>
+    <Compile Include="..\..\sourcefiles\common\texturetools\MarchingSquares.cs">
+      <Link>Common\TextureTools\MarchingSquares.cs</Link>
+    </Compile>
+    <Compile Include="..\..\sourcefiles\common\texturetools\TextureConverter.cs">
+      <Link>Common\TextureTools\TextureConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\Vector2.cs">
       <Link>Common\Vector2.cs</Link>

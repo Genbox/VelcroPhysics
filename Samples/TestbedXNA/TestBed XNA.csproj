@@ -122,6 +122,7 @@
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
     <Compile Include="Tests\CloneTest.cs" />
+    <Compile Include="Tests\MarchingSquaresTest.cs" />
     <Compile Include="Tests\SerilizationTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmark.cs" />
