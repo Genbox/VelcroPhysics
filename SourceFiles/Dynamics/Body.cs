@@ -74,6 +74,7 @@ namespace FarseerPhysics.Dynamics
 
     public class Body : IDisposable
     {
+        private static int _bodyIdCounter;
         internal float AngularVelocityInternal;
         public ControllerFilter ControllerFilter = new ControllerFilter();
         internal BodyFlags Flags;
@@ -90,8 +91,9 @@ namespace FarseerPhysics.Dynamics
         private BodyType _bodyType;
         private float _inertia;
         private float _mass;
+        public int BodyId;
 
-        private Body()
+        internal Body()
         {
             FixtureList = new List<Fixture>(32);
         }
@@ -104,6 +106,7 @@ namespace FarseerPhysics.Dynamics
         public Body(World world, object userData)
         {
             FixtureList = new List<Fixture>(32);
+            BodyId = _bodyIdCounter++;
 
             World = world;
             UserData = userData;

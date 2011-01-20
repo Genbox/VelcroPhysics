@@ -63,7 +63,7 @@ namespace FarseerPhysics.Collision.Shapes
             Vertices = new Vertices();
         }
 
-        private PolygonShape()
+        internal PolygonShape()
             : base(0)
         {
             ShapeType = ShapeType.Polygon;

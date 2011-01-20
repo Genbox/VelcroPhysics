@@ -89,12 +89,10 @@ namespace FarseerPhysics.Dynamics
         private Category _collisionCategories;
         private short _collisionGroup;
         private Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
-        private Fixture _fixture;
+        private Fixture Fixture { get; set; }
 
-        public CollisionFilter(Fixture fixture)
+        internal CollisionFilter()
         {
-            _fixture = fixture;
-
             if (Settings.UseFPECollisionCategories)
                 _collisionCategories = Category.All;
             else
@@ -102,6 +100,12 @@ namespace FarseerPhysics.Dynamics
 
             _collidesWith = Category.All;
             _collisionGroup = 0;
+        }
+
+        public CollisionFilter(Fixture fixture)
+            : this()
+        {
+            Fixture = fixture;
         }
 
         /// <summary>
@@ -119,7 +123,7 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (_fixture.Body == null)
+                if (Fixture.Body == null)
                     return;
 
                 if (_collisionGroup == value)
@@ -144,7 +148,7 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (_fixture.Body == null)
+                if (Fixture.Body == null)
                     return;
 
                 if (_collidesWith == value)
@@ -170,7 +174,7 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (_fixture.Body == null)
+                if (Fixture.Body == null)
                     return;
 
                 if (_collisionCategories == value)
@@ -291,13 +295,13 @@ namespace FarseerPhysics.Dynamics
         private void FilterChanged()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = _fixture.Body.ContactList;
+            ContactEdge edge = Fixture.Body.ContactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;
                 Fixture fixtureA = contact.FixtureA;
                 Fixture fixtureB = contact.FixtureB;
-                if (fixtureA == _fixture || fixtureB == _fixture)
+                if (fixtureA == Fixture || fixtureB == Fixture)
                 {
                     contact.FlagForFiltering();
                 }
@@ -308,7 +312,7 @@ namespace FarseerPhysics.Dynamics
 
         public CollisionFilter Clone()
         {
-            CollisionFilter filter = new CollisionFilter(_fixture);
+            CollisionFilter filter = new CollisionFilter(Fixture);
             filter._collidesWith = _collidesWith;
             filter._collisionCategories = _collisionCategories;
             filter._collisionGroup = _collisionGroup;
@@ -339,7 +343,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public BeforeCollisionEventHandler BeforeCollision;
 
-        public CollisionFilter CollisionFilter { get; private set; }
+        public CollisionFilter CollisionFilter { get; internal set; }
 
         /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
@@ -356,7 +360,7 @@ namespace FarseerPhysics.Dynamics
         public FixtureProxy[] Proxies;
         public int ProxyCount;
 
-        private Fixture()
+        internal Fixture()
         {
         }
 
@@ -439,7 +443,7 @@ namespace FarseerPhysics.Dynamics
         /// number of vertices because this will crash some collision caching mechanisms.
         /// </summary>
         /// <value>The shape.</value>
-        public Shape Shape { get; private set; }
+        public Shape Shape { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this fixture is a sensor.
@@ -535,7 +539,7 @@ namespace FarseerPhysics.Dynamics
         {
             Fixture fixture = new Fixture();
             fixture.Body = Body.Clone();
-            
+
             if (Settings.ConserveMemory)
                 fixture.Shape = Shape;
             else

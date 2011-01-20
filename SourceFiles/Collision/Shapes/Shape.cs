@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -31,7 +32,7 @@ namespace FarseerPhysics.Collision.Shapes
     /// <summary>
     /// This holds the mass data computed for a shape.
     /// </summary>
-    public struct MassData
+    public struct MassData : IEquatable<MassData>
     {
         /// <summary>
         /// The area of the shape
@@ -52,6 +53,40 @@ namespace FarseerPhysics.Collision.Shapes
         /// The mass of the shape, usually in kilograms.
         /// </summary>
         public float Mass;
+
+        public static bool operator ==(MassData left, MassData right)
+        {
+            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia);
+        }
+
+        public static bool operator !=(MassData left, MassData right)
+        {
+            return !(left == right);
+        }
+
+        public bool Equals(MassData other)
+        {
+            return this == other;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof (MassData)) return false;
+            return Equals((MassData) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = Area.GetHashCode();
+                result = (result * 397) ^ Centroid.GetHashCode();
+                result = (result * 397) ^ Inertia.GetHashCode();
+                result = (result * 397) ^ Mass.GetHashCode();
+                return result;
+            }
+        }
     }
 
     public enum ShapeType
@@ -69,21 +104,25 @@ namespace FarseerPhysics.Collision.Shapes
     /// Shapes used for simulation in World are created automatically when a Fixture
     /// is created. Shapes may encapsulate a one or more child shapes.
     /// </summary>
-    public abstract class Shape
+    public abstract class Shape 
     {
         public MassData MassData;
+        public int ShapeId;
 
         internal float _radius;
         internal float _density;
+
+        private static int _shapeIdCounter;
 
         protected Shape(float density)
         {
             _density = density;
             ShapeType = ShapeType.Unknown;
+            ShapeId = _shapeIdCounter++;
         }
 
         /// <summary>
-        /// Get the type of this shape. You can use this to down cast to the concrete shape.
+        /// Get the type of this shape.
         /// </summary>
         /// <value>The type of the shape.</value>
         public ShapeType ShapeType { get; internal set; }

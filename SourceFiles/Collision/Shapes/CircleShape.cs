@@ -42,7 +42,7 @@ namespace FarseerPhysics.Collision.Shapes
             ComputeProperties();
         }
 
-        private CircleShape()
+        internal CircleShape()
             : base(0)
         {
             ShapeType = ShapeType.Circle;
