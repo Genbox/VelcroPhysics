@@ -12,13 +12,40 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
+    public static class WorldSerializer
+    {
+        public static void Serialize(World world, string filename)
+        {
+            using (FileStream fs = new FileStream(filename, FileMode.Create))
+            {
+                WorldXmlSerializer.Serialize(world, fs);
+            }
+        }
+
+        public static void Deserialize(World world, string filename)
+        {
+            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            {
+                WorldXmlDeserializer.Deserialize(world, fs);
+            }
+        }
+
+        public static World Deserialize(string filename)
+        {
+            using (FileStream fs = new FileStream(filename, FileMode.Open))
+            {
+                return WorldXmlDeserializer.Deserialize(fs);
+            }
+        }
+    }
+
     ///<summary>
     ///</summary>
-    public class WorldXmlSerializer
+    public static class WorldXmlSerializer
     {
-        private XmlTextWriter _writer;
+        private static XmlTextWriter _writer;
 
-        private void SerializeShape(Shape shape)
+        private static void SerializeShape(Shape shape)
         {
             _writer.WriteStartElement("Shape");
             _writer.WriteAttributeString("Type", shape.ShapeType.ToString());
@@ -60,10 +87,10 @@ namespace FarseerPhysics.Common
             WriteEndElement();
         }
 
-        private int _shapeCounter;
-        private int _fixtureCounter;
+        private static int _shapeCounter;
+        private static int _fixtureCounter;
 
-        private void SerializeFixture(Fixture fixture)
+        private static void SerializeFixture(Fixture fixture)
         {
             _writer.WriteStartElement("Fixture");
             _writer.WriteElementString("Shape", _shapeCounter++.ToString());
@@ -83,7 +110,7 @@ namespace FarseerPhysics.Common
             WriteEndElement();
         }
 
-        private void SerializeBody(Body body)
+        private static void SerializeBody(Body body)
         {
             _writer.WriteStartElement("Body");
             _writer.WriteAttributeString("Type", body.BodyType.ToString());
@@ -118,8 +145,11 @@ namespace FarseerPhysics.Common
             WriteEndElement();
         }
 
-        private void SerializeJoint(Joint joint)
+        private static void SerializeJoint(Joint joint)
         {
+            if (joint.IsFixedType())
+                return;
+
             _writer.WriteStartElement("Joint");
 
             _writer.WriteAttributeString("Type", joint.JointType.ToString());
@@ -237,12 +267,12 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
         }
 
-        private void WriteEndElement()
+        private static void WriteEndElement()
         {
             _writer.WriteEndElement();
         }
 
-        private void WriteSimpleType(Type type, object val)
+        private static void WriteSimpleType(Type type, object val)
         {
             DataContractSerializer serializer = new DataContractSerializer(type);
             //serializer.WriteObject(_writer, val);
@@ -260,7 +290,7 @@ namespace FarseerPhysics.Common
             _writer.WriteRaw(cleaned);
         }
 
-        private void WriteDynamicType(Type type, object val)
+        private static void WriteDynamicType(Type type, object val)
         {
             _writer.WriteElementString("Type", type.FullName);
 
@@ -272,27 +302,27 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
         }
 
-        private void WriteElement(string name, Vector2 vec)
+        private static void WriteElement(string name, Vector2 vec)
         {
             _writer.WriteElementString(name, vec.X + " " + vec.Y);
         }
 
-        private void WriteElement(string name, int val)
+        private static void WriteElement(string name, int val)
         {
             _writer.WriteElementString(name, val.ToString());
         }
 
-        private void WriteElement(string name, bool val)
+        private static void WriteElement(string name, bool val)
         {
             _writer.WriteElementString(name, val.ToString());
         }
 
-        void WriteElement(string name, float val)
+        private static void WriteElement(string name, float val)
         {
             _writer.WriteElementString(name, val.ToString());
         }
 
-        public void Serialize(World world, Stream stream)
+        public static void Serialize(World world, Stream stream)
         {
             StringWriter sw = new StringWriter();
             _writer = new XmlTextWriter(sw);
@@ -374,7 +404,7 @@ namespace FarseerPhysics.Common
         }
 
         //Part of hack
-        private string FormatXml(string sUnformattedXml)
+        private static string FormatXml(string sUnformattedXml)
         {
             //load unformatted xml into a dom
             XmlDocument xd = new XmlDocument();
@@ -411,7 +441,7 @@ namespace FarseerPhysics.Common
             return sb.ToString();
         }
 
-        private int FindBodyIndex(Body body)
+        private static int FindBodyIndex(Body body)
         {
             for (int i = 0; i < bodyId.Count; i++)
             {
@@ -422,22 +452,28 @@ namespace FarseerPhysics.Common
             return -1;
         }
 
-        private HashSet<int> shapeId = new HashSet<int>();
-        private HashSet<int> fixtureId = new HashSet<int>();
-        private List<int> bodyId = new List<int>();
+        private static HashSet<int> shapeId = new HashSet<int>();
+        private static HashSet<int> fixtureId = new HashSet<int>();
+        private static List<int> bodyId = new List<int>();
     }
 
-    public class WorldXmlDeserializer
+    public static class WorldXmlDeserializer
     {
-        private List<Body> _bodies = new List<Body>();
-        private List<Fixture> _fixtures = new List<Fixture>();
-        private List<Joint> _joints = new List<Joint>();
-        private List<Shape> _shapes = new List<Shape>();
+        private static List<Body> _bodies = new List<Body>();
+        private static List<Fixture> _fixtures = new List<Fixture>();
+        private static List<Joint> _joints = new List<Joint>();
+        private static List<Shape> _shapes = new List<Shape>();
 
-        public void Deserialize(World world, Stream stream)
+        public static World Deserialize(Stream stream)
+        {
+            World world = new World();
+            Deserialize(world, stream);
+            return world;
+        }
+
+        public static void Deserialize(World world, Stream stream)
         {
             world.Clear();
-
             XMLFragmentElement root = XMLFragmentParser.LoadFromStream(stream);
 
             if (root.Name.ToLower() != "world")
@@ -934,13 +970,13 @@ namespace FarseerPhysics.Common
             }
         }
 
-        private Vector2 ReadVector(XMLFragmentElement node)
+        private static Vector2 ReadVector(XMLFragmentElement node)
         {
             string[] values = node.Value.Split(' ');
             return new Vector2(float.Parse(values[0]), float.Parse(values[1]));
         }
 
-        private object ReadSimpleType(XMLFragmentElement node, Type type, bool outer)
+        private static object ReadSimpleType(XMLFragmentElement node, Type type, bool outer)
         {
             if (type == null)
                 return ReadSimpleType(node.Elements[1], Type.GetType(node.Elements[0].Value), outer);
