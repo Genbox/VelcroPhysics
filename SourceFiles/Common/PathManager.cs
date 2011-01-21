@@ -35,17 +35,9 @@ namespace FarseerPhysics.Factories
         /// <param name="subdivisions">The subdivisions.</param>
         public static void ConvertPathToEdges(Path path, Body body, int subdivisions)
         {
-            List<Vector2> verts = path.GetVertices(subdivisions);
-
-            for (int i = 1; i < verts.Count; i++)
-            {
-                body.CreateFixture(new EdgeShape(verts[i], verts[i - 1]));
-            }
-
-            if (path.Closed)
-            {
-                body.CreateFixture(new EdgeShape(verts[verts.Count - 1], verts[0]));
-            }
+            Vertices verts = path.GetVertices(subdivisions);
+            LoopShape loop = new LoopShape(verts);
+            body.CreateFixture(loop);
         }
 
         /// <summary>

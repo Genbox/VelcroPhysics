@@ -35,36 +35,36 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(edgeShape, userData);
         }
 
-        public static Fixture CreateLoopShape(World world, Vertices vertices, float density)
+        public static Fixture CreateLoopShape(World world, Vertices vertices)
         {
-            return CreateLoopShape(world, vertices, density, null);
+            return CreateLoopShape(world, vertices, null);
         }
 
-        public static Fixture CreateLoopShape(World world, Vertices vertices, float density, Object userData)
+        public static Fixture CreateLoopShape(World world, Vertices vertices, Object userData)
         {
-            return CreateLoopShape(world, vertices, density, Vector2.Zero, userData);
+            return CreateLoopShape(world, vertices, Vector2.Zero, userData);
         }
 
-        public static Fixture CreateLoopShape(World world, Vertices vertices, float density, Vector2 position)
+        public static Fixture CreateLoopShape(World world, Vertices vertices, Vector2 position)
         {
-            return CreateLoopShape(world, vertices, density, position, null);
+            return CreateLoopShape(world, vertices, position, null);
         }
 
-        public static Fixture CreateLoopShape(World world, Vertices vertices, float density, Vector2 position,
+        public static Fixture CreateLoopShape(World world, Vertices vertices, Vector2 position,
                                               Object userData)
         {
             Body body = BodyFactory.CreateBody(world, position);
-            return CreateLoopShape(vertices, density, body, userData);
+            return CreateLoopShape(vertices, body, userData);
         }
 
-        public static Fixture CreateLoopShape(Vertices vertices, float density, Body body)
+        public static Fixture CreateLoopShape(Vertices vertices, Body body)
         {
-            return CreateLoopShape(vertices, density, body, null);
+            return CreateLoopShape(vertices, body, null);
         }
 
-        public static Fixture CreateLoopShape(Vertices vertices, float density, Body body, Object userData)
+        public static Fixture CreateLoopShape(Vertices vertices, Body body, Object userData)
         {
-            LoopShape shape = new LoopShape(vertices, density);
+            LoopShape shape = new LoopShape(vertices);
             return body.CreateFixture(shape, userData);
         }
 

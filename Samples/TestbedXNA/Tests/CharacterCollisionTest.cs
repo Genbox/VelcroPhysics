@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
-            LoopShape loopShape = new LoopShape(vertices, 0);
+            LoopShape loopShape = new LoopShape(vertices);
             ground.Body.CreateFixture(loopShape);
 
             // Edge loop.
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(-6.0f, 2.0f));
             vertices.Add(new Vector2(-6.0f, 0.0f));
 
-            FixtureFactory.CreateLoopShape(World, vertices, 0, new Vector2(-10, 4));
+            FixtureFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
 
             // Square character
             Fixture squareCharacter = FixtureFactory.CreateRectangle(World, 1, 1, 20);
