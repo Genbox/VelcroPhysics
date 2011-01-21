@@ -35,19 +35,11 @@ namespace FarseerPhysics.TestBed.Tests
                 StepCount = 0;
                 if (save)
                 {
-                    using (FileStream fs = new FileStream("out.xml", FileMode.Create))
-                    {
-                        WorldXmlSerializer serializer = new WorldXmlSerializer();
-                        serializer.Serialize(World, fs);
-                    }
+                    WorldSerializer.Serialize(World, "out.xml");
                 }
                 else
                 {
-                    using (FileStream fs = new FileStream("out.xml", FileMode.Open))
-                    {
-                        WorldXmlDeserializer deserializer = new WorldXmlDeserializer();
-                        deserializer.Deserialize(World, fs);
-                    }
+                    WorldSerializer.Deserialize(World, "out.xml");
                 }
 
                 save = !save;

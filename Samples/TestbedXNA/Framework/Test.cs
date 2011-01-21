@@ -152,20 +152,12 @@ namespace FarseerPhysics.TestBed.Framework
         {
             if (keyboardManager.IsNewKeyPress(Keys.F11))
             {
-                using (FileStream fs = new FileStream("out.xml", FileMode.Create))
-                {
-                    WorldXmlSerializer serializer = new WorldXmlSerializer();
-                    serializer.Serialize(World, fs);
-                }
+                WorldSerializer.Serialize(World, "out.xml");
             }
 
             if (keyboardManager.IsNewKeyPress(Keys.F12))
             {
-                using (FileStream fs = new FileStream("out.xml", FileMode.Open))
-                {
-                    WorldXmlDeserializer deserializer = new WorldXmlDeserializer();
-                    deserializer.Deserialize(World, fs);
-                }
+                WorldSerializer.Deserialize(World, "out.xml");
             }
         }
 
