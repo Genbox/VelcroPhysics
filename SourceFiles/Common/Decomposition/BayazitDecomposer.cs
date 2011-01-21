@@ -166,7 +166,7 @@ namespace FarseerPhysics.Common.Decomposition
             }
 
             //Remove empty vertice collections
-            for (int i = list.Count -1; i >= 0; i--)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
                 if (list[i].Count == 0)
                     list.RemoveAt(i);
@@ -203,9 +203,8 @@ namespace FarseerPhysics.Common.Decomposition
                 {
                     continue; // ignore incident edges
                 }
-                //if(QLineF(at(i), at(j)).intersect(QLineF(at(k), at(k + 1)), NULL) == QLineF::BoundedIntersection) {
-                if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices)) !=
-                    Vector2.Zero)
+                Vector2 intersectionPoint;
+                if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices), out intersectionPoint))
                 {
                     return false;
                 }
