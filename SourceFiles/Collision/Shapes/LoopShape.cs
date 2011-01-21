@@ -51,7 +51,7 @@ namespace FarseerPhysics.Collision.Shapes
             _radius = Settings.PolygonRadius;
         }
 
-        public LoopShape(Vertices vertices, float density) : base(density)
+        public LoopShape(Vertices vertices) : base(0)
         {
             ShapeType = ShapeType.Loop;
             _radius = Settings.PolygonRadius;

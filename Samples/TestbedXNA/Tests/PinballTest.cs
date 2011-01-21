@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
 
-                LoopShape loop = new LoopShape(vertices, 0);
+                LoopShape loop = new LoopShape(vertices);
                 ground.CreateFixture(loop);
             }
 
