@@ -64,8 +64,8 @@ namespace FarseerPhysics.TestBed.Tests
                 const float y = 15;
 
                 Body prevBody = ground;
-                Vertices largeBox = PolygonTools.CreateRectangle(1.5f, 1.5f);
-                Vertices smallBox = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
+                PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
 
                 for (int i = 0; i < Count; ++i)
                 {
@@ -75,8 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     if (i == Count - 1)
                     {
-                        PolygonShape shape = new PolygonShape(largeBox, 100);
-                        Fixture fixture = body.CreateFixture(shape);
+                        Fixture fixture = body.CreateFixture(largeShape);
                         fixture.Friction = 0.2f;
                         fixture.CollisionFilter.CollisionCategories = Category.Cat2;
                         fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
@@ -85,8 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                     else
                     {
-                        PolygonShape shape = new PolygonShape(smallBox, 20);
-                        Fixture fixture = body.CreateFixture(shape);
+                        Fixture fixture = body.CreateFixture(smallShape);
                         fixture.Friction = 0.2f;
                         fixture.CollisionFilter.CollisionCategories = Category.Cat1;
                         fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
