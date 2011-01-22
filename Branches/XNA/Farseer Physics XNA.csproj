@@ -80,7 +80,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>

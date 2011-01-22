@@ -167,5 +167,11 @@ namespace FarseerPhysics.Collision.Shapes
             // inertia about the local origin
             MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
+
+        public bool CompareTo(CircleShape shape)
+        {
+            return (Radius == shape.Radius &&
+                    Position == shape.Position);
+        }
     }
 }

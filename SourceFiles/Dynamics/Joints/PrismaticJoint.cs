@@ -285,6 +285,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <value>The force.</value>
         public float MaxMotorForce
         {
+            get { return _maxMotorForce; }
             set
             {
                 WakeBodies();
@@ -310,6 +311,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 _localXAxis1 = BodyA.GetLocalVector(value);
                 _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             }
+        }
+
+        public float ReferenceAngle
+        {
+            get { return _refAngle; }
+            set { _refAngle = value; }
         }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -599,7 +606,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _s2 = MathUtils.Cross(r2, _perp);
 
             Vector3 impulse;
-            Vector2 C1 = new Vector2(Vector2.Dot(_perp, d), a2 - a1 - _refAngle);
+            Vector2 C1 = new Vector2(Vector2.Dot(_perp, d), a2 - a1 - ReferenceAngle);
 
             linearError = Math.Max(linearError, Math.Abs(C1.X));
             float angularError = Math.Abs(C1.Y);

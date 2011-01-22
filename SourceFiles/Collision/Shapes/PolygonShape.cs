@@ -409,5 +409,20 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.LowerBound = lower - r;
             aabb.UpperBound = upper + r;
         }
+
+        public bool CompareTo(PolygonShape shape)
+        {
+            if (Vertices.Count != shape.Vertices.Count)
+                return false;
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                if (Vertices[i] != shape.Vertices[i])
+                    return false;
+            }
+
+            return (Radius == shape.Radius &&
+                    MassData == shape.MassData);
+        }
     }
 }

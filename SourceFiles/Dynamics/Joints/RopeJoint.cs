@@ -54,6 +54,8 @@ namespace FarseerPhysics.Dynamics.Joints
         private LimitState _state;
         private Vector2 _u;
 
+        internal RopeJoint() { JointType = JointType.Rope; }
+
         public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)
         {
@@ -157,7 +159,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 bA.AngularVelocity -= bA.InvI * MathUtils.Cross(_rA, P);
                 bB.LinearVelocity += bB.InvMass * P;
                 bB.AngularVelocity += bB.InvI * MathUtils.Cross(_rB, P);
-             }
+            }
             else
             {
                 _impulse = 0.0f;
