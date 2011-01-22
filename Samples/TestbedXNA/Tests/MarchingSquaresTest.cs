@@ -21,8 +21,7 @@ namespace FarseerPhysics.TestBed.Tests
         private float[,] _f;
         private float _gridSize = 5;
         private int _level = 2;
-        private List<List<Vertices>> _polys = new List<List<Vertices>>();
-        private GeomPolyVal[,] _ps;
+        private List<Vertices> _polys = new List<Vertices>();
         private Stopwatch _sw = new Stopwatch();
         private Texture2D _terrainTex;
         private double _time;
@@ -72,36 +71,33 @@ namespace FarseerPhysics.TestBed.Tests
             _sw.Start();
 
             _aabb = new AABB { LowerBound = new Vector2(0, 0), UpperBound = new Vector2(_terrainTex.Width, _terrainTex.Height), };
-            _polys = MarchingSquares.DetectSquares(_aabb, _gridSize, _gridSize, Eval, _level, _combine, out _ps);
+            _polys = MarchingSquares.DetectSquares(_aabb, _gridSize, _gridSize, Eval, _level, _combine);
 
             _sw.Stop();
             _time = _sw.Elapsed.TotalMilliseconds;
             _sw.Reset();
 
-            foreach (List<Vertices> list in _polys)
+            for (int i = 0; i < _polys.Count; i++)
             {
-                for (int i = 0; i < list.Count; i++)
+                Vertices poly = _polys[i];
+                poly.Translate(ref _translate);
+
+                poly.Scale(ref _scale);
+                poly.ForceCounterClockWise();
+
+                if (!poly.IsConvex())
                 {
-                    Vertices poly = list[i];
-                    poly.Translate(ref _translate);
+                    List<Vertices> verts = EarclipDecomposer.ConvexPartition(poly);
 
-                    poly.Scale(ref _scale);
-                    poly.ForceCounterClockWise();
-
-                    if (!poly.IsConvex())
+                    for (int j = 0; j < verts.Count; j++)
                     {
-                        List<Vertices> verts = BayazitDecomposer.ConvexPartition(poly);
-
-                        for (int j = 0; j < verts.Count; j++)
-                        {
-                            Vertices v = verts[j];
-                            FixtureFactory.CreatePolygon(World, v, 1);
-                        }
+                        Vertices v = verts[j];
+                        FixtureFactory.CreatePolygon(World, v, 1);
                     }
-                    else
-                    {
-                        FixtureFactory.CreatePolygon(World, poly, 1);
-                    }
+                }
+                else
+                {
+                    FixtureFactory.CreatePolygon(World, poly, 1);
                 }
             }
         }

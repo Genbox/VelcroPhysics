@@ -7,30 +7,35 @@ namespace FarseerPhysics.Common
 {
     // Ported by Matthew Bettcher
 
-    public class GeomPolyVal
-    {
-        /** Associated polygon at coordinate **/
-        /** Key of original sub-polygon **/
-        public int Key;
-        public Vertices P;
-
-        public GeomPolyVal(Vertices p, int key)
-        {
-            P = p;
-            Key = key;
-        }
-    }
-
+    /// <summary>
+    /// Given a position this delegate should return true if the given position is inside a solid area.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public delegate float Evaluate(float x, float y);
 
     public static class MarchingSquares
     {
+        internal class GeomPolyVal
+        {
+            /** Associated polygon at coordinate **/
+            /** Key of original sub-polygon **/
+            public int Key;
+            public Vertices P;
+
+            public GeomPolyVal(Vertices p, int key)
+            {
+                P = p;
+                Key = key;
+            }
+        }
+
         private static int[] _lookMarch = new[]
-                                              {
-                                                  0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B
-                                                  ,
-                                                  0x8D, 0x6D, 0xB5, 0x55
-                                              };
+        {
+            0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B,
+            0x8D, 0x6D, 0xB5, 0x55
+        };
 
         /// <summary>
         /// Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1) 
@@ -60,7 +65,7 @@ namespace FarseerPhysics.Common
             if (c == 0) return xm;
             else
             {
-                float vm = f((int)xm, (int)y);
+                float vm = f(xm, y);
                 if (v0 * vm < 0) return Xlerp(x0, xm, y, v0, vm, f, c - 1);
                 else return Xlerp(xm, x1, y, vm, v1, f, c - 1);
             }
@@ -75,30 +80,33 @@ namespace FarseerPhysics.Common
             if (c == 0) return ym;
             else
             {
-                float vm = f((int)x, (int)ym);
+                float vm = f(x, ym);
                 if (v0 * vm < 0) return Ylerp(y0, ym, x, v0, vm, f, c - 1);
                 else return Ylerp(ym, y1, x, vm, v1, f, c - 1);
             }
         }
 
-        public static List<List<Vertices>> DetectSquares(AABB domain, float cellWidth, float cellHeight, Evaluate f,
-                                                           int recursionLevels, bool combine, out GeomPolyVal[,] ps)
+        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, Evaluate f,
+                                                           int recursionLevels, bool combine)
         {
             // this is a list of all our scanline polygons for this row inside a list of of scanlines
-            List<List<Vertices>> polys = new List<List<Vertices>>();
+            List<Vertices> polys = new List<Vertices>();
 
             float domainWidth = domain.UpperBound.X - domain.LowerBound.X;
             float domainHeight = domain.UpperBound.Y - domain.LowerBound.Y;
 
-            var xn = (int)(domainWidth / cellWidth);
-            var xp = xn == (domainWidth / cellWidth);
-            var yn = (int)(domainHeight / cellHeight);
-            var yp = yn == (domainHeight / cellHeight);
+            int xn = (int)(domainWidth / cellWidth);
+            bool xp = xn == (domainWidth / cellWidth);
+            int yn = (int)(domainHeight / cellHeight);
+            bool yp = yn == (domainHeight / cellHeight);
             if (!xp) xn++;
             if (!yp) yn++;
 
-            var fs = new float[xn + 1, yn + 1];
-            ps = new GeomPolyVal[xn + 1, yn + 1];
+            float[,] fs = new float[xn + 1, yn + 1];
+
+            // ps is only needed for combining slices together and is not needed yet!
+            //ps = new GeomPolyVal[xn + 1, yn + 1];
+
             //populate shared function lookups.
             for (int x = 0; x < (xn + 1); x++)
             {
@@ -115,7 +123,7 @@ namespace FarseerPhysics.Common
                         y0 = domain.UpperBound.Y;
                     else
                         y0 = y * cellHeight + domain.LowerBound.Y;
-                    fs[x, y] = f((int)x0, (int)y0);
+                    fs[x, y] = f(x0, y0);
                 }
             }
 
@@ -133,8 +141,6 @@ namespace FarseerPhysics.Common
                 LinkedList<Vector2> scanlinePoly = new LinkedList<Vector2>();
                 LinkedListNode<Vector2> rightTopMost = null;
                 LinkedListNode<Vector2> rightBottomMost = null;
-
-                List<Vertices> scanlinePolys = new List<Vertices>();
 
                 for (int x = 0; x < xn; x++)
                 {
@@ -160,7 +166,7 @@ namespace FarseerPhysics.Common
                             case 1:
                                 // scanline polygon finisher
                                 rightBottomMost.Value = p[0];
-                                scanlinePolys.Add(new Vertices(scanlinePoly.ToList()));
+                                polys.Add(new Vertices(scanlinePoly.ToList()));
                                 break;
                             case 2:
                                 // this is a starter key
@@ -208,13 +214,13 @@ namespace FarseerPhysics.Common
                             case 8:
                                 // scanline polygon finisher
                                 rightTopMost.Value = p[1];
-                                scanlinePolys.Add(new Vertices(scanlinePoly.ToList()));
+                                polys.Add(new Vertices(scanlinePoly.ToList()));
                                 break;
                             case 9:
                                 // scanline polygon finisher
                                 rightTopMost.Value = p[1];
                                 rightBottomMost.Value = p[2];
-                                scanlinePolys.Add(new Vertices(scanlinePoly.ToList()));
+                                polys.Add(new Vertices(scanlinePoly.ToList()));
                                 break;
                             case 10:
                                 // this is the ambiguous case...
@@ -254,23 +260,17 @@ namespace FarseerPhysics.Common
                     {
                         if (p.Count > 0)
                         {
-                            List<Vertices> list = new List<Vertices>();
-                            list.Add(p);
-                            polys.Add(list);
+                            polys.Add(p);
                         }
                     }
-                    ps[x, y] = new GeomPolyVal(p, key);
+                    // again ps will only be used when the combine code is finished
+                    //ps[x, y] = new GeomPolyVal(p, key);
                 }
-
-                // all polygons for this scanline are done
-                // add to main list
-                polys.Add(scanlinePolys);
             }
 
             return polys;
         }
 
-        // TODO - is fs supposed to be a 2 dimensional array?
         /// <summary>
         /// Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1)
         /// using the function f for recursive interpolation, given the look-up table 'fs' of
@@ -302,7 +302,7 @@ namespace FarseerPhysics.Common
             float v3 = fs[ax, ay + 1];
             if (v3 < 0) key |= 1;
 
-            var val = _lookMarch[key];
+            int val = _lookMarch[key];
             if (val != 0)
             {
                 int pi = 0; // null?
@@ -332,10 +332,6 @@ namespace FarseerPhysics.Common
                             poly.Add(p);
                             pi = poly.IndexOf(p);
                         }
-                        // our length is automatic because we use a list
-                        // but in the future a speed improvement might be to use a pool
-                        // of fixed sized polygons to find squares?
-                        //poly.length++;
                     }
                 }
                 // what could possibly need simplified here?
