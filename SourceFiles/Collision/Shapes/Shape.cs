@@ -198,5 +198,16 @@ namespace FarseerPhysics.Collision.Shapes
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
         public abstract void ComputeProperties();
+
+        public bool CompareTo(Shape shape)
+        {
+            if (shape is PolygonShape && this is PolygonShape)
+                return ((PolygonShape)this).CompareTo((PolygonShape)shape);
+            
+            if (shape is CircleShape && this is CircleShape)
+                return ((CircleShape)this).CompareTo((CircleShape)shape);
+
+            return false;
+        }
     }
 }

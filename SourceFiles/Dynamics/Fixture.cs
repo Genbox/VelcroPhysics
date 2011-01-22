@@ -35,74 +35,41 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
-    [DataContract, Flags]
+    [Flags]
     public enum Category
     {
-        [EnumMember(Value = "0")]
         None = 0,
-        [EnumMember(Value = "2147483647")]
         All = int.MaxValue,
-        [EnumMember(Value = "1")]
         Cat1 = 1,
-        [EnumMember(Value = "2")]
         Cat2 = 2,
-        [EnumMember(Value = "4")]
         Cat3 = 4,
-        [EnumMember(Value = "8")]
         Cat4 = 8,
-        [EnumMember(Value = "16")]
         Cat5 = 16,
-        [EnumMember(Value = "32")]
         Cat6 = 32,
-        [EnumMember(Value = "64")]
         Cat7 = 64,
-        [EnumMember(Value = "128")]
         Cat8 = 128,
-        [EnumMember(Value = "256")]
         Cat9 = 256,
-        [EnumMember(Value = "512")]
         Cat10 = 512,
-        [EnumMember(Value = "1024")]
         Cat11 = 1024,
-        [EnumMember(Value = "2048")]
         Cat12 = 2048,
-        [EnumMember(Value = "4096")]
         Cat13 = 4096,
-        [EnumMember(Value = "8192")]
         Cat14 = 8192,
-        [EnumMember(Value = "16384")]
         Cat15 = 16384,
-        [EnumMember(Value = "32768")]
         Cat16 = 32768,
-        [EnumMember(Value = "65536")]
         Cat17 = 65536,
-        [EnumMember(Value = "131072")]
         Cat18 = 131072,
-        [EnumMember(Value = "262144")]
         Cat19 = 262144,
-        [EnumMember(Value = "524288")]
         Cat20 = 524288,
-        [EnumMember(Value = "1048576")]
         Cat21 = 1048576,
-        [EnumMember(Value = "2097152")]
         Cat22 = 2097152,
-        [EnumMember(Value = "4194304")]
         Cat23 = 4194304,
-        [EnumMember(Value = "8388608")]
         Cat24 = 8388608,
-        [EnumMember(Value = "16777216")]
         Cat25 = 16777216,
-        [EnumMember(Value = "33554432")]
         Cat26 = 33554432,
-        [EnumMember]
         Cat27 = 67108864,
-        [EnumMember(Value = "134217728")]
         Cat28 = 134217728,
-        [EnumMember(Value = "268435456")]
         Cat29 = 268435456,
-        [EnumMember(Value = "536870912")]
         Cat30 = 536870912,
-        [EnumMember(Value = "1073741824")]
         Cat31 = 1073741824
     }
 
@@ -117,16 +84,10 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
-    [DataContract(Name = "FilterData", Namespace = "")]
     public class CollisionFilter
     {
-        [DataMember(Name = "MaskBits")]
         private Category _collidesWith;
-
-        [DataMember(Name = "CategoryBits")]
         private Category _collisionCategories;
-
-        [DataMember(Name = "GroupIndex")]
         private short _collisionGroup;
 
         internal Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
@@ -665,6 +626,19 @@ namespace FarseerPhysics.Dynamics
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }
+        }
+
+        internal bool CompareTo(Fixture fixture)
+        {
+            return (
+                    CollisionFilter.CollidesWith == fixture.CollisionFilter.CollidesWith &&
+                    CollisionFilter.CollisionCategories == fixture.CollisionFilter.CollisionCategories &&
+                    CollisionFilter.CollisionGroup == fixture.CollisionFilter.CollisionGroup &&
+                    Friction == fixture.Friction &&
+                    IsSensor == fixture.IsSensor &&
+                    Restitution == fixture.Restitution &&
+                    Shape.CompareTo(fixture.Shape) &&
+                    UserData == fixture.UserData);
         }
     }
 }
