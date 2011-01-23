@@ -361,10 +361,10 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Create a rigid body.
+        /// Add a rigid body.
         /// </summary>
         /// <returns></returns>
-        public void AddBody(Body body)
+        internal void AddBody(Body body)
         {
             Debug.Assert(!_bodyAddList.Contains(body), "You are adding the same body more than once.");
 
