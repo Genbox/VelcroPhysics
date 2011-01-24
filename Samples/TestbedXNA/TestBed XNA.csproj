@@ -122,8 +122,8 @@
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
     <Compile Include="Tests\CloneTest.cs" />
-    <Compile Include="Tests\DestructibleTerrainTest.cs" />
-    <Compile Include="Tests\MarchingSquaresTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
     <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmark.cs" />

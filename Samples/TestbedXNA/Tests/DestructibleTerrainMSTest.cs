@@ -1,41 +1,39 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class DestructibleTerrainTest : Test
+    public class DestructibleTerrainMSTest : Test
     {
-        Texture2D destroyTexture;
-        Texture2D terrainTexture;
-        float[,] terrainMap;
-        float[,] destroyMap;
-        List<Fixture>[,] terrainFixtures;
-        int xnum;
-        int ynum;
-        float gwid;
+        private float[,] destroyMap;
+        private Texture2D destroyTexture;
+        private float gwid;
+        private List<Fixture>[,] terrainFixtures;
+        private float[,] terrainMap;
+        private Texture2D terrainTexture;
+        private int xnum;
+        private int ynum;
+        private Vector2 _scale = new Vector2(0.07f, -0.07f);
+        private Vector2 _translate = new Vector2(-512, -512);
 
-        private DestructibleTerrainTest()
+        private DestructibleTerrainMSTest()
         {
             World = new World(new Vector2(0, -9.82f));
         }
 
         public override void Initialize()
         {
-            this.GameInstance.IsFixedTimeStep = false;
+            GameInstance.IsFixedTimeStep = false;
 
             // texture used to hold initial terrain shape
-            terrainTexture = this.GameInstance.Content.Load<Texture2D>("Terrain");
+            terrainTexture = GameInstance.Content.Load<Texture2D>("Terrain");
 
             // all values
             Color[] fFlat = new Color[terrainTexture.Width * terrainTexture.Height];
@@ -57,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // texture used to hold initial terrain shape
-            destroyTexture = this.GameInstance.Content.Load<Texture2D>("Circle");
+            destroyTexture = GameInstance.Content.Load<Texture2D>("Circle");
 
             // all values
             fFlat = new Color[destroyTexture.Width * destroyTexture.Height];
@@ -109,11 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
             // create physics object for this grid cell
             foreach (var item in polys)
             {
-                Vector2 _scale = new Vector2(0.07f, -0.07f);
-                Vector2 _translate = new Vector2(-512, -512);
-
                 item.Translate(ref _translate);
-
                 item.Scale(ref _scale);
                 item.ForceCounterClockWise();
 
@@ -144,11 +138,17 @@ namespace FarseerPhysics.TestBed.Tests
                             terrainMap[(int)ax, (int)ay] = -destroyMap[bx, by];
                     }
                 }
-                     
+
                 //iterate effected cells
-                var gx0 = (int)((x - 30) / gwid); var gx1 = (int)((x + 30) / gwid) + 1; if (gx0 < 0) gx0 = 0; if(gx1>xnum) gx1 = xnum;
-                var gy0 = (int)((y - 30) / gwid); var gy1 = (int)((y + 30) / gwid) + 1; if (gy0 < 0) gy0 = 0; if (gy1 > ynum) gy1 = ynum;
-                    
+                var gx0 = (int)((x - 30) / gwid);
+                var gx1 = (int)((x + 30) / gwid) + 1;
+                if (gx0 < 0) gx0 = 0;
+                if (gx1 > xnum) gx1 = xnum;
+                var gy0 = (int)((y - 30) / gwid);
+                var gy1 = (int)((y + 30) / gwid) + 1;
+                if (gy0 < 0) gy0 = 0;
+                if (gy1 > ynum) gy1 = ynum;
+
                 for (int gx = gx0; gx < gx1; gx++)
                 {
                     for (int gy = gy0; gy < gy1; gy++)
@@ -163,27 +163,11 @@ namespace FarseerPhysics.TestBed.Tests
                         }
 
                         terrainFixtures[gx, gy] = null;
-                                         
+
                         //generate new one
                         GenerateTerrain(gx, gy);
                     }
                 }
-                         
-            }
-            //else 
-            {
-                        /*
-                    //create random object
-                    if(Math.random()<0.75) {
-                            var obj = Tools.createRegular(x, y, Math.random() * 12 + 12, Math.random() * 12 + 12, Std.int(Math.random() * 3 + 3), 0, 0, 0, false, false, Material.Wood);
-                            space.addObject(obj);
-                            addChild(obj.graphic);
-                    }else {
-                            var obj = Tools.createCircle(x, y, Math.random() * 12 + 12, 0, 0, 0, false, true, Material.Wood);
-                            space.addObject(obj);
-                            addChild(obj.graphic);
-                    }
-                        * */
             }
         }
 
@@ -218,7 +202,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new DestructibleTerrainTest();
+            return new DestructibleTerrainMSTest();
         }
     }
 }
