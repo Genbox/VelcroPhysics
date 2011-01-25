@@ -46,6 +46,8 @@ namespace FarseerPhysics.Common
     public static class WorldXmlSerializer
     {
         private static XmlWriter _writer;
+        private static List<Fixture> _serializedFixtures = new List<Fixture>();
+        private static List<Body> _bodies = new List<Body>();
 
         private static void SerializeShape(Shape shape)
         {
@@ -90,7 +92,6 @@ namespace FarseerPhysics.Common
         }
 
         private static int _shapeCounter;
-        private static int _fixtureCounter;
 
         private static void SerializeFixture(Fixture fixture)
         {
@@ -145,11 +146,10 @@ namespace FarseerPhysics.Common
             _writer.WriteStartElement("Fixtures");
             for (int i = 0; i < body.FixtureList.Count; i++)
             {
-                _writer.WriteElementString("ID", _fixtureCounter++.ToString());
+                _writer.WriteElementString("ID", FindFixtureIndex(body.FixtureList[i]).ToString());
             }
 
             _writer.WriteEndElement();
-
             _writer.WriteEndElement();
         }
 
@@ -367,7 +367,6 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
             _writer.WriteStartElement("Fixtures");
 
-            List<Fixture> serializedFixtures = new List<Fixture>(world.BodyList.Count);
 
             for (int i = 0; i < world.BodyList.Count; i++)
             {
@@ -376,9 +375,9 @@ namespace FarseerPhysics.Common
                 {
                     Fixture fixture = body.FixtureList[j];
                     bool alreadyThere = false;
-                    for (int k = 0; k < serializedFixtures.Count; k++)
+                    for (int k = 0; k < _serializedFixtures.Count; k++)
                     {
-                        Fixture f2 = serializedFixtures[k];
+                        Fixture f2 = _serializedFixtures[k];
                         if (fixture.CompareTo(f2))
                         {
                             alreadyThere = true;
@@ -389,7 +388,7 @@ namespace FarseerPhysics.Common
                     if (!alreadyThere)
                     {
                         SerializeFixture(fixture);
-                        serializedFixtures.Add(fixture);
+                        _serializedFixtures.Add(fixture);
                     }
                 }
             }
@@ -400,6 +399,7 @@ namespace FarseerPhysics.Common
             for (int i = 0; i < world.BodyList.Count; i++)
             {
                 Body body = world.BodyList[i];
+                _bodies.Add(body);
                 SerializeBody(body);
             }
 
@@ -419,13 +419,22 @@ namespace FarseerPhysics.Common
             _writer.Close();
         }
 
-        private static int FindBodyIndex(Body body)
+        private static int FindBodyIndex(Body b)
         {
-            //for (int i = 0; i < _bodyId.Count; i++)
-            //{
-            //    if (body.BodyId == _bodyId[i])
-            //        return i;
-            //}
+            for (int i = 0; i < _bodies.Count; ++i)
+                if (_bodies[i] == b)
+                    return i;
+
+            return -1;
+        }
+
+        private static int FindFixtureIndex(Fixture fixture)
+        {
+            for (int i = 0; i < _serializedFixtures.Count; ++i)
+            {
+                if (_serializedFixtures[i].CompareTo(fixture))
+                    return i;
+            }
 
             return -1;
         }
