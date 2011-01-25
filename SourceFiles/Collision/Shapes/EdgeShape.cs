@@ -246,5 +246,15 @@ namespace FarseerPhysics.Collision.Shapes
         {
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
+
+        public bool CompareTo(EdgeShape shape)
+        {
+            return (HasVertex0 == shape.HasVertex0 &&
+                    HasVertex3 == shape.HasVertex3 &&
+                    Vertex0 == shape.Vertex0 &&
+                    Vertex1 == shape.Vertex1 &&
+                    Vertex2 == shape.Vertex2 &&
+                    Vertex3 == shape.Vertex3);
+        }
     }
 }
