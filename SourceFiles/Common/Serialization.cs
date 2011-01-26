@@ -281,8 +281,17 @@ namespace FarseerPhysics.Common
                         WriteElement("MaxLength", rjd.MaxLength);
                     }
                     break;
+                case JointType.Angle:
+                    {
+                        AngleJoint aj = (AngleJoint) joint;
+                        WriteElement("BiasFactor", aj.BiasFactor);
+                        WriteElement("MaxImpulse", aj.MaxImpulse);
+                        WriteElement("Softness", aj.Softness);
+                        WriteElement("TargetAngle", aj.TargetAngle);
+                    }
+                    break;
                 default:
-                    throw new Exception();
+                    throw new Exception("Joint not supported");
             }
 
             _writer.WriteEndElement();
@@ -789,6 +798,9 @@ namespace FarseerPhysics.Common
                             case JointType.Rope:
                                 joint = new RopeJoint();
                                 break;
+                            case JointType.Angle:
+                                joint = new AngleJoint();
+                                break;
                             default:
                                 throw new Exception("Invalid or unsupported joint");
                         }
@@ -1016,6 +1028,25 @@ namespace FarseerPhysics.Common
                                     break;
                                 case JointType.Gear:
                                     throw new Exception("Gear joint is unsupported");
+                                case JointType.Angle:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "biasfactor":
+                                                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
+                                                break;
+                                            case "maximpulse":
+                                                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
+                                                break;
+                                            case "softness":
+                                                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
+                                                break;
+                                            case "targetangle":
+                                                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
+                                    }
+                                    break;
                             }
                         }
                     }
