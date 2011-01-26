@@ -130,6 +130,8 @@ namespace FarseerPhysics.TestBed.Tests
                 if (keyboardManager.IsKeyDown(Keys.D))
                     _end.X += MoveAmount;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Gamepad(GamePadState state, GamePadState oldState)

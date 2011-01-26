@@ -157,6 +157,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _body.ApplyTorque(-50.0f);
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         internal static Test Create()

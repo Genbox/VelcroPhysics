@@ -118,6 +118,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _platform.LinearVelocity = new Vector2(-_speed, 0.0f);
                 _platform.AngularVelocity = 0.0f;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

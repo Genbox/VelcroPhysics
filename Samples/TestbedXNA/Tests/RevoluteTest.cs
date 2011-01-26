@@ -92,6 +92,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint.MotorEnabled = !_joint.MotorEnabled;
                 _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

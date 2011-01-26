@@ -105,6 +105,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _fixedJoint.MotorSpeed = -_fixedJoint.MotorSpeed;
                 _joint.MotorSpeed = -_joint.MotorSpeed;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

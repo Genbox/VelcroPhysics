@@ -116,6 +116,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _lineJoint.MotorEnabled = !_lineJoint.MotorEnabled;
                 _fixedLineJoint.MotorEnabled = !_fixedLineJoint.MotorEnabled;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         internal static Test Create()
