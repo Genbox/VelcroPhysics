@@ -47,8 +47,8 @@ namespace FarseerPhysics.Common
     {
         private XmlWriter _writer;
         private List<Fixture> _serializedFixtures = new List<Fixture>();
+        private List<Shape> _serializedShapes = new List<Shape>();
         private List<Body> _bodies = new List<Body>();
-        private int _shapeCounter;
 
         private void SerializeShape(Shape shape)
         {
@@ -95,7 +95,7 @@ namespace FarseerPhysics.Common
         private void SerializeFixture(Fixture fixture)
         {
             _writer.WriteStartElement("Fixture");
-            _writer.WriteElementString("Shape", _shapeCounter++.ToString());
+            _writer.WriteElementString("Shape", FindShapeIndex(fixture.Shape).ToString());
             _writer.WriteElementString("Density", fixture.Shape.Density.ToString());
 
             _writer.WriteStartElement("FilterData");
@@ -335,8 +335,6 @@ namespace FarseerPhysics.Common
 
             _writer.WriteStartElement("Shapes");
 
-            List<Shape> serializedShapes = new List<Shape>(world.BodyList.Count);
-
             for (int i = 0; i < world.BodyList.Count; i++)
             {
                 Body body = world.BodyList[i];
@@ -345,9 +343,9 @@ namespace FarseerPhysics.Common
                     Fixture fixture = body.FixtureList[j];
 
                     bool alreadyThere = false;
-                    for (int k = 0; k < serializedShapes.Count; k++)
+                    for (int k = 0; k < _serializedShapes.Count; k++)
                     {
-                        Shape s2 = serializedShapes[k];
+                        Shape s2 = _serializedShapes[k];
                         if (fixture.Shape.CompareTo(s2))
                         {
                             alreadyThere = true;
@@ -358,7 +356,7 @@ namespace FarseerPhysics.Common
                     if (!alreadyThere)
                     {
                         SerializeShape(fixture.Shape);
-                        serializedShapes.Add(fixture.Shape);
+                        _serializedShapes.Add(fixture.Shape);
                     }
                 }
             }
@@ -432,6 +430,17 @@ namespace FarseerPhysics.Common
             for (int i = 0; i < _serializedFixtures.Count; ++i)
             {
                 if (_serializedFixtures[i].CompareTo(fixture))
+                    return i;
+            }
+
+            return -1;
+        }
+
+        private int FindShapeIndex(Shape shape)
+        {
+            for (int i = 0; i < _serializedShapes.Count; ++i)
+            {
+                if (_serializedShapes[i].CompareTo(shape))
                     return i;
             }
 

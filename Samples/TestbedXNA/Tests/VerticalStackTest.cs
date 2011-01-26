@@ -102,6 +102,8 @@ namespace FarseerPhysics.TestBed.Tests
                     _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
                 }
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
