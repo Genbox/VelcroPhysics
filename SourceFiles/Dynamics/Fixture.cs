@@ -86,9 +86,9 @@ namespace FarseerPhysics.Dynamics
 
     public class CollisionFilter
     {
-        private Category _collidesWith;
-        private Category _collisionCategories;
-        private short _collisionGroup;
+        internal Category _collidesWith;
+        internal Category _collisionCategories;
+        internal short _collisionGroup;
 
         internal Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
         private Fixture Fixture { get; set; }
