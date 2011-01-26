@@ -7,7 +7,8 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
 {
     public class Camera2D
     {
-        private const float SmoothingSpeed = 0.15f;
+        const float TargetPositionEpsilon = 0.01f;
+        public float SmoothingSpeed = 0.15f;
         public static Matrix View;
         public static Matrix Projection;
 
@@ -48,7 +49,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get { return _position; }
             set
             {
-                _position = Vector2.Clamp(value, MinPosition * Zoom, MaxPosition * Zoom);
+                _position = Vector2.Clamp(value, MinPosition, MaxPosition);
 
                 Resize();
             }
@@ -201,19 +202,14 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             get { return _targetPosition; }
             set
             {
-                if (_targetPosition == value)
-                {
-                    _targetXPositionReached = true;
-                    _targetYPositionReached = true;
-                }
-                else
-                {
-                    _targetPosition = value;
-                    _targetXPositionReached = false;
-                    _targetYPositionReached = false;
-                }
+                value = Vector2.Clamp(value, MinPosition, MaxPosition);
+                _targetPosition = value;
             }
         }
+
+        public Vector2 TargetPositionTolerance { get; set; }
+
+        public bool EnableTargetTracking { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum rotation in radians.
@@ -274,7 +270,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             MinRotation = -(MathHelper.Pi / 2);
             MaxRotation = MathHelper.Pi / 2;
             MaxPosition = new Vector2(25f, 25f);
-            MinPosition = new Vector2(-25f, 0f);
+            MinPosition = new Vector2(-25f, -25f);
 
             _targetPosition = Vector2.Zero;
             _targetRotation = 0;
@@ -300,7 +296,7 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
             MinRotation = -(MathHelper.Pi / 2);
             MaxRotation = MathHelper.Pi / 2;
             MaxPosition = new Vector2(25f, 25f);
-            MinPosition = new Vector2(-25f, 0f);
+            MinPosition = new Vector2(-25f, -25f);
 
             TargetPosition = Vector2.Zero;
             TargetRotation = 0;
@@ -321,73 +317,114 @@ namespace FarseerPhysics.DemoBaseXNA.ScreenSystem
         /// </summary>
         public void Update()
         {
+            if (!EnableTargetTracking)
+                return;
+
+            // Do logic on the position using local variables so the property assignment & it's related clamping/resize 
+            // only occurs once and only then if the value changed.
+            Vector2 currentPosition = Position;
+
             if (TrackingBody != null)
-                Position = TrackingBody.Position;
+                currentPosition = TrackingBody.Position;
 
-            if (_targetYPositionReached == false)
-            {
-                float value;
-
-                if (TargetPosition.X > Position.X)
-                {
-                    value = Math.Min(MaxPosition.X * Zoom, _position.X + MoveRate.X);
-                    Position = new Vector2(MathHelper.SmoothStep(_position.X, value, SmoothingSpeed), Position.Y);
-
-                    if (Position.X >= TargetPosition.X)
-                        _targetYPositionReached = true;
-                }
-                else if (TargetPosition.X < Position.X)
-                {
-                    value = Math.Max(MinPosition.X * Zoom, _position.X - MoveRate.X);
-                    Position = new Vector2(MathHelper.SmoothStep(_position.X, value, SmoothingSpeed), Position.Y);
-
-                    if (Position.X <= TargetPosition.X)
-                        _targetYPositionReached = true;
-                }
-            }
+            _targetXPositionReached = Math.Abs(TargetPosition.X - currentPosition.X) < TargetPositionTolerance.X;
+            _targetYPositionReached = Math.Abs(TargetPosition.Y - currentPosition.Y) < TargetPositionTolerance.Y;
 
             if (_targetXPositionReached == false)
             {
-                float value;
-
-                if (TargetPosition.Y > Position.Y)
+                if (TargetPosition.X > currentPosition.X)
                 {
-                    value = Math.Min(MaxPosition.Y * Zoom, _position.Y + MoveRate.Y);
-                    Position = new Vector2(Position.X, MathHelper.SmoothStep(_position.Y, value, SmoothingSpeed));
-
-                    if (Position.Y >= TargetPosition.Y)
+                    var goal = TargetPosition.X - TargetPositionTolerance.X;
+                    if (goal < currentPosition.X)
+                    {
                         _targetXPositionReached = true;
+                    }
+                    else
+                    {
+                        currentPosition.X = MathHelper.SmoothStep(currentPosition.X, goal, SmoothingSpeed);
+                        _targetXPositionReached = currentPosition.X >= goal - TargetPositionEpsilon;
+                    }
                 }
-                else if (TargetPosition.Y < Position.Y)
+                else if (TargetPosition.X < currentPosition.X)
                 {
-                    value = Math.Max(MinPosition.Y * Zoom, _position.Y - MoveRate.Y);
-                    Position = new Vector2(Position.X, MathHelper.SmoothStep(_position.Y, value, SmoothingSpeed));
-
-                    if (Position.Y <= TargetPosition.Y)
+                    var goal = TargetPosition.X + TargetPositionTolerance.X;
+                    if (goal > currentPosition.X)
+                    {
                         _targetXPositionReached = true;
+                    }
+                    else
+                    {
+                        currentPosition.X = MathHelper.SmoothStep(currentPosition.X, goal, SmoothingSpeed);
+                        _targetXPositionReached = currentPosition.X <= goal + TargetPositionEpsilon;
+                    }
                 }
             }
 
+            if (_targetYPositionReached == false)
+            {
+                if (TargetPosition.Y > currentPosition.Y)
+                {
+                    float goal = TargetPosition.Y - TargetPositionTolerance.Y;
+                    if (goal < currentPosition.Y)
+                    {
+                        _targetYPositionReached = true;
+                    }
+                    else
+                    {
+                        currentPosition.Y = MathHelper.SmoothStep(currentPosition.Y, goal, SmoothingSpeed);
+                        _targetYPositionReached = currentPosition.Y >= goal - TargetPositionEpsilon;
+                    }
+                }
+                else if (TargetPosition.Y < currentPosition.Y)
+                {
+                    float goal = TargetPosition.Y + TargetPositionTolerance.Y;
+                    if (goal > currentPosition.Y)
+                    {
+                        _targetYPositionReached = true;
+                    }
+                    else
+                    {
+                        currentPosition.Y = MathHelper.SmoothStep(currentPosition.Y, goal, SmoothingSpeed);
+                        _targetYPositionReached = currentPosition.Y <= goal + TargetPositionEpsilon;
+                    }
+                }
+            }
+
+            // Only update the property if the value changed.
+            if (!currentPosition.Equals(Position))
+            {
+                Position = currentPosition;
+            }
+
+            // Do logic on the rotation using local variables so the property assignment & it's related clamping/resize 
+            // only occurs once and only then if the value changed.
+            var currentRotation = _rotation;
             if (_targetRotationReached == false)
             {
                 float value;
 
-                if (TargetRotation > Rotation)
+                if (_targetRotation > currentRotation)
                 {
-                    value = Math.Min(MaxRotation, _rotation + RotationRate);
-                    Rotation = MathHelper.SmoothStep(_rotation, value, SmoothingSpeed);
+                    value = Math.Min(MaxRotation, currentRotation + RotationRate);
+                    currentRotation = MathHelper.SmoothStep(currentRotation, value, SmoothingSpeed);
 
-                    if (Rotation >= TargetRotation)
+                    if (currentRotation >= _targetRotation)
                         _targetRotationReached = true;
                 }
-                else if (TargetRotation < Rotation)
+                else if (_targetRotation < currentRotation)
                 {
-                    value = Math.Max(MinRotation, _rotation - RotationRate);
-                    Rotation = MathHelper.SmoothStep(_rotation, value, SmoothingSpeed);
+                    value = Math.Max(MinRotation, currentRotation - RotationRate);
+                    currentRotation = MathHelper.SmoothStep(currentRotation, value, SmoothingSpeed);
 
-                    if (Rotation <= TargetRotation)
+                    if (currentRotation <= _targetRotation)
                         _targetRotationReached = true;
                 }
+            }
+
+            // Only update the property if the value changed.
+            if (currentRotation != _rotation)
+            {
+                Rotation = currentRotation;
             }
 
             if (_targetZoomReached == false)
