@@ -101,6 +101,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CreateCircle();
             }
+            
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

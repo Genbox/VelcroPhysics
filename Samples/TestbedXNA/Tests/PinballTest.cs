@@ -117,6 +117,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _leftJoint.MotorSpeed = -10.0f;
                 _rightJoint.MotorSpeed = 10.0f;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         internal static Test Create()

@@ -111,6 +111,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _simpleWind.Variation -= 0.1f;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)

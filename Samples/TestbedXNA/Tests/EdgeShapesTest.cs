@@ -190,6 +190,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 DestroyBody();
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

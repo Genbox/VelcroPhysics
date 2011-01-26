@@ -29,8 +29,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (keyboardManager.IsNewKeyPress(Keys.D))
                 Create(0);
+
             if (keyboardManager.IsNewKeyPress(Keys.F))
                 Create(1);
+
+            base.Keyboard(keyboardManager);
         }
 
         private void Create(int type)

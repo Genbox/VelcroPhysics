@@ -146,6 +146,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _joint1.MotorEnabled = !_joint1.MotorEnabled;
                 _joint1.BodyB.Awake = true;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

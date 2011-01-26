@@ -89,6 +89,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _power = MathHelper.Clamp(_power + 0.1f, 0, 20);
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

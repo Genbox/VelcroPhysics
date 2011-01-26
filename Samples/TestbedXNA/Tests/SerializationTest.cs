@@ -1,4 +1,3 @@
-using System.IO;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -9,6 +8,9 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class SerializationTest : Test
     {
+        private bool save = true;
+        private double time;
+
         private SerializationTest()
         {
             FixtureFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
@@ -26,13 +28,13 @@ namespace FarseerPhysics.TestBed.Tests
             JointFactory.CreateDistanceJoint(World, circle.Body, rectangle.Body, Vector2.Zero, Vector2.Zero);
         }
 
-        private bool save = true;
-
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (StepCount > 100)
+            time += gameTime.ElapsedGameTime.Milliseconds;
+
+            if (time > 100)
             {
-                StepCount = 0;
+                time = 0;
                 if (save)
                 {
                     WorldSerializer.Serialize(World, "out.xml");

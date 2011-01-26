@@ -67,6 +67,8 @@ namespace FarseerPhysics.TestBed.Tests
                 _fixture2 = null;
                 _body.Awake = true;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

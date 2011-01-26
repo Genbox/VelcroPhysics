@@ -242,6 +242,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _motorJoint.MotorEnabled = !_motorJoint.MotorEnabled;
             }
+
+            base.Keyboard(keyboardManager);
         }
 
         internal static Test Create()
