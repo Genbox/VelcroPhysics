@@ -101,16 +101,12 @@ namespace FarseerPhysics.Common.PolygonManipulation
             CalculateSimplicalChain(slicedSubject, out subjectCoeff, out subjectSimplices);
             CalculateSimplicalChain(slicedClip, out clipCoeff, out clipSimplices);
 
-            List<float> subjectCharacter;
-            List<float> clipCharacter;
-            // Determine the characteristics function for all non-original edges
-            // in subject and clip simplical chain
-            CalculateEdgeCharacter(subjectCoeff, subjectSimplices, clipCoeff, clipSimplices,
-                                   out subjectCharacter, out clipCharacter);
-
             List<Edge> resultSimplices;
-            // Combine the edges contributing to the result, depending on the clipType
-            CalculateResultChain(subjectSimplices, subjectCharacter, clipSimplices, clipCharacter, clipType,
+
+            // Determine the characteristics function for all non-original edges
+            // in subject and clip simplical chain and combine the edges contributing
+            // to the result, depending on the clipType
+            CalculateResultChain(subjectCoeff, subjectSimplices, clipCoeff, clipSimplices, clipType,
                                  out resultSimplices);
 
             List<Vertices> result;
@@ -226,21 +222,22 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
         /// <summary>
         /// Calculates the characteristics function for all edges of
-        /// a given simplical chain.
+        /// the given simplical chains and builds the result chain.
         /// </summary>
         /// <remarks>Used by method <c>Execute()</c>.</remarks>
-        private static void CalculateEdgeCharacter(List<float> poly1Coeff, List<Edge> poly1Simplicies,
+        private static void CalculateResultChain(List<float> poly1Coeff, List<Edge> poly1Simplicies,
                                                    List<float> poly2Coeff, List<Edge> poly2Simplicies,
-                                                   out List<float> poly1Char, out List<float> poly2Char)
+                                                   PolyClipType clipType, out List<Edge> resultSimplices)
         {
-            poly1Char = new List<float>();
-            poly2Char = new List<float>();
+            resultSimplices = new List<Edge>();
+
             for (int i = 0; i < poly1Simplicies.Count; ++i)
             {
-                poly1Char.Add(0f);
-                if (poly2Simplicies.Contains(poly1Simplicies[i]))
+                float edgeCharacter = 0f;
+                if (poly2Simplicies.Contains(poly1Simplicies[i]) ||
+                    (poly2Simplicies.Contains(-poly1Simplicies[i]) && clipType == PolyClipType.Union))
                 {
-                    poly1Char[i] = 1f;
+                    edgeCharacter = 1f;
                 }
                 else
                 {
@@ -248,50 +245,21 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     {
                         if (!poly2Simplicies.Contains(-poly1Simplicies[i]))
                         {
-                            poly1Char[i] += CalculateBeta(poly1Simplicies[i].GetCenter(),
-                                                          poly2Simplicies[j], poly2Coeff[j]);
+                            edgeCharacter += CalculateBeta(poly1Simplicies[i].GetCenter(),
+                                                           poly2Simplicies[j], poly2Coeff[j]);
                         }
                     }
                 }
-            }
-            for (int i = 0; i < poly2Simplicies.Count; ++i)
-            {
-                poly2Char.Add(0f);
-                for (int j = 0; j < poly1Simplicies.Count; ++j)
-                {
-                    if (!poly1Simplicies.Contains(poly2Simplicies[i]) &&
-                        !poly1Simplicies.Contains(-poly2Simplicies[i]))
-                    {
-                        poly2Char[i] += CalculateBeta(poly2Simplicies[i].GetCenter(),
-                                                      poly1Simplicies[j], poly1Coeff[j]);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Calculates the result between the subject and clip simplical chains,
-        /// based on the provided operation.
-        /// </summary>
-        /// <remarks>Used by method <c>Execute()</c>.</remarks>
-        private static void CalculateResultChain(List<Edge> poly1Simplicies, List<float> poly1Char,
-                                                 List<Edge> poly2Simplicies, List<float> poly2Char,
-                                                 PolyClipType clipType, out List<Edge> resultSimplices)
-        {
-            resultSimplices = new List<Edge>();
-
-            for (int i = 0; i < poly1Simplicies.Count; ++i)
-            {
                 if (clipType == PolyClipType.Intersect)
                 {
-                    if (poly1Char[i] == 1f)
+                    if (edgeCharacter == 1f)
                     {
                         resultSimplices.Add(poly1Simplicies[i]);
                     }
                 }
                 else
                 {
-                    if (poly1Char[i] == 0f)
+                    if (edgeCharacter == 0f)
                     {
                         resultSimplices.Add(poly1Simplicies[i]);
                     }
@@ -299,18 +267,39 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
             for (int i = 0; i < poly2Simplicies.Count; ++i)
             {
-                if (clipType == PolyClipType.Intersect || clipType == PolyClipType.Difference)
+                if (!resultSimplices.Contains(poly2Simplicies[i]) &&
+                    !resultSimplices.Contains(-poly2Simplicies[i]))
                 {
-                    if (poly2Char[i] == 1f)
+                    float edgeCharacter = 0f;
+                    if (poly1Simplicies.Contains(poly2Simplicies[i]) ||
+                        (poly1Simplicies.Contains(-poly2Simplicies[i]) && clipType == PolyClipType.Union))
                     {
-                        resultSimplices.Add(-poly2Simplicies[i]);
+                        edgeCharacter = 1f;
                     }
-                }
-                else
-                {
-                    if (poly2Char[i] == 0f)
+                    else
                     {
-                        resultSimplices.Add(poly2Simplicies[i]);
+                        for (int j = 0; j < poly1Simplicies.Count; ++j)
+                        {
+                            if (!poly1Simplicies.Contains(-poly2Simplicies[i]))
+                            {
+                                edgeCharacter += CalculateBeta(poly2Simplicies[i].GetCenter(),
+                                                               poly1Simplicies[j], poly1Coeff[j]);
+                            }
+                        }
+                    }
+                    if (clipType == PolyClipType.Intersect || clipType == PolyClipType.Difference)
+                    {
+                        if (edgeCharacter == 1f)
+                        {
+                            resultSimplices.Add(-poly2Simplicies[i]);
+                        }
+                    }
+                    else
+                    {
+                        if (edgeCharacter == 0f)
+                        {
+                            resultSimplices.Add(poly2Simplicies[i]);
+                        }
                     }
                 }
             }
@@ -398,10 +387,10 @@ namespace FarseerPhysics.Common.PolygonManipulation
             {
                 result = coefficient;
             }
-            if (PoinOnLineSegment(Vector2.Zero, e.EdgeStart, point) ||
-                PoinOnLineSegment(Vector2.Zero, e.EdgeEnd, point))
+            if (PointOnLineSegment(Vector2.Zero, e.EdgeStart, point) ||
+                PointOnLineSegment(Vector2.Zero, e.EdgeEnd, point))
             {
-                result = .5f*coefficient;
+                result = .5f * coefficient;
             }
             return result;
         }
@@ -412,7 +401,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <remarks>Used by method <c>CalculateIntersections()</c>.</remarks>
         private static float GetAlpha(Vector2 start, Vector2 end, Vector2 point)
         {
-            return (point - start).LengthSquared()/(end - start).LengthSquared();
+            return (point - start).LengthSquared() / (end - start).LengthSquared();
         }
 
         /// <summary>
@@ -448,14 +437,14 @@ namespace FarseerPhysics.Common.PolygonManipulation
             polygon.Add(Vector2.Zero);
             polygon.Add(edge.EdgeStart);
             polygon.Add(edge.EdgeEnd);
-            return polygon.PointInPolygon(ref point);
+            return (polygon.PointInPolygon(ref point) == 1);
         }
 
         /// <summary>
         /// Tests if a point lies on a line segment.
         /// </summary>
         /// <remarks>Used by method <c>CalculateBeta()</c>.</remarks>
-        private static bool PoinOnLineSegment(Vector2 start, Vector2 end, Vector2 point)
+        private static bool PointOnLineSegment(Vector2 start, Vector2 end, Vector2 point)
         {
             Vector2 segment = end - start;
             return MathUtils.Area(ref start, ref end, ref point) == 0f &&
@@ -484,7 +473,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             public Vector2 GetCenter()
             {
-                return (EdgeStart + EdgeEnd)/2f;
+                return (EdgeStart + EdgeEnd) / 2f;
             }
 
             public static Edge operator -(Edge e)
@@ -501,14 +490,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
 
                 // If parameter cannot be cast to Point return false.
-                Edge e = obj as Edge;
-                if (e == null)
-                {
-                    return false;
-                }
-
-                // Return true if the fields match
-                return (EdgeStart == e.EdgeStart) && (EdgeEnd == e.EdgeEnd);
+                return Equals(obj as Edge);
             }
 
             public bool Equals(Edge e)
@@ -520,7 +502,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 }
 
                 // Return true if the fields match
-                return (EdgeStart == e.EdgeStart) && (EdgeEnd == e.EdgeEnd);
+                return VectorEqual(EdgeStart, e.EdgeStart) && VectorEqual(EdgeEnd, e.EdgeEnd);
             }
 
             public override int GetHashCode()

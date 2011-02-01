@@ -245,7 +245,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (_polygons[i] == null)
                         continue;
 
-                    if (_polygons[i].PointInPolygon(ref position))
+                    if (_polygons[i].PointInPolygon(ref position) == 1)
                     {
                         _selected = _polygons[i];
                         break;
@@ -266,8 +266,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_selected != null)
             {
-                Vector2 trans = new Vector2((state.X - oldState.X)/12f,
-                                            (oldState.Y - state.Y)/12f);
+                Vector2 trans = new Vector2((state.X - oldState.X) / 12f,
+                                            (oldState.Y - state.Y) / 12f);
                 _selected.Translate(ref trans);
             }
         }
