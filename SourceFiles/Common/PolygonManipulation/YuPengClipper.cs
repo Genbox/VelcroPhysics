@@ -61,13 +61,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         private static List<Vertices> Execute(Vertices subject, Vertices clip,
                                               PolyClipType clipType, out PolyClipError error)
         {
-            if (!subject.IsSimple() || !clip.IsSimple())
-            {
-                error = PolyClipError.NonSimpleInput;
-                Debug.WriteLine("Input polygons must be simple (cannot intersect themselves).");
-                return new List<Vertices>();
-            }
-
+            Debug.Assert(subject.IsSimple() && clip.IsSimple(), "Non simple input!", "Input polygons must be simple (cannot intersect themselves).");
+            
             // Copy polygons
             Vertices slicedSubject;
             Vertices slicedClip;
@@ -114,10 +109,12 @@ namespace FarseerPhysics.Common.PolygonManipulation
             error = BuildPolygonsFromChain(resultSimplices, out result);
 
             // Reverse the polygon translation from the beginning
+            // and remove collinear points from output
             translate *= -1f;
             for (int i = 0; i < result.Count; ++i)
             {
                 result[i].Translate(ref translate);
+                SimplifyTools.CollinearSimplify(result[i]);
             }
             return result;
         }
