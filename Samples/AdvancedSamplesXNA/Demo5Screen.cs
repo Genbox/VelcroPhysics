@@ -86,6 +86,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             }
         }
 
+#if (!XBOX)
         public override void HandleInput(InputHelper input)
         {
             if (input.CurrentMouseState.RightButton == ButtonState.Pressed && input.LastMouseState.RightButton == ButtonState.Released)
@@ -109,5 +110,6 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
             base.HandleInput(input);
         }
+#endif
     }
 }

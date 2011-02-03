@@ -137,9 +137,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Xbox360\Farseer Physics Xbox360.csproj">
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA Xbox360.csproj">
       <Project>{68C00837-1D4D-4335-9AD3-26D7E17E233B}</Project>
-      <Name>Farseer Physics Xbox360</Name>
+      <Name>Farseer Physics XNA Xbox360</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj">
       <Project>{4897a388-8a29-4d6e-a737-50b82a46b543}</Project>

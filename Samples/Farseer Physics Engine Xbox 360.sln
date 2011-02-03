@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBase XNA Content", "Dem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamples XNA Content", "AdvancedSamplesXNA\Content\AdvancedSamples XNA Content.contentproj", "{1FCC5A90-3EDE-4A8B-B7DB-58E406D9B926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics Xbox360", "..\Branches\Xbox360\Farseer Physics Xbox360.csproj", "{68C00837-1D4D-4335-9AD3-26D7E17E233B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Farseer Physics XNA Xbox360", "..\Branches\XNA\Farseer Physics XNA Xbox360.csproj", "{68C00837-1D4D-4335-9AD3-26D7E17E233B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA Xbox360", "..\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj", "{4897A388-8A29-4D6E-A737-50B82A46B543}"
 EndProject
@@ -19,13 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSamples XNA Xbox360",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA Xbox360", "TestbedXNA\TestBed XNA Xbox360.csproj", "{09E76189-4AAE-4EDD-8605-B7C1982978FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA Xbox360", "HelloWorldXNA\HelloWorld XNA Xbox360.csproj", "{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedSamples XNA Xbox360", "AdvancedSamplesXNA\AdvancedSamples XNA Xbox360.csproj", "{4E086B3C-0025-4329-B752-B158F5E30A33}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -41,27 +39,24 @@ Global
 		SccProjectUniqueName4 = AdvancedSamplesXNA\\Content\\AdvancedSamples\u0020XNA\u0020Content.contentproj
 		SccProjectName4 = AdvancedSamplesXNA/Content
 		SccLocalPath4 = AdvancedSamplesXNA\\Content
-		SccProjectUniqueName5 = ..\\Branches\\Xbox360\\Farseer\u0020Physics\u0020Xbox360.csproj
-		SccProjectName5 = ../Branches/Xbox360
-		SccLocalPath5 = ..\\Branches\\Xbox360
-		SccProjectUniqueName6 = SimpleSamplesXNA\\SimpleSamples\u0020XNA\u0020Xbox360.csproj
-		SccProjectName6 = SimpleSamplesXNA
-		SccLocalPath6 = SimpleSamplesXNA
-		SccProjectUniqueName7 = ..\\DebugViews\\DebugViewXNA\\DebugView\u0020XNA\u0020Xbox360.csproj
-		SccProjectName7 = ../DebugViews/DebugViewXNA
-		SccLocalPath7 = ..\\DebugViews\\DebugViewXNA
-		SccProjectUniqueName8 = DemoBaseXNA\\DemoBase\u0020XNA\u0020Xbox360.csproj
-		SccProjectName8 = DemoBaseXNA
-		SccLocalPath8 = DemoBaseXNA
-		SccProjectUniqueName9 = TestbedXNA\\TestBed\u0020XNA\u0020Xbox360.csproj
-		SccProjectName9 = TestbedXNA
-		SccLocalPath9 = TestbedXNA
-		SccProjectUniqueName10 = HelloWorldXNA\\HelloWorld\u0020XNA\u0020Xbox360.csproj
-		SccProjectName10 = HelloWorldXNA
-		SccLocalPath10 = HelloWorldXNA
-		SccProjectUniqueName11 = AdvancedSamplesXNA\\AdvancedSamples\u0020XNA\u0020Xbox360.csproj
-		SccProjectName11 = AdvancedSamplesXNA
-		SccLocalPath11 = AdvancedSamplesXNA
+		SccProjectUniqueName5 = SimpleSamplesXNA\\SimpleSamples\u0020XNA\u0020Xbox360.csproj
+		SccProjectName5 = SimpleSamplesXNA
+		SccLocalPath5 = SimpleSamplesXNA
+		SccProjectUniqueName6 = ..\\DebugViews\\DebugViewXNA\\DebugView\u0020XNA\u0020Xbox360.csproj
+		SccProjectName6 = ../DebugViews/DebugViewXNA
+		SccLocalPath6 = ..\\DebugViews\\DebugViewXNA
+		SccProjectUniqueName7 = DemoBaseXNA\\DemoBase\u0020XNA\u0020Xbox360.csproj
+		SccProjectName7 = DemoBaseXNA
+		SccLocalPath7 = DemoBaseXNA
+		SccProjectUniqueName8 = TestbedXNA\\TestBed\u0020XNA\u0020Xbox360.csproj
+		SccProjectName8 = TestbedXNA
+		SccLocalPath8 = TestbedXNA
+		SccProjectUniqueName9 = AdvancedSamplesXNA\\AdvancedSamples\u0020XNA\u0020Xbox360.csproj
+		SccProjectName9 = AdvancedSamplesXNA
+		SccLocalPath9 = AdvancedSamplesXNA
+		SccProjectUniqueName10 = ..\\Branches\\XNA\\Farseer\u0020Physics\u0020XNA\u0020Xbox360.csproj
+		SccProjectName10 = ../Branches/XNA
+		SccLocalPath10 = ..\\Branches\\XNA
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,24 +189,6 @@ Global
 		{09E76189-4AAE-4EDD-8605-B7C1982978FA}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 		{09E76189-4AAE-4EDD-8605-B7C1982978FA}.Release|Xbox 360.Build.0 = Release|Xbox 360
 		{09E76189-4AAE-4EDD-8605-B7C1982978FA}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Mixed Platforms.Deploy.0 = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Windows Phone.ActiveCfg = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|x86.ActiveCfg = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Debug|Xbox 360.Deploy.0 = Debug|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Any CPU.ActiveCfg = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Mixed Platforms.Deploy.0 = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Windows Phone.ActiveCfg = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|x86.ActiveCfg = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Xbox 360.Build.0 = Release|Xbox 360
-		{F395F5C9-9E54-44E4-87FB-32AC4018A6D3}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
 		{4E086B3C-0025-4329-B752-B158F5E30A33}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
 		{4E086B3C-0025-4329-B752-B158F5E30A33}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
 		{4E086B3C-0025-4329-B752-B158F5E30A33}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360

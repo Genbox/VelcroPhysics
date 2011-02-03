@@ -80,6 +80,7 @@
     <Compile Include="Tests\CantileverTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
     <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\CloneTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
     <Compile Include="Tests\CollisionProcessingTest.cs" />
     <Compile Include="Tests\CompoundShapes.cs" />
@@ -90,10 +91,13 @@
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmark.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
     <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
+    <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\SimpleWindForceTest.cs" />
     <Compile Include="Tests\SliderJointTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
@@ -187,9 +191,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Xbox360\Farseer Physics Xbox360.csproj">
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA Xbox360.csproj">
       <Project>{68C00837-1D4D-4335-9AD3-26D7E17E233B}</Project>
-      <Name>Farseer Physics Xbox360</Name>
+      <Name>Farseer Physics XNA Xbox360</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj">
       <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
@@ -217,11 +221,9 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
