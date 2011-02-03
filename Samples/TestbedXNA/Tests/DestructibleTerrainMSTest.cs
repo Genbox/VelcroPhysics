@@ -7,21 +7,22 @@ using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class DestructibleTerrainMSTest : Test
     {
-        private float[,] destroyMap;
+        private sbyte[,] destroyMap;
         private Texture2D destroyTexture;
         private float gwid;
         private List<Fixture>[,] terrainFixtures;
-        private float[,] terrainMap;
+        private sbyte[,] terrainMap;
         private Texture2D terrainTexture;
         private int xnum;
         private int ynum;
         private Vector2 _scale = new Vector2(0.07f, -0.07f);
-        private Vector2 _translate = new Vector2(-512, -512);
+        private Vector2 _translate = new Vector2(-511, -511);
 
         private DestructibleTerrainMSTest()
         {
@@ -40,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             terrainTexture.GetData(fFlat);
 
-            terrainMap = new float[terrainTexture.Width, terrainTexture.Height];
+            terrainMap = new sbyte[terrainTexture.Width, terrainTexture.Height];
 
             for (int y = 0; y < terrainTexture.Height; y++)
             {
@@ -48,9 +49,9 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Color c = fFlat[(y * terrainTexture.Width) + x];
                     if (c == Color.White)
-                        terrainMap[x, y] = 1.0f;
+                        terrainMap[x, y] = 1;
                     else
-                        terrainMap[x, y] = -1.0f;
+                        terrainMap[x, y] = -1;
                 }
             }
 
@@ -62,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             destroyTexture.GetData(fFlat);
 
-            destroyMap = new float[destroyTexture.Width, destroyTexture.Height];
+            destroyMap = new sbyte[destroyTexture.Width, destroyTexture.Height];
 
             for (int y = 0; y < destroyTexture.Height; y++)
             {
@@ -70,9 +71,9 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Color c = fFlat[(y * destroyTexture.Width) + x];
                     if (c == Color.White)
-                        destroyMap[x, y] = 1.0f;
+                        destroyMap[x, y] = 1;
                     else
-                        destroyMap[x, y] = -1.0f;
+                        destroyMap[x, y] = -1;
                 }
             }
 
@@ -99,7 +100,7 @@ namespace FarseerPhysics.TestBed.Tests
             float ax = gx * gwid;
             float ay = gy * gwid;
 
-            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 4, 4, EvalGround, 2, false);
+            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 6, 6, terrainMap, 3, true);
             if (polys.Count == 0) return;
 
             terrainFixtures[gx, gy] = new List<Fixture>();
@@ -110,42 +111,99 @@ namespace FarseerPhysics.TestBed.Tests
                 item.Translate(ref _translate);
                 item.Scale(ref _scale);
                 item.ForceCounterClockWise();
+                Vertices p = FarseerPhysics.Common.PolygonManipulation.SimplifyTools.CollinearSimplify(item);
 
-                terrainFixtures[gx, gy].Add(FixtureFactory.CreatePolygon(World, item, 1));
+                List<Vertices> decompPolys = FarseerPhysics.Common.Decomposition.EarclipDecomposer.ConvexPartition(p);
+
+                foreach (var poly in decompPolys)
+                {
+                    terrainFixtures[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1));
+                }
             }
         }
 
-        private float EvalGround(float x, float y)
+        private Vector2 WorldToMap(Vector2 point, Vector2 mapOrigin, float metersPerUnit)
         {
-            return terrainMap[(int)x, (int)y];
+            point *= new Vector2(metersPerUnit, -metersPerUnit);
+            point -= mapOrigin;
+            return point;
         }
 
-        private void Destroy()
+        private void DestroyTerrain(Vector2 location)
         {
-            float x = Microsoft.Xna.Framework.Input.Mouse.GetState().X;
-            float y = Microsoft.Xna.Framework.Input.Mouse.GetState().Y;
+            float x = location.X;
+            float y = location.Y;
 
-            //if (EvalGround(x, y) < 0)
-            if (x > 30 && x < terrainTexture.Width - 30 && y > 30 && y < terrainTexture.Height - 30)
+            if (x > 12.5f && x < terrainTexture.Width - 12.5f && y > 12.5f && y < terrainTexture.Height - 12.5f)
             {
-                for (int by = 0; by < 60; by++)
+                for (int by = 0; by < 25; by++)
                 {
-                    for (int bx = 0; bx < 60; bx++)
+                    for (int bx = 0; bx < 25; bx++)
                     {
-                        var ax = x - 30 + bx;
-                        var ay = y - 30 + by;
+                        var ax = x - 12.5f + bx;
+                        var ay = y - 12.5f + by;
                         if (destroyMap[bx, by] < 0)
-                            terrainMap[(int)ax, (int)ay] = -destroyMap[bx, by];
+                            terrainMap[(int)ax, (int)ay] = (sbyte)-destroyMap[bx, by];
                     }
                 }
 
                 //iterate effected cells
-                var gx0 = (int)((x - 30) / gwid);
-                var gx1 = (int)((x + 30) / gwid) + 1;
+                var gx0 = (int)((x - 12.5f) / gwid);
+                var gx1 = (int)((x + 12.5f) / gwid) + 1;
                 if (gx0 < 0) gx0 = 0;
                 if (gx1 > xnum) gx1 = xnum;
-                var gy0 = (int)((y - 30) / gwid);
-                var gy1 = (int)((y + 30) / gwid) + 1;
+                var gy0 = (int)((y - 12.5f) / gwid);
+                var gy1 = (int)((y + 12.5f) / gwid) + 1;
+                if (gy0 < 0) gy0 = 0;
+                if (gy1 > ynum) gy1 = ynum;
+
+                for (int gx = gx0; gx < gx1; gx++)
+                {
+                    for (int gy = gy0; gy < gy1; gy++)
+                    {
+                        //remove old terrain object at grid cell
+                        if (terrainFixtures[gx, gy] != null)
+                        {
+                            for (int i = 0; i < terrainFixtures[gx, gy].Count; i++)
+                            {
+                                World.RemoveBody(terrainFixtures[gx, gy][i].Body);
+                            }
+                        }
+
+                        terrainFixtures[gx, gy] = null;
+
+                        //generate new one
+                        GenerateTerrain(gx, gy);
+                    }
+                }
+            }
+        }
+
+        private void CreateTerrain(Vector2 location)
+        {
+            float x = location.X;
+            float y = location.Y;
+
+            if (x > 12.5f && x < terrainTexture.Width - 12.5f && y > 12.5f && y < terrainTexture.Height - 12.5f)
+            {
+                for (int by = 0; by < 25; by++)
+                {
+                    for (int bx = 0; bx < 25; bx++)
+                    {
+                        var ax = x - 12.5f + bx;
+                        var ay = y - 12.5f + by;
+                        if (destroyMap[bx, by] < 0)
+                            terrainMap[(int)ax, (int)ay] = (sbyte)destroyMap[bx, by];
+                    }
+                }
+
+                //iterate effected cells
+                var gx0 = (int)((x - 12.5f) / gwid);
+                var gx1 = (int)((x + 12.5f) / gwid) + 1;
+                if (gx0 < 0) gx0 = 0;
+                if (gx1 > xnum) gx1 = xnum;
+                var gy0 = (int)((y - 12.5f) / gwid);
+                var gy1 = (int)((y + 12.5f) / gwid) + 1;
                 if (gy0 < 0) gy0 = 0;
                 if (gy1 > ynum) gy1 = ynum;
 
@@ -173,14 +231,27 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Mouse(MouseState state, MouseState oldState)
         {
+            Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+
+            Vector2 mapPosition = WorldToMap(position, _translate, 1f / 0.07f);
+
             if (state.LeftButton == ButtonState.Pressed)
-                Destroy();
-
-            if (state.RightButton == ButtonState.Pressed && oldState.RightButton == ButtonState.Released)
             {
-                Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+                DebugView.DrawCircle(position, 0.75f, Color.Red);
 
-                Fixture f = FixtureFactory.CreateCircle(World, 1, 1, position);
+                DestroyTerrain(mapPosition);
+            }
+
+            if (state.RightButton == ButtonState.Pressed)
+            {
+                DebugView.DrawCircle(position, 0.75f, Color.Blue);
+
+                CreateTerrain(mapPosition);
+            }
+
+            if (state.MiddleButton == ButtonState.Pressed && oldState.MiddleButton == ButtonState.Released)
+            {
+                Fixture f = FixtureFactory.CreateCircle(World, 0.5f, 1, position);
 
                 f.Body.IsStatic = false;
             }
@@ -192,7 +263,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             DebugView.DrawString(50, TextLine, "Left click and drag the mouse to destroy terrain!");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Right click to create objects!");
+            DebugView.DrawString(50, TextLine, "Right click and drag the mouse to create terrain!");
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Middle click to create circles!");
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Total Polygons: " + World.BodyList.Count);
             TextLine += 15;
