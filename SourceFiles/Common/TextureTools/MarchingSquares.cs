@@ -2,320 +2,320 @@
 using System.Linq;
 using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace FarseerPhysics.Common
 {
     // Ported by Matthew Bettcher
 
-    /// <summary>
-    /// Given a position this delegate should return true if the given position is inside a solid area.
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    public delegate float Evaluate(float x, float y);
-
     public static class MarchingSquares
     {
-        internal class GeomPolyVal
-        {
-            /** Associated polygon at coordinate **/
-            /** Key of original sub-polygon **/
-            public int Key;
-            public Vertices P;
+        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-            public GeomPolyVal(Vertices p, int key)
-            {
-                P = p;
-                Key = key;
+        /**
+            Evaluate marching squares itself over a mesh defined in the given domain with
+            the given cell dimensions (wid,hei).
+		
+            Marching squares will be evaluated for each of these cells using the sub-mesh defined
+            by the sub-dimensions (swid,shei) using the functino f, and recursive linear interpolation
+            count 'cnt' as usual.
+		
+            For this method, composition is always implied.
+        **/
+        /*
+        static public function marchingMesh(domain:AABB,cell_width:Float,cell_height:Float,subcell_width:Float,subcell_height:Float,f:Float->Float->Float,?lerp_count:Int=0) {
+            var ret = new CxFastList(GeomPoly)();
+		
+            var xn = Std.int(domain.width ()/cell_width);  var xp = xn == (domain.width ()/cell_width);
+            var yn = Std.int(domain.height()/cell_height); var yp = yn == (domain.height()/cell_height);
+            if(!xp) xn++;
+            if(!yp) yn++;
+		
+            var sdomain = new AABB(0,0,0,0);
+		
+            for(x in 0...(xn)) {
+                sdomain.minx = x*cell_width+domain.minx;
+                sdomain.maxx = if(x==xn-1) domain.maxx else sdomain.minx+cell_width;
+                for(y in 0...(yn)) {
+                    sdomain.miny = y*cell_height+domain.miny; 
+                    sdomain.maxy = if(y==yn-1) domain.maxy else sdomain.miny+cell_height;
+				
+                    var tri = marchingSquares(sdomain,subcell_width,subcell_height,f,lerp_count);
+                    ret.addAll(tri);
+                }
             }
+		
+            return ret;
         }
+        */
+        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-        private static int[] _lookMarch = new[]
-        {
-            0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B,
-            0x8D, 0x6D, 0xB5, 0x55
-        };
+
 
         /// <summary>
-        /// Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1) 
-        /// such as to approximate value(return) = 0
+        /// Marching squares over the given domain using the mesh defined via the dimensions
+        ///    (wid,hei) to build a set of polygons such that f(x,y) < 0, using the given number
+        ///    'bin' for recursive linear inteprolation along cell boundaries.
+        ///
+        ///    if 'comb' is true, then the polygons will also be composited into larger possible concave
+        ///    polygons.
         /// </summary>
-        /// <param name="x0"></param>
-        /// <param name="x1"></param>
-        /// <param name="v0"></param>
-        /// <param name="v1"></param>
+        /// <param name="domain"></param>
+        /// <param name="cell_width"></param>
+        /// <param name="cell_height"></param>
+        /// <param name="f"></param>
+        /// <param name="lerp_count"></param>
+        /// <param name="combine"></param>
         /// <returns></returns>
-        private static float Lerp(float x0, float x1, float v0, float v1)
+        public static List<Vertices> DetectSquares(AABB domain, float cell_width, float cell_height, sbyte[,] f, int lerp_count, bool combine)
         {
-            float dv = v0 - v1;
-            float g;
-            bool t = dv * dv < float.Epsilon;
-            if (t) g = 0.5f;
-            else g = v0 / dv;
-            return x0 + g * (x1 - x0);
-        }
+            var ret = new CxFastList<GeomPoly>();
 
-        // TODO make sure f is supposed to be a 2 dimensional array of floats
-        /** Recursive linear interpolation for use in marching squares **/
+            List<Vertices> verticesList = new List<Vertices>();
 
-        private static float Xlerp(float x0, float x1, float y, float v0, float v1, Evaluate f, int c)
-        {
-            float xm = Lerp(x0, x1, v0, v1);
-            if (c == 0) return xm;
-            else
-            {
-                float vm = f(xm, y);
-                if (v0 * vm < 0) return Xlerp(x0, xm, y, v0, vm, f, c - 1);
-                else return Xlerp(xm, x1, y, vm, v1, f, c - 1);
-            }
-        }
+            List<GeomPoly> polyList = ret.GetListOfElements();
 
-        // TODO make sure f is supposed to be a 2 dimensional array of floats
-        /** Recursive linear interpolation for use in marching squares **/
-
-        private static float Ylerp(float y0, float y1, float x, float v0, float v1, Evaluate f, int c)
-        {
-            float ym = Lerp(y0, y1, v0, v1);
-            if (c == 0) return ym;
-            else
-            {
-                float vm = f(x, ym);
-                if (v0 * vm < 0) return Ylerp(y0, ym, x, v0, vm, f, c - 1);
-                else return Ylerp(ym, y1, x, vm, v1, f, c - 1);
-            }
-        }
-
-        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, Evaluate f,
-                                                           int recursionLevels, bool combine)
-        {
-            // this is a list of all our scanline polygons for this row inside a list of of scanlines
-            List<Vertices> polys = new List<Vertices>();
-
-            float domainWidth = domain.UpperBound.X - domain.LowerBound.X;
-            float domainHeight = domain.UpperBound.Y - domain.LowerBound.Y;
-
-            int xn = (int)(domainWidth / cellWidth);
-            bool xp = xn == (domainWidth / cellWidth);
-            int yn = (int)(domainHeight / cellHeight);
-            bool yp = yn == (domainHeight / cellHeight);
+            var xn = (int)(domain.Extents.X * 2 / cell_width); var xp = xn == (domain.Extents.X * 2 / cell_width);
+            var yn = (int)(domain.Extents.Y * 2 / cell_height); var yp = yn == (domain.Extents.Y * 2 / cell_height);
             if (!xp) xn++;
             if (!yp) yn++;
 
-            float[,] fs = new float[xn + 1, yn + 1];
-
-            // ps is only needed for combining slices together and is not needed yet!
-            //ps = new GeomPolyVal[xn + 1, yn + 1];
-
+            var fs = new sbyte[xn + 1, yn + 1];
+            var ps = new GeomPolyVal[xn + 1, yn + 1];
             //populate shared function lookups.
-            for (int x = 0; x < (xn + 1); x++)
+            for (int x = 0; x < xn + 1; x++)
             {
-                float x0;
-                if (x == xn)
-                    x0 = domain.UpperBound.X;
-                else
-                    x0 = x * cellWidth + domain.LowerBound.X;
-
-                for (int y = 0; y < (yn + 1); y++)
+                int x0;
+                if (x == xn) x0 = (int)domain.UpperBound.X; else x0 = (int)(x * cell_width + domain.LowerBound.X);
+                for (int y = 0; y < yn + 1; y++)
                 {
-                    float y0;
-                    if (y == yn)
-                        y0 = domain.UpperBound.Y;
-                    else
-                        y0 = y * cellHeight + domain.LowerBound.Y;
-                    fs[x, y] = f(x0, y0);
+                    int y0;
+                    if (y == yn) y0 = (int)domain.UpperBound.Y; else y0 = (int)(y * cell_height + domain.LowerBound.Y);
+                    fs[x, y] = f[x0, y0];
                 }
             }
 
             //generate sub-polys and combine to scan lines
             for (int y = 0; y < yn; y++)
             {
-                float y0 = y * cellHeight + domain.LowerBound.Y;
-                float y1;
-                if (y == yn - 1)
-                    y1 = domain.UpperBound.Y;
-                else
-                    y1 = y0 + cellHeight;
-
-                // our big scanline poly
-                LinkedList<Vector2> scanlinePoly = new LinkedList<Vector2>();
-                LinkedListNode<Vector2> rightTopMost = null;
-                LinkedListNode<Vector2> rightBottomMost = null;
-
+                var y0 = y * cell_height + domain.LowerBound.Y; float y1; if (y == yn - 1) y1 = domain.UpperBound.Y; else y1 = y0 + cell_height;
+                GeomPoly pre = null;
                 for (int x = 0; x < xn; x++)
                 {
-                    float x0 = x * cellWidth + domain.LowerBound.X;
-                    float x1;
-                    if (x == xn - 1)
-                        x1 = domain.UpperBound.X;
-                    else
-                        x1 = x0 + cellWidth;
+                    var x0 = x * cell_width + domain.LowerBound.X; float x1; if (x == xn - 1) x1 = domain.UpperBound.X; else x1 = x0 + cell_width;
 
-                    Vertices p = new Vertices();
-                    var key = MarchSquare(f, fs, ref p, x, y, x0, y0, x1, y1, recursionLevels);
-
-                    if (combine)
+                    GeomPoly p = new GeomPoly();
+                    var key = marchSquare(f, fs, ref p, x, y, x0, y0, x1, y1, lerp_count);
+                    if (p.length != 0)
                     {
-                        // In the new method we create scanline (read horizontal) polygons on the fly!
-                        // These polygons must be as simple as possible.
-
-                        // first get to the code to add the current key to the scanline polygon or
-                        // end this scanline polygon.
-                        switch (key)
+                        if (combine && pre != null && (key & 9) != 0)
                         {
-                            case 1:
-                                // scanline polygon finisher
-                                rightBottomMost.Value = p[0];
-                                polys.Add(new Vertices(scanlinePoly.ToList()));
-                                break;
-                            case 2:
-                                // this is a starter key
-                                scanlinePoly.Clear();
-                                rightTopMost = scanlinePoly.AddLast(p[0]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightTopMost, p[2]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[1]);
-                                break;
-                            case 3:
-                                // this square should add a top vertex and move the bottom
-                                // first check if the previous point has the same y
-                                if (rightTopMost.Previous.Value.Y == rightTopMost.Value.Y)
-                                    rightTopMost.Value = p[0];
-                                else
-                                    rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[0]);
-                                rightBottomMost.Value = p[1];
-                                break;
-                            case 4:
-                                // this is a starter key
-                                scanlinePoly.Clear();
-                                scanlinePoly.AddLast(p[0]);
-                                rightTopMost = scanlinePoly.AddLast(p[1]);
-                                rightBottomMost = scanlinePoly.AddLast(p[2]);
-                                break;
-                            case 5:
-                                // this is the ambiguous case...
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[0]);
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[1]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[3]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[2]);
-                                break;
-                            case 6:
-                                // this is a starter key
-                                scanlinePoly.Clear();
-                                scanlinePoly.AddLast(p[0]);
-                                rightTopMost = scanlinePoly.AddLast(p[1]);
-                                rightBottomMost = scanlinePoly.AddLast(p[2]);
-                                scanlinePoly.AddLast(p[3]);
-                                break;
-                            case 7:
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[0]);
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[1]);
-                                rightBottomMost.Value = p[2];
-                                break;
-                            case 8:
-                                // scanline polygon finisher
-                                rightTopMost.Value = p[1];
-                                polys.Add(new Vertices(scanlinePoly.ToList()));
-                                break;
-                            case 9:
-                                // scanline polygon finisher
-                                rightTopMost.Value = p[1];
-                                rightBottomMost.Value = p[2];
-                                polys.Add(new Vertices(scanlinePoly.ToList()));
-                                break;
-                            case 10:
-                                // this is the ambiguous case...
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[0]);
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[1]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[3]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[2]);
-                                break;
-                            case 11:
-                                rightTopMost.Value = p[1];
-                                rightTopMost = scanlinePoly.AddAfter(rightTopMost, p[2]);
-                                rightBottomMost.Value = p[3];
-                                break;
-                            case 12:
-                                rightTopMost.Value = p[1];
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[2]);
-                                break;
-                            case 13:
-                                //
-                                rightTopMost.Value = p[1];
-                                rightBottomMost.Value = p[3];
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[2]);
-                                break;
-                            case 14:
-                                rightTopMost.Value = p[1];
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[3]);
-                                rightBottomMost = scanlinePoly.AddBefore(rightBottomMost, p[2]);
-                                break;
-                            case 15:
-                                // this square just moves the top and bottom vertices over
-                                rightTopMost.Value = p[1];
-                                rightBottomMost.Value = p[2];
-                                break;
+                            combLeft(ref pre, ref p);
+                            p = pre;
                         }
+                        else
+                            ret.add(p);
+                        ps[x, y] = new GeomPolyVal(p, key);
                     }
                     else
+                        p = null;
+                    pre = p;
+                }
+            }
+            if (!combine)
+            {
+                polyList = ret.GetListOfElements();
+
+                foreach (var poly in polyList)
+                {
+                    verticesList.Add(new Vertices(poly.points.GetListOfElements()));
+                }
+
+                return verticesList;
+            }
+
+            //combine scan lines together
+            for (int y = 1; y < yn; y++)
+            {
+                var x = 0;
+                while (x < xn)
+                {
+                    var p = ps[x, y];
+
+                    //skip along scan line if no polygon exists at this point
+                    if (p == null) { x++; continue; }
+
+                    //skip along if current polygon cannot be combined above.
+                    if ((p.key & 12) == 0) { x++; continue; }
+
+                    //skip along if no polygon exists above.
+                    var u = ps[x, y - 1];
+                    if (u == null) { x++; continue; }
+
+                    //skip along if polygon above cannot be combined with.
+                    if ((u.key & 3) == 0) { x++; continue; }
+
+                    var ax = x * cell_width + domain.LowerBound.X;
+                    var ay = y * cell_height + domain.LowerBound.Y;
+
+                    var bp = p.p.points;
+                    var ap = u.p.points;
+
+                    //skip if it's already been combined with above polygon
+                    if (u.p == p.p) { x++; continue; }
+
+                    //combine above (but disallow the hole thingies
+                    var bi = bp.begin();
+                    while (square(bi.elem().Y - ay) > float.Epsilon || bi.elem().X < ax) bi = bi.next();
+
+                    Vector2 b0 = bi.elem();
+                    var b1 = bi.next().elem();
+                    if (square(b1.Y - ay) > float.Epsilon) { x++; continue; }
+
+                    var brk = true;
+                    var ai = ap.begin();
+                    while (ai != ap.end())
                     {
-                        if (p.Count > 0)
+                        if (vec_dsq(ai.elem(), b1) < float.Epsilon)
                         {
-                            polys.Add(p);
+                            brk = false;
+                            break;
                         }
+                        ai = ai.next();
                     }
-                    // again ps will only be used when the combine code is finished
-                    //ps[x, y] = new GeomPolyVal(p, key);
+                    if (brk) { x++; continue; }
+
+                    var bj = bi.next().next(); if (bj == bp.end()) bj = bp.begin();
+                    while (bj != bi)
+                    {
+                        ai = ap.insert(ai, bj.elem());  // .clone()
+                        bj = bj.next(); if (bj == bp.end()) bj = bp.begin();
+                        u.p.length++;
+                    }
+                    //u.p.simplify(float.Epsilon,float.Epsilon);
+                    //
+                    ax = x + 1;
+                    while (ax < xn)
+                    {
+                        var p2 = ps[(int)ax, y];
+                        if (p2 == null || p2.p != p.p) { ax++; continue; }
+                        p2.p = u.p;
+                        ax++;
+                    }
+                    ax = x - 1;
+                    while (ax >= 0)
+                    {
+                        var p2 = ps[(int)ax, y];
+                        if (p2 == null || p2.p != p.p) { ax--; continue; }
+                        p2.p = u.p;
+                        ax--;
+                    }
+                    ret.remove(p.p);
+                    p.p = u.p;
+
+                    x = (int)((bi.next().elem().X - domain.LowerBound.X) / cell_width) + 1;
+                    //x++; this was already commented out!
                 }
             }
 
-            return polys;
+            polyList = ret.GetListOfElements();
+
+            foreach (var poly in polyList)
+            {
+                verticesList.Add(new Vertices(poly.points.GetListOfElements()));
+            }
+
+            return verticesList;
         }
 
-        /// <summary>
-        /// Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1)
-        /// using the function f for recursive interpolation, given the look-up table 'fs' of
-        /// the values of 'f' at cell vertices with the result to be stored in 'poly' given the actual
-        /// coordinates of 'ax' 'ay' in the marching squares mesh.
-        /// </summary>
-        /// <param name="f"></param>
-        /// <param name="fs"></param>
-        /// <param name="poly"></param>
-        /// <param name="ax"></param>
-        /// <param name="ay"></param>
-        /// <param name="x0"></param>
-        /// <param name="y0"></param>
-        /// <param name="x1"></param>
-        /// <param name="y1"></param>
-        /// <param name="bin"></param>
-        /// <returns></returns>
-        private static int MarchSquare(Evaluate f, float[,] fs, ref Vertices poly, int ax, int ay, float x0, float y0,
-                                      float x1, float y1, int bin)
+        #region Private Methods
+
+        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        /** Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1)
+            such as to approximate value(return) = 0
+        **/
+        private static float lerp(float x0, float x1, float v0, float v1)
+        {
+            var dv = v0 - v1;
+            float t;
+            if (dv * dv < float.Epsilon)
+                t = 0.5f;
+            else t = v0 / dv;
+            return x0 + t * (x1 - x0);
+        }
+
+        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        /** Recursive linear interpolation for use in marching squares **/
+        private static float xlerp(float x0, float x1, float y, float v0, float v1, sbyte[,] f, int c)
+        {
+            var xm = lerp(x0, x1, v0, v1);
+            if (c == 0) return xm;
+            else
+            {
+                var vm = f[(int)xm, (int)y];
+                if (v0 * vm < 0) return xlerp(x0, xm, y, v0, vm, f, c - 1);
+                else return xlerp(xm, x1, y, vm, v1, f, c - 1);
+            }
+        }
+
+        /** Recursive linear interpolation for use in marching squares **/
+        private static float ylerp(float y0, float y1, float x, float v0, float v1, sbyte[,] f, int c)
+        {
+            var ym = lerp(y0, y1, v0, v1);
+            if (c == 0) return ym;
+            else
+            {
+                var vm = f[(int)x, (int)ym];
+                if (v0 * vm < 0) return ylerp(y0, ym, x, v0, vm, f, c - 1);
+                else return ylerp(ym, y1, x, vm, v1, f, c - 1);
+            }
+        }
+
+        /** Square value for use in marching squares **/
+        private static float square(float x) { return x * x; }
+
+        private static float vec_dsq(Vector2 a, Vector2 b)
+        {
+            Vector2 d = a - b;
+            return d.X * d.X + d.Y * d.Y;
+        }
+
+        private static float vec_cross(Vector2 a, Vector2 b)
+        {
+            return a.X * b.Y - a.Y * b.X;
+        }
+
+        /** Look-up table to relate polygon key with the vertices that should be used for
+            the sub polygon in marching squares
+        **/
+        private static int[] look_march = { 0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D, 0x6D, 0xB5, 0x55 };
+        /** Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1)
+            using the function f for recursive interpolation, given the look-up table 'fs' of
+            the values of 'f' at cell vertices with the result to be stored in 'poly' given the actual
+            coordinates of 'ax' 'ay' in the marching squares mesh.
+        **/
+        private static int marchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0, float x1, float y1, int bin)
         {
             //key lookup
-            int key = 0;
-            float v0 = fs[ax, ay];
-            if (v0 < 0) key |= 8;
-            float v1 = fs[ax + 1, ay];
-            if (v1 < 0) key |= 4;
-            float v2 = fs[ax + 1, ay + 1];
-            if (v2 < 0) key |= 2;
-            float v3 = fs[ax, ay + 1];
-            if (v3 < 0) key |= 1;
+            var key = 0;
+            var v0 = fs[ax, ay]; if (v0 < 0) key |= 8;
+            var v1 = fs[ax + 1, ay]; if (v1 < 0) key |= 4;
+            var v2 = fs[ax + 1, ay + 1]; if (v2 < 0) key |= 2;
+            var v3 = fs[ax, ay + 1]; if (v3 < 0) key |= 1;
 
-            int val = _lookMarch[key];
+            var val = look_march[key];
             if (val != 0)
             {
-                int pi = 0; // null?
+                CxFastListNode<Vector2> pi = null;
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 p;
                     if ((val & (1 << i)) != 0)
                     {
                         if (i == 7 && (val & 1) == 0)
-                        {
-                            p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
-                            poly.Add(p);
-                        }
+                            poly.points.add(p = new Vector2(x0, ylerp(y0, y1, x0, v0, v3, f, bin)));
                         else
                         {
                             if (i == 0) p = new Vector2(x0, y0);
@@ -323,21 +323,466 @@ namespace FarseerPhysics.Common
                             else if (i == 4) p = new Vector2(x1, y1);
                             else if (i == 6) p = new Vector2(x0, y1);
 
-                            else if (i == 1) p = new Vector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
-                            else if (i == 5) p = new Vector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
+                            else if (i == 1) p = new Vector2(xlerp(x0, x1, y0, v0, v1, f, bin), y0);
+                            else if (i == 5) p = new Vector2(xlerp(x0, x1, y1, v3, v2, f, bin), y1);
 
-                            else if (i == 3) p = new Vector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
-                            else p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
+                            else if (i == 3) p = new Vector2(x1, ylerp(y0, y1, x1, v1, v2, f, bin));
+                            else p = new Vector2(x0, ylerp(y0, y1, x0, v0, v3, f, bin));
 
-                            poly.Add(p);
-                            pi = poly.IndexOf(p);
+                            pi = poly.points.insert(pi, p);
                         }
+                        poly.length++;
                     }
                 }
-                // what could possibly need simplified here?
-                //poly.simplify(Const.EPSILON,Const.EPSILON);
+                //poly.simplify(float.Epsilon,float.Epsilon);
             }
             return key;
         }
+
+        /** Used in polygon composition to composit polygons into scan lines
+            Combining polya and polyb into one super-polygon stored in polya.
+        **/
+        private static void combLeft(ref GeomPoly polya, ref GeomPoly polyb)
+        {
+            var ap = polya.points;
+            var bp = polyb.points;
+            var ai = ap.begin();
+            var bi = bp.begin();
+
+            var b = bi.elem();
+            CxFastListNode<Vector2> prea = null;
+            while (ai != ap.end())
+            {
+                var a = ai.elem();
+                if (vec_dsq(a, b) < float.Epsilon)
+                {
+                    //ignore shared vertex if parallel
+                    if (prea != null)
+                    {
+                        var a0 = prea.elem();
+                        b = bi.next().elem();
+
+                        Vector2 u = a - a0;
+                        //vec_new(u); vec_sub(a.p.p, a0.p.p, u);
+                        Vector2 v = b - a;
+                        //vec_new(v); vec_sub(b.p.p, a.p.p, v);
+                        var dot = vec_cross(u, v);
+                        if (dot * dot < float.Epsilon)
+                        {
+                            ap.erase(prea, ai);
+                            polya.length--;
+                            ai = prea;
+                        }
+                    }
+
+                    //insert polyb into polya
+                    var fst = true;
+                    CxFastListNode<Vector2> preb = null;
+                    while (!bp.empty())
+                    {
+                        var bb = bp.front();
+                        bp.pop();
+                        if (!fst && !bp.empty())
+                        {
+                            ai = ap.insert(ai, bb);
+                            polya.length++;
+                            preb = ai;
+                        }
+                        fst = false;
+                    }
+
+                    //ignore shared vertex if parallel
+                    ai = ai.next();
+                    var a1 = ai.elem();
+                    ai = ai.next(); if (ai == ap.end()) ai = ap.begin();
+                    var a2 = ai.elem();
+                    var a00 = preb.elem();
+                    Vector2 uu = a1 - a00;
+                    //vec_new(u); vec_sub(a1.p, a0.p, u);
+                    Vector2 vv = a2 - a1;
+                    //vec_new(v); vec_sub(a2.p, a1.p, v);
+                    var dot1 = vec_cross(uu, vv);
+                    if (dot1 * dot1 < float.Epsilon)
+                    {
+                        ap.erase(preb, preb.next());
+                        polya.length--;
+                    }
+
+                    return;
+                }
+                prea = ai;
+                ai = ai.next();
+            }
+        }
+
+        #endregion
+
+        #region CxFastList from nape physics
+
+        internal class CxFastListNode<T>
+        {
+            internal T _elt;
+            internal CxFastListNode<T> _next;
+
+            public T elem()
+            {
+                return _elt;
+            }
+
+            public CxFastListNode<T> next()
+            {
+                return _next;
+            }
+
+            public CxFastListNode(T obj)
+            {
+                _elt = obj;
+            }
+        }
+
+
+        /// <summary>
+        /// Designed as a complete port of CxFastList from CxStd.
+        /// </summary>
+        internal class CxFastList<T>
+        {
+            // first node in the list
+            private CxFastListNode<T> _head = null;
+            private int count;
+
+            /// <summary>
+            /// Iterator to start of list (O(1))
+            /// </summary>
+            public CxFastListNode<T> begin()
+            {
+                return _head;
+            }
+
+            /// <summary>
+            /// Iterator to end of list (O(1))
+            /// </summary>
+            public CxFastListNode<T> end()
+            {
+                return null;
+            }
+
+            /// <summary>
+            /// Returns first element of list (O(1))
+            /// </summary>
+            public T front()
+            {
+                return _head.elem();
+            }
+
+            /// <summary>
+            /// Returns last element of list (O(n))
+            /// </summary>
+            public T back()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Returns element at index 'ind' (O(ind))
+            /// </summary>
+            public T at(int i)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Returns iterator to element at 'ind' (O(ind))
+            /// </summary>
+            //public CxFastListNode<T> at(int i)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            /// <summary>
+            /// Reverses the list (O(n))
+            /// </summary>
+            public void reverse()
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Element pointed to by iterator
+            /// </summary>
+            public T elem()
+            {
+                return _head.elem();
+            }
+
+            /// <summary>
+            /// add object to list (O(1))
+            /// </summary>
+            public CxFastListNode<T> add(T value)
+            {
+                CxFastListNode<T> newNode = new CxFastListNode<T>(value);
+                if (this._head == null)
+                {
+                    newNode._next = null;
+                    this._head = newNode;
+                    this.count++;
+                    return newNode;
+                }
+                newNode._next = this._head;
+                this._head = newNode;
+
+                this.count++;
+
+                return newNode;
+            }
+
+            /// <summary>
+            /// add all elements of the list of same type. (O(n)) with n length of the argument list.
+            /// </summary>
+            public void addAll(CxFastList<T> list)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// remove object from list, returns true if an element was removed (O(n))
+            /// </summary>
+            public bool remove(T value)
+            {
+                CxFastListNode<T> head = _head;
+                CxFastListNode<T> prev = _head;
+
+                EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+
+                if (head != null)
+                {
+                    if (value != null)
+                    {
+                        do
+                        {
+                            // if we are on the value to be removed
+                            if (comparer.Equals(head._elt, value))
+                            {
+                                // then we need to patch the list
+                                // check to see if we are removing the _head
+                                if (head == _head)
+                                {
+                                    _head = head._next;
+                                    this.count--;
+                                    return true;
+                                }
+                                else
+                                {
+                                    // were not at the head
+                                    prev._next = head._next;
+                                    this.count--;
+                                    return true;
+                                }
+                            }
+                            // cache the current as the previous for the next go around
+                            prev = head;
+                            head = head._next;
+                        }
+                        while (head != null);
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// pop element from head of list (O(1)) Note: this does not return the object popped! 
+            /// There is good reason to this, and it regards the Alloc list variants which guarantee 
+            /// objects are released to the object pool. You do not want to retrieve an element 
+            /// through pop or else that object may suddenly be used by another piece of code which 
+            /// retrieves it from the object pool.
+            /// </summary>
+            public CxFastListNode<T> pop()
+            {
+                return erase(null, _head);
+            }
+
+            /// <summary>
+            /// insert object after 'node' returning an iterator to the inserted object.
+            /// </summary>
+            public CxFastListNode<T> insert(CxFastListNode<T> node, T value)
+            {
+                if (node == null)
+                {
+                    return add(value);
+                }
+                CxFastListNode<T> newNode = new CxFastListNode<T>(value);
+                CxFastListNode<T> nextNode = node._next;
+                newNode._next = nextNode;
+                node._next = newNode;
+
+                this.count++;
+
+                return newNode;
+            }
+
+            /// <summary>
+            /// removes the element pointed to by 'node' with 'prev' being the previous iterator, 
+            /// returning an iterator to the element following that of 'node' (O(1))
+            /// </summary>
+            public CxFastListNode<T> erase(CxFastListNode<T> prev, CxFastListNode<T> node)
+            {
+                // cache the node after the node to be removed
+                CxFastListNode<T> nextNode = node._next;
+                if (prev != null)
+                    prev._next = nextNode;
+                else if (_head != null)
+                    _head = _head._next;
+                else
+                    return null;
+
+                this.count--;
+                return nextNode;
+            }
+
+            /// <summary>
+            /// removes 'cnt' elements starting at 'cur' with 'pre' being the previous iterator, 
+            /// returning an iterator to the element following those deleted. (O(cnt)).
+            /// </summary>
+            public CxFastListNode<T> splice(CxFastListNode<T> pre, CxFastListNode<T> curr, int cnt)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// whether the list is empty (O(1))
+            /// </summary>
+            public bool empty()
+            {
+                if (_head == null)
+                    return true;
+                return false;
+            }
+
+            /// <summary>
+            /// computes size of list (O(n))
+            /// </summary>
+            public int size()
+            {
+                var i = begin();
+                var count = 0;
+
+                do
+                {
+                    count++;
+                } while (i.next() != null);
+
+                return count;
+            }
+
+            /// <summary>
+            /// empty the list (O(1) if CxMixList, O(n) otherwise)
+            /// </summary>
+            public void clear()
+            {
+                CxFastListNode<T> head = this._head;
+                while (head != null)
+                {
+                    CxFastListNode<T> node2 = head;
+                    head = head._next;
+                    node2._next = null;
+                }
+                this._head = null;
+                this.count = 0;
+            }
+
+            /// <summary>
+            /// returns true if 'value' is an element of the list (O(n))
+            /// </summary>
+            public bool has(T value)
+            {
+                return (this.Find(value) != null);
+            }
+
+            // Non CxFastList Methods 
+            public CxFastListNode<T> Find(T value)
+            {
+                // start at head
+                CxFastListNode<T> head = this._head;
+                EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+                if (head != null)
+                {
+                    if (value != null)
+                    {
+                        do
+                        {
+                            if (comparer.Equals(head._elt, value))
+                            {
+                                return head;
+                            }
+                            head = head._next;
+                        }
+                        while (head != this._head);
+                    }
+                    else
+                    {
+                        do
+                        {
+                            if (head._elt == null)
+                            {
+                                return head;
+                            }
+                            head = head._next;
+                        }
+                        while (head != this._head);
+                    }
+                }
+                return null;
+            }
+
+            public List<T> GetListOfElements()
+            {
+                List<T> list = new List<T>();
+
+                var iter = begin();
+
+                if (iter != null)
+                {
+                    do
+                    {
+                        list.Add(iter._elt);
+                        iter = iter._next;
+                    } while (iter != null);
+
+                }
+                return list;
+            }
+        }
+
+        #endregion
+
+        #region Internal Stuff
+
+        internal class GeomPolyVal
+        {
+            /** Associated polygon at coordinate **/
+            public GeomPoly p;
+            /** Key of original sub-polygon **/
+            public int key;
+
+            public GeomPolyVal(GeomPoly P, int K)
+            {
+                p = P;
+                key = K;
+            }
+        }
+
+        internal class GeomPoly
+        {
+            public CxFastList<Vector2> points;
+
+            public int length;
+
+            public GeomPoly()
+            {
+                points = new CxFastList<Vector2>();
+                length = 0;
+            }
+        }
+
+        #endregion
     }
 }
