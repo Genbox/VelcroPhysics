@@ -302,7 +302,7 @@ namespace FarseerPhysics.Common
             _writer.WriteElementString("Type", type.FullName);
 
             _writer.WriteStartElement("Value");
-            XmlSerializer serializer = new XmlSerializerFactory().CreateSerializer(type);
+            XmlSerializer serializer = new XmlSerializer(type);
             XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
             xmlnsEmpty.Add("", "");
             serializer.Serialize(_writer, val, xmlnsEmpty);
@@ -1117,7 +1117,6 @@ namespace FarseerPhysics.Common
         public string InnerXml { get; set; }
     }
 
-    [Serializable]
     public class XMLFragmentException : Exception
     {
         public XMLFragmentException()
@@ -1131,13 +1130,6 @@ namespace FarseerPhysics.Common
 
         public XMLFragmentException(string message, Exception inner)
             : base(message, inner)
-        {
-        }
-
-        protected XMLFragmentException(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context)
         {
         }
     }
