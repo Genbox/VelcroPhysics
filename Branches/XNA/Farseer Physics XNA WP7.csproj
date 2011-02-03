@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-    <ProjectGuid>{aa6cb78e-9484-4843-8613-54cd2bf1e948}</ProjectGuid>
+    <ProjectGuid>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
@@ -43,6 +43,10 @@
     <TileImage Condition="$(XnaOutputType)=='Game'">Background.png</TileImage>
     <TileTitle Condition="$(XnaOutputType)=='Game'">$(AssemblyName)</TileTitle>
     <SupportedCultures />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Debug</OutputPath>
@@ -286,8 +290,14 @@
     <Compile Include="..\..\sourcefiles\common\PolygonTools.cs">
       <Link>Common\PolygonTools.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\common\TextureConverter.cs">
-      <Link>Common\TextureConverter.cs</Link>
+    <Compile Include="..\..\SourceFiles\Common\Serialization.cs">
+      <Link>Common\Serialization.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\MarchingSquares.cs">
+      <Link>Common\TextureTools\MarchingSquares.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
+      <Link>Common\TextureTools\TextureConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\common\Vertices.cs">
       <Link>Common\Vertices.cs</Link>
@@ -417,6 +427,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
+    <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
@@ -429,7 +440,6 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>

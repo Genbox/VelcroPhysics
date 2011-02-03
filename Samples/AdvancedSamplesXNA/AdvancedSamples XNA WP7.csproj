@@ -74,9 +74,9 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\WP7\Farseer Physics WP7.csproj">
-      <Project>{FB9FD837-9D1C-4878-B5F6-E79A44F46E7E}</Project>
-      <Name>Farseer Physics WP7</Name>
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA WP7.csproj">
+      <Project>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</Project>
+      <Name>Farseer Physics XNA WP7</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
@@ -95,6 +95,9 @@
   <ItemGroup>
     <Compile Include="Demo2Screen.cs" />
     <Compile Include="Demo1Screen.cs" />
+    <Compile Include="Demo3Screen.cs" />
+    <Compile Include="Demo4Screen.cs" />
+    <Compile Include="Demo5Screen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
@@ -172,6 +175,7 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>

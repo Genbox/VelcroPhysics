@@ -96,6 +96,7 @@
     <Compile Include="Tests\CantileverTest.cs" />
     <Compile Include="Tests\ChainTest.cs" />
     <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\CloneTest.cs" />
     <Compile Include="Tests\CollisionFilteringTest.cs" />
     <Compile Include="Tests\CollisionProcessingTest.cs" />
     <Compile Include="Tests\CompoundShapes.cs" />
@@ -106,10 +107,13 @@
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmark.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
     <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
+    <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\SimpleWindForceTest.cs" />
     <Compile Include="Tests\SliderJointTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
@@ -203,9 +207,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\WP7\Farseer Physics WP7.csproj">
-      <Project>{FB9FD837-9D1C-4878-B5F6-E79A44F46E7E}</Project>
-      <Name>Farseer Physics WP7</Name>
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA WP7.csproj">
+      <Project>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</Project>
+      <Name>Farseer Physics XNA WP7</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
@@ -233,11 +237,9 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>

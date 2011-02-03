@@ -153,9 +153,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\WP7\Farseer Physics WP7.csproj">
-      <Project>{FB9FD837-9D1C-4878-B5F6-E79A44F46E7E}</Project>
-      <Name>Farseer Physics WP7</Name>
+    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA WP7.csproj">
+      <Project>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</Project>
+      <Name>Farseer Physics XNA WP7</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
       <Project>{f658a60d-5941-4cbe-8ec1-8ae20e93f60e}</Project>
