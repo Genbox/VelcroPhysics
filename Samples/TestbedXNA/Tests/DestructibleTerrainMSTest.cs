@@ -8,11 +8,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class DestructibleTerrainMSTest : Test
     {
+        internal enum Decomposer
+        {
+            Bayazit,
+            CDT,
+            Earclip,
+            Flipcode,
+            Seidel,
+        }
+
         private sbyte[,] destroyMap;
         private Texture2D destroyTexture;
         private float gwid;
@@ -22,7 +33,25 @@ namespace FarseerPhysics.TestBed.Tests
         private int xnum;
         private int ynum;
         private Vector2 _scale = new Vector2(0.07f, -0.07f);
-        private Vector2 _translate = new Vector2(-511, -511);
+        private Vector2 _translate = new Vector2(0, -511);
+
+        private Stopwatch watch = new Stopwatch();
+        private double regenerateTime = 0;
+
+        //Performance graph
+        public bool AdaptiveLimits = true;
+        public int ValuesToGraph = 500;
+        public int MinimumValue;
+        public int MaximumValue = 1000;
+        private List<float> _graphValues = new List<float>();
+        private Vector2[] _background = new Vector2[4];
+
+        private float _max;
+        private float _avg;
+        private float _min;
+
+        private Decomposer decomposer = Decomposer.Earclip;
+
 
         private DestructibleTerrainMSTest()
         {
@@ -31,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Initialize()
         {
-            GameInstance.IsFixedTimeStep = false;
+            GameInstance.IsFixedTimeStep = true;
 
             // texture used to hold initial terrain shape
             terrainTexture = GameInstance.Content.Load<Texture2D>("Terrain");
@@ -47,8 +76,9 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int x = 0; x < terrainTexture.Width; x++)
                 {
-                    Color c = fFlat[(y * terrainTexture.Width) + x];
-                    if (c == Color.White)
+                    sbyte brightness = (sbyte)((GetBrightness(fFlat[(y * terrainTexture.Width) + x]) - 0.5f) * 255);
+
+                    if (brightness > 0)
                         terrainMap[x, y] = 1;
                     else
                         terrainMap[x, y] = -1;
@@ -69,8 +99,9 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int x = 0; x < destroyTexture.Width; x++)
                 {
-                    Color c = fFlat[(y * destroyTexture.Width) + x];
-                    if (c == Color.White)
+                    sbyte brightness = (sbyte)((GetBrightness(fFlat[(y * destroyTexture.Width) + x]) - 0.5f) * 255);
+
+                    if (brightness > 0)
                         destroyMap[x, y] = 1;
                     else
                         destroyMap[x, y] = -1;
@@ -95,12 +126,40 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
+        public float GetBrightness(Color color)
+        {
+            float red = ((float)color.R) / 255f;
+            float green = ((float)color.G) / 255f;
+            float blue = ((float)color.B) / 255f;
+            float num4 = red;
+            float num5 = red;
+            if (green > num4)
+            {
+                num4 = green;
+            }
+            if (blue > num4)
+            {
+                num4 = blue;
+            }
+            if (green < num5)
+            {
+                num5 = green;
+            }
+            if (blue < num5)
+            {
+                num5 = blue;
+            }
+            return ((num4 + num5) / 2f);
+        }
+
+
+
         private void GenerateTerrain(int gx, int gy)
         {
             float ax = gx * gwid;
             float ay = gy * gwid;
 
-            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 6, 6, terrainMap, 3, true);
+            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 4, 4, terrainMap, 2, true);
             if (polys.Count == 0) return;
 
             terrainFixtures[gx, gy] = new List<Fixture>();
@@ -112,12 +171,33 @@ namespace FarseerPhysics.TestBed.Tests
                 item.Scale(ref _scale);
                 item.ForceCounterClockWise();
                 Vertices p = FarseerPhysics.Common.PolygonManipulation.SimplifyTools.CollinearSimplify(item);
+                List<Vertices> decompPolys = new List<Vertices>();
 
-                List<Vertices> decompPolys = FarseerPhysics.Common.Decomposition.EarclipDecomposer.ConvexPartition(p);
+                switch (decomposer)
+                {
+                    case Decomposer.Bayazit:
+                        decompPolys = FarseerPhysics.Common.Decomposition.BayazitDecomposer.ConvexPartition(p);
+                        break;
+                    case Decomposer.CDT:
+                        decompPolys = FarseerPhysics.Common.Decomposition.CDTDecomposer.ConvexPartition(p);
+                        break;
+                    case Decomposer.Earclip:
+                        decompPolys = FarseerPhysics.Common.Decomposition.EarclipDecomposer.ConvexPartition(p);
+                        break;
+                    case Decomposer.Flipcode:
+                        decompPolys = FarseerPhysics.Common.Decomposition.FlipcodeDecomposer.ConvexPartition(p);
+                        break;
+                    case Decomposer.Seidel:
+                        decompPolys = FarseerPhysics.Common.Decomposition.SeidelDecomposer.ConvexPartition(p, 0.001f);
+                        break;
+                    default:
+                        break;
+                }
 
                 foreach (var poly in decompPolys)
                 {
-                    terrainFixtures[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1));
+                    if (poly.Count > 1)
+                        terrainFixtures[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1));
                 }
             }
         }
@@ -133,6 +213,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             float x = location.X;
             float y = location.Y;
+
+            watch.Start();
 
             if (x > 12.5f && x < terrainTexture.Width - 12.5f && y > 12.5f && y < terrainTexture.Height - 12.5f)
             {
@@ -177,12 +259,22 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                 }
             }
+
+            watch.Stop();
+
+            regenerateTime = watch.Elapsed.TotalMilliseconds;
+
+            _graphValues.Add((float)regenerateTime);
+
+            watch.Reset();
         }
 
         private void CreateTerrain(Vector2 location)
         {
             float x = location.X;
             float y = location.Y;
+
+            watch.Start();
 
             if (x > 12.5f && x < terrainTexture.Width - 12.5f && y > 12.5f && y < terrainTexture.Height - 12.5f)
             {
@@ -227,6 +319,14 @@ namespace FarseerPhysics.TestBed.Tests
                     }
                 }
             }
+
+            watch.Stop();
+
+            regenerateTime = watch.Elapsed.TotalMilliseconds;
+
+            _graphValues.Add((float)regenerateTime);
+
+            watch.Reset();
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -253,10 +353,74 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Fixture f = FixtureFactory.CreateCircle(World, 0.5f, 1, position);
 
+                f.Friction = 0;
                 f.Body.IsStatic = false;
             }
 
             base.Mouse(state, oldState);
+        }
+
+        public override void Keyboard(KeyboardManager keyboardManager)
+        {
+            if (keyboardManager.IsNewKeyPress(Keys.OemMinus))
+            {
+                decomposer--;
+                if (decomposer < 0)
+                    decomposer = 0;
+
+                foreach (var fixtureList in terrainFixtures)
+                {
+                    if (fixtureList != null)
+                    {
+                        foreach (var fixture in fixtureList)
+                        {
+                            fixture.Body.DestroyFixture(fixture);
+                        }
+                    }
+                }
+
+                terrainFixtures = new List<Fixture>[xnum, ynum];
+
+                // generate terrain
+                for (int gy = 0; gy < ynum; gy++)
+                {
+                    for (int gx = 0; gx < xnum; gx++)
+                    {
+                        GenerateTerrain(gx, gy);
+                    }
+                }
+            }
+
+            if (keyboardManager.IsNewKeyPress(Keys.OemPlus))
+            {
+                decomposer++;
+                if ((int)decomposer > 4)
+                    decomposer = (Decomposer)4;
+
+                foreach (var fixtureList in terrainFixtures)
+                {
+                    if (fixtureList != null)
+                    {
+                        foreach (var fixture in fixtureList)
+                        {
+                            fixture.Body.DestroyFixture(fixture);
+                        }
+                    }
+                }
+
+                terrainFixtures = new List<Fixture>[xnum, ynum];
+
+                // generate terrain
+                for (int gy = 0; gy < ynum; gy++)
+                {
+                    for (int gx = 0; gx < xnum; gx++)
+                    {
+                        GenerateTerrain(gx, gy);
+                    }
+                }
+            }
+            
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -267,10 +431,90 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Middle click to create circles!");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Total Polygons: " + World.BodyList.Count);
+            DebugView.DrawString(50, TextLine, "Press + or - to cycle between decomposers.");
+            TextLine += 25;
+
+
+            // count fixtures in terrain only
+            int count = 0;
+
+            foreach (var fixtureList in terrainFixtures)
+            {
+                if (fixtureList != null)
+                {
+                    foreach (var fixture in fixtureList)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            DebugView.DrawString(60, TextLine, "Current Decomposer: " + decomposer.ToString());
+            TextLine += 15;
+            DebugView.DrawString(60, TextLine, "Total Polygons in Terrain: " + count);
+            TextLine += 15;
+            DebugView.DrawString(60, TextLine, "Regeneration Time in ms: " + regenerateTime);
             TextLine += 15;
 
+            DrawPerformanceGraph();
+
             base.Update(settings, gameTime);
+        }
+
+        private void DrawPerformanceGraph()
+        {
+            Rectangle PerformancePanelBounds = new Rectangle(50, 200, 250, 200);
+
+            if (_graphValues.Count > ValuesToGraph + 1)
+                _graphValues.RemoveAt(0);
+
+            float x = PerformancePanelBounds.X;
+            float deltaX = PerformancePanelBounds.Width / (float)ValuesToGraph;
+            float yScale = PerformancePanelBounds.Bottom - (float)PerformancePanelBounds.Top;
+
+            // we must have at least 2 values to start rendering
+            if (_graphValues.Count > 2)
+            {
+                _max = (float)_graphValues.Max();
+                _avg = (float)_graphValues.Average();
+                _min = (float)_graphValues.Min();
+
+                if (AdaptiveLimits)
+                {
+                    MaximumValue = (int)_max;
+                    MinimumValue = 0;
+                }
+
+                // start at last value (newest value added)
+                // continue until no values are left
+                for (int i = _graphValues.Count - 1; i > 0; i--)
+                {
+                    float y1 = PerformancePanelBounds.Bottom - ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
+                    float y2 = PerformancePanelBounds.Bottom - ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
+
+                    Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                                             MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+
+                    Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                                             MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+
+                    DebugView.DrawLocalSegment(x1, x2, Color.LightGreen);
+
+                    x += deltaX;
+                }
+            }
+
+            DebugView.DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, "Max: " + _max);
+            DebugView.DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, "Avg: " + _avg);
+            DebugView.DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, "Min: " + _min);
+
+            //Draw background.
+            _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
+            _background[1] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y);
+
+            DebugView.DrawLocalSolidPolygon(_background, 4, Color.DarkGray, true);
         }
 
         internal static Test Create()

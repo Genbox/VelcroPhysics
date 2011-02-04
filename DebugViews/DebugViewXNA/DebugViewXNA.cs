@@ -653,7 +653,7 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        private void DrawLocalSegment(Vector2 start, Vector2 end, Color color)
+        public void DrawLocalSegment(Vector2 start, Vector2 end, Color color)
         {
             _localVertsLines[_localLineCount * 2].Position = new Vector3(start, 0f);
             _localVertsLines[_localLineCount * 2 + 1].Position = new Vector3(end, 0f);
@@ -691,7 +691,7 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        private void DrawLocalPolygon(Vector2[] vertices, int count, Color color)
+        public void DrawLocalPolygon(Vector2[] vertices, int count, Color color)
         {
             for (int i = 0; i < count - 1; i++)
             {
