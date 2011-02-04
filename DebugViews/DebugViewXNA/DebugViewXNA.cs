@@ -568,6 +568,7 @@ namespace FarseerPhysics.DebugViews
                         int count = loop.Vertices.Count;
 
                         Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
+                        DrawCircle(v1, 0.05f, color);
                         for (int i = 0; i < count; ++i)
                         {
                             Vector2 v2 = MathUtils.Multiply(ref xf, loop.Vertices[i]);

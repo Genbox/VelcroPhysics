@@ -24,37 +24,25 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class LineJointTest : Test
     {
-        private FixedLineJoint _fixedLineJoint;
-        private LineJoint _lineJoint;
-
         private LineJointTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
+            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
-            //-------------------------
-            // FixedLineJoint example
-            //-------------------------
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
-                Body body = BodyFactory.CreateBody(World);
+                PolygonShape shape = new PolygonShape(1);
+                shape.SetAsBox(0.5f, 2.0f);
+
+                Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
                 body.CreateFixture(shape);
@@ -62,62 +50,14 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
 
-                _fixedLineJoint = new FixedLineJoint(body, new Vector2(0.0f, 8.5f), axis);
-                _fixedLineJoint.MotorSpeed = 100.0f;
-                _fixedLineJoint.MaxMotorForce = 100.0f;
-                _fixedLineJoint.MotorEnabled = false;
-                _fixedLineJoint.LowerLimit = -4.0f;
-                _fixedLineJoint.UpperLimit = 4.0f;
-                _fixedLineJoint.EnableLimit = true;
-                World.AddJoint(_fixedLineJoint);
+                LineJoint jd = new LineJoint(ground.Body, body, new Vector2(0, 8.5f), axis);
+                jd.MotorSpeed = 1.0f;
+                jd.MaxMotorTorque = 1000.0f;
+                jd.MotorEnabled = true;
+                jd.FrequencyHz = 1.0f;
+                jd.DampingRatio = 0.2f;
+                World.AddJoint(jd);
             }
-
-            //-------------------------
-            // LineJoint example
-            //-------------------------
-            {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 2.0f), 1);
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(10.0f, 7.0f);
-                body.CreateFixture(shape);
-
-                Vector2 axis = new Vector2(2.0f, 1.0f);
-                axis.Normalize();
-
-                Vector2 anchor = new Vector2(0.0f, 1.5f);
-                _lineJoint = new LineJoint(ground, body, ground.GetLocalPoint(body.GetWorldPoint(anchor)), anchor, axis);
-                _lineJoint.MotorSpeed = 100.0f;
-                _lineJoint.MaxMotorForce = 100.0f;
-                _lineJoint.MotorEnabled = false;
-                _lineJoint.LowerLimit = -4.0f;
-                _lineJoint.UpperLimit = 4.0f;
-                _lineJoint.EnableLimit = true;
-                World.AddJoint(_lineJoint);
-            }
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.L))
-            {
-                _lineJoint.EnableLimit = !_lineJoint.EnableLimit;
-                _fixedLineJoint.EnableLimit = !_fixedLineJoint.EnableLimit;
-            }
-
-            if (keyboardManager.IsNewKeyPress(Keys.M))
-            {
-                _lineJoint.MotorEnabled = !_lineJoint.MotorEnabled;
-                _fixedLineJoint.MotorEnabled = !_fixedLineJoint.MotorEnabled;
-            }
-
-            base.Keyboard(keyboardManager);
         }
 
         internal static Test Create()

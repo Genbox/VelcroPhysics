@@ -203,15 +203,15 @@ namespace FarseerPhysics.Common
                     {
                         LineJoint ljd = (LineJoint)joint;
 
-                        WriteElement("EnableLimit", ljd.EnableLimit);
-                        WriteElement("EnableMotor", ljd.MotorEnabled);
-                        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
+                        //WriteElement("EnableLimit", ljd.EnableLimit);
+                        //WriteElement("EnableMotor", ljd.MotorEnabled);
+                        //WriteElement("LocalAnchorA", ljd.LocalAnchorA);
+                        //WriteElement("LocalAnchorB", ljd.LocalAnchorB);
                         //WriteElement("LocalAxisA", ljd.LocalAxisA);
-                        WriteElement("LowerTranslation", ljd.LowerLimit);
-                        WriteElement("MaxMotorForce", ljd.MaxMotorForce);
-                        WriteElement("MotorSpeed", ljd.MotorSpeed);
-                        WriteElement("UpperTranslation", ljd.UpperLimit);
+                        //WriteElement("LowerTranslation", ljd.LowerLimit);
+                        //WriteElement("MaxMotorForce", ljd.MaxMotorForce);
+                        //WriteElement("MotorSpeed", ljd.MotorSpeed);
+                        //WriteElement("UpperTranslation", ljd.UpperLimit);
                     }
                     break;
                 case JointType.Prismatic:
@@ -862,33 +862,33 @@ namespace FarseerPhysics.Common
                                     {
                                         switch (sn.Name.ToLower())
                                         {
-                                            case "enablelimit":
-                                                ((LineJoint)joint).EnableLimit = bool.Parse(sn.Value);
-                                                break;
-                                            case "enablemotor":
-                                                ((LineJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                                break;
-                                            case "localanchora":
-                                                ((LineJoint)joint).LocalAnchorA = ReadVector(sn);
-                                                break;
-                                            case "localanchorb":
-                                                ((LineJoint)joint).LocalAnchorB = ReadVector(sn);
-                                                break;
-                                            //case "localaxisa":
-                                            //    ((LineJoint)joint).LocalXAxis1 = ReadVector(sn);
+                                            //case "enablelimit":
+                                            //    ((LineJoint)joint).EnableLimit = bool.Parse(sn.Value);
                                             //    break;
-                                            case "maxmotorforce":
-                                                ((LineJoint)joint).MaxMotorForce = float.Parse(sn.Value);
-                                                break;
-                                            case "motorspeed":
-                                                ((LineJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                                break;
-                                            case "lowertranslation":
-                                                ((LineJoint)joint).LowerLimit = float.Parse(sn.Value);
-                                                break;
-                                            case "uppertranslation":
-                                                ((LineJoint)joint).UpperLimit = float.Parse(sn.Value);
-                                                break;
+                                            //case "enablemotor":
+                                            //    ((LineJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                            //    break;
+                                            //case "localanchora":
+                                            //    ((LineJoint)joint).LocalAnchorA = ReadVector(sn);
+                                            //    break;
+                                            //case "localanchorb":
+                                            //    ((LineJoint)joint).LocalAnchorB = ReadVector(sn);
+                                            //    break;
+                                            ////case "localaxisa":
+                                            ////    ((LineJoint)joint).LocalXAxis1 = ReadVector(sn);
+                                            ////    break;
+                                            //case "maxmotorforce":
+                                            //    ((LineJoint)joint).MaxMotorForce = float.Parse(sn.Value);
+                                            //    break;
+                                            //case "motorspeed":
+                                            //    ((LineJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                            //    break;
+                                            //case "lowertranslation":
+                                            //    ((LineJoint)joint).LowerLimit = float.Parse(sn.Value);
+                                            //    break;
+                                            //case "uppertranslation":
+                                            //    ((LineJoint)joint).UpperLimit = float.Parse(sn.Value);
+                                                //break;
                                         }
                                     }
                                     break;

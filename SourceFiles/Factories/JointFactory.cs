@@ -142,13 +142,12 @@ namespace FarseerPhysics.Factories
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
+        /// <param name="anchor"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static LineJoint CreateLineJoint(Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
+        public static LineJoint CreateLineJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
         {
-            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
-            LineJoint joint = new LineJoint(bodyA, bodyB, localanchorA, localanchorB, axis);
+            LineJoint joint = new LineJoint(bodyA, bodyB, anchor, axis);
             return joint;
         }
 

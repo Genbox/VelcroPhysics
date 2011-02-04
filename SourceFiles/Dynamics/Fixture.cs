@@ -132,7 +132,7 @@ namespace FarseerPhysics.Dynamics
                     return;
 
                 _collisionGroup = value;
-                FilterChanged();
+                Refilter();
             }
             get { return _collisionGroup; }
         }
@@ -157,7 +157,7 @@ namespace FarseerPhysics.Dynamics
                     return;
 
                 _collidesWith = value;
-                FilterChanged();
+                Refilter();
             }
         }
 
@@ -183,7 +183,7 @@ namespace FarseerPhysics.Dynamics
                     return;
 
                 _collisionCategories = value;
-                FilterChanged();
+                Refilter();
             }
         }
 
@@ -256,7 +256,7 @@ namespace FarseerPhysics.Dynamics
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
             {
                 _collisionIgnores[fixture.FixtureId] = false;
-                FilterChanged();
+                Refilter();
             }
         }
 
@@ -271,7 +271,7 @@ namespace FarseerPhysics.Dynamics
             else
                 _collisionIgnores.Add(fixture.FixtureId, true);
 
-            FilterChanged();
+            Refilter();
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace FarseerPhysics.Dynamics
         /// flagged for filtering.
         /// This methods flags all contacts associated with the body for filtering.
         /// </summary>
-        private void FilterChanged()
+        internal void Refilter()
         {
             // Flag associated contacts for filtering.
             ContactEdge edge = Fixture.Body.ContactList;
@@ -309,6 +309,20 @@ namespace FarseerPhysics.Dynamics
                 }
 
                 edge = edge.Next;
+            }
+
+            World world = Fixture.Body.World;
+
+            if (world == null)
+            {
+                return;
+            }
+
+            // Touch each proxy so that new pairs may be created
+            BroadPhase broadPhase = world.ContactManager.BroadPhase;
+            for (int i = 0; i < Fixture.ProxyCount; ++i)
+            {
+                broadPhase.TouchProxy(Fixture.Proxies[i].ProxyId);
             }
         }
 
