@@ -312,5 +312,10 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
+
+        internal void TouchProxy(int proxyId)
+        {
+            BufferMove(proxyId);
+        }
     }
 }
