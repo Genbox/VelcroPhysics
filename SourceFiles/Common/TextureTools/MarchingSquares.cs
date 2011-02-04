@@ -6,7 +6,32 @@ using System;
 
 namespace FarseerPhysics.Common
 {
-    // Ported by Matthew Bettcher
+    // Ported by Matthew Bettcher - Feb 2011
+
+    /*
+    Copyright (c) 2010, Luca Deltodesco
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without modification, are permitted
+    provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright notice, this list of conditions
+	      and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright notice, this list of
+	      conditions and the following disclaimer in the documentation and/or other materials provided
+	      with the distribution.
+        * Neither the name of the nape project nor the names of its contributors may be used to endorse
+	     or promote products derived from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+    DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+    IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+    OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    */
 
     public static class MarchingSquares
     {
@@ -75,6 +100,8 @@ namespace FarseerPhysics.Common
 
             List<GeomPoly> polyList = ret.GetListOfElements();
 
+            GeomPoly gp = new GeomPoly();
+
             var xn = (int)(domain.Extents.X * 2 / cell_width); var xp = xn == (domain.Extents.X * 2 / cell_width);
             var yn = (int)(domain.Extents.Y * 2 / cell_height); var yp = yn == (domain.Extents.Y * 2 / cell_height);
             if (!xp) xn++;
@@ -103,23 +130,24 @@ namespace FarseerPhysics.Common
                 for (int x = 0; x < xn; x++)
                 {
                     var x0 = x * cell_width + domain.LowerBound.X; float x1; if (x == xn - 1) x1 = domain.UpperBound.X; else x1 = x0 + cell_width;
+                    
+                    gp = new GeomPoly();
 
-                    GeomPoly p = new GeomPoly();
-                    var key = marchSquare(f, fs, ref p, x, y, x0, y0, x1, y1, lerp_count);
-                    if (p.length != 0)
+                    var key = marchSquare(f, fs, ref gp, x, y, x0, y0, x1, y1, lerp_count);
+                    if (gp.length != 0)
                     {
                         if (combine && pre != null && (key & 9) != 0)
                         {
-                            combLeft(ref pre, ref p);
-                            p = pre;
+                            combLeft(ref pre, ref gp);
+                            gp = pre;
                         }
                         else
-                            ret.add(p);
-                        ps[x, y] = new GeomPolyVal(p, key);
+                            ret.add(gp);
+                        ps[x, y] = new GeomPolyVal(gp, key);
                     }
                     else
-                        p = null;
-                    pre = p;
+                        gp = null;
+                    pre = gp;
                 }
             }
             if (!combine)
