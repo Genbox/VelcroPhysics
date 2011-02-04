@@ -1,6 +1,4 @@
-﻿using System;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -16,13 +14,6 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
             ground.OnCollision += OnCollision;
             ground.OnSeparation += OnSeparation;
-
-            Vertices v = new Vertices(3);
-            v.Add(new Vector2(17.63f, 36.31f));
-            v.Add(new Vector2(17.52f, 36.69f));
-            v.Add(new Vector2(17.19f, 36.36f));
-
-            FixtureFactory.CreatePolygon(World, v, 1);
         }
 
         private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
