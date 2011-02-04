@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            gwid = 20;
+            gwid = 50;
             xnum = (int)(terrainTexture.Width / gwid);
             ynum = (int)(terrainTexture.Height / gwid);
 
@@ -159,7 +159,7 @@ namespace FarseerPhysics.TestBed.Tests
             float ax = gx * gwid;
             float ay = gy * gwid;
 
-            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 4, 4, terrainMap, 2, true);
+            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + gwid, ay + gwid)), 5, 5, terrainMap, 2, true);
             if (polys.Count == 0) return;
 
             terrainFixtures[gx, gy] = new List<Fixture>();
@@ -353,7 +353,6 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Fixture f = FixtureFactory.CreateCircle(World, 0.5f, 1, position);
 
-                f.Friction = 0;
                 f.Body.IsStatic = false;
             }
 
