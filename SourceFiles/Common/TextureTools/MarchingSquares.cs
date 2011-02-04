@@ -35,46 +35,7 @@ namespace FarseerPhysics.Common
 
     public static class MarchingSquares
     {
-        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-        /**
-            Evaluate marching squares itself over a mesh defined in the given domain with
-            the given cell dimensions (wid,hei).
-		
-            Marching squares will be evaluated for each of these cells using the sub-mesh defined
-            by the sub-dimensions (swid,shei) using the functino f, and recursive linear interpolation
-            count 'cnt' as usual.
-		
-            For this method, composition is always implied.
-        **/
-        /*
-        static public function marchingMesh(domain:AABB,cell_width:Float,cell_height:Float,subcell_width:Float,subcell_height:Float,f:Float->Float->Float,?lerp_count:Int=0) {
-            var ret = new CxFastList(GeomPoly)();
-		
-            var xn = Std.int(domain.width ()/cell_width);  var xp = xn == (domain.width ()/cell_width);
-            var yn = Std.int(domain.height()/cell_height); var yp = yn == (domain.height()/cell_height);
-            if(!xp) xn++;
-            if(!yp) yn++;
-		
-            var sdomain = new AABB(0,0,0,0);
-		
-            for(x in 0...(xn)) {
-                sdomain.minx = x*cell_width+domain.minx;
-                sdomain.maxx = if(x==xn-1) domain.maxx else sdomain.minx+cell_width;
-                for(y in 0...(yn)) {
-                    sdomain.miny = y*cell_height+domain.miny; 
-                    sdomain.maxy = if(y==yn-1) domain.maxy else sdomain.miny+cell_height;
-				
-                    var tri = marchingSquares(sdomain,subcell_width,subcell_height,f,lerp_count);
-                    ret.addAll(tri);
-                }
-            }
-		
-            return ret;
-        }
-        */
-        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
+        
 
 
         /// <summary>

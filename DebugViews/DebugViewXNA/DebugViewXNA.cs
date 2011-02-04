@@ -1232,8 +1232,8 @@ namespace FarseerPhysics.DebugViews
             _texturedEdges = new List<Fixture>();
 
             //For now, the local vertices are only used by the graph.
-            _localVertsLines = new VertexPositionColor[10000];
-            _localVertsFill = new VertexPositionColor[10000];
+            _localVertsLines = new VertexPositionColor[30000];
+            _localVertsFill = new VertexPositionColor[30000];
         }
 
         public void Update(GameTime gameTime)
