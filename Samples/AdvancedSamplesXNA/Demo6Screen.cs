@@ -46,7 +46,24 @@ namespace FarseerPhysics.AdvancedSamplesXNA
                 Scale = 8f
             };
 
-            terrain = new MSTerrain(World, this.ScreenManager.ContentManager.Load<Texture2D>("Texture"), InsideTerrain, defaultMaterial);
+            Vector2 gameWorld =
+                Camera2D.ConvertScreenToWorld(new Vector2(ScreenManager.Camera.ScreenWidth,
+                                                          ScreenManager.Camera.ScreenHeight));
+
+            gameWorld *= 0.95f;
+
+            Vector2 metersPerUnit = new Vector2(gameWorld.X / ScreenManager.Camera.ScreenWidth, -gameWorld.Y / ScreenManager.Camera.ScreenHeight);
+
+            terrain = new MSTerrain(World, new AABB(gameWorld.X * 2, -gameWorld.Y * 2, new Vector2(-gameWorld.X, -gameWorld.Y) + new Vector2(0.5f, -0.5f)), defaultMaterial)
+            {
+                Decomposer = Decomposer.Earclip,
+                MetersPerUnit = metersPerUnit,
+                CellSize = 60,
+                SubCellSize = 30,
+                Iterations = 2,
+            };
+
+            terrain.Initialize();
         }
 
         public override void HandleInput(InputHelper input)

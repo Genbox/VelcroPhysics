@@ -27,27 +27,38 @@ namespace FarseerPhysics.Common
     public class MSTerrain
     {
         public World World;
-        public Vector2 Position = new Vector2(-300, -100);
-        public int TerrainWidth;
-        public int TerrainHeight;
+        public Vector2 Position;
+        public float TerrainWidth;
+        public float TerrainHeight;
         public float CellSize = 25;
-        public float MetersPerUnit = 0.1f;
+        public float SubCellSize = 5;
+        public int Iterations = 2;
+        public Vector2 MetersPerUnit;
         public Decomposer Decomposer;
         public sbyte[,] TerrainMap;
         public List<Fixture>[,] FixtureMap;
 
         private int xnum;
         private int ynum;
-        public AABB dirtyArea;
+        private AABB dirtyArea;
         private object userData;
 
-        public MSTerrain(World world, Texture2D terrainTexture, InsideTerrain insideTerrain, object userData)
+        public MSTerrain(World world, AABB area, object userData)
+        {
+            World = world;
+            this.userData = userData;
+            TerrainWidth = area.Extents.X * 2;
+            TerrainHeight = area.Extents.Y * 2;
+            Position = area.LowerBound;
+        }
+
+        public MSTerrain(World world, Vector2 position, Texture2D terrainTexture, InsideTerrain insideTerrain, object userData)
         {
             World = world;
 
             this.userData = userData;
 
-            Decomposer = Decomposer.Earclip;
+            Position = position;
 
             dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
 
@@ -86,6 +97,29 @@ namespace FarseerPhysics.Common
                     GenerateTerrain(gx, gy);
                 }
             }
+        }
+
+        public void Initialize()
+        {
+            TerrainWidth = TerrainWidth * (1f / MetersPerUnit.X);
+            TerrainHeight = TerrainHeight * (1f / MetersPerUnit.Y);
+
+            Vector2 p = Position * new Vector2(1f / MetersPerUnit.X, 1f / -MetersPerUnit.Y);
+
+            Position = p;
+
+            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+            TerrainMap = new sbyte[(int)TerrainWidth, (int)TerrainHeight];
+            for (int y = 0; y < TerrainHeight; y++)
+            {
+                for (int x = 0; x < TerrainWidth; x++)
+                {
+                    TerrainMap[x, y] = 1;
+                }
+            }
+            xnum = (int)(TerrainWidth / CellSize);
+            ynum = (int)(TerrainHeight / CellSize);
+            FixtureMap = new List<Fixture>[xnum, ynum];
         }
 
         public void ModifyTerrain(Vector2 location, sbyte value)
@@ -140,7 +174,7 @@ namespace FarseerPhysics.Common
 
         public Vector2 WorldToMap(Vector2 point)
         {
-            point *= new Vector2(1f / MetersPerUnit, -1f / MetersPerUnit);
+            point *= new Vector2(1f / MetersPerUnit.X, 1f / -MetersPerUnit.Y);
             point -= Position;
             return point;
         }
@@ -150,13 +184,13 @@ namespace FarseerPhysics.Common
             float ax = gx * CellSize;
             float ay = gy * CellSize;
 
-            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + CellSize, ay + CellSize)), 3, 3, TerrainMap, 2, true);
+            List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize, TerrainMap, Iterations, true);
             if (polys.Count == 0) return;
 
             FixtureMap[gx, gy] = new List<Fixture>();
 
             // create the scale vector
-            Vector2 scale = new Vector2(MetersPerUnit, -MetersPerUnit);
+            Vector2 scale = new Vector2(MetersPerUnit.X, -MetersPerUnit.Y);
 
             // create physics object for this grid cell
             foreach (var item in polys)
@@ -191,6 +225,7 @@ namespace FarseerPhysics.Common
 
                 foreach (var poly in decompPolys)
                 {
+                    if (poly.Count > 2)
                         FixtureMap[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1, userData));
                 }
             }
