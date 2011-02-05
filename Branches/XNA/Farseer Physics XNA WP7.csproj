@@ -422,6 +422,7 @@
     <Compile Include="..\..\SourceFiles\Settings.cs">
       <Link>Settings.cs</Link>
     </Compile>
+    <Compile Include="Common\TextureTools\MSTerrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -431,6 +432,7 @@
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
