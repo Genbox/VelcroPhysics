@@ -10,6 +10,7 @@ using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.Collision;
 
 namespace FarseerPhysics.AdvancedSamplesXNA
 {
@@ -34,12 +35,14 @@ namespace FarseerPhysics.AdvancedSamplesXNA
 
         public override void LoadContent()
         {
+            this.ScreenManager.Game.IsFixedTimeStep = false;
+
             World = new World(new Vector2(0, -9.82f));
             base.LoadContent();
 
-            DebugMaterial defaultMaterial = new DebugMaterial(MaterialType.Pavement)
+            DebugMaterial defaultMaterial = new DebugMaterial(MaterialType.Stars)
             {
-                Color = Color.LightGray,
+                Color = Color.YellowGreen,
                 Scale = 8f
             };
 
@@ -52,13 +55,16 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             {
                 Vector2 position = terrain.WorldToMap(Camera2D.ConvertScreenToWorld(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y)));
 
-                for (int by = 0; by < 25; by++)
+                for (int by = -25; by < 25; by++)
                 {
-                    for (int bx = 0; bx < 25; bx++)
+                    for (int bx = -25; bx < 25; bx++)
                     {
-                        var ax = position.X - 12.5f + bx;
-                        var ay = position.Y - 12.5f + by;
-                        terrain.ModifyTerrain(new Vector2(ax, ay), -1);
+                        if ((bx * bx) + (by * by) < 625)
+                        {
+                            var ax = position.X - bx;
+                            var ay = position.Y - by;
+                            terrain.ModifyTerrain(new Vector2(ax, ay), 1);
+                        }
                     }
                 }
 
@@ -69,17 +75,35 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             {
                 Vector2 position = terrain.WorldToMap(Camera2D.ConvertScreenToWorld(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y)));
 
-                for (int by = 0; by < 25; by++)
+                for (int by = -25; by < 25; by++)
                 {
-                    for (int bx = 0; bx < 25; bx++)
+                    for (int bx = -25; bx < 25; bx++)
                     {
-                        var ax = position.X - 12.5f + bx;
-                        var ay = position.Y - 12.5f + by;
-                        terrain.ModifyTerrain(new Vector2(ax, ay), 1);
+                        if ((bx * bx) + (by * by) < 625f)
+                        {
+                            var ax = position.X - bx;
+                            var ay = position.Y - by;
+                            terrain.ModifyTerrain(new Vector2(ax, ay), -1);
+                        }
                     }
                 }
 
                 terrain.RegenerateTerrain();
+            }
+
+            if (input.CurrentMouseState.MiddleButton == ButtonState.Pressed)
+            {
+                Vector2 position = Camera2D.ConvertScreenToWorld(new Vector2(input.CurrentMouseState.X, input.CurrentMouseState.Y));
+
+                DebugMaterial circleMaterial = new DebugMaterial(MaterialType.Face)
+                {
+                    Color = Color.LightGray,
+                    Scale = 1.25f
+                };
+
+                Fixture circle = FixtureFactory.CreateCircle(World, 0.5f, 1, position, circleMaterial);
+
+                circle.Body.BodyType = BodyType.Dynamic;
             }
             
             base.HandleInput(input);
