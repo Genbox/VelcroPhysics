@@ -30,7 +30,7 @@ namespace FarseerPhysics.Common
         public Vector2 Position = new Vector2(-300, -100);
         public int TerrainWidth;
         public int TerrainHeight;
-        public float CellSize = 50;
+        public float CellSize = 25;
         public float MetersPerUnit = 0.1f;
         public Decomposer Decomposer;
         public sbyte[,] TerrainMap;
@@ -38,7 +38,7 @@ namespace FarseerPhysics.Common
 
         private int xnum;
         private int ynum;
-        private AABB dirtyArea;
+        public AABB dirtyArea;
         private object userData;
 
         public MSTerrain(World world, Texture2D terrainTexture, InsideTerrain insideTerrain, object userData)
@@ -49,7 +49,7 @@ namespace FarseerPhysics.Common
 
             Decomposer = Decomposer.Earclip;
 
-            dirtyArea = new AABB();
+            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
 
             TerrainWidth = terrainTexture.Width;
             TerrainHeight = terrainTexture.Height;
@@ -96,10 +96,10 @@ namespace FarseerPhysics.Common
 
                 // expand dirty area
                 if (location.X < dirtyArea.LowerBound.X) dirtyArea.LowerBound.X = location.X;
-                else if (location.X > dirtyArea.UpperBound.X) dirtyArea.UpperBound.X = location.X;
+                if (location.X > dirtyArea.UpperBound.X) dirtyArea.UpperBound.X = location.X;
 
                 if (location.Y < dirtyArea.LowerBound.Y) dirtyArea.LowerBound.Y = location.Y;
-                else if (location.Y > dirtyArea.UpperBound.Y) dirtyArea.UpperBound.Y = location.Y;
+                if (location.Y > dirtyArea.UpperBound.Y) dirtyArea.UpperBound.Y = location.Y;
             }
         }
 
@@ -134,6 +134,8 @@ namespace FarseerPhysics.Common
                     GenerateTerrain(gx, gy);
                 }
             }
+
+            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
         }
 
         public Vector2 WorldToMap(Vector2 point)
@@ -189,7 +191,6 @@ namespace FarseerPhysics.Common
 
                 foreach (var poly in decompPolys)
                 {
-                    if (poly.Count > 2)
                         FixtureMap[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1, userData));
                 }
             }
