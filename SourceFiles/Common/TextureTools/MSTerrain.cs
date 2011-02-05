@@ -109,7 +109,7 @@ namespace FarseerPhysics.Common
             Position = p;
 
             dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
-            TerrainMap = new sbyte[(int)TerrainWidth, (int)TerrainHeight];
+            TerrainMap = new sbyte[(int)TerrainWidth + 1, (int)TerrainHeight + 1];
             for (int y = 0; y < TerrainHeight; y++)
             {
                 for (int x = 0; x < TerrainWidth; x++)
@@ -124,7 +124,7 @@ namespace FarseerPhysics.Common
 
         public void ModifyTerrain(Vector2 location, sbyte value)
         {
-            if (location.X > 0 && location.X < TerrainWidth && location.Y > 0 && location.Y < TerrainHeight)
+            if (location.X >= 0 && location.X < TerrainWidth && location.Y >= 0 && location.Y < TerrainHeight)
             {
                 TerrainMap[(int)location.X, (int)location.Y] = value;
 
