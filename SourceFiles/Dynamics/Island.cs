@@ -357,7 +357,7 @@ namespace FarseerPhysics.Dynamics
             const float kTOIBaumgarte = 0.75f;
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
             {
-                bool contactsOkay = _contactSolver.SolvePositionConstraintsTOI(kTOIBaumgarte);
+                bool contactsOkay = _contactSolver.SolvePositionConstraints(kTOIBaumgarte);
                 if (contactsOkay)
                 {
                     break;
