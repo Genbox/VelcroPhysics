@@ -479,17 +479,39 @@ namespace FarseerPhysics.Dynamics
         /// <value>The user data.</value>
         public object UserData { get; set; }
 
+        private float _friction;
+
         /// <summary>
         /// Get or set the coefficient of friction.
         /// </summary>
         /// <value>The friction.</value>
-        public float Friction { get; set; }
+        public float Friction
+        {
+            get { return _friction; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _friction = value;
+            }
+        }
+
+        private float _restitution;
 
         /// <summary>
         /// Get or set the coefficient of restitution.
         /// </summary>
         /// <value>The restitution.</value>
-        public float Restitution { get; set; }
+        public float Restitution
+        {
+            get { return _restitution; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _restitution = value;
+            }
+        }
 
         /// <summary>
         /// Gets a unique ID for this fixture.
@@ -527,15 +549,6 @@ namespace FarseerPhysics.Dynamics
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
             return Shape.RayCast(out output, ref input, ref Body.Xf, childIndex);
-        }
-
-        /// <summary>
-        /// Get the mass data for this fixture. The mass data is based on the density and
-        /// the Shape. The rotational inertia is about the Shape's origin.
-        /// </summary>
-        public MassData GetMassData()
-        {
-            return Shape.MassData;
         }
 
         /// <summary>
