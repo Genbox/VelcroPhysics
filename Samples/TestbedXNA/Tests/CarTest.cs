@@ -23,8 +23,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -86,6 +88,11 @@ namespace FarseerPhysics.TestBed.Tests
                 jd2.DampingRatio = _zeta;
                 World.AddJoint(jd2);
             }
+        }
+
+        private bool On(Fixture fixturea, Fixture fixtureb, Contact contact)
+        {
+            return true;
         }
 
         internal static Test Create()
