@@ -1065,6 +1065,18 @@ namespace FarseerPhysics.Dynamics
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
 
+        public Body DeepClone()
+        {
+            Body body = Clone();
+            
+            for (int i = 0; i < FixtureList.Count; i++)
+            {
+                FixtureList[i].Clone(body);
+            }
+
+            return body;
+        }
+
         public Body Clone()
         {
             Body body = new Body();

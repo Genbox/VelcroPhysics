@@ -1,7 +1,11 @@
-﻿using FarseerPhysics.Dynamics;
+﻿using System.Collections.Generic;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -21,16 +25,40 @@ namespace FarseerPhysics.TestBed.Tests
             box.Body.LinearDamping = 1;
             box.Body.AngularDamping = 0.5f;
             box.Body.AngularVelocity = 0.5f;
-            box.Body.LinearVelocity = new Vector2(0,10);
+            box.Body.LinearVelocity = new Vector2(0, 10);
 
-            Fixture boxClone1 = box.Clone();
+            Fixture boxClone1 = box.DeepClone();
             //Swiching the body type to static will reset all forces. This will affect the next clone.
             boxClone1.Body.BodyType = BodyType.Static;
             boxClone1.Body.Position += new Vector2(-10, 0);
 
-            Fixture boxClone2 = boxClone1.Clone();
+            Fixture boxClone2 = boxClone1.DeepClone();
             boxClone2.Body.BodyType = BodyType.Dynamic;
             boxClone2.Body.Position += new Vector2(-10, 0);
+        }
+
+        public override void Initialize()
+        {
+            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("Texture");
+            uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
+            polygonTexture.GetData(data);
+
+            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width);
+
+            Vector2 scale = new Vector2(0.07f, -0.07f);
+            verts.Scale(ref scale);
+
+            Vector2 centroid = -verts.GetCentroid();
+            verts.Translate(ref centroid);
+
+            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
+            compund[0].Body.Position = new Vector2(-25, 30);
+
+            Body b = compund[0].Body.DeepClone();
+            b.Position = new Vector2(20, 30);
+            b.BodyType = BodyType.Dynamic;
+
+            base.Initialize();
         }
 
         public static CloneTest Create()

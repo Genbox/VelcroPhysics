@@ -551,10 +551,10 @@ namespace FarseerPhysics.Dynamics
             aabb = Proxies[childIndex].AABB;
         }
 
-        public Fixture Clone()
+        public Fixture Clone(Body body)
         {
             Fixture fixture = new Fixture();
-            fixture.Body = Body.Clone();
+            fixture.Body = body;
 
             if (Settings.ConserveMemory)
                 fixture.Shape = Shape;
@@ -568,6 +568,12 @@ namespace FarseerPhysics.Dynamics
             fixture.CollisionFilter = CollisionFilter.Clone();
             fixture.RegisterFixture();
             return fixture;
+        }
+
+        public Fixture DeepClone()
+        {
+            Fixture fix = Clone(Body.Clone());
+            return fix;
         }
 
         internal void Destroy()
