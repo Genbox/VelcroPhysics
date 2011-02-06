@@ -236,7 +236,7 @@
       <Link>Common\Decomposition\FlipcodeDecomposer.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\decomposition\SeidelDecomposer.cs">
-      <Link>SeidelDecomposer.cs</Link>
+      <Link>Common\Decomposition\SeidelDecomposer.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\common\FixedArray.cs">
       <Link>Common\FixedArray.cs</Link>
@@ -279,6 +279,9 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\TextureTools\MarchingSquares.cs">
       <Link>Common\TextureTools\MarchingSquares.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\MSTerrain.cs">
+      <Link>Common\TextureTools\MSTerrain.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
       <Link>Common\TextureTools\TextureConverter.cs</Link>
@@ -413,6 +416,7 @@
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -422,7 +426,6 @@
     <Reference Include="System.Core">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
