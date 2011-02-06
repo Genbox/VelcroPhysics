@@ -54,8 +54,6 @@ namespace FarseerPhysics.Dynamics
         /// Positive mass, non-zero velocity determined by forces, moved by solver
         /// </summary>
         Dynamic,
-        // TODO_ERIN
-        //b2_bulletBody,
     }
 
     [Flags]
@@ -68,30 +66,32 @@ namespace FarseerPhysics.Dynamics
         Bullet = (1 << 3),
         FixedRotation = (1 << 4),
         Enabled = (1 << 5),
-        Toi = (1 << 6),
-        IgnoreGravity = (1 << 7),
+        IgnoreGravity = (1 << 6),
     }
 
     public class Body : IDisposable
     {
+        public ControllerFilter ControllerFilter = new ControllerFilter();
+        public PhysicsLogicFilter PhysicsLogicFilter = new PhysicsLogicFilter();
+        public int BodyId;
+
         private static int _bodyIdCounter;
         internal float AngularVelocityInternal;
-        public ControllerFilter ControllerFilter = new ControllerFilter();
         internal BodyFlags Flags;
         internal Vector2 Force;
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
-        public PhysicsLogicFilter PhysicsLogicFilter = new PhysicsLogicFilter();
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
         internal World World;
         internal Transform Xf; // the body origin transform
+        private float _angularDamping;
         private BodyType _bodyType;
         private float _inertia;
+        private float _linearDamping;
         private float _mass;
-        public int BodyId;
 
         internal Body()
         {
@@ -129,7 +129,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float)Math.PI; }
+            get { return Rotation / (float) Math.PI; }
         }
 
         /// <summary>
@@ -178,15 +178,13 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
+                Debug.Assert(!float.IsNaN(value.X) && !float.IsNaN(value.Y));
+
                 if (_bodyType == BodyType.Static)
-                {
                     return;
-                }
 
                 if (Vector2.Dot(value, value) > 0.0f)
-                {
                     Awake = true;
-                }
 
                 LinearVelocityInternal = value;
             }
@@ -201,15 +199,13 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
+                Debug.Assert(!float.IsNaN(value));
+
                 if (_bodyType == BodyType.Static)
-                {
                     return;
-                }
 
                 if (value * value > 0.0f)
-                {
                     Awake = true;
-                }
 
                 AngularVelocityInternal = value;
             }
@@ -220,13 +216,31 @@ namespace FarseerPhysics.Dynamics
         /// Gets or sets the linear damping.
         /// </summary>
         /// <value>The linear damping.</value>
-        public float LinearDamping { get; set; }
+        public float LinearDamping
+        {
+            get { return _linearDamping; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _linearDamping = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the angular damping.
         /// </summary>
         /// <value>The angular damping.</value>
-        public float AngularDamping { get; set; }
+        public float AngularDamping
+        {
+            get { return _angularDamping; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _angularDamping = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this body should be included in the CCD solver.
@@ -420,7 +434,12 @@ namespace FarseerPhysics.Dynamics
         public Vector2 Position
         {
             get { return Xf.Position; }
-            set { SetTransform(ref value, Rotation); }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value.X) && !float.IsNaN(value.Y));
+
+                SetTransform(ref value, Rotation);
+            }
         }
 
         /// <summary>
@@ -430,7 +449,12 @@ namespace FarseerPhysics.Dynamics
         public float Rotation
         {
             get { return Sweep.A; }
-            set { SetTransform(ref Xf.Position, value); }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                SetTransform(ref Xf.Position, value);
+            }
         }
 
         /// <summary>
@@ -484,9 +508,7 @@ namespace FarseerPhysics.Dynamics
             set
             {
                 if (_bodyType != BodyType.Dynamic)
-                {
                     return;
-                }
 
                 // Move center of mass.
                 Vector2 oldCenter = Sweep.C;
@@ -508,16 +530,15 @@ namespace FarseerPhysics.Dynamics
             get { return _mass; }
             set
             {
+                Debug.Assert(!float.IsNaN(value));
+
                 if (_bodyType != BodyType.Dynamic)
-                {
                     return;
-                }
 
                 _mass = value;
+
                 if (_mass <= 0.0f)
-                {
                     _mass = 1.0f;
-                }
 
                 InvMass = 1.0f / _mass;
             }
@@ -532,10 +553,10 @@ namespace FarseerPhysics.Dynamics
             get { return _inertia + Mass * Vector2.Dot(Sweep.LocalCenter, Sweep.LocalCenter); }
             set
             {
+                Debug.Assert(!float.IsNaN(value));
+
                 if (_bodyType != BodyType.Dynamic)
-                {
                     return;
-                }
 
                 if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
                 {
@@ -986,8 +1007,9 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local point relative to the body's origin.</returns>
         public Vector2 GetLocalPoint(ref Vector2 worldPoint)
         {
-            return new Vector2((worldPoint.X - Xf.Position.X) * Xf.R.Col1.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col1.Y,
-                               (worldPoint.X - Xf.Position.X) * Xf.R.Col2.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col2.Y);
+            return
+                new Vector2((worldPoint.X - Xf.Position.X) * Xf.R.Col1.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col1.Y,
+                            (worldPoint.X - Xf.Position.X) * Xf.R.Col2.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col2.Y);
         }
 
         /// <summary>
@@ -1068,7 +1090,7 @@ namespace FarseerPhysics.Dynamics
         public Body DeepClone()
         {
             Body body = Clone();
-            
+
             for (int i = 0; i < FixtureList.Count; i++)
             {
                 FixtureList[i].Clone(body);
@@ -1090,16 +1112,16 @@ namespace FarseerPhysics.Dynamics
             body.Rotation = Rotation;
             body._bodyType = _bodyType;
             body.Flags = Flags;
-            
+
             World.AddBody(body);
-            
+
             return body;
         }
 
         internal void SynchronizeFixtures()
         {
             Transform xf1 = new Transform();
-            float c = (float)Math.Cos(Sweep.A0), s = (float)Math.Sin(Sweep.A0);
+            float c = (float) Math.Cos(Sweep.A0), s = (float) Math.Sin(Sweep.A0);
             xf1.R.Col1.X = c;
             xf1.R.Col2.X = -s;
             xf1.R.Col1.Y = s;
