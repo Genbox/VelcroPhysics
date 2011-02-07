@@ -26,7 +26,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -84,16 +83,59 @@ namespace FarseerPhysics.Dynamics
         public int ProxyId;
     }
 
-    public class CollisionFilter
+    /// <summary>
+    /// A fixture is used to attach a Shape to a body for collision detection. A fixture
+    /// inherits its transform from its parent. Fixtures hold additional non-geometric data
+    /// such as friction, collision filters, etc.
+    /// Fixtures are created via Body.CreateFixture.
+    /// Warning: You cannot reuse fixtures.
+    /// </summary>
+    public class Fixture : IDisposable
     {
+        private static int _fixtureIdCounter;
+
+        /// <summary>
+        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
+        /// </summary>
+        public AfterCollisionEventHandler AfterCollision;
+
+        /// <summary>
+        /// Fires when two fixtures are close to each other.
+        /// Due to how the broadphase works, this can be quite inaccurate as shapes are approximated using AABBs.
+        /// </summary>
+        public BeforeCollisionEventHandler BeforeCollision;
+
+        /// <summary>
+        /// Fires when two shapes collide and a contact is created between them.
+        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// </summary>
+        public OnCollisionEventHandler OnCollision;
+
+        /// <summary>
+        /// Fires when two shapes separate and a contact is removed between them.
+        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// </summary>
+        public OnSeparationEventHandler OnSeparation;
+
+        public FixtureProxy[] Proxies;
+        public int ProxyCount;
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
+        internal Dictionary<int, bool> _collisionIgnores;
+        private float _friction;
+        private float _restitution;
 
-        internal Dictionary<int, bool> _collisionIgnores = new Dictionary<int, bool>();
-        private Fixture Fixture { get; set; }
+        internal Fixture()
+        {
+        }
 
-        internal CollisionFilter()
+        public Fixture(Body body, Shape shape)
+            : this(body, shape, null)
+        {
+        }
+
+        public Fixture(Body body, Shape shape, object userData)
         {
             if (Settings.UseFPECollisionCategories)
                 _collisionCategories = Category.All;
@@ -102,12 +144,22 @@ namespace FarseerPhysics.Dynamics
 
             _collidesWith = Category.All;
             _collisionGroup = 0;
-        }
 
-        public CollisionFilter(Fixture fixture)
-            : this()
-        {
-            Fixture = fixture;
+            //Fixture defaults
+            Friction = 0.2f;
+            Restitution = 0;
+
+            IsSensor = false;
+
+            Body = body;
+            UserData = userData;
+
+            if (Settings.ConserveMemory)
+                Shape = shape;
+            else
+                Shape = shape.Clone();
+
+            RegisterFixture();
         }
 
         /// <summary>
@@ -125,9 +177,6 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (Fixture.Body == null)
-                    return;
-
                 if (_collisionGroup == value)
                     return;
 
@@ -150,9 +199,6 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (Fixture.Body == null)
-                    return;
-
                 if (_collidesWith == value)
                     return;
 
@@ -176,9 +222,6 @@ namespace FarseerPhysics.Dynamics
 
             set
             {
-                if (Fixture.Body == null)
-                    return;
-
                 if (_collisionCategories == value)
                     return;
 
@@ -188,64 +231,84 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Adds the category.
+        /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
         /// </summary>
-        /// <param name="category">The category.</param>
-        public void AddCollisionCategory(Category category)
+        /// <value>The type of the shape.</value>
+        public ShapeType ShapeType
         {
-            CollisionCategories |= category;
+            get { return Shape.ShapeType; }
         }
 
         /// <summary>
-        /// Removes the category.
+        /// Get the child Shape. You can modify the child Shape, however you should not change the
+        /// number of vertices because this will crash some collision caching mechanisms.
         /// </summary>
-        /// <param name="category">The category.</param>
-        public void RemoveCollisionCategory(Category category)
+        /// <value>The shape.</value>
+        public Shape Shape { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this fixture is a sensor.
+        /// </summary>
+        /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
+        public bool IsSensor { get; set; }
+
+        /// <summary>
+        /// Get the parent body of this fixture. This is null if the fixture is not attached.
+        /// </summary>
+        /// <value>The body.</value>
+        public Body Body { get; internal set; }
+
+        /// <summary>
+        /// Set the user data. Use this to store your application specific data.
+        /// </summary>
+        /// <value>The user data.</value>
+        public object UserData { get; set; }
+
+        /// <summary>
+        /// Get or set the coefficient of friction.
+        /// </summary>
+        /// <value>The friction.</value>
+        public float Friction
         {
-            CollisionCategories &= ~category;
+            get { return _friction; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _friction = value;
+            }
         }
 
         /// <summary>
-        /// Determines whether this object has the specified category.
+        /// Get or set the coefficient of restitution.
         /// </summary>
-        /// <param name="category">The category.</param>
-        /// <returns>
-        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsInCollisionCategory(Category category)
+        /// <value>The restitution.</value>
+        public float Restitution
         {
-            return (CollisionCategories & category) == category;
+            get { return _restitution; }
+            set
+            {
+                Debug.Assert(!float.IsNaN(value));
+
+                _restitution = value;
+            }
         }
 
         /// <summary>
-        /// Adds the category.
+        /// Gets a unique ID for this fixture.
         /// </summary>
-        /// <param name="category">The category.</param>
-        public void AddCollidesWithCategory(Category category)
+        /// <value>The fixture id.</value>
+        public int FixtureId { get; private set; }
+
+        #region IDisposable Members
+
+        public void Dispose()
         {
-            CollidesWith |= category;
+            Body.Dispose();
+            GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Removes the category.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        public void RemoveCollidesWithCategory(Category category)
-        {
-            CollidesWith &= ~category;
-        }
-
-        /// <summary>
-        /// Determines whether this object has the specified category.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        /// <returns>
-        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsInCollidesWithCategory(Category category)
-        {
-            return (CollidesWith & category) == category;
-        }
+        #endregion
 
         /// <summary>
         /// Restores collisions between this fixture and the provided fixture.
@@ -253,6 +316,9 @@ namespace FarseerPhysics.Dynamics
         /// <param name="fixture">The fixture.</param>
         public void RestoreCollisionWith(Fixture fixture)
         {
+            if (_collisionIgnores == null)
+                return;
+
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
             {
                 _collisionIgnores[fixture.FixtureId] = false;
@@ -266,6 +332,9 @@ namespace FarseerPhysics.Dynamics
         /// <param name="fixture">The fixture.</param>
         public void IgnoreCollisionWith(Fixture fixture)
         {
+            if (_collisionIgnores == null)
+                _collisionIgnores = new Dictionary<int, bool>();
+
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
                 _collisionIgnores[fixture.FixtureId] = true;
             else
@@ -283,6 +352,9 @@ namespace FarseerPhysics.Dynamics
         /// </returns>
         public bool IsFixtureIgnored(Fixture fixture)
         {
+            if (_collisionIgnores == null)
+                return false;
+
             if (_collisionIgnores.ContainsKey(fixture.FixtureId))
                 return _collisionIgnores[fixture.FixtureId];
 
@@ -297,13 +369,13 @@ namespace FarseerPhysics.Dynamics
         internal void Refilter()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = Fixture.Body.ContactList;
+            ContactEdge edge = Body.ContactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;
                 Fixture fixtureA = contact.FixtureA;
                 Fixture fixtureB = contact.FixtureB;
-                if (fixtureA == Fixture || fixtureB == Fixture)
+                if (fixtureA == this || fixtureB == this)
                 {
                     contact.FlagForFiltering();
                 }
@@ -311,7 +383,7 @@ namespace FarseerPhysics.Dynamics
                 edge = edge.Next;
             }
 
-            World world = Fixture.Body.World;
+            World world = Body.World;
 
             if (world == null)
             {
@@ -320,90 +392,10 @@ namespace FarseerPhysics.Dynamics
 
             // Touch each proxy so that new pairs may be created
             BroadPhase broadPhase = world.ContactManager.BroadPhase;
-            for (int i = 0; i < Fixture.ProxyCount; ++i)
+            for (int i = 0; i < ProxyCount; ++i)
             {
-                broadPhase.TouchProxy(Fixture.Proxies[i].ProxyId);
+                broadPhase.TouchProxy(Proxies[i].ProxyId);
             }
-        }
-
-        public CollisionFilter Clone()
-        {
-            CollisionFilter filter = new CollisionFilter(Fixture);
-            filter._collidesWith = _collidesWith;
-            filter._collisionCategories = _collisionCategories;
-            filter._collisionGroup = _collisionGroup;
-            filter._collisionIgnores = new Dictionary<int, bool>(filter._collisionIgnores);
-            return filter;
-        }
-    }
-
-    /// <summary>
-    /// A fixture is used to attach a Shape to a body for collision detection. A fixture
-    /// inherits its transform from its parent. Fixtures hold additional non-geometric data
-    /// such as friction, collision filters, etc.
-    /// Fixtures are created via Body.CreateFixture.
-    /// Warning: You cannot reuse fixtures.
-    /// </summary>
-    public class Fixture : IDisposable
-    {
-        private static int _fixtureIdCounter;
-
-        /// <summary>
-        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
-        /// </summary>
-        public AfterCollisionEventHandler AfterCollision;
-
-        /// <summary>
-        /// Fires when two fixtures are close to each other.
-        /// Due to how the broadphase works, this can be quite inaccurate as shapes are approximated using AABBs.
-        /// </summary>
-        public BeforeCollisionEventHandler BeforeCollision;
-
-        public CollisionFilter CollisionFilter { get; internal set; }
-
-        /// <summary>
-        /// Fires when two shapes collide and a contact is created between them.
-        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
-        /// </summary>
-        public OnCollisionEventHandler OnCollision;
-
-        /// <summary>
-        /// Fires when two shapes separate and a contact is removed between them.
-        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
-        /// </summary>
-        public OnSeparationEventHandler OnSeparation;
-
-        public FixtureProxy[] Proxies;
-        public int ProxyCount;
-
-        internal Fixture()
-        {
-        }
-
-        public Fixture(Body body, Shape shape)
-            : this(body, shape, null)
-        {
-        }
-
-        public Fixture(Body body, Shape shape, object userData)
-        {
-            CollisionFilter = new CollisionFilter(this);
-
-            //Fixture defaults
-            Friction = 0.2f;
-            Restitution = 0;
-
-            IsSensor = false;
-
-            Body = body;
-            UserData = userData;
-
-            if (Settings.ConserveMemory)
-                Shape = shape;
-            else
-                Shape = shape.Clone();
-
-            RegisterFixture();
         }
 
         internal void RegisterFixture()
@@ -444,90 +436,6 @@ namespace FarseerPhysics.Dynamics
                 Body.World.FixtureAdded(this);
             }
         }
-
-        /// <summary>
-        /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
-        /// </summary>
-        /// <value>The type of the shape.</value>
-        public ShapeType ShapeType
-        {
-            get { return Shape.ShapeType; }
-        }
-
-        /// <summary>
-        /// Get the child Shape. You can modify the child Shape, however you should not change the
-        /// number of vertices because this will crash some collision caching mechanisms.
-        /// </summary>
-        /// <value>The shape.</value>
-        public Shape Shape { get; internal set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this fixture is a sensor.
-        /// </summary>
-        /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
-        public bool IsSensor { get; set; }
-
-        /// <summary>
-        /// Get the parent body of this fixture. This is null if the fixture is not attached.
-        /// </summary>
-        /// <value>The body.</value>
-        public Body Body { get; internal set; }
-
-        /// <summary>
-        /// Set the user data. Use this to store your application specific data.
-        /// </summary>
-        /// <value>The user data.</value>
-        public object UserData { get; set; }
-
-        private float _friction;
-
-        /// <summary>
-        /// Get or set the coefficient of friction.
-        /// </summary>
-        /// <value>The friction.</value>
-        public float Friction
-        {
-            get { return _friction; }
-            set
-            {
-                Debug.Assert(!float.IsNaN(value));
-
-                _friction = value;
-            }
-        }
-
-        private float _restitution;
-
-        /// <summary>
-        /// Get or set the coefficient of restitution.
-        /// </summary>
-        /// <value>The restitution.</value>
-        public float Restitution
-        {
-            get { return _restitution; }
-            set
-            {
-                Debug.Assert(!float.IsNaN(value));
-
-                _restitution = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets a unique ID for this fixture.
-        /// </summary>
-        /// <value>The fixture id.</value>
-        public int FixtureId { get; private set; }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Body.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
 
         /// <summary>
         /// Test a point for containment in this fixture.
@@ -578,7 +486,20 @@ namespace FarseerPhysics.Dynamics
             fixture.Restitution = Restitution;
             fixture.Friction = Friction;
             fixture.IsSensor = IsSensor;
-            fixture.CollisionFilter = CollisionFilter.Clone();
+            fixture._collisionGroup = CollisionGroup;
+            fixture._collisionCategories = CollisionCategories;
+            fixture._collidesWith = CollidesWith;
+
+            if (_collisionIgnores != null)
+            {
+                fixture._collisionIgnores = new Dictionary<int, bool>();
+
+                foreach (KeyValuePair<int, bool> pair in _collisionIgnores)
+                {
+                    fixture._collisionIgnores.Add(pair.Key, pair.Value);
+                }
+            }
+
             fixture.RegisterFixture();
             return fixture;
         }
@@ -596,8 +517,12 @@ namespace FarseerPhysics.Dynamics
 
             // Free the proxy array.
             Proxies = null;
-
             Shape = null;
+
+            BeforeCollision = null;
+            OnCollision = null;
+            OnSeparation = null;
+            AfterCollision = null;
 
             if (Body.World.FixtureRemoved != null)
             {
@@ -664,14 +589,14 @@ namespace FarseerPhysics.Dynamics
         internal bool CompareTo(Fixture fixture)
         {
             return (
-                    CollisionFilter.CollidesWith == fixture.CollisionFilter.CollidesWith &&
-                    CollisionFilter.CollisionCategories == fixture.CollisionFilter.CollisionCategories &&
-                    CollisionFilter.CollisionGroup == fixture.CollisionFilter.CollisionGroup &&
-                    Friction == fixture.Friction &&
-                    IsSensor == fixture.IsSensor &&
-                    Restitution == fixture.Restitution &&
-                    Shape.CompareTo(fixture.Shape) &&
-                    UserData == fixture.UserData);
+                       CollidesWith == fixture.CollidesWith &&
+                       CollisionCategories == fixture.CollisionCategories &&
+                       CollisionGroup == fixture.CollisionGroup &&
+                       Friction == fixture.Friction &&
+                       IsSensor == fixture.IsSensor &&
+                       Restitution == fixture.Restitution &&
+                       Shape.CompareTo(fixture.Shape) &&
+                       UserData == fixture.UserData);
         }
     }
 }

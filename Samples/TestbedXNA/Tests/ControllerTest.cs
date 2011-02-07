@@ -71,8 +71,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 CircleShape circleShape = new CircleShape(1, 0.1f);
                 Fixture fix = circle.CreateFixture(circleShape);
-                fix.CollisionFilter.CollisionCategories = Category.Cat3;
-                fix.CollisionFilter.CollisionGroup = 2;
+                fix.CollisionCategories = Category.Cat3;
+                fix.CollisionGroup = 2;
 
                 if (i == 4)
                 {
@@ -81,12 +81,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 if (i == 5)
                 {
-                    fix.CollisionFilter.CollisionCategories = Category.Cat2;
+                    fix.CollisionCategories = Category.Cat2;
                 }
 
                 if (i == 6)
                 {
-                    fix.CollisionFilter.CollisionGroup = 3;
+                    fix.CollisionGroup = 3;
                 }
             }
         }

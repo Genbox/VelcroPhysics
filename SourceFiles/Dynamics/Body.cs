@@ -71,8 +71,8 @@ namespace FarseerPhysics.Dynamics
 
     public class Body : IDisposable
     {
-        public ControllerFilter ControllerFilter = new ControllerFilter();
-        public PhysicsLogicFilter PhysicsLogicFilter = new PhysicsLogicFilter();
+        public ControllerFilter ControllerFilter;
+        public PhysicsLogicFilter PhysicsLogicFilter;
         public int BodyId;
 
         private static int _bodyIdCounter;
@@ -165,7 +165,7 @@ namespace FarseerPhysics.Dynamics
                 for (int i = 0; i < FixtureList.Count; i++)
                 {
                     Fixture f = FixtureList[i];
-                    f.CollisionFilter.Refilter();
+                    f.Refilter();
                 }
             }
         }
@@ -615,10 +615,40 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public CollisionFilter CollisionFilter
+        public Category CollisionCategories
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.CollisionCategories = value;
+                }
+            }
+        }
+
+        public Category CollidesWith
+        {
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.CollidesWith = value;
+                }
+            }
+        }
+
+        public short CollisionGroup
+        {
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.CollisionGroup = value;
+                }
+            }
         }
 
         #region IDisposable Members

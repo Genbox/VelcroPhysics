@@ -48,7 +48,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
 
                 foreach (Fixture fixture in _agentBody.FixtureList)
                 {
-                    fixture.CollisionFilter.CollisionCategories = _collisionCategories;
+                    fixture.CollisionCategories = _collisionCategories;
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
 
                 foreach (Fixture fixture in _agentBody.FixtureList)
                 {
-                    fixture.CollisionFilter.CollidesWith = _collidesWith;
+                    fixture.CollidesWith = _collidesWith;
                 }
             }
         }

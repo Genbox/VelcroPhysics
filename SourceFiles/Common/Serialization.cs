@@ -99,9 +99,9 @@ namespace FarseerPhysics.Common
             _writer.WriteElementString("Density", fixture.Shape.Density.ToString());
 
             _writer.WriteStartElement("FilterData");
-            _writer.WriteElementString("CategoryBits", ((int)fixture.CollisionFilter.CollisionCategories).ToString());
-            _writer.WriteElementString("MaskBits", ((int)fixture.CollisionFilter.CollidesWith).ToString());
-            _writer.WriteElementString("GroupIndex", fixture.CollisionFilter.CollisionGroup.ToString());
+            _writer.WriteElementString("CategoryBits", ((int)fixture.CollisionCategories).ToString());
+            _writer.WriteElementString("MaskBits", ((int)fixture.CollidesWith).ToString());
+            _writer.WriteElementString("GroupIndex", fixture.CollisionGroup.ToString());
             _writer.WriteEndElement();
 
             _writer.WriteElementString("Friction", fixture.Friction.ToString());
@@ -609,19 +609,18 @@ namespace FarseerPhysics.Common
                                     fixture.Shape.Density = float.Parse(sn.Value);
                                     break;
                                 case "filterdata":
-                                    fixture.CollisionFilter = new CollisionFilter(fixture);
                                     foreach (var ssn in sn.Elements)
                                     {
                                         switch (ssn.Name.ToLower())
                                         {
                                             case "categorybits":
-                                                fixture.CollisionFilter._collisionCategories = (Category)int.Parse(ssn.Value);
+                                                fixture._collisionCategories = (Category)int.Parse(ssn.Value);
                                                 break;
                                             case "maskbits":
-                                                fixture.CollisionFilter._collidesWith = (Category)int.Parse(ssn.Value);
+                                                fixture._collidesWith = (Category)int.Parse(ssn.Value);
                                                 break;
                                             case "groupindex":
-                                                fixture.CollisionFilter._collisionGroup = short.Parse(ssn.Value);
+                                                fixture._collisionGroup = short.Parse(ssn.Value);
                                                 break;
                                         }
                                     }
@@ -719,9 +718,9 @@ namespace FarseerPhysics.Common
                                             f.Restitution = blueprint.Restitution;
                                             f.UserData = blueprint.UserData;
                                             f.Friction = blueprint.Friction;
-                                            f.CollisionFilter.CollidesWith = blueprint.CollisionFilter.CollidesWith;
-                                            f.CollisionFilter.CollisionCategories = blueprint.CollisionFilter.CollisionCategories;
-                                            f.CollisionFilter.CollisionGroup = blueprint.CollisionFilter.CollisionGroup;
+                                            f.CollidesWith = blueprint.CollidesWith;
+                                            f.CollisionCategories = blueprint.CollisionCategories;
+                                            f.CollisionGroup = blueprint.CollisionGroup;
                                         }
                                         break;
                                     }

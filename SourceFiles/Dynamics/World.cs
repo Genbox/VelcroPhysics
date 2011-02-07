@@ -57,21 +57,21 @@ namespace FarseerPhysics.Dynamics
             foreach (Fixture fixture in body.FixtureList)
             {
                 //Disable
-                if ((fixture.CollisionFilter.CollisionGroup == DisabledOnGroup) &&
-                    fixture.CollisionFilter.CollisionGroup != 0 && DisabledOnGroup != 0)
+                if ((fixture.CollisionGroup == DisabledOnGroup) &&
+                    fixture.CollisionGroup != 0 && DisabledOnGroup != 0)
                     return false;
 
-                if ((fixture.CollisionFilter.CollisionCategories & DisabledOnCategories) != Category.None)
+                if ((fixture.CollisionCategories & DisabledOnCategories) != Category.None)
                     return false;
 
                 if (EnabledOnGroup != 0 || EnabledOnCategories != Category.All)
                 {
                     //Enable
-                    if ((fixture.CollisionFilter.CollisionGroup == EnabledOnGroup) &&
-                        fixture.CollisionFilter.CollisionGroup != 0 && EnabledOnGroup != 0)
+                    if ((fixture.CollisionGroup == EnabledOnGroup) &&
+                        fixture.CollisionGroup != 0 && EnabledOnGroup != 0)
                         return true;
 
-                    if ((fixture.CollisionFilter.CollisionCategories & EnabledOnCategories) != Category.None &&
+                    if ((fixture.CollisionCategories & EnabledOnCategories) != Category.None &&
                         EnabledOnCategories != Category.All)
                         return true;
                 }

@@ -29,7 +29,7 @@ namespace FarseerPhysics.Controllers
         }
     }
 
-    public class ControllerFilter
+    public struct ControllerFilter
     {
         public ControllerType ControllerFlags;
 
