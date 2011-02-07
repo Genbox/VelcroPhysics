@@ -334,36 +334,36 @@ namespace FarseerPhysics.Dynamics
         {
             if (Settings.UseFPECollisionCategories)
             {
-                if ((fixtureA.CollisionFilter.CollisionGroup == fixtureB.CollisionFilter.CollisionGroup) &&
-                    fixtureA.CollisionFilter.CollisionGroup != 0 && fixtureB.CollisionFilter.CollisionGroup != 0)
+                if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) &&
+                    fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
                     return false;
 
-                if (((fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) ==
+                if (((fixtureA.CollisionCategories & fixtureB.CollidesWith) ==
                      Category.None) &
-                    ((fixtureB.CollisionFilter.CollisionCategories & fixtureA.CollisionFilter.CollidesWith) ==
+                    ((fixtureB.CollisionCategories & fixtureA.CollidesWith) ==
                      Category.None))
                     return false;
 
-                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) ||
-                    fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
+                if (fixtureA.IsFixtureIgnored(fixtureB) ||
+                    fixtureB.IsFixtureIgnored(fixtureA))
                     return false;
 
                 return true;
             }
 
-            if (fixtureA.CollisionFilter.CollisionGroup == fixtureB.CollisionFilter.CollisionGroup &&
-                fixtureA.CollisionFilter.CollisionGroup != 0)
+            if (fixtureA.CollisionGroup == fixtureB.CollisionGroup &&
+                fixtureA.CollisionGroup != 0)
             {
-                return fixtureA.CollisionFilter.CollisionGroup > 0;
+                return fixtureA.CollisionGroup > 0;
             }
 
-            bool collide = (fixtureA.CollisionFilter.CollidesWith & fixtureB.CollisionFilter.CollisionCategories) != 0 &&
-                           (fixtureA.CollisionFilter.CollisionCategories & fixtureB.CollisionFilter.CollidesWith) != 0;
+            bool collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 &&
+                           (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;
 
             if (collide)
             {
-                if (fixtureA.CollisionFilter.IsFixtureIgnored(fixtureB) ||
-                    fixtureB.CollisionFilter.IsFixtureIgnored(fixtureA))
+                if (fixtureA.IsFixtureIgnored(fixtureB) ||
+                    fixtureB.IsFixtureIgnored(fixtureA))
                 {
                     return false;
                 }

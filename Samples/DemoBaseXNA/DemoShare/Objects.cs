@@ -62,8 +62,8 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                 body.Position = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
                 body.Restitution = .7f;
                 body.Friction = .2f;
-                body.CollisionFilter.CollisionCategories = CollisionCategories;
-                body.CollisionFilter.CollidesWith = CollidesWith;
+                body.CollisionCategories = CollisionCategories;
+                body.CollidesWith = CollidesWith;
             }
         }
 
@@ -76,7 +76,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
                 foreach (Body body in _bodies)
                 {
-                    body.CollisionFilter.CollisionCategories = _collisionCategories;
+                    body.CollisionCategories = _collisionCategories;
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
 
                 foreach (Body body in _bodies)
                 {
-                    body.CollisionFilter.CollidesWith = _collidesWith;
+                    body.CollidesWith = _collidesWith;
                 }
             }
         }

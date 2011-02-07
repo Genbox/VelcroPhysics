@@ -57,11 +57,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             set
             {
                 _collisionCategories = value;
-
-                foreach (Fixture fixture in _agentBody.FixtureList)
-                {
-                    fixture.CollisionFilter.CollisionCategories = _collisionCategories;
-                }
+                Body.CollisionCategories = value;
             }
         }
 
@@ -71,11 +67,7 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             set
             {
                 _collidesWith = value;
-
-                foreach (Fixture fixture in _agentBody.FixtureList)
-                {
-                    fixture.CollisionFilter.CollidesWith = _collidesWith;
-                }
+                Body.CollidesWith = value;
             }
         }
 

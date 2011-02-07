@@ -77,8 +77,8 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         Fixture fixture = body.CreateFixture(largeShape);
                         fixture.Friction = 0.2f;
-                        fixture.CollisionFilter.CollisionCategories = Category.Cat2;
-                        fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
+                        fixture.CollisionCategories = Category.Cat2;
+                        fixture.CollidesWith = Category.All & ~Category.Cat2;
                         body.Position = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
@@ -86,8 +86,8 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         Fixture fixture = body.CreateFixture(smallShape);
                         fixture.Friction = 0.2f;
-                        fixture.CollisionFilter.CollisionCategories = Category.Cat1;
-                        fixture.CollisionFilter.CollidesWith = Category.All & ~Category.Cat2;
+                        fixture.CollisionCategories = Category.Cat1;
+                        fixture.CollidesWith = Category.All & ~Category.Cat2;
                     }
 
                     Vector2 anchor = new Vector2(i, y);
