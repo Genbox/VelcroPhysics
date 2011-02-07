@@ -296,6 +296,9 @@
     <Compile Include="..\..\SourceFiles\Common\TextureTools\MarchingSquares.cs">
       <Link>Common\TextureTools\MarchingSquares.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\TextureTools\MSTerrain.cs">
+      <Link>Common\TextureTools\MSTerrain.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
       <Link>Common\TextureTools\TextureConverter.cs</Link>
     </Compile>
@@ -422,7 +425,6 @@
     <Compile Include="..\..\SourceFiles\Settings.cs">
       <Link>Settings.cs</Link>
     </Compile>
-    <Compile Include="Common\TextureTools\MSTerrain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
