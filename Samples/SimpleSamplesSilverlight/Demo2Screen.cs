@@ -12,7 +12,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 {
     internal class Demo2Screen : GameScreen, IDemoScreen
     {
-        private List<Fixture> _rectangles;
+        private Body _rectangles;
 
         #region IDemoScreen Members
 
@@ -55,8 +55,8 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
             vertices.Add(rect1);
             vertices.Add(rect2);
 
-            _rectangles = FixtureFactory.CreateCompoundPolygon(World, vertices, 1);
-            _rectangles[0].Body.BodyType = BodyType.Dynamic;
+            _rectangles = BodyFactory.CreateCompoundPolygon(World, vertices, 1);
+            _rectangles.BodyType = BodyType.Dynamic;
 
             base.LoadContent();
         }
@@ -91,7 +91,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
                 force += new Vector2(0, forceAmount);
             }
 
-            _rectangles[0].Body.ApplyForce(force);
+            _rectangles.ApplyForce(force);
 
             const float torqueAmount = 200;
             float torque = 0;
@@ -105,7 +105,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
                 torque -= torqueAmount;
             }
 
-            _rectangles[0].Body.ApplyTorque(torque);
+            _rectangles.ApplyTorque(torque);
         }
     }
 }

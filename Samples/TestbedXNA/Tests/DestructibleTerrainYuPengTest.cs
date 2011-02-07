@@ -23,7 +23,7 @@ namespace FarseerPhysics.TestBed.Tests
             Settings.MaxPolygonVertices = 16;
 
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             //Create 7 blocks
             const float size = 2.0f;

@@ -55,16 +55,16 @@ namespace FarseerPhysics.SimpleSamplesXNA
                                              Scale = 8f
                                          };
 
-            Fixture[] rect = new Fixture[4];
+            Body[] rect = new Body[4];
 
             for (int i = 0; i < 4; i++)
             {
-                rect[i] = FixtureFactory.CreateRectangle(World, 6, 1.5f, 1, material);
+                rect[i] = BodyFactory.CreateRectangle(World, 6, 1.5f, 1, material);
             }
-            rect[0].Body.Position = new Vector2(-9, -5);
-            rect[1].Body.Position = new Vector2(-8, 7);
-            rect[2].Body.Position = new Vector2(9, -7);
-            rect[3].Body.Position = new Vector2(7, 5);
+            rect[0].Position = new Vector2(-9, -5);
+            rect[1].Position = new Vector2(-8, 7);
+            rect[2].Position = new Vector2(9, -7);
+            rect[3].Position = new Vector2(7, 5);
         }
 
         public override void HandleGamePadInput(InputHelper input)

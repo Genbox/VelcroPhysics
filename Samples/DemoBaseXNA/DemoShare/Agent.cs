@@ -32,23 +32,23 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                                          };
 
             //Center
-            FixtureFactory.CreateCircle(1, 1, _agentBody, matBody);
+            FixtureFactory.AttachCircle(1, 1, _agentBody, matBody);
 
             //Left arm
-            FixtureFactory.CreateRectangle(3, 0.8f, 1, new Vector2(-2, 0), _agentBody, matBody);
-            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(-4, 0), matHands);
+            FixtureFactory.AttachRectangle(3, 0.8f, 1, new Vector2(-2, 0), _agentBody, matBody);
+            FixtureFactory.AttachCircle(1, 1, _agentBody, new Vector2(-4, 0), matHands);
 
             //Right arm
-            FixtureFactory.CreateRectangle(3, 0.8f, 1, new Vector2(2, 0), _agentBody, matBody);
-            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(4, 0), matHands);
+            FixtureFactory.AttachRectangle(3, 0.8f, 1, new Vector2(2, 0), _agentBody, matBody);
+            FixtureFactory.AttachCircle(1, 1, _agentBody, new Vector2(4, 0), matHands);
 
             //Top arm
-            FixtureFactory.CreateRectangle(0.8f, 3, 1, new Vector2(0, 2), _agentBody, matBody);
-            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(0, 4), matHands);
+            FixtureFactory.AttachRectangle(0.8f, 3, 1, new Vector2(0, 2), _agentBody, matBody);
+            FixtureFactory.AttachCircle(1, 1, _agentBody, new Vector2(0, 4), matHands);
 
             //Bottom arm
-            FixtureFactory.CreateRectangle(0.8f, 3, 1, new Vector2(0, -2), _agentBody, matBody);
-            FixtureFactory.CreateCircle(1, 1, _agentBody, new Vector2(0, -4), matHands);
+            FixtureFactory.AttachRectangle(0.8f, 3, 1, new Vector2(0, -2), _agentBody, matBody);
+            FixtureFactory.AttachCircle(1, 1, _agentBody, new Vector2(0, -4), matHands);
         }
 
         public Category CollisionCategories

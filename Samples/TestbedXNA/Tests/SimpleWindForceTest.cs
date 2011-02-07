@@ -37,20 +37,20 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int y = 0; y < countY; y++)
                 {
-                    Fixture currentFixture = FixtureFactory.CreateRectangle(World, 1f, 1f, 5f,
+                    Body currentFixture = BodyFactory.CreateRectangle(World, 1f, 1f, 5f,
                                                                             new Vector2(x*2 - countX, y*2 + 5));
-                    //Fixture currentFixture = FixtureFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
-                    currentFixture.Body.BodyType = BodyType.Dynamic;
+                    //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
+                    currentFixture.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
-                    currentFixture.Body.SetTransform(currentFixture.Body.Position, 0.6f);
+                    currentFixture.SetTransform(currentFixture.Position, 0.6f);
                     //currentFixture.CollidesWith = Category.Cat10;
                 }
             }
 
-            Fixture floor = FixtureFactory.CreateRectangle(World, 100, 1, 1, new Vector2(0, 0));
-            Fixture ceiling = FixtureFactory.CreateRectangle(World, 100, 1, 1, new Vector2(0, 40));
-            Fixture right = FixtureFactory.CreateRectangle(World, 1, 100, 1, new Vector2(35, 0));
-            Fixture left = FixtureFactory.CreateRectangle(World, 1, 100, 1, new Vector2(-35, 0));
+            Body floor = BodyFactory.CreateRectangle(World, 100, 1, 1, new Vector2(0, 0));
+            Body ceiling = BodyFactory.CreateRectangle(World, 100, 1, 1, new Vector2(0, 40));
+            Body right = BodyFactory.CreateRectangle(World, 1, 100, 1, new Vector2(35, 0));
+            Body left = BodyFactory.CreateRectangle(World, 1, 100, 1, new Vector2(-35, 0));
 
             floor.Friction = 0.2f;
             ceiling.Friction = 0.2f;

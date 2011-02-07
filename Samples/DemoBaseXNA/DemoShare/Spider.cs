@@ -39,53 +39,53 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                                        };
 
             //Load bodies
-            Fixture circle = FixtureFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position, matHead);
-            circle.Body.BodyType = BodyType.Dynamic;
+            Body circle = BodyFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position, matHead);
+            circle.BodyType = BodyType.Dynamic;
 
             //Left upper leg
-            Fixture leftUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                               circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
+            Body leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
+                                                               circle.Position - new Vector2(SpiderBodyRadius, 0) -
                                                                new Vector2(_upperLegSize.X/2, 0), matBody);
-            leftUpper.Body.BodyType = BodyType.Dynamic;
+            leftUpper.BodyType = BodyType.Dynamic;
 
             //Left lower leg
-            Fixture leftLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                               circle.Body.Position - new Vector2(SpiderBodyRadius, 0) -
+            Body leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
+                                                               circle.Position - new Vector2(SpiderBodyRadius, 0) -
                                                                new Vector2(_upperLegSize.X, 0) -
                                                                new Vector2(_lowerLegSize.X/2, 0), matLeg);
-            leftLower.Body.BodyType = BodyType.Dynamic;
+            leftLower.BodyType = BodyType.Dynamic;
 
             //Right upper leg
-            Fixture rightUpper = FixtureFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                                circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
+            Body rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
+                                                                circle.Position + new Vector2(SpiderBodyRadius, 0) +
                                                                 new Vector2(_upperLegSize.X/2, 0), matBody);
-            rightUpper.Body.BodyType = BodyType.Dynamic;
+            rightUpper.BodyType = BodyType.Dynamic;
 
             //Right lower leg
-            Fixture rightLower = FixtureFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                                circle.Body.Position + new Vector2(SpiderBodyRadius, 0) +
+            Body rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
+                                                                circle.Position + new Vector2(SpiderBodyRadius, 0) +
                                                                 new Vector2(_upperLegSize.X, 0) +
                                                                 new Vector2(_lowerLegSize.X/2, 0), matLeg);
-            rightLower.Body.BodyType = BodyType.Dynamic;
+            rightLower.BodyType = BodyType.Dynamic;
 
             //Create joints
-            JointFactory.CreateRevoluteJoint(world, circle.Body, leftUpper.Body, new Vector2(SpiderBodyRadius, 0));
+            JointFactory.CreateRevoluteJoint(world, circle, leftUpper, new Vector2(SpiderBodyRadius, 0));
 
-            _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle.Body, leftUpper.Body);
+            _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, leftUpper);
             _leftShoulderAngleJoint.MaxImpulse = 3;
 
-            JointFactory.CreateRevoluteJoint(world, circle.Body, rightUpper.Body, new Vector2(-SpiderBodyRadius, 0));
+            JointFactory.CreateRevoluteJoint(world, circle, rightUpper, new Vector2(-SpiderBodyRadius, 0));
 
-            _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle.Body, rightUpper.Body);
+            _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, rightUpper);
             _rightShoulderAngleJoint.MaxImpulse = 3;
 
-            JointFactory.CreateRevoluteJoint(world, leftUpper.Body, leftLower.Body, new Vector2(_upperLegSize.X/2, 0));
-            _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper.Body, leftLower.Body);
+            JointFactory.CreateRevoluteJoint(world, leftUpper, leftLower, new Vector2(_upperLegSize.X/2, 0));
+            _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper, leftLower);
             _leftKneeAngleJoint.MaxImpulse = 3;
 
-            JointFactory.CreateRevoluteJoint(world, rightUpper.Body, rightLower.Body,
+            JointFactory.CreateRevoluteJoint(world, rightUpper, rightLower,
                                              -new Vector2(_upperLegSize.X/2, 0));
-            _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper.Body, rightLower.Body);
+            _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper, rightLower);
             _rightKneeAngleJoint.MaxImpulse = 3;
         }
 

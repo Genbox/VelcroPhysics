@@ -22,8 +22,8 @@ namespace FarseerPhysics.HelloWorld
         private World _world;
         private DebugViewXNA _debugView;
 
-        private Fixture _circleFixture;
-        private Fixture _groundFixture;
+        private Body _circleBody;
+        private Body _groundBody;
 
         private Texture2D _circleSprite;
         private Texture2D _groundSprite;
@@ -94,22 +94,22 @@ namespace FarseerPhysics.HelloWorld
             circlePosition -= Vector2.UnitY * 1.5f;
 
             // Create the circle fixture
-            _circleFixture = FixtureFactory.CreateCircle(_world, 96f / (2f * MeterInPx), 1f, circlePosition);
-            _circleFixture.Body.BodyType = BodyType.Dynamic;
+            _circleBody = BodyFactory.CreateCircle(_world, 96f / (2f * MeterInPx), 1f, circlePosition);
+            _circleBody.BodyType = BodyType.Dynamic;
 
             // Give it some bounce and friction
-            _circleFixture.Restitution = 0.3f;
-            _circleFixture.Friction = 0.5f;
+            _circleBody.Restitution = 0.3f;
+            _circleBody.Friction = 0.5f;
 
             /* Ground Fixture: */
             Vector2 groundPosition = _screenCenter / MeterInPx + Vector2.UnitY * 1.25f;
 
             // Create the ground fixture
-            _groundFixture = FixtureFactory.CreateRectangle(_world, 512f / MeterInPx, 64f / MeterInPx, 1f, groundPosition);
-            _groundFixture.Body.IsStatic = true;
+            _groundBody = BodyFactory.CreateRectangle(_world, 512f / MeterInPx, 64f / MeterInPx, 1f, groundPosition);
+            _groundBody.IsStatic = true;
 
-            _groundFixture.Restitution = 0.3f;
-            _groundFixture.Friction = 0.5f;
+            _groundBody.Restitution = 0.3f;
+            _groundBody.Friction = 0.5f;
         }
 
         /// <summary>
@@ -155,13 +155,13 @@ namespace FarseerPhysics.HelloWorld
             {
                 // We make it possible to rotate the circle body
                 if (state.IsKeyDown(Keys.A))
-                    _circleFixture.Body.ApplyTorque(-10);
+                    _circleBody.ApplyTorque(-10);
 
                 if (state.IsKeyDown(Keys.D))
-                    _circleFixture.Body.ApplyTorque(10);
+                    _circleBody.ApplyTorque(10);
 
                 if (state.IsKeyDown(Keys.Space) && _oldState.IsKeyUp(Keys.Space))
-                    _circleFixture.Body.ApplyLinearImpulse(new Vector2(0, -10));
+                    _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
             }
 
             // Toggle DebugView
@@ -189,11 +189,11 @@ namespace FarseerPhysics.HelloWorld
 
             /* Circle position and rotation */
             // Convert physics position to screen coordinates
-            Vector2 circlePos = _circleFixture.Body.Position * MeterInPx;
-            float circleRotation = _circleFixture.Body.Rotation;
+            Vector2 circlePos = _circleBody.Position * MeterInPx;
+            float circleRotation = _circleBody.Rotation;
 
             /* Ground position and origin */
-            Vector2 groundPos = _groundFixture.Body.Position * MeterInPx;
+            Vector2 groundPos = _groundBody.Position * MeterInPx;
             Vector2 groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
 
             // Align sprite center to body position

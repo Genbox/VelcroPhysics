@@ -31,20 +31,20 @@ namespace FarseerPhysics.TestBed.Tests
             //Right
             borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2(width, 0), 0));
 
-            List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(World, borders, 1, new Vector2(0, 20));
+            Body body = BodyFactory.CreateCompoundPolygon(World, borders, 1, new Vector2(0, 20));
 
-            foreach (Fixture fixture in fixtures)
+            foreach (Fixture fixture in body.FixtureList)
             {
                 fixture.Restitution = 1f;
                 fixture.Friction = 0;
             }
 
-            Fixture circle = FixtureFactory.CreateCircle(World, 0.32f, 1);
-            circle.Body.BodyType = BodyType.Dynamic;
+            Body circle = BodyFactory.CreateCircle(World, 0.32f, 1);
+            circle.BodyType = BodyType.Dynamic;
             circle.Restitution = 1f;
             circle.Friction = 0;
 
-            circle.Body.ApplyLinearImpulse(new Vector2(200, 50));
+            circle.ApplyLinearImpulse(new Vector2(200, 50));
         }
 
         internal static Test Create()

@@ -23,7 +23,7 @@ namespace FarseerPhysics.TestBed.Tests
         private ExplosionTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             float[] xs = new[] {-10.0f, -5.0f, 0.0f, 5.0f, 10.0f};
 

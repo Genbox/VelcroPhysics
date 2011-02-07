@@ -425,7 +425,7 @@
     <Compile Include="..\..\sourcefiles\factories\BodyFactory.cs">
       <Link>Factories\BodyFactory.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\factories\FixtureFactory.cs">
+    <Compile Include="..\..\SourceFiles\Factories\FixtureFactory.cs">
       <Link>Factories\FixtureFactory.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\factories\JointFactory.cs">

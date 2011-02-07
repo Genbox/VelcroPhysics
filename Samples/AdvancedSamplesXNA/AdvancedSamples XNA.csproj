@@ -27,7 +27,7 @@
     </XnaUpgrade>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaOutputType>Game</XnaOutputType>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>

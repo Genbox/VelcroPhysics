@@ -38,22 +38,19 @@ namespace FarseerPhysics.SimpleSamplesXNA
                                              Scale = 4f
                                          };
 
-            Fixture _temp;
-            _temp = FixtureFactory.CreateEdge(World, new Vector2(-20f, 17f), new Vector2(10f, 8f));
-            _temp = FixtureFactory.CreateEdge(World, new Vector2(13.5f, 11f), new Vector2(13.5f, 7f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20f, 17f), new Vector2(10f, 8f));
+            FixtureFactory.AttachEdge(new Vector2(13.5f, 11f), new Vector2(13.5f, 7f), ground);
+            FixtureFactory.AttachEdge(new Vector2(-10f, -4f), new Vector2(20f, 4f), ground);
+            FixtureFactory.AttachEdge(new Vector2(-13.5f, -1f), new Vector2(-13.5f, -5f), ground);
+            FixtureFactory.AttachEdge(new Vector2(-20f, -8f), new Vector2(10f, -17f), ground);
 
-            _temp = FixtureFactory.CreateEdge(World, new Vector2(-10f, -4f), new Vector2(20f, 4f));
-            _temp = FixtureFactory.CreateEdge(World, new Vector2(-13.5f, -1f), new Vector2(-13.5f, -5f));
-
-            _temp = FixtureFactory.CreateEdge(World, new Vector2(-20f, -8f), new Vector2(10f, -17f));
-
-            float[] friction = new[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
+            float[] friction = new[] { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };
             for (int i = 0; i < 5; ++i)
             {
-                _temp = FixtureFactory.CreateRectangle(World, 2.5f, 2.5f, 1f, material);
-                _temp.Body.BodyType = BodyType.Dynamic;
-                _temp.Body.Position = new Vector2(-18f + 5.2f*i, 20.0f);
-                _temp.Friction = friction[i];
+                Body b = BodyFactory.CreateRectangle(World, 2.5f, 2.5f, 1f, material);
+                b.BodyType = BodyType.Dynamic;
+                b.Position = new Vector2(-18f + 5.2f * i, 20.0f);
+                b.Friction = friction[i];
             }
         }
     }

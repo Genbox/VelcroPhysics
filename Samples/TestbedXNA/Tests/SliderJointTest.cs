@@ -35,15 +35,15 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private SliderJointTest()
         {
-            FixtureFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
+            BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
-            Fixture fA = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
-            fA.Body.BodyType = BodyType.Dynamic;
+            Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
+            fA.BodyType = BodyType.Dynamic;
 
-            Fixture fB = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
-            fB.Body.BodyType = BodyType.Dynamic;
+            Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
+            fB.BodyType = BodyType.Dynamic;
 
-            SliderJoint joint = new SliderJoint(fA.Body, fB.Body, Vector2.Zero, Vector2.Zero, 5, 10);
+            SliderJoint joint = new SliderJoint(fA, fB, Vector2.Zero, Vector2.Zero, 5, 10);
             World.AddJoint(joint);
         }
 

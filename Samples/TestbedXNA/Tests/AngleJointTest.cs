@@ -36,22 +36,22 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private AngleJointTest()
         {
-            FixtureFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
+            BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
-            Fixture fA = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
-            fA.Body.BodyType = BodyType.Dynamic;
+            Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
+            fA.BodyType = BodyType.Dynamic;
 
-            Fixture fB = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
-            fB.Body.BodyType = BodyType.Dynamic;
+            Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
+            fB.BodyType = BodyType.Dynamic;
 
-            AngleJoint joint = new AngleJoint(fA.Body, fB.Body);
+            AngleJoint joint = new AngleJoint(fA, fB);
             joint.TargetAngle = (float) Math.PI/2;
             World.AddJoint(joint);
 
-            Fixture fC = FixtureFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
-            fC.Body.BodyType = BodyType.Dynamic;
+            Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
+            fC.BodyType = BodyType.Dynamic;
 
-            FixedAngleJoint fixedJoint = new FixedAngleJoint(fC.Body);
+            FixedAngleJoint fixedJoint = new FixedAngleJoint(fC);
             fixedJoint.TargetAngle = (float) Math.PI/3;
             World.AddJoint(fixedJoint);
         }

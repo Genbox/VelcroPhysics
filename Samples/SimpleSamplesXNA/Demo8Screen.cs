@@ -10,7 +10,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 {
     internal class Demo8Screen : PhysicsGameScreen, IDemoScreen
     {
-        private Fixture[] _circle;
+        private Body[] _circle;
 
         #region IDemoScreen Members
 
@@ -40,14 +40,14 @@ namespace FarseerPhysics.SimpleSamplesXNA
                                              Scale = 4f
                                          };
 
-            _circle = new Fixture[6];
+            _circle = new Body[6];
             Vector2 _position = new Vector2(-14f, 0f);
             float _restitution = 0f;
 
             for (int i = 0; i < 6; ++i)
             {
-                _circle[i] = FixtureFactory.CreateCircle(World, 2f, 1f, _position, material);
-                _circle[i].Body.BodyType = BodyType.Dynamic;
+                _circle[i] = BodyFactory.CreateCircle(World, 2f, 1f, _position, material);
+                _circle[i].BodyType = BodyType.Dynamic;
                 _circle[i].Restitution = _restitution;
                 _position.X += 6f;
                 _restitution += 0.2f;

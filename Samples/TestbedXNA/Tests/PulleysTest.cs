@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
         private PulleysTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 const float a = 2.0f;

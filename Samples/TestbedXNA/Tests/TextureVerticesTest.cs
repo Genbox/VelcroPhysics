@@ -14,7 +14,7 @@ namespace FarseerPhysics.TestBed.Tests
         private TextureVerticesTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
         }
 
         public override void Initialize()
@@ -40,9 +40,9 @@ namespace FarseerPhysics.TestBed.Tests
             verts.Translate(ref centroid);
 
             //Create a single body with multiple fixtures
-            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
-            compund[0].Body.BodyType = BodyType.Dynamic;
-            compund[0].Body.Position = new Vector2(0, 20);
+            Body compund = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
+            compund.BodyType = BodyType.Dynamic;
+            compund.Position = new Vector2(0, 20);
 
             base.Initialize();
         }

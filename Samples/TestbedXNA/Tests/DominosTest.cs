@@ -39,7 +39,7 @@ namespace FarseerPhysics.TestBed.Tests
         private DominosTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 Vertices box = PolygonTools.CreateRectangle(6.0f, 0.25f);
@@ -210,7 +210,7 @@ namespace FarseerPhysics.TestBed.Tests
                 World.Clear();
 
                 //Add a rectangle
-                FixtureFactory.CreateRectangle(World, 5, 5, 1);
+                BodyFactory.CreateRectangle(World, 5, 5, 1);
             }
 
             return false;

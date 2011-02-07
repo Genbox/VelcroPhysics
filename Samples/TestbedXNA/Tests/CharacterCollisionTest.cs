@@ -41,24 +41,24 @@ namespace FarseerPhysics.TestBed.Tests
         private CharacterCollisionTest()
         {
             //Ground body
-            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Collinear edges
             EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.CreateFixture(shape);
             shape = new EdgeShape(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.CreateFixture(shape);
             shape = new EdgeShape(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
-            ground.Body.CreateFixture(shape);
+            ground.CreateFixture(shape);
 
             // Square tiles
             PolygonShape tile = new PolygonShape(1);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.CreateFixture(tile);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.CreateFixture(tile);
             tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
-            ground.Body.CreateFixture(tile);
+            ground.CreateFixture(tile);
 
             // Square made from an edge loop.
             Vertices vertices = new Vertices(4);
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
             LoopShape loopShape = new LoopShape(vertices);
-            ground.Body.CreateFixture(loopShape);
+            ground.CreateFixture(loopShape);
 
             // Edge loop.
             vertices = new Vertices(10);
@@ -81,24 +81,24 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(-6.0f, 2.0f));
             vertices.Add(new Vector2(-6.0f, 0.0f));
 
-            FixtureFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
+            BodyFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
 
             // Square character
-            Fixture squareCharacter = FixtureFactory.CreateRectangle(World, 1, 1, 20);
-            squareCharacter.Body.Position = new Vector2(-3.0f, 5.0f);
-            squareCharacter.Body.BodyType = BodyType.Dynamic;
-            squareCharacter.Body.FixedRotation = true;
-            squareCharacter.Body.SleepingAllowed = false;
+            Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
+            squareCharacter.Position = new Vector2(-3.0f, 5.0f);
+            squareCharacter.BodyType = BodyType.Dynamic;
+            squareCharacter.FixedRotation = true;
+            squareCharacter.SleepingAllowed = false;
 
             squareCharacter.OnCollision += CharacterOnCollision;
             squareCharacter.OnSeparation += CharacterOnSeparation;
 
             // Square character 2
-            Fixture squareCharacter2 = FixtureFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
-            squareCharacter2.Body.Position = new Vector2(-5.0f, 5.0f);
-            squareCharacter2.Body.BodyType = BodyType.Dynamic;
-            squareCharacter2.Body.FixedRotation = true;
-            squareCharacter2.Body.SleepingAllowed = false;
+            Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
+            squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
+            squareCharacter2.BodyType = BodyType.Dynamic;
+            squareCharacter2.FixedRotation = true;
+            squareCharacter2.SleepingAllowed = false;
 
             // Hexagon character
             float angle = 0.0f;
@@ -111,18 +111,18 @@ namespace FarseerPhysics.TestBed.Tests
                 angle += delta;
             }
 
-            Fixture hexCharacter = FixtureFactory.CreatePolygon(World, vertices, 20);
-            hexCharacter.Body.Position = new Vector2(-5.0f, 8.0f);
-            hexCharacter.Body.BodyType = BodyType.Dynamic;
-            hexCharacter.Body.FixedRotation = true;
-            hexCharacter.Body.SleepingAllowed = false;
+            Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
+            hexCharacter.Position = new Vector2(-5.0f, 8.0f);
+            hexCharacter.BodyType = BodyType.Dynamic;
+            hexCharacter.FixedRotation = true;
+            hexCharacter.SleepingAllowed = false;
 
             // Circle character
-            Fixture circleCharacter = FixtureFactory.CreateCircle(World, 0.5f, 20);
-            circleCharacter.Body.Position = new Vector2(3.0f, 5.0f);
-            circleCharacter.Body.BodyType = BodyType.Dynamic;
-            circleCharacter.Body.FixedRotation = true;
-            circleCharacter.Body.SleepingAllowed = false;
+            Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
+            circleCharacter.Position = new Vector2(3.0f, 5.0f);
+            circleCharacter.BodyType = BodyType.Dynamic;
+            circleCharacter.FixedRotation = true;
+            circleCharacter.SleepingAllowed = false;
         }
 
         private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)

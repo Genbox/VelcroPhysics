@@ -15,7 +15,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
     internal class Demo1Screen : PhysicsGameScreen, IDemoScreen
     {
         private BasicEffect _effect;
-        private List<Fixture> _compund;
+        private Body _compund;
         private Vector2 _origin;
         private Texture2D _polygonTexture;
         private Vector2 _scale;
@@ -85,7 +85,7 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             }
 
             //Create a single body with multiple fixtures
-            _compund = FixtureFactory.CreateCompoundPolygon(World, list, 1, BodyType.Dynamic);
+            _compund = BodyFactory.CreateCompoundPolygon(World, list, 1, BodyType.Dynamic);
 
             base.LoadContent();
         }
@@ -95,8 +95,8 @@ namespace FarseerPhysics.AdvancedSamplesXNA
             _effect.Projection = Camera2D.Projection;
             _effect.View = Camera2D.View;
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, _effect);
-            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund[0].Body.Position, null, Color.Tomato,
-                                           _compund[0].Body.Rotation, _origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund.Position, null, Color.Tomato,
+                                           _compund.Rotation, _origin, _scale, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

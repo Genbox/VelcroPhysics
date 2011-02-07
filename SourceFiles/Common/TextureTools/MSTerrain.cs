@@ -36,7 +36,7 @@ namespace FarseerPhysics.Common
         public Vector2 MetersPerUnit;
         public Decomposer Decomposer;
         public sbyte[,] TerrainMap;
-        public List<Fixture>[,] FixtureMap;
+        public List<Body>[,] BodyMap;
 
         private int xnum;
         private int ynum;
@@ -87,7 +87,7 @@ namespace FarseerPhysics.Common
             xnum = (int)(terrainTexture.Width / CellSize);
             ynum = (int)(terrainTexture.Height / CellSize);
 
-            FixtureMap = new List<Fixture>[xnum, ynum];
+            BodyMap = new List<Body>[xnum, ynum];
 
             // generate terrain
             for (int gy = 0; gy < ynum; gy++)
@@ -119,7 +119,7 @@ namespace FarseerPhysics.Common
             }
             xnum = (int)(TerrainWidth / CellSize);
             ynum = (int)(TerrainHeight / CellSize);
-            FixtureMap = new List<Fixture>[xnum, ynum];
+            BodyMap = new List<Body>[xnum, ynum];
         }
 
         public void ModifyTerrain(Vector2 location, sbyte value)
@@ -154,15 +154,15 @@ namespace FarseerPhysics.Common
                 for (int gy = gy0; gy < gy1; gy++)
                 {
                     //remove old terrain object at grid cell
-                    if (FixtureMap[gx, gy] != null)
+                    if (BodyMap[gx, gy] != null)
                     {
-                        for (int i = 0; i < FixtureMap[gx, gy].Count; i++)
+                        for (int i = 0; i < BodyMap[gx, gy].Count; i++)
                         {
-                            World.RemoveBody(FixtureMap[gx, gy][i].Body);
+                            World.RemoveBody(BodyMap[gx, gy][i]);
                         }
                     }
 
-                    FixtureMap[gx, gy] = null;
+                    BodyMap[gx, gy] = null;
 
                     //generate new one
                     GenerateTerrain(gx, gy);
@@ -187,7 +187,7 @@ namespace FarseerPhysics.Common
             List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize, TerrainMap, Iterations, true);
             if (polys.Count == 0) return;
 
-            FixtureMap[gx, gy] = new List<Fixture>();
+            BodyMap[gx, gy] = new List<Body>();
 
             // create the scale vector
             Vector2 scale = new Vector2(MetersPerUnit.X, -MetersPerUnit.Y);
@@ -226,7 +226,7 @@ namespace FarseerPhysics.Common
                 foreach (var poly in decompPolys)
                 {
                     if (poly.Count > 2)
-                        FixtureMap[gx, gy].Add(FixtureFactory.CreatePolygon(World, poly, 1, userData));
+                        BodyMap[gx, gy].Add(BodyFactory.CreatePolygon(World, poly, 1, userData));
                 }
             }
         }

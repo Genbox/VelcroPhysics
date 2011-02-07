@@ -14,27 +14,27 @@ namespace FarseerPhysics.TestBed.Tests
         private CloneTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            Fixture box = FixtureFactory.CreateRectangle(World, 5, 5, 5);
+            Body box = BodyFactory.CreateRectangle(World, 5, 5, 5);
             box.Restitution = 0.8f;
             box.Friction = 0.9f;
-            box.Body.BodyType = BodyType.Dynamic;
-            box.Body.Position = new Vector2(10, 10);
-            box.Body.SleepingAllowed = false;
-            box.Body.LinearDamping = 1;
-            box.Body.AngularDamping = 0.5f;
-            box.Body.AngularVelocity = 0.5f;
-            box.Body.LinearVelocity = new Vector2(0, 10);
+            box.BodyType = BodyType.Dynamic;
+            box.Position = new Vector2(10, 10);
+            box.SleepingAllowed = false;
+            box.LinearDamping = 1;
+            box.AngularDamping = 0.5f;
+            box.AngularVelocity = 0.5f;
+            box.LinearVelocity = new Vector2(0, 10);
 
-            Fixture boxClone1 = box.DeepClone();
+            Body boxClone1 = box.DeepClone();
             //Swiching the body type to static will reset all forces. This will affect the next clone.
-            boxClone1.Body.BodyType = BodyType.Static;
-            boxClone1.Body.Position += new Vector2(-10, 0);
+            boxClone1.BodyType = BodyType.Static;
+            boxClone1.Position += new Vector2(-10, 0);
 
-            Fixture boxClone2 = boxClone1.DeepClone();
-            boxClone2.Body.BodyType = BodyType.Dynamic;
-            boxClone2.Body.Position += new Vector2(-10, 0);
+            Body boxClone2 = boxClone1.DeepClone();
+            boxClone2.BodyType = BodyType.Dynamic;
+            boxClone2.Position += new Vector2(-10, 0);
         }
 
         public override void Initialize()
@@ -51,10 +51,10 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 centroid = -verts.GetCentroid();
             verts.Translate(ref centroid);
 
-            List<Fixture> compund = FixtureFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
-            compund[0].Body.Position = new Vector2(-25, 30);
+            Body compund = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
+            compund.Position = new Vector2(-25, 30);
 
-            Body b = compund[0].Body.DeepClone();
+            Body b = compund.DeepClone();
             b.Position = new Vector2(20, 30);
             b.BodyType = BodyType.Dynamic;
 

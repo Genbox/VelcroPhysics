@@ -12,18 +12,18 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
         private const float LegDensity = 15;
         private const float LimbAngularDamping = 7;
 
-        private List<Fixture> _body;
-        private Fixture _head;
+        private Body _body;
+        private Body _head;
 
-        private List<Fixture> _lowerLeftArm;
-        private List<Fixture> _lowerLeftLeg;
-        private List<Fixture> _lowerRightArm;
-        private List<Fixture> _lowerRightLeg;
-
-        private List<Fixture> _upperLeftArm;
-        private List<Fixture> _upperLeftLeg;
-        private List<Fixture> _upperRightArm;
-        private List<Fixture> _upperRightLeg;
+        private Body _lowerLeftArm;
+        private Body _lowerLeftLeg;
+        private Body _lowerRightArm;
+        private Body _lowerRightLeg;
+        
+        private Body _upperLeftArm;
+        private Body _upperLeftLeg;
+        private Body _upperRightArm;
+        private Body _upperRightLeg;
 
 
         public Ragdoll(World world, Vector2 position)
@@ -34,80 +34,80 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
 
         public Body Body
         {
-            get { return _body[0].Body; }
+            get { return _body; }
         }
 
         //Torso
         private void CreateBody(World world, Vector2 position)
         {
             //Head
-            _head = FixtureFactory.CreateCircle(world, .9f, 10);
-            _head.Body.BodyType = BodyType.Dynamic;
-            _head.Body.AngularDamping = LimbAngularDamping;
-            _head.Body.Mass = 2;
-            _head.Body.Position = position;
+            _head = BodyFactory.CreateCircle(world, .9f, 10);
+            _head.BodyType = BodyType.Dynamic;
+            _head.AngularDamping = LimbAngularDamping;
+            _head.Mass = 2;
+            _head.Position = position;
 
             //Body
-            _body = FixtureFactory.CreateRoundedRectangle(world, 2, 4, .5f, .7f, 2, 10);
-            _body[0].Body.BodyType = BodyType.Dynamic;
-            _body[0].Body.Mass = 2;
-            _body[0].Body.Position = position + new Vector2(0, -3);
+            _body = BodyFactory.CreateRoundedRectangle(world, 2, 4, .5f, .7f, 2, 10);
+            _body.BodyType = BodyType.Dynamic;
+            _body.Mass = 2;
+            _body.Position = position + new Vector2(0, -3);
 
             //Left Arm
-            _lowerLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
-            _lowerLeftArm[0].Body.BodyType = BodyType.Dynamic;
-            _lowerLeftArm[0].Body.AngularDamping = LimbAngularDamping;
-            _lowerLeftArm[0].Body.Mass = 2;
-            _lowerLeftArm[0].Body.Rotation = -1.4f;
-            _lowerLeftArm[0].Body.Position = position + new Vector2(-4, -2.2f);
+            _lowerLeftArm = BodyFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _lowerLeftArm.BodyType = BodyType.Dynamic;
+            _lowerLeftArm.AngularDamping = LimbAngularDamping;
+            _lowerLeftArm.Mass = 2;
+            _lowerLeftArm.Rotation = -1.4f;
+            _lowerLeftArm.Position = position + new Vector2(-4, -2.2f);
 
-            _upperLeftArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
-            _upperLeftArm[0].Body.BodyType = BodyType.Dynamic;
-            _upperLeftArm[0].Body.AngularDamping = LimbAngularDamping;
-            _upperLeftArm[0].Body.Mass = 2;
-            _upperLeftArm[0].Body.Rotation = -1.4f;
-            _upperLeftArm[0].Body.Position = position + new Vector2(-2, -1.8f);
+            _upperLeftArm = BodyFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _upperLeftArm.BodyType = BodyType.Dynamic;
+            _upperLeftArm.AngularDamping = LimbAngularDamping;
+            _upperLeftArm.Mass = 2;
+            _upperLeftArm.Rotation = -1.4f;
+            _upperLeftArm.Position = position + new Vector2(-2, -1.8f);
 
             //Right Arm
-            _lowerRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
-            _lowerRightArm[0].Body.BodyType = BodyType.Dynamic;
-            _lowerRightArm[0].Body.AngularDamping = LimbAngularDamping;
-            _lowerRightArm[0].Body.Mass = 2;
-            _lowerRightArm[0].Body.Rotation = 1.4f;
-            _lowerRightArm[0].Body.Position = position + new Vector2(4, -2.2f);
+            _lowerRightArm = BodyFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _lowerRightArm.BodyType = BodyType.Dynamic;
+            _lowerRightArm.AngularDamping = LimbAngularDamping;
+            _lowerRightArm.Mass = 2;
+            _lowerRightArm.Rotation = 1.4f;
+            _lowerRightArm.Position = position + new Vector2(4, -2.2f);
 
-            _upperRightArm = FixtureFactory.CreateCapsule(world, 1, .45f, ArmDensity);
-            _upperRightArm[0].Body.BodyType = BodyType.Dynamic;
-            _upperRightArm[0].Body.AngularDamping = LimbAngularDamping;
-            _upperRightArm[0].Body.Mass = 2;
-            _upperRightArm[0].Body.Rotation = 1.4f;
-            _upperRightArm[0].Body.Position = position + new Vector2(2, -1.8f);
+            _upperRightArm = BodyFactory.CreateCapsule(world, 1, .45f, ArmDensity);
+            _upperRightArm.BodyType = BodyType.Dynamic;
+            _upperRightArm.AngularDamping = LimbAngularDamping;
+            _upperRightArm.Mass = 2;
+            _upperRightArm.Rotation = 1.4f;
+            _upperRightArm.Position = position + new Vector2(2, -1.8f);
 
             //Left Leg
-            _lowerLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
-            _lowerLeftLeg[0].Body.BodyType = BodyType.Dynamic;
-            _lowerLeftLeg[0].Body.AngularDamping = LimbAngularDamping;
-            _lowerLeftLeg[0].Body.Mass = 2;
-            _lowerLeftLeg[0].Body.Position = position + new Vector2(-0.6f, -8);
+            _lowerLeftLeg = BodyFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _lowerLeftLeg.BodyType = BodyType.Dynamic;
+            _lowerLeftLeg.AngularDamping = LimbAngularDamping;
+            _lowerLeftLeg.Mass = 2;
+            _lowerLeftLeg.Position = position + new Vector2(-0.6f, -8);
 
-            _upperLeftLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
-            _upperLeftLeg[0].Body.BodyType = BodyType.Dynamic;
-            _upperLeftLeg[0].Body.AngularDamping = LimbAngularDamping;
-            _upperLeftLeg[0].Body.Mass = 2;
-            _upperLeftLeg[0].Body.Position = position + new Vector2(-0.6f, -6);
+            _upperLeftLeg = BodyFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _upperLeftLeg.BodyType = BodyType.Dynamic;
+            _upperLeftLeg.AngularDamping = LimbAngularDamping;
+            _upperLeftLeg.Mass = 2;
+            _upperLeftLeg.Position = position + new Vector2(-0.6f, -6);
 
             //Right Leg
-            _lowerRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
-            _lowerRightLeg[0].Body.BodyType = BodyType.Dynamic;
-            _lowerRightLeg[0].Body.AngularDamping = LimbAngularDamping;
-            _lowerRightLeg[0].Body.Mass = 2;
-            _lowerRightLeg[0].Body.Position = position + new Vector2(0.6f, -8);
+            _lowerRightLeg = BodyFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _lowerRightLeg.BodyType = BodyType.Dynamic;
+            _lowerRightLeg.AngularDamping = LimbAngularDamping;
+            _lowerRightLeg.Mass = 2;
+            _lowerRightLeg.Position = position + new Vector2(0.6f, -8);
 
-            _upperRightLeg = FixtureFactory.CreateCapsule(world, 1, .5f, LegDensity);
-            _upperRightLeg[0].Body.BodyType = BodyType.Dynamic;
-            _upperRightLeg[0].Body.AngularDamping = LimbAngularDamping;
-            _upperRightLeg[0].Body.Mass = 2;
-            _upperRightLeg[0].Body.Position = position + new Vector2(0.6f, -6);
+            _upperRightLeg = BodyFactory.CreateCapsule(world, 1, .5f, LegDensity);
+            _upperRightLeg.BodyType = BodyType.Dynamic;
+            _upperRightLeg.AngularDamping = LimbAngularDamping;
+            _upperRightLeg.Mass = 2;
+            _upperRightLeg.Position = position + new Vector2(0.6f, -6);
         }
 
         private void CreateJoints(World world)
@@ -116,7 +116,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             const float frequency = 25;
 
             //head -> body
-            DistanceJoint jHeadBody = new DistanceJoint(_head.Body, _body[0].Body,
+            DistanceJoint jHeadBody = new DistanceJoint(_head, _body,
                                                         new Vector2(0, -1), new Vector2(0, 2));
             jHeadBody.CollideConnected = true;
             jHeadBody.DampingRatio = dampingRatio;
@@ -125,7 +125,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jHeadBody);
 
             //lowerLeftArm -> upperLeftArm
-            DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm[0].Body, _upperLeftArm[0].Body,
+            DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm,
                                                        new Vector2(0, 1), new Vector2(0, -1));
             jLeftArm.CollideConnected = true;
             jLeftArm.DampingRatio = dampingRatio;
@@ -134,7 +134,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jLeftArm);
 
             //upperLeftArm -> body
-            DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm[0].Body, _body[0].Body,
+            DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm, _body,
                                                            new Vector2(0, 1), new Vector2(-1, 1.5f));
             jLeftArmBody.CollideConnected = true;
             jLeftArmBody.DampingRatio = dampingRatio;
@@ -143,7 +143,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jLeftArmBody);
 
             //lowerRightArm -> upperRightArm
-            DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm[0].Body, _upperRightArm[0].Body,
+            DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm,
                                                         new Vector2(0, 1), new Vector2(0, -1));
             jRightArm.CollideConnected = true;
             jRightArm.DampingRatio = dampingRatio;
@@ -152,7 +152,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jRightArm);
 
             //upperRightArm -> body
-            DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm[0].Body, _body[0].Body,
+            DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm, _body,
                                                             new Vector2(0, 1), new Vector2(1, 1.5f));
 
             jRightArmBody.CollideConnected = true;
@@ -162,7 +162,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jRightArmBody);
 
             //lowerLeftLeg -> upperLeftLeg
-            DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg[0].Body, _upperLeftLeg[0].Body,
+            DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg,
                                                        new Vector2(0, 1.1f), new Vector2(0, -1));
             jLeftLeg.CollideConnected = true;
             jLeftLeg.DampingRatio = dampingRatio;
@@ -171,7 +171,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jLeftLeg);
 
             //upperLeftLeg -> body
-            DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg[0].Body, _body[0].Body,
+            DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg, _body,
                                                            new Vector2(0, 1.1f), new Vector2(-0.8f, -1.9f));
             jLeftLegBody.CollideConnected = true;
             jLeftLegBody.DampingRatio = dampingRatio;
@@ -180,7 +180,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jLeftLegBody);
 
             //lowerRightleg -> upperRightleg
-            DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg[0].Body, _upperRightLeg[0].Body,
+            DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg,
                                                         new Vector2(0, 1.1f), new Vector2(0, -1));
             jRightLeg.CollideConnected = true;
             jRightLeg.DampingRatio = dampingRatio;
@@ -189,7 +189,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
             world.AddJoint(jRightLeg);
 
             //upperRightleg -> body
-            DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg[0].Body, _body[0].Body,
+            DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg, _body,
                                                             new Vector2(0, 1.1f), new Vector2(0.8f, -1.9f));
             jRightLegBody.CollideConnected = true;
             jRightLegBody.DampingRatio = dampingRatio;
