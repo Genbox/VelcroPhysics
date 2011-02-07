@@ -45,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
         private RevoluteTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 //The big fixed wheel
@@ -64,11 +64,11 @@ namespace FarseerPhysics.TestBed.Tests
                 World.AddJoint(_fixedJoint);
 
                 // The small gear attached to the big one
-                List<Fixture> fixtures = FixtureFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
-                fixtures[0].Body.Position = new Vector2(0.0f, 12.0f);
-                fixtures[0].Body.BodyType = BodyType.Dynamic;
+                Body body1 = BodyFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
+                body1.Position = new Vector2(0.0f, 12.0f);
+                body1.BodyType = BodyType.Dynamic;
 
-                _joint = new RevoluteJoint(body, fixtures[0].Body, body.GetLocalPoint(fixtures[0].Body.Position),
+                _joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
                                            Vector2.Zero);
                 _joint.MotorSpeed = 1.0f*Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;

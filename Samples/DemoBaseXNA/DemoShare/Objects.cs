@@ -18,79 +18,52 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
     {
         private Category _collidesWith;
         private Category _collisionCategories;
-        private Color _color;
-        private List<List<Fixture>> _decomposedFixtures;
-        private List<Fixture> _fixtures;
-        private ObjectType _type;
+        private List<Body> _bodies;
 
-        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type,
-                       DebugMaterial material)
+        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type, DebugMaterial material )
         {
-            _fixtures = new List<Fixture>(count);
-            _decomposedFixtures = new List<List<Fixture>>(count);
-            _type = type;
+            _bodies = new List<Body>(count);
             CollidesWith = Category.All;
             CollisionCategories = Category.All;
 
             for (int i = 0; i < count; i++)
             {
-                Fixture fixture = null;
+                Body body;
 
                 switch (type)
                 {
                     case ObjectType.Circle:
-                        fixture = FixtureFactory.CreateCircle(world, radius, 1, material);
-                        _fixtures.Add(fixture);
+                        body = BodyFactory.CreateCircle(world, radius, 1, material);
+                        _bodies.Add(body);
                         break;
                     case ObjectType.Rectangle:
-                        fixture = FixtureFactory.CreateRectangle(world, radius, radius, 1, material);
-                        _fixtures.Add(fixture);
+                        body = BodyFactory.CreateRectangle(world, radius, radius, 1, material);
+                        _bodies.Add(body);
                         break;
                     case ObjectType.Star:
-                        List<Fixture> star = null;
-                        star = FixtureFactory.CreateGear(world, radius, 10, 0f, 1f, 1, material);
-                        _decomposedFixtures.Add(star);
+                        Body star = BodyFactory.CreateGear(world, radius, 10, 0f, 1f, 1, material);
+                        _bodies.Add(star);
                         break;
                     case ObjectType.Gear:
-                        List<Fixture> gear = null;
-                        gear = FixtureFactory.CreateGear(world, radius, 10, 100f, 1f, 1, material);
-                        _decomposedFixtures.Add(gear);
+                        Body gear = BodyFactory.CreateGear(world, radius, 10, 100f, 1f, 1, material);
+                        _bodies.Add(gear);
                         break;
                     default:
-                        fixture = FixtureFactory.CreateCircle(world, radius, 1, material);
-                        _fixtures.Add(fixture);
+                        body = BodyFactory.CreateCircle(world, radius, 1, material);
+                        _bodies.Add(body);
                         break;
                 }
             }
 
-            if (type == ObjectType.Circle || type == ObjectType.Rectangle)
+            for (int i = 0; i < _bodies.Count; i++)
             {
-                for (int i = 0; i < _fixtures.Count; i++)
-                {
-                    Fixture fixture = _fixtures[i];
-                    fixture.Body.BodyType = BodyType.Dynamic;
-                    fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
-                    fixture.Restitution = .7f;
-                    fixture.Friction = .2f;
-                    fixture.CollisionFilter.CollisionCategories = CollisionCategories;
-                    fixture.CollisionFilter.CollidesWith = CollidesWith;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < _decomposedFixtures.Count; i++)
-                {
-                    List<Fixture> fixtures = _decomposedFixtures[i];
-                    foreach (Fixture fixture in fixtures)
-                    {
-                        fixture.Body.BodyType = BodyType.Dynamic;
-                        fixture.Body.Position = Vector2.Lerp(startPosition, endPosition, i/(float) (count - 1));
-                        fixture.Restitution = .7f;
-                        fixture.Friction = .2f;
-                        fixture.CollisionFilter.CollisionCategories = CollisionCategories;
-                        fixture.CollisionFilter.CollidesWith = CollidesWith;
-                    }
-                }
+                Body body = _bodies[i];
+                body.BodyType = BodyType.Dynamic;
+                body.Position = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
+                body.Restitution = .7f;
+                body.Friction = .2f;
+                body.CollisionFilter.CollisionCategories = CollisionCategories;
+                body.CollisionFilter.CollidesWith = CollidesWith;
             }
         }
 
@@ -101,22 +74,9 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             {
                 _collisionCategories = value;
 
-                if (_type == ObjectType.Circle || _type == ObjectType.Rectangle)
+                foreach (Body body in _bodies)
                 {
-                    foreach (Fixture fixture in _fixtures)
-                    {
-                        fixture.CollisionFilter.CollisionCategories = _collisionCategories;
-                    }
-                }
-                else
-                {
-                    foreach (List<Fixture> fixtures in _decomposedFixtures)
-                    {
-                        foreach (Fixture fixture in fixtures)
-                        {
-                            fixture.CollisionFilter.CollisionCategories = _collisionCategories;
-                        }
-                    }
+                    body.CollisionFilter.CollisionCategories = _collisionCategories;
                 }
             }
         }
@@ -128,22 +88,9 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
             {
                 _collidesWith = value;
 
-                if (_type == ObjectType.Circle || _type == ObjectType.Rectangle)
+                foreach (Body body in _bodies)
                 {
-                    foreach (Fixture fixture in _fixtures)
-                    {
-                        fixture.CollisionFilter.CollidesWith = _collidesWith;
-                    }
-                }
-                else
-                {
-                    foreach (List<Fixture> fixtures in _decomposedFixtures)
-                    {
-                        foreach (Fixture fixture in fixtures)
-                        {
-                            fixture.CollisionFilter.CollidesWith = _collidesWith;
-                        }
-                    }
+                    body.CollisionFilter.CollidesWith = _collidesWith;
                 }
             }
         }

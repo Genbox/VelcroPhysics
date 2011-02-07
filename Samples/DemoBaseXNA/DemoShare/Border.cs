@@ -45,9 +45,10 @@ namespace FarseerPhysics.DemoBaseXNA.DemoShare
                                              Color = Color.LightGray,
                                              Scale = 8f
                                          };
-            List<Fixture> fixtures = FixtureFactory.CreateCompoundPolygon(borders, 1, _anchor, material);
 
-            foreach (Fixture t in fixtures)
+            FixtureFactory.AttachCompoundPolygon(borders, 1, _anchor, material);
+
+            foreach (Fixture t in _anchor.FixtureList)
             {
                 t.CollisionFilter.CollisionCategories = Category.All;
                 t.CollisionFilter.CollidesWith = Category.All;

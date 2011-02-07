@@ -11,7 +11,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
 {
     internal class Demo1Screen : PhysicsGameScreen, IDemoScreen
     {
-        private Fixture _rectangle;
+        private Body _rectangle;
 
         #region IDemoScreen Members
 
@@ -49,20 +49,20 @@ namespace FarseerPhysics.SimpleSamplesXNA
                                              Scale = 2.5f
                                          };
 
-            _rectangle = FixtureFactory.CreateRectangle(World, 5, 5, 1, material);
-            _rectangle.Body.BodyType = BodyType.Dynamic;
+            _rectangle = BodyFactory.CreateRectangle(World, 5, 5, 1, material);
+            _rectangle.BodyType = BodyType.Dynamic;
         }
 
         public override void HandleGamePadInput(InputHelper input)
         {
             Vector2 force = 50*input.CurrentGamePadState.ThumbSticks.Left;
-            _rectangle.Body.ApplyForce(force);
+            _rectangle.ApplyForce(force);
 
             float rotation = 40*input.CurrentGamePadState.Triggers.Left;
-            _rectangle.Body.ApplyTorque(rotation);
+            _rectangle.ApplyTorque(rotation);
 
             rotation = -40*input.CurrentGamePadState.Triggers.Right;
-            _rectangle.Body.ApplyTorque(rotation);
+            _rectangle.ApplyTorque(rotation);
 
             base.HandleGamePadInput(input);
         }
@@ -89,7 +89,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
                 force += new Vector2(0, forceAmount);
             }
 
-            _rectangle.Body.ApplyForce(force);
+            _rectangle.ApplyForce(force);
 
             const float torqueAmount = 40;
             float torque = 0;
@@ -103,7 +103,7 @@ namespace FarseerPhysics.SimpleSamplesXNA
                 torque -= torqueAmount;
             }
 
-            _rectangle.Body.ApplyTorque(torque);
+            _rectangle.ApplyTorque(torque);
 
             base.HandleKeyboardInput(input);
         }

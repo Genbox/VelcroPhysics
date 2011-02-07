@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CollisionProcessingTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             const float xLo = -5.0f;
             const float xHi = 5.0f;

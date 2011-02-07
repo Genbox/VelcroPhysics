@@ -176,22 +176,22 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     //Delete the original shape and create two new. Retain the properties of the body.
                     if (SanityCheck(first))
                     {
-                        Fixture firstFixture = FixtureFactory.CreatePolygon(world, first, fixtures[i].Shape.Density,
+                        Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density,
                                                                             fixtures[i].Body.Position);
-                        firstFixture.Body.Rotation = fixtures[i].Body.Rotation;
-                        firstFixture.Body.LinearVelocity = fixtures[i].Body.LinearVelocity;
-                        firstFixture.Body.AngularVelocity = fixtures[i].Body.AngularVelocity;
-                        firstFixture.Body.BodyType = BodyType.Dynamic;
+                        firstFixture.Rotation = fixtures[i].Body.Rotation;
+                        firstFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
+                        firstFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
+                        firstFixture.BodyType = BodyType.Dynamic;
                     }
 
                     if (SanityCheck(second))
                     {
-                        Fixture secondFixture = FixtureFactory.CreatePolygon(world, second, fixtures[i].Shape.Density,
+                        Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density,
                                                                              fixtures[i].Body.Position);
-                        secondFixture.Body.Rotation = fixtures[i].Body.Rotation;
-                        secondFixture.Body.LinearVelocity = fixtures[i].Body.LinearVelocity;
-                        secondFixture.Body.AngularVelocity = fixtures[i].Body.AngularVelocity;
-                        secondFixture.Body.BodyType = BodyType.Dynamic;
+                        secondFixture.Rotation = fixtures[i].Body.Rotation;
+                        secondFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
+                        secondFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
+                        secondFixture.BodyType = BodyType.Dynamic;
                     }
                     world.RemoveBody(fixtures[i].Body);
                 }

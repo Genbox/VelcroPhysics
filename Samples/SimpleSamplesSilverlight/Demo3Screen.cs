@@ -11,7 +11,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
     internal class Demo3Screen : GameScreen, IDemoScreen
     {
         private Agent _agent;
-        private Fixture[] _obstacles = new Fixture[5];
+        private Body[] _obstacles = new Body[5];
 
         #region IDemoScreen Members
 
@@ -59,8 +59,8 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
         {
             for (int i = 0; i < 5; i++)
             {
-                _obstacles[i] = FixtureFactory.CreateRectangle(World, 8, 1.5f, 1);
-                _obstacles[i].Body.IsStatic = true;
+                _obstacles[i] = BodyFactory.CreateRectangle(World, 8, 1.5f, 1);
+                _obstacles[i].IsStatic = true;
 
                 if (i == 0)
                 {
@@ -69,11 +69,11 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
                 }
             }
 
-            _obstacles[0].Body.Position = new Vector2(-5, -15);
-            _obstacles[1].Body.Position = new Vector2(15, -10);
-            _obstacles[2].Body.Position = new Vector2(10, 5);
-            _obstacles[3].Body.Position = new Vector2(-10, 15);
-            _obstacles[4].Body.Position = new Vector2(-17, 0);
+            _obstacles[0].Position = new Vector2(-5, -15);
+            _obstacles[1].Position = new Vector2(15, -10);
+            _obstacles[2].Position = new Vector2(10, 5);
+            _obstacles[3].Position = new Vector2(-10, 15);
+            _obstacles[4].Position = new Vector2(-17, 0);
         }
     }
 }

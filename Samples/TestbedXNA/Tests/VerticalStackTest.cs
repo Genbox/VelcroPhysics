@@ -44,8 +44,8 @@ namespace FarseerPhysics.TestBed.Tests
         private VerticalStackTest()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            FixtureFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
 
             float[] xs = new[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
 

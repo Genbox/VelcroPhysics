@@ -11,9 +11,9 @@ namespace FarseerPhysics.TestBed.Tests
         private DeletionTest()
         {
             //Ground body
-            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            ground.OnCollision += OnCollision;
-            ground.OnSeparation += OnSeparation;
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            //ground.OnCollision += OnCollision;
+            //ground.OnSeparation += OnSeparation;
         }
 
         private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
@@ -28,10 +28,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            Fixture fix = FixtureFactory.CreateCircle(World, 0.4f, 1);
-            fix.Body.Position = new Vector2(Rand.RandomFloat(-35, 35), 10);
-            fix.Body.BodyType = BodyType.Dynamic;
-            fix.Restitution = 1f;
+            Body body = BodyFactory.CreateCircle(World, 0.4f, 1);
+            body.Position = new Vector2(Rand.RandomFloat(-35, 35), 10);
+            body.BodyType = BodyType.Dynamic;
+            body.Restitution = 1f;
 
             base.Update(settings, gameTime);
         }

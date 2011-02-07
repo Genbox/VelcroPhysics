@@ -51,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
         private BreakableTest()
         {
             // Ground body
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             // Breakable dynamic body
             _body1 = BodyFactory.CreateBody(World);
@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
 
-            FixtureFactory.CreateBreakableBody(World, verts, 50, new Vector2(-10, 25));
+            BodyFactory.CreateBreakableBody(World, verts, 50, new Vector2(-10, 25));
 
             base.Initialize();
         }

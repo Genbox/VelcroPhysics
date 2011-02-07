@@ -39,16 +39,16 @@ namespace FarseerPhysics.TestBed.Tests
 
         private BulletTest()
         {
-            FixtureFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
-            FixtureFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
+            BodyFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
 
             //Bar
-            _body = FixtureFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f)).Body;
+            _body = BodyFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f));
             _body.Position = new Vector2(0, 4);
             _body.BodyType = BodyType.Dynamic;
 
             //Bullet
-            _bullet = FixtureFactory.CreateRectangle(World, 0.5f, 0.5f, 100).Body;
+            _bullet = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 100);
             _bullet.IsBullet = true;
             _bullet.BodyType = BodyType.Dynamic;
             _x = 0.20352793f;

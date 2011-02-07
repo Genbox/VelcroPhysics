@@ -129,7 +129,7 @@ namespace FarseerPhysics.Dynamics
         /// <value>The revolutions.</value>
         public float Revolutions
         {
-            get { return Rotation / (float) Math.PI; }
+            get { return Rotation / (float)Math.PI; }
         }
 
         /// <summary>
@@ -565,6 +565,60 @@ namespace FarseerPhysics.Dynamics
                     InvI = 1.0f / _inertia;
                 }
             }
+        }
+
+        public float Restitution
+        {
+            get
+            {
+                float res = 0;
+
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    res += f.Restitution;
+                }
+
+                return res / FixtureList.Count;
+            }
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.Restitution = value;
+                }
+            }
+        }
+
+        public float Friction
+        {
+            get
+            {
+                float res = 0;
+
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    res += f.Friction;
+                }
+
+                return res / FixtureList.Count;
+            }
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.Friction = value;
+                }
+            }
+        }
+
+        public CollisionFilter CollisionFilter
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
         }
 
         #region IDisposable Members
@@ -1121,7 +1175,7 @@ namespace FarseerPhysics.Dynamics
         internal void SynchronizeFixtures()
         {
             Transform xf1 = new Transform();
-            float c = (float) Math.Cos(Sweep.A0), s = (float) Math.Sin(Sweep.A0);
+            float c = (float)Math.Cos(Sweep.A0), s = (float)Math.Sin(Sweep.A0);
             xf1.R.Col1.X = c;
             xf1.R.Col2.X = -s;
             xf1.R.Col1.Y = s;
@@ -1184,6 +1238,42 @@ namespace FarseerPhysics.Dynamics
             Sweep.C = Sweep.C0;
             Sweep.A = Sweep.A0;
             SynchronizeTransform();
+        }
+
+        public event OnCollisionEventHandler OnCollision
+        {
+            add
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].OnCollision += value;
+                }
+            }
+            remove
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].OnCollision -= value;
+                }
+            }
+        }
+
+        public event OnSeparationEventHandler OnSeparation
+        {
+            add
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].OnSeparation += value;
+                }
+            }
+            remove
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].OnSeparation -= value;
+                }
+            }
         }
     }
 }

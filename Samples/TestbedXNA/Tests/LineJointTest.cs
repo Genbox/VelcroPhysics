@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private LineJointTest()
         {
-            Fixture ground = FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 PolygonShape shape = new PolygonShape(1);
@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 axis = new Vector2(2.0f, 1.0f);
                 axis.Normalize();
 
-                LineJoint jd = new LineJoint(ground.Body, body, new Vector2(0, 8.5f), axis);
+                LineJoint jd = new LineJoint(ground, body, new Vector2(0, 8.5f), axis);
                 jd.MotorSpeed = 1.0f;
                 jd.MaxMotorTorque = 1000.0f;
                 jd.MotorEnabled = true;

@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
     public class ContinuousTest : Test
     {
         private float _angularVelocity;
-        private Fixture _box;
+        private Body _box;
 
         private ContinuousTest()
         {
@@ -44,25 +44,25 @@ namespace FarseerPhysics.TestBed.Tests
             list.Add(PolygonTools.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
             list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
-            FixtureFactory.CreateCompoundPolygon(World, list, 0);
+            BodyFactory.CreateCompoundPolygon(World, list, 0);
 
-            _box = FixtureFactory.CreateRectangle(World, 4, 0.2f, 1);
-            _box.Body.Position = new Vector2(0, 20);
-            _box.Body.BodyType = BodyType.Dynamic;
+            _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
+            _box.Position = new Vector2(0, 20);
+            _box.BodyType = BodyType.Dynamic;
             //_box.Body.Rotation = 0.1f;
 
             //_angularVelocity = 46.661274f;
             _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.Body.AngularVelocity = _angularVelocity;
+            _box.LinearVelocity = new Vector2(0.0f, -100.0f);
+            _box.AngularVelocity = _angularVelocity;
         }
 
         private void Launch()
         {
-            _box.Body.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
+            _box.SetTransform(new Vector2(0.0f, 20.0f), 0.0f);
             _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _box.Body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _box.Body.AngularVelocity = _angularVelocity;
+            _box.LinearVelocity = new Vector2(0.0f, -100.0f);
+            _box.AngularVelocity = _angularVelocity;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

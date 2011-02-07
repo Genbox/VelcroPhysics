@@ -37,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
         private CompoundShapes()
         {
             //Ground
-            FixtureFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 CircleShape circle1 = new CircleShape(0.5f, 2);
