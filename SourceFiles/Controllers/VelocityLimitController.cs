@@ -83,7 +83,7 @@ namespace FarseerPhysics.Controllers
         {
             foreach (Body body in _bodies)
             {
-                if (!FilterData.IsActiveOn(body))
+                if (!IsActiveOn(body))
                     continue;
 
                 if (LimitLinearVelocity)

@@ -43,7 +43,7 @@ namespace FarseerPhysics.Controllers
 
             foreach (Body body1 in World.BodyList)
             {
-                if (!FilterData.IsActiveOn(body1))
+                if (!IsActiveOn(body1))
                     continue;
 
                 foreach (Body body2 in Bodies)

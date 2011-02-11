@@ -269,7 +269,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                                   {
                                       Body body = f.Body;
 
-                                      if (!FilterData.IsActiveOn(body))
+                                      if (!IsActiveOn(body))
                                           return 0;
 
                                       if (body.UserData != null)
@@ -341,7 +341,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
             for (int i = 0; i < _data.Count(); ++i)
             {
-                if (!FilterData.IsActiveOn(_data[i].Body))
+                if (!IsActiveOn(_data[i].Body))
                     continue;
 
                 float arclen = _data[i].Max - _data[i].Min;
@@ -430,7 +430,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             {
                 Fixture fix = containedShapes[i];
 
-                if (!FilterData.IsActiveOn(fix.Body))
+                if (!IsActiveOn(fix.Body))
                     continue;
 
                 float impulse = MinRays*maxForce*180.0f/MathHelper.Pi;

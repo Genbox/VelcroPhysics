@@ -9,24 +9,6 @@ namespace FarseerPhysics.Common.PhysicsLogic
         Explosion = (1 << 0)
     }
 
-    public class FilterPhysicsLogicData : FilterData
-    {
-        private PhysicsLogicType _type;
-
-        public FilterPhysicsLogicData(PhysicsLogicType type)
-        {
-            _type = type;
-        }
-
-        public override bool IsActiveOn(Body body)
-        {
-            if (body.PhysicsLogicFilter.IsPhysicsLogicIgnored(_type))
-                return false;
-
-            return base.IsActiveOn(body);
-        }
-    }
-
     public struct PhysicsLogicFilter
     {
         public PhysicsLogicType ControllerIgnores;
@@ -62,14 +44,22 @@ namespace FarseerPhysics.Common.PhysicsLogic
         }
     }
 
-    public abstract class PhysicsLogic
+    public abstract class PhysicsLogic : FilterData
     {
-        public FilterPhysicsLogicData FilterData;
+        private PhysicsLogicType _type;
         public World World;
+
+        public override bool IsActiveOn(Body body)
+        {
+            if (body.PhysicsLogicFilter.IsPhysicsLogicIgnored(_type))
+                return false;
+
+            return base.IsActiveOn(body);
+        }
 
         public PhysicsLogic(World world, PhysicsLogicType type)
         {
-            FilterData = new FilterPhysicsLogicData(type);
+            _type = type;
             World = world;
         }
     }
