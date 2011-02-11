@@ -11,24 +11,6 @@ namespace FarseerPhysics.Controllers
         AbstractForceController = (1 << 2)
     }
 
-    public class FilterControllerData : FilterData
-    {
-        private ControllerType _type;
-
-        public FilterControllerData(ControllerType type)
-        {
-            _type = type;
-        }
-
-        public override bool IsActiveOn(Body body)
-        {
-            if (body.ControllerFilter.IsControllerIgnored(_type))
-                return false;
-
-            return base.IsActiveOn(body);
-        }
-    }
-
     public struct ControllerFilter
     {
         public ControllerType ControllerFlags;
@@ -64,16 +46,23 @@ namespace FarseerPhysics.Controllers
         }
     }
 
-    public abstract class Controller
+    public abstract class Controller : FilterData
     {
         public bool Enabled;
-        public FilterControllerData FilterData;
-
+        private ControllerType _type;
         public World World;
+
+        public override bool IsActiveOn(Body body)
+        {
+            if (body.ControllerFilter.IsControllerIgnored(_type))
+                return false;
+
+            return base.IsActiveOn(body);
+        }
 
         public Controller(ControllerType controllerType)
         {
-            FilterData = new FilterControllerData(controllerType);
+            _type = controllerType;
         }
 
         public abstract void Update(float dt);

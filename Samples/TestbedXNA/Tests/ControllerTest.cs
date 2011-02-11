@@ -41,10 +41,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Create the gravity controller
             GravityController gravity = new GravityController(20);
-            gravity.FilterData.DisabledOnGroup = 3;
-            gravity.FilterData.EnabledOnGroup = 2;
-            gravity.FilterData.DisabledOnCategories = Category.Cat2;
-            gravity.FilterData.EnabledOnCategories = Category.Cat3;
+            gravity.DisabledOnGroup = 3;
+            gravity.EnabledOnGroup = 2;
+            gravity.DisabledOnCategories = Category.Cat2;
+            gravity.EnabledOnCategories = Category.Cat3;
 
             World.AddController(gravity);
 
