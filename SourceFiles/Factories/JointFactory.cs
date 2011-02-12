@@ -12,7 +12,7 @@ namespace FarseerPhysics.Factories
         #region Revolute Joint
 
         /// <summary>
-        /// Creates a revolute joint and adds it to the world
+        /// Creates a revolute joint.
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
