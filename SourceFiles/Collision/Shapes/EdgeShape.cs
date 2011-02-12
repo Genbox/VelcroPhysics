@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -245,6 +246,12 @@ namespace FarseerPhysics.Collision.Shapes
         public override void ComputeProperties()
         {
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
+        }
+
+        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        {
+            sc = Vector2.Zero;
+            return 0;
         }
 
         public bool CompareTo(EdgeShape shape)

@@ -173,5 +173,35 @@ namespace FarseerPhysics.Collision.Shapes
             return (Radius == shape.Radius &&
                     Position == shape.Position);
         }
+
+        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        {
+            sc = Vector2.Zero;
+
+            Vector2 p = MathUtils.Multiply(ref xf, Position);
+            float l = -(Vector2.Dot(normal, p) - offset);
+            if (l < -Radius + Settings.Epsilon)
+            {
+                //Completely dry
+                return 0;
+            }
+            if (l > Radius)
+            {
+                //Completely wet
+                sc = p;
+                return Settings.Pi * Radius * Radius;
+            }
+
+            //Magic
+            float r2 = Radius * Radius;
+            float l2 = l * l;
+            float area = r2 * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2));
+            float com = -2.0f / 3.0f * (float)Math.Pow(r2 - l2, 1.5f) / area;
+
+            sc.X = p.X + normal.X * com;
+            sc.Y = p.Y + normal.Y * com;
+
+            return area;
+        }
     }
 }

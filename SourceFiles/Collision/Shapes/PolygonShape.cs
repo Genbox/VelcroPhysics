@@ -23,6 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
@@ -423,6 +424,127 @@ namespace FarseerPhysics.Collision.Shapes
 
             return (Radius == shape.Radius &&
                     MassData == shape.MassData);
+        }
+
+        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        {
+            sc = Vector2.Zero;
+
+            //Transform plane into shape co-ordinates
+            Vector2 normalL = MathUtils.MultiplyT(ref xf.R, normal);
+            float offsetL = offset - Vector2.Dot(normal, xf.Position);
+
+            float[] depths = new float[Settings.MaxPolygonVertices];
+            int diveCount = 0;
+            int intoIndex = -1;
+            int outoIndex = -1;
+
+            bool lastSubmerged = false;
+            int i;
+            for (i = 0; i < Vertices.Count; i++)
+            {
+                depths[i] = Vector2.Dot(normalL, Vertices[i]) - offsetL;
+                bool isSubmerged = depths[i] < -Settings.Epsilon;
+                if (i > 0)
+                {
+                    if (isSubmerged)
+                    {
+                        if (!lastSubmerged)
+                        {
+                            intoIndex = i - 1;
+                            diveCount++;
+                        }
+                    }
+                    else
+                    {
+                        if (lastSubmerged)
+                        {
+                            outoIndex = i - 1;
+                            diveCount++;
+                        }
+                    }
+                }
+                lastSubmerged = isSubmerged;
+            }
+            switch (diveCount)
+            {
+                case 0:
+                    if (lastSubmerged)
+                    {
+                        //Completely submerged
+                        sc = MathUtils.Multiply(ref xf, MassData.Centroid);
+                        return MassData.Mass / Density;
+                    }
+                    else
+                    {
+                        //Completely dry
+                        return 0;
+                    }
+                    break;
+                case 1:
+                    if (intoIndex == -1)
+                    {
+                        intoIndex = Vertices.Count - 1;
+                    }
+                    else
+                    {
+                        outoIndex = Vertices.Count - 1;
+                    }
+                    break;
+            }
+            int intoIndex2 = (intoIndex + 1) % Vertices.Count;
+            int outoIndex2 = (outoIndex + 1) % Vertices.Count;
+
+            float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
+            float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
+
+            Vector2 intoVec = new Vector2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
+                            Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
+            Vector2 outoVec = new Vector2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
+                            Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
+
+            //Initialize accumulator
+            float area = 0;
+            Vector2 center = new Vector2(0, 0);
+            Vector2 p2 = Vertices[intoIndex2];
+            Vector2 p3;
+
+            float k_inv3 = 1.0f / 3.0f;
+
+            //An awkward loop from intoIndex2+1 to outIndex2
+            i = intoIndex2;
+            while (i != outoIndex2)
+            {
+                i = (i + 1) % Vertices.Count;
+                if (i == outoIndex2)
+                    p3 = outoVec;
+                else
+                    p3 = Vertices[i];
+                //Add the triangle formed by intoVec,p2,p3
+                {
+                    Vector2 e1 = p2 - intoVec;
+                    Vector2 e2 = p3 - intoVec;
+
+                    float D = MathUtils.Cross(e1, e2);
+
+                    float triangleArea = 0.5f * D;
+
+                    area += triangleArea;
+
+                    // Area weighted centroid
+                    center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+
+                }
+                //
+                p2 = p3;
+            }
+
+            //Normalize and transform centroid
+            center *= 1.0f / area;
+
+            sc = MathUtils.Multiply(ref xf, center);
+
+            return area;
         }
     }
 }

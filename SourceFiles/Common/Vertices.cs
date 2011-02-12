@@ -204,6 +204,11 @@ namespace FarseerPhysics.Common
             return aabb;
         }
 
+        public void Translate(Vector2 vector)
+        {
+            Translate(ref vector);
+        }
+
         /// <summary>
         /// Translates the vertices with the specified vector.
         /// </summary>
