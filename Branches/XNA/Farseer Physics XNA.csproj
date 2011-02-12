@@ -173,6 +173,9 @@
     <Compile Include="..\..\sourcefiles\collision\TimeOfImpact.cs">
       <Link>Collision\TimeOfImpact.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\ConvexHull\ChainHull.cs">
+      <Link>Common\ConvexHull\ChainHull.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\convexhull\GiftWrap.cs">
       <Link>Common\ConvexHull\GiftWrap.cs</Link>
     </Compile>
@@ -437,6 +440,7 @@
     <Compile Include="..\..\SourceFiles\Settings.cs">
       <Link>Settings.cs</Link>
     </Compile>
+    <Compile Include="Controllers\BuoyancyController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

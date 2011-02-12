@@ -240,10 +240,10 @@ namespace FarseerPhysics.Collision
             UpperBound = max;
         }
 
-        public AABB(float width, float height, Vector2 position)
+        public AABB(Vector2 position, float width, float height)
         {
-            LowerBound = position;
-            UpperBound = new Vector2(position.X + width, position.Y + height);
+            LowerBound = position - new Vector2(width / 2, height / 2);
+            UpperBound = position + new Vector2(width / 2, height / 2);
         }
 
         /// <summary>

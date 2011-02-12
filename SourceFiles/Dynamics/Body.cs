@@ -847,6 +847,11 @@ namespace FarseerPhysics.Dynamics
         /// <param name="point">The world position of the point of application.</param>
         public void ApplyForce(ref Vector2 force, ref Vector2 point)
         {
+            Debug.Assert(!float.IsNaN(force.X));
+            Debug.Assert(!float.IsNaN(force.Y));
+            Debug.Assert(!float.IsNaN(point.X));
+            Debug.Assert(!float.IsNaN(point.X));
+
             if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)
@@ -867,6 +872,8 @@ namespace FarseerPhysics.Dynamics
         /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
         public void ApplyTorque(float torque)
         {
+            Debug.Assert(!float.IsNaN(torque));
+
             if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)

@@ -212,5 +212,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             return false;
         }
+
+        public abstract float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc);
     }
 }

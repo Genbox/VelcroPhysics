@@ -19,7 +19,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             World = new World(new Vector2(0, -9.82f));
 
-            terrain = new MSTerrain(World, new AABB(80, 80, new Vector2(-40, 40)), null)
+            terrain = new MSTerrain(World, new AABB(new Vector2(-40, 40), 80, 80), null)
             {
                 CellSize = 50,
                 SubCellSize = 10,

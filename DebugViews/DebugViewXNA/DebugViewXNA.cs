@@ -5,6 +5,7 @@ using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
@@ -101,6 +102,7 @@ namespace FarseerPhysics.DebugViews
 
             //Default flags
             AppendFlags(DebugViewFlags.Shape);
+            AppendFlags(DebugViewFlags.Controllers);
             AppendFlags(DebugViewFlags.Joint);
         }
 
@@ -339,6 +341,21 @@ namespace FarseerPhysics.DebugViews
                     b.GetTransform(out xf);
                     xf.Position = b.WorldCenter;
                     DrawTransform(ref xf);
+                }
+            }
+
+            if ((Flags & DebugViewFlags.Controllers) == DebugViewFlags.Controllers)
+            {
+                for (int i = 0; i < World.ControllerList.Count; i++)
+                {
+                    Controller controller = World.ControllerList[i];
+
+                    BuoyancyController buoyancy = controller as BuoyancyController;
+                    if (buoyancy != null)
+                    {
+                        AABB container = buoyancy.Container;
+                        DrawAABB(ref container, Color.LightBlue);
+                    }
                 }
             }
         }

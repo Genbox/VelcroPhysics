@@ -7,13 +7,14 @@ namespace FarseerPhysics.Common.ConvexHull
         //Melkman based convex hull algorithm contributed by Cowdozer
 
         /// <summary>
-        /// Creates a convex hull of the Vertices.
-        /// Note: Vertices must be of a simple polygon, i.e. edges do not overlap.
+        /// Creates a convex hull.
+        /// Note:
+        /// 1. Vertices must be of a simple polygon, i.e. edges do not overlap.
+        /// 2. Melkman does not work on point clouds
         /// </summary>
         /// <remarks>
         /// Implemented using Melkman's Convex Hull Algorithm - O(n) time complexity.
         /// Reference: http://www.ams.sunysb.edu/~jsbm/courses/345/melkman.pdf
-        /// Requires that vertices are of a simple polygon. Handles collinear points.
         /// </remarks>
         /// <returns>A convex hull in counterclockwise winding order.</returns>
         public static Vertices GetConvexHull(Vertices vertices)
