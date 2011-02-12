@@ -180,7 +180,7 @@ namespace FarseerPhysics.TestBed.Tests
             return true;
         }
 
-        private float RayCastCallback(ref RayCastInput input, int proxyid)
+        private float RayCastCallback(RayCastInput input, int proxyid)
         {
             Actor actor = _tree.GetUserData(proxyid);
 
