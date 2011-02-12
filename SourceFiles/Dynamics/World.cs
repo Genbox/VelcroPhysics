@@ -207,10 +207,6 @@ namespace FarseerPhysics.Dynamics
 
         private float _invDt0;
         public Island Island = new Island();
-        private Func<Fixture, bool> _queryAABBCallback;
-        private Func<int, bool> _queryAABBCallbackWrapper;
-        private RayCastCallback _rayCastCallback;
-        private RayCastCallbackInternal _rayCastCallbackWrapper;
         private Body[] _stack = new Body[64];
         private bool _stepComplete;
         private HashSet<Body> _bodyAddList = new HashSet<Body>();
@@ -243,9 +239,6 @@ namespace FarseerPhysics.Dynamics
             Gravity = gravity;
 
             Flags = WorldFlags.ClearForces;
-
-            _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
-            _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
@@ -783,26 +776,32 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Query the world for all fixtures that potentially overlap the
         /// provided AABB.
+        /// 
+        /// Inside the callback:
+        /// Return true: Continues the query
+        /// Return false: Terminate the query
         /// </summary>
         /// <param name="callback">A user implemented callback class.</param>
         /// <param name="aabb">The aabb query box.</param>
         public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
         {
-            _queryAABBCallback = callback;
-            ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
-            _queryAABBCallback = null;
-        }
-
-        private bool QueryAABBCallbackWrapper(int proxyId)
-        {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
-            return _queryAABBCallback(proxy.Fixture);
+            ContactManager.BroadPhase.Query(proxyId =>
+                                                {
+                                                    FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
+                                                    return callback(proxy.Fixture);
+                                                }, ref aabb);
         }
 
         /// <summary>
         /// Ray-cast the world for all fixtures in the path of the ray. Your callback
         /// controls whether you get the closest point, any point, or n-points.
         /// The ray-cast ignores shapes that contain the starting point.
+        /// 
+        /// Inside the callback:
+        /// return -1: ignore this fixture and continue
+        /// return 0: terminate the ray cast
+        /// return fraction: clip the ray to this point
+        /// return 1: don't clip the ray and continue
         /// </summary>
         /// <param name="callback">A user implemented callback class.</param>
         /// <param name="point1">The ray starting point.</param>
@@ -814,27 +813,23 @@ namespace FarseerPhysics.Dynamics
             input.Point1 = point1;
             input.Point2 = point2;
 
-            _rayCastCallback = callback;
-            ContactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
-            _rayCastCallback = null;
-        }
+            ContactManager.BroadPhase.RayCast((rayCastInput, proxyId) =>
+                                                  {
+                                                      FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
+                                                      Fixture fixture = proxy.Fixture;
+                                                      int index = proxy.ChildIndex;
+                                                      RayCastOutput output;
+                                                      bool hit = fixture.RayCast(out output, ref rayCastInput, index);
 
-        private float RayCastCallbackWrapper(ref RayCastInput input, int proxyId)
-        {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
-            Fixture fixture = proxy.Fixture;
-            int index = proxy.ChildIndex;
-            RayCastOutput output;
-            bool hit = fixture.RayCast(out output, ref input, index);
+                                                      if (hit)
+                                                      {
+                                                          float fraction = output.Fraction;
+                                                          Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
+                                                          return callback(fixture, point, output.Normal, fraction);
+                                                      }
 
-            if (hit)
-            {
-                float fraction = output.Fraction;
-                Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
-                return _rayCastCallback(fixture, point, output.Normal, fraction);
-            }
-
-            return input.MaxFraction;
+                                                      return input.MaxFraction;
+                                                  }, ref input);
         }
 
         private void Solve(ref TimeStep step)

@@ -32,11 +32,6 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Collision
 {
     /// <summary>
-    /// A dynamic AABB tree broad-phase, inspired by Nathanael Presson's btDbvt.
-    /// </summary>
-    public delegate float RayCastCallbackInternal(ref RayCastInput input, int userData);
-
-    /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
     /// </summary>
     internal struct DynamicTreeNode<T>
@@ -169,7 +164,7 @@ namespace FarseerPhysics.Collision
             b.UpperBound = b.UpperBound + r;
 
             // Predict AABB displacement.
-            Vector2 d = Settings.AABBMultiplier*displacement;
+            Vector2 d = Settings.AABBMultiplier * displacement;
 
             if (d.X < 0.0f)
             {
@@ -240,7 +235,7 @@ namespace FarseerPhysics.Collision
         public T GetUserData(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T) _nodes[proxyId].UserData;
+            return (T)_nodes[proxyId].UserData;
         }
 
         /// <summary>
@@ -313,7 +308,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
-        public void RayCast(RayCastCallbackInternal callback, ref RayCastInput input)
+        public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
         {
             Vector2 p1 = input.Point1;
             Vector2 p2 = input.Point2;
@@ -332,7 +327,7 @@ namespace FarseerPhysics.Collision
             // Build a bounding box for the segment.
             AABB segmentAABB = new AABB();
             {
-                Vector2 t = p1 + maxFraction*(p2 - p1);
+                Vector2 t = p1 + maxFraction * (p2 - p1);
                 Vector2.Min(ref p1, ref t, out segmentAABB.LowerBound);
                 Vector2.Max(ref p1, ref t, out segmentAABB.UpperBound);
             }
@@ -372,7 +367,7 @@ namespace FarseerPhysics.Collision
                     subInput.Point2 = input.Point2;
                     subInput.MaxFraction = maxFraction;
 
-                    float value = callback(ref subInput, nodeId);
+                    float value = callback(subInput, nodeId);
 
                     if (value == 0.0f)
                     {
@@ -384,7 +379,7 @@ namespace FarseerPhysics.Collision
                     {
                         // Update segment bounding box.
                         maxFraction = value;
-                        Vector2 t = p1 + maxFraction*(p2 - p1);
+                        Vector2 t = p1 + maxFraction * (p2 - p1);
                         segmentAABB.LowerBound = Vector2.Min(p1, t);
                         segmentAABB.UpperBound = Vector2.Max(p1, t);
                     }
@@ -495,9 +490,9 @@ namespace FarseerPhysics.Collision
                 AABB parentAABB = new AABB();
                 parentAABB.Combine(ref _nodes[sibling].AABB, ref leafAABB);
                 float parentArea = parentAABB.Perimeter;
-                float cost1 = 2.0f*parentArea;
+                float cost1 = 2.0f * parentArea;
 
-                float inheritanceCost = 2.0f*(parentArea - siblingArea);
+                float inheritanceCost = 2.0f * (parentArea - siblingArea);
 
                 float cost2;
                 if (_nodes[child1].IsLeaf())
