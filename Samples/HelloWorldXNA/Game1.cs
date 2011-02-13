@@ -32,8 +32,7 @@ namespace FarseerPhysics.HelloWorld
 
         const string Text = "Press A or D to rotate the ball\n" +
                             "Press Space to jump\n" +
-                            "Press Shift + W/S/A/D to move the camera\n" +
-                            "Press Shift + Q/E to rotate the camera";
+                            "Press Shift + W/S/A/D to move the camera";
 
         // Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
         // 1 meters equals 64 pixels here
