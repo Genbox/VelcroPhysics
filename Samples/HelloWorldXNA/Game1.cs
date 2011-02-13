@@ -15,7 +15,6 @@ namespace FarseerPhysics.HelloWorld
         private SpriteBatch _batch;
         private KeyboardState _oldState;
         private SpriteFont _font;
-        private bool _showDebug;
 
         private World _world;
 
@@ -132,10 +131,6 @@ namespace FarseerPhysics.HelloWorld
                 if (state.IsKeyDown(Keys.Space) && _oldState.IsKeyUp(Keys.Space))
                     _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
             }
-
-            // Toggle DebugView
-            if (state.IsKeyUp(Keys.F1) && _oldState.IsKeyDown(Keys.F1))
-                _showDebug = !_showDebug;
 
             if (state.IsKeyDown(Keys.Escape))
                 Exit();
