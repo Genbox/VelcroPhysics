@@ -119,24 +119,9 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             get
             {
-                Body bA = BodyA;
-                Body bB = BodyB;
-
-                Vector2 rA = MathUtils.Multiply(ref bA.Xf.R, LocalAnchorA - LocalCenterA);
-                Vector2 rB = MathUtils.Multiply(ref bB.Xf.R, LocalAnchorB - LocalCenterB);
-                Vector2 pA = bA.Sweep.C + rA;
-                Vector2 pB = bB.Sweep.C + rB;
-                Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(_localXAxisA);
-
-                Vector2 vA = bA.LinearVelocityInternal;
-                Vector2 vB = bB.LinearVelocityInternal;
-                float wA = bA.AngularVelocityInternal;
-                float wB = bB.AngularVelocityInternal;
-
-                float speed = Vector2.Dot(d, MathUtils.Cross(wA, axis)) +
-                              Vector2.Dot(axis, vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA));
-                return speed;
+                float wA = BodyA.AngularVelocityInternal;
+                float wB = BodyB.AngularVelocityInternal;
+                return wB - wA;
             }
         }
 
