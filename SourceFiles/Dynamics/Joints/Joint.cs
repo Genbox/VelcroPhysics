@@ -39,16 +39,16 @@ namespace FarseerPhysics.Dynamics.Joints
         Line,
         Weld,
         Friction,
+        Slider,
+        Angle,
+        Rope,
         FixedMouse,
         FixedRevolute,
         FixedDistance,
         FixedLine,
         FixedPrismatic,
-        MaxDistance,
-        Angle,
         FixedAngle,
         FixedFriction,
-        Rope
     }
 
     public enum LimitState

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using System.Linq;
 
 namespace FarseerPhysics.Common
 {
@@ -71,7 +67,7 @@ namespace FarseerPhysics.Common
                         PolygonShape poly = (PolygonShape)shape;
 
                         _writer.WriteStartElement("Vertices");
-                        foreach (var v in poly.Vertices)
+                        foreach (Vector2 v in poly.Vertices)
                             WriteElement("Vertex", v);
                         _writer.WriteEndElement();
 
@@ -203,15 +199,14 @@ namespace FarseerPhysics.Common
                     {
                         LineJoint ljd = (LineJoint)joint;
 
-                        //WriteElement("EnableLimit", ljd.EnableLimit);
-                        //WriteElement("EnableMotor", ljd.MotorEnabled);
-                        //WriteElement("LocalAnchorA", ljd.LocalAnchorA);
-                        //WriteElement("LocalAnchorB", ljd.LocalAnchorB);
-                        //WriteElement("LocalAxisA", ljd.LocalAxisA);
-                        //WriteElement("LowerTranslation", ljd.LowerLimit);
-                        //WriteElement("MaxMotorForce", ljd.MaxMotorForce);
-                        //WriteElement("MotorSpeed", ljd.MotorSpeed);
-                        //WriteElement("UpperTranslation", ljd.UpperLimit);
+                        WriteElement("EnableMotor", ljd.MotorEnabled);
+                        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
+                        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
+                        WriteElement("MotorSpeed", ljd.MotorSpeed);
+                        WriteElement("DampingRatio", ljd.DampingRatio);
+                        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
+                        WriteElement("FrequencyHz", ljd.Frequency);
+                        WriteElement("LocalXAxis", ljd.LocalXAxis);
                     }
                     break;
                 case JointType.Prismatic:
@@ -226,9 +221,9 @@ namespace FarseerPhysics.Common
                         WriteElement("LocalAnchorB", pjd.LocalAnchorB);
                         WriteElement("LocalXAxis1", pjd.LocalXAxis1);
                         WriteElement("LowerTranslation", pjd.LowerLimit);
+                        WriteElement("UpperTranslation", pjd.UpperLimit);
                         WriteElement("MaxMotorForce", pjd.MaxMotorForce);
                         WriteElement("MotorSpeed", pjd.MotorSpeed);
-                        WriteElement("UpperTranslation", pjd.UpperLimit);
                     }
                     break;
                 case JointType.Pulley:
@@ -283,11 +278,22 @@ namespace FarseerPhysics.Common
                     break;
                 case JointType.Angle:
                     {
-                        AngleJoint aj = (AngleJoint) joint;
+                        AngleJoint aj = (AngleJoint)joint;
                         WriteElement("BiasFactor", aj.BiasFactor);
                         WriteElement("MaxImpulse", aj.MaxImpulse);
                         WriteElement("Softness", aj.Softness);
                         WriteElement("TargetAngle", aj.TargetAngle);
+                    }
+                    break;
+                case JointType.Slider:
+                    {
+                        SliderJoint sliderJoint = (SliderJoint)joint;
+                        WriteElement("DampingRatio", sliderJoint.DampingRatio);
+                        WriteElement("FrequencyHz", sliderJoint.Frequency);
+                        WriteElement("MaxLength", sliderJoint.MaxLength);
+                        WriteElement("MinLength", sliderJoint.MinLength);
+                        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
                     }
                     break;
                 default:
@@ -800,8 +806,13 @@ namespace FarseerPhysics.Common
                             case JointType.Angle:
                                 joint = new AngleJoint();
                                 break;
+                            case JointType.Slider:
+                                joint = new SliderJoint();
+                                break;
+                            case JointType.Gear:
+                                throw new Exception("GearJoint is not supported.");
                             default:
-                                throw new Exception("Invalid or unsupported joint");
+                                throw new Exception("Invalid or unsupported joint.");
                         }
 
                         joint.CollideConnected = collideConnected;
@@ -861,33 +872,30 @@ namespace FarseerPhysics.Common
                                     {
                                         switch (sn.Name.ToLower())
                                         {
-                                            //case "enablelimit":
-                                            //    ((LineJoint)joint).EnableLimit = bool.Parse(sn.Value);
-                                            //    break;
-                                            //case "enablemotor":
-                                            //    ((LineJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                            //    break;
-                                            //case "localanchora":
-                                            //    ((LineJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            //    break;
-                                            //case "localanchorb":
-                                            //    ((LineJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            //    break;
-                                            ////case "localaxisa":
-                                            ////    ((LineJoint)joint).LocalXAxis1 = ReadVector(sn);
-                                            ////    break;
-                                            //case "maxmotorforce":
-                                            //    ((LineJoint)joint).MaxMotorForce = float.Parse(sn.Value);
-                                            //    break;
-                                            //case "motorspeed":
-                                            //    ((LineJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                            //    break;
-                                            //case "lowertranslation":
-                                            //    ((LineJoint)joint).LowerLimit = float.Parse(sn.Value);
-                                            //    break;
-                                            //case "uppertranslation":
-                                            //    ((LineJoint)joint).UpperLimit = float.Parse(sn.Value);
-                                                //break;
+                                            case "enablemotor":
+                                                ((LineJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((LineJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((LineJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "motorspeed":
+                                                ((LineJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                break;
+                                            case "dampingratio":
+                                                ((LineJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "maxmotortorque":
+                                                ((LineJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((LineJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "localxaxis":
+                                                ((LineJoint)joint).LocalXAxis = ReadVector(sn);
+                                                break;
                                         }
                                     }
                                     break;
@@ -1042,6 +1050,31 @@ namespace FarseerPhysics.Common
                                                 break;
                                             case "targetangle":
                                                 ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case JointType.Slider:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "dampingratio":
+                                                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "maxlength":
+                                                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
+                                                break;
+                                            case "minlength":
+                                                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
                                                 break;
                                         }
                                     }
