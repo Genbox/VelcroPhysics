@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.MotorSpeed = 1.0f;
                 jd.MaxMotorTorque = 1000.0f;
                 jd.MotorEnabled = true;
-                jd.FrequencyHz = 1.0f;
+                jd.Frequency = 1.0f;
                 jd.DampingRatio = 0.2f;
                 World.AddJoint(jd);
             }

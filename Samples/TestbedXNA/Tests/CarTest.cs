@@ -196,7 +196,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _spring1.MotorSpeed = 0.0f;
                 _spring1.MaxMotorTorque = 20.0f;
                 _spring1.MotorEnabled = true;
-                _spring1.FrequencyHz = _hz;
+                _spring1.Frequency = _hz;
                 _spring1.DampingRatio = _zeta;
                 World.AddJoint(_spring1);
 
@@ -204,7 +204,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _spring2.MotorSpeed = 0.0f;
                 _spring2.MaxMotorTorque = 10.0f;
                 _spring2.MotorEnabled = false;
-                _spring2.FrequencyHz = _hz;
+                _spring2.Frequency = _hz;
                 _spring2.DampingRatio = _zeta;
                 World.AddJoint(_spring2);
             }
@@ -227,14 +227,14 @@ namespace FarseerPhysics.TestBed.Tests
             else if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 _hz = Math.Max(0.0f, _hz - 1.0f);
-                _spring1.FrequencyHz = _hz;
-                _spring2.FrequencyHz = _hz;
+                _spring1.Frequency = _hz;
+                _spring2.Frequency = _hz;
             }
             else if (keyboardManager.IsNewKeyPress(Keys.E))
             {
                 _hz += 1.0f;
-                _spring1.FrequencyHz = _hz;
-                _spring2.FrequencyHz = _hz;
+                _spring1.Frequency = _hz;
+                _spring2.Frequency = _hz;
             }
 
             base.Keyboard(keyboardManager);

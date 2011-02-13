@@ -24,6 +24,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -36,7 +37,7 @@ namespace FarseerPhysics.Dynamics.Joints
         private bool _enableMotor;
         private float _gamma;
         private float _impulse;
-        private Vector2 _localXAxisA;
+        private Vector2 _localXAxis;
         private Vector2 _localYAxisA;
         private float _mass;
         private float _maxMotorTorque;
@@ -68,10 +69,7 @@ namespace FarseerPhysics.Dynamics.Joints
         // Cdot = wB - wA
         // J = [0 0 -1 0 0 1]
 
-        internal LineJoint()
-        {
-            JointType = JointType.Line;
-        }
+        internal LineJoint() { JointType = JointType.Line; }
 
         public LineJoint(Body bA, Body bB, Vector2 anchor, Vector2 axis)
             : base(bA, bB)
@@ -80,12 +78,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
             LocalAnchorA = bA.GetLocalPoint(anchor);
             LocalAnchorB = bB.GetLocalPoint(anchor);
-            _localXAxisA = bA.GetLocalVector(axis);
-            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+            LocalXAxis = bA.GetLocalVector(axis);
         }
 
-        public Vector2 LocalAnchorA { get; private set; }
-        public Vector2 LocalAnchorB { get; private set; }
+        public Vector2 LocalAnchorA { get; set; }
+
+        public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
@@ -95,7 +93,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { throw new NotImplementedException(); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         public float JointTranslation
@@ -108,7 +106,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
                 Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
                 Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(_localXAxisA);
+                Vector2 axis = bA.GetWorldVector(LocalXAxis);
 
                 float translation = Vector2.Dot(d, axis);
                 return translation;
@@ -158,9 +156,19 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _maxMotorTorque; }
         }
 
-        public float FrequencyHz { get; set; }
+        public float Frequency { get; set; }
 
         public float DampingRatio { get; set; }
+
+        public Vector2 LocalXAxis
+        {
+            get { return _localXAxis; }
+            set
+            {
+                _localXAxis = value;
+                _localYAxisA = MathUtils.Cross(1.0f, _localXAxis);
+            }
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -211,9 +219,9 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Spring constraint
             _springMass = 0.0f;
-            if (FrequencyHz > 0.0f)
+            if (Frequency > 0.0f)
             {
-                _ax = MathUtils.Multiply(ref xfA.R, _localXAxisA);
+                _ax = MathUtils.Multiply(ref xfA.R, LocalXAxis);
                 _sAx = MathUtils.Cross(d + rA, _ax);
                 _sBx = MathUtils.Cross(rB, _ax);
 
@@ -226,7 +234,7 @@ namespace FarseerPhysics.Dynamics.Joints
                     float C = Vector2.Dot(d, _ax);
 
                     // Frequency
-                    float omega = 2.0f * Settings.Pi * FrequencyHz;
+                    float omega = 2.0f * Settings.Pi * Frequency;
 
                     // Damping coefficient
                     float da = 2.0f * _springMass * DampingRatio * omega;
