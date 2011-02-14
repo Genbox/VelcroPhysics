@@ -128,11 +128,11 @@ namespace FarseerPhysics.SamplesFramework
                 float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
                 if (isSelected)
                 {
-                    _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
+                    _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1f);
                 }
                 else
                 {
-                    _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
+                    _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
                 }
                 _scale = 0.7f + 0.1f * _selectionFade;
             }
@@ -141,7 +141,7 @@ namespace FarseerPhysics.SamplesFramework
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public void Draw(bool isSelected, GameTime gameTime)
+        public void Draw(bool isSelected)
         {
             SpriteFont _font = _menu.ScreenManager.Fonts.MenuSpriteFont;
             SpriteBatch _batch = _menu.ScreenManager.SpriteBatch;

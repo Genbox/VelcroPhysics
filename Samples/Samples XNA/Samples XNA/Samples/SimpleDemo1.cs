@@ -60,7 +60,7 @@ namespace FarseerPhysics.SamplesFramework
         }
 
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             Vector2 force = 100f * input.GamePadState.ThumbSticks.Right;
             float torque = 100f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
@@ -102,7 +102,7 @@ namespace FarseerPhysics.SamplesFramework
             _rectangle.ApplyForce(force);
             _rectangle.ApplyTorque(torque);
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }

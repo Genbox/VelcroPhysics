@@ -55,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
             _content.Unload();
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.KeyboardState.GetPressedKeys().Length > 0 ||
                 input.GamePadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||

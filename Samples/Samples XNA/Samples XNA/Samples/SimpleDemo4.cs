@@ -67,7 +67,7 @@ namespace FarseerPhysics.SamplesFramework
             _pyramid = new Pyramid(World, new Vector2(0f, -15f), PyramidBaseBodyCount, 1f);
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             Vector2 force = 1000f * input.GamePadState.ThumbSticks.Right;
             float torque = 400f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
@@ -109,7 +109,7 @@ namespace FarseerPhysics.SamplesFramework
             _agent.Body.ApplyForce(force);
             _agent.Body.ApplyTorque(torque);
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }

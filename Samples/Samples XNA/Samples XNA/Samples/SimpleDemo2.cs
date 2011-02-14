@@ -73,7 +73,7 @@ namespace FarseerPhysics.SamplesFramework
             _rectangles.BodyType = BodyType.Dynamic;
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             Vector2 force = 200f * input.GamePadState.ThumbSticks.Right;
             float torque = 200f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
@@ -115,7 +115,7 @@ namespace FarseerPhysics.SamplesFramework
             _rectangles.ApplyForce(force);
             _rectangles.ApplyTorque(torque);
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }
