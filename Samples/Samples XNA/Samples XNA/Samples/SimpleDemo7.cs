@@ -71,7 +71,7 @@ namespace FarseerPhysics.SamplesFramework
             _obstacles[3].Position = new Vector2(7f, 5f);
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             Vector2 force = 1000f * input.GamePadState.ThumbSticks.Right;
             float torque = 400f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
@@ -113,7 +113,7 @@ namespace FarseerPhysics.SamplesFramework
             _ragdoll.Body.ApplyForce(force);
             _ragdoll.Body.ApplyTorque(torque);
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }

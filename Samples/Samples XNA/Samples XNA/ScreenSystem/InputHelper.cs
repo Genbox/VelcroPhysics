@@ -277,6 +277,15 @@ namespace FarseerPhysics.SamplesFramework
                    IsNewMouseButtonPress(MouseButtons.LeftButton);
         }
 
+        public bool IsMenuPressed()
+        {
+            return CurrentKeyboardState.IsKeyDown(Keys.Space) ||
+                   CurrentKeyboardState.IsKeyDown(Keys.Enter) ||
+                   CurrentGamePadState.IsButtonDown(Buttons.A) ||
+                   CurrentGamePadState.IsButtonDown(Buttons.Start) ||
+                   CurrentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
         /// <summary>
         ///   Checks for a "menu cancel" input action.
         /// </summary>

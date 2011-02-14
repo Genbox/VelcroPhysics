@@ -98,7 +98,7 @@ namespace FarseerPhysics.SamplesFramework
             }
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsNewMouseButtonPress(MouseButtons.RightButton) ||
                 input.IsNewButtonPress(Buttons.B))
@@ -120,7 +120,7 @@ namespace FarseerPhysics.SamplesFramework
                                 }, ref aabb);
             }
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }

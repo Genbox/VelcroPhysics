@@ -9,6 +9,7 @@ namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
     {
         public Texture2D texture { get; private set; }
         public Color color { get; private set; }
+        public Vector2 origin { get; private set; }
         public Body body;
 
         public DrawableObject()

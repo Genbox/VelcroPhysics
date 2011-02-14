@@ -52,7 +52,7 @@ namespace FarseerPhysics.SamplesFramework
             _walker = new TheoJansenWalker(World, new Vector2(0, 0));
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsNewButtonPress(Buttons.B) ||
                 input.IsNewMouseButtonPress(MouseButtons.RightButton) ||
@@ -61,7 +61,7 @@ namespace FarseerPhysics.SamplesFramework
                 _walker.Reverse();
             }
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
     }
 }

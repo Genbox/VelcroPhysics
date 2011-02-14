@@ -58,7 +58,7 @@ namespace FarseerPhysics.SamplesFramework
         /// <summary>
         /// Responds to user input, accepting or cancelling the message box.
         /// </summary>
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsMenuSelect() || input.IsMenuCancel() ||
                 input.IsNewMouseButtonPress(MouseButtons.LeftButton))

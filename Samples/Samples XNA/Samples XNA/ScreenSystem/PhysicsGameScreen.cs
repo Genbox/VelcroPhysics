@@ -57,7 +57,7 @@ namespace FarseerPhysics.SamplesFramework
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
-        public override void HandleInput(InputHelper input)
+        public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             // Control debug view
             if (input.IsNewButtonPress(Buttons.Start))
@@ -141,7 +141,7 @@ namespace FarseerPhysics.SamplesFramework
                 ExitScreen();
             }
 
-            base.HandleInput(input);
+            base.HandleInput(input, gameTime);
         }
 
         private void EnableOrDisableFlag(DebugViewFlags flag)

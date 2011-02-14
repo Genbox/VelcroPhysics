@@ -148,7 +148,7 @@ namespace FarseerPhysics.SamplesFramework
                     if (!otherScreenHasFocus)
                     {
                         _input.ShowCursor = screen.HasCursor;
-                        screen.HandleInput(_input);
+                        screen.HandleInput(_input, gameTime);
                         otherScreenHasFocus = true;
                     }
 
