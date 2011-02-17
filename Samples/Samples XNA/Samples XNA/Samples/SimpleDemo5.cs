@@ -59,7 +59,7 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = Vector2.Zero;
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
-            
+
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, Vector2.Zero);
 
@@ -67,82 +67,39 @@ namespace FarseerPhysics.SamplesFramework
             _agent.CollisionCategories = Category.All & ~Category.Cat4;
             _agent.CollidesWith = Category.All & ~Category.Cat4;
 
-            Vector2 startPosition = new Vector2(-20f, 11f);
-            Vector2 endPosition = new Vector2(20, 11f);
+            Vector2 startPosition = new Vector2(-20f, -11f);
+            Vector2 endPosition = new Vector2(20, -11f);
             _circles = new Objects(World, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
 
             //Collide with itself only
             _circles.CollisionCategories = Category.Cat1;
             _circles.CollidesWith = Category.Cat1;
 
-            startPosition = new Vector2(-20, -11f);
-            endPosition = new Vector2(20, -11f);
+            startPosition = new Vector2(-20, 11f);
+            endPosition = new Vector2(20, 11f);
             _rectangles = new Objects(World, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
 
             //Collides with itself only
             _rectangles.CollisionCategories = Category.Cat2;
             _rectangles.CollidesWith = Category.Cat2;
 
-            startPosition = new Vector2(-20, -7);
-            endPosition = new Vector2(-20, 7);
+            startPosition = new Vector2(-20, 7);
+            endPosition = new Vector2(-20, -7);
             _gears = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
 
             //Collides with stars
             _gears.CollisionCategories = Category.Cat3;
             _gears.CollidesWith = Category.Cat3 | Category.Cat4;
 
-            startPosition = new Vector2(20, -7);
-            endPosition = new Vector2(20, 7);
+            startPosition = new Vector2(20, 7);
+            endPosition = new Vector2(20, -7);
             _stars = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
 
             //Collides with gears
             _stars.CollisionCategories = Category.Cat4;
             _stars.CollidesWith = Category.Cat3 | Category.Cat4;
-        }
 
-        public override void HandleInput(InputHelper input, GameTime gameTime)
-        {
-            Vector2 force = 1000f * input.GamePadState.ThumbSticks.Right;
-            float torque = 400f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
-
-            _agent.Body.ApplyForce(force);
-            _agent.Body.ApplyTorque(torque);
-
-            const float forceAmount = 600f;
-            const float torqueAmount = 400f;
-
-            force = Vector2.Zero;
-            torque = 0;
-
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Q))
-            {
-                torque += torqueAmount;
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.E))
-            {
-                torque -= torqueAmount;
-            }
-
-            _agent.Body.ApplyForce(force);
-            _agent.Body.ApplyTorque(torque);
-
-            base.HandleInput(input, gameTime);
+            SetUserAgent(_agent.Body, 1000f, 400f);
         }
     }
 }

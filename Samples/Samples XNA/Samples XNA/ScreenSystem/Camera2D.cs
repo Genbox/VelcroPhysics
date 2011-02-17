@@ -10,10 +10,12 @@ namespace FarseerPhysics.SamplesFramework
         private static GraphicsDevice _graphics;
 
         private Matrix _view;
+        private Matrix _batchView;
         private Matrix _projection;
 
         private Vector2 _currentPosition;
         private Vector2 _targetPosition;
+        private Vector2 _translateCenter;
 
         private float _currentRotation;
         private float _targetRotation;
@@ -27,19 +29,28 @@ namespace FarseerPhysics.SamplesFramework
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _projection = Matrix.CreateOrthographic(ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                    ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 1f);
+            _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
+                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f, 1f);
             _view = Matrix.Identity;
+            _batchView = Matrix.Identity;
+
+            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
+                                           ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
         }
 
         public Matrix View
         {
+            get { return _batchView; }
+        }
+
+        public Matrix SimView
+        {
             get { return _view; }
         }
 
-        public Matrix Projection
+        public Matrix SimProjection
         {
             get { return _projection; }
         }
@@ -49,8 +60,8 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         public Vector2 Position
         {
-            get { return _currentPosition; }
-            set { _targetPosition = Vector2.Clamp(value, MinPosition, MaxPosition); }
+            get { return (ConvertUnits.ToDisplayUnits(_currentPosition)); }
+            set { _targetPosition = ConvertUnits.ToSimUnits(Vector2.Clamp(value, MinPosition, MaxPosition)); }
         }
 
         /// <summary>
@@ -114,7 +125,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public void MoveCamera(Vector2 amount)
         {
-            _targetPosition += amount;
+            _targetPosition += ConvertUnits.ToSimUnits(amount);
             _tracking = false;
         }
 
@@ -154,8 +165,11 @@ namespace FarseerPhysics.SamplesFramework
 
         private void SetView()
         {
-            _view = Matrix.CreateRotationZ(_currentRotation) *
-                    Matrix.CreateTranslation(-_currentPosition.X, -_currentPosition.Y, 0f);
+            Matrix rotation = Matrix.CreateRotationZ(_currentRotation);
+            Vector3 translation = new Vector3(_translateCenter - _currentPosition, 0f);
+
+            _view = rotation * Matrix.CreateTranslation(translation);
+            _batchView = rotation * Matrix.CreateTranslation(ConvertUnits.ToDisplayUnits(translation));
         }
 
         /// <summary>

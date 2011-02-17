@@ -46,7 +46,11 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
-        private Vector2 _scale = new Vector2(0.05f, -0.05f);
+#if WINDOWS_PHONE
+        private float _scale = 0.6f;
+#else
+        private float _scale = 1.0f;
+#endif
 
         public override void LoadContent()
         {
@@ -71,7 +75,7 @@ namespace FarseerPhysics.SamplesFramework
 
                 if (i == 14)
                 {
-                    yOffset = -5f;
+                    yOffset = 5f;
                     xOffset = -19.25f;
                 }
 
@@ -82,13 +86,10 @@ namespace FarseerPhysics.SamplesFramework
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
                 List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
 
+                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
                 foreach (Vertices vertices in triangulated)
                 {
-                    vertices.Scale(ref _scale);
-
-                    //When we flip the y-axis, the orientation can change.
-                    //We need to remember that FPE works with CCW polygons only.
-                    vertices.ForceCounterClockWise();
+                    vertices.Scale(ref vertScale);
                 }
 
                 BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);

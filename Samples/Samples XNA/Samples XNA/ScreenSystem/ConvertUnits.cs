@@ -36,6 +36,11 @@ namespace FarseerPhysics.SamplesFramework
             Vector2.Multiply(ref simUnits, _displayUnitsToSimUnitsRatio, out displayUnits);
         }
 
+        public static Vector3 ToDisplayUnits(Vector3 simUnits)
+        {
+            return simUnits * _displayUnitsToSimUnitsRatio;
+        }
+
         public static Vector2 ToDisplayUnits(float x, float y)
         {
             return new Vector2(x, y) * _displayUnitsToSimUnitsRatio;
@@ -64,6 +69,11 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         public static Vector2 ToSimUnits(Vector2 displayUnits)
+        {
+            return displayUnits * _simUnitsToDisplayUnitsRatio;
+        }
+
+        public static Vector3 ToSimUnits(Vector3 displayUnits)
         {
             return displayUnits * _simUnitsToDisplayUnitsRatio;
         }

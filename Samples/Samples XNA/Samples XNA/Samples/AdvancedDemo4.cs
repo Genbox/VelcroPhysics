@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -35,17 +36,28 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
+        private Spiderweb _spiderweb;
+
         public override void LoadContent()
         {
             base.LoadContent();
 
-            World.Gravity = new Vector2(0, -9.82f);
+            World.Gravity = new Vector2(0, 9.82f);
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
-            
+
             DebugView.AppendFlags(DebugViewFlags.Joint);
 
-            new Spiderweb(World, Vector2.Zero, 0.2f, 5, 12);
+            _spiderweb = new Spiderweb(World, Vector2.Zero, 0.2f, 5, 12);
+            _spiderweb.LoadContent(ScreenManager.Content);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            _spiderweb.Draw(ScreenManager.SpriteBatch);
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

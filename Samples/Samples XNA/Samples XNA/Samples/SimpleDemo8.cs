@@ -44,11 +44,11 @@ namespace FarseerPhysics.SamplesFramework
         {
             base.LoadContent();
 
-            World.Gravity = new Vector2(0f, -20f);
+            World.Gravity = new Vector2(0f, 20f);
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            Vector2 _position = new Vector2(-15f, 8f);
+            Vector2 _position = new Vector2(-15f, -8f);
             float _restitution = 0f;
 
             for (int i = 0; i < 6; ++i)

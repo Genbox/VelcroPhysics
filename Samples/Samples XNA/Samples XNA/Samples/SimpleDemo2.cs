@@ -56,7 +56,7 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = Vector2.Zero;
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
-            
+
             Vertices rect1 = PolygonTools.CreateRectangle(2f, 2f);
             Vertices rect2 = PolygonTools.CreateRectangle(2f, 2f);
 
@@ -71,51 +71,8 @@ namespace FarseerPhysics.SamplesFramework
 
             _rectangles = BodyFactory.CreateCompoundPolygon(World, vertices, 1f);
             _rectangles.BodyType = BodyType.Dynamic;
-        }
 
-        public override void HandleInput(InputHelper input, GameTime gameTime)
-        {
-            Vector2 force = 200f * input.GamePadState.ThumbSticks.Right;
-            float torque = 200f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
-
-            _rectangles.ApplyForce(force);
-            _rectangles.ApplyTorque(torque);
-
-            const float forceAmount = 120f;
-            const float torqueAmount = 200f;
-
-            force = Vector2.Zero;
-            torque = 0;
-
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Q))
-            {
-                torque += torqueAmount;
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.E))
-            {
-                torque -= torqueAmount;
-            }
-
-            _rectangles.ApplyForce(force);
-            _rectangles.ApplyTorque(torque);
-
-            base.HandleInput(input, gameTime);
+            SetUserAgent(_rectangles, 200f, 200f);
         }
     }
 }

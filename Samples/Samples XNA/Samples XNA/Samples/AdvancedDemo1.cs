@@ -41,11 +41,10 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
-        private BasicEffect _effect;
-        private Body _compund;
+        private Body _compound;
         private Vector2 _origin;
         private Texture2D _polygonTexture;
-        private Vector2 _scale;
+        private float _scale;
 
         public override void LoadContent()
         {
@@ -54,10 +53,6 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = Vector2.Zero;
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
-
-            _effect = new BasicEffect(ScreenManager.GraphicsDevice);
-            _effect.TextureEnabled = true;
-            _effect.VertexColorEnabled = true;
 
             //load texture that will represent the physics body
             _polygonTexture = ScreenManager.Content.Load<Texture2D>("Samples/object");
@@ -87,31 +82,30 @@ namespace FarseerPhysics.SamplesFramework
             //Since it is a concave polygon, we need to partition it into several smaller convex polygons
             List<Vertices> list = BayazitDecomposer.ConvexPartition(textureVertices);
 
-            //Now we need to scale the vertices (result is in pixels, we use meters)
-            //At the same time we flip the y-axis.
-            _scale = new Vector2(0.05f, -0.05f);
+            //Adjust the scale of the object for WP7's lower resolution
+#if WINDOWS_PHONE
+            _scale = 0.6f;
+#else
+            _scale = 1f;
+#endif
 
+            //scale the vertices from graphics space to sim space
+            Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
             foreach (Vertices vertices in list)
             {
-                vertices.Scale(ref _scale);
-
-                //When we flip the y-axis, the orientation can change.
-                //We need to remember that FPE works with CCW polygons only.
-                vertices.ForceCounterClockWise();
+                vertices.Scale(ref vertScale);
             }
 
             //Create a single body with multiple fixtures
-            _compund = BodyFactory.CreateCompoundPolygon(World, list, 1f, BodyType.Dynamic);
-            _compund.BodyType = BodyType.Dynamic;
+            _compound = BodyFactory.CreateCompoundPolygon(World, list, 1f, BodyType.Dynamic);
+            _compound.BodyType = BodyType.Dynamic;
         }
 
         public override void Draw(GameTime gameTime)
         {
-            _effect.Projection = Camera.Projection;
-            _effect.View = Camera.View;
-            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, _effect);
-            ScreenManager.SpriteBatch.Draw(_polygonTexture, _compund.Position, null, Color.Tomato,
-                                           _compund.Rotation, _origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            ScreenManager.SpriteBatch.Draw(_polygonTexture, ConvertUnits.ToDisplayUnits(_compound.Position),
+                                           null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
 
             base.Draw(gameTime);

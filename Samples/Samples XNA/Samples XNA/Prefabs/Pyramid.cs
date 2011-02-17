@@ -18,9 +18,9 @@ namespace FarseerPhysics.SamplesFramework
             PolygonShape shape = new PolygonShape(box, density);
 
             Vector2 rowStart = position;
-            rowStart.Y += 0.5f + count * 1.1f;
+            rowStart.Y -= 0.5f + count * 1.1f;
 
-            Vector2 deltaRow = new Vector2(-0.625f, -1.1f);
+            Vector2 deltaRow = new Vector2(-0.625f, 1.1f);
             float spacing = 1.25f;
 
             for (int i = 0; i < count; ++i)

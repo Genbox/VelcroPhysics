@@ -52,63 +52,63 @@ namespace FarseerPhysics.SamplesFramework
             _body = BodyFactory.CreateRoundedRectangle(world, 2f, 4f, 0.5f, 0.7f, 2, 10f);
             _body.BodyType = BodyType.Dynamic;
             _body.Mass = 2f;
-            _body.Position = position + new Vector2(0f, -3f);
+            _body.Position = position + new Vector2(0f, 3f);
 
             //Left Arm
             _lowerLeftArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _lowerLeftArm.BodyType = BodyType.Dynamic;
             _lowerLeftArm.AngularDamping = LimbAngularDamping;
             _lowerLeftArm.Mass = 2f;
-            _lowerLeftArm.Rotation = -1.4f;
-            _lowerLeftArm.Position = position + new Vector2(-4f, -2.2f);
+            _lowerLeftArm.Rotation = 1.4f;
+            _lowerLeftArm.Position = position + new Vector2(-4f, 2.2f);
 
             _upperLeftArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _upperLeftArm.BodyType = BodyType.Dynamic;
             _upperLeftArm.AngularDamping = LimbAngularDamping;
             _upperLeftArm.Mass = 2f;
-            _upperLeftArm.Rotation = -1.4f;
-            _upperLeftArm.Position = position + new Vector2(-2f, -1.8f);
+            _upperLeftArm.Rotation = 1.4f;
+            _upperLeftArm.Position = position + new Vector2(-2f, 1.8f);
 
             //Right Arm
             _lowerRightArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _lowerRightArm.BodyType = BodyType.Dynamic;
             _lowerRightArm.AngularDamping = LimbAngularDamping;
             _lowerRightArm.Mass = 2f;
-            _lowerRightArm.Rotation = 1.4f;
-            _lowerRightArm.Position = position + new Vector2(4f, -2.2f);
+            _lowerRightArm.Rotation = -1.4f;
+            _lowerRightArm.Position = position + new Vector2(4f, 2.2f);
 
             _upperRightArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _upperRightArm.BodyType = BodyType.Dynamic;
             _upperRightArm.AngularDamping = LimbAngularDamping;
             _upperRightArm.Mass = 2f;
-            _upperRightArm.Rotation = 1.4f;
-            _upperRightArm.Position = position + new Vector2(2f, -1.8f);
+            _upperRightArm.Rotation = -1.4f;
+            _upperRightArm.Position = position + new Vector2(2f, 1.8f);
 
             //Left Leg
             _lowerLeftLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerLeftLeg.BodyType = BodyType.Dynamic;
             _lowerLeftLeg.AngularDamping = LimbAngularDamping;
             _lowerLeftLeg.Mass = 2f;
-            _lowerLeftLeg.Position = position + new Vector2(-0.6f, -8f);
+            _lowerLeftLeg.Position = position + new Vector2(-0.6f, 8f);
 
             _upperLeftLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _upperLeftLeg.BodyType = BodyType.Dynamic;
             _upperLeftLeg.AngularDamping = LimbAngularDamping;
             _upperLeftLeg.Mass = 2f;
-            _upperLeftLeg.Position = position + new Vector2(-0.6f, -6f);
+            _upperLeftLeg.Position = position + new Vector2(-0.6f, 6f);
 
             //Right Leg
             _lowerRightLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerRightLeg.BodyType = BodyType.Dynamic;
             _lowerRightLeg.AngularDamping = LimbAngularDamping;
             _lowerRightLeg.Mass = 2f;
-            _lowerRightLeg.Position = position + new Vector2(0.6f, -8f);
+            _lowerRightLeg.Position = position + new Vector2(0.6f, 8f);
 
             _upperRightLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _upperRightLeg.BodyType = BodyType.Dynamic;
             _upperRightLeg.AngularDamping = LimbAngularDamping;
             _upperRightLeg.Mass = 2f;
-            _upperRightLeg.Position = position + new Vector2(0.6f, -6f);
+            _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
         }
 
         private void CreateJoints(World world)
@@ -118,8 +118,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //head -> body
             DistanceJoint jHeadBody = new DistanceJoint(_head, _body,
-                                                        new Vector2(0f, -1f),
-                                                        new Vector2(0f, 2f));
+                                                        new Vector2(0f, 1f),
+                                                        new Vector2(0f, -2f));
             jHeadBody.CollideConnected = true;
             jHeadBody.DampingRatio = dampingRatio;
             jHeadBody.Frequency = frequency;
@@ -128,8 +128,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //lowerLeftArm -> upperLeftArm
             DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm,
-                                                       new Vector2(0f, 1f),
-                                                       new Vector2(0f, -1f));
+                                                       new Vector2(0f, -1f),
+                                                       new Vector2(0f, 1f));
             jLeftArm.CollideConnected = true;
             jLeftArm.DampingRatio = dampingRatio;
             jLeftArm.Frequency = frequency;
@@ -138,8 +138,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //upperLeftArm -> body
             DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm, _body,
-                                                           new Vector2(0f, 1f),
-                                                           new Vector2(-1f, 1.5f));
+                                                           new Vector2(0f, -1f),
+                                                           new Vector2(-1f, -1.5f));
             jLeftArmBody.CollideConnected = true;
             jLeftArmBody.DampingRatio = dampingRatio;
             jLeftArmBody.Frequency = frequency;
@@ -148,8 +148,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //lowerRightArm -> upperRightArm
             DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm,
-                                                        new Vector2(0f, 1f),
-                                                        new Vector2(0f, -1f));
+                                                        new Vector2(0f, -1f),
+                                                        new Vector2(0f, 1f));
             jRightArm.CollideConnected = true;
             jRightArm.DampingRatio = dampingRatio;
             jRightArm.Frequency = frequency;
@@ -158,8 +158,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //upperRightArm -> body
             DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm, _body,
-                                                            new Vector2(0f, 1f),
-                                                            new Vector2(1f, 1.5f));
+                                                            new Vector2(0f, -1f),
+                                                            new Vector2(1f, -1.5f));
 
             jRightArmBody.CollideConnected = true;
             jRightArmBody.DampingRatio = dampingRatio;
@@ -169,8 +169,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //lowerLeftLeg -> upperLeftLeg
             DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg,
-                                                       new Vector2(0f, 1.1f),
-                                                       new Vector2(0f, -1f));
+                                                       new Vector2(0f, -1.1f),
+                                                       new Vector2(0f, 1f));
             jLeftLeg.CollideConnected = true;
             jLeftLeg.DampingRatio = dampingRatio;
             jLeftLeg.Frequency = frequency;
@@ -179,8 +179,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //upperLeftLeg -> body
             DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg, _body,
-                                                           new Vector2(0f, 1.1f),
-                                                           new Vector2(-0.8f, -1.9f));
+                                                           new Vector2(0f, -1.1f),
+                                                           new Vector2(-0.8f, 1.9f));
             jLeftLegBody.CollideConnected = true;
             jLeftLegBody.DampingRatio = dampingRatio;
             jLeftLegBody.Frequency = frequency;
@@ -189,8 +189,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //lowerRightleg -> upperRightleg
             DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg,
-                                                        new Vector2(0f, 1.1f),
-                                                        new Vector2(0f, -1f));
+                                                        new Vector2(0f, -1.1f),
+                                                        new Vector2(0f, 1f));
             jRightLeg.CollideConnected = true;
             jRightLeg.DampingRatio = dampingRatio;
             jRightLeg.Frequency = frequency;
@@ -199,8 +199,8 @@ namespace FarseerPhysics.SamplesFramework
 
             //upperRightleg -> body
             DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg, _body,
-                                                            new Vector2(0f, 1.1f),
-                                                            new Vector2(0.8f, -1.9f));
+                                                            new Vector2(0f, -1.1f),
+                                                            new Vector2(0.8f, 1.9f));
             jRightLegBody.CollideConnected = true;
             jRightLegBody.DampingRatio = dampingRatio;
             jRightLegBody.Frequency = frequency;

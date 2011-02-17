@@ -71,7 +71,7 @@ namespace FarseerPhysics.SamplesFramework
                 _scrollBarPos = Math.Min(_scrollBarPos,
                                          (viewport.Width - _menuEntries[i].GetWidth()) / 2f);
             }
-            _scrollBarPos -= texScrollButton.Width + 10f;
+            _scrollBarPos -= texScrollButton.Width + 2f;
 
             titleOrigin = font.MeasureString(_menuTitle) / 2f;
             titlePosition = new Vector2(viewport.Width / 2f, font.MeasureString("M").Y / 2f + 10f);
@@ -84,9 +84,9 @@ namespace FarseerPhysics.SamplesFramework
             _maxOffset = Math.Max(0f, (_menuEntries.Count - NumEntries) * _menuBorderMargin);
 
             _scrollUp = new MenuButton(texScrollButton, false, true,
-                                       new Vector2(_scrollBarPos, _menuBorderTop - _menuBorderMargin), this);
+                                       new Vector2(_scrollBarPos, _menuBorderTop - texScrollButton.Height), this);
             _scrollDown = new MenuButton(texScrollButton, true, true,
-                                         new Vector2(_scrollBarPos, _menuBorderBottom + _menuBorderMargin), this);
+                                         new Vector2(_scrollBarPos, _menuBorderBottom + texScrollButton.Height), this);
             _scrollSlider = new MenuButton(texSlider, false, false, new Vector2(_scrollBarPos, _menuBorderTop), this);
         }
 

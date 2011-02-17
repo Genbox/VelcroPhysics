@@ -5,14 +5,22 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace FarseerPhysics.SamplesFramework
 {
     public class Spiderweb
     {
+        World world;
+        Texture2D link;
+
         public Spiderweb(World world, Vector2 position, float boxSize, int rings, int sides)
         {
             const float breakpoint = 100f;
+
+            this.world = world;
+
             Vertices box = PolygonTools.CreateRectangle(boxSize, boxSize);
 
             List<List<Body>> ringBodys = new List<List<Body>>(rings);
@@ -85,6 +93,29 @@ namespace FarseerPhysics.SamplesFramework
                     DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, currentFixture, Vector2.Zero, Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
+                }
+            }
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            link = content.Load<Texture2D>("Samples/link");
+        }
+
+        public void Draw(SpriteBatch batch)
+        {
+            foreach (Joint j in world.JointList)
+            {
+                if (j.Enabled && !j.IsFixedType())
+                {
+                    Vector2 pos = ConvertUnits.ToDisplayUnits((j.BodyA.Position + j.BodyB.Position) / 2f);
+                    float distance = ConvertUnits.ToDisplayUnits((j.BodyB.Position - j.BodyA.Position).Length());
+                    Vector2 scale = new Vector2(distance / link.Width, 1f);
+                    Vector2 origin = new Vector2(link.Width / 2f, link.Height / 2f);
+                    Vector2 v1 = Vector2.UnitX;
+                    Vector2 v2 = j.BodyB.Position - j.BodyA.Position;
+                    float angle = (float)MathUtils.VectorAngle(ref v1, ref v2);
+                    batch.Draw(link, pos, null, Color.White, angle, origin, scale, SpriteEffects.None, 0f);
                 }
             }
         }
