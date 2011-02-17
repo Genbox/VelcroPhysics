@@ -128,8 +128,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _cursorIsValid = false;
             }
-#endif
-#if WINDOWS_PHONE
+#elif WINDOWS_PHONE
             if (CurrentMouseState.LeftButton == ButtonState.Pressed)
             {
                 _cursorIsValid = true;

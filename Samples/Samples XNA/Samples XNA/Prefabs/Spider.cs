@@ -10,7 +10,7 @@ namespace FarseerPhysics.SamplesFramework
     {
         private const float SpiderBodyRadius = 0.65f;
         private bool _kneeFlexed;
-        private float _kneeTargetAngle = 0.4f;
+        private float _kneeTargetAngle = -0.4f;
         private AngleJoint _leftKneeAngleJoint;
         private AngleJoint _leftShoulderAngleJoint;
         private Vector2 _lowerLegSize = new Vector2(1.8f, 0.3f);
@@ -19,7 +19,7 @@ namespace FarseerPhysics.SamplesFramework
         private AngleJoint _rightShoulderAngleJoint;
         private float _s;
         private bool _shoulderFlexed;
-        private float _shoulderTargetAngle = 0.2f;
+        private float _shoulderTargetAngle = -0.2f;
         private Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
 
         public Spider(World world, Vector2 position)
@@ -85,14 +85,14 @@ namespace FarseerPhysics.SamplesFramework
                 _shoulderFlexed = !_shoulderFlexed;
 
                 if (_kneeFlexed)
-                    _kneeTargetAngle = 1.4f;
+                    _kneeTargetAngle = -1.4f;
                 else
-                    _kneeTargetAngle = 0.4f;
+                    _kneeTargetAngle = -0.4f;
 
                 if (_kneeFlexed)
-                    _shoulderTargetAngle = 1.2f;
+                    _shoulderTargetAngle = -1.2f;
                 else
-                    _shoulderTargetAngle = 0.2f;
+                    _shoulderTargetAngle = -0.2f;
             }
 
             _leftKneeAngleJoint.TargetAngle = _kneeTargetAngle;

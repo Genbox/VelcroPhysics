@@ -28,7 +28,7 @@ namespace FarseerPhysics.SamplesFramework
             _position = position;
             _motorSpeed = 2.0f;
             _motorOn = true;
-            Vector2 pivot = new Vector2(0f, 0.8f);
+            Vector2 pivot = new Vector2(0f, -0.8f);
 
             // Chassis
             {
@@ -63,7 +63,7 @@ namespace FarseerPhysics.SamplesFramework
                 world.AddJoint(_motorJoint);
             }
 
-            Vector2 wheelAnchor = pivot + new Vector2(0f, -0.8f);
+            Vector2 wheelAnchor = pivot + new Vector2(0f, 0.8f);
 
             CreateLeg(world, -1f, wheelAnchor);
             CreateLeg(world, 1f, wheelAnchor);
@@ -79,19 +79,19 @@ namespace FarseerPhysics.SamplesFramework
 
         private void CreateLeg(World world, float s, Vector2 wheelAnchor)
         {
-            Vector2 p1 = new Vector2(5.4f * s, -6.1f);
-            Vector2 p2 = new Vector2(7.2f * s, -1.2f);
-            Vector2 p3 = new Vector2(4.3f * s, -1.9f);
-            Vector2 p4 = new Vector2(3.1f * s, 0.8f);
-            Vector2 p5 = new Vector2(6.0f * s, 1.5f);
-            Vector2 p6 = new Vector2(2.5f * s, 3.7f);
+            Vector2 p1 = new Vector2(5.4f * s, 6.1f);
+            Vector2 p2 = new Vector2(7.2f * s, 1.2f);
+            Vector2 p3 = new Vector2(4.3f * s, 1.9f);
+            Vector2 p4 = new Vector2(3.1f * s, -0.8f);
+            Vector2 p5 = new Vector2(6.0f * s, -1.5f);
+            Vector2 p6 = new Vector2(2.5f * s, -3.7f);
 
             PolygonShape poly1 = new PolygonShape(1f);
             PolygonShape poly2 = new PolygonShape(2f);
 
             Vertices vertices = new Vertices(3);
 
-            if (s > 0f)
+            if (s < 0f)
             {
                 vertices.Add(p1);
                 vertices.Add(p2);
@@ -163,7 +163,7 @@ namespace FarseerPhysics.SamplesFramework
 
             world.AddJoint(djd4);
 
-            Vector2 anchor = p4 - new Vector2(0f, 0.8f);
+            Vector2 anchor = p4 - new Vector2(0f, -0.8f);
             RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)),
                                                   anchor);
             world.AddJoint(rjd);

@@ -16,12 +16,23 @@ namespace FarseerPhysics.SamplesFramework
         protected Camera2D Camera;
 
         private FixedMouseJoint _fixedMouseJoint;
+        private Body _userAgent;
+        private float _agentForce;
+        private float _agentTorque;
 
         protected PhysicsGameScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.75);
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
+            _userAgent = null;
+        }
+
+        protected void SetUserAgent(Body agent, float force, float torque)
+        {
+            _userAgent = agent;
+            _agentForce = force;
+            _agentTorque = torque;
         }
 
         public override void LoadContent()
@@ -141,7 +152,55 @@ namespace FarseerPhysics.SamplesFramework
                 ExitScreen();
             }
 
+            if (_userAgent != null)
+            {
+                HandleUserAgent(input);
+            }
+
             base.HandleInput(input, gameTime);
+        }
+
+        private void HandleUserAgent(InputHelper input)
+        {
+            Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X,
+                                                      -input.GamePadState.ThumbSticks.Right.Y);
+            float torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
+
+            _userAgent.ApplyForce(force);
+            _userAgent.ApplyTorque(torque);
+
+            float forceAmount = _agentForce * 0.6f;
+
+            force = Vector2.Zero;
+            torque = 0;
+
+            if (input.KeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, forceAmount);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Q))
+            {
+                torque -= _agentTorque;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.E))
+            {
+                torque += _agentTorque;
+            }
+
+            _userAgent.ApplyForce(force);
+            _userAgent.ApplyTorque(torque);
         }
 
         private void EnableOrDisableFlag(DebugViewFlags flag)
@@ -158,8 +217,8 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix projection = Camera.Projection;
-            Matrix view = Camera.View;
+            Matrix projection = Camera.SimProjection;
+            Matrix view = Camera.SimView;
 
             DebugView.RenderDebugData(ref projection, ref view);
             base.Draw(gameTime);

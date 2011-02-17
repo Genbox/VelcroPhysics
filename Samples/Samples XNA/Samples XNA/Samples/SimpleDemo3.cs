@@ -51,13 +51,15 @@ namespace FarseerPhysics.SamplesFramework
         {
             base.LoadContent();
 
-            World.Gravity = new Vector2(0f, -20f);
+            World.Gravity = new Vector2(0f, 20f);
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _agent = new Agent(World, new Vector2(-7f, 11f));
+            _agent = new Agent(World, new Vector2(-7f, -11f));
 
             LoadObstacles();
+
+            SetUserAgent(_agent.Body, 1000f, 400f);
         }
 
         private void LoadObstacles()
@@ -70,56 +72,11 @@ namespace FarseerPhysics.SamplesFramework
                 _obstacles[i].Friction = 0.2f;
             }
 
-            _obstacles[0].Position = new Vector2(-5f, -9f);
-            _obstacles[1].Position = new Vector2(15f, -6f);
-            _obstacles[2].Position = new Vector2(10f, 3f);
-            _obstacles[3].Position = new Vector2(-10f, 9f);
+            _obstacles[0].Position = new Vector2(-5f, 9f);
+            _obstacles[1].Position = new Vector2(15f, 6f);
+            _obstacles[2].Position = new Vector2(10f, -3f);
+            _obstacles[3].Position = new Vector2(-10f, -9f);
             _obstacles[4].Position = new Vector2(-17f, 0f);
-        }
-
-        public override void HandleInput(InputHelper input, GameTime gameTime)
-        {
-            Vector2 force = 1000f * input.GamePadState.ThumbSticks.Right;
-            float torque = 400f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
-
-            _agent.Body.ApplyForce(force);
-            _agent.Body.ApplyTorque(torque);
-
-            const float forceAmount = 600f;
-            const float torqueAmount = 400f;
-
-            force = Vector2.Zero;
-            torque = 0;
-
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Q))
-            {
-                torque += torqueAmount;
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.E))
-            {
-                torque -= torqueAmount;
-            }
-
-            _agent.Body.ApplyForce(force);
-            _agent.Body.ApplyTorque(torque);
-
-            base.HandleInput(input, gameTime);
         }
     }
 }

@@ -57,52 +57,8 @@ namespace FarseerPhysics.SamplesFramework
 
             _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
             _rectangle.BodyType = BodyType.Dynamic;
-        }
 
-
-        public override void HandleInput(InputHelper input, GameTime gameTime)
-        {
-            Vector2 force = 100f * input.GamePadState.ThumbSticks.Right;
-            float torque = 100f * (input.GamePadState.Triggers.Left - input.GamePadState.Triggers.Right);
-
-            _rectangle.ApplyForce(force);
-            _rectangle.ApplyTorque(torque);
-
-            const float forceAmount = 60f;
-            const float torqueAmount = 100f;
-
-            force = Vector2.Zero;
-            torque = 0;
-
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                force += new Vector2(-forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
-            {
-                force += new Vector2(0, -forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.D))
-            {
-                force += new Vector2(forceAmount, 0);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
-                force += new Vector2(0, forceAmount);
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.Q))
-            {
-                torque += torqueAmount;
-            }
-            if (input.KeyboardState.IsKeyDown(Keys.E))
-            {
-                torque -= torqueAmount;
-            }
-
-            _rectangle.ApplyForce(force);
-            _rectangle.ApplyTorque(torque);
-
-            base.HandleInput(input, gameTime);
+            SetUserAgent(_rectangle, 100f, 100f);
         }
     }
 }

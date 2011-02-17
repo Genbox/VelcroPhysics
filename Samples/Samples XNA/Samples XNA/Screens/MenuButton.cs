@@ -85,7 +85,7 @@ namespace FarseerPhysics.SamplesFramework
                 {
                     _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
                 }
-                _scale = 0.9f + 0.1f * _selectionFade;
+                _scale = 1f + 0.1f * _selectionFade;
             }
         }
 

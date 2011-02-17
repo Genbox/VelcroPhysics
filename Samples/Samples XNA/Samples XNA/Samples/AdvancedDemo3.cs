@@ -45,11 +45,11 @@ namespace FarseerPhysics.SamplesFramework
         {
             base.LoadContent();
 
-            World.Gravity = new Vector2(0, -9.82f);
+            World.Gravity = new Vector2(0, 9.82f);
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _walker = new TheoJansenWalker(World, new Vector2(0, 0));
+            _walker = new TheoJansenWalker(World, Vector2.Zero);
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)

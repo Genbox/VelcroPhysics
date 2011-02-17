@@ -3,17 +3,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Dynamics;
 
-namespace FarseerPhysics.DemoBaseXNA.DrawingSystem
+namespace FarseerPhysics.SamplesFramework
 {
-    public class DrawableObject
+    public struct DrawableObject
     {
-        public Texture2D texture { get; private set; }
-        public Color color { get; private set; }
-        public Vector2 origin { get; private set; }
-        public Body body;
+        public Texture2D sprite;
+        public Vector2 origin;
+        public Color color;
 
-        public DrawableObject()
+        public DrawableObject(Texture2D sprite, Vector2 origin, Color color)
         {
+            this.sprite = sprite;
+            this.origin = origin;
+            this.color = color;
         }
     }
 }
