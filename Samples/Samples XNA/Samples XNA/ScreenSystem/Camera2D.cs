@@ -20,7 +20,9 @@ namespace FarseerPhysics.SamplesFramework
         private float _currentRotation;
         private float _targetRotation;
 
-        private bool _tracking;
+        private Body _trackingBody;
+        private bool _positionTracking;
+        private bool _rotationTracking;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -106,33 +108,71 @@ namespace FarseerPhysics.SamplesFramework
         /// the body that this camera is currently tracking. 
         /// Null if not tracking any.
         /// </summary>
-        public Body TrackingBody { get; set; }
-        public bool EnableTargetTracking
+        public Body TrackingBody
         {
-            get { return _tracking; }
+            get { return _trackingBody; }
             set
             {
-                if (value == true && TrackingBody != null)
+                _trackingBody = value;
+                if (_trackingBody != null)
                 {
-                    _tracking = true;
+                    _positionTracking = true;
+                }
+            }
+        }
+        public bool EnablePositionTracking
+        {
+            get { return _positionTracking; }
+            set
+            {
+                if (value == true && _trackingBody != null)
+                {
+                    _positionTracking = true;
                 }
                 else
                 {
-                    _tracking = false;
+                    _positionTracking = false;
                 }
+            }
+        }
+
+        public bool EnableRotationTracking
+        {
+            get { return _rotationTracking; }
+            set
+            {
+                if (value == true && _trackingBody != null)
+                {
+                    _rotationTracking = true;
+                }
+                else
+                {
+                    _rotationTracking = false;
+                }
+            }
+        }
+
+        public bool EnableTracking
+        {
+            set
+            {
+                EnablePositionTracking = value;
+                EnableRotationTracking = value;
             }
         }
 
         public void MoveCamera(Vector2 amount)
         {
             _targetPosition += ConvertUnits.ToSimUnits(amount);
-            _tracking = false;
+            _positionTracking = false;
+            _rotationTracking = false;
         }
 
         public void RotateCamera(float amount)
         {
             _targetRotation += amount;
-            _tracking = false;
+            _positionTracking = false;
+            _rotationTracking = false;
         }
 
         /// <summary>
@@ -150,7 +190,8 @@ namespace FarseerPhysics.SamplesFramework
             MinRotation = -MathHelper.Pi;
             MaxRotation = MathHelper.Pi;
 
-            _tracking = false;
+            _positionTracking = false;
+            _rotationTracking = false;
 
             SetView();
         }
@@ -165,11 +206,20 @@ namespace FarseerPhysics.SamplesFramework
 
         private void SetView()
         {
-            Matrix rotation = Matrix.CreateRotationZ(_currentRotation);
-            Vector3 translation = new Vector3(_translateCenter - _currentPosition, 0f);
+            Matrix matRotation = Matrix.CreateRotationZ(_currentRotation);
+            Vector3 translateCenter = new Vector3(_translateCenter, 0f);
+            Vector3 translateBody = new Vector3(-_currentPosition, 0f);
 
-            _view = rotation * Matrix.CreateTranslation(translation);
-            _batchView = rotation * Matrix.CreateTranslation(ConvertUnits.ToDisplayUnits(translation));
+            _view = Matrix.CreateTranslation(translateBody) *
+                    matRotation *
+                    Matrix.CreateTranslation(translateCenter);
+
+            translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
+            translateBody = ConvertUnits.ToDisplayUnits(translateBody);
+
+            _batchView = Matrix.CreateTranslation(translateBody) *
+                         matRotation *
+                         Matrix.CreateTranslation(translateCenter);
         }
 
         /// <summary>
@@ -177,12 +227,17 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            if (_tracking && TrackingBody != null)
+            if (_trackingBody != null)
             {
-                _targetPosition = TrackingBody.Position;
-                _targetRotation = TrackingBody.Rotation;
+                if (_positionTracking)
+                {
+                    _targetPosition = _trackingBody.Position;
+                }
+                if (_rotationTracking)
+                {
+                    _targetRotation = _trackingBody.Rotation;
+                }
             }
-
             Vector2 _delta = _targetPosition - _currentPosition;
             float _distance = _delta.Length();
             if (_distance > 0f)
@@ -190,9 +245,9 @@ namespace FarseerPhysics.SamplesFramework
                 _delta /= _distance;
             }
             float _inertia;
-            if (_distance < 1.5f)
+            if (_distance < 10f)
             {
-                _inertia = (float)Math.Pow(_distance / 1.5, 2.0);
+                _inertia = (float)Math.Pow(_distance / 10, 2.0);
             }
             else
             {
@@ -202,17 +257,17 @@ namespace FarseerPhysics.SamplesFramework
             float _rotDelta = _targetRotation - _currentRotation;
 
             float _rotInertia;
-            if (_rotDelta < 10f)
+            if (_rotDelta < 5f)
             {
-                _rotInertia = (float)Math.Pow(_rotDelta / 10.0, 2.0);
+                _rotInertia = (float)Math.Pow(_rotDelta / 5.0, 2.0);
             }
             else
             {
                 _rotInertia = 1f;
             }
 
-            _currentPosition += _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _currentRotation += 10f * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentPosition += 100f * _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentRotation += 100f * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }
