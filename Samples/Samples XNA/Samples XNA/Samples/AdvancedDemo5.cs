@@ -46,12 +46,6 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
-#if WINDOWS_PHONE
-        private float _scale = 0.6f;
-#else
-        private float _scale = 1.0f;
-#endif
-
         public override void LoadContent()
         {
             base.LoadContent();
