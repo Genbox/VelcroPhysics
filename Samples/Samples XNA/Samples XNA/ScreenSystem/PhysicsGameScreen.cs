@@ -26,6 +26,9 @@ namespace FarseerPhysics.SamplesFramework
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
             _userAgent = null;
+            World = null;
+            Camera = null;
+            DebugView = null;
         }
 
         protected void SetUserAgent(Body agent, float force, float torque)
@@ -42,16 +45,33 @@ namespace FarseerPhysics.SamplesFramework
             //We enable diagnostics to show get values for our performance counters.
             Settings.EnableDiagnostics = true;
 
-            World = new World();
+            if (World == null)
+            {
+                World = new World();
+            }
+            else
+            {
+                World.Clear();
+            }
 
-            DebugView = new DebugViewXNA(World);
-            //DebugView.RemoveFlags(DebugViewFlags.Shape);  removed for debugging purposes
-            //DebugView.RemoveFlags(DebugViewFlags.Joint);  removed for debugging purposes
-            DebugView.DefaultShapeColor = Color.White;
-            DebugView.SleepingShapeColor = Color.LightGray;
-            DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
+            if (DebugView == null)
+            {
+                DebugView = new DebugViewXNA(World);
+                //DebugView.RemoveFlags(DebugViewFlags.Shape);  removed for debugging purposes
+                //DebugView.RemoveFlags(DebugViewFlags.Joint);  removed for debugging purposes
+                DebugView.DefaultShapeColor = Color.White;
+                DebugView.SleepingShapeColor = Color.LightGray;
+                DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
+            }
 
-            Camera = new Camera2D(ScreenManager.GraphicsDevice);
+            if (Camera == null)
+            {
+                Camera = new Camera2D(ScreenManager.GraphicsDevice);
+            }
+            else
+            {
+                Camera.ResetCamera();
+            }
 
             // Loading may take a while... so prevent the game from "catching up" once we finished loading
             ScreenManager.Game.ResetElapsedTime();
