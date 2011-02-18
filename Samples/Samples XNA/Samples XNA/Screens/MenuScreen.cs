@@ -137,7 +137,18 @@ namespace FarseerPhysics.SamplesFramework
             // Accept or cancel the menu? 
             if (input.IsMenuSelect() && _selectedEntry != -1)
             {
-                OnSelectEntry(_selectedEntry);
+                if (_menuEntries[_selectedEntry].IsExitItem())
+                {
+                    ScreenManager.Game.Exit();
+                }
+                else if (_menuEntries[_selectedEntry].Screen != null)
+                {
+                    ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
+                    if (_menuEntries[_selectedEntry].Screen is IDemoScreen)
+                    {
+                        ScreenManager.AddScreen(new MessageBoxScreen((_menuEntries[_selectedEntry].Screen as IDemoScreen).GetDetails()));
+                    }
+                }
             }
             else if (input.IsMenuCancel())
             {
@@ -153,25 +164,6 @@ namespace FarseerPhysics.SamplesFramework
                 if (_scrollDown.Hover)
                 {
                     _menuOffset = Math.Min(_menuOffset + 120f * (float)gameTime.ElapsedGameTime.TotalSeconds, _maxOffset);
-                }
-            }
-        }
-
-        /// <summary>
-        ///   Responds to user menu selections.
-        /// </summary>
-        protected virtual void OnSelectEntry(int entryIndex)
-        {
-            if (_menuEntries[entryIndex].IsExitItem())
-            {
-                ScreenManager.Game.Exit();
-            }
-            else if (_menuEntries[entryIndex].Screen != null)
-            {
-                ScreenManager.AddScreen(_menuEntries[entryIndex].Screen);
-                if (_menuEntries[entryIndex].Screen is IDemoScreen)
-                {
-                    ScreenManager.AddScreen(new MessageBoxScreen((_menuEntries[entryIndex].Screen as IDemoScreen).GetDetails()));
                 }
             }
         }
