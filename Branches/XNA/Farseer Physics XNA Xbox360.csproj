@@ -145,6 +145,9 @@
     <Compile Include="..\..\sourcefiles\collision\TimeOfImpact.cs">
       <Link>Collision\TimeOfImpact.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Common\ConvexHull\ChainHull.cs">
+      <Link>Common\ConvexHull\ChainHull.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\common\convexhull\GiftWrap.cs">
       <Link>Common\ConvexHull\GiftWrap.cs</Link>
     </Compile>
@@ -291,6 +294,9 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Controllers\AbstractForceController.cs">
       <Link>Controllers\AbstractForceController.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Controllers\BuoyancyController.cs">
+      <Link>Controllers\BuoyancyController.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
