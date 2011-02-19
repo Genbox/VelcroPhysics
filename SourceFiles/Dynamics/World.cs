@@ -272,15 +272,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the number of contacts (each may have 0 or more contact points).
-        /// </summary>
-        /// <value>The contact count.</value>
-        public int ContactCount
-        {
-            get { return ContactManager.ContactCount; }
-        }
-
-        /// <summary>
         /// Change the global gravity vector.
         /// </summary>
         /// <value>The gravity.</value>
@@ -329,7 +320,7 @@ namespace FarseerPhysics.Dynamics
         /// the next contact in the world list. A null contact indicates the end of the list.
         /// </summary>
         /// <value>The head of the world contact list.</value>
-        public Contact ContactList
+        public List<Contact> ContactList
         {
             get { return ContactManager.ContactList; }
         }
@@ -836,7 +827,7 @@ namespace FarseerPhysics.Dynamics
         {
             // Size the island for the worst case.
             Island.Reset(BodyList.Count,
-                         ContactManager.ContactCount,
+                         ContactManager.ContactList.Count,
                          JointList.Count,
                          ContactManager);
 
@@ -845,8 +836,10 @@ namespace FarseerPhysics.Dynamics
             {
                 b.Flags &= ~BodyFlags.Island;
             }
-            for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
+
+            for (int i = 0; i < ContactManager.ContactList.Count; i++)
             {
+                Contact c = ContactManager.ContactList[i];
                 c.Flags &= ~ContactFlags.Island;
             }
             foreach (Joint j in JointList)
@@ -1035,8 +1028,10 @@ namespace FarseerPhysics.Dynamics
                     BodyList[i].Sweep.Alpha0 = 0.0f;
                 }
 
-                for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
+                for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
+                    Contact c = ContactManager.ContactList[i];
+
                     // Invalidate TOI
                     c.Flags &= ~(ContactFlags.TOI | ContactFlags.Island);
                     c.TOICount = 0;
@@ -1051,8 +1046,10 @@ namespace FarseerPhysics.Dynamics
                 Contact minContact = null;
                 float minAlpha = 1.0f;
 
-                for (Contact c = ContactManager.ContactList; c != null; c = c.Next)
+                for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
+                    Contact c = ContactManager.ContactList[i];
+
                     // Is this contact disabled?
                     if (c.Enabled == false)
                     {

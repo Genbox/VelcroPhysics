@@ -291,8 +291,9 @@ namespace FarseerPhysics.DebugViews
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (Contact c = World.ContactManager.ContactList; c != null; c = c.Next)
+                for (int i = 0; i < World.ContactManager.ContactList.Count; i++)
                 {
+                    Contact c = World.ContactManager.ContactList[i];
                     Fixture fixtureA = c.FixtureA;
                     Fixture fixtureB = c.FixtureB;
 
@@ -432,7 +433,7 @@ namespace FarseerPhysics.DebugViews
             DrawString(x, y, "Objects: ");
             DrawString(x, y += ySize, "- Bodies: " + World.BodyList.Count);
             DrawString(x, y += ySize, "- Fixtures: " + fixtures);
-            DrawString(x, y += ySize, "- Contacts: " + World.ContactCount);
+            DrawString(x, y += ySize, "- Contacts: " + World.ContactList.Count);
             DrawString(x, y += ySize, "- Joints: " + World.JointList.Count);
             DrawString(x, y += ySize, "- Controllers: " + World.ControllerList.Count);
             DrawString(x, y + ySize, "- Proxies: " + World.ProxyCount);
