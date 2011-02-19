@@ -84,7 +84,7 @@ namespace FarseerPhysics.DebugViews
         public Rectangle PerformancePanelBounds = new Rectangle(250, 100, 200, 100);
 #endif
         private Vector2[] _background = new Vector2[4];
-        private bool Enabled;
+        private bool Enabled = true;
 
 #if XBOX || WINDOWS_PHONE
         public const int CircleSegments = 16;
