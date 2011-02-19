@@ -191,18 +191,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         public int ChildIndexB { get; internal set; }
 
         /// <summary>
-        /// Get the next contact in the world's contact list.
-        /// </summary>
-        /// <value>The next.</value>
-        public Contact Next { get; internal set; }
-
-        /// <summary>
-        /// Get the previous contact in the world's contact list.
-        /// </summary>
-        /// <value>The prev.</value>
-        public Contact Prev { get; internal set; }
-
-        /// <summary>
         /// Get the contact manifold. Do not modify the manifold unless you understand the
         /// internals of Box2D.
         /// </summary>
@@ -256,9 +244,6 @@ namespace FarseerPhysics.Dynamics.Contacts
             ChildIndexB = indexB;
 
             Manifold.PointCount = 0;
-
-            Prev = null;
-            Next = null;
 
             NodeA.Contact = null;
             NodeA.Prev = null;

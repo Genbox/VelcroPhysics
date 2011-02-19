@@ -203,8 +203,10 @@ namespace FarseerPhysics.DebugViewSilverlight
             if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
             {
                 Color color = Color.FromArgb(255, 77, 230, 230);
-                for (Contact c = World.ContactManager.ContactList; c != null; c = c.Next)
+                for (int i = 0; i < World.ContactManager.ContactList.Count; i++)
                 {
+                    Contact c = World.ContactManager.ContactList[i];
+
                     Fixture fixtureA = c.FixtureA;
                     Fixture fixtureB = c.FixtureB;
 
@@ -276,7 +278,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                 StringBuilder output = new StringBuilder();
                 output.AppendLine("Bodies: " + World.BodyList.Count);
                 output.AppendLine("Fixtures: " + fixtures);
-                output.AppendLine("Contacts: " + World.ContactCount);
+                output.AppendLine("Contacts: " + World.ContactList.Count);
                 output.AppendLine("Joints: " + World.JointList.Count);
                 output.AppendLine("Proxies: " + World.ProxyCount);
                 output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
