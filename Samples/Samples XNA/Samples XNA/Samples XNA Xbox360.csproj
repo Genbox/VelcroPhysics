@@ -62,6 +62,14 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Branches\XNA\Farseer Physics XNA Xbox360.csproj">
+      <Project>{68C00837-1D4D-4335-9AD3-26D7E17E233B}</Project>
+      <Name>Farseer Physics XNA Xbox360</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugView XNA Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView XNA Xbox360</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Samples XNAContent\Samples XNA Content.contentproj">
       <Name>Samples XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>

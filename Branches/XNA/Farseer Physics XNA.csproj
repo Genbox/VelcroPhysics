@@ -323,6 +323,9 @@
     <Compile Include="..\..\SourceFiles\Controllers\AbstractForceController.cs">
       <Link>Controllers\AbstractForceController.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Controllers\BuoyancyController.cs">
+      <Link>Controllers\BuoyancyController.cs</Link>
+    </Compile>
     <Compile Include="..\..\sourcefiles\controllers\Controller.cs">
       <Link>Controllers\Controller.cs</Link>
     </Compile>
@@ -440,7 +443,6 @@
     <Compile Include="..\..\SourceFiles\Settings.cs">
       <Link>Settings.cs</Link>
     </Compile>
-    <Compile Include="Controllers\BuoyancyController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
