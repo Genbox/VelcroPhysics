@@ -84,6 +84,7 @@ namespace FarseerPhysics.DebugViews
         public Rectangle PerformancePanelBounds = new Rectangle(250, 100, 200, 100);
 #endif
         private Vector2[] _background = new Vector2[4];
+        private bool Enabled;
 
 #if XBOX || WINDOWS_PHONE
         public const int CircleSegments = 16;
@@ -1157,6 +1158,9 @@ namespace FarseerPhysics.DebugViews
 
         public void RenderDebugData(ref Matrix projection)
         {
+            if (!Enabled)
+                return;
+
             //Nothing is enabled - don't draw the debug view.
             if (Flags == 0)
                 return;
@@ -1213,6 +1217,9 @@ namespace FarseerPhysics.DebugViews
 
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
+            if (!Enabled)
+                return;
+
             _effect.View = view;
             _texturedEffect.View = view;
             RenderDebugData(ref projection);
