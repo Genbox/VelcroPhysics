@@ -1095,8 +1095,8 @@ namespace FarseerPhysics.Dynamics
                             continue;
                         }
 
-                        bool collideA = bA.IsBullet || typeA != BodyType.Dynamic;
-                        bool collideB = bB.IsBullet || typeB != BodyType.Dynamic;
+                        bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && !bA.IgnoreCCD;
+                        bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && !bB.IgnoreCCD;
 
                         // Are these two non-bullet dynamic bodies?
                         if (collideA == false && collideB == false)
