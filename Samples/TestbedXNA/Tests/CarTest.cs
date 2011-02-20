@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
                 box.SetAsBox(10.0f, 0.25f);
                 body.CreateFixture(box);
 
-                RevoluteJoint jd = JointFactory.CreateRevoluteJoint(ground, body, body.Position);
+                RevoluteJoint jd = JointFactory.CreateRevoluteJoint(ground, body, Vector2.Zero);
                 jd.LowerLimit = -8.0f * Settings.Pi / 180.0f;
                 jd.UpperLimit = 8.0f * Settings.Pi / 180.0f;
                 jd.LimitEnabled = true;
@@ -130,14 +130,14 @@ namespace FarseerPhysics.TestBed.Tests
                     Fixture fix = body.CreateFixture(shape);
                     fix.Friction = 0.6f;
 
-                    Vector2 anchor = new Vector2(160.0f + 2.0f * i, -0.125f);
+                    Vector2 anchor = new Vector2(-1, 0);
                     JointFactory.CreateRevoluteJoint(World, prevBody, body, anchor);
 
                     prevBody = body;
                 }
 
-                Vector2 anchor2 = new Vector2(160.0f + 2.0f * N, -0.125f);
-                JointFactory.CreateRevoluteJoint(World, prevBody, ground, anchor2);
+                Vector2 anchor2 = new Vector2(1.0f, 0);
+                JointFactory.CreateRevoluteJoint(World, ground, prevBody, anchor2);
             }
 
             // Boxes
