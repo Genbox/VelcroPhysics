@@ -16,11 +16,12 @@ namespace FarseerPhysics.Factories
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
+        /// <param name="localAnchorB">The anchor of bodyB in local coordinates</param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor)
+        public static RevoluteJoint CreateRevoluteJoint(Body bodyA, Body bodyB, Vector2 localAnchorB)
         {
-            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, bodyA.GetLocalPoint(anchor), bodyB.GetLocalPoint(anchor));
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localAnchorB));
+            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, localAnchorB);
             return joint;
         }
 
@@ -30,11 +31,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
+        /// <param name="anchor"></param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
         {
-            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, localanchorB);
+            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, anchor);
             world.AddJoint(joint);
             return joint;
         }
