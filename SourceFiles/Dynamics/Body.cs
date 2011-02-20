@@ -67,6 +67,7 @@ namespace FarseerPhysics.Dynamics
         FixedRotation = (1 << 4),
         Enabled = (1 << 5),
         IgnoreGravity = (1 << 6),
+        IgnoreCCD = (1 << 7),
     }
 
     public class Body : IDisposable
@@ -651,6 +652,17 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public bool IgnoreCCD
+        {
+            get { return (Flags & BodyFlags.IgnoreCCD) == BodyFlags.IgnoreCCD; }
+            set
+            {
+                if (value)
+                    Flags |= BodyFlags.IgnoreCCD;
+                else
+                    Flags &= ~BodyFlags.IgnoreCCD;
+            }
+        }
         #region IDisposable Members
 
         public void Dispose()
