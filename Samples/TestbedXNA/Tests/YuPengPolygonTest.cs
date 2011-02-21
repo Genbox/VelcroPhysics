@@ -106,11 +106,13 @@ namespace FarseerPhysics.TestBed.Tests
                             col = Color.IndianRed;
                         }
                     }
+                    DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                     DebugView.DrawPolygon(array, _polygons[i].Count, col);
                     for (int j = 0; j < _polygons[i].Count; ++j)
                     {
                         DebugView.DrawPoint(_polygons[i][j], .2f, Color.Red);
                     }
+                    DebugView.EndCustomDraw();
                 }
             }
 

@@ -82,7 +82,11 @@ namespace FarseerPhysics.SamplesFramework
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
                 // variable time step but never less then 30 Hz
-                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f)));
+                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
+            }
+            else
+            {
+                World.Step(0f);
             }
             Camera.Update(gameTime);
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -136,7 +140,27 @@ namespace FarseerPhysics.SamplesFramework
             {
                 EnableOrDisableFlag(DebugViewFlags.AABB);
             }
+            
+            if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
+            {
+                ExitScreen();
+            }
 
+            if (HasCursor)
+            {
+                HandleCursor(input);
+            }
+
+            if (_userAgent != null)
+            {
+                HandleUserAgent(input);
+            }
+
+            base.HandleInput(input, gameTime);
+        }
+
+        private void HandleCursor(InputHelper input)
+        {
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);
 
             if ((input.IsNewButtonPress(Buttons.A) ||
@@ -166,18 +190,6 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _fixedMouseJoint.WorldAnchorB = position;
             }
-
-            if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
-            {
-                ExitScreen();
-            }
-
-            if (_userAgent != null)
-            {
-                HandleUserAgent(input);
-            }
-
-            base.HandleInput(input, gameTime);
         }
 
         private void HandleUserAgent(InputHelper input)

@@ -218,6 +218,7 @@ namespace FarseerPhysics.TestBed.Tests
                                   return fraction;
                               }, point1, point2);
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             if (_fixture != null)
             {
                 DebugView.DrawPoint(_point, 0.5f, new Color(0.4f, 0.9f, 0.4f));
@@ -231,6 +232,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
             }
+            DebugView.EndCustomDraw();
 
             if (advanceRay)
             {

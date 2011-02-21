@@ -70,14 +70,14 @@ namespace FarseerPhysics.TestBed
         private Vector2 _lower;
         private GamePadState _oldGamePad;
         private MouseState _oldMouseState;
-        private Matrix _projection;
+        public Matrix Projection;
         private GameSettings _settings = new GameSettings();
         private Test _test;
         private int _testCount;
         private int _testIndex;
         private int _testSelection;
         private Vector2 _upper;
-        private Matrix _view;
+        public Matrix View;
         private Vector2 _viewCenter;
 
         private float _viewZoom;
@@ -152,7 +152,7 @@ namespace FarseerPhysics.TestBed
             _upper = new Vector2(25.0f * GraphicsDevice.Viewport.AspectRatio, 25.0f);
 
             // L/R/B/T
-            _projection = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
+            Projection = Matrix.CreateOrthographicOffCenter(_lower.X, _upper.X, _lower.Y, _upper.Y, -1, 1);
         }
 
         private void StartTest(int index)
@@ -343,7 +343,7 @@ namespace FarseerPhysics.TestBed
                 ResetView();
             }
 
-            _test.DebugView.RenderDebugData(ref _projection, ref _view);
+            _test.DebugView.RenderDebugData(ref Projection, ref View);
 
             base.Draw(gameTime);
         }
@@ -357,12 +357,12 @@ namespace FarseerPhysics.TestBed
 
         private void Resize()
         {
-            _view = Matrix.CreateTranslation(new Vector3(-ViewCenter.X, -ViewCenter.Y, 0)) * Matrix.CreateScale(ViewZoom);
+            View = Matrix.CreateTranslation(new Vector3(-ViewCenter.X, -ViewCenter.Y, 0)) * Matrix.CreateScale(ViewZoom);
         }
 
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), _projection, _view,
+            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), Projection, View,
                                                              Matrix.Identity);
 
             return new Vector2(temp.X, temp.Y);

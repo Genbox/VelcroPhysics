@@ -84,10 +84,9 @@ namespace FarseerPhysics
         PerformanceGraph = (1 << 9),
 
         /// <summary>
-        /// Draws textured shapes.
+        /// Draws controllers.
         /// </summary>
-        TexturedShape = (1 << 10),
-        Controllers = (1 << 11)
+        Controllers = (1 << 10)
     }
 
     /// Implement and register this class with a World to provide debug drawing of physics

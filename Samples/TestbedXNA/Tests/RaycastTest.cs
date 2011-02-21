@@ -198,16 +198,20 @@ namespace FarseerPhysics.TestBed.Tests
 
                     if (hitClosest)
                     {
+                        DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                         DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
 
                         DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
                         Vector2 head = point + 0.5f*normal;
                         DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+                        DebugView.EndCustomDraw();
                     }
                     else
                     {
+                        DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                         DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                        DebugView.EndCustomDraw();
                     }
 
                     break;
@@ -234,16 +238,20 @@ namespace FarseerPhysics.TestBed.Tests
 
                     if (hitAny)
                     {
+                        DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                         DebugView.DrawPoint(point, .5f, new Color(0.4f, 0.9f, 0.4f));
 
                         DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
                         Vector2 head = point + 0.5f*normal;
                         DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
+                        DebugView.EndCustomDraw();
                     }
                     else
                     {
+                        DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                         DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+                        DebugView.EndCustomDraw();
                     }
                     break;
                 case RayCastMode.Multiple:
@@ -267,6 +275,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           return 1.0f;
                                       }, point1, point2);
 
+                    DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                     DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
 
                     for (int i = 0; i < points.Count; i++)
@@ -278,6 +287,7 @@ namespace FarseerPhysics.TestBed.Tests
                         Vector2 head = points[i] + 0.5f*normals[i];
                         DebugView.DrawSegment(points[i], head, new Color(0.9f, 0.9f, 0.4f));
                     }
+                    DebugView.EndCustomDraw();
                     break;
                 default:
                     break;

@@ -220,10 +220,14 @@ namespace FarseerPhysics.SamplesFramework
             float transitionDelta;
 
             if (time == TimeSpan.Zero)
-                transitionDelta = 1;
+            {
+                transitionDelta = 1f;
+            }
             else
+            {
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                           time.TotalMilliseconds);
+                                          time.TotalMilliseconds);
+            }
 
             // Update the transition position.
             TransitionPosition += transitionDelta * direction;

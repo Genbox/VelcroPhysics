@@ -87,9 +87,11 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Wind Strength:" + _simpleWind.Strength.ToString());
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "Variation:" + _simpleWind.Variation.ToString());
+            
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             //DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
-
             DrawPointForce();
+            DebugView.EndCustomDraw();
             base.Update(settings, gameTime);
         }
 
