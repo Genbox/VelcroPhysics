@@ -89,7 +89,9 @@ namespace FarseerPhysics.TestBed.Tests
             //Transform shape to mouseposition and then draw
             Vertices tempshape = new Vertices(_clipCircle);
             tempshape.Translate(ref _mousePos);
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawPolygon(tempshape.ToArray(), _clipCircle.Count, color);
+            DebugView.EndCustomDraw();
         }
 
         private void Explode()
