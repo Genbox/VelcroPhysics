@@ -2,7 +2,6 @@ using System;
 
 namespace FarseerPhysics.SamplesFramework
 {
-#if WINDOWS || XBOX
     static class Program
     {
         /// <summary>
@@ -16,6 +15,5 @@ namespace FarseerPhysics.SamplesFramework
             }
         }
     }
-#endif
 }
 
