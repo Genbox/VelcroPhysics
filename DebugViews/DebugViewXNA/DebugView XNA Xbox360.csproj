@@ -68,7 +68,7 @@
   <ItemGroup />
   <ItemGroup>
     <Compile Include="DebugViewXNA.cs" />
-    <Compile Include="MaterialManager.cs" />
+    <Compile Include="PrimitiveBatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
