@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FarseerPhysics.Common;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -12,16 +13,23 @@ namespace FarseerPhysics.SamplesFramework
 {
     public class Spiderweb
     {
-        World world;
-        Texture2D link;
+        private World world;
+        private Texture2D link;
+        private Texture2D goo;
 
-        public Spiderweb(World world, Vector2 position, float boxSize, int rings, int sides)
+        private Vector2 linkOrigin;
+        private Vector2 gooOrigin;
+        private float spriteScale;
+        private float radius;
+
+
+        public Spiderweb(World world, Vector2 position, float radius, int rings, int sides)
         {
             const float breakpoint = 100f;
 
             this.world = world;
 
-            Vertices box = PolygonTools.CreateRectangle(boxSize, boxSize);
+            this.radius = radius;
 
             List<List<Body>> ringBodys = new List<List<Body>>(rings);
 
@@ -30,18 +38,18 @@ namespace FarseerPhysics.SamplesFramework
                 Vertices vertices = PolygonTools.CreateCircle(i * 2.9f, sides);
                 List<Body> bodies = new List<Body>(sides);
 
-                //Create the first box
-                Body prev = BodyFactory.CreatePolygon(world, box, 1f, vertices[0]);
+                //Create the first goo
+                Body prev = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[0]);
                 prev.FixedRotation = true;
                 prev.Position += position;
                 prev.BodyType = BodyType.Dynamic;
 
                 bodies.Add(prev);
 
-                //Connect the first box to the next
+                //Connect the first goo to the next
                 for (int j = 1; j < vertices.Count; ++j)
                 {
-                    Body bod = BodyFactory.CreatePolygon(world, box, 1f, vertices[j]);
+                    Body bod = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[j]);
                     bod.FixedRotation = true;
                     bod.BodyType = BodyType.Dynamic;
                     bod.Position += position;
@@ -100,22 +108,36 @@ namespace FarseerPhysics.SamplesFramework
         public void LoadContent(ContentManager content)
         {
             link = content.Load<Texture2D>("Samples/link");
+            goo = content.Load<Texture2D>("Samples/goo");
+
+            linkOrigin = new Vector2(link.Width / 2f, link.Height / 2f);
+            gooOrigin = new Vector2(goo.Width / 2f, goo.Height / 2f);
+            spriteScale = 2f * ConvertUnits.ToDisplayUnits(radius) / goo.Width;
         }
 
         public void Draw(SpriteBatch batch)
         {
             foreach (Joint j in world.JointList)
             {
-                if (j.Enabled && !j.IsFixedType())
+                if (j.Enabled && j.JointType != JointType.FixedMouse)
                 {
-                    Vector2 pos = ConvertUnits.ToDisplayUnits((j.BodyA.Position + j.BodyB.Position) / 2f);
-                    float distance = ConvertUnits.ToDisplayUnits((j.BodyB.Position - j.BodyA.Position).Length());
-                    Vector2 scale = new Vector2(distance / link.Width, 1f);
-                    Vector2 origin = new Vector2(link.Width / 2f, link.Height / 2f);
+                    Vector2 pos = ConvertUnits.ToDisplayUnits((j.WorldAnchorA + j.WorldAnchorB) / 2f);
+                    float distance = ConvertUnits.ToDisplayUnits((j.WorldAnchorB - j.WorldAnchorA).Length()) + 8f;
+                    Vector2 scale = new Vector2(distance / link.Width, spriteScale);
+
                     Vector2 v1 = Vector2.UnitX;
-                    Vector2 v2 = j.BodyB.Position - j.BodyA.Position;
+                    Vector2 v2 = j.WorldAnchorB - j.WorldAnchorA;
                     float angle = (float)MathUtils.VectorAngle(ref v1, ref v2);
-                    batch.Draw(link, pos, null, Color.White, angle, origin, scale, SpriteEffects.None, 0f);
+                    batch.Draw(link, pos, null, Color.White, angle, linkOrigin, scale, SpriteEffects.None, 0f);
+                }
+            }
+
+            foreach (Body b in world.BodyList)
+            {
+                if (b.Enabled && b.FixtureList[0].ShapeType == ShapeType.Circle)
+                {
+                    batch.Draw(goo, ConvertUnits.ToDisplayUnits(b.Position), null,
+                               Color.White, 0f, gooOrigin, spriteScale, SpriteEffects.None, 0f);
                 }
             }
         }

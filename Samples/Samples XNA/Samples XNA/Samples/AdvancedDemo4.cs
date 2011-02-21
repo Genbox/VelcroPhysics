@@ -46,9 +46,11 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            DebugView.AppendFlags(DebugViewFlags.Joint);
-
-            _spiderweb = new Spiderweb(World, Vector2.Zero, 0.2f, 5, 12);
+#if WINDOWS || XBOX
+            _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
+#elif WINDOWS_PHONE
+            _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(8), 5, 12);
+#endif
             _spiderweb.LoadContent(ScreenManager.Content);
         }
 
