@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.Common;
+using FarseerPhysics.Collision.Shapes;
 
 namespace FarseerPhysics.SamplesFramework
 {
     public enum MaterialType
     {
-        Blank, Circles, Dots, Face, Squares, Waves, Pavement
+        Blank, Dots, Squares, Waves, Pavement
     }
 
     public class AssetCreator
@@ -28,20 +30,38 @@ namespace FarseerPhysics.SamplesFramework
         public void LoadContent(ContentManager contentManager)
         {
             _materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Materials/blank");
-            _materials[MaterialType.Circles] = contentManager.Load<Texture2D>("Materials/circles");
             _materials[MaterialType.Dots] = contentManager.Load<Texture2D>("Materials/dots");
             _materials[MaterialType.Squares] = contentManager.Load<Texture2D>("Materials/squares");
             _materials[MaterialType.Waves] = contentManager.Load<Texture2D>("Materials/waves");
             _materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
-            _materials[MaterialType.Face] = contentManager.Load<Texture2D>("Materials/face");
         }
 
-        public Texture2D CreateCircleSprite(MaterialType type, Color color, float radius)
+        public Texture2D CreateTextureFromShape(Shape shape, MaterialType type, Color color, float scale)
         {
-            return CreateElipseSprite(type, color, radius, radius);
+            switch (shape.ShapeType)
+            {
+                case ShapeType.Circle:
+                    return CreateCircleSprite((shape as CircleShape).Radius, type, color, scale);
+                case ShapeType.Polygon:
+                    return CreateTextureFromVertices((shape as PolygonShape).Vertices, type, color, scale);
+                default:
+                    throw new NotSupportedException("The specified shape type is not supported.");
+
+            }
         }
 
-        public Texture2D CreateElipseSprite(MaterialType type, Color color, float radiusX, float radiusY)
+        public Texture2D CreateTextureFromVertices(Vertices verts, MaterialType type, Color color, float scale)
+        {
+            //return RenderTexture( // TODO);
+            return null;
+        }
+
+        public Texture2D CreateCircleSprite(float radius, MaterialType type, Color color, float scale)
+        {
+            return CreateElipseSprite(radius, radius, type, color, scale);
+        }
+
+        public Texture2D CreateElipseSprite(float radiusX, float radiusY, MaterialType type, Color color, float scale)
         {
             VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[CircleSegments];
             VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments + 2];
@@ -79,40 +99,48 @@ namespace FarseerPhysics.SamplesFramework
             verticesOutline[2 * CircleSegments + 1].Position = new Vector3(radiusX - 2f, 0f, 0f);
             verticesOutline[2 * CircleSegments + 1].Color = Color.Black;
 
-            return RenderTexture((int)Math.Ceiling(radiusX * 2.0), (int)Math.Ceiling(radiusY * 2.0), type, verticesFill, verticesOutline);
+            return RenderTexture((int)Math.Ceiling(radiusX * 2.0), (int)Math.Ceiling(radiusY * 2.0),
+                                 _materials[type], verticesFill, verticesOutline);
         }
 
-        private Texture2D RenderTexture(int width, int height, MaterialType type,
+        private Texture2D RenderTexture(int width, int height, Texture2D material,
                                         VertexPositionColorTexture[] verticesFill,
                                         VertexPositionColor[] verticesOutline)
         {
-            RenderTarget2D texture = new RenderTarget2D(_device, width, height, false, SurfaceFormat.Color, DepthFormat.Depth24Stencil8, _device.PresentationParameters.MultiSampleCount, RenderTargetUsage.DiscardContents);
+            List<VertexPositionColorTexture[]> fill = new List<VertexPositionColorTexture[]>(1);
+            fill.Add(verticesFill);
+            return RenderTexture(width, height, material, fill, verticesOutline);
+        }
+
+        private Texture2D RenderTexture(int width, int height, Texture2D material,
+                                        List<VertexPositionColorTexture[]> verticesFill,
+                                        VertexPositionColor[] verticesOutline)
+        {
+            PresentationParameters pp = _device.PresentationParameters;
+            RenderTarget2D texture = new RenderTarget2D(_device, width, height, false, pp.BackBufferFormat,
+                                                        DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
-            if (type == MaterialType.Face)
-            {
-                _device.SamplerStates[0] = SamplerState.LinearClamp;
-            }
-            else
-            {
-                _device.SamplerStates[0] = SamplerState.LinearWrap;
-            }
+            _device.SamplerStates[0] = SamplerState.LinearWrap;
+
             _device.SetRenderTarget(texture);
             _device.Clear(Color.Transparent);
             _effect.Projection = Matrix.CreateOrthographic(width, height, 0f, 1f);
             // render shape;
             _effect.TextureEnabled = true;
-            _effect.Texture = _materials[type];
+            _effect.Texture = material;
             _effect.VertexColorEnabled = true;
             _effect.Techniques[0].Passes[0].Apply();
-            _device.DrawUserPrimitives(PrimitiveType.TriangleStrip, verticesFill, 0, verticesFill.Length - 2);
+            for (int i = 0; i < verticesFill.Count; ++i)
+            {
+                _device.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
+            }
             // render outline;
             _effect.TextureEnabled = false;
             _effect.Techniques[0].Passes[0].Apply();
-            _device.DrawUserPrimitives(PrimitiveType.TriangleStrip, verticesOutline, 0, verticesOutline.Length - 2);
+            _device.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
             _device.SetRenderTarget(null);
             return (Texture2D)texture;
         }
-
     }
 }
 /*            
