@@ -87,6 +87,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             Transform transformA;
             sweepA.GetTransform(out transformA, 0.0f);
             for (int i = 0; i < _shapeA.Vertices.Count; ++i)
@@ -117,6 +118,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
+            DebugView.EndCustomDraw();
         }
     }
 }

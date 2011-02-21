@@ -291,7 +291,9 @@ namespace FarseerPhysics.TestBed.Tests
             World.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawCircle(callback.Circle.Position, callback.Circle.Radius, color);
+            DebugView.EndCustomDraw();
 
             DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
             TextLine += 15;

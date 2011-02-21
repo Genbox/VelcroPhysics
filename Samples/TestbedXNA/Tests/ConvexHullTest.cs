@@ -52,6 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "ChainHull: Blue");
             TextLine += 15;
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             for (int i = 0; i < 32; i++)
             {
                 DebugView.DrawPoint(_pointCloud1[i], 0.1f, Color.Yellow);
@@ -62,6 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawPolygon(_melkman.ToArray(), _melkman.Count, Color.Red);
             DebugView.DrawPolygon(_giftWrap.ToArray(), _giftWrap.Count, Color.Green);
             DebugView.DrawPolygon(_chainHull.ToArray(), _chainHull.Count, Color.Blue);
+            DebugView.EndCustomDraw();
 
             base.Update(settings, gameTime);
         }

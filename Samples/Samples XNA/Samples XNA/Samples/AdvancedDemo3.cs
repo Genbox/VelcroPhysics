@@ -21,9 +21,6 @@ namespace FarseerPhysics.SamplesFramework
             sb.AppendLine(string.Empty);
             sb.AppendLine("GamePad:");
             sb.AppendLine("  - Switch walker direction: B button");
-            sb.AppendLine("  - Move cursor: left thumbstick");
-            sb.AppendLine("  - Grab object (beneath cursor): A button");
-            sb.AppendLine("  - Drag grabbed object: left thumbstick");
             sb.AppendLine("  - Exit to menu: Back button");
             sb.AppendLine(string.Empty);
             sb.AppendLine("Keyboard:");
@@ -32,8 +29,6 @@ namespace FarseerPhysics.SamplesFramework
             sb.AppendLine(string.Empty);
             sb.AppendLine("Mouse / Touchscreen");
             sb.AppendLine("  - Switch walker direction: Right click");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.AppendLine("  - Drag grabbed object: move mouse / finger");
             return sb.ToString();
         }
 
@@ -44,6 +39,8 @@ namespace FarseerPhysics.SamplesFramework
         public override void LoadContent()
         {
             base.LoadContent();
+
+            HasCursor = false;
 
             World.Gravity = new Vector2(0, 9.82f);
 

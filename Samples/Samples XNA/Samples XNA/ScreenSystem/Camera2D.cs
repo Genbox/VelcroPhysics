@@ -15,10 +15,14 @@ namespace FarseerPhysics.SamplesFramework
 
         private Vector2 _currentPosition;
         private Vector2 _targetPosition;
+        private Vector2 _minPosition;
+        private Vector2 _maxPosition;
         private Vector2 _translateCenter;
 
         private float _currentRotation;
         private float _targetRotation;
+        private float _minRotation;
+        private float _maxRotation;
 
         private Body _trackingBody;
         private bool _positionTracking;
@@ -62,8 +66,15 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         public Vector2 Position
         {
-            get { return (ConvertUnits.ToDisplayUnits(_currentPosition)); }
-            set { _targetPosition = ConvertUnits.ToSimUnits(Vector2.Clamp(value, MinPosition, MaxPosition)); }
+            get { return ConvertUnits.ToDisplayUnits(_currentPosition); }
+            set
+            {
+                _targetPosition = ConvertUnits.ToSimUnits(value);
+                if (_minPosition != _maxPosition)
+                {
+                    Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out  _targetPosition);
+                }
+            }
         }
 
         /// <summary>
@@ -71,14 +82,22 @@ namespace FarseerPhysics.SamplesFramework
         /// if this value equals maxPosition, then no clamping will be 
         /// applied (unless you override that function).
         /// </summary>
-        public Vector2 MinPosition { get; set; }
+        public Vector2 MinPosition
+        {
+            get { return ConvertUnits.ToDisplayUnits(_minPosition); }
+            set { _minPosition = ConvertUnits.ToSimUnits(value); }
+        }
 
         /// <summary>
         /// the furthest down, and the furthest right the camera will go.
         /// if this value equals minPosition, then no clamping will be 
         /// applied (unless you override that function).
         /// </summary>
-        public Vector2 MaxPosition { get; set; }
+        public Vector2 MaxPosition
+        {
+            get { return ConvertUnits.ToDisplayUnits(_maxPosition); }
+            set { _maxPosition = ConvertUnits.ToSimUnits(value); }
+        }
 
         /// <summary>
         /// The current rotation of the camera in radians.
@@ -88,7 +107,11 @@ namespace FarseerPhysics.SamplesFramework
             get { return _currentRotation; }
             set
             {
-                _targetRotation = MathHelper.Clamp(value, MinRotation, MaxRotation);
+                _targetRotation = value % MathHelper.Pi;
+                if (_minRotation != _maxRotation)
+                {
+                    _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
+                }
             }
         }
 
@@ -96,13 +119,21 @@ namespace FarseerPhysics.SamplesFramework
         /// Gets or sets the minimum rotation in radians.
         /// </summary>
         /// <value>The min rotation.</value>
-        public float MinRotation { get; set; }
+        public float MinRotation
+        {
+            get { return _minRotation; }
+            set { _minRotation = value % MathHelper.Pi; }
+        }
 
         /// <summary>
         /// Gets or sets the maximum rotation in radians.
         /// </summary>
         /// <value>The max rotation.</value>
-        public float MaxRotation { get; set; }
+        public float MaxRotation
+        {
+            get { return _maxRotation; }
+            set { _maxRotation = value % MathHelper.Pi; }
+        }
 
         /// <summary>
         /// the body that this camera is currently tracking. 
@@ -163,14 +194,14 @@ namespace FarseerPhysics.SamplesFramework
 
         public void MoveCamera(Vector2 amount)
         {
-            _targetPosition += ConvertUnits.ToSimUnits(amount);
+            Position += amount;
             _positionTracking = false;
             _rotationTracking = false;
         }
 
         public void RotateCamera(float amount)
         {
-            _targetRotation += amount;
+            Rotation += amount;
             _positionTracking = false;
             _rotationTracking = false;
         }
@@ -182,13 +213,13 @@ namespace FarseerPhysics.SamplesFramework
         {
             _currentPosition = Vector2.Zero;
             _targetPosition = Vector2.Zero;
-            MinPosition = Vector2.Zero;
-            MaxPosition = Vector2.Zero;
+            _minPosition = Vector2.Zero;
+            _maxPosition = Vector2.Zero;
 
             _currentRotation = 0f;
             _targetRotation = 0f;
-            MinRotation = -MathHelper.Pi;
-            MaxRotation = MathHelper.Pi;
+            _minRotation = -MathHelper.Pi;
+            _maxRotation = MathHelper.Pi;
 
             _positionTracking = false;
             _rotationTracking = false;
@@ -232,10 +263,18 @@ namespace FarseerPhysics.SamplesFramework
                 if (_positionTracking)
                 {
                     _targetPosition = _trackingBody.Position;
+                    if (_minPosition != _maxPosition)
+                    {
+                        Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out  _targetPosition);
+                    }
                 }
                 if (_rotationTracking)
                 {
-                    _targetRotation = _trackingBody.Rotation;
+                    _targetRotation = _trackingBody.Rotation % MathHelper.Pi;
+                    if (_minRotation != _maxRotation)
+                    {
+                        _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
+                    }
                 }
             }
             Vector2 _delta = _targetPosition - _currentPosition;

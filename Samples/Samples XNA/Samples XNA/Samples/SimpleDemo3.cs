@@ -55,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _agent = new Agent(World, new Vector2(-7f, -11f));
+            _agent = new Agent(World, new Vector2(-6.9f, -11f));
 
             LoadObstacles();
 
