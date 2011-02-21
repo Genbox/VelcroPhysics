@@ -181,6 +181,9 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // clear graphics here because some tests already draw during update
+            GraphicsDevice.Clear(Color.Black);
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
@@ -332,8 +335,6 @@ namespace FarseerPhysics.TestBed
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-
             _test.DrawTitle(50, 15, _entry.Name);
 
             if (_testSelection != _testIndex)

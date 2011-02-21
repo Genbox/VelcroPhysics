@@ -58,7 +58,9 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Press TAB to change endpoint");
             TextLine += 15;
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawSegment(_start, _end, Color.Red);
+            DebugView.EndCustomDraw();
 
             List<Fixture> fixtures = new List<Fixture>();
             List<Vector2> entryPoints = new List<Vector2>();
@@ -81,6 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(50, TextLine, "Fixtures: " + fixtures.Count);
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             foreach (Vector2 entryPoint in entryPoints)
             {
                 DebugView.DrawPoint(entryPoint, 0.5f, Color.Yellow);
@@ -90,6 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 DebugView.DrawPoint(exitPoint, 0.5f, Color.PowderBlue);
             }
+            DebugView.EndCustomDraw();
 
             base.Update(settings, gameTime);
         }

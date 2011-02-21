@@ -85,7 +85,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
             TextLine += 15;
-
+            
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
                 Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
@@ -101,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
                 DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
             }
-
+            
             Vector2 x1 = output.PointA;
             Vector2 x2 = output.PointB;
 
@@ -110,6 +111,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawPoint(x2, 0.5f, new Color(1.0f, 0.0f, 0.0f));
 
             DebugView.DrawSegment(x1, x2, new Color(1.0f, 1.0f, 0.0f));
+            DebugView.EndCustomDraw();
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)

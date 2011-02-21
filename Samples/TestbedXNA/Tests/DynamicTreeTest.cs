@@ -104,6 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
             Query();
             RayCast();
 
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             for (int i = 0; i < ActorCount; ++i)
             {
                 Actor actor = _actors[i];
@@ -140,10 +141,10 @@ namespace FarseerPhysics.TestBed.Tests
             if (_rayActor != null)
             {
                 Color cr = new Color(0.2f, 0.2f, 0.9f);
-                Vector2 p = _rayCastInput.Point1 + _rayActor.Fraction*(_rayCastInput.Point2 - _rayCastInput.Point1);
+                Vector2 p = _rayCastInput.Point1 + _rayActor.Fraction * (_rayCastInput.Point2 - _rayCastInput.Point1);
                 DebugView.DrawPoint(p, 0.1f, cr);
             }
-
+            DebugView.EndCustomDraw();
             {
                 int height = _tree.ComputeHeight();
                 DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}", height);
@@ -202,11 +203,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             aabb = new AABB();
 
-            Vector2 w = new Vector2(2.0f*_proxyExtent, 2.0f*_proxyExtent);
+            Vector2 w = new Vector2(2.0f * _proxyExtent, 2.0f * _proxyExtent);
             //aabb.LowerBound.x = -_proxyExtent;
             //aabb.LowerBound.y = -_proxyExtent + _worldExtent;
             aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
-            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f*_worldExtent);
+            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, 2.0f * _worldExtent);
             aabb.UpperBound = aabb.LowerBound + w;
         }
 
@@ -220,9 +221,9 @@ namespace FarseerPhysics.TestBed.Tests
             aabb.LowerBound += d;
             aabb.UpperBound += d;
 
-            Vector2 c0 = 0.5f*(aabb.LowerBound + aabb.UpperBound);
+            Vector2 c0 = 0.5f * (aabb.LowerBound + aabb.UpperBound);
             Vector2 min = new Vector2(-_worldExtent, 0.0f);
-            Vector2 max = new Vector2(_worldExtent, 2.0f*_worldExtent);
+            Vector2 max = new Vector2(_worldExtent, 2.0f * _worldExtent);
             Vector2 c = Vector2.Clamp(c0, min, max);
 
             aabb.LowerBound += c - c0;
@@ -233,7 +234,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.Random.Next()%ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.ProxyId == -1)
                 {
@@ -248,7 +249,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.Random.Next()%ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.ProxyId != -1)
                 {
@@ -263,7 +264,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             for (int i = 0; i < ActorCount; ++i)
             {
-                int j = Rand.Random.Next()%ActorCount;
+                int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.ProxyId == -1)
                 {
@@ -280,7 +281,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void Action()
         {
-            int choice = Rand.Random.Next()%20;
+            int choice = Rand.Random.Next() % 20;
 
             switch (choice)
             {
