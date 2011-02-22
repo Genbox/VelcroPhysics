@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -43,6 +44,7 @@ namespace FarseerPhysics.SamplesFramework
         private float _hz;
         private float _zeta;
         private float _maxSpeed;
+        private float _acceleration;
 
         public override void LoadContent()
         {
@@ -113,7 +115,7 @@ namespace FarseerPhysics.SamplesFramework
                 box.SetAsBox(10.0f, 0.25f);
                 board.CreateFixture(box);
 
-                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(ground, board, board.Position);
+                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(ground, board, Vector2.Zero);
                 teeterAxis.LowerLimit = -8.0f * Settings.Pi / 180.0f;
                 teeterAxis.UpperLimit = 8.0f * Settings.Pi / 180.0f;
                 teeterAxis.LimitEnabled = true;
@@ -136,15 +138,11 @@ namespace FarseerPhysics.SamplesFramework
                     body.Position = new Vector2(161f + 2f * i, 0.125f);
                     Fixture fix = body.CreateFixture(shape);
                     fix.Friction = 0.6f;
-
-                    Vector2 anchor = new Vector2(160f + 2f * i, 0.125f);
-                    JointFactory.CreateRevoluteJoint(World, prevBody, body, anchor);
+                    JointFactory.CreateRevoluteJoint(World, prevBody, body, -Vector2.UnitX);
 
                     prevBody = body;
                 }
-
-                Vector2 anchorEnd = new Vector2(160f + 2f * segmentCount, 0.125f);
-                JointFactory.CreateRevoluteJoint(World, prevBody, ground, anchorEnd);
+                JointFactory.CreateRevoluteJoint(World, ground, prevBody, Vector2.UnitX);
             }
 
             // boxes
@@ -170,15 +168,15 @@ namespace FarseerPhysics.SamplesFramework
 
             // car
             {
-                Vertices vertices = new Vertices(8);
+                Vertices vertices = new Vertices(6);
                 vertices.Add(new Vector2(-1.5f, -0.2f));
-                vertices.Add(new Vector2(-1.15f, -0.9f));
-                vertices.Add(new Vector2(0f, -0.9f));
+                vertices.Add(new Vector2(-1f, -0.7f));
+                vertices.Add(new Vector2(0f, -0.8f));
                 vertices.Add(new Vector2(1.5f, 0f));
                 vertices.Add(new Vector2(1.5f, 0.5f));
                 vertices.Add(new Vector2(-1.5f, 0.5f));
-                
-                PolygonShape chassis = new PolygonShape(vertices, 1f);
+
+                PolygonShape chassis = new PolygonShape(vertices, 2f);
 
                 _car = new Body(World);
                 _car.BodyType = BodyType.Dynamic;
@@ -188,13 +186,13 @@ namespace FarseerPhysics.SamplesFramework
                 _wheelBack = new Body(World);
                 _wheelBack.BodyType = BodyType.Dynamic;
                 _wheelBack.Position = new Vector2(-1.0f, -0.35f);
-                Fixture fix = _wheelBack.CreateFixture(new CircleShape(0.4f, 1f));
+                Fixture fix = _wheelBack.CreateFixture(new CircleShape(0.4f, 0.8f));
                 fix.Friction = 0.9f;
 
                 _wheelFront = new Body(World);
                 _wheelFront.BodyType = BodyType.Dynamic;
                 _wheelFront.Position = new Vector2(1.0f, -0.4f);
-                _wheelFront.CreateFixture(new CircleShape(0.4f, 1.5f));
+                _wheelFront.CreateFixture(new CircleShape(0.4f, 1f));
 
                 Vector2 axis = new Vector2(0.0f, -1.0f);
                 _springBack = new LineJoint(_car, _wheelBack, _wheelBack.Position, axis);
@@ -214,29 +212,45 @@ namespace FarseerPhysics.SamplesFramework
                 World.AddJoint(_springFront);
             }
 
-            Camera.MinRotation = 0.2f;
-            Camera.MaxRotation = -0.2f;
+            Camera.MinRotation = -0.05f;
+            Camera.MaxRotation = 0.05f;
 
             Camera.TrackingBody = _car;
             Camera.EnableTracking = true;
         }
 
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsNewKeyPress(Keys.A))
+            if (input.KeyboardState.IsKeyDown(Keys.S))
             {
-                _springBack.MotorSpeed = -_maxSpeed;
+                _acceleration = 0f;
             }
-            else if (input.IsNewKeyPress(Keys.S))
+            else if (input.KeyboardState.IsKeyDown(Keys.D))
             {
-                _springBack.MotorSpeed = 0f;
+                _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
             }
-            else if (input.IsNewKeyPress(Keys.D))
+            else if (input.KeyboardState.IsKeyDown(Keys.A))
             {
-                _springBack.MotorSpeed = _maxSpeed;
+                _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
+            }
+            else
+            {
+                _acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
             }
 
             base.HandleInput(input, gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            // TODO
+            base.Draw(gameTime);
         }
     }
 }

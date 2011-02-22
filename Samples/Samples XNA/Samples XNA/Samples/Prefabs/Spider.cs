@@ -55,21 +55,19 @@ namespace FarseerPhysics.SamplesFramework
             rightLower.BodyType = BodyType.Dynamic;
 
             //Create joints
-            JointFactory.CreateRevoluteJoint(world, circle, leftUpper, circle.Position - new Vector2(SpiderBodyRadius, 0f));
+            JointFactory.CreateRevoluteJoint(world, circle, leftUpper, new Vector2(_upperLegSize.X / 2f, 0f));
             _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, leftUpper);
             _leftShoulderAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, circle, rightUpper, circle.Position + new Vector2(SpiderBodyRadius, 0f));
+            JointFactory.CreateRevoluteJoint(world, circle, rightUpper, new Vector2(-_upperLegSize.X / 2f, 0f));
             _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, rightUpper);
             _rightShoulderAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, leftUpper, leftLower, circle.Position - new Vector2(SpiderBodyRadius, 0f)
-                                                                          - new Vector2(_upperLegSize.X, 0f));
+            JointFactory.CreateRevoluteJoint(world, leftUpper, leftLower, new Vector2(_lowerLegSize.X / 2f, 0f));
             _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper, leftLower);
             _leftKneeAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, rightUpper, rightLower, circle.Position + new Vector2(SpiderBodyRadius, 0f)
-                                                                            + new Vector2(_upperLegSize.X, 0f));
+            JointFactory.CreateRevoluteJoint(world, rightUpper, rightLower, new Vector2(-_lowerLegSize.X / 2f, 0f));
             _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper, rightLower);
             _rightKneeAngleJoint.MaxImpulse = 3;
         }
