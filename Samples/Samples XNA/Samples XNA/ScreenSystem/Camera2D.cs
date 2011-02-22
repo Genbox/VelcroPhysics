@@ -107,7 +107,7 @@ namespace FarseerPhysics.SamplesFramework
             get { return _currentRotation; }
             set
             {
-                _targetRotation = value % MathHelper.Pi;
+                _targetRotation = value % MathHelper.TwoPi;
                 if (_minRotation != _maxRotation)
                 {
                     _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
@@ -122,7 +122,7 @@ namespace FarseerPhysics.SamplesFramework
         public float MinRotation
         {
             get { return _minRotation; }
-            set { _minRotation = value % MathHelper.Pi; }
+            set { _minRotation = MathHelper.Clamp(value, -MathHelper.Pi, 0f); }
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace FarseerPhysics.SamplesFramework
         public float MaxRotation
         {
             get { return _maxRotation; }
-            set { _maxRotation = value % MathHelper.Pi; }
+            set { _maxRotation = MathHelper.Clamp(value, 0f, MathHelper.Pi); }
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace FarseerPhysics.SamplesFramework
                 }
                 if (_rotationTracking)
                 {
-                    _targetRotation = _trackingBody.Rotation % MathHelper.Pi;
+                    _targetRotation = -_trackingBody.Rotation % MathHelper.TwoPi;
                     if (_minRotation != _maxRotation)
                     {
                         _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
@@ -296,7 +296,7 @@ namespace FarseerPhysics.SamplesFramework
             float _rotDelta = _targetRotation - _currentRotation;
 
             float _rotInertia;
-            if (_rotDelta < 5f)
+            if (Math.Abs(_rotDelta) < 5f)
             {
                 _rotInertia = (float)Math.Pow(_rotDelta / 5.0, 2.0);
             }
@@ -304,9 +304,13 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _rotInertia = 1f;
             }
+            if (Math.Abs(_rotDelta) > 0f)
+            {
+                _rotDelta /= Math.Abs(_rotDelta);
+            }
 
             _currentPosition += 100f * _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _currentRotation += 100f * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentRotation += 80f * _rotDelta * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }
