@@ -46,6 +46,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Body _rectangle;
+        private DrawableObject _rectangleSprite;
 
         public override void LoadContent()
         {
@@ -59,6 +60,19 @@ namespace FarseerPhysics.SamplesFramework
             _rectangle.BodyType = BodyType.Dynamic;
 
             SetUserAgent(_rectangle, 100f, 100f);
+
+            Texture2D temp = ScreenManager.Assets.CreateTextureFromShape(_rectangle.FixtureList[0].Shape, MaterialType.Squares, Color.Orange, 1f);
+
+            _rectangleSprite = new DrawableObject(temp, new Vector2(temp.Width / 2f, temp.Height / 2f));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.sprite, ConvertUnits.ToDisplayUnits(_rectangle.Position), null,
+                                           Color.White, _rectangle.Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

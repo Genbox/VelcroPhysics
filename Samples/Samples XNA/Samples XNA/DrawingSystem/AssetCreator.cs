@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Collision;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -15,7 +17,7 @@ namespace FarseerPhysics.SamplesFramework
 
     public class AssetCreator
     {
-        public const int CircleSegments = 32;
+        private const int CircleSegments = 32;
 
         private Dictionary<MaterialType, Texture2D> _materials = new Dictionary<MaterialType, Texture2D>();
         private BasicEffect _effect;
@@ -36,68 +38,128 @@ namespace FarseerPhysics.SamplesFramework
             _materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
         }
 
-        public Texture2D CreateTextureFromShape(Shape shape, MaterialType type, Color color, float scale)
+        public Texture2D CreateTextureFromShape(Shape shape, MaterialType type, Color color, float materialScale)
         {
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    return CreateCircleSprite((shape as CircleShape).Radius, type, color, scale);
+                    return CreateCircleSprite((shape as CircleShape).Radius, type, color, materialScale);
                 case ShapeType.Polygon:
-                    return CreateTextureFromVertices((shape as PolygonShape).Vertices, type, color, scale);
+                    return CreateTextureFromVertices((shape as PolygonShape).Vertices, type, color, materialScale);
                 default:
                     throw new NotSupportedException("The specified shape type is not supported.");
-
             }
         }
 
-        public Texture2D CreateTextureFromVertices(Vertices verts, MaterialType type, Color color, float scale)
+        public Texture2D CreateTextureFromVertices(Vertices vertices, MaterialType type, Color color, float materialScale)
         {
-            //return RenderTexture( // TODO);
-            return null;
-        }
+            // copy vertices
+            Vertices verts = new Vertices(vertices);
 
-        public Texture2D CreateCircleSprite(float radius, MaterialType type, Color color, float scale)
-        {
-            return CreateElipseSprite(radius, radius, type, color, scale);
-        }
+            // scale to display units (i.e. pixels) for rendering to texture
+            Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
+            verts.Scale(ref scale);
 
-        public Texture2D CreateElipseSprite(float radiusX, float radiusY, MaterialType type, Color color, float scale)
-        {
-            VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[CircleSegments];
-            VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments + 2];
-            const double TwoPi = Math.PI * 2.0;
-            const double segmentSize = TwoPi / CircleSegments;
-            double theta = 0.0;
+            // translate the boundingbox center to the texture center
+            // because we use an orthographic projection for rendering later
+            AABB vertsBounds = verts.GetCollisionBox();
+            verts.Translate(-vertsBounds.Center);
 
-            verticesOutline[0].Position = new Vector3(radiusX, 0f, 0f);
-            verticesOutline[0].Color = Color.Black;
-            for (int i = 0; i < CircleSegments; ++i)
+            List<Vertices> decomposedVerts;
+            if (!verts.IsConvex())
             {
-                Vector2 position;
-                if (i % 2 == 0)
-                {
-                    position = new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                    theta += segmentSize;
-                }
-                else
-                {
-                    position = new Vector2((float)Math.Cos(TwoPi - theta), (float)Math.Sin(TwoPi - theta));
-                }
-                // fill vertices
-                verticesFill[i].Position = new Vector3(position.X * radiusX, position.Y * radiusY, 0f);
-                verticesFill[i].Color = color;
-                verticesFill[i].TextureCoordinate.X = 0.5f + position.X * 0.5f;
-                verticesFill[i].TextureCoordinate.Y = 0.5f - position.Y * radiusY / radiusX * 0.5f;
-                // outline vertices
-                verticesOutline[2 * i + 1].Position = new Vector3((float)Math.Cos(segmentSize * i) * (radiusX - 2f),
-                                                                  (float)Math.Sin(segmentSize * i) * (radiusY - 2f), 0f);
-                verticesOutline[2 * i + 1].Color = Color.Black;
-                verticesOutline[2 * i + 2].Position = new Vector3((float)Math.Cos(segmentSize * (i + 1)) * radiusX,
-                                                                  (float)Math.Sin(segmentSize * (i + 1)) * radiusY, 0f);
-                verticesOutline[2 * i + 2].Color = Color.Black;
+                decomposedVerts = EarclipDecomposer.ConvexPartition(verts);
             }
-            verticesOutline[2 * CircleSegments + 1].Position = new Vector3(radiusX - 2f, 0f, 0f);
-            verticesOutline[2 * CircleSegments + 1].Color = Color.Black;
+            else
+            {
+                decomposedVerts = new List<Vertices>();
+                decomposedVerts.Add(verts);
+            }
+            List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVerts.Count);
+
+            materialScale /= _materials[type].Width;
+
+            for (int i = 0; i < decomposedVerts.Count; ++i)
+            {
+                verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVerts[i].Count - 2)]);
+                for (int j = 0; j < decomposedVerts[i].Count - 2; ++j)
+                {
+                    // fill vertices
+                    verticesFill[i][3 * j].Position = new Vector3(decomposedVerts[i][0], 0f);
+                    verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVerts[i].NextVertex(j), 0f);
+                    verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVerts[i].NextVertex(j + 1), 0f);
+                    verticesFill[i][3 * j].TextureCoordinate = decomposedVerts[i][0] * materialScale;
+                    verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVerts[i].NextVertex(j) * materialScale;
+                    verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVerts[i].NextVertex(j + 1) * materialScale;
+                    verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
+                }
+            }
+
+            // calculate outline
+            VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * verts.Count];
+            for (int i = 0; i < verts.Count; ++i)
+            {
+                verticesOutline[2 * i].Position = new Vector3(verts[i], 0f);
+                verticesOutline[2 * i + 1].Position = new Vector3(verts.NextVertex(i), 0f);
+                verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = Color.Black;
+            }
+
+            Vector2 vertsSize = new Vector2(vertsBounds.UpperBound.X - vertsBounds.LowerBound.X,
+                                            vertsBounds.UpperBound.Y - vertsBounds.LowerBound.Y);
+            return RenderTexture((int)Math.Ceiling(vertsSize.X), (int)Math.Ceiling(vertsSize.Y),
+                                 _materials[type], verticesFill, verticesOutline);
+        }
+
+        public Texture2D CreateCircleSprite(float radius, MaterialType type, Color color, float materialScale)
+        {
+            return CreateElipseSprite(radius, radius, type, color, materialScale);
+        }
+
+        public Texture2D CreateElipseSprite(float radiusX, float radiusY, MaterialType type, Color color, float materialScale)
+        {
+            VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
+            VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
+            const float segmentSize = MathHelper.TwoPi / CircleSegments;
+            float theta = segmentSize;
+
+            radiusX = ConvertUnits.ToDisplayUnits(radiusX);
+            radiusY = ConvertUnits.ToDisplayUnits(radiusY);
+            materialScale /= _materials[type].Width;
+
+            Vector2 start = new Vector2(radiusX, 0f);
+
+            for (int i = 0; i < CircleSegments - 2; ++i)
+            {
+                Vector2 p1 = new Vector2(radiusX * (float)Math.Cos(theta), radiusY * (float)Math.Sin(theta));
+                Vector2 p2 = new Vector2(radiusX * (float)Math.Cos(theta + segmentSize), radiusY * (float)Math.Sin(theta + segmentSize));
+                // fill vertices
+                verticesFill[3 * i].Position = new Vector3(start, 0f);
+                verticesFill[3 * i + 1].Position = new Vector3(p1, 0f);
+                verticesFill[3 * i + 2].Position = new Vector3(p2, 0f);
+                verticesFill[3 * i].TextureCoordinate = start * materialScale;
+                verticesFill[3 * i + 1].TextureCoordinate = p1 * materialScale;
+                verticesFill[3 * i + 2].TextureCoordinate = p2 * materialScale;
+                verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = color;
+
+                // outline vertices
+                if (i == 0)
+                {
+                    verticesOutline[0].Position = new Vector3(start, 0f);
+                    verticesOutline[1].Position = new Vector3(p1, 0f);
+                    verticesOutline[0].Color = verticesOutline[1].Color = Color.Black;
+                }
+                if (i == CircleSegments - 3)
+                {
+                    verticesOutline[CircleSegments - 2].Position = new Vector3(p2, 0f);
+                    verticesOutline[CircleSegments - 1].Position = new Vector3(start, 0f);
+                    verticesOutline[CircleSegments - 2].Color = verticesOutline[CircleSegments - 1].Color = Color.Black;
+                }
+                verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
+                verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
+                verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = Color.Black;
+
+                theta += segmentSize;
+            }
 
             return RenderTexture((int)Math.Ceiling(radiusX * 2.0), (int)Math.Ceiling(radiusY * 2.0),
                                  _materials[type], verticesFill, verticesOutline);
@@ -117,14 +179,14 @@ namespace FarseerPhysics.SamplesFramework
                                         VertexPositionColor[] verticesOutline)
         {
             PresentationParameters pp = _device.PresentationParameters;
-            RenderTarget2D texture = new RenderTarget2D(_device, width, height, false, pp.BackBufferFormat,
+            RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, pp.BackBufferFormat,
                                                         DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
             _device.SamplerStates[0] = SamplerState.LinearWrap;
 
             _device.SetRenderTarget(texture);
             _device.Clear(Color.Transparent);
-            _effect.Projection = Matrix.CreateOrthographic(width, height, 0f, 1f);
+            _effect.Projection = Matrix.CreateOrthographic(width + 2, height + 2, 0f, 1f);
             // render shape;
             _effect.TextureEnabled = true;
             _effect.Texture = material;
@@ -143,58 +205,3 @@ namespace FarseerPhysics.SamplesFramework
         }
     }
 }
-/*            
-
-        private void DrawTexturedPolygon(Fixture fixture)
-        {
-            Transform xf;
-            fixture.Body.GetTransform(out xf);
-            PolygonShape poly = (PolygonShape)fixture.Shape;
-            DebugMaterial material = (DebugMaterial)fixture.UserData;
-            int count = poly.Vertices.Count;
-
-            if (count == 2)
-            {
-                return;
-            }
-
-            Color colorFill = material.Color;
-            float depth = material.Depth;
-            Vector2 texCoordCenter = new Vector2(.5f, .5f);
-            if (material.CenterOnBody)
-            {
-                texCoordCenter += poly.Vertices[0] / material.Scale;
-            }
-
-            Vector2 v0 = MathUtils.Multiply(ref xf, poly.Vertices[0]);
-            for (int i = 1; i < count - 1; i++)
-            {
-                Vector2 v1 = MathUtils.Multiply(ref xf, poly.Vertices[i]);
-                Vector2 v2 = MathUtils.Multiply(ref xf, poly.Vertices[i + 1]);
-
-                _vertsFill[_fillCount * 3].Position = new Vector3(v0, depth);
-                _vertsFill[_fillCount * 3].Color = colorFill;
-                _vertsFill[_fillCount * 3].TextureCoordinate = texCoordCenter;
-                _vertsFill[_fillCount * 3].TextureCoordinate.Y = 1 - _vertsFill[_fillCount * 3].TextureCoordinate.Y;
-
-                _vertsFill[_fillCount * 3 + 1].Position = new Vector3(v1, depth);
-                _vertsFill[_fillCount * 3 + 1].Color = colorFill;
-                _vertsFill[_fillCount * 3 + 1].TextureCoordinate = texCoordCenter + (poly.Vertices[i] - poly.Vertices[0]) / material.Scale;
-                _vertsFill[_fillCount * 3 + 1].TextureCoordinate.Y = 1 - _vertsFill[_fillCount * 3 + 1].TextureCoordinate.Y;
-
-                _vertsFill[_fillCount * 3 + 2].Position = new Vector3(v2, depth);
-                _vertsFill[_fillCount * 3 + 2].Color = colorFill;
-                _vertsFill[_fillCount * 3 + 2].TextureCoordinate = texCoordCenter + (poly.Vertices[i + 1] - poly.Vertices[0]) / material.Scale;
-                _vertsFill[_fillCount * 3 + 2].TextureCoordinate.Y = 1 - _vertsFill[_fillCount * 3 + 2].TextureCoordinate.Y;
-
-                _fillCount++;
-
-                // outline
-                DrawTexturedLine(v1, v2);
-            }
-            DrawTexturedLine(v0, MathUtils.Multiply(ref xf, poly.Vertices[1]));
-            DrawTexturedLine(MathUtils.Multiply(ref xf, poly.Vertices[count - 1]), v0);
-        }
-
-     
-*/

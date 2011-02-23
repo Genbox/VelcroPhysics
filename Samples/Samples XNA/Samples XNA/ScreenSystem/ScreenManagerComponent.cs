@@ -30,6 +30,7 @@ namespace FarseerPhysics.SamplesFramework
         private List<GameScreen> _screensToUpdate;
 
         private SpriteBatch _spriteBatch;
+        private AssetCreator _assetCreator;
         private List<RenderTarget2D> _transitions;
 
 
@@ -70,6 +71,10 @@ namespace FarseerPhysics.SamplesFramework
             get { return _spriteFonts; }
         }
 
+        public AssetCreator Assets
+        {
+            get { return _assetCreator; }
+        }
 
         /// <summary>
         /// Initializes the screen manager component.
@@ -88,6 +93,8 @@ namespace FarseerPhysics.SamplesFramework
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _assetCreator = new AssetCreator(GraphicsDevice);
+            _assetCreator.LoadContent(_contentManager);
             _input.LoadContent();
 
             // Tell each of the screens to load their content.
