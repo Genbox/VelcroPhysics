@@ -9,13 +9,11 @@ namespace FarseerPhysics.SamplesFramework
     {
         public Texture2D sprite;
         public Vector2 origin;
-        public Color color;
 
-        public DrawableObject(Texture2D sprite, Vector2 origin, Color color)
+        public DrawableObject(Texture2D sprite, Vector2 origin)
         {
             this.sprite = sprite;
             this.origin = origin;
-            this.color = color;
         }
     }
 }
