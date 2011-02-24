@@ -41,7 +41,7 @@ namespace FarseerPhysics.SamplesFramework
             }
             // calculate body offset from its center and add a 1 pixel border
             // because we generate the textures a little bigger than the actual body's fixtures
-            return ConvertUnits.ToDisplayUnits(b.Position - lBound) + Vector2.One;
+            return ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1.5f);
         }
 
         public AssetCreator(GraphicsDevice device)
@@ -171,9 +171,9 @@ namespace FarseerPhysics.SamplesFramework
                 }
                 if (i == CircleSegments - 3)
                 {
-                    verticesOutline[CircleSegments - 2].Position = new Vector3(p2, 0f);
-                    verticesOutline[CircleSegments - 1].Position = new Vector3(start, 0f);
-                    verticesOutline[CircleSegments - 2].Color = verticesOutline[CircleSegments - 1].Color = Color.Black;
+                    verticesOutline[2 * CircleSegments - 2].Position = new Vector3(p2, 0f);
+                    verticesOutline[2 * CircleSegments - 1].Position = new Vector3(start, 0f);
+                    verticesOutline[2 * CircleSegments - 2].Color = verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
                 }
                 verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
                 verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
@@ -199,15 +199,16 @@ namespace FarseerPhysics.SamplesFramework
                                         List<VertexPositionColorTexture[]> verticesFill,
                                         VertexPositionColor[] verticesOutline)
         {
+            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
             PresentationParameters pp = _device.PresentationParameters;
-            RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, pp.BackBufferFormat,
+            RenderTarget2D texture = new RenderTarget2D(_device, width + 3, height + 3, false, SurfaceFormat.Color,
                                                         DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
-            _device.SamplerStates[0] = SamplerState.LinearWrap;
+            _device.SamplerStates[0] = SamplerState.AnisotropicWrap;
 
             _device.SetRenderTarget(texture);
             _device.Clear(Color.Transparent);
-            _effect.Projection = Matrix.CreateOrthographic(width + 2, height + 2, 0f, 1f);
+            _effect.Projection = halfPixelOffset * Matrix.CreateOrthographic(width + 3, height + 3, 0f, 1f);
             // render shape;
             _effect.TextureEnabled = true;
             _effect.Texture = material;
