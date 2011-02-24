@@ -3,6 +3,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
@@ -46,6 +47,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Agent _agent;
         private Body[] _obstacles = new Body[5];
+        private DrawableObject _obstacle;
 
         public override void LoadContent()
         {
@@ -55,7 +57,7 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _agent = new Agent(World, new Vector2(-6.9f, -11f));
+            _agent = new Agent(World, this, new Vector2(-6.9f, -11f));
 
             LoadObstacles();
 
@@ -64,7 +66,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private void LoadObstacles()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; ++i)
             {
                 _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1f, 1f);
                 _obstacles[i].IsStatic = true;
@@ -77,6 +79,25 @@ namespace FarseerPhysics.SamplesFramework
             _obstacles[2].Position = new Vector2(10f, -3f);
             _obstacles[3].Position = new Vector2(-10f, -9f);
             _obstacles[4].Position = new Vector2(-17f, 0f);
+
+            // create sprite based on body
+            _obstacle = new DrawableObject(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
+                                                                                 MaterialType.Dots,
+                                                                                 Color.SandyBrown, 0.8f),
+                                           AssetCreator.CalculateOrigin(_obstacles[0]));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            for (int i = 0; i < 5; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_obstacle.texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position), null,
+                                               Color.White, _obstacles[i].Rotation, _obstacle.origin, 1f, SpriteEffects.None, 0f);
+            }
+            _agent.Draw();
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

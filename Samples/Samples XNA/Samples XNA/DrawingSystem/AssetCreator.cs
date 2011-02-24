@@ -4,9 +4,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using FarseerPhysics.Common;
-using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -23,6 +24,26 @@ namespace FarseerPhysics.SamplesFramework
         private BasicEffect _effect;
         private GraphicsDevice _device;
 
+        public static Vector2 CalculateOrigin(Body b)
+        {
+            Vector2 lBound = new Vector2(float.MaxValue);
+            AABB bounds;
+            Transform trans;
+            b.GetTransform(out trans);
+
+            for (int i = 0; i < b.FixtureList.Count; ++i)
+            {
+                for (int j = 0; j < b.FixtureList[i].Shape.ChildCount; ++j)
+                {
+                    b.FixtureList[i].Shape.ComputeAABB(out bounds, ref trans, j);
+                    Vector2.Min(ref lBound, ref bounds.LowerBound, out lBound);
+                }
+            }
+            // calculate body offset from its center and add a 1 pixel border
+            // because we generate the textures a little bigger than the actual body's fixtures
+            return ConvertUnits.ToDisplayUnits(b.Position - lBound) + Vector2.One;
+        }
+
         public AssetCreator(GraphicsDevice device)
         {
             _device = device;
@@ -38,20 +59,20 @@ namespace FarseerPhysics.SamplesFramework
             _materials[MaterialType.Pavement] = contentManager.Load<Texture2D>("Materials/pavement");
         }
 
-        public Texture2D CreateTextureFromShape(Shape shape, MaterialType type, Color color, float materialScale)
+        public Texture2D TextureFromShape(Shape shape, MaterialType type, Color color, float materialScale)
         {
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    return CreateCircleSprite((shape as CircleShape).Radius, type, color, materialScale);
+                    return CircleTexture((shape as CircleShape).Radius, type, color, materialScale);
                 case ShapeType.Polygon:
-                    return CreateTextureFromVertices((shape as PolygonShape).Vertices, type, color, materialScale);
+                    return TextureFromVertices((shape as PolygonShape).Vertices, type, color, materialScale);
                 default:
                     throw new NotSupportedException("The specified shape type is not supported.");
             }
         }
 
-        public Texture2D CreateTextureFromVertices(Vertices vertices, MaterialType type, Color color, float materialScale)
+        public Texture2D TextureFromVertices(Vertices vertices, MaterialType type, Color color, float materialScale)
         {
             // copy vertices
             Vertices verts = new Vertices(vertices);
@@ -110,12 +131,12 @@ namespace FarseerPhysics.SamplesFramework
                                  _materials[type], verticesFill, verticesOutline);
         }
 
-        public Texture2D CreateCircleSprite(float radius, MaterialType type, Color color, float materialScale)
+        public Texture2D CircleTexture(float radius, MaterialType type, Color color, float materialScale)
         {
-            return CreateElipseSprite(radius, radius, type, color, materialScale);
+            return EllipseTexture(radius, radius, type, color, materialScale);
         }
 
-        public Texture2D CreateElipseSprite(float radiusX, float radiusY, MaterialType type, Color color, float materialScale)
+        public Texture2D EllipseTexture(float radiusX, float radiusY, MaterialType type, Color color, float materialScale)
         {
             VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
             VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
