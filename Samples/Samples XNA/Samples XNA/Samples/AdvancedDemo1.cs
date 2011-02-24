@@ -90,7 +90,7 @@ namespace FarseerPhysics.SamplesFramework
 #endif
 
             //scale the vertices from graphics space to sim space
-            Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
+            Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * _scale;
             foreach (Vertices vertices in list)
             {
                 vertices.Scale(ref vertScale);
