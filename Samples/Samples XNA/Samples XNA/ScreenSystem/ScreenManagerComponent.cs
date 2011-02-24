@@ -185,7 +185,7 @@ namespace FarseerPhysics.SamplesFramework
                     {
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
                         _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
-                                                            _pp.BackBufferFormat, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                                                            SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
                                                             RenderTargetUsage.DiscardContents));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);

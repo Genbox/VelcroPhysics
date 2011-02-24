@@ -222,6 +222,14 @@ namespace FarseerPhysics.SamplesFramework
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
+            if (Math.Abs(_springBack.MotorSpeed) < _maxSpeed * 0.06f)
+            {
+                _springBack.MotorEnabled = false;
+            }
+            else
+            {
+                _springBack.MotorEnabled = true;
+            }
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
