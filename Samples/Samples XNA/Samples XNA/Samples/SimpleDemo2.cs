@@ -4,6 +4,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -48,6 +49,8 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Body _rectangles;
+        private DrawableObject _rectangleSprite;
+        private Vector2 offset;
 
         public override void LoadContent()
         {
@@ -73,6 +76,26 @@ namespace FarseerPhysics.SamplesFramework
             _rectangles.BodyType = BodyType.Dynamic;
 
             SetUserAgent(_rectangles, 200f, 200f);
+
+            // create sprite based on body
+            _rectangleSprite = new DrawableObject(ScreenManager.Assets.TextureFromVertices(rect1, MaterialType.Squares, 
+                                                                                           Color.Orange, 1f));
+            offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           Color.White, _rectangles.Rotation,
+                                           _rectangleSprite.origin + offset, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           Color.White, _rectangles.Rotation,
+                                           _rectangleSprite.origin - offset, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace FarseerPhysics.SamplesFramework
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
-            _agent = new Agent(World, Vector2.Zero);
+            _agent = new Agent(World, this, Vector2.Zero);
 
             //Collide with all but stars
             _agent.CollisionCategories = Category.All & ~Category.Cat4;
@@ -100,6 +100,14 @@ namespace FarseerPhysics.SamplesFramework
             _stars.CollidesWith = Category.Cat3 | Category.Cat4;
 
             SetUserAgent(_agent.Body, 1000f, 400f);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            _agent.Draw();
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

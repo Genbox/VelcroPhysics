@@ -52,7 +52,7 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _agent = new Agent(World, new Vector2(0f, 12f));
+            _agent = new Agent(World,this, new Vector2(0f, 12f));
             _spiders = new Spider[8];
 
             for (int i = 0; i < _spiders.Length; i++)
@@ -74,6 +74,14 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            _agent.Draw();
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

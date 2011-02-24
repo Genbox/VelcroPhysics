@@ -62,11 +62,19 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _agent = new Agent(World, new Vector2(5f, -10f));
+            _agent = new Agent(World, this, new Vector2(5f, -10f));
 
             _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
 
             SetUserAgent(_agent.Body, 1000f, 400f);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            _agent.Draw();
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }
