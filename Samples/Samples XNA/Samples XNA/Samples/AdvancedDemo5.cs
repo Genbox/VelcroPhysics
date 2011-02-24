@@ -80,7 +80,12 @@ namespace FarseerPhysics.SamplesFramework
                 polygon = SimplifyTools.ReduceByDistance(polygon, 4);
                 List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
 
-                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
+#if WINDOWS_PHONE
+                float _scale = 0.6f;
+#else
+                float _scale = 1f;
+#endif
+                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * _scale;
                 foreach (Vertices vertices in triangulated)
                 {
                     vertices.Scale(ref vertScale);

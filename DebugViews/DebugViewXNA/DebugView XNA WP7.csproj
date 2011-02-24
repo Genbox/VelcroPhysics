@@ -72,9 +72,6 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Background.png">
-      <XnaPlatformSpecific>true</XnaPlatformSpecific>
-    </None>
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
