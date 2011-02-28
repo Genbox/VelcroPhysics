@@ -59,7 +59,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Actor actor = _actors[i];
                 GetRandomAABB(out actor.AABB);
-                actor.ProxyId = _tree.CreateProxy(ref actor.AABB, actor);
+                actor.ProxyId = _tree.AddProxy(ref actor.AABB, actor);
             }
 
             _stepCount = 0;
@@ -239,7 +239,7 @@ namespace FarseerPhysics.TestBed.Tests
                 if (actor.ProxyId == -1)
                 {
                     GetRandomAABB(out actor.AABB);
-                    actor.ProxyId = _tree.CreateProxy(ref actor.AABB, actor);
+                    actor.ProxyId = _tree.AddProxy(ref actor.AABB, actor);
                     return;
                 }
             }
@@ -253,7 +253,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Actor actor = _actors[j];
                 if (actor.ProxyId != -1)
                 {
-                    _tree.DestroyProxy(actor.ProxyId);
+                    _tree.RemoveProxy(actor.ProxyId);
                     actor.ProxyId = -1;
                     return;
                 }

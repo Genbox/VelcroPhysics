@@ -391,31 +391,24 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Touch each proxy so that new pairs may be created
-            BroadPhase broadPhase = world.ContactManager.BroadPhase;
+            IBroadPhase broadPhase = world.ContactManager.BroadPhase;
             for (int i = 0; i < ProxyCount; ++i)
             {
                 broadPhase.TouchProxy(Proxies[i].ProxyId);
             }
         }
 
-        internal void RegisterFixture()
+        private void RegisterFixture()
         {
             // Reserve proxy space
-            int childCount = Shape.ChildCount;
-            Proxies = new FixtureProxy[childCount];
-            for (int i = 0; i < childCount; ++i)
-            {
-                Proxies[i] = new FixtureProxy();
-                Proxies[i].Fixture = null;
-                Proxies[i].ProxyId = BroadPhase.NullProxy;
-            }
+            Proxies = new FixtureProxy[Shape.ChildCount];
             ProxyCount = 0;
 
             FixtureId = _fixtureIdCounter++;
 
             if ((Body.Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
-                BroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
+                IBroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
                 CreateProxies(broadPhase, ref Body.Xf);
             }
 
@@ -531,7 +524,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         // These support body activation/deactivation.
-        internal void CreateProxies(BroadPhase broadPhase, ref Transform xf)
+        internal void CreateProxies(IBroadPhase broadPhase, ref Transform xf)
         {
             Debug.Assert(ProxyCount == 0);
 
@@ -540,29 +533,30 @@ namespace FarseerPhysics.Dynamics
 
             for (int i = 0; i < ProxyCount; ++i)
             {
-                FixtureProxy proxy = Proxies[i];
+                FixtureProxy proxy = new FixtureProxy();
                 Shape.ComputeAABB(out proxy.AABB, ref xf, i);
+
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
-                proxy.ProxyId = broadPhase.CreateProxy(ref proxy.AABB, ref proxy);
+                proxy.ProxyId = broadPhase.AddProxy(ref proxy);
 
                 Proxies[i] = proxy;
             }
         }
 
-        internal void DestroyProxies(BroadPhase broadPhase)
+        internal void DestroyProxies(IBroadPhase broadPhase)
         {
             // Destroy proxies in the broad-phase.
             for (int i = 0; i < ProxyCount; ++i)
             {
-                broadPhase.DestroyProxy(Proxies[i].ProxyId);
-                Proxies[i].ProxyId = BroadPhase.NullProxy;
+                broadPhase.RemoveProxy(Proxies[i].ProxyId);
+                Proxies[i].ProxyId = -1;
             }
 
             ProxyCount = 0;
         }
 
-        internal void Synchronize(BroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
+        internal void Synchronize(IBroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (ProxyCount == 0)
             {

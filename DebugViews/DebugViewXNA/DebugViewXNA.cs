@@ -258,7 +258,7 @@ namespace FarseerPhysics.DebugViews
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
-                BroadPhase bp = World.ContactManager.BroadPhase;
+                IBroadPhase bp = World.ContactManager.BroadPhase;
 
                 foreach (Body b in World.BodyList)
                 {
@@ -269,14 +269,14 @@ namespace FarseerPhysics.DebugViews
 
                     foreach (Fixture f in b.FixtureList)
                     {
-                        for (int t = 0; t < f.ProxyCount; ++t)
-                        {
-                            FixtureProxy proxy = f.Proxies[t];
-                            AABB aabb;
-                            bp.GetFatAABB(proxy.ProxyId, out aabb);
+                        //for (int t = 0; t < f.ProxyCount; ++t)
+                        //{
+                        //    FixtureProxy proxy = f.Proxies[t];
+                        //    AABB aabb;
+                        //    bp.GetFatAABB(proxy.ProxyId, out aabb);
 
-                            DrawAABB(ref aabb, color);
-                        }
+                        //    DrawAABB(ref aabb, color);
+                        //}
                     }
                 }
             }

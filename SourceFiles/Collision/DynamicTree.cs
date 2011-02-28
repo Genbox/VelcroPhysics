@@ -63,7 +63,7 @@ namespace FarseerPhysics.Collision
     ///
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     /// </summary>
-    public class DynamicTree<T>
+    public class DynamicTree<T> : IBroadPhaseBackend
     {
         internal const int NullNode = -1;
         private static Stack<int> _stack = new Stack<int>(256);
@@ -106,7 +106,7 @@ namespace FarseerPhysics.Collision
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
-        public int CreateProxy(ref AABB aabb, T userData)
+        public int AddProxy(ref AABB aabb, T userData)
         {
             int proxyId = AllocateNode();
 
@@ -126,7 +126,7 @@ namespace FarseerPhysics.Collision
         /// Destroy a proxy. This asserts if the id is invalid.
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
-        public void DestroyProxy(int proxyId)
+        public void RemoveProxy(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             Debug.Assert(_nodes[proxyId].IsLeaf());
@@ -650,5 +650,11 @@ namespace FarseerPhysics.Collision
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);
         }
+    }
+
+    public interface IBroadPhaseBackend
+    {
+        void Query(Func<int, bool> callback, ref AABB aabb);
+        void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input);
     }
 }
