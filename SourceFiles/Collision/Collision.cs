@@ -296,6 +296,38 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
+        /// first quadrant
+        /// </summary>
+        public AABB Q1
+        {
+            get { return new AABB(Center, UpperBound); }
+        }
+
+        public AABB Q2
+        {
+            get { return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y)); ;}
+        }
+
+        public AABB Q3
+        {
+            get { return new AABB(LowerBound, Center); }
+        }
+
+        public AABB Q4
+        {
+            get { return new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y)); }
+        }
+
+        public Vector2[] GetVertices()
+        {
+            Vector2 p1 = UpperBound;
+            Vector2 p2 = new Vector2(UpperBound.X, LowerBound.Y);
+            Vector2 p3 = LowerBound;
+            Vector2 p4 = new Vector2(LowerBound.X, UpperBound.Y);
+            return new[] { p1, p2, p3, p4 };
+        }
+
+        /// <summary>
         /// Verify that the bounds are sorted.
         /// </summary>
         /// <returns>
@@ -363,6 +395,11 @@ namespace FarseerPhysics.Collision
                 return true;
             }
             return false;
+        }
+
+        public static bool TestOverlap(AABB a, AABB b)
+        {
+            return TestOverlap(ref a, ref b);
         }
 
         public static bool TestOverlap(ref AABB a, ref AABB b)

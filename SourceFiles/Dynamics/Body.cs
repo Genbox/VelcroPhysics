@@ -345,7 +345,7 @@ namespace FarseerPhysics.Dynamics
                     Flags |= BodyFlags.Enabled;
 
                     // Create all proxies.
-                    BroadPhase broadPhase = World.ContactManager.BroadPhase;
+                    IBroadPhase broadPhase = World.ContactManager.BroadPhase;
                     for (int i = 0; i < FixtureList.Count; i++)
                     {
                         FixtureList[i].CreateProxies(broadPhase, ref Xf);
@@ -358,7 +358,7 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.Enabled;
 
                     // Destroy all proxies.
-                    BroadPhase broadPhase = World.ContactManager.BroadPhase;
+                    IBroadPhase broadPhase = World.ContactManager.BroadPhase;
 
                     for (int i = 0; i < FixtureList.Count; i++)
                     {
@@ -751,7 +751,7 @@ namespace FarseerPhysics.Dynamics
 
             if ((Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
-                BroadPhase broadPhase = World.ContactManager.BroadPhase;
+                IBroadPhase broadPhase = World.ContactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
             }
 
@@ -804,7 +804,7 @@ namespace FarseerPhysics.Dynamics
                             Xf.Position.Y + Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
             Sweep.A0 = Sweep.A = angle;
 
-            BroadPhase broadPhase = World.ContactManager.BroadPhase;
+            IBroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
             {
                 FixtureList[i].Synchronize(broadPhase, ref Xf, ref Xf);
@@ -1233,7 +1233,7 @@ namespace FarseerPhysics.Dynamics
             xf1.Position.X = Sweep.C0.X - (xf1.R.Col1.X * Sweep.LocalCenter.X + xf1.R.Col2.X * Sweep.LocalCenter.Y);
             xf1.Position.Y = Sweep.C0.Y - (xf1.R.Col1.Y * Sweep.LocalCenter.X + xf1.R.Col2.Y * Sweep.LocalCenter.Y);
 
-            BroadPhase broadPhase = World.ContactManager.BroadPhase;
+            IBroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
             {
                 FixtureList[i].Synchronize(broadPhase, ref xf1, ref Xf);

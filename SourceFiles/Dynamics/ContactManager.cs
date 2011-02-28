@@ -25,7 +25,6 @@
 
 using System.Collections.Generic;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics.Contacts;
 
 namespace FarseerPhysics.Dynamics
@@ -37,7 +36,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public BeginContactDelegate BeginContact;
 
-        public BroadPhase BroadPhase = new BroadPhase();
+        public IBroadPhase BroadPhase = new DynamicTreeBroadPhase();
 
         /// <summary>
         /// The filter used by the contact manager.

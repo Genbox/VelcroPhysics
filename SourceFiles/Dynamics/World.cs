@@ -778,7 +778,7 @@ namespace FarseerPhysics.Dynamics
         {
             ContactManager.BroadPhase.Query(proxyId =>
                                                 {
-                                                    FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
+                                                    FixtureProxy proxy = ContactManager.BroadPhase.GetProxy(proxyId);
                                                     return callback(proxy.Fixture);
                                                 }, ref aabb);
         }
@@ -806,7 +806,7 @@ namespace FarseerPhysics.Dynamics
 
             ContactManager.BroadPhase.RayCast((rayCastInput, proxyId) =>
                                                   {
-                                                      FixtureProxy proxy = ContactManager.BroadPhase.GetUserData(proxyId);
+                                                      FixtureProxy proxy = ContactManager.BroadPhase.GetProxy(proxyId);
                                                       Fixture fixture = proxy.Fixture;
                                                       int index = proxy.ChildIndex;
                                                       RayCastOutput output;

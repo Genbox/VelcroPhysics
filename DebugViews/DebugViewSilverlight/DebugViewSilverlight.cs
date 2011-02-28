@@ -225,7 +225,7 @@ namespace FarseerPhysics.DebugViewSilverlight
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = Color.FromArgb(255, 230, 77, 230);
-                BroadPhase bp = World.ContactManager.BroadPhase;
+                IBroadPhase bp = World.ContactManager.BroadPhase;
 
                 foreach (Body b in World.BodyList)
                 {
@@ -236,19 +236,19 @@ namespace FarseerPhysics.DebugViewSilverlight
 
                     foreach (Fixture f in b.FixtureList)
                     {
-                        for (int t = 0; t < f.ProxyCount; ++t)
-                        {
-                            FixtureProxy proxy = f.Proxies[t];
-                            AABB aabb;
-                            bp.GetFatAABB(proxy.ProxyId, out aabb);
-                            Vector2[] vs = new Vector2[4];
-                            vs[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
-                            vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
-                            vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
-                            vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
+                        //for (int t = 0; t < f.ProxyCount; ++t)
+                        //{
+                        //    FixtureProxy proxy = f.Proxies[t];
+                        //    AABB aabb;
+                        //    bp.GetFatAABB(proxy.ProxyId, out aabb);
+                        //    Vector2[] vs = new Vector2[4];
+                        //    vs[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
+                        //    vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
+                        //    vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
+                        //    vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
 
-                            DrawPolygon(vs, 4, color);
-                        }
+                        //    DrawPolygon(vs, 4, color);
+                        //}
                     }
                 }
             }

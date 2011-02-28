@@ -65,9 +65,8 @@ namespace FarseerPhysics.Collision
     /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
     /// It is up to the client to consume the new pairs and to track subsequent overlap.
     /// </summary>
-    public class BroadPhase
+    public class DynamicTreeBroadPhase : IBroadPhase
     {
-        internal const int NullProxy = -1;
         private int[] _moveBuffer;
         private int _moveCapacity;
         private int _moveCount;
@@ -80,7 +79,7 @@ namespace FarseerPhysics.Collision
         private int _queryProxyId;
         private DynamicTree<FixtureProxy> _tree = new DynamicTree<FixtureProxy>();
 
-        public BroadPhase()
+        public DynamicTreeBroadPhase()
         {
             _queryCallback = new Func<int, bool>(QueryCallback);
 
@@ -105,11 +104,11 @@ namespace FarseerPhysics.Collision
         /// UpdatePairs is called.
         /// </summary>
         /// <param name="aabb">The aabb.</param>
-        /// <param name="userData">The user data.</param>
+        /// <param name="proxy">The user data.</param>
         /// <returns></returns>
-        public int CreateProxy(ref AABB aabb, ref FixtureProxy userData)
+        public int AddProxy(ref FixtureProxy proxy)
         {
-            int proxyId = _tree.CreateProxy(ref aabb, userData);
+            int proxyId = _tree.AddProxy(ref proxy.AABB, proxy);
             ++_proxyCount;
             BufferMove(proxyId);
             return proxyId;
@@ -119,11 +118,11 @@ namespace FarseerPhysics.Collision
         /// Destroy a proxy. It is up to the client to remove any pairs.
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
-        public void DestroyProxy(int proxyId)
+        public void RemoveProxy(int proxyId)
         {
             UnBufferMove(proxyId);
             --_proxyCount;
-            _tree.DestroyProxy(proxyId);
+            _tree.RemoveProxy(proxyId);
         }
 
         public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
@@ -150,7 +149,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns></returns>
-        public FixtureProxy GetUserData(int proxyId)
+        public FixtureProxy GetProxy(int proxyId)
         {
             return _tree.GetUserData(proxyId);
         }
@@ -182,7 +181,7 @@ namespace FarseerPhysics.Collision
             for (int j = 0; j < _moveCount; ++j)
             {
                 _queryProxyId = _moveBuffer[j];
-                if (_queryProxyId == NullProxy)
+                if (_queryProxyId == -1)
                 {
                     continue;
                 }
@@ -249,7 +248,7 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
-        internal void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
+        public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
         {
             _tree.RayCast(callback, ref input);
         }
@@ -283,7 +282,7 @@ namespace FarseerPhysics.Collision
             {
                 if (_moveBuffer[i] == proxyId)
                 {
-                    _moveBuffer[i] = NullProxy;
+                    _moveBuffer[i] = -1;
                     return;
                 }
             }
@@ -313,9 +312,28 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        internal void TouchProxy(int proxyId)
+        public void TouchProxy(int proxyId)
         {
             BufferMove(proxyId);
         }
+    }
+
+    public interface IBroadPhase : IBroadPhaseBackend
+    {
+        void UpdatePairs(BroadphaseDelegate callback);
+
+        bool TestOverlap(int proxyIdA, int proxyIdB);
+
+        int AddProxy(ref FixtureProxy proxy);
+
+        void RemoveProxy(int proxyId);
+
+        void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement);
+
+        FixtureProxy GetProxy(int proxyId);
+
+        void TouchProxy(int proxyId);
+
+        int ProxyCount { get; }
     }
 }
