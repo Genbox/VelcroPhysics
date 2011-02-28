@@ -16,7 +16,6 @@ public class QTElement<T>
         Value = value;
         Parent = null;
     }
-
 }
 
 public class QuadTree<T> : IBroadPhaseBackend
@@ -138,41 +137,6 @@ public class QuadTree<T> : IBroadPhaseBackend
         }
     }
 
-    public void QueryR(AABB searchR, ref List<QTElement<T>> hits)
-    {
-        if (searchR.Contains(ref this.Span))
-        {
-            GetAllNodesR(ref hits);
-        }
-        else if (AABB.TestOverlap(ref searchR, ref this.Span))
-        {
-            foreach (var n in QTNodes)
-                if (AABB.TestOverlap(searchR, n.Span)) hits.Add(n);
-
-            if (IsPartitioned)
-                foreach (var st in SubTrees) st.QueryR(searchR, ref hits);
-        }
-    }
-
-    public List<QTElement<T>> Query(AABB searchR)
-    {
-        var hits = new List<QTElement<T>>();
-        QueryR(searchR, ref hits);
-        return hits;
-    }
-
-    public void QueryP(Predicate<AABB> selector, ref List<QTElement<T>> hits)
-    {
-        if (selector(this.Span))
-        {
-            foreach (var n in QTNodes)
-                if (selector(n.Span)) hits.Add(n);
-
-            if (IsPartitioned)
-                foreach (var st in SubTrees) st.QueryP(selector, ref hits);
-        }
-    }
-
     /// <summary>
     /// tests if ray intersects AABB
     /// </summary>
@@ -209,7 +173,7 @@ public class QuadTree<T> : IBroadPhaseBackend
         return false;
     }
 
-    public void Query_Callback(Func<QTElement<T>, bool> callback, ref AABB searchR)
+    public void QueryAABB(Func<QTElement<T>, bool> callback, ref AABB searchR)
     {
         Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
         stack.Push(this);
@@ -310,14 +274,6 @@ public class QuadTree<T> : IBroadPhaseBackend
     public void Query(Func<int, bool> callback, ref AABB aabb)
     {
         throw new NotImplementedException();
-    }
-
-    private Func<RayCastInput, QTElement<FixtureProxy>, float> transformRayCallback(
-    Func<RayCastInput, int, float> callback)
-    {
-        Func<RayCastInput, QTElement<FixtureProxy>, float> newCallback =
-            (RayCastInput input, QTElement<FixtureProxy> qtnode) => callback(input, qtnode.Value.ProxyId);
-        return newCallback;
     }
 
     public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
