@@ -36,7 +36,7 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public BeginContactDelegate BeginContact;
 
-        public IBroadPhase BroadPhase = new DynamicTreeBroadPhase();
+        public IBroadPhase BroadPhase;
 
         /// <summary>
         /// The filter used by the contact manager.
@@ -65,8 +65,9 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public PreSolveDelegate PreSolve;
 
-        internal ContactManager()
+        internal ContactManager(IBroadPhase broadPhase)
         {
+            BroadPhase = broadPhase;
             OnBroadphaseCollision = AddPair;
         }
 

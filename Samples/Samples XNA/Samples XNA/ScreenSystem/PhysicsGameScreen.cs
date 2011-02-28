@@ -47,7 +47,7 @@ namespace FarseerPhysics.SamplesFramework
 
             if (World == null)
             {
-                World = new World();
+                World = new World(Vector2.Zero);
             }
             else
             {

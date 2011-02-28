@@ -227,23 +227,32 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
-        public World() : this(Vector2.Zero) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="World"/> class.
-        /// </summary>
-        /// <param name="gravity">The gravity.</param>
-        public World(Vector2 gravity)
+        private World()
         {
-            ContactManager = new ContactManager();
-            Gravity = gravity;
-
             Flags = WorldFlags.ClearForces;
 
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
             JointList = new List<Joint>(32);
+        }
+
+        public World(Vector2 gravity, AABB span)
+            : this()
+        {
+            Gravity = gravity;
+            ContactManager = new ContactManager(new QuadTreeBroadPhase(span));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="World"/> class.
+        /// </summary>
+        /// <param name="gravity">The gravity.</param>
+        public World(Vector2 gravity)
+            : this()
+        {
+            ContactManager = new ContactManager(new DynamicTreeBroadPhase());
+            Gravity = gravity;
         }
 
         public List<Controller> ControllerList { get; private set; }
