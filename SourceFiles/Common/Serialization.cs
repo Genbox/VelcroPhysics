@@ -472,7 +472,7 @@ namespace FarseerPhysics.Common
 
         public World Deserialize(Stream stream)
         {
-            World world = new World();
+            World world = new World(Vector2.Zero);
             Deserialize(world, stream);
             return world;
         }
