@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 public class QuadTreeBroadPhase : IBroadPhase
 {
-    private const int TreeUpdateThresh = 10;
+    private const int TreeUpdateThresh = 10000;
     private Dictionary<int, QTElement<FixtureProxy>> _idRegister;
     private QuadTree<FixtureProxy> _quadTree;
     private int _currID;
@@ -22,7 +22,7 @@ public class QuadTreeBroadPhase : IBroadPhase
     /// <param name="span">the maximum span of the tree (world size)</param>
     public QuadTreeBroadPhase(AABB span)
     {
-        _quadTree = new QuadTree<FixtureProxy>(span, 5, 10);
+        _quadTree = new QuadTree<FixtureProxy>(span, 10, 10);
         _idRegister = new Dictionary<int, QTElement<FixtureProxy>>();
         _moveBuffer = new List<QTElement<FixtureProxy>>();
         _pairBuffer = new List<Pair>();
@@ -151,7 +151,8 @@ public class QuadTreeBroadPhase : IBroadPhase
 
     public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
     {
-        if (GetFatAABB(proxyId).Contains(ref aabb)) return; //exit if movement is within fat aabb
+        if (GetFatAABB(proxyId).Contains(ref aabb))
+            return; //exit if movement is within fat aabb
 
 
         // Extend AABB.
