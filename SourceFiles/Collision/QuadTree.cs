@@ -183,14 +183,14 @@ public class QuadTree<T> : IBroadPhaseBackend
             var qt = stack.Pop();
             if (AABB.TestOverlap(ref searchR, ref qt.Span))
             {
-                foreach (var n in QTNodes)
+                foreach (var n in qt.QTNodes)
                     if (AABB.TestOverlap(ref searchR, ref n.Span))
                     {
                         if (!callback(n)) return;
                     }
 
-                if (IsPartitioned)
-                    foreach (var st in SubTrees) stack.Push(st);
+                if (qt.IsPartitioned)
+                    foreach (var st in qt.SubTrees) stack.Push(st);
             }
         }
     }
@@ -210,7 +210,7 @@ public class QuadTree<T> : IBroadPhaseBackend
 
             if (RayCastAABB(qt.Span, p1, p2))
             {
-                foreach (var n in QTNodes)
+                foreach (var n in qt.QTNodes)
                 {
                     if (RayCastAABB(n.Span, p1, p2))
                     {
@@ -232,7 +232,7 @@ public class QuadTree<T> : IBroadPhaseBackend
                     }
                 }
                 if (IsPartitioned)
-                    foreach (var st in SubTrees) stack.Push(st);
+                    foreach (var st in qt.SubTrees) stack.Push(st);
             }
         }
     }

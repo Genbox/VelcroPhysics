@@ -70,6 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Distance Test", CreateFcn = DistanceTest.Create},
                 new TestEntry {Name = "Dominos", CreateFcn = DominosTest.Create},
                 new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
+                new TestEntry{Name= "QuadTreeBroadPhase test", CreateFcn = QTBroadTest.Create},
                 new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
