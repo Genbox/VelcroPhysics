@@ -142,22 +142,32 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Boxes
             {
-                PolygonShape box = new PolygonShape(1);
+                PolygonShape box = new PolygonShape(0.5f);
                 box.SetAsBox(0.5f, 0.5f);
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220.0f, 0.5f);
+                body.Position = new Vector2(230.0f, 0.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220.0f, 1.5f);
+                body.Position = new Vector2(230.0f, 1.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220.0f, 2.5f);
+                body.Position = new Vector2(230.0f, 2.5f);
+                body.CreateFixture(box);
+
+                body = new Body(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(230.0f, 3.5f);
+                body.CreateFixture(box);
+
+                body = new Body(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(230.0f, 4.5f);
                 body.CreateFixture(box);
             }
 
@@ -242,12 +252,12 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            //m_debugDraw.DrawString(5, m_textLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
-            //m_textLine += 15;
-            //m_debugDraw.DrawString(5, m_textLine, "frequency = %g hz, damping ratio = %g", m_hz, m_zeta);
-            //m_textLine += 15;
-            //m_debugDraw.DrawString(5, m_textLine, "actual speed = %g rad/sec", m_spring1.GetJointSpeed());
-            //m_textLine += 15;
+            DebugView.DrawString(5, TextLine, "Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
+            TextLine += 15;
+            DebugView.DrawString(5, TextLine, "frequency = %g hz, damping ratio = %g", _hz, _zeta);
+            TextLine += 15;
+            DebugView.DrawString(5, TextLine, "actual speed = %g rad/sec", _spring1.JointSpeed);
+            TextLine += 15;
 
             GameInstance.ViewCenter = _car.Position;
 
