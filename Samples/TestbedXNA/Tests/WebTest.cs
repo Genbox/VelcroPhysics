@@ -80,57 +80,57 @@ namespace FarseerPhysics.TestBed.Tests
                 FixedDistanceJoint dj = new FixedDistanceJoint(_bodies[0], new Vector2(-0.5f, -0.5f),
                                                                new Vector2(-10.0f, 0.0f));
                 _joints[0] = dj;
-                dj.Frequency = 4.0f;
-                dj.DampingRatio = 0.5f;
+                dj.Frequency = 2.0f;
+                dj.DampingRatio = 0.0f;
                 World.AddJoint(_joints[0]);
 
                 FixedDistanceJoint dj1 = new FixedDistanceJoint(_bodies[1], new Vector2(0.5f, -0.5f),
                                                                 new Vector2(10.0f, 0.0f));
                 _joints[1] = dj1;
-                dj1.Frequency = 4.0f;
-                dj1.DampingRatio = 0.5f;
+                dj1.Frequency = 2.0f;
+                dj1.DampingRatio = 0.0f;
                 World.AddJoint(_joints[1]);
 
                 FixedDistanceJoint dj2 = new FixedDistanceJoint(_bodies[2], new Vector2(0.5f, 0.5f),
                                                                 new Vector2(10.0f, 20.0f));
                 _joints[2] = dj2;
-                dj2.Frequency = 4.0f;
-                dj2.DampingRatio = 0.5f;
+                dj2.Frequency = 2.0f;
+                dj2.DampingRatio = 0.0f;
                 World.AddJoint(_joints[2]);
 
                 FixedDistanceJoint dj3 = new FixedDistanceJoint(_bodies[3], new Vector2(-0.5f, 0.5f),
                                                                 new Vector2(-10.0f, 20.0f));
                 _joints[3] = dj3;
-                dj3.Frequency = 4.0f;
-                dj3.DampingRatio = 0.5f;
+                dj3.Frequency = 2.0f;
+                dj3.DampingRatio = 0.0f;
                 World.AddJoint(_joints[3]);
 
                 DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], Vector2.Zero,
                                                       Vector2.Zero);
                 _joints[4] = dj4;
-                dj4.Frequency = 4.0f;
-                dj4.DampingRatio = 0.5f;
+                dj4.Frequency = 2.0f;
+                dj4.DampingRatio = 0.0f;
                 World.AddJoint(_joints[4]);
 
                 DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], Vector2.Zero,
                                                       Vector2.Zero);
                 _joints[5] = dj5;
-                dj5.Frequency = 4.0f;
-                dj5.DampingRatio = 0.5f;
+                dj5.Frequency = 2.0f;
+                dj5.DampingRatio = 0.0f;
                 World.AddJoint(_joints[5]);
 
                 DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], Vector2.Zero,
                                                       Vector2.Zero);
                 _joints[6] = dj6;
-                dj6.Frequency = 4.0f;
-                dj6.DampingRatio = 0.5f;
+                dj6.Frequency = 2.0f;
+                dj6.DampingRatio = 0.0f;
                 World.AddJoint(_joints[6]);
 
                 DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], Vector2.Zero,
                                                       Vector2.Zero);
                 _joints[7] = dj7;
-                dj7.Frequency = 4.0f;
-                dj7.DampingRatio = 0.5f;
+                dj7.Frequency = 2.0f;
+                dj7.DampingRatio = 0.0f;
                 World.AddJoint(_joints[7]);
             }
         }
