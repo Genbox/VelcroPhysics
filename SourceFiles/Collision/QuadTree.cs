@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-public class QTElement<T>
+public class Element<T>
 {
+    public QuadTree<T> Parent;
     public AABB Span;
     public T Value;
-    public QuadTree<T> Parent;
 
-    public QTElement(T value, AABB span)
+    public Element(T value, AABB span)
     {
         Span = span;
         Value = value;
@@ -20,26 +19,39 @@ public class QTElement<T>
 
 public class QuadTree<T> : IBroadPhaseBackend
 {
-    public AABB Span;
-    public List<QTElement<T>> QTNodes;
-    public QuadTree<T>[] SubTrees;
-
     public int MaxBucket;
     public int MaxDepth;
+    public List<Element<T>> Nodes;
+    public AABB Span;
+    public QuadTree<T>[] SubTrees;
+
+    public QuadTree(AABB span, int maxbucket, int maxdepth)
+    {
+        Span = span;
+        Nodes = new List<Element<T>>();
+
+        MaxBucket = maxbucket;
+        MaxDepth = maxdepth;
+    }
 
     public bool IsPartitioned
     {
         get { return SubTrees != null; }
     }
 
-    public QuadTree(AABB span, int maxbucket, int maxdepth)
-    {
-        Span = span;
-        QTNodes = new List<QTElement<T>>();
+    #region IBroadPhaseBackend Members
 
-        MaxBucket = maxbucket;
-        MaxDepth = maxdepth;
+    public void Query(Func<int, bool> callback, ref AABB aabb)
+    {
+        throw new NotImplementedException();
     }
+
+    public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
 
     /// <summary>
     /// returns the quadrant of span that entirely contains test. if none, return 0.
@@ -47,7 +59,7 @@ public class QuadTree<T> : IBroadPhaseBackend
     /// <param name="span"></param>
     /// <param name="test"></param>
     /// <returns></returns>
-    private int partition(AABB span, AABB test)
+    private int Partition(AABB span, AABB test)
     {
         if (span.Q1.Contains(ref test)) return 1;
         if (span.Q2.Contains(ref test)) return 2;
@@ -57,29 +69,29 @@ public class QuadTree<T> : IBroadPhaseBackend
         return 0;
     }
 
-    public void AddNode(QTElement<T> node)
+    public void AddNode(Element<T> node)
     {
         if (!IsPartitioned)
         {
-
-            if (QTNodes.Count >= MaxBucket && MaxDepth > 0) //bin is full and can still subdivide
+            if (Nodes.Count >= MaxBucket && MaxDepth > 0) //bin is full and can still subdivide
             {
                 //
                 //partition into quadrants and sort existing nodes amonst quads.
                 //
-                QTNodes.Add(node); //treat new node just like other nodes for partitioning
+                Nodes.Add(node); //treat new node just like other nodes for partitioning
 
                 SubTrees = new QuadTree<T>[4];
-                SubTrees[0] = new QuadTree<T>(this.Span.Q1, MaxBucket, MaxDepth - 1);
-                SubTrees[1] = new QuadTree<T>(this.Span.Q2, MaxBucket, MaxDepth - 1);
-                SubTrees[2] = new QuadTree<T>(this.Span.Q3, MaxBucket, MaxDepth - 1);
-                SubTrees[3] = new QuadTree<T>(this.Span.Q4, MaxBucket, MaxDepth - 1);
+                SubTrees[0] = new QuadTree<T>(Span.Q1, MaxBucket, MaxDepth - 1);
+                SubTrees[1] = new QuadTree<T>(Span.Q2, MaxBucket, MaxDepth - 1);
+                SubTrees[2] = new QuadTree<T>(Span.Q3, MaxBucket, MaxDepth - 1);
+                SubTrees[3] = new QuadTree<T>(Span.Q4, MaxBucket, MaxDepth - 1);
 
-                var remNodes = new List<QTElement<T>>(); //nodes that are not fully contained by any quadrant
+                List<Element<T>> remNodes = new List<Element<T>>();
+                    //nodes that are not fully contained by any quadrant
 
-                foreach (var n in QTNodes)
+                foreach (Element<T> n in Nodes)
                 {
-                    switch (partition(this.Span, n.Span))
+                    switch (Partition(Span, n.Span))
                     {
                         case 1: //quadrant 1
                             SubTrees[0].AddNode(n);
@@ -100,21 +112,21 @@ public class QuadTree<T> : IBroadPhaseBackend
                     }
                 }
 
-                QTNodes = remNodes;
+                Nodes = remNodes;
             }
             else
             {
                 node.Parent = this;
-                QTNodes.Add(node); //if bin is not yet full or max depth has been reached, just add the node without subdividing
+                Nodes.Add(node);
+                    //if bin is not yet full or max depth has been reached, just add the node without subdividing
             }
-
         }
         else //we already have children nodes
         {
             //
             //add node to specific sub-tree
             //
-            switch (partition(this.Span, node.Span))
+            switch (Partition(Span, node.Span))
             {
                 case 1: //quadrant 1
                     SubTrees[0].AddNode(node);
@@ -130,9 +142,8 @@ public class QuadTree<T> : IBroadPhaseBackend
                     break;
                 case 0:
                     node.Parent = this;
-                    QTNodes.Add(node);
+                    Nodes.Add(node);
                     break;
-
             }
         }
     }
@@ -141,7 +152,6 @@ public class QuadTree<T> : IBroadPhaseBackend
     /// tests if ray intersects AABB
     /// </summary>
     /// <param name="aabb"></param>
-    /// <param name="rayDir"></param>
     /// <returns></returns>
     public static bool RayCastAABB(AABB aabb, Vector2 p1, Vector2 p2)
     {
@@ -152,132 +162,125 @@ public class QuadTree<T> : IBroadPhaseBackend
         }
         if (!AABB.TestOverlap(aabb, segmentAABB)) return false;
 
-        var rayDir = p2 - p1;
-        var rayPos = p1;
+        Vector2 rayDir = p2 - p1;
+        Vector2 rayPos = p1;
 
-        var norm = new Vector2(-rayDir.Y, rayDir.X); //normal to ray
-        if (norm.Length() == 0.0) return true; //if ray is just a point, return true (iff point is within aabb, as tested earlier)
+        Vector2 norm = new Vector2(-rayDir.Y, rayDir.X); //normal to ray
+        if (norm.Length() == 0.0)
+            return true; //if ray is just a point, return true (iff point is within aabb, as tested earlier)
         norm.Normalize();
 
-        var dPos = Vector2.Dot(rayPos, norm);
+        float dPos = Vector2.Dot(rayPos, norm);
 
-        var verts = aabb.GetVertices();
-        var d0 = Vector2.Dot(verts[0], norm) - dPos;
+        Vector2[] verts = aabb.GetVertices();
+        float d0 = Vector2.Dot(verts[0], norm) - dPos;
         for (int i = 1; i < 4; i++)
         {
-            var d = Vector2.Dot(verts[i], norm) - dPos;
-            if (Math.Sign(d) != Math.Sign(d0)) //return true if the ray splits the vertices (ie: sign of dot products with normal are not all same)
+            float d = Vector2.Dot(verts[i], norm) - dPos;
+            if (Math.Sign(d) != Math.Sign(d0))
+                //return true if the ray splits the vertices (ie: sign of dot products with normal are not all same)
                 return true;
         }
 
         return false;
     }
 
-    public void QueryAABB(Func<QTElement<T>, bool> callback, ref AABB searchR)
+    public void QueryAABB(Func<Element<T>, bool> callback, ref AABB searchR)
     {
         Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
         stack.Push(this);
 
         while (stack.Count > 0)
         {
-            var qt = stack.Pop();
-            if (AABB.TestOverlap(ref searchR, ref qt.Span))
-            {
-                foreach (var n in qt.QTNodes)
-                    if (AABB.TestOverlap(ref searchR, ref n.Span))
-                    {
-                        if (!callback(n)) return;
-                    }
+            QuadTree<T> qt = stack.Pop();
+            if (!AABB.TestOverlap(ref searchR, ref qt.Span))
+                continue;
 
-                if (qt.IsPartitioned)
-                    foreach (var st in qt.SubTrees) stack.Push(st);
-            }
-        }
-    }
-
-    public void RayCast(Func<RayCastInput, QTElement<T>, float> callback, ref RayCastInput input)
-    {
-        Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
-        stack.Push(this);
-
-        var maxFraction = input.MaxFraction;
-        var p1 = input.Point1;
-        var p2 = p1 + (input.Point2 - input.Point1) * maxFraction;
-
-        while (stack.Count > 0)
-        {
-            var qt = stack.Pop();
-
-            if (RayCastAABB(qt.Span, p1, p2))
-            {
-                foreach (var n in qt.QTNodes)
+            foreach (Element<T> n in qt.Nodes)
+                if (AABB.TestOverlap(ref searchR, ref n.Span))
                 {
-                    if (RayCastAABB(n.Span, p1, p2))
-                    {
-                        RayCastInput subInput;
-                        subInput.Point1 = input.Point1;
-                        subInput.Point2 = input.Point2;
-                        subInput.MaxFraction = maxFraction;
-
-                        float value = callback(subInput, n);
-                        if (value == 0.0f)
-                            return; // the client has terminated the raycast.
-
-                        if (value > 0.0f)
-                        {
-                            maxFraction = value;
-                            p2 = p1 + (input.Point2 - input.Point1) * maxFraction; //update segment endpoint
-                        }
-
-                    }
+                    if (!callback(n)) return;
                 }
-                if (IsPartitioned)
-                    foreach (var st in qt.SubTrees) stack.Push(st);
-            }
+
+            if (qt.IsPartitioned)
+                foreach (QuadTree<T> st in qt.SubTrees)
+                    stack.Push(st);
         }
     }
 
-    public void GetAllNodesR(ref List<QTElement<T>> nodes)
+    public void RayCast(Func<RayCastInput, Element<T>, float> callback, ref RayCastInput input)
     {
-        foreach (var n in QTNodes) nodes.Add(n);
+        Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
+        stack.Push(this);
+
+        float maxFraction = input.MaxFraction;
+        Vector2 p1 = input.Point1;
+        Vector2 p2 = p1 + (input.Point2 - input.Point1) * maxFraction;
+
+        while (stack.Count > 0)
+        {
+            QuadTree<T> qt = stack.Pop();
+
+            if (!RayCastAABB(qt.Span, p1, p2))
+                continue;
+
+            foreach (Element<T> n in qt.Nodes)
+            {
+                if (!RayCastAABB(n.Span, p1, p2))
+                    continue;
+
+                RayCastInput subInput;
+                subInput.Point1 = input.Point1;
+                subInput.Point2 = input.Point2;
+                subInput.MaxFraction = maxFraction;
+
+                float value = callback(subInput, n);
+                if (value == 0.0f)
+                    return; // the client has terminated the raycast.
+
+                if (value <= 0.0f)
+                    continue;
+
+                maxFraction = value;
+                p2 = p1 + (input.Point2 - input.Point1) * maxFraction; //update segment endpoint
+            }
+            if (IsPartitioned)
+                foreach (QuadTree<T> st in qt.SubTrees)
+                    stack.Push(st);
+        }
+    }
+
+    public void GetAllNodesR(ref List<Element<T>> nodes)
+    {
+        nodes.AddRange(Nodes);
 
         if (IsPartitioned)
-            foreach (var st in SubTrees) st.GetAllNodesR(ref nodes);
+            foreach (QuadTree<T> st in SubTrees) st.GetAllNodesR(ref nodes);
     }
 
-    public void RemoveNode(QTElement<T> node)
+    public void RemoveNode(Element<T> node)
     {
-        node.Parent.QTNodes.Remove(node);
+        node.Parent.Nodes.Remove(node);
 
         //TODO: probably faster to reconstruct tree than to recursivly fix
         //this.Reconstruct();
     }
 
-    public void RemoveNodes(List<QTElement<T>> nodes)
+    public void RemoveNodes(List<Element<T>> nodes)
     {
-        nodes.ForEach(n => n.Parent.QTNodes.Remove(n));
+        nodes.ForEach(n => n.Parent.Nodes.Remove(n));
 
         Reconstruct();
     }
 
     public void Reconstruct()
     {
-        List<QTElement<T>> allNodes = new List<QTElement<T>>();
-        this.GetAllNodesR(ref allNodes);
+        List<Element<T>> allNodes = new List<Element<T>>();
+        GetAllNodesR(ref allNodes);
 
-        QTNodes = new List<QTElement<T>>();
+        Nodes = new List<Element<T>>();
         SubTrees = null;
 
-        allNodes.ForEach(n => this.AddNode(n));
-    }
-
-    public void Query(Func<int, bool> callback, ref AABB aabb)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
-    {
-        throw new NotImplementedException();
+        allNodes.ForEach(AddNode);
     }
 }

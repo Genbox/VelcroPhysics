@@ -31,7 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
-                new TestEntry {Name = "Car test", CreateFcn = CarTest.Create},
+                new TestEntry {Name = "Quad Tree BroadPhase test", CreateFcn = QuadTreeTest.Create},
 
                 //Original tests
                 new TestEntry {Name = "Car test", CreateFcn = CarTest.Create},
@@ -70,7 +70,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Distance Test", CreateFcn = DistanceTest.Create},
                 new TestEntry {Name = "Dominos", CreateFcn = DominosTest.Create},
                 new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
-                new TestEntry{Name= "QuadTreeBroadPhase test", CreateFcn = QTBroadTest.Create},
                 new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
                 new TestEntry {Name = "Line Joint", CreateFcn = LineJointTest.Create},
                 new TestEntry {Name = "Pulleys", CreateFcn = PulleysTest.Create},
@@ -102,9 +101,8 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Marching Squares Terrain test", CreateFcn = MSTerrainTest.Create},
                 new TestEntry {Name = "Buoyancy test", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Convex hull test", CreateFcn = ConvexHullTest.Create},
-
-                // Forces tests
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
+
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }

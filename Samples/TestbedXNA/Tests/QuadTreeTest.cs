@@ -9,46 +9,39 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class QTBroadTest : Test
+    public class QuadTreeTest : Test
     {
-        private QTBroadTest()
-        {
-
-        }
         public override void Initialize()
         {
             Settings.VelocityIterations = 2;
             Settings.PositionIterations = 4;
 
-
             GameInstance.ViewCenter = Vector2.Zero;
 
             Vector2 worldSize = 2 * GameInstance.ConvertScreenToWorld(GameInstance.Window.ClientBounds.Width, 0);
 
-            //recreate World, using QT constructor
-            World = new Dynamics.World(new Vector2(0.0f, -10.0f), new AABB(-worldSize / 2, worldSize / 2));
-            World.JointRemoved += JointRemoved;
-            World.ContactManager.PreSolve += PreSolve;
-            World.ContactManager.PostSolve += PostSolve;
-            World.ContactManager.BeginContact += BeginContact;
-            World.ContactManager.EndContact += EndContact;
+            //Create a World using QuadTree constructor
+            World = new World(new Vector2(0.0f, -10.0f), new AABB(-worldSize / 2, worldSize / 2));
+            
+            //Create a World using DynamicTree constructor
+            //World = new World(new Vector2(0.0f, -10.0f));
 
             //
             //set up border
             //
 
-            float _halfWidth = worldSize.X / 2 - 2f;
-            float _halfHeight = worldSize.Y / 2 - 2f;
+            float halfWidth = worldSize.X / 2 - 2f;
+            float halfHeight = worldSize.Y / 2 - 2f;
 
             Vertices borders = new Vertices(4);
-            borders.Add(new Vector2(-_halfWidth, _halfHeight));
-            borders.Add(new Vector2(_halfWidth, _halfHeight));
-            borders.Add(new Vector2(_halfWidth, -_halfHeight));
-            borders.Add(new Vector2(-_halfWidth, -_halfHeight));
+            borders.Add(new Vector2(-halfWidth, halfHeight));
+            borders.Add(new Vector2(halfWidth, halfHeight));
+            borders.Add(new Vector2(halfWidth, -halfHeight));
+            borders.Add(new Vector2(-halfWidth, -halfHeight));
 
-            Body _anchor = BodyFactory.CreateLoopShape(World, borders);
-            _anchor.CollisionCategories = Category.All;
-            _anchor.CollidesWith = Category.All;
+            Body anchor = BodyFactory.CreateLoopShape(World, borders);
+            anchor.CollisionCategories = Category.All;
+            anchor.CollidesWith = Category.All;
 
             //
             //box
@@ -65,11 +58,10 @@ namespace FarseerPhysics.TestBed.Tests
             //
             //populate
             //
-            int rad = 12;
+            const int rad = 12;
+            const float a = 0.6f;
+            const float sep = 0.000f;
 
-            float a = 0.6f;
-
-            float sep = 0.000f;
             Vector2 cent = Vector2.Zero;
 
             for (int y = -rad; y <= +rad; y++)
@@ -83,12 +75,10 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
             base.Initialize();
-
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-
             GameInstance.ViewCenter = Vector2.Zero;
 
             base.Update(settings, gameTime);
@@ -96,7 +86,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new QTBroadTest();
+            return new QuadTreeTest();
         }
     }
 }
