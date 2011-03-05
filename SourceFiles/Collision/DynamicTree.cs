@@ -63,7 +63,7 @@ namespace FarseerPhysics.Collision
     ///
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     /// </summary>
-    public class DynamicTree<T> : IBroadPhaseBackend
+    public class DynamicTree<T>
     {
         internal const int NullNode = -1;
         private static Stack<int> _stack = new Stack<int>(256);
@@ -650,11 +650,5 @@ namespace FarseerPhysics.Collision
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);
         }
-    }
-
-    public interface IBroadPhaseBackend
-    {
-        void Query(Func<int, bool> callback, ref AABB aabb);
-        void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input);
     }
 }

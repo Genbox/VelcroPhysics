@@ -317,25 +317,4 @@ namespace FarseerPhysics.Collision
             BufferMove(proxyId);
         }
     }
-
-    public interface IBroadPhase : IBroadPhaseBackend
-    {
-        void UpdatePairs(BroadphaseDelegate callback);
-
-        bool TestOverlap(int proxyIdA, int proxyIdB);
-
-        int AddProxy(ref FixtureProxy proxy);
-
-        void RemoveProxy(int proxyId);
-
-        void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement);
-
-        FixtureProxy GetProxy(int proxyId);
-
-        void TouchProxy(int proxyId);
-
-        int ProxyCount { get; }
-
-        void GetFatAABB(int proxyId, out AABB aabb);
-    }
 }

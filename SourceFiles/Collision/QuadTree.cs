@@ -18,7 +18,7 @@ public class Element<T>
     }
 }
 
-public class QuadTree<T> : IBroadPhaseBackend
+public class QuadTree<T>
 {
     public int MaxBucket;
     public int MaxDepth;
@@ -39,20 +39,6 @@ public class QuadTree<T> : IBroadPhaseBackend
     {
         get { return SubTrees != null; }
     }
-
-    #region IBroadPhaseBackend Members
-
-    public void Query(Func<int, bool> callback, ref AABB aabb)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
-    {
-        throw new NotImplementedException();
-    }
-
-    #endregion
 
     /// <summary>
     /// returns the quadrant of span that entirely contains test. if none, return 0.
@@ -283,15 +269,5 @@ public class QuadTree<T> : IBroadPhaseBackend
         SubTrees = null;
 
         allNodes.ForEach(AddNode);
-    }
-
-    /// <summary>
-    /// Get the fat AABB for a proxy.
-    /// </summary>
-    /// <param name="proxyId">The proxy id.</param>
-    /// <param name="fatAABB">The fat AABB.</param>
-    public void GetFatAABB(int proxyId, out AABB fatAABB)
-    {
-        fatAABB = Nodes[proxyId].Span;
     }
 }
