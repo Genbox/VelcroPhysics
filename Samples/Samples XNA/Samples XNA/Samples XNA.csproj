@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Samples_XNA</RootNamespace>
+    <RootNamespace>FarseerPhysics</RootNamespace>
     <AssemblyName>Samples XNA</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -117,6 +117,7 @@
     <Compile Include="Samples\AdvancedDemo3.cs" />
     <Compile Include="Samples\AdvancedDemo4.cs" />
     <Compile Include="Samples\AdvancedDemo5.cs" />
+    <Compile Include="Samples\GameDemo2.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
     <Compile Include="DrawingSystem\DrawableObject.cs" />
