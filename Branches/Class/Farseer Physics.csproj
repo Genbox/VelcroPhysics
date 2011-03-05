@@ -89,9 +89,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\SourceFiles\Collision\BroadPhase.cs">
-      <Link>Collision\BroadPhase.cs</Link>
-    </Compile>
     <Compile Include="..\..\SourceFiles\Collision\Collision.cs">
       <Link>Collision\Collision.cs</Link>
     </Compile>
@@ -100,6 +97,12 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Collision\DynamicTree.cs">
       <Link>Collision\DynamicTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\DynamicTreeBroadPhase.cs">
+      <Link>Collision\DynamicTreeBroadPhase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\IBroadPhase.cs">
+      <Link>Collision\IBroadPhase.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Collision\QuadTree.cs">
       <Link>Collision\QuadTree.cs</Link>
