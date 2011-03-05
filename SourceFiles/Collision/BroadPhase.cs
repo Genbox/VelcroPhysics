@@ -335,5 +335,7 @@ namespace FarseerPhysics.Collision
         void TouchProxy(int proxyId);
 
         int ProxyCount { get; }
+
+        void GetFatAABB(int proxyId, out AABB aabb);
     }
 }
