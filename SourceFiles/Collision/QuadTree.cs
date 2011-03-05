@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 
@@ -282,5 +283,15 @@ public class QuadTree<T> : IBroadPhaseBackend
         SubTrees = null;
 
         allNodes.ForEach(AddNode);
+    }
+
+    /// <summary>
+    /// Get the fat AABB for a proxy.
+    /// </summary>
+    /// <param name="proxyId">The proxy id.</param>
+    /// <param name="fatAABB">The fat AABB.</param>
+    public void GetFatAABB(int proxyId, out AABB fatAABB)
+    {
+        fatAABB = Nodes[proxyId].Span;
     }
 }

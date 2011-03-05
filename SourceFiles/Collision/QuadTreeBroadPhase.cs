@@ -8,11 +8,11 @@ using Microsoft.Xna.Framework;
 public class QuadTreeBroadPhase : IBroadPhase
 {
     private const int TreeUpdateThresh = 10000;
-    private Dictionary<int, Element<FixtureProxy>> _idRegister;
-    private QuadTree<FixtureProxy> _quadTree;
     private int _currID;
+    private Dictionary<int, Element<FixtureProxy>> _idRegister;
     private List<Element<FixtureProxy>> _moveBuffer;
     private List<Pair> _pairBuffer;
+    private QuadTree<FixtureProxy> _quadTree;
     private int _treeMoveNum;
 
     /// <summary>
@@ -27,47 +27,25 @@ public class QuadTreeBroadPhase : IBroadPhase
         _pairBuffer = new List<Pair>();
     }
 
+    #region IBroadPhase Members
+
     public int ProxyCount
     {
         get { return _idRegister.Count; }
     }
 
-    private int NextID()
-    {
-        return _currID++;
-    }
-
-    private AABB Fatten(ref AABB aabb)
-    {
-        Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
-        return new AABB(aabb.LowerBound - r, aabb.UpperBound + r);
-    }
-
-    private Func<Element<FixtureProxy>, bool> TransformPredicate(Func<int, bool> idPredicate)
-    {
-        Func<Element<FixtureProxy>, bool> qtPred = qtnode => idPredicate(qtnode.Value.ProxyId);
-        return qtPred;
-    }
-
-    private Func<RayCastInput, Element<FixtureProxy>, float> TransformRayCallback(
-        Func<RayCastInput, int, float> callback)
-    {
-        Func<RayCastInput, Element<FixtureProxy>, float> newCallback = (input, qtnode) => callback(input, qtnode.Value.ProxyId);
-        return newCallback;
-    }
-
-    private AABB GetFatAABB(int proxyID)
+    public void GetFatAABB(int proxyID, out AABB aabb)
     {
         if (_idRegister.ContainsKey(proxyID))
-            return _idRegister[proxyID].Span;
-
-        throw new KeyNotFoundException("proxyID not found in register");
+            aabb = _idRegister[proxyID].Span;
+        else
+            throw new KeyNotFoundException("proxyID not found in register");
     }
 
     public void UpdatePairs(BroadphaseDelegate callback)
     {
         _pairBuffer.Clear();
-        foreach (var qtnode in _moveBuffer)
+        foreach (Element<FixtureProxy> qtnode in _moveBuffer)
         {
             // Query tree, create pairs and add them pair buffer.
             Query(proxyID => PairBufferQueryCallback(proxyID, qtnode.Value.ProxyId), ref qtnode.Span);
@@ -95,20 +73,6 @@ public class QuadTreeBroadPhase : IBroadPhase
         }
     }
 
-    private bool PairBufferQueryCallback(int proxyID, int baseID)
-    {
-        // A proxy cannot form a pair with itself.
-        if (proxyID == baseID)
-            return true;
-
-        Pair p = new Pair();
-        p.ProxyIdA = Math.Min(proxyID, baseID);
-        p.ProxyIdB = Math.Max(proxyID, baseID);
-        _pairBuffer.Add(p);
-
-        return true;
-    }
-
     /// <summary>
     /// Test overlap of fat AABBs.
     /// </summary>
@@ -117,12 +81,16 @@ public class QuadTreeBroadPhase : IBroadPhase
     /// <returns></returns>
     public bool TestOverlap(int proxyIdA, int proxyIdB)
     {
-        return AABB.TestOverlap(GetFatAABB(proxyIdA), GetFatAABB(proxyIdB));
+        AABB aabb1;
+        AABB aabb2;
+        GetFatAABB(proxyIdA, out aabb1);
+        GetFatAABB(proxyIdB, out aabb2);
+        return AABB.TestOverlap(ref aabb1, ref aabb2);
     }
 
     public int AddProxy(ref FixtureProxy proxy)
     {
-        int proxyID = NextID();
+        int proxyID = _currID++;
         proxy.ProxyId = proxyID;
         AABB aabb = Fatten(ref proxy.AABB);
         Element<FixtureProxy> qtnode = new Element<FixtureProxy>(proxy, aabb);
@@ -137,7 +105,7 @@ public class QuadTreeBroadPhase : IBroadPhase
     {
         if (_idRegister.ContainsKey(proxyId))
         {
-            var qtnode = _idRegister[proxyId];
+            Element<FixtureProxy> qtnode = _idRegister[proxyId];
             UnbufferMove(qtnode);
             _idRegister.Remove(proxyId);
             _quadTree.RemoveNode(qtnode);
@@ -148,9 +116,12 @@ public class QuadTreeBroadPhase : IBroadPhase
 
     public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
     {
-        if (GetFatAABB(proxyId).Contains(ref aabb))
-            return; //exit if movement is within fat aabb
+        AABB fatAABB;
+        GetFatAABB(proxyId, out fatAABB);
 
+        //exit if movement is within fat aabb
+        if (fatAABB.Contains(ref aabb))
+            return;
 
         // Extend AABB.
         AABB b = aabb;
@@ -172,35 +143,13 @@ public class QuadTreeBroadPhase : IBroadPhase
             b.UpperBound.Y += d.Y;
 
 
-        var qtnode = _idRegister[proxyId];
+        Element<FixtureProxy> qtnode = _idRegister[proxyId];
         qtnode.Value.AABB = b; //not neccesary for QTree, but might be accessed externally
         qtnode.Span = b;
 
         ReinsertNode(qtnode);
 
         BufferMove(qtnode);
-    }
-
-    private void ReinsertNode(Element<FixtureProxy> qtnode)
-    {
-        _quadTree.RemoveNode(qtnode);
-        _quadTree.AddNode(qtnode);
-
-        if (++_treeMoveNum > TreeUpdateThresh)
-        {
-            _quadTree.Reconstruct();
-            _treeMoveNum = 0;
-        }
-    }
-
-    private void BufferMove(Element<FixtureProxy> proxy)
-    {
-        _moveBuffer.Add(proxy);
-    }
-
-    private void UnbufferMove(Element<FixtureProxy> proxy)
-    {
-        _moveBuffer.Remove(proxy);
     }
 
     public FixtureProxy GetProxy(int proxyId)
@@ -227,5 +176,63 @@ public class QuadTreeBroadPhase : IBroadPhase
     public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
     {
         _quadTree.RayCast(TransformRayCallback(callback), ref input);
+    }
+
+    #endregion
+
+    private AABB Fatten(ref AABB aabb)
+    {
+        Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
+        return new AABB(aabb.LowerBound - r, aabb.UpperBound + r);
+    }
+
+    private Func<Element<FixtureProxy>, bool> TransformPredicate(Func<int, bool> idPredicate)
+    {
+        Func<Element<FixtureProxy>, bool> qtPred = qtnode => idPredicate(qtnode.Value.ProxyId);
+        return qtPred;
+    }
+
+    private Func<RayCastInput, Element<FixtureProxy>, float> TransformRayCallback(
+        Func<RayCastInput, int, float> callback)
+    {
+        Func<RayCastInput, Element<FixtureProxy>, float> newCallback =
+            (input, qtnode) => callback(input, qtnode.Value.ProxyId);
+        return newCallback;
+    }
+
+    private bool PairBufferQueryCallback(int proxyID, int baseID)
+    {
+        // A proxy cannot form a pair with itself.
+        if (proxyID == baseID)
+            return true;
+
+        Pair p = new Pair();
+        p.ProxyIdA = Math.Min(proxyID, baseID);
+        p.ProxyIdB = Math.Max(proxyID, baseID);
+        _pairBuffer.Add(p);
+
+        return true;
+    }
+
+    private void ReinsertNode(Element<FixtureProxy> qtnode)
+    {
+        _quadTree.RemoveNode(qtnode);
+        _quadTree.AddNode(qtnode);
+
+        if (++_treeMoveNum > TreeUpdateThresh)
+        {
+            _quadTree.Reconstruct();
+            _treeMoveNum = 0;
+        }
+    }
+
+    private void BufferMove(Element<FixtureProxy> proxy)
+    {
+        _moveBuffer.Add(proxy);
+    }
+
+    private void UnbufferMove(Element<FixtureProxy> proxy)
+    {
+        _moveBuffer.Remove(proxy);
     }
 }

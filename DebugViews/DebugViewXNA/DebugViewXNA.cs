@@ -259,7 +259,7 @@ namespace FarseerPhysics.DebugViews
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 IBroadPhase bp = World.ContactManager.BroadPhase;
-
+                
                 foreach (Body b in World.BodyList)
                 {
                     if (b.Enabled == false)
@@ -269,14 +269,14 @@ namespace FarseerPhysics.DebugViews
 
                     foreach (Fixture f in b.FixtureList)
                     {
-                        //for (int t = 0; t < f.ProxyCount; ++t)
-                        //{
-                        //    FixtureProxy proxy = f.Proxies[t];
-                        //    AABB aabb;
-                        //    bp.GetFatAABB(proxy.ProxyId, out aabb);
+                        for (int t = 0; t < f.ProxyCount; ++t)
+                        {
+                            FixtureProxy proxy = f.Proxies[t];
+                            AABB aabb;
+                            bp.GetFatAABB(proxy.ProxyId, out aabb);
 
-                        //    DrawAABB(ref aabb, color);
-                        //}
+                            DrawAABB(ref aabb, color);
+                        }
                     }
                 }
             }
