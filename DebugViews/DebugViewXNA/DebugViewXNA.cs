@@ -310,7 +310,6 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-
         private void DrawPerformanceGraph()
         {
             _graphValues.Add(World.UpdateTime);
