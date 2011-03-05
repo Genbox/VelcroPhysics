@@ -394,6 +394,7 @@ namespace FarseerPhysics.Common
 
                 searchOn = false;
 
+
                 if (polygon.Count > 2)
                 {
                     if (_holeDetection)
@@ -444,12 +445,12 @@ namespace FarseerPhysics.Common
                     }
 
                     detectedPolygons.Add(polygon);
+                }
 
-                    if (_multipartDetection)
-                    {
-                        if (SearchNextHullEntrance(detectedPolygons, polygonEntrance.Value, out polygonEntrance))
-                            searchOn = true;
-                    }
+                if (_multipartDetection || polygon.Count <= 2)
+                {
+                    if (SearchNextHullEntrance(detectedPolygons, polygonEntrance.Value, out polygonEntrance))
+                        searchOn = true;
                 }
             }
             while (searchOn);
