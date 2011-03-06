@@ -36,8 +36,19 @@ namespace FarseerPhysics.Factories
         public static void ConvertPathToEdges(Path path, Body body, int subdivisions)
         {
             Vertices verts = path.GetVertices(subdivisions);
-            LoopShape loop = new LoopShape(verts);
-            body.CreateFixture(loop);
+
+            if (path.Closed)
+            {
+                LoopShape loop = new LoopShape(verts);
+                body.CreateFixture(loop);
+            }
+            else
+            {
+                for (int i = 1; i < verts.Count; i++)
+                {
+                    body.CreateFixture(new EdgeShape(verts[i], verts[i - 1]));
+                }
+            }
         }
 
         /// <summary>
@@ -145,7 +156,7 @@ namespace FarseerPhysics.Factories
         {
             Vector2 destination = path.GetPosition(time);
             Vector2 positionDelta = body.Position - destination;
-            Vector2 velocity = (positionDelta/timeStep)*strength;
+            Vector2 velocity = (positionDelta / timeStep) * strength;
 
             body.LinearVelocity = -velocity;
         }
