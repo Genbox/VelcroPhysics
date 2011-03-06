@@ -76,6 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
+                
                 //FPE tests
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
