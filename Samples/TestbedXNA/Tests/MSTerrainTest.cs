@@ -9,6 +9,7 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework.Input;
 using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -19,18 +20,32 @@ namespace FarseerPhysics.TestBed.Tests
 
         public MSTerrainTest()
         {
-            World = new World(new Vector2(0, -9.82f));
+            World = new World(new Vector2(0, -10));
 
             terrain = new MSTerrain(World, new AABB(new Vector2(0, 0), 80, 80))
             {
                 PointsPerUnit = 10,
                 CellSize = 50,
-                SubCellSize = 10,
-                Decomposer = Decomposer.Earclip,
+                SubCellSize = 5,
+                Decomposer = Decomposer.Bayazit,
                 Iterations = 2,
             };
 
             terrain.Initialize();
+        }
+
+        public override void Initialize()
+        {
+            Texture2D texture = GameInstance.Content.Load<Texture2D>("Terrain");
+
+            terrain.ApplyTexture(texture, new Vector2(400,0), InsideTerrainTest);
+            
+            base.Initialize();
+        }
+
+        private bool InsideTerrainTest(Color color)
+        {
+            return (color == Color.Black);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
