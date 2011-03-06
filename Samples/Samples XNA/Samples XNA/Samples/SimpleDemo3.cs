@@ -47,7 +47,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Agent _agent;
         private Body[] _obstacles = new Body[5];
-        private DrawableObject _obstacle;
+        private Sprite _obstacle;
 
         public override void LoadContent()
         {
@@ -81,7 +81,7 @@ namespace FarseerPhysics.SamplesFramework
             _obstacles[4].Position = new Vector2(-17f, 0f);
 
             // create sprite based on body
-            _obstacle = new DrawableObject(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
+            _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
                                                                                  MaterialType.Dots,
                                                                                  Color.SandyBrown, 0.8f),
                                            AssetCreator.CalculateOrigin(_obstacles[0]));

@@ -46,7 +46,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Body _rectangle;
-        private DrawableObject _rectangleSprite;
+        private Sprite _rectangleSprite;
 
         public override void LoadContent()
         {
@@ -62,7 +62,7 @@ namespace FarseerPhysics.SamplesFramework
             SetUserAgent(_rectangle, 100f, 100f);
             
             // create sprite based on body
-            _rectangleSprite = new DrawableObject(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape, 
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape, 
                                                                                         MaterialType.Squares, 
                                                                                         Color.Orange, 1f),
                                                   AssetCreator.CalculateOrigin(_rectangle));
