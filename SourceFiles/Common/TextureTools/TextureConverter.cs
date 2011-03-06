@@ -46,9 +46,32 @@ namespace FarseerPhysics.Common
             : base(vertices)
         {
         }
+
+        public void Transform(Matrix transform)
+        {
+            // Transform main polygon
+            for (int i = 0; i < this.Count; i++)
+                this[i] = Vector2.Transform(this[i], transform);
+
+            // Transform holes
+            Vector2[] temp = null; 
+            if (_holes != null && _holes.Count > 0)
+            {
+                for (int i = 0; i < _holes.Count; i++)
+                {
+                    temp = _holes[i].ToArray();
+                    Vector2.Transform(temp, ref transform, temp);
+
+                    _holes[i] = new Vertices(temp);
+                }
+            }
+        }
     }
     #endregion
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class TextureConverter
     {
         private const int _CLOSEPIXELS_LENGTH = 8;
@@ -73,9 +96,8 @@ namespace FarseerPhysics.Common
         private bool _holeDetection;
         private bool _multipartDetection;
         private bool _pixelOffsetOptimization;
-        private bool _resultScaling;
 
-        private Vector2 _resultSizeTarget;
+        private Matrix _transform = Matrix.Identity;
 
         #region Properties
         /// <summary>
@@ -115,21 +137,12 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
-        /// Will use 'ResultSizeTarget' to scale the resulting polygon data (post processing). Default is false.
+        /// Can be used for scaling.
         /// </summary>
-        public bool ResultScaling
+        public Matrix Transform
         {
-            get { return _resultScaling; }
-            set { _resultScaling = value; }
-        }
-
-        /// <summary>
-        /// Target size of the polygon. Sizes the polygon regarding the aspect ratio of the texture data to X or Y size (whichever is matched first). Default is X=1f and Y=1f.
-        /// </summary>
-        public Vector2 ResultSizeTarget
-        {
-            get { return _resultSizeTarget; }
-            set { _resultSizeTarget = value; }
+            get { return _transform; }
+            set { _transform = value; }
         }
 
         /// <summary>
@@ -168,35 +181,34 @@ namespace FarseerPhysics.Common
         #region Constructors
         public TextureConverter()
         {
-            Initialize(null, null, null, null, null, null, null, null, null);
+            Initialize(null, null, null, null, null, null, null, null);
         }
 
         public TextureConverter(byte? alphaTolerance, float? hullTolerance,
-            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization,
-            bool? resultScaling, Vector2? resultSizeTarget)
+            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, Matrix? transform)
         {
             Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
-                multipartDetection, pixelOffsetOptimization, resultScaling, resultSizeTarget);
+                multipartDetection, pixelOffsetOptimization, transform);
         }
 
         public TextureConverter(uint[] data, int width)
         {
-            Initialize(data, width, null, null, null, null, null, null, null);
+            Initialize(data, width, null, null, null, null, null, null);
         }
 
         public TextureConverter(uint[] data, int width, byte? alphaTolerance,
             float? hullTolerance, bool? holeDetection, bool? multipartDetection,
-            bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
+            bool? pixelOffsetOptimization, Matrix? transform)
         {
             Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
-                multipartDetection, pixelOffsetOptimization, resultScaling, resultSizeTarget);
+                multipartDetection, pixelOffsetOptimization, transform);
         }
         #endregion
 
         #region Initialization
         private void Initialize(uint[] data, int? width, byte? alphaTolerance,
             float? hullTolerance, bool? holeDetection, bool? multipartDetection,
-            bool? pixelOffsetOptimization, bool? resultScaling, Vector2? resultSizeTarget)
+            bool? pixelOffsetOptimization, Matrix? transform)
         {
             if (data != null && !width.HasValue)
                 throw new ArgumentNullException("width", "'width' can't be null if 'data' is set.");
@@ -232,15 +244,10 @@ namespace FarseerPhysics.Common
             else
                 PixelOffsetOptimization = false;
 
-            if (resultScaling.HasValue)
-                ResultScaling = resultScaling.Value;
+            if (transform.HasValue)
+                Transform = transform.Value;
             else
-                ResultScaling = false;
-
-            if (resultSizeTarget.HasValue)
-                ResultSizeTarget = resultSizeTarget.Value;
-            else
-                ResultSizeTarget = new Vector2(1f, 1f);
+                Transform = Matrix.Identity;
         }
         #endregion
 
@@ -458,42 +465,44 @@ namespace FarseerPhysics.Common
             if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
                 throw new Exception("Couldn't detect any vertices.");
 
-            // Revert the order of vetrices. Temporary solution.
-            if (PolygonDetectionType == VerticesDetectionType.Separated)
-            {
-                for (int i = 0; i < detectedPolygons.Count; i++)
-                {
-                    detectedPolygons[i].Reverse();
-
-                    if (detectedPolygons[i].Holes != null && detectedPolygons[i].Holes.Count > 0)
-                    {
-                        for (int j = 0; j < detectedPolygons[i].Holes.Count; j++)
-                            detectedPolygons[i].Holes[j].Reverse();
-                    }
-                }
-            }
-
-            #region Post processing.
+            
+            // Post processing.
+            if (PolygonDetectionType == VerticesDetectionType.Separated) // Only when VerticesDetectionType.Separated? -> Recheck.
+                ApplyTriangulationCompatibleWinding(ref detectedPolygons);
 
             if (_pixelOffsetOptimization)
                 ApplyPixelOffsetOptimization(ref detectedPolygons);
 
-            if (_resultScaling)
-                ApplyTargetSize(ref detectedPolygons);
+            if (_transform != Matrix.Identity)
+                ApplyTransform(ref detectedPolygons);
 
-            #endregion
 
             return detectedPolygons;
         }
 
-        private void ApplyPixelOffsetOptimization(ref List<DetectedVertices> detectedPolygons)
+        private void ApplyTriangulationCompatibleWinding(ref List<DetectedVertices> detectedPolygons)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < detectedPolygons.Count; i++)
+            {
+                detectedPolygons[i].Reverse();
+
+                if (detectedPolygons[i].Holes != null && detectedPolygons[i].Holes.Count > 0)
+                {
+                    for (int j = 0; j < detectedPolygons[i].Holes.Count; j++)
+                        detectedPolygons[i].Holes[j].Reverse();
+                }
+            }
         }
 
-        private void ApplyTargetSize(ref List<DetectedVertices> detectedPolygons)
+        private void ApplyPixelOffsetOptimization(ref List<DetectedVertices> detectedPolygons)
         {
-            throw new NotImplementedException();
+
+        }
+
+        private void ApplyTransform(ref List<DetectedVertices> detectedPolygons)
+        {
+            for (int i = 0; i < detectedPolygons.Count; i++)
+                detectedPolygons[i].Transform(_transform);
         }
 
         #region Data[] functions
