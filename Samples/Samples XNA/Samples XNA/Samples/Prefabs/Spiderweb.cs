@@ -14,11 +14,9 @@ namespace FarseerPhysics.SamplesFramework
     public class Spiderweb
     {
         private World world;
-        private Texture2D link;
-        private Texture2D goo;
+        private Sprite link;
+        private Sprite goo;
 
-        private Vector2 linkOrigin;
-        private Vector2 gooOrigin;
         private float spriteScale;
         private float radius;
 
@@ -107,12 +105,10 @@ namespace FarseerPhysics.SamplesFramework
 
         public void LoadContent(ContentManager content)
         {
-            link = content.Load<Texture2D>("Samples/link");
-            goo = content.Load<Texture2D>("Samples/goo");
+            link  = new Sprite(content.Load<Texture2D>("Samples/link"));
+            goo = new Sprite(content.Load<Texture2D>("Samples/goo"));
 
-            linkOrigin = new Vector2(link.Width / 2f, link.Height / 2f);
-            gooOrigin = new Vector2(goo.Width / 2f, goo.Height / 2f);
-            spriteScale = 2f * ConvertUnits.ToDisplayUnits(radius) / goo.Width;
+            spriteScale = 2f * ConvertUnits.ToDisplayUnits(radius) / goo.texture.Width;
         }
 
         public void Draw(SpriteBatch batch)
@@ -122,13 +118,11 @@ namespace FarseerPhysics.SamplesFramework
                 if (j.Enabled && j.JointType != JointType.FixedMouse)
                 {
                     Vector2 pos = ConvertUnits.ToDisplayUnits((j.WorldAnchorA + j.WorldAnchorB) / 2f);
-                    float distance = ConvertUnits.ToDisplayUnits((j.WorldAnchorB - j.WorldAnchorA).Length()) + 8f;
-                    Vector2 scale = new Vector2(distance / link.Width, spriteScale);
-
-                    Vector2 v1 = Vector2.UnitX;
-                    Vector2 v2 = j.WorldAnchorB - j.WorldAnchorA;
-                    float angle = (float)MathUtils.VectorAngle(ref v1, ref v2);
-                    batch.Draw(link, pos, null, Color.White, angle, linkOrigin, scale, SpriteEffects.None, 0f);
+                    Vector2 AtoB = j.WorldAnchorB - j.WorldAnchorA;
+                    float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * spriteScale;
+                    Vector2 scale = new Vector2(distance / link.texture.Width, spriteScale);
+                    float angle = (float)MathUtils.VectorAngle(Vector2.UnitX, AtoB);
+                    batch.Draw(link.texture, pos, null, Color.White, angle, link.origin, scale, SpriteEffects.None, 0f);
                 }
             }
 
@@ -136,8 +130,8 @@ namespace FarseerPhysics.SamplesFramework
             {
                 if (b.Enabled && b.FixtureList[0].ShapeType == ShapeType.Circle)
                 {
-                    batch.Draw(goo, ConvertUnits.ToDisplayUnits(b.Position), null,
-                               Color.White, 0f, gooOrigin, spriteScale, SpriteEffects.None, 0f);
+                    batch.Draw(goo.texture, ConvertUnits.ToDisplayUnits(b.Position), null,
+                               Color.White, 0f, goo.origin, spriteScale, SpriteEffects.None, 0f);
                 }
             }
         }

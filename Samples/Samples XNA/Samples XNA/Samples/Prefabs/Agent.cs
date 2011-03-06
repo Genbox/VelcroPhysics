@@ -12,8 +12,8 @@ namespace FarseerPhysics.SamplesFramework
         private Body _agentBody;
         private Category _collidesWith;
         private PhysicsGameScreen _screen;
-        private DrawableObject _box;
-        private DrawableObject _knob;
+        private Sprite _box;
+        private Sprite _knob;
         private float _offset;
 
         private Category _collisionCategories;
@@ -49,9 +49,9 @@ namespace FarseerPhysics.SamplesFramework
 
             //Gfx
             AssetCreator _creator = _screen.ScreenManager.Assets;
-            _box = new DrawableObject(_creator.TextureFromVertices(PolygonTools.CreateRectangle(1.75f, 0.2f),
+            _box = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateRectangle(1.75f, 0.2f),
                                                                    MaterialType.Blank, Color.White, 1f));
-            _knob = new DrawableObject(_creator.CircleTexture(0.5f, MaterialType.Blank, Color.Orange, 1f));
+            _knob = new Sprite(_creator.CircleTexture(0.5f, MaterialType.Blank, Color.Orange, 1f));
             _offset = ConvertUnits.ToDisplayUnits(2f);
         }
 

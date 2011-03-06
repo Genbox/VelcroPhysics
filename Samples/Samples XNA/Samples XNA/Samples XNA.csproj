@@ -120,7 +120,7 @@
     <Compile Include="Samples\GameDemo2.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
-    <Compile Include="DrawingSystem\DrawableObject.cs" />
+    <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="Samples\GameDemo1.cs" />
     <Compile Include="Samples\Prefabs\Agent.cs" />
     <Compile Include="Samples\Prefabs\Border.cs" />
