@@ -121,7 +121,8 @@ namespace FarseerPhysics.SamplesFramework
                     Vector2 AtoB = j.WorldAnchorB - j.WorldAnchorA;
                     float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * spriteScale;
                     Vector2 scale = new Vector2(distance / link.texture.Width, spriteScale);
-                    float angle = (float)MathUtils.VectorAngle(Vector2.UnitX, AtoB);
+                    Vector2 unitx = Vector2.UnitX;
+                    float angle = (float)MathUtils.VectorAngle(ref unitx, ref AtoB);
                     batch.Draw(link.texture, pos, null, Color.White, angle, link.origin, scale, SpriteEffects.None, 0f);
                 }
             }

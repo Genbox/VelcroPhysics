@@ -211,7 +211,7 @@ namespace FarseerPhysics.Common
 
             foreach (var poly in polyList)
             {
-                verticesList.Add(new Vertices(poly.points.GetListOfElements()));
+               verticesList.Add(new Vertices(poly.points.GetListOfElements()));
             }
 
             return verticesList;

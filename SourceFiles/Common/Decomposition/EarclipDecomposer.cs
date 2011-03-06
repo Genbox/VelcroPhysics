@@ -71,7 +71,22 @@ namespace FarseerPhysics.Common.Decomposition
         {
             if (vertices.Count < 3)
                 return new List<Vertices> {vertices};
-
+            /*
+            if (vertices.IsConvex() && vertices.Count <= Settings.MaxPolygonVertices)
+            {
+                if (vertices.IsCounterClockWise())
+                {
+                    Vertices tempP = new Vertices(vertices);
+                    tempP.Reverse();
+                    tempP = SimplifyTools.CollinearSimplify(tempP);
+                    tempP.ForceCounterClockWise();
+                    return new List<Vertices> { tempP };
+                }
+                vertices = SimplifyTools.CollinearSimplify(vertices);
+                vertices.ForceCounterClockWise();
+                return new List<Vertices> { vertices };
+            }
+            */
             List<Triangle> triangulated;
 
             if (vertices.IsCounterClockWise())
@@ -207,7 +222,7 @@ namespace FarseerPhysics.Common.Decomposition
                     //We have a maximum of polygons that we need to keep under.
                     if (polyIndex < maxPolys)
                     {
-                        SimplifyTools.MergeParallelEdges(poly, tolerance);
+                        //SimplifyTools.MergeParallelEdges(poly, tolerance);
 
                         //If identical points are present, a triangle gets
                         //borked by the MergeParallelEdges function, hence

@@ -27,7 +27,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PointsPerUnit = 10,
                 CellSize = 50,
                 SubCellSize = 5,
-                Decomposer = Decomposer.Bayazit,
+                Decomposer = Decomposer.Earclip,
                 Iterations = 2,
             };
 
