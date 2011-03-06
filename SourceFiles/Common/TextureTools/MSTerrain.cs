@@ -26,44 +26,90 @@ namespace FarseerPhysics.Common
     /// </summary>
     public class MSTerrain
     {
+        /// <summary>
+        /// World to manage terrain in.
+        /// </summary>
         public World World;
-        public Vector2 Position;
-        public float TerrainWidth;
-        public float TerrainHeight;
-        public float CellSize = 25;
-        public float SubCellSize = 5;
+
+        /// <summary>
+        /// Center of terrain in world units.
+        /// </summary>
+        public Vector2 Center;
+
+        /// <summary>
+        /// Width of terrain in world units.
+        /// </summary>
+        public float Width;
+
+        /// <summary>
+        /// Height of terrain in world units.
+        /// </summary>
+        public float Height;
+
+        /// <summary>
+        /// Points per each world unit used to define the terrain in the point cloud.
+        /// </summary>
+        public int PointsPerUnit;
+
+        /// <summary>
+        /// Points per cell.
+        /// </summary>
+        public int CellSize;
+
+        /// <summary>
+        /// Points per sub cell.
+        /// </summary>
+        public int SubCellSize;
+
+        /// <summary>
+        /// Number of iterations to perform in the Marching Squares algorithm.
+        /// Note: More then 3 has almost no effect on quality.
+        /// </summary>
         public int Iterations = 2;
-        public Vector2 MetersPerUnit;
+
+        /// <summary>
+        /// Decomposer to use when regenerating terrain. Can be changed on the fly without consequence.
+        /// Note: Some decomposerers are unstable.
+        /// </summary>
         public Decomposer Decomposer;
+
+        // TODO - should everything below be private?
+
+        /// <summary>
+        /// Point cloud defining the terrain.
+        /// </summary>
         public sbyte[,] TerrainMap;
+
+        /// <summary>
+        /// Generated bodies.
+        /// </summary>
         public List<Body>[,] BodyMap;
 
+        private float localWidth;
+        private float localHeight;
         private int xnum;
         private int ynum;
         private AABB dirtyArea;
-        private object userData;
+        private Vector2 topLeft;
 
-        public MSTerrain(World world, AABB area, object userData)
+        public MSTerrain(World world, AABB area)
         {
             World = world;
-            this.userData = userData;
-            TerrainWidth = area.Extents.X * 2;
-            TerrainHeight = area.Extents.Y * 2;
-            Position = area.LowerBound;
+            Width = area.Extents.X * 2;
+            Height = area.Extents.Y * 2;
+            Center = area.Center;
         }
 
-        public MSTerrain(World world, Vector2 position, Texture2D terrainTexture, InsideTerrain insideTerrain, object userData)
+        public MSTerrain(World world, Vector2 position, Texture2D terrainTexture, InsideTerrain insideTerrain)
         {
             World = world;
 
-            this.userData = userData;
-
-            Position = position;
+            Center = position;
 
             dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
 
-            TerrainWidth = terrainTexture.Width;
-            TerrainHeight = terrainTexture.Height;
+            Width = terrainTexture.Width;
+            Height = terrainTexture.Height;
 
             Color[] colorData = new Color[terrainTexture.Width * terrainTexture.Height];
 
@@ -101,39 +147,77 @@ namespace FarseerPhysics.Common
 
         public void Initialize()
         {
-            TerrainWidth = TerrainWidth * (1f / MetersPerUnit.X);
-            TerrainHeight = TerrainHeight * (1f / MetersPerUnit.Y);
+            // find top left of terrain in world space
+            topLeft = new Vector2(Center.X - (Width * 0.5f), Center.Y - (-Height * 0.5f));
 
-            Vector2 p = Position * new Vector2(1f / MetersPerUnit.X, 1f / -MetersPerUnit.Y);
+            // convert the terrains size to a point cloud size
+            localWidth = Width * PointsPerUnit;
+            localHeight = Height * PointsPerUnit;
 
-            Position = p;
+            TerrainMap = new sbyte[(int)localWidth + 1, (int)localHeight + 1];
 
-            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
-            TerrainMap = new sbyte[(int)TerrainWidth + 1, (int)TerrainHeight + 1];
-            for (int y = 0; y < TerrainHeight; y++)
+            // TODO - we shouldn't need this
+            for (int y = 0; y < localHeight; y++)
             {
-                for (int x = 0; x < TerrainWidth; x++)
+                for (int x = 0; x < localWidth; x++)
                 {
-                    TerrainMap[x, y] = 1;
+                    TerrainMap[x, y] = -1;
                 }
             }
-            xnum = (int)(TerrainWidth / CellSize);
-            ynum = (int)(TerrainHeight / CellSize);
+
+            xnum = (int)(localWidth / CellSize);
+            ynum = (int)(localHeight / CellSize);
             BodyMap = new List<Body>[xnum, ynum];
+
+            for (int gx = 0; gx < xnum; gx++)
+            {
+                for (int gy = 0; gy < ynum; gy++)
+                {
+                    //remove old terrain object at grid cell
+                    if (BodyMap[gx, gy] != null)
+                    {
+                        for (int i = 0; i < BodyMap[gx, gy].Count; i++)
+                        {
+                            World.RemoveBody(BodyMap[gx, gy][i]);
+                        }
+                    }
+
+                    BodyMap[gx, gy] = null;
+
+                    //generate new one
+                    GenerateTerrain(gx, gy);
+                }
+            }
+
+            // make sure to mark the dirty area to an infinitely small box
+            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
         }
 
+        /// <summary>
+        /// Modify a single point in the terrain.
+        /// </summary>
+        /// <param name="location">World location to modify. Automatically clipped.</param>
+        /// <param name="value">-1 = inside terrain, 1 = outside terrain</param>
         public void ModifyTerrain(Vector2 location, sbyte value)
         {
-            if (location.X >= 0 && location.X < TerrainWidth && location.Y >= 0 && location.Y < TerrainHeight)
+            // find local position
+            // make position local to map space
+            Vector2 p = location - topLeft;
+            
+            // find map position for each axis
+            p.X = p.X * localWidth / Width;
+            p.Y = p.Y * -localHeight / Height;
+
+            if (p.X >= 0 && p.X < localWidth && p.Y >= 0 && p.Y < localHeight)
             {
-                TerrainMap[(int)location.X, (int)location.Y] = value;
+                TerrainMap[(int)p.X, (int)p.Y] = value;
 
                 // expand dirty area
-                if (location.X < dirtyArea.LowerBound.X) dirtyArea.LowerBound.X = location.X;
-                if (location.X > dirtyArea.UpperBound.X) dirtyArea.UpperBound.X = location.X;
+                if (p.X < dirtyArea.LowerBound.X) dirtyArea.LowerBound.X = p.X;
+                if (p.X > dirtyArea.UpperBound.X) dirtyArea.UpperBound.X = p.X;
 
-                if (location.Y < dirtyArea.LowerBound.Y) dirtyArea.LowerBound.Y = location.Y;
-                if (location.Y > dirtyArea.UpperBound.Y) dirtyArea.UpperBound.Y = location.Y;
+                if (p.Y < dirtyArea.LowerBound.Y) dirtyArea.LowerBound.Y = p.Y;
+                if (p.Y > dirtyArea.UpperBound.Y) dirtyArea.UpperBound.Y = p.Y;
             }
         }
 
@@ -172,13 +256,6 @@ namespace FarseerPhysics.Common
             dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
         }
 
-        public Vector2 WorldToMap(Vector2 point)
-        {
-            point *= new Vector2(1f / MetersPerUnit.X, 1f / -MetersPerUnit.Y);
-            point -= Position;
-            return point;
-        }
-
         private void GenerateTerrain(int gx, int gy)
         {
             float ax = gx * CellSize;
@@ -190,14 +267,14 @@ namespace FarseerPhysics.Common
             BodyMap[gx, gy] = new List<Body>();
 
             // create the scale vector
-            Vector2 scale = new Vector2(MetersPerUnit.X, -MetersPerUnit.Y);
+            Vector2 scale = new Vector2(1f / PointsPerUnit, 1f / -PointsPerUnit);
 
             // create physics object for this grid cell
             foreach (var item in polys)
             {
                 // does this need to be negative?
-                item.Translate(ref Position);
                 item.Scale(ref scale);
+                item.Translate(ref topLeft);
                 item.ForceCounterClockWise();
                 Vertices p = FarseerPhysics.Common.PolygonManipulation.SimplifyTools.CollinearSimplify(item);
                 List<Vertices> decompPolys = new List<Vertices>();
@@ -226,7 +303,7 @@ namespace FarseerPhysics.Common
                 foreach (var poly in decompPolys)
                 {
                     if (poly.Count > 2)
-                        BodyMap[gx, gy].Add(BodyFactory.CreatePolygon(World, poly, 1, userData));
+                        BodyMap[gx, gy].Add(BodyFactory.CreatePolygon(World, poly, 1));
                 }
             }
         }
