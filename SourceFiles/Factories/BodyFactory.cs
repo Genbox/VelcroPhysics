@@ -382,39 +382,15 @@ namespace FarseerPhysics.Factories
 
         public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position, bool closed)
         {
-            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2);
-            arc.Translate(ref position);
-
-            if (closed)
-            {
-                return CreateLoopShape(world, arc);
-            }
-
             Body body = CreateBody(world);
-
-            for (int i = 1; i < arc.Count; i++)
-            {
-                body.CreateFixture(new EdgeShape(arc[i], arc[i - 1]));
-            }
-
+            FixtureFactory.AttachLineArc(radians, sides, radius, position, closed, body);
             return body;
         }
 
         public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius, Vector2 position)
         {
-            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2);
-
-            arc.Translate(ref position);
-
-            //Close the arc
-            arc.Add(arc[0]);
-
-            List<Vertices> triangles = EarclipDecomposer.ConvexPartition(arc);
-
-            Body body = CreateCompoundPolygon(world, triangles, density);
-
+            Body body = CreateBody(world);
+            FixtureFactory.AttachSolidArc(density, radians, sides, radius, position, body);
             return body;
         }
     }
