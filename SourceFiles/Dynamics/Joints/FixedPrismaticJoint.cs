@@ -112,7 +112,6 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _localYAxis1;
         private float _lowerTranslation;
         private float _maxMotorForce;
-        private float _motorImpulse;
         private float _motorMass; // effective mass for motor/limit translational constraint.
         private float _motorSpeed;
         private Vector2 _perp;
@@ -141,7 +140,6 @@ namespace FarseerPhysics.Dynamics.Joints
             LocalAnchorA = worldAnchor;
             LocalAnchorB = BodyB.GetLocalPoint(worldAnchor);
 
-
             _localXAxis1 = axis;
             _localYAxis1 = MathUtils.Cross(1.0f, _localXAxis1);
             _refAngle = BodyB.Rotation;
@@ -160,7 +158,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            get { return BodyA.GetWorldPoint(LocalAnchorB); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
@@ -217,6 +215,8 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _enableLimit; }
             set
             {
+                Debug.Assert(BodyA.FixedRotation == false, "Warning: limits does currently not work with fixed rotation");
+
                 WakeBodies();
                 _enableLimit = value;
             }
@@ -295,11 +295,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Get the current motor force, usually in N.
         /// </summary>
         /// <value></value>
-        public float MotorForce
-        {
-            get { return _motorImpulse; }
-            set { _motorImpulse = value; }
-        }
+        public float MotorForce { get; set; }
 
         public Vector2 LocalXAxis1
         {
@@ -313,7 +309,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            return inv_dt*(_impulse.X*_perp + (_motorImpulse + _impulse.Z)*_axis);
+            return inv_dt*(_impulse.X*_perp + (MotorForce + _impulse.Z)*_axis);
         }
 
         public override float GetReactionTorque(float inv_dt)
@@ -323,23 +319,23 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            Body b2 = BodyB;
+            Body bB = BodyB;
 
             LocalCenterA = Vector2.Zero;
-            LocalCenterB = b2.LocalCenter;
+            LocalCenterB = bB.LocalCenter;
 
             Transform xf2;
-            b2.GetTransform(out xf2);
+            bB.GetTransform(out xf2);
 
             // Compute the effective masses.
             Vector2 r1 = LocalAnchorA;
             Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
-            Vector2 d = b2.Sweep.C + r2 - /* b1._sweep.Center - */ r1;
+            Vector2 d = bB.Sweep.C + r2 - /* b1._sweep.Center - */ r1;
 
             InvMassA = 0.0f;
             InvIA = 0.0f;
-            InvMassB = b2.InvMass;
-            InvIB = b2.InvI;
+            InvMassB = bB.InvMass;
+            InvIB = bB.InvI;
 
             // Compute motor Jacobian and effective mass.
             {
@@ -414,46 +410,46 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (_enableMotor == false)
             {
-                _motorImpulse = 0.0f;
+                MotorForce = 0.0f;
             }
 
             if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
                 _impulse *= step.dtRatio;
-                _motorImpulse *= step.dtRatio;
+                MotorForce *= step.dtRatio;
 
-                Vector2 P = _impulse.X*_perp + (_motorImpulse + _impulse.Z)*_axis;
-                float L2 = _impulse.X*_s2 + _impulse.Y + (_motorImpulse + _impulse.Z)*_a2;
+                Vector2 P = _impulse.X*_perp + (MotorForce + _impulse.Z)*_axis;
+                float L2 = _impulse.X*_s2 + _impulse.Y + (MotorForce + _impulse.Z)*_a2;
 
-                b2.LinearVelocityInternal += InvMassB*P;
-                b2.AngularVelocityInternal += InvIB*L2;
+                bB.LinearVelocityInternal += InvMassB*P;
+                bB.AngularVelocityInternal += InvIB*L2;
             }
             else
             {
                 _impulse = Vector3.Zero;
-                _motorImpulse = 0.0f;
+                MotorForce = 0.0f;
             }
         }
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            Body b2 = BodyB;
+            Body bB = BodyB;
 
             Vector2 v1 = Vector2.Zero;
             float w1 = 0.0f;
-            Vector2 v2 = b2.LinearVelocityInternal;
-            float w2 = b2.AngularVelocityInternal;
+            Vector2 v2 = bB.LinearVelocityInternal;
+            float w2 = bB.AngularVelocityInternal;
 
             // Solve linear motor constraint.
             if (_enableMotor && _limitState != LimitState.Equal)
             {
                 float Cdot = Vector2.Dot(_axis, v2 - v1) + _a2*w2 - _a1*w1;
                 float impulse = _motorMass*(_motorSpeed - Cdot);
-                float oldImpulse = _motorImpulse;
+                float oldImpulse = MotorForce;
                 float maxImpulse = step.dt*_maxMotorForce;
-                _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
-                impulse = _motorImpulse - oldImpulse;
+                MotorForce = MathUtils.Clamp(MotorForce + impulse, -maxImpulse, maxImpulse);
+                impulse = MotorForce - oldImpulse;
 
                 Vector2 P = impulse*_axis;
                 float L1 = impulse*_a1;
@@ -515,8 +511,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 w2 += InvIB*L2;
             }
 
-            b2.LinearVelocityInternal = v2;
-            b2.AngularVelocityInternal = w2;
+            bB.LinearVelocityInternal = v2;
+            bB.AngularVelocityInternal = w2;
         }
 
         internal override bool SolvePositionConstraints()
@@ -624,20 +620,14 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             Vector2 P = impulse.X*_perp + impulse.Z*_axis;
-            float L1 = impulse.X*_s1 + impulse.Y + impulse.Z*_a1;
             float L2 = impulse.X*_s2 + impulse.Y + impulse.Z*_a2;
 
-            c1 -= InvMassA*P;
-            a1 -= InvIA*L1;
             c2 += InvMassB*P;
             a2 += InvIB*L2;
 
             // TODO_ERIN remove need for this.
-            //b1._sweep.Center = c1;
-            //b1._sweep.Angle = a1;
             b2.Sweep.C = c2;
             b2.Sweep.A = a2;
-            //b1.SynchronizeTransform();
             b2.SynchronizeTransform();
 
             return linearError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
