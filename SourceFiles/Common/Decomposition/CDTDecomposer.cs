@@ -104,26 +104,7 @@ namespace FarseerPhysics.Common.Decomposition
                 results.Add(v);
             }
 
-            // sickbattery: Temporary Workaround 06.03.2011 14:37
-            RemoveIllegalPolygons(ref results);
-
             return results;
-        }
-
-        // sickbattery: Temporary Workaround 06.03.2011 14:37
-        private static void RemoveIllegalPolygons(ref List<Vertices> vertices)
-        {
-            vertices = vertices.Where(
-                (v) =>
-                {
-                    if (v.Count == 3)
-                    {
-                        return !v[0].Equals(v[1]) && !v[1].Equals(v[2]) && !v[2].Equals(v[0]);
-                    }
-
-                    return false;
-                })
-                .ToList();
         }
     }
 }
