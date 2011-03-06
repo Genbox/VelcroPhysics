@@ -1100,7 +1100,12 @@ namespace FarseerPhysics.Common
                         // It's the last bit of the hull, search on and exit at next found vertex.
                         endOfHull = true;
                         endOfHullArea.AddRange(hullArea);
+
+                        // We don't want the last vertex to be the same as the first one, because it causes the triangulation code to crash.
+                        if (endOfHullArea.Contains(entrance))
+                            endOfHullArea.Remove(entrance);
                     }
+
                 } while (true);
             }
 
