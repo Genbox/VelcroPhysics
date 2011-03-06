@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -15,6 +14,22 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+
+            //Arcs
+            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 10), false);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, new Vector2(-20, 10), false);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 10), false);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 10), false);
+
+            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 25), true);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, new Vector2(-20, 25), true);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 25), true);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 25), true);
+
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi, 50, 2, new Vector2(-20, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 40));
 
             Create(0);
         }
@@ -49,8 +64,8 @@ namespace FarseerPhysics.TestBed.Tests
                     break;
                 case 1:
                     Body capsule = BodyFactory.CreateCapsule(World, 10, 2,
-                                                                         (int) MathHelper.Max(_segments, 1), 3,
-                                                                         (int) MathHelper.Max(_segments, 1), 10,
+                                                                         (int)MathHelper.Max(_segments, 1), 3,
+                                                                         (int)MathHelper.Max(_segments, 1), 10,
                                                                          position);
                     capsule.BodyType = BodyType.Dynamic;
                     break;

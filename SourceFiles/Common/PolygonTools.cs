@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -157,6 +158,24 @@ namespace FarseerPhysics.Common
             for (int i = numberOfEdges - 1; i > 0; --i)
                 vertices.Add(new Vector2(xRadius * (float)Math.Cos(stepSize * i),
                                          -yRadius * (float)Math.Sin(stepSize * i)));
+
+            return vertices;
+        }
+
+        public static Vertices CreateArc(float radians, int sides, float radius)
+        {
+            Debug.Assert(radians > 0, "The arc needs to be larger than 0");
+            Debug.Assert(sides > 1, "The arc needs to have more than 1 sides");
+            Debug.Assert(radius > 0, "The arc needs to have a radius larger than 0");
+
+            Vertices vertices = new Vertices();
+
+            float stepSize = radians / sides;
+            for (int i = sides - 1; i > 0; i--)
+            {
+                vertices.Add(new Vector2(radius * (float)Math.Cos(stepSize * i),
+                                         radius * (float)Math.Sin(stepSize * i)));
+            }
 
             return vertices;
         }

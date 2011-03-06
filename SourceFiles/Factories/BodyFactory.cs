@@ -63,7 +63,7 @@ namespace FarseerPhysics.Factories
         public static Body CreateLoopShape(World world, Vertices vertices, Vector2 position,
                                               object userData)
         {
-            Body body = BodyFactory.CreateBody(world, position);
+            Body body = CreateBody(world, position);
             FixtureFactory.AttachLoopShape(vertices, body, userData);
             return body;
         }
@@ -339,7 +339,7 @@ namespace FarseerPhysics.Factories
 
         public static Body CreateRoundedRectangle(World world, float width, float height, float xRadius,
                                                            float yRadius,
-                                                           int segments, float density, Object userData)
+                                                           int segments, float density, object userData)
         {
             return CreateRoundedRectangle(world, width, height, xRadius, yRadius, segments, density, Vector2.Zero,
                                           userData);
@@ -379,6 +379,43 @@ namespace FarseerPhysics.Factories
         {
             return CreateBreakableBody(world, vertices, density, position, null);
         }
-    }
 
+        public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position, bool closed)
+        {
+            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
+            arc.Rotate((MathHelper.Pi - radians) / 2);
+            arc.Translate(ref position);
+
+            if (closed)
+            {
+                return CreateLoopShape(world, arc);
+            }
+
+            Body body = CreateBody(world);
+
+            for (int i = 1; i < arc.Count; i++)
+            {
+                body.CreateFixture(new EdgeShape(arc[i], arc[i - 1]));
+            }
+
+            return body;
+        }
+
+        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius, Vector2 position)
+        {
+            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
+            arc.Rotate((MathHelper.Pi - radians) / 2);
+
+            arc.Translate(ref position);
+
+            //Close the arc
+            arc.Add(arc[0]);
+
+            List<Vertices> triangles = EarclipDecomposer.ConvexPartition(arc);
+
+            Body body = CreateCompoundPolygon(world, triangles, density);
+
+            return body;
+        }
+    }
 }
