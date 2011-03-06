@@ -19,7 +19,10 @@ namespace FarseerPhysics.Common
         Seidel,
     }
 
-    public delegate bool InsideTerrain(Color color);
+    /// <summary>
+    /// Return true if the specified color is inside the terrain.
+    /// </summary>
+    public delegate bool TerrainTester(Color color);
 
     /// <summary>
     /// Simple class to maintain a terrain.
@@ -100,51 +103,9 @@ namespace FarseerPhysics.Common
             Center = area.Center;
         }
 
-        public MSTerrain(World world, Vector2 position, Texture2D terrainTexture, InsideTerrain insideTerrain)
-        {
-            World = world;
-
-            Center = position;
-
-            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
-
-            Width = terrainTexture.Width;
-            Height = terrainTexture.Height;
-
-            Color[] colorData = new Color[terrainTexture.Width * terrainTexture.Height];
-
-            terrainTexture.GetData(colorData);
-
-            TerrainMap = new sbyte[terrainTexture.Width, terrainTexture.Height];
-
-            for (int y = 0; y < terrainTexture.Height; y++)
-            {
-                for (int x = 0; x < terrainTexture.Width; x++)
-                {
-                    bool inside = insideTerrain(colorData[(y * terrainTexture.Width) + x]);
-
-                    if (!inside)
-                        TerrainMap[x, y] = 1;
-                    else
-                        TerrainMap[x, y] = -1;
-                }
-            }
-
-            xnum = (int)(terrainTexture.Width / CellSize);
-            ynum = (int)(terrainTexture.Height / CellSize);
-
-            BodyMap = new List<Body>[xnum, ynum];
-
-            // generate terrain
-            for (int gy = 0; gy < ynum; gy++)
-            {
-                for (int gx = 0; gx < xnum; gx++)
-                {
-                    GenerateTerrain(gx, gy);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Initialize the terrain for use.
+        /// </summary>
         public void Initialize()
         {
             // find top left of terrain in world space
@@ -156,12 +117,11 @@ namespace FarseerPhysics.Common
 
             TerrainMap = new sbyte[(int)localWidth + 1, (int)localHeight + 1];
 
-            // TODO - we shouldn't need this
-            for (int y = 0; y < localHeight; y++)
+            for (int x = 0; x < localWidth; x++)
             {
-                for (int x = 0; x < localWidth; x++)
+                for (int y = 0; y < localHeight; y++)
                 {
-                    TerrainMap[x, y] = -1;
+                    TerrainMap[x, y] = 1;
                 }
             }
 
@@ -169,9 +129,42 @@ namespace FarseerPhysics.Common
             ynum = (int)(localHeight / CellSize);
             BodyMap = new List<Body>[xnum, ynum];
 
-            for (int gx = 0; gx < xnum; gx++)
+            // make sure to mark the dirty area to an infinitely small box
+            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+        }
+
+        /// <summary>
+        /// Apply a texture to the terrain using the specified TerrainTester.
+        /// </summary>
+        /// <param name="texture">Texture to apply.</param>
+        /// <param name="position">Top left position of the texture relative to the terrain.</param>
+        /// <param name="tester">Delegate method used to determine what colors should be included in the terrain.</param>
+        public void ApplyTexture(Texture2D texture, Vector2 position, TerrainTester tester)
+        {
+            Color[] colorData = new Color[texture.Width * texture.Height];
+
+            texture.GetData(colorData);
+
+            for (int y = (int)position.Y; y < texture.Height + (int)position.Y; y++)
             {
-                for (int gy = 0; gy < ynum; gy++)
+                for (int x = (int)position.X; x < texture.Width + (int)position.X; x++)
+                {
+                    if (x >= 0 && x < localWidth && y >= 0 && y < localHeight)
+                    {
+                        bool inside = tester(colorData[((y - (int)position.Y) * texture.Width) + (x - (int)position.X)]);
+
+                        if (!inside)
+                            TerrainMap[x, y] = 1;
+                        else
+                            TerrainMap[x, y] = -1;
+                    }
+                }
+            }
+            
+            // generate terrain
+            for (int gy = 0; gy < ynum; gy++)
+            {
+                for (int gx = 0; gx < xnum; gx++)
                 {
                     //remove old terrain object at grid cell
                     if (BodyMap[gx, gy] != null)
@@ -188,9 +181,76 @@ namespace FarseerPhysics.Common
                     GenerateTerrain(gx, gy);
                 }
             }
+        }
 
-            // make sure to mark the dirty area to an infinitely small box
-            dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+        /// <summary>
+        /// Apply a texture to the terrain using the specified TerrainTester.
+        /// </summary>
+        /// <param name="texture">Texture to apply.</param>
+        /// <param name="position">Top left position of the texture relative to the terrain.</param>
+        /// <param name="insideTerrain">Delegate method used to determine what colors should be included in the terrain.</param>
+        public void ApplyData(sbyte[,] data, Vector2 position)
+        {
+            for (int y = (int)position.Y; y < data.GetUpperBound(1) + (int)position.Y; y++)
+            {
+                for (int x = (int)position.X; x < data.GetUpperBound(0) + (int)position.X; x++)
+                {
+                    if (x >= 0 && x < localWidth && y >= 0 && y < localHeight)
+                    {
+                       TerrainMap[x, y] = data[x, y];
+                    }
+                }
+            }
+
+            // generate terrain
+            for (int gy = 0; gy < ynum; gy++)
+            {
+                for (int gx = 0; gx < xnum; gx++)
+                {
+                    //remove old terrain object at grid cell
+                    if (BodyMap[gx, gy] != null)
+                    {
+                        for (int i = 0; i < BodyMap[gx, gy].Count; i++)
+                        {
+                            World.RemoveBody(BodyMap[gx, gy][i]);
+                        }
+                    }
+
+                    BodyMap[gx, gy] = null;
+
+                    //generate new one
+                    GenerateTerrain(gx, gy);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Convert a texture to an sbtye array compatible with ApplyData().
+        /// </summary>
+        /// <param name="texture">Texture to convert.</param>
+        /// <param name="tester"></param>
+        /// <returns></returns>
+        public static sbyte[,] ConvertTextureToData(Texture2D texture, TerrainTester tester)
+        {
+            sbyte[,] data = new sbyte[texture.Width, texture.Height];
+            Color[] colorData = new Color[texture.Width * texture.Height];
+
+            texture.GetData(colorData);
+
+            for (int y = 0; y < texture.Height; y++)
+            {
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    bool inside = tester(colorData[(y * texture.Width) + x]);
+
+                        if (!inside)
+                            data[x, y] = 1;
+                        else
+                            data[x, y] = -1;
+                }
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -221,6 +281,9 @@ namespace FarseerPhysics.Common
             }
         }
 
+        /// <summary>
+        /// Regenerate the terrain.
+        /// </summary>
         public void RegenerateTerrain()
         {
             //iterate effected cells

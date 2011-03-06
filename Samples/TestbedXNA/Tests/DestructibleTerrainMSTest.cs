@@ -434,17 +434,6 @@ namespace FarseerPhysics.TestBed.Tests
             return new DestructibleTerrainMSTest();
         }
 
-        #region Nested type: Decomposer
-
-        private enum Decomposer
-        {
-            Bayazit,
-            CDT,
-            Earclip,
-            Flipcode,
-            Seidel,
-        }
-
-        #endregion
+        
     }
 }
