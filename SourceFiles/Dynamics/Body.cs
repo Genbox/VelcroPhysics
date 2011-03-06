@@ -652,6 +652,18 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public bool IsSensor
+        {
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+                    f.IsSensor = value;
+                }
+            }
+        }
+
         public bool IgnoreCCD
         {
             get { return (Flags & BodyFlags.IgnoreCCD) == BodyFlags.IgnoreCCD; }
@@ -663,6 +675,7 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.IgnoreCCD;
             }
         }
+    
         #region IDisposable Members
 
         public void Dispose()
