@@ -137,10 +137,10 @@ namespace FarseerPhysics.Factories
             return res;
         }
 
-        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, bool closed, Body body)
+        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle, bool closed, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2);
+            arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
             arc.Translate(ref position);
 
             List<Fixture> fixtures = new List<Fixture>(arc.Count);
@@ -158,10 +158,10 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Vector2 position, Body body)
+        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Vector2 position, float angle, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2);
+            arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
 
             arc.Translate(ref position);
 

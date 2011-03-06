@@ -380,17 +380,17 @@ namespace FarseerPhysics.Factories
             return CreateBreakableBody(world, vertices, density, position, null);
         }
 
-        public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position, bool closed)
+        public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position, float angle, bool closed)
         {
             Body body = CreateBody(world);
-            FixtureFactory.AttachLineArc(radians, sides, radius, position, closed, body);
+            FixtureFactory.AttachLineArc(radians, sides, radius, position, angle, closed, body);
             return body;
         }
 
-        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius, Vector2 position)
+        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius, Vector2 position, float angle)
         {
             Body body = CreateBody(world);
-            FixtureFactory.AttachSolidArc(density, radians, sides, radius, position, body);
+            FixtureFactory.AttachSolidArc(density, radians, sides, radius, position, angle, body);
             return body;
         }
     }

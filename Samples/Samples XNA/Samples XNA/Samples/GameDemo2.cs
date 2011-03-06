@@ -14,6 +14,7 @@ namespace FarseerPhysics.SamplesFramework
         private Body _ball;
         private RevoluteJoint _leftJoint;
         private RevoluteJoint _rightJoint;
+        private Body _jumper;
 
         #region IDemoScreen Members
 
@@ -42,77 +43,49 @@ namespace FarseerPhysics.SamplesFramework
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 10f);
-            HasCursor = false;
+            //HasCursor = false;
 
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
+            //Bounds
+            Vertices bounds = new Vertices();
+            bounds.Add(new Vector2(-10, 13));
+            bounds.Add(new Vector2(-10, -13));
+            bounds.Add(new Vector2(10, -13));
+            bounds.Add(new Vector2(10, 13));
 
-                Vertices vertices = new Vertices(5);
-                vertices.Add(new Vector2(0.0f, -2.0f));
-                vertices.Add(new Vector2(8.0f, 6.0f));
-                vertices.Add(new Vector2(8.0f, 20.0f));
-                vertices.Add(new Vector2(-8.0f, 20.0f));
-                vertices.Add(new Vector2(-8.0f, 6.0f));
-                Vector2 flip = new Vector2(1, -1);
-                vertices.Scale(ref flip);
-                LoopShape loop = new LoopShape(vertices);
-                ground.CreateFixture(loop);
-            }
+            Body body = BodyFactory.CreateLoopShape(World, bounds);
 
-            Vector2 p1 = new Vector2(-2.0f, 0f);
-            Vector2 p2 = new Vector2(2.0f, 0f);
+            //Launcher
+            FixtureFactory.AttachEdge(new Vector2(9, -3), new Vector2(9f, 12), body);
+            FixtureFactory.AttachEdge(new Vector2(9, 12), new Vector2(9.5f, 12), body);
+            FixtureFactory.AttachEdge(new Vector2(9.5f, 12), new Vector2(9.5f, -3.6f), body);
 
-            Body leftFlipper = BodyFactory.CreateBody(World, p1);
-            leftFlipper.BodyType = BodyType.Dynamic;
-            Body rightFlipper = BodyFactory.CreateBody(World, p2);
-            rightFlipper.BodyType = BodyType.Dynamic;
+            //Jumper
+            _jumper = BodyFactory.CreateRectangle(World, 0.43f, 0.2f, 5, new Vector2(9.25f, 10));
+            _jumper.BodyType = BodyType.Dynamic;
 
-            PolygonShape box = new PolygonShape(1);
-            box.SetAsBox(1.75f, 0.1f);
+            Vector2 axis = new Vector2(0.0f, -1.0f);
+            FixedPrismaticJoint jumperJoint = JointFactory.CreateFixedPrismaticJoint(World, _jumper, _jumper.Position, axis);
+            jumperJoint.MotorSpeed = 50.0f;
+            jumperJoint.MaxMotorForce = 100.0f;
+            jumperJoint.MotorEnabled = true;
+            jumperJoint.LowerLimit = -2.0f;
+            jumperJoint.UpperLimit = -0.1f;
+            jumperJoint.LimitEnabled = true;
 
-            leftFlipper.CreateFixture(box);
-            rightFlipper.CreateFixture(box);
-
-            _leftJoint = new RevoluteJoint(ground, leftFlipper, p1, Vector2.Zero);
-            _leftJoint.MaxMotorTorque = 1000.0f;
-            _leftJoint.LimitEnabled = true;
-            _leftJoint.MotorEnabled = true;
-            _leftJoint.MotorSpeed = 0.0f;
-            _leftJoint.LowerLimit = -30.0f * Settings.Pi / 180.0f;
-            _leftJoint.UpperLimit = 5.0f * Settings.Pi / 180.0f;
-            World.AddJoint(_leftJoint);
-
-            _rightJoint = new RevoluteJoint(ground, rightFlipper, p2, Vector2.Zero);
-            _rightJoint.MaxMotorTorque = 1000.0f;
-            _rightJoint.LimitEnabled = true;
-            _rightJoint.MotorEnabled = true;
-            _rightJoint.MotorSpeed = 0.0f;
-            _rightJoint.LowerLimit = -5.0f * Settings.Pi / 180.0f;
-            _rightJoint.UpperLimit = 30.0f * Settings.Pi / 180.0f;
-            World.AddJoint(_rightJoint);
+            //Top arc
+            FixtureFactory.AttachLineArc(MathHelper.Pi, 50, 9.5f, new Vector2(0, -3), MathHelper.Pi, false, body);
 
             // Circle character
-            {
-                _ball = BodyFactory.CreateBody(World, new Vector2(1.0f, 15.0f));
-                _ball.BodyType = BodyType.Dynamic;
-                _ball.IsBullet = true;
-                _ball.CreateFixture(new CircleShape(0.2f, 1.0f));
-            }
+            _ball = BodyFactory.CreateBody(World, new Vector2(9.25f, 9.0f));
+            _ball.BodyType = BodyType.Dynamic;
+            _ball.IsBullet = true;
+            _ball.CreateFixture(new CircleShape(0.2f, 1.0f));
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
-                _leftJoint.MotorSpeed = 20.0f;
-                _rightJoint.MotorSpeed = -20.0f;
-            }
-            if (input.KeyboardState.IsKeyUp(Keys.A))
-            {
-                _leftJoint.MotorSpeed = -10.0f;
-                _rightJoint.MotorSpeed = 10.0f;
-            }
+            if (input.KeyboardState.IsKeyDown(Keys.Space))
+                _jumper.ApplyForce(new Vector2(0, 100));
 
             base.HandleInput(input, gameTime);
         }
