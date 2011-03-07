@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -40,6 +42,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Body[] _rectangle = new Body[5];
         private Sprite _rectangleSprite;
+        private List<Body> _ramps;
 
         public override void LoadContent()
         {
@@ -49,14 +52,14 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            Body _temp;
-            _temp = BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f));
-            _temp = BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f));
+            _ramps = new List<Body>();
+            _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
+            _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f)));
 
-            _temp = BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f));
-            _temp = BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f));
+            _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f)));
+            _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f)));
 
-            _temp = BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f));
+            _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
 
             float[] friction = new[] { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
             for (int i = 0; i < 5; ++i)
@@ -82,6 +85,12 @@ namespace FarseerPhysics.SamplesFramework
                                                Color.White, _rectangle[i].Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
+            ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
+            for (int i = 0; i < _ramps.Count; ++i)
+            {
+                ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape);
+            }
+            ScreenManager.LineBatch.End();
             base.Draw(gameTime);
         }
     }

@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawingSystem\LineBatch.cs" />
     <Compile Include="Samples\AdvancedDemo1.cs" />
     <Compile Include="Samples\AdvancedDemo2.cs" />
     <Compile Include="Samples\AdvancedDemo3.cs" />
