@@ -128,7 +128,6 @@
     <Compile Include="Tests\DeletionTest.cs" />
     <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
-    <Compile Include="Tests\EarclipTest.cs" />
     <Compile Include="Tests\MSTerrainTest.cs" />
     <Compile Include="Tests\QuadTreeTest.cs" />
     <Compile Include="Tests\SerializationTest.cs" />
