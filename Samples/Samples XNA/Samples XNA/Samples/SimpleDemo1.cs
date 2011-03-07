@@ -60,12 +60,11 @@ namespace FarseerPhysics.SamplesFramework
             _rectangle.BodyType = BodyType.Dynamic;
 
             SetUserAgent(_rectangle, 100f, 100f);
-            
+
             // create sprite based on body
-            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape, 
-                                                                                        MaterialType.Squares, 
-                                                                                        Color.Orange, 1f),
-                                                  AssetCreator.CalculateOrigin(_rectangle));
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape,
+                                                                                MaterialType.Squares,
+                                                                                Color.Orange, 1f));
         }
 
         public override void Draw(GameTime gameTime)

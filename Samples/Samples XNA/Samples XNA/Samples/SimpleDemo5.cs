@@ -69,7 +69,7 @@ namespace FarseerPhysics.SamplesFramework
 
             Vector2 startPosition = new Vector2(-20f, -11f);
             Vector2 endPosition = new Vector2(20, -11f);
-            _circles = new Objects(World, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
+            _circles = new Objects(World, this, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
 
             //Collide with itself only
             _circles.CollisionCategories = Category.Cat1;
@@ -77,7 +77,7 @@ namespace FarseerPhysics.SamplesFramework
 
             startPosition = new Vector2(-20, 11f);
             endPosition = new Vector2(20, 11f);
-            _rectangles = new Objects(World, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
+            _rectangles = new Objects(World, this, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
 
             //Collides with itself only
             _rectangles.CollisionCategories = Category.Cat2;
@@ -85,7 +85,7 @@ namespace FarseerPhysics.SamplesFramework
 
             startPosition = new Vector2(-20, 7);
             endPosition = new Vector2(-20, -7);
-            _gears = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
+            _gears = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
 
             //Collides with stars
             _gears.CollisionCategories = Category.Cat3;
@@ -93,7 +93,7 @@ namespace FarseerPhysics.SamplesFramework
 
             startPosition = new Vector2(20, 7);
             endPosition = new Vector2(20, -7);
-            _stars = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
+            _stars = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
 
             //Collides with gears
             _stars.CollisionCategories = Category.Cat4;
@@ -106,6 +106,10 @@ namespace FarseerPhysics.SamplesFramework
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw();
+            _circles.Draw();
+            _rectangles.Draw();
+            _stars.Draw();
+            _gears.Draw();
             ScreenManager.SpriteBatch.End();
             base.Draw(gameTime);
         }

@@ -64,7 +64,7 @@ namespace FarseerPhysics.SamplesFramework
 
             _agent = new Agent(World, this, new Vector2(5f, -10f));
 
-            _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
+            _pyramid = new Pyramid(World, this, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
 
             SetUserAgent(_agent.Body, 1000f, 400f);
         }
@@ -73,6 +73,7 @@ namespace FarseerPhysics.SamplesFramework
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw();
+            _pyramid.Draw();
             ScreenManager.SpriteBatch.End();
             base.Draw(gameTime);
         }

@@ -3,6 +3,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
@@ -44,6 +45,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Ragdoll _ragdoll;
         private Body[] _obstacles = new Body[4];
+        private Sprite _obstacle;
 
         public override void LoadContent()
         {
@@ -53,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
 
             new Border(World, ScreenManager.GraphicsDevice.Viewport);
 
-            _ragdoll = new Ragdoll(World, Vector2.Zero);
+            _ragdoll = new Ragdoll(World, this, Vector2.Zero);
             LoadObstacles();
 
             SetUserAgent(_ragdoll.Body, 1000f, 400f);
@@ -71,6 +73,24 @@ namespace FarseerPhysics.SamplesFramework
             _obstacles[1].Position = new Vector2(-8f, -7f);
             _obstacles[2].Position = new Vector2(9f, 7f);
             _obstacles[3].Position = new Vector2(7f, -5f);
+
+            // create sprite based on body
+            _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
+                                                                         MaterialType.Dots,
+                                                                         Color.SandyBrown, 0.8f));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            for (int i = 0; i < 4; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_obstacle.texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position), null,
+                                               Color.White, _obstacles[i].Rotation, _obstacle.origin, 1f, SpriteEffects.None, 0f);
+            }
+            _ragdoll.Draw();
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }
