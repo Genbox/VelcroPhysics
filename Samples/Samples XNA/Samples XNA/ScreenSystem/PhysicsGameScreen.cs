@@ -57,8 +57,8 @@ namespace FarseerPhysics.SamplesFramework
             if (DebugView == null)
             {
                 DebugView = new DebugViewXNA(World);
-                //DebugView.RemoveFlags(DebugViewFlags.Shape);  removed for debugging purposes
-                //DebugView.RemoveFlags(DebugViewFlags.Joint);  removed for debugging purposes
+                DebugView.RemoveFlags(DebugViewFlags.Shape);
+                DebugView.RemoveFlags(DebugViewFlags.Joint);
                 DebugView.DefaultShapeColor = Color.White;
                 DebugView.SleepingShapeColor = Color.LightGray;
                 DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);

@@ -47,10 +47,10 @@ namespace FarseerPhysics.SamplesFramework
 
             _screen = screen;
 
-            //Gfx
+            //GFX
             AssetCreator _creator = _screen.ScreenManager.Assets;
             _box = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateRectangle(1.75f, 0.2f),
-                                                                   MaterialType.Blank, Color.White, 1f));
+                                                           MaterialType.Blank, Color.White, 1f));
             _knob = new Sprite(_creator.CircleTexture(0.5f, MaterialType.Blank, Color.Orange, 1f));
             _offset = ConvertUnits.ToDisplayUnits(2f);
         }

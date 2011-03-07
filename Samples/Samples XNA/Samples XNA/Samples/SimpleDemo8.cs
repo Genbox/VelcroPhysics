@@ -4,6 +4,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -39,6 +40,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Body[] _circle = new Body[6];
+        private Sprite _circleSprite;
 
         public override void LoadContent()
         {
@@ -59,6 +61,23 @@ namespace FarseerPhysics.SamplesFramework
                 _position.X += 6f;
                 _restitution += 0.2f;
             }
+
+            // create sprite based on body
+            _circleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_circle[0].FixtureList[0].Shape,
+                                                                             MaterialType.Waves,
+                                                                             Color.Brown, 1f));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            for (int i = 0; i < 6; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_circleSprite.texture, ConvertUnits.ToDisplayUnits(_circle[i].Position), null,
+                                               Color.White, _circle[i].Rotation, _circleSprite.origin, 1f, SpriteEffects.None, 0f);
+            }
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }

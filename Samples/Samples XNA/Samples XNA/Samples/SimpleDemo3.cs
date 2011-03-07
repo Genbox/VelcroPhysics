@@ -82,9 +82,8 @@ namespace FarseerPhysics.SamplesFramework
 
             // create sprite based on body
             _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
-                                                                                 MaterialType.Dots,
-                                                                                 Color.SandyBrown, 0.8f),
-                                           AssetCreator.CalculateOrigin(_obstacles[0]));
+                                                                         MaterialType.Dots,
+                                                                         Color.SandyBrown, 0.8f));
         }
 
         public override void Draw(GameTime gameTime)

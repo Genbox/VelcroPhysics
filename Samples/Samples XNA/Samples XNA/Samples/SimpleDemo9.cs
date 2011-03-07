@@ -3,6 +3,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -38,6 +39,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Body[] _rectangle = new Body[5];
+        private Sprite _rectangleSprite;
 
         public override void LoadContent()
         {
@@ -64,6 +66,23 @@ namespace FarseerPhysics.SamplesFramework
                 _rectangle[i].Position = new Vector2(-18f + 5.2f * i, -13.0f + 1.282f * i);
                 _rectangle[i].Friction = friction[i];
             }
+
+            // create sprite based on body
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle[0].FixtureList[0].Shape,
+                                                                                MaterialType.Squares,
+                                                                                Color.ForestGreen, 0.8f));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            for (int i = 0; i < 5; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                                               Color.White, _rectangle[i].Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);
+            }
+            ScreenManager.SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }
