@@ -30,6 +30,7 @@ namespace FarseerPhysics.SamplesFramework
         private List<GameScreen> _screensToUpdate;
 
         private SpriteBatch _spriteBatch;
+        private LineBatch _lineBatch;
         private AssetCreator _assetCreator;
         private List<RenderTarget2D> _transitions;
 
@@ -59,6 +60,11 @@ namespace FarseerPhysics.SamplesFramework
         public SpriteBatch SpriteBatch
         {
             get { return _spriteBatch; }
+        }
+
+        public LineBatch LineBatch
+        {
+            get { return _lineBatch; }
         }
 
         public ContentManager Content
@@ -93,6 +99,7 @@ namespace FarseerPhysics.SamplesFramework
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _lineBatch = new LineBatch(GraphicsDevice);
             _assetCreator = new AssetCreator(GraphicsDevice);
             _assetCreator.LoadContent(_contentManager);
             _input.LoadContent();
