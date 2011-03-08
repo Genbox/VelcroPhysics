@@ -51,6 +51,7 @@ namespace FarseerPhysics.SamplesFramework
         private Objects _gears;
         private Objects _rectangles;
         private Objects _stars;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -58,7 +59,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = Vector2.Zero;
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, this, Vector2.Zero);
@@ -104,6 +105,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw();
             _circles.Draw();

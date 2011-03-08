@@ -53,6 +53,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Agent _agent;
         private Pyramid _pyramid;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -60,7 +61,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0f, 20f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _agent = new Agent(World, this, new Vector2(5f, -10f));
 
@@ -71,6 +72,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw();
             _pyramid.Draw();

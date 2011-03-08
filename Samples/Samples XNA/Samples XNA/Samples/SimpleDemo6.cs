@@ -43,6 +43,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Agent _agent;
         private Spider[] _spiders;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -50,7 +51,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0f, 20f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _agent = new Agent(World, this, new Vector2(0f, 12f));
             _spiders = new Spider[8];
@@ -78,6 +79,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw();
             for (int i = 0; i < _spiders.Length; i++)

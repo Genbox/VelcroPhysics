@@ -46,13 +46,15 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
+        private Border _border;
+
         public override void LoadContent()
         {
             base.LoadContent();
 
             World.Gravity = Vector2.Zero;
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
 
@@ -121,6 +123,12 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             base.HandleInput(input, gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            _border.Draw();
+            base.Draw(gameTime);
         }
     }
 }

@@ -38,6 +38,7 @@ namespace FarseerPhysics.SamplesFramework
         private Body _car;
         private Body _wheelBack;
         private Body _wheelFront;
+        private Body _ground;
 
         private LineJoint _springBack;
         private LineJoint _springFront;
@@ -59,7 +60,7 @@ namespace FarseerPhysics.SamplesFramework
             _maxSpeed = 50.0f;
 
             // terrain
-            Body ground = new Body(World);
+            _ground = new Body(World);
             {
                 Vertices terrain = new Vertices();
                 terrain.Add(new Vector2(-20f, -5f));
@@ -99,10 +100,10 @@ namespace FarseerPhysics.SamplesFramework
 
                 for (int i = 0; i < terrain.Count - 1; ++i)
                 {
-                    FixtureFactory.AttachEdge(terrain[i], terrain[i + 1], ground);
+                    FixtureFactory.AttachEdge(terrain[i], terrain[i + 1], _ground);
                 }
 
-                ground.Friction = 0.6f;
+                _ground.Friction = 0.6f;
             }
 
             // teeter board
@@ -115,7 +116,7 @@ namespace FarseerPhysics.SamplesFramework
                 box.SetAsBox(10.0f, 0.25f);
                 board.CreateFixture(box);
 
-                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(ground, board, Vector2.Zero);
+                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(_ground, board, Vector2.Zero);
                 teeterAxis.LowerLimit = -8.0f * Settings.Pi / 180.0f;
                 teeterAxis.UpperLimit = 8.0f * Settings.Pi / 180.0f;
                 teeterAxis.LimitEnabled = true;
@@ -130,7 +131,7 @@ namespace FarseerPhysics.SamplesFramework
                 PolygonShape shape = new PolygonShape(1f);
                 shape.SetAsBox(1.0f, 0.125f);
 
-                Body prevBody = ground;
+                Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
                 {
                     Body body = new Body(World);
@@ -142,7 +143,7 @@ namespace FarseerPhysics.SamplesFramework
 
                     prevBody = body;
                 }
-                JointFactory.CreateRevoluteJoint(World, ground, prevBody, Vector2.UnitX);
+                JointFactory.CreateRevoluteJoint(World, _ground, prevBody, Vector2.UnitX);
             }
 
             // boxes
@@ -257,7 +258,12 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            // TODO
+            ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
+            for (int i = 0; i < _ground.FixtureList.Count; ++i)
+            {
+                ScreenManager.LineBatch.DrawLineShape(_ground.FixtureList[i].Shape, Color.DarkGoldenrod);
+            }
+            ScreenManager.LineBatch.End();
             base.Draw(gameTime);
         }
     }

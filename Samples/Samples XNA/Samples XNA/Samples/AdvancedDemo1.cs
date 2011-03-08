@@ -45,6 +45,7 @@ namespace FarseerPhysics.SamplesFramework
         private Vector2 _origin;
         private Texture2D _polygonTexture;
         private float _scale;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -52,7 +53,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = Vector2.Zero;
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             //load texture that will represent the physics body
             _polygonTexture = ScreenManager.Content.Load<Texture2D>("Samples/object");
@@ -103,6 +104,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             ScreenManager.SpriteBatch.Draw(_polygonTexture, ConvertUnits.ToDisplayUnits(_compound.Position),
                                            null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None, 0f);

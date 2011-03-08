@@ -43,6 +43,7 @@ namespace FarseerPhysics.SamplesFramework
         private Body[] _rectangle = new Body[5];
         private Sprite _rectangleSprite;
         private List<Body> _ramps;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -50,7 +51,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0f, 20f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _ramps = new List<Body>();
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
@@ -78,6 +79,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 5; ++i)
             {
@@ -88,7 +90,7 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
             for (int i = 0; i < _ramps.Count; ++i)
             {
-                ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape);
+                ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.DarkGreen);
             }
             ScreenManager.LineBatch.End();
             base.Draw(gameTime);

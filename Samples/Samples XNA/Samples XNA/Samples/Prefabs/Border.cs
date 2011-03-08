@@ -13,8 +13,9 @@ namespace FarseerPhysics.SamplesFramework
     {
         private Body _anchor;
         private World _world;
+        private PhysicsGameScreen _screen;
 
-        public Border(World world, Viewport viewport)
+        public Border(World world, PhysicsGameScreen screen, Viewport viewport)
         {
             _world = world;
 
@@ -30,6 +31,16 @@ namespace FarseerPhysics.SamplesFramework
             _anchor = BodyFactory.CreateLoopShape(_world, borders);
             _anchor.CollisionCategories = Category.All;
             _anchor.CollidesWith = Category.All;
+
+            _screen = screen;
+        }
+
+        public void Draw()
+        {
+            LineBatch _batch = _screen.ScreenManager.LineBatch;
+            _batch.Begin(_screen.Camera.SimProjection, _screen.Camera.SimView);
+            _batch.DrawLineShape(_anchor.FixtureList[0].Shape);
+            _batch.End();
         }
     }
 }

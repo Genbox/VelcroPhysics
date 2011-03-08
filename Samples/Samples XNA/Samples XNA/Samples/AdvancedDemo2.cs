@@ -40,13 +40,15 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
+        private Border _border;
+
         public override void LoadContent()
         {
             base.LoadContent();
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             /* Bridge */
             //We make a path using 2 points.
@@ -91,5 +93,12 @@ namespace FarseerPhysics.SamplesFramework
             PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true,
                                                       true);
         }
+
+        public override void Draw(GameTime gameTime)
+        {
+            _border.Draw();
+            base.Draw(gameTime);
+        }
+
     }
 }
