@@ -27,7 +27,8 @@ namespace FarseerPhysics.DebugViews
 
         // the constructor creates a new PrimitiveBatch and sets up all of the internals
         // that PrimitiveBatch will need.
-        public PrimitiveBatch(GraphicsDevice graphicsDevice) : this(graphicsDevice, DefaultBufferSize)
+        public PrimitiveBatch(GraphicsDevice graphicsDevice)
+            : this(graphicsDevice, DefaultBufferSize)
         {
         }
 
@@ -158,6 +159,7 @@ namespace FarseerPhysics.DebugViews
             {
                 int primitiveCount = _triangleVertsCount / 3;
                 // submit the draw call to the graphics card
+                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, _triangleVertices, 0, primitiveCount);
                 _triangleVertsCount -= primitiveCount * 3;
             }
@@ -173,6 +175,7 @@ namespace FarseerPhysics.DebugViews
             {
                 int primitiveCount = _lineVertsCount / 2;
                 // submit the draw call to the graphics card
+                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
                 _lineVertsCount -= primitiveCount * 2;
             }

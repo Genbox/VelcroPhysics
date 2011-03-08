@@ -150,8 +150,8 @@ namespace FarseerPhysics.SamplesFramework
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
-                _device.SamplerStates[0] = SamplerState.LinearClamp;
                 // submit the draw call to the graphics card
+                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
                 _lineVertsCount -= primitiveCount * 2;
             }
