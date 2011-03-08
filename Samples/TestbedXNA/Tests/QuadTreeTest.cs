@@ -11,6 +11,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class QuadTreeTest : Test
     {
+        Vector2 worldSize;
+
         public override void Initialize()
         {
             Settings.VelocityIterations = 2;
@@ -18,7 +20,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             GameInstance.ViewCenter = Vector2.Zero;
 
-            Vector2 worldSize = 2 * GameInstance.ConvertScreenToWorld(GameInstance.Window.ClientBounds.Width, 0);
+            worldSize = 2 * GameInstance.ConvertScreenToWorld(GameInstance.Window.ClientBounds.Width, 0);
 
             //Create a World using QuadTree constructor
             World = new World(new Vector2(0.0f, -10.0f), new AABB(-worldSize / 2, worldSize / 2));
@@ -74,12 +76,50 @@ namespace FarseerPhysics.TestBed.Tests
                     cBody.BodyType = BodyType.Dynamic;
                 }
             }
+
+
+            /*for (int i = 0; i < 50; i++)
+            {
+                Vector2 pos = new Vector2(Rand.RandomFloat(-worldSize.X / 2, worldSize.X / 2), Rand.RandomFloat(-worldSize.Y / 2, worldSize.Y / 2));
+                Body cBody = BodyFactory.CreateCircle(World, 1.0f, 5f, pos);
+                cBody.BodyType = BodyType.Static;
+            }*/
+
+
             base.Initialize();
+        }
+
+        AABB randomAABB()
+        {
+            AABB aabb = new AABB();
+            aabb.LowerBound.X = Rand.RandomFloat(0.0f, worldSize.X);
+            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, worldSize.Y);
+            aabb.UpperBound.X = aabb.LowerBound.X + Rand.RandomFloat(0.0f, 2.0f);
+            aabb.UpperBound.X = aabb.LowerBound.X + Rand.RandomFloat(0.0f, 2.0f);
+            return aabb;
+        }
+        void testCycle()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                var aabb = randomAABB();
+                World.ContactManager.BroadPhase.Query(id => true, ref aabb);
+            }
+
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             GameInstance.ViewCenter = Vector2.Zero;
+
+            /*DateTime start, end;
+
+            start = DateTime.Now;
+            testCycle();
+            end = DateTime.Now;
+            var time = (end - start).TotalMilliseconds;
+
+            DebugView.DrawString(0, 0, time.ToString());*/
 
             base.Update(settings, gameTime);
         }

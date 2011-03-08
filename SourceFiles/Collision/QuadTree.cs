@@ -92,7 +92,7 @@ public class QuadTree<T>
                         case 4:
                             SubTrees[3].AddNode(n);
                             break;
-                        case 0:
+                        default:
                             n.Parent = this;
                             remNodes.Add(n);
                             break;
@@ -127,7 +127,7 @@ public class QuadTree<T>
                 case 4:
                     SubTrees[3].AddNode(node);
                     break;
-                case 0:
+                default:
                     node.Parent = this;
                     Nodes.Add(node);
                     break;
@@ -248,16 +248,6 @@ public class QuadTree<T>
     public void RemoveNode(Element<T> node)
     {
         node.Parent.Nodes.Remove(node);
-
-        //TODO: probably faster to reconstruct tree than to recursivly fix
-        //this.Reconstruct();
-    }
-
-    public void RemoveNodes(List<Element<T>> nodes)
-    {
-        nodes.ForEach(n => n.Parent.Nodes.Remove(n));
-
-        Reconstruct();
     }
 
     public void Reconstruct()
@@ -265,9 +255,14 @@ public class QuadTree<T>
         List<Element<T>> allNodes = new List<Element<T>>();
         GetAllNodesR(ref allNodes);
 
-        Nodes = new List<Element<T>>();
-        SubTrees = null;
+        Clear();
 
         allNodes.ForEach(AddNode);
+    }
+
+    public void Clear()
+    {
+        Nodes.Clear();
+        SubTrees = null;
     }
 }
