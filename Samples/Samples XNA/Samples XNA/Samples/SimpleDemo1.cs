@@ -47,6 +47,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Body _rectangle;
         private Sprite _rectangleSprite;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -54,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = Vector2.Zero;
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
             _rectangle.BodyType = BodyType.Dynamic;
@@ -69,6 +70,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture, ConvertUnits.ToDisplayUnits(_rectangle.Position), null,
                                            Color.White, _rectangle.Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);

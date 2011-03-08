@@ -204,7 +204,7 @@ namespace FarseerPhysics.SamplesFramework
             RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, SurfaceFormat.Color,
                                                         DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
-            _device.SamplerStates[0] = SamplerState.AnisotropicWrap;
+            _device.SamplerStates[0] = SamplerState.LinearWrap;
 
             _device.SetRenderTarget(texture);
             _device.Clear(Color.Transparent);

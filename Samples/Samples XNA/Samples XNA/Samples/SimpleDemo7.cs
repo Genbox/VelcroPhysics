@@ -46,6 +46,7 @@ namespace FarseerPhysics.SamplesFramework
         private Ragdoll _ragdoll;
         private Body[] _obstacles = new Body[4];
         private Sprite _obstacle;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -53,7 +54,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0f, 20f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _ragdoll = new Ragdoll(World, this, Vector2.Zero);
             LoadObstacles();
@@ -82,6 +83,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 4; ++i)
             {

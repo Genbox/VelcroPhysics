@@ -13,7 +13,7 @@ namespace FarseerPhysics.SamplesFramework
         protected World World;
         protected DebugViewXNA DebugView;
 
-        protected Camera2D Camera;
+        public Camera2D Camera;
 
         private FixedMouseJoint _fixedMouseJoint;
         private Body _userAgent;

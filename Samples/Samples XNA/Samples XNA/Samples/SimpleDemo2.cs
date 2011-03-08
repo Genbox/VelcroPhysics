@@ -51,6 +51,7 @@ namespace FarseerPhysics.SamplesFramework
         private Body _rectangles;
         private Sprite _rectangleSprite;
         private Vector2 offset;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -58,7 +59,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = Vector2.Zero;
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             Vertices rect1 = PolygonTools.CreateRectangle(2f, 2f);
             Vertices rect2 = PolygonTools.CreateRectangle(2f, 2f);
@@ -78,13 +79,14 @@ namespace FarseerPhysics.SamplesFramework
             SetUserAgent(_rectangles, 200f, 200f);
 
             // create sprite based on rectangle fixture
-            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromVertices(rect1, MaterialType.Squares, 
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromVertices(rect1, MaterialType.Squares,
                                                                                    Color.Orange, 1f));
             offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,

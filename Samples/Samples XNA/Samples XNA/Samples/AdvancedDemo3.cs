@@ -35,6 +35,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         TheoJansenWalker _walker;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -44,7 +45,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             _walker = new TheoJansenWalker(World, Vector2.Zero);
         }
@@ -59,6 +60,12 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             base.HandleInput(input, gameTime);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            _border.Draw();
+            base.Draw(gameTime);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace FarseerPhysics.SamplesFramework
         #endregion
 
         private Spiderweb _spiderweb;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -44,7 +45,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border=new Border(World, this,ScreenManager.GraphicsDevice.Viewport);
 
 #if WINDOWS || XBOX
             _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
@@ -56,6 +57,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _spiderweb.Draw(ScreenManager.SpriteBatch);
             ScreenManager.SpriteBatch.End();

@@ -41,6 +41,7 @@ namespace FarseerPhysics.SamplesFramework
 
         private Body[] _circle = new Body[6];
         private Sprite _circleSprite;
+        private Border _border;
 
         public override void LoadContent()
         {
@@ -48,7 +49,7 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0f, 20f);
 
-            new Border(World, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
             Vector2 _position = new Vector2(-15f, -8f);
             float _restitution = 0f;
@@ -70,6 +71,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 6; ++i)
             {
