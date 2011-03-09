@@ -70,11 +70,11 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture, ConvertUnits.ToDisplayUnits(_rectangle.Position), null,
                                            Color.White, _rectangle.Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
+            _border.Draw();
             base.Draw(gameTime);
         }
     }

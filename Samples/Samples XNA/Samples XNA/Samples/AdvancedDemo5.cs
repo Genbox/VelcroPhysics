@@ -63,18 +63,20 @@ namespace FarseerPhysics.SamplesFramework
 
             List<Vertices> list = PolygonTools.CreatePolygon(data, alphabet.Width, 3.5f, 20, true, true);
 
-            float yOffset = 0f;
-            float xOffset = -26.25f;
+            float yOffset = -5f;
+            float xOffset = -14f;
             for (int i = 0; i < list.Count; i++)
             {
-                xOffset += 3.5f;
-
-                if (i == 14)
+                if (i == 9)
+                {
+                    yOffset = 0f;
+                    xOffset = -14f;
+                }
+                if (i == 18)
                 {
                     yOffset = 5f;
-                    xOffset = -19.25f;
+                    xOffset = -12.25f;
                 }
-
                 Vertices polygon = list[i];
                 Vector2 centroid = -polygon.GetCentroid();
                 polygon.Translate(ref centroid);
@@ -97,6 +99,8 @@ namespace FarseerPhysics.SamplesFramework
                 breakableBody.MainBody.Position = new Vector2(xOffset, yOffset);
                 breakableBody.Strength = 100;
                 World.AddBreakableBody(breakableBody);
+
+                xOffset += 3.5f;
             }
         }
 

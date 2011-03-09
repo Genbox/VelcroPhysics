@@ -47,7 +47,7 @@ namespace FarseerPhysics.SamplesFramework
 
             _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
-            _walker = new TheoJansenWalker(World, Vector2.Zero);
+            _walker = new TheoJansenWalker(World, this, Vector2.Zero);
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
@@ -64,6 +64,9 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            _walker.Draw();
+            ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);
         }

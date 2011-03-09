@@ -71,7 +71,6 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 6; ++i)
             {
@@ -79,6 +78,7 @@ namespace FarseerPhysics.SamplesFramework
                                                Color.White, _circle[i].Rotation, _circleSprite.origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
+            _border.Draw();
             base.Draw(gameTime);
         }
     }
