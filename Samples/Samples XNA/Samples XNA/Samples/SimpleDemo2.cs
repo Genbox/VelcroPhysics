@@ -86,7 +86,6 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            _border.Draw();
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,
@@ -99,6 +98,7 @@ namespace FarseerPhysics.SamplesFramework
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.origin - offset, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
+            _border.Draw();
             base.Draw(gameTime);
         }
     }

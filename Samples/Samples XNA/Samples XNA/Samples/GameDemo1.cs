@@ -135,7 +135,7 @@ namespace FarseerPhysics.SamplesFramework
 
                 PolygonShape box = new PolygonShape(1f);
                 box.SetAsBox(10.0f, 0.25f);
-                _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.White, 1.2f));
+                _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
 
                 _board.CreateFixture(box);
 

@@ -70,6 +70,7 @@ namespace FarseerPhysics.SamplesFramework
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
             }
 
+            _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
             //tell our basic effect to begin.
             _basicEffect.Projection = projection;
             _basicEffect.View = view;
@@ -151,7 +152,6 @@ namespace FarseerPhysics.SamplesFramework
             {
                 int primitiveCount = _lineVertsCount / 2;
                 // submit the draw call to the graphics card
-                _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
                 _lineVertsCount -= primitiveCount * 2;
             }

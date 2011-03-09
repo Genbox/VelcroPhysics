@@ -16,6 +16,7 @@ namespace FarseerPhysics.SamplesFramework
         private float _motorSpeed;
         private Vector2 _position;
         private Body _wheel;
+        private PhysicsGameScreen _screen;
 
         public void Reverse()
         {
@@ -23,11 +24,13 @@ namespace FarseerPhysics.SamplesFramework
             _motorJoint.MotorSpeed = _motorSpeed;
         }
 
-        public TheoJansenWalker(World world, Vector2 position)
+        public TheoJansenWalker(World world, PhysicsGameScreen screen, Vector2 position)
         {
             _position = position;
             _motorSpeed = 2.0f;
             _motorOn = true;
+            _screen = screen;
+
             Vector2 pivot = new Vector2(0f, -0.8f);
 
             // Chassis
@@ -167,6 +170,10 @@ namespace FarseerPhysics.SamplesFramework
             RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)),
                                                   anchor);
             world.AddJoint(rjd);
+        }
+
+        public void Draw(){
+
         }
     }
 }
