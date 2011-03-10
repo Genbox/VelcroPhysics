@@ -325,7 +325,7 @@ namespace FarseerPhysics.SamplesFramework
             // draw ground
             for (int i = 0; i < _ground.FixtureList.Count; ++i)
             {
-                ScreenManager.LineBatch.DrawLineShape(_ground.FixtureList[i].Shape, Color.DarkGoldenrod);
+                ScreenManager.LineBatch.DrawLineShape(_ground.FixtureList[i].Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
             base.Draw(gameTime);

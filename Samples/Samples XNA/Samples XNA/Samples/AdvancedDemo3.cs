@@ -64,9 +64,7 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Draw(GameTime gameTime)
         {
-            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             _walker.Draw();
-            ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);
         }
