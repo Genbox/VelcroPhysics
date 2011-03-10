@@ -183,7 +183,7 @@ namespace FarseerPhysics.Common
                 {
                     lowerBound.X = this[i].X;
                 }
-                else if (this[i].X > upperBound.X)
+                if (this[i].X > upperBound.X)
                 {
                     upperBound.X = this[i].X;
                 }
@@ -192,7 +192,7 @@ namespace FarseerPhysics.Common
                 {
                     lowerBound.Y = this[i].Y;
                 }
-                else if (this[i].Y > upperBound.Y)
+                if (this[i].Y > upperBound.Y)
                 {
                     upperBound.Y = this[i].Y;
                 }
