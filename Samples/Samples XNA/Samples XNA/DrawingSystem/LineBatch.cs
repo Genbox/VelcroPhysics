@@ -126,6 +126,27 @@ namespace FarseerPhysics.SamplesFramework
             }
         }
 
+        public void DrawLine(Vector2 v1, Vector2 v2)
+        {
+            DrawLine(v1, v2, Color.Black);
+        }
+
+        public void DrawLine(Vector2 v1, Vector2 v2, Color color)
+        {
+            if (!_hasBegun)
+            {
+                throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
+            }
+            if (_lineVertsCount >= _lineVertices.Length)
+            {
+                Flush();
+            }
+            _lineVertices[_lineVertsCount].Position = new Vector3(v1, 0f);
+            _lineVertices[_lineVertsCount + 1].Position = new Vector3(v2, 0f);
+            _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+            _lineVertsCount += 2;
+        }
+
         // End is called once all the primitives have been drawn using AddVertex.
         // it will call Flush to actually submit the draw call to the graphics card, and
         // then tell the basic effect to end.
