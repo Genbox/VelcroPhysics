@@ -131,9 +131,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\sourcefiles\collision\BroadPhase.cs">
-      <Link>Collision\BroadPhase.cs</Link>
-    </Compile>
     <Compile Include="..\..\sourcefiles\collision\Collision.cs">
       <Link>Collision\Collision.cs</Link>
     </Compile>
@@ -142,6 +139,18 @@
     </Compile>
     <Compile Include="..\..\sourcefiles\collision\DynamicTree.cs">
       <Link>Collision\DynamicTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\DynamicTreeBroadPhase.cs">
+      <Link>Collision\DynamicTreeBroadPhase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\IBroadPhase.cs">
+      <Link>Collision\IBroadPhase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\QuadTree.cs">
+      <Link>Collision\QuadTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\QuadTreeBroadPhase.cs">
+      <Link>Collision\QuadTreeBroadPhase.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\collision\shapes\CircleShape.cs">
       <Link>Collision\Shapes\CircleShape.cs</Link>
