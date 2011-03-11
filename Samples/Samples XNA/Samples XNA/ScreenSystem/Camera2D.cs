@@ -25,7 +25,6 @@ namespace FarseerPhysics.SamplesFramework
         private float _maxRotation;
 
         private float _currentZoom;
-        private float _targetZoom;
         private const float _minZoom = 0.02f;
         private const float _maxZoom = 20f;
 
@@ -148,8 +147,8 @@ namespace FarseerPhysics.SamplesFramework
             get { return _currentZoom; }
             set
             {
-                _targetZoom = value;
-                _targetZoom = MathHelper.Clamp(_targetZoom, _minZoom, _maxZoom);
+                _currentZoom = value;
+                _currentZoom = MathHelper.Clamp(_currentZoom, _minZoom, _maxZoom);
             }
         }
 
@@ -212,21 +211,26 @@ namespace FarseerPhysics.SamplesFramework
 
         public void MoveCamera(Vector2 amount)
         {
-            Position += amount;
+            _currentPosition += amount;
+            if (_minPosition != _maxPosition)
+            {
+                Vector2.Clamp(ref _currentPosition, ref _minPosition, ref _maxPosition, out  _currentPosition);
+            }
+            _targetPosition = _currentPosition;
             _positionTracking = false;
             _rotationTracking = false;
         }
 
         public void RotateCamera(float amount)
         {
-            Rotation += amount;
+            _currentRotation += amount;
+            if (_minRotation != _maxRotation)
+            {
+                _currentRotation = MathHelper.Clamp(_currentRotation, _minRotation, _maxRotation);
+            }
+            _targetRotation = _currentRotation;
             _positionTracking = false;
             _rotationTracking = false;
-        }
-
-        public void ZoomCamera(float amount)
-        {
-            Zoom += amount;
         }
 
         /// <summary>
@@ -248,7 +252,6 @@ namespace FarseerPhysics.SamplesFramework
             _rotationTracking = false;
 
             _currentZoom = 1f;
-            _targetZoom = 1f;
 
             SetView();
         }
@@ -338,21 +341,8 @@ namespace FarseerPhysics.SamplesFramework
                 _rotDelta /= Math.Abs(_rotDelta);
             }
 
-            float _zoomDelta = _targetZoom - _currentZoom;
-
-            float _zoomInertia;
-            if (Math.Abs(_zoomDelta) < 1f)
-            {
-                _zoomInertia = (float)Math.Pow(_zoomDelta, 2.0);
-            }
-            else
-            {
-                _zoomInertia = 1f;
-            }
-
             _currentPosition += 100f * _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
             _currentRotation += 80f * _rotDelta * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _currentZoom += 60f * _zoomDelta * _zoomInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }

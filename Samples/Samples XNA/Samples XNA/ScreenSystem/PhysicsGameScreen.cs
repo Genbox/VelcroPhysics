@@ -209,35 +209,35 @@ namespace FarseerPhysics.SamplesFramework
         private void HandleCamera(InputHelper input, GameTime gameTime)
         {
             Vector2 camMove = Vector2.Zero;
-            float camZoom = 0f;
 
             if (input.KeyboardState.IsKeyDown(Keys.Up))
             {
-                camMove.Y -= 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (input.KeyboardState.IsKeyDown(Keys.Down))
             {
-                camMove.Y += 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (input.KeyboardState.IsKeyDown(Keys.Left))
             {
-                camMove.X -= 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (input.KeyboardState.IsKeyDown(Keys.Right))
             {
-                camMove.X += 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
             if (input.KeyboardState.IsKeyDown(Keys.PageUp))
             {
-                camZoom += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
             }
             if (input.KeyboardState.IsKeyDown(Keys.PageDown))
             {
-                camZoom -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
             }
-            Camera.MoveCamera(camMove);
-            Camera.ZoomCamera(camZoom);
-
+            if (camMove != Vector2.Zero)
+            {
+                Camera.MoveCamera(camMove);
+            }
             if (input.IsNewKeyPress(Keys.Home))
             {
                 Camera.ResetCamera();
