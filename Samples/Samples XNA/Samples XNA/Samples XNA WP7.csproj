@@ -83,17 +83,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawingSystem\LineBatch.cs" />
+    <Compile Include="DrawingSystem\Sprite.cs" />
     <Compile Include="Samples\AdvancedDemo1.cs" />
     <Compile Include="Samples\AdvancedDemo2.cs" />
     <Compile Include="Samples\AdvancedDemo3.cs" />
     <Compile Include="Samples\AdvancedDemo4.cs" />
     <Compile Include="Samples\AdvancedDemo5.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
-    <Compile Include="DrawingSystem\DrawableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
     <Compile Include="Samples\GameDemo1.cs" />
+    <Compile Include="Samples\GameDemo2.cs" />
+    <Compile Include="Samples\GameDemo3.cs" />
     <Compile Include="Samples\Prefabs\Agent.cs" />
     <Compile Include="Samples\Prefabs\Border.cs" />
     <Compile Include="Samples\Prefabs\Objects.cs" />

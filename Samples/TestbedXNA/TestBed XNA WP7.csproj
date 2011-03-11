@@ -117,6 +117,7 @@
     <Compile Include="Tests\ExplosionTest.cs" />
     <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\MSTerrainTest.cs" />
+    <Compile Include="Tests\QuadTreeTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
     <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\SimpleWindForceTest.cs" />
