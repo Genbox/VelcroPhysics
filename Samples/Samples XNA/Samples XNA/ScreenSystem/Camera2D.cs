@@ -24,6 +24,11 @@ namespace FarseerPhysics.SamplesFramework
         private float _minRotation;
         private float _maxRotation;
 
+        private float _currentZoom;
+        private float _targetZoom;
+        private const float _minZoom = 0.02f;
+        private const float _maxZoom = 20f;
+
         private Body _trackingBody;
         private bool _positionTracking;
         private bool _rotationTracking;
@@ -136,6 +141,19 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         /// <summary>
+        /// The current rotation of the camera in radians.
+        /// </summary>
+        public float Zoom
+        {
+            get { return _currentZoom; }
+            set
+            {
+                _targetZoom = value;
+                _targetZoom = MathHelper.Clamp(_targetZoom, _minZoom, _maxZoom);
+            }
+        }
+
+        /// <summary>
         /// the body that this camera is currently tracking. 
         /// Null if not tracking any.
         /// </summary>
@@ -206,6 +224,11 @@ namespace FarseerPhysics.SamplesFramework
             _rotationTracking = false;
         }
 
+        public void ZoomCamera(float amount)
+        {
+            Zoom += amount;
+        }
+
         /// <summary>
         /// Resets the camera to default values.
         /// </summary>
@@ -224,6 +247,9 @@ namespace FarseerPhysics.SamplesFramework
             _positionTracking = false;
             _rotationTracking = false;
 
+            _currentZoom = 1f;
+            _targetZoom = 1f;
+
             SetView();
         }
 
@@ -238,11 +264,13 @@ namespace FarseerPhysics.SamplesFramework
         private void SetView()
         {
             Matrix matRotation = Matrix.CreateRotationZ(_currentRotation);
+            Matrix matZoom = Matrix.CreateScale(_currentZoom);
             Vector3 translateCenter = new Vector3(_translateCenter, 0f);
             Vector3 translateBody = new Vector3(-_currentPosition, 0f);
 
             _view = Matrix.CreateTranslation(translateBody) *
                     matRotation *
+                    matZoom *
                     Matrix.CreateTranslation(translateCenter);
 
             translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
@@ -250,6 +278,7 @@ namespace FarseerPhysics.SamplesFramework
 
             _batchView = Matrix.CreateTranslation(translateBody) *
                          matRotation *
+                         matZoom *
                          Matrix.CreateTranslation(translateCenter);
         }
 
@@ -286,7 +315,7 @@ namespace FarseerPhysics.SamplesFramework
             float _inertia;
             if (_distance < 10f)
             {
-                _inertia = (float)Math.Pow(_distance / 10, 2.0);
+                _inertia = (float)Math.Pow(_distance / 10.0, 2.0);
             }
             else
             {
@@ -309,8 +338,21 @@ namespace FarseerPhysics.SamplesFramework
                 _rotDelta /= Math.Abs(_rotDelta);
             }
 
+            float _zoomDelta = _targetZoom - _currentZoom;
+
+            float _zoomInertia;
+            if (Math.Abs(_zoomDelta) < 1f)
+            {
+                _zoomInertia = (float)Math.Pow(_zoomDelta, 2.0);
+            }
+            else
+            {
+                _zoomInertia = 1f;
+            }
+
             _currentPosition += 100f * _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
             _currentRotation += 80f * _rotDelta * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentZoom += 60f * _zoomDelta * _zoomInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }

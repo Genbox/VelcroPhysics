@@ -20,11 +20,14 @@ namespace FarseerPhysics.SamplesFramework
         private float _agentForce;
         private float _agentTorque;
 
+        private bool _enableCameraControl;
+
         protected PhysicsGameScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.75);
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
+            _enableCameraControl = true;
             _userAgent = null;
             World = null;
             Camera = null;
@@ -36,6 +39,12 @@ namespace FarseerPhysics.SamplesFramework
             _userAgent = agent;
             _agentForce = force;
             _agentTorque = torque;
+        }
+
+        public bool EnableCameraControl
+        {
+            get { return _enableCameraControl; }
+            set { _enableCameraControl = value; }
         }
 
         public override void LoadContent()
@@ -140,7 +149,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 EnableOrDisableFlag(DebugViewFlags.AABB);
             }
-            
+
             if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
             {
                 ExitScreen();
@@ -154,6 +163,11 @@ namespace FarseerPhysics.SamplesFramework
             if (_userAgent != null)
             {
                 HandleUserAgent(input);
+            }
+
+            if (EnableCameraControl)
+            {
+                HandleCamera(input, gameTime);
             }
 
             base.HandleInput(input, gameTime);
@@ -189,6 +203,44 @@ namespace FarseerPhysics.SamplesFramework
             if (_fixedMouseJoint != null)
             {
                 _fixedMouseJoint.WorldAnchorB = position;
+            }
+        }
+
+        private void HandleCamera(InputHelper input, GameTime gameTime)
+        {
+            Vector2 camMove = Vector2.Zero;
+            float camZoom = 0f;
+
+            if (input.KeyboardState.IsKeyDown(Keys.Up))
+            {
+                camMove.Y -= 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Down))
+            {
+                camMove.Y += 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Left))
+            {
+                camMove.X -= 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Right))
+            {
+                camMove.X += 2000f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.PageUp))
+            {
+                camZoom += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.PageDown))
+            {
+                camZoom -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            Camera.MoveCamera(camMove);
+            Camera.ZoomCamera(camZoom);
+
+            if (input.IsNewKeyPress(Keys.Home))
+            {
+                Camera.ResetCamera();
             }
         }
 

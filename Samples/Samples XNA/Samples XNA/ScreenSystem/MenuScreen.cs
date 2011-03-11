@@ -159,11 +159,11 @@ namespace FarseerPhysics.SamplesFramework
             {
                 if (_scrollUp.Hover)
                 {
-                    _menuOffset = Math.Max(_menuOffset - 120f * (float)gameTime.ElapsedGameTime.TotalSeconds, 0f);
+                    _menuOffset = Math.Max(_menuOffset - 160f * (float)gameTime.ElapsedGameTime.TotalSeconds, 0f);
                 }
                 if (_scrollDown.Hover)
                 {
-                    _menuOffset = Math.Min(_menuOffset + 120f * (float)gameTime.ElapsedGameTime.TotalSeconds, _maxOffset);
+                    _menuOffset = Math.Min(_menuOffset + 160f * (float)gameTime.ElapsedGameTime.TotalSeconds, _maxOffset);
                 }
             }
         }
