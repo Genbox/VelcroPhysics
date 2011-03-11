@@ -6,6 +6,7 @@ using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -42,6 +43,13 @@ namespace FarseerPhysics.SamplesFramework
 
         private Border _border;
 
+        private List<Body> _bridgeBodies;
+        private List<Body> _softBodies;
+
+        private Sprite _bridgeBox;
+        private Sprite _softBodyBox;
+        private Sprite _softBodyCircle;
+
         public override void LoadContent()
         {
             base.LoadContent();
@@ -60,15 +68,16 @@ namespace FarseerPhysics.SamplesFramework
             Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 20);
 
-            List<Body> bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
-                                                                                  BodyType.Dynamic, 29);
+            _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
+                                                                       BodyType.Dynamic, 29);
+            _bridgeBox = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
             //Attach the first and last fixtures to the world
-            JointFactory.CreateFixedRevoluteJoint(World, bridgeBodies[0], new Vector2(0f, -0.5f), bridgeBodies[0].Position);
-            JointFactory.CreateFixedRevoluteJoint(World, bridgeBodies[bridgeBodies.Count - 1], new Vector2(0, 0.5f),
-                                                  bridgeBodies[bridgeBodies.Count - 1].Position);
+            JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f), _bridgeBodies[0].Position);
+            JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
+                                                  _bridgeBodies[_bridgeBodies.Count - 1].Position);
 
-            PathManager.AttachBodiesWithRevoluteJoint(World, bridgeBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f),
+            PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f),
                                                       false, true);
 
             /* Soft body */
@@ -86,16 +95,35 @@ namespace FarseerPhysics.SamplesFramework
             shapes.Add(new CircleShape(0.5f, 1f));
 
             //We distribute the shapes in the rectangular path.
-            List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes,
+            _softBodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes,
                                                                             BodyType.Dynamic, 30);
+            _softBodyBox = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[0], MaterialType.Blank, Color.Silver * 0.8f, 1f));
+            _softBodyBox.origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
+            _softBodyCircle = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[1], MaterialType.Waves, Color.Silver, 1f));
 
             //Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
-            PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true,
-                                                      true);
+            PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
         }
 
         public override void Draw(GameTime gameTime)
         {
+            ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+            for (int i = 0; i < _softBodies.Count; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_softBodyBox.texture, ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
+                                               Color.White, _softBodies[i].Rotation, _softBodyBox.origin, 1f, SpriteEffects.None, 0f);
+            }
+            for (int i = 0; i < _softBodies.Count; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_softBodyCircle.texture, ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
+                                                   Color.White, _softBodies[i].Rotation, _softBodyCircle.origin, 1f, SpriteEffects.None, 0f);
+            }
+            for (int i = 0; i < _bridgeBodies.Count; ++i)
+            {
+                ScreenManager.SpriteBatch.Draw(_bridgeBox.texture, ConvertUnits.ToDisplayUnits(_bridgeBodies[i].Position), null,
+                                               Color.White, _bridgeBodies[i].Rotation, _bridgeBox.origin, 1f, SpriteEffects.None, 0f);
+            }
+            ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);
         }
