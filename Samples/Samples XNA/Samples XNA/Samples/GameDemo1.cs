@@ -68,6 +68,7 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = new Vector2(0f, 10f);
 
             HasCursor = false;
+            EnableCameraControl = false;
 
             _hzFront = 8.5f;
             _hzBack = 5.0f;
