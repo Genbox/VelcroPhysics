@@ -67,18 +67,18 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 const float w = 1.0f;
-                float b = w/(2.0f + (float) Math.Sqrt(2.0));
-                float s = (float) Math.Sqrt(2.0)*b;
+                float b = w / (2.0f + (float)Math.Sqrt(2.0));
+                float s = (float)Math.Sqrt(2.0) * b;
 
                 Vertices vertices3 = new Vertices(8);
-                vertices3.Add(new Vector2(0.5f*s, 0.0f));
-                vertices3.Add(new Vector2(0.5f*w, b));
-                vertices3.Add(new Vector2(0.5f*w, b + s));
-                vertices3.Add(new Vector2(0.5f*s, w));
-                vertices3.Add(new Vector2(-0.5f*s, w));
-                vertices3.Add(new Vector2(-0.5f*w, b + s));
-                vertices3.Add(new Vector2(-0.5f*w, b));
-                vertices3.Add(new Vector2(-0.5f*s, 0.0f));
+                vertices3.Add(new Vector2(0.5f * s, 0.0f));
+                vertices3.Add(new Vector2(0.5f * w, b));
+                vertices3.Add(new Vector2(0.5f * w, b + s));
+                vertices3.Add(new Vector2(0.5f * s, w));
+                vertices3.Add(new Vector2(-0.5f * s, w));
+                vertices3.Add(new Vector2(-0.5f * w, b + s));
+                vertices3.Add(new Vector2(-0.5f * w, b));
+                vertices3.Add(new Vector2(-0.5f * s, 0.0f));
                 _polygons[2] = new PolygonShape(vertices3, 1);
             }
 
@@ -168,7 +168,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float l = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(l*(float) Math.Cos(_angle), l*(float) Math.Sin(_angle));
+            Vector2 d = new Vector2(l * (float)Math.Cos(_angle), l * (float)Math.Sin(_angle));
             Vector2 point2 = point1 + d;
 
             Vector2 point = Vector2.Zero, normal = Vector2.Zero;
@@ -182,7 +182,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -203,7 +203,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                         DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
-                        Vector2 head = point + 0.5f*normal;
+                        Vector2 head = point + 0.5f * normal;
                         DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
                         DebugView.EndCustomDraw();
                     }
@@ -222,7 +222,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -243,7 +243,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                         DebugView.DrawSegment(point1, point, new Color(0.8f, 0.8f, 0.8f));
 
-                        Vector2 head = point + 0.5f*normal;
+                        Vector2 head = point + 0.5f * normal;
                         DebugView.DrawSegment(point, head, new Color(0.9f, 0.9f, 0.4f));
                         DebugView.EndCustomDraw();
                     }
@@ -262,7 +262,7 @@ namespace FarseerPhysics.TestBed.Tests
                                           Body body = f.Body;
                                           if (body.UserData != null)
                                           {
-                                              int index = (int) body.UserData;
+                                              int index = (int)body.UserData;
                                               if (index == 0)
                                               {
                                                   // filter
@@ -284,7 +284,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                         DebugView.DrawSegment(point1, points[i], new Color(0.8f, 0.8f, 0.8f));
 
-                        Vector2 head = points[i] + 0.5f*normals[i];
+                        Vector2 head = points[i] + 0.5f * normals[i];
                         DebugView.DrawSegment(points[i], head, new Color(0.9f, 0.9f, 0.4f));
                     }
                     DebugView.EndCustomDraw();
@@ -295,7 +295,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (advanceRay)
             {
-                _angle += 0.25f*Settings.Pi/180.0f;
+                _angle += 0.25f * Settings.Pi / 180.0f;
             }
         }
 
@@ -332,7 +332,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fixture.Friction = 0.3f;
             }
 
-            _bodyIndex = (_bodyIndex + 1)%MaxBodies;
+            _bodyIndex = (_bodyIndex + 1) % MaxBodies;
         }
 
         internal static Test Create()

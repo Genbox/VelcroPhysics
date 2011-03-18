@@ -20,11 +20,11 @@ namespace FarseerPhysics.TestBed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 float x1 = -20.0f;
-                float y1 = 2.0f*(float) Math.Cos(x1/10.0f*(float) Math.PI);
+                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * (float)Math.PI);
                 for (int i = 0; i < 80; ++i)
                 {
                     float x2 = x1 + 0.5f;
-                    float y2 = 2.0f*(float) Math.Cos(x2/10.0f*(float) Math.PI);
+                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * (float)Math.PI);
 
                     EdgeShape shape = new EdgeShape(new Vector2(x1, y1), new Vector2(x2, y2));
                     ground.CreateFixture(shape);
@@ -36,18 +36,18 @@ namespace FarseerPhysics.TestBed.Tests
 
             const float w = 1.0f;
             const float t = 2.0f;
-            float b = w/(2.0f + (float) Math.Sqrt(t));
-            float s = (float) Math.Sqrt(t)*b;
+            float b = w / (2.0f + (float)Math.Sqrt(t));
+            float s = (float)Math.Sqrt(t) * b;
 
             Vertices vertices = new Vertices(8);
-            vertices.Add(new Vector2(0.5f*s, 0.0f));
-            vertices.Add(new Vector2(0.5f*w, b));
-            vertices.Add(new Vector2(0.5f*w, b + s));
-            vertices.Add(new Vector2(0.5f*s, w));
-            vertices.Add(new Vector2(-0.5f*s, w));
-            vertices.Add(new Vector2(-0.5f*w, b + s));
-            vertices.Add(new Vector2(-0.5f*w, b));
-            vertices.Add(new Vector2(-0.5f*s, 0.0f));
+            vertices.Add(new Vector2(0.5f * s, 0.0f));
+            vertices.Add(new Vector2(0.5f * w, b));
+            vertices.Add(new Vector2(0.5f * w, b + s));
+            vertices.Add(new Vector2(0.5f * s, w));
+            vertices.Add(new Vector2(-0.5f * s, w));
+            vertices.Add(new Vector2(-0.5f * w, b + s));
+            vertices.Add(new Vector2(-0.5f * w, b));
+            vertices.Add(new Vector2(-0.5f * s, 0.0f));
 
             _polyShape = new PolygonShape(20);
             _polyShape.Set(vertices);

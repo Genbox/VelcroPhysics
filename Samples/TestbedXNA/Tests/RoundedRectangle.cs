@@ -59,14 +59,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 default:
                     Body rounded = BodyFactory.CreateRoundedRectangle(World, 10, 10, 2.5F, 2.5F, _segments,
-                                                                                  10, position);
+                                                                      10, position);
                     rounded.BodyType = BodyType.Dynamic;
                     break;
                 case 1:
                     Body capsule = BodyFactory.CreateCapsule(World, 10, 2,
-                                                                         (int)MathHelper.Max(_segments, 1), 3,
-                                                                         (int)MathHelper.Max(_segments, 1), 10,
-                                                                         position);
+                                                             (int)MathHelper.Max(_segments, 1), 3,
+                                                             (int)MathHelper.Max(_segments, 1), 10,
+                                                             position);
                     capsule.BodyType = BodyType.Dynamic;
                     break;
             }

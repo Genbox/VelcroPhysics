@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (_time > 1f)
                 _time = 0;
 
-            PathManager.MoveBodyOnPath(_path, _movingBody, _time, 1f, 1f/60f);
+            PathManager.MoveBodyOnPath(_path, _movingBody, _time, 1f, 1f / 60f);
 
             base.Update(settings, gameTime);
         }

@@ -24,7 +24,6 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -69,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                     Vector2 anchor = new Vector2(0.0f, -2.0f);
                     _joint1 = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(body.GetWorldPoint(anchor)),
                                                 anchor);
-                    _joint1.MotorSpeed = 1.0f*Settings.Pi;
+                    _joint1.MotorSpeed = 1.0f * Settings.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
                     World.AddJoint(_joint1);

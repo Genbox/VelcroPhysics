@@ -76,7 +76,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Shape Editing", CreateFcn = ShapeEditingTest.Create},
                 new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
                 new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
-                
                 //FPE tests
                 new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
                 new TestEntry {Name = "Path Test", CreateFcn = PathTest.Create},
@@ -94,14 +93,14 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
                 new TestEntry {Name = "Clone Test", CreateFcn = CloneTest.Create},
                 new TestEntry {Name = "Serialization Test", CreateFcn = SerializationTest.Create},
-                new TestEntry {Name = "Destructible Terrain YuPeng Test", CreateFcn = DestructibleTerrainYuPengTest.Create},
+                new TestEntry
+                    {Name = "Destructible Terrain YuPeng Test", CreateFcn = DestructibleTerrainYuPengTest.Create},
                 new TestEntry {Name = "Destructible Terrain MS Test", CreateFcn = DestructibleTerrainMSTest.Create},
                 new TestEntry {Name = "Deletion test", CreateFcn = DeletionTest.Create},
                 new TestEntry {Name = "Buoyancy test", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Convex hull test", CreateFcn = ConvexHullTest.Create},
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
                 new TestEntry {Name = "Quad Tree BroadPhase test", CreateFcn = QuadTreeTest.Create},
-
                 new TestEntry {Name = null, CreateFcn = null}
             };
     }

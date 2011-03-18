@@ -45,14 +45,14 @@ namespace FarseerPhysics.TestBed.Tests
             fB.BodyType = BodyType.Dynamic;
 
             AngleJoint joint = new AngleJoint(fA, fB);
-            joint.TargetAngle = (float) Math.PI/2;
+            joint.TargetAngle = (float)Math.PI / 2;
             World.AddJoint(joint);
 
             Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
             fC.BodyType = BodyType.Dynamic;
 
             FixedAngleJoint fixedJoint = new FixedAngleJoint(fC);
-            fixedJoint.TargetAngle = (float) Math.PI/3;
+            fixedJoint.TargetAngle = (float)Math.PI / 3;
             World.AddJoint(fixedJoint);
         }
 

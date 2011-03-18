@@ -37,9 +37,9 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private const int ColumnCount = 5;
         private const int RowCount = 16;
-        private Body[] _bodies = new Body[RowCount*ColumnCount];
+        private Body[] _bodies = new Body[RowCount * ColumnCount];
         private Body _bullet;
-        private int[] _indices = new int[RowCount*ColumnCount];
+        private int[] _indices = new int[RowCount * ColumnCount];
 
         private VerticalStackTest()
         {
@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
             BodyFactory.CreateEdge(World, new Vector2(20.0f, 0.0f), new Vector2(20.0f, 20.0f));
 
-            float[] xs = new[] {0.0f, -10.0f, -5.0f, 5.0f, 10.0f};
+            float[] xs = new[] { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -56,8 +56,8 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < RowCount; ++i)
                 {
-                    int n = j*RowCount + i;
-                    Debug.Assert(n < RowCount*ColumnCount);
+                    int n = j * RowCount + i;
+                    Debug.Assert(n < RowCount * ColumnCount);
                     _indices[n] = n;
 
                     const float x = 0.0f;
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f*i);
+                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
 
                     _bodies[n] = body;

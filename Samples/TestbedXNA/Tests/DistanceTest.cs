@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.DrawString(50, TextLine, "Iterations = {0:n0}", output.Iterations);
             TextLine += 15;
-            
+
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
@@ -102,7 +102,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
                 DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
             }
-            
+
             Vector2 x1 = output.PointA;
             Vector2 x2 = output.PointB;
 
@@ -134,11 +134,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
-                _angleB += 0.1f*Settings.Pi;
+                _angleB += 0.1f * Settings.Pi;
             }
             if (keyboardManager.IsNewKeyPress(Keys.E))
             {
-                _angleB -= 0.1f*Settings.Pi;
+                _angleB -= 0.1f * Settings.Pi;
             }
 
             _transformB.Set(_positionB, _angleB);

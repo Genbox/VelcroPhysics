@@ -24,7 +24,6 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
@@ -67,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _touching[i] = false;
                     _bodies[i] = BodyFactory.CreateBody(World);
                     _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].Position = new Vector2(-10.0f + 3.0f*i, 20.0f);
+                    _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     _bodies[i].UserData = i;
 
                     _bodies[i].CreateFixture(shape);
@@ -83,12 +82,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int) (fixtureB.Body.UserData)] = true;
+                _touching[(int)(fixtureB.Body.UserData)] = true;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int) (fixtureA.Body.UserData)] = true;
+                _touching[(int)(fixtureA.Body.UserData)] = true;
             }
 
             return true;
@@ -102,12 +101,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int) (fixtureB.Body.UserData)] = false;
+                _touching[(int)(fixtureB.Body.UserData)] = false;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int) (fixtureA.Body.UserData)] = false;
+                _touching[(int)(fixtureA.Body.UserData)] = false;
             }
         }
 
@@ -127,19 +126,19 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = _bodies[i];
                 Body ground = _sensor.Body;
 
-                CircleShape circle = (CircleShape) _sensor.Shape;
+                CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
                 Vector2 position = body.Position;
 
                 Vector2 d = center - position;
-                if (d.LengthSquared() < Settings.Epsilon*Settings.Epsilon)
+                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
                 {
                     continue;
                 }
 
                 d.Normalize();
-                Vector2 f = 100.0f*d;
+                Vector2 f = 100.0f * d;
                 body.ApplyForce(f, position);
             }
         }

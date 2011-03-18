@@ -96,13 +96,13 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 25);
 
-                float[] friction = new[] {0.75f, 0.5f, 0.35f, 0.1f, 0.0f};
+                float[] friction = new[] { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };
 
                 for (int i = 0; i < 5; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-15.0f + 4.0f*i, 28.0f);
+                    body.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = friction[i];

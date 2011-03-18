@@ -24,7 +24,6 @@
 */
 
 using System;
-using System.IO;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;

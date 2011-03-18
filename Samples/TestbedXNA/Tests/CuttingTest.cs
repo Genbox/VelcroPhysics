@@ -140,11 +140,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Gamepad(GamePadState state, GamePadState oldState)
         {
-            _start.X += state.ThumbSticks.Left.X/5;
-            _start.Y += state.ThumbSticks.Left.Y/5;
+            _start.X += state.ThumbSticks.Left.X / 5;
+            _start.Y += state.ThumbSticks.Left.Y / 5;
 
-            _end.X += state.ThumbSticks.Right.X/5;
-            _end.Y += state.ThumbSticks.Right.Y/5;
+            _end.X += state.ThumbSticks.Right.X / 5;
+            _end.Y += state.ThumbSticks.Right.Y / 5;
 
             if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
                 CuttingTools.Cut(World, _start, _end, 0.001f);
