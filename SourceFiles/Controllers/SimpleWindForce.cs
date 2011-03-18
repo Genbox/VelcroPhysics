@@ -11,10 +11,6 @@ namespace FarseerPhysics.Controllers
     /// </summary>
     public class SimpleWindForce : AbstractForceController
     {
-        public SimpleWindForce() : base()
-        {
-        }
-
         /// <summary>
         /// Direction of the windforce
         /// </summary>
@@ -63,14 +59,14 @@ namespace FarseerPhysics.Controllers
                     // Calculate random Variation
                     if (Variation != 0)
                     {
-                        float strengthVariation = (float) Randomize.NextDouble()*MathHelper.Clamp(Variation, 0, 1);
+                        float strengthVariation = (float)Randomize.NextDouble() * MathHelper.Clamp(Variation, 0, 1);
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector*strength*decayMultiplier*strengthVariation);
+                        body.ApplyForce(forceVector * strength * decayMultiplier * strengthVariation);
                     }
                     else
                     {
                         forceVector.Normalize();
-                        body.ApplyForce(forceVector*strength*decayMultiplier);
+                        body.ApplyForce(forceVector * strength * decayMultiplier);
                     }
                 }
             }

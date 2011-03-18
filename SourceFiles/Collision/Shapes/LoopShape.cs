@@ -23,7 +23,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
@@ -52,7 +51,8 @@ namespace FarseerPhysics.Collision.Shapes
             _radius = Settings.PolygonRadius;
         }
 
-        public LoopShape(Vertices vertices) : base(0)
+        public LoopShape(Vertices vertices)
+            : base(0)
         {
             ShapeType = ShapeType.Loop;
             _radius = Settings.PolygonRadius;

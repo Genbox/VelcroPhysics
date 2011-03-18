@@ -219,6 +219,8 @@ namespace FarseerPhysics.Collision
     /// </summary>
     public struct AABB
     {
+        private static DistanceInput _input = new DistanceInput();
+
         /// <summary>
         /// The lower vertex
         /// </summary>
@@ -305,7 +307,11 @@ namespace FarseerPhysics.Collision
 
         public AABB Q2
         {
-            get { return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y)); ;}
+            get
+            {
+                return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y));
+                ;
+            }
         }
 
         public AABB Q3
@@ -415,7 +421,6 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
-        private static DistanceInput _input = new DistanceInput();
 
         public static bool TestOverlap(Shape shapeA, int indexA,
                                        Shape shapeB, int indexB,
@@ -616,7 +621,8 @@ namespace FarseerPhysics.Collision
                         normal.X = 1;
                         normal.Y = 0;
 
-                        float result = (pointAx - pointBx) * (pointAx - pointBx) + (pointAy - pointBy) * (pointAy - pointBy);
+                        float result = (pointAx - pointBx) * (pointAx - pointBx) +
+                                       (pointAy - pointBy) * (pointAy - pointBy);
                         if (result > Settings.Epsilon * Settings.Epsilon)
                         {
                             float tmpNormalx = pointBx - pointAx;
@@ -1797,10 +1803,14 @@ namespace FarseerPhysics.Collision
             int count1 = poly1.Vertices.Count;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            float dx = (xf2.Position.X + xf2.R.Col1.X * poly2.MassData.Centroid.X + xf2.R.Col2.X * poly2.MassData.Centroid.Y) -
-                       (xf1.Position.X + xf1.R.Col1.X * poly1.MassData.Centroid.X + xf1.R.Col2.X * poly1.MassData.Centroid.Y);
-            float dy = (xf2.Position.Y + xf2.R.Col1.Y * poly2.MassData.Centroid.X + xf2.R.Col2.Y * poly2.MassData.Centroid.Y) -
-                       (xf1.Position.Y + xf1.R.Col1.Y * poly1.MassData.Centroid.X + xf1.R.Col2.Y * poly1.MassData.Centroid.Y);
+            float dx = (xf2.Position.X + xf2.R.Col1.X * poly2.MassData.Centroid.X +
+                        xf2.R.Col2.X * poly2.MassData.Centroid.Y) -
+                       (xf1.Position.X + xf1.R.Col1.X * poly1.MassData.Centroid.X +
+                        xf1.R.Col2.X * poly1.MassData.Centroid.Y);
+            float dy = (xf2.Position.Y + xf2.R.Col1.Y * poly2.MassData.Centroid.X +
+                        xf2.R.Col2.Y * poly2.MassData.Centroid.Y) -
+                       (xf1.Position.Y + xf1.R.Col1.Y * poly1.MassData.Centroid.X +
+                        xf1.R.Col2.Y * poly1.MassData.Centroid.Y);
             Vector2 dLocal1 = new Vector2(dx * xf1.R.Col1.X + dy * xf1.R.Col1.Y, dx * xf1.R.Col2.X + dy * xf1.R.Col2.Y);
 
             // Find edge normal on poly1 that has the largest projection onto d.
@@ -1888,7 +1898,8 @@ namespace FarseerPhysics.Collision
             Vector2 v = poly1.Normals[edge1];
             float tmpx = xf1.R.Col1.X * v.X + xf1.R.Col2.X * v.Y;
             float tmpy = xf1.R.Col1.Y * v.X + xf1.R.Col2.Y * v.Y;
-            Vector2 normal1 = new Vector2(tmpx * xf2.R.Col1.X + tmpy * xf2.R.Col1.Y, tmpx * xf2.R.Col2.X + tmpy * xf2.R.Col2.Y);
+            Vector2 normal1 = new Vector2(tmpx * xf2.R.Col1.X + tmpy * xf2.R.Col1.Y,
+                                          tmpx * xf2.R.Col2.X + tmpy * xf2.R.Col2.Y);
 
             // Find the incident edge on poly2.
             int index = 0;

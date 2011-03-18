@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
 
@@ -74,7 +73,7 @@ public class QuadTree<T>
                 SubTrees[3] = new QuadTree<T>(Span.Q4, MaxBucket, MaxDepth - 1);
 
                 List<Element<T>> remNodes = new List<Element<T>>();
-                    //nodes that are not fully contained by any quadrant
+                //nodes that are not fully contained by any quadrant
 
                 foreach (Element<T> n in Nodes)
                 {
@@ -105,7 +104,7 @@ public class QuadTree<T>
             {
                 node.Parent = this;
                 Nodes.Add(node);
-                    //if bin is not yet full or max depth has been reached, just add the node without subdividing
+                //if bin is not yet full or max depth has been reached, just add the node without subdividing
             }
         }
         else //we already have children nodes

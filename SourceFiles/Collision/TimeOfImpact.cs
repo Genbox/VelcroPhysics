@@ -74,9 +74,9 @@ namespace FarseerPhysics.Collision
         private static SeparationFunctionType _type;
 
         public static void Set(ref SimplexCache cache,
-                                  DistanceProxy proxyA, ref Sweep sweepA,
-                                  DistanceProxy proxyB, ref Sweep sweepB,
-                                  float t1)
+                               DistanceProxy proxyA, ref Sweep sweepA,
+                               DistanceProxy proxyB, ref Sweep sweepB,
+                               float t1)
         {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;

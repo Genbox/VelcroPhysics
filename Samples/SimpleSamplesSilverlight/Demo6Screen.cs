@@ -46,7 +46,7 @@ namespace FarseerPhysics.SimpleSamplesSilverlight
 
             for (int i = 0; i < _spiders.Length; i++)
             {
-                _spiders[i] = new Spider(World, new Vector2(0, ((i + 1)*3) - 7));
+                _spiders[i] = new Spider(World, new Vector2(0, ((i + 1) * 3) - 7));
             }
 
             base.LoadContent();

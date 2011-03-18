@@ -62,7 +62,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                                               PolyClipType clipType, out PolyClipError error)
         {
             Debug.Assert(subject.IsSimple() && clip.IsSimple(), "Non simple input!", "Input polygons must be simple (cannot intersect themselves).");
-            
+
             // Copy polygons
             Vertices slicedSubject;
             Vertices slicedClip;

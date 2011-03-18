@@ -27,13 +27,13 @@ namespace FarseerPhysics.Common.Decomposition
         private static bool InsideTriangle(ref Vector2 a, ref Vector2 b, ref Vector2 c, ref Vector2 p)
         {
             //A cross bp
-            float abp = (c.X - b.X)*(p.Y - b.Y) - (c.Y - b.Y)*(p.X - b.X);
+            float abp = (c.X - b.X) * (p.Y - b.Y) - (c.Y - b.Y) * (p.X - b.X);
 
             //A cross ap
-            float aap = (b.X - a.X)*(p.Y - a.Y) - (b.Y - a.Y)*(p.X - a.X);
+            float aap = (b.X - a.X) * (p.Y - a.Y) - (b.Y - a.Y) * (p.X - a.X);
 
             //b cross cp
-            float bcp = (a.X - c.X)*(p.Y - c.Y) - (a.Y - c.Y)*(p.X - c.X);
+            float bcp = (a.X - c.X) * (p.Y - c.Y) - (a.Y - c.Y) * (p.X - c.X);
 
             return ((abp >= 0.0f) && (bcp >= 0.0f) && (aap >= 0.0f));
         }
@@ -103,11 +103,11 @@ namespace FarseerPhysics.Common.Decomposition
             int nv = n;
 
             // Remove nv-2 Vertices, creating 1 triangle every time
-            int count = 2*nv; /* error detection */
+            int count = 2 * nv; /* error detection */
 
             List<Vertices> result = new List<Vertices>();
 
-            for (int v = nv - 1; nv > 2;)
+            for (int v = nv - 1; nv > 2; )
             {
                 // If we loop, it is probably a non-simple polygon 
                 if (0 >= (count--))
@@ -150,7 +150,7 @@ namespace FarseerPhysics.Common.Decomposition
                     nv--;
 
                     // Reset error detection counter
-                    count = 2*nv;
+                    count = 2 * nv;
                 }
             }
 

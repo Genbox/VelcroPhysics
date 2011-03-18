@@ -72,17 +72,16 @@ namespace FarseerPhysics.Dynamics
 
     public class Body : IDisposable
     {
-        public ControllerFilter ControllerFilter;
-        public PhysicsLogicFilter PhysicsLogicFilter;
-        public int BodyId;
-
         private static int _bodyIdCounter;
         internal float AngularVelocityInternal;
+        public int BodyId;
+        public ControllerFilter ControllerFilter;
         internal BodyFlags Flags;
         internal Vector2 Force;
         internal float InvI;
         internal float InvMass;
         internal Vector2 LinearVelocityInternal;
+        public PhysicsLogicFilter PhysicsLogicFilter;
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
@@ -675,7 +674,7 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.IgnoreCCD;
             }
         }
-    
+
         #region IDisposable Members
 
         public void Dispose()

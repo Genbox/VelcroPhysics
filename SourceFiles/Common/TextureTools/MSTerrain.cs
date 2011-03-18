@@ -155,7 +155,7 @@ namespace FarseerPhysics.Common
                     }
                 }
             }
-            
+
             // generate terrain
             for (int gy = 0; gy < _ynum; gy++)
             {
@@ -190,7 +190,7 @@ namespace FarseerPhysics.Common
                 {
                     if (x >= 0 && x < _localWidth && y >= 0 && y < _localHeight)
                     {
-                       _terrainMap[x, y] = data[x, y];
+                        _terrainMap[x, y] = data[x, y];
                     }
                 }
             }
@@ -236,10 +236,10 @@ namespace FarseerPhysics.Common
                 {
                     bool inside = tester(colorData[(y * texture.Width) + x]);
 
-                        if (!inside)
-                            data[x, y] = 1;
-                        else
-                            data[x, y] = -1;
+                    if (!inside)
+                        data[x, y] = 1;
+                    else
+                        data[x, y] = -1;
                 }
             }
 
@@ -256,7 +256,7 @@ namespace FarseerPhysics.Common
             // find local position
             // make position local to map space
             Vector2 p = location - _topLeft;
-            
+
             // find map position for each axis
             p.X = p.X * _localWidth / Width;
             p.Y = p.Y * -_localHeight / Height;

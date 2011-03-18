@@ -54,7 +54,10 @@ namespace FarseerPhysics.Dynamics.Joints
         private LimitState _state;
         private Vector2 _u;
 
-        internal RopeJoint() { JointType = JointType.Rope; }
+        internal RopeJoint()
+        {
+            JointType = JointType.Rope;
+        }
 
         public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
             : base(bodyA, bodyB)

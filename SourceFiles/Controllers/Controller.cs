@@ -50,8 +50,13 @@ namespace FarseerPhysics.Controllers
     public abstract class Controller : FilterData
     {
         public bool Enabled;
-        private ControllerType _type;
         public World World;
+        private ControllerType _type;
+
+        public Controller(ControllerType controllerType)
+        {
+            _type = controllerType;
+        }
 
         public override bool IsActiveOn(Body body)
         {
@@ -59,11 +64,6 @@ namespace FarseerPhysics.Controllers
                 return false;
 
             return base.IsActiveOn(body);
-        }
-
-        public Controller(ControllerType controllerType)
-        {
-            _type = controllerType;
         }
 
         public abstract void Update(float dt);

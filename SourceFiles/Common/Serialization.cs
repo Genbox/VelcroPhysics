@@ -41,10 +41,10 @@ namespace FarseerPhysics.Common
     ///</summary>
     public class WorldXmlSerializer
     {
-        private XmlWriter _writer;
+        private List<Body> _bodies = new List<Body>();
         private List<Fixture> _serializedFixtures = new List<Fixture>();
         private List<Shape> _serializedShapes = new List<Shape>();
-        private List<Body> _bodies = new List<Body>();
+        private XmlWriter _writer;
 
         private void SerializeShape(Shape shape)
         {
@@ -486,7 +486,7 @@ namespace FarseerPhysics.Common
             if (root.Name.ToLower() != "world")
                 throw new Exception();
 
-            foreach (var main in root.Elements)
+            foreach (XMLFragmentElement main in root.Elements)
             {
                 if (main.Name.ToLower() == "gravity")
                 {
@@ -494,11 +494,11 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            foreach (var shapeElement in root.Elements)
+            foreach (XMLFragmentElement shapeElement in root.Elements)
             {
                 if (shapeElement.Name.ToLower() == "shapes")
                 {
-                    foreach (var n in shapeElement.Elements)
+                    foreach (XMLFragmentElement n in shapeElement.Elements)
                     {
                         if (n.Name.ToLower() != "shape")
                             throw new Exception();
@@ -511,7 +511,7 @@ namespace FarseerPhysics.Common
                                 {
                                     CircleShape shape = new CircleShape();
 
-                                    foreach (var sn in n.Elements)
+                                    foreach (XMLFragmentElement sn in n.Elements)
                                     {
                                         switch (sn.Name.ToLower())
                                         {
@@ -533,7 +533,7 @@ namespace FarseerPhysics.Common
                                 {
                                     PolygonShape shape = new PolygonShape();
 
-                                    foreach (var sn in n.Elements)
+                                    foreach (XMLFragmentElement sn in n.Elements)
                                     {
                                         switch (sn.Name.ToLower())
                                         {
@@ -541,7 +541,7 @@ namespace FarseerPhysics.Common
                                                 {
                                                     List<Vector2> verts = new List<Vector2>();
 
-                                                    foreach (var vert in sn.Elements)
+                                                    foreach (XMLFragmentElement vert in sn.Elements)
                                                         verts.Add(ReadVector(vert));
 
                                                     shape.Set(new Vertices(verts.ToArray()));
@@ -559,7 +559,7 @@ namespace FarseerPhysics.Common
                             case ShapeType.Edge:
                                 {
                                     EdgeShape shape = new EdgeShape();
-                                    foreach (var sn in n.Elements)
+                                    foreach (XMLFragmentElement sn in n.Elements)
                                     {
                                         switch (sn.Name.ToLower())
                                         {
@@ -593,18 +593,18 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            foreach (var fixtureElement in root.Elements)
+            foreach (XMLFragmentElement fixtureElement in root.Elements)
             {
                 if (fixtureElement.Name.ToLower() == "fixtures")
                 {
-                    foreach (var n in fixtureElement.Elements)
+                    foreach (XMLFragmentElement n in fixtureElement.Elements)
                     {
                         Fixture fixture = new Fixture();
 
                         if (n.Name.ToLower() != "fixture")
                             throw new Exception();
 
-                        foreach (var sn in n.Elements)
+                        foreach (XMLFragmentElement sn in n.Elements)
                         {
                             switch (sn.Name.ToLower())
                             {
@@ -615,7 +615,7 @@ namespace FarseerPhysics.Common
                                     fixture.Shape.Density = float.Parse(sn.Value);
                                     break;
                                 case "filterdata":
-                                    foreach (var ssn in sn.Elements)
+                                    foreach (XMLFragmentElement ssn in sn.Elements)
                                     {
                                         switch (ssn.Name.ToLower())
                                         {
@@ -652,11 +652,11 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            foreach (var bodyElement in root.Elements)
+            foreach (XMLFragmentElement bodyElement in root.Elements)
             {
                 if (bodyElement.Name.ToLower() == "bodies")
                 {
-                    foreach (var n in bodyElement.Elements)
+                    foreach (XMLFragmentElement n in bodyElement.Elements)
                     {
                         Body body = new Body(world);
 
@@ -665,7 +665,7 @@ namespace FarseerPhysics.Common
 
                         body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), n.Attributes[0].Value, true);
 
-                        foreach (var sn in n.Elements)
+                        foreach (XMLFragmentElement sn in n.Elements)
                         {
                             switch (sn.Name.ToLower())
                             {
@@ -717,7 +717,7 @@ namespace FarseerPhysics.Common
                                     break;
                                 case "fixtures":
                                     {
-                                        foreach (var v in sn.Elements)
+                                        foreach (XMLFragmentElement v in sn.Elements)
                                         {
                                             Fixture blueprint = _fixtures[int.Parse(v.Value)];
                                             Fixture f = new Fixture(body, blueprint.Shape);
@@ -738,11 +738,11 @@ namespace FarseerPhysics.Common
                 }
             }
 
-            foreach (var jointElement in root.Elements)
+            foreach (XMLFragmentElement jointElement in root.Elements)
             {
                 if (jointElement.Name.ToLower() == "joints")
                 {
-                    foreach (var n in jointElement.Elements)
+                    foreach (XMLFragmentElement n in jointElement.Elements)
                     {
                         Joint joint;
 
@@ -755,7 +755,7 @@ namespace FarseerPhysics.Common
                         bool collideConnected = false;
                         object userData = null;
 
-                        foreach (var sn in n.Elements)
+                        foreach (XMLFragmentElement sn in n.Elements)
                         {
                             switch (sn.Name.ToLower())
                             {
@@ -822,7 +822,7 @@ namespace FarseerPhysics.Common
                         _joints.Add(joint);
                         world.AddJoint(joint);
 
-                        foreach (var sn in n.Elements)
+                        foreach (XMLFragmentElement sn in n.Elements)
                         {
                             // check for specific nodes
                             switch (type)
@@ -1097,7 +1097,7 @@ namespace FarseerPhysics.Common
             if (type == null)
                 return ReadSimpleType(node.Elements[1], Type.GetType(node.Elements[0].Value), outer);
 
-            var serializer = new XmlSerializer(type);
+            XmlSerializer serializer = new XmlSerializer(type);
             XmlSerializerNamespaces xmlnsEmpty = new XmlSerializerNamespaces();
             xmlnsEmpty.Add("", "");
 
@@ -1118,6 +1118,7 @@ namespace FarseerPhysics.Common
     }
 
     #region XMLFragment
+
     public class XMLFragmentAttribute
     {
         public string Name { get; set; }
@@ -1235,14 +1236,14 @@ namespace FarseerPhysics.Common
 
         public static XMLFragmentElement LoadFromFile(string fileName)
         {
-            var x = new XMLFragmentParser(fileName);
+            XMLFragmentParser x = new XMLFragmentParser(fileName);
             x.Parse();
             return x.RootNode;
         }
 
         public static XMLFragmentElement LoadFromStream(Stream stream)
         {
-            var x = new XMLFragmentParser(stream);
+            XMLFragmentParser x = new XMLFragmentParser(stream);
             x.Parse();
             return x.RootNode;
         }
@@ -1294,8 +1295,8 @@ namespace FarseerPhysics.Common
 
         private string PeekToken()
         {
-            var oldPos = _buffer.Position;
-            var str = NextToken();
+            int oldPos = _buffer.Position;
+            string str = NextToken();
             _buffer.Position = oldPos;
             return str;
         }
@@ -1361,7 +1362,7 @@ namespace FarseerPhysics.Common
                 return null;
 
             int startOuterXml = _buffer.Position;
-            var token = NextToken();
+            string token = NextToken();
 
             if (token != "<")
                 throw new XMLFragmentException("Expected \"<\", got " + token);
@@ -1399,7 +1400,7 @@ namespace FarseerPhysics.Common
 
             while (true)
             {
-                var oldPos = _buffer.Position; // for restoration below
+                int oldPos = _buffer.Position; // for restoration below
                 token = NextToken();
 
                 if (token == "<")
@@ -1447,5 +1448,6 @@ namespace FarseerPhysics.Common
                 throw new XMLFragmentException("Unable to load root node");
         }
     }
+
     #endregion
 }

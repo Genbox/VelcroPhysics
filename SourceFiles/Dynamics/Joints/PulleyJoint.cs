@@ -75,7 +75,10 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _u1;
         private Vector2 _u2;
 
-        internal PulleyJoint() { JointType = JointType.Pulley; }
+        internal PulleyJoint()
+        {
+            JointType = JointType.Pulley;
+        }
 
         /// <summary>
         /// Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.

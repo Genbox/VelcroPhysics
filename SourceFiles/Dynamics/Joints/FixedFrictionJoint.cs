@@ -75,10 +75,10 @@ namespace FarseerPhysics.Dynamics.Joints
             const float gravity = 10.0f;
 
             // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-            float radius = (float) Math.Sqrt(2.0*(body.Inertia/body.Mass));
+            float radius = (float)Math.Sqrt(2.0 * (body.Inertia / body.Mass));
 
-            MaxForce = body.Mass*gravity;
-            MaxTorque = body.Mass*radius*gravity;
+            MaxForce = body.Mass * gravity;
+            MaxTorque = body.Mass * radius * gravity;
         }
 
         public override Vector2 WorldAnchorA
@@ -94,12 +94,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float invDT)
         {
-            return invDT*_linearImpulse;
+            return invDT * _linearImpulse;
         }
 
         public override float GetReactionTorque(float invDT)
         {
-            return invDT*_angularImpulse;
+            return invDT * _angularImpulse;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
@@ -131,10 +131,10 @@ namespace FarseerPhysics.Dynamics.Joints
             K1.Col2.Y = mA;
 
             Mat22 K2 = new Mat22();
-            K2.Col1.X = iA*rA.Y*rA.Y;
-            K2.Col2.X = -iA*rA.X*rA.Y;
-            K2.Col1.Y = -iA*rA.X*rA.Y;
-            K2.Col2.Y = iA*rA.X*rA.X;
+            K2.Col1.X = iA * rA.Y * rA.Y;
+            K2.Col2.X = -iA * rA.X * rA.Y;
+            K2.Col1.Y = -iA * rA.X * rA.Y;
+            K2.Col2.Y = iA * rA.X * rA.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);
@@ -144,7 +144,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _angularMass = iA;
             if (_angularMass > 0.0f)
             {
-                _angularMass = 1.0f/_angularMass;
+                _angularMass = 1.0f / _angularMass;
             }
 
             if (Settings.EnableWarmstarting)
@@ -155,8 +155,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
-                bA.LinearVelocityInternal -= mA*P;
-                bA.AngularVelocityInternal -= iA*(MathUtils.Cross(rA, P) + _angularImpulse);
+                bA.LinearVelocityInternal -= mA * P;
+                bA.AngularVelocityInternal -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
             }
             else
             {
@@ -183,14 +183,14 @@ namespace FarseerPhysics.Dynamics.Joints
             // Solve angular friction
             {
                 float Cdot = -wA;
-                float impulse = -_angularMass*Cdot;
+                float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt*MaxTorque;
+                float maxImpulse = step.dt * MaxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
-                wA -= iA*impulse;
+                wA -= iA * impulse;
             }
 
             // Solve linear friction
@@ -201,9 +201,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.dt*MaxForce;
+                float maxImpulse = step.dt * MaxForce;
 
-                if (_linearImpulse.LengthSquared() > maxImpulse*maxImpulse)
+                if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
                 {
                     _linearImpulse.Normalize();
                     _linearImpulse *= maxImpulse;
@@ -211,8 +211,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 impulse = _linearImpulse - oldImpulse;
 
-                vA -= mA*impulse;
-                wA -= iA*MathUtils.Cross(rA, impulse);
+                vA -= mA * impulse;
+                wA -= iA * MathUtils.Cross(rA, impulse);
             }
 
             bA.LinearVelocityInternal = vA;

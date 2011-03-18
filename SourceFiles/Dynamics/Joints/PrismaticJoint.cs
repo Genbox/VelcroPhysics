@@ -123,7 +123,10 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _s1, _s2;
         private float _upperTranslation;
 
-        internal PrismaticJoint() { JointType = JointType.Prismatic; }
+        internal PrismaticJoint()
+        {
+            JointType = JointType.Prismatic;
+        }
 
         /// <summary>
         /// This requires defining a line of
@@ -218,7 +221,8 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _enableLimit; }
             set
             {
-                Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false, "Warning: limits does currently not work with fixed rotation");
+                Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false,
+                             "Warning: limits does currently not work with fixed rotation");
 
                 WakeBodies();
                 _enableLimit = value;

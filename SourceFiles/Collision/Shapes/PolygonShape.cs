@@ -23,7 +23,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
@@ -498,10 +497,12 @@ namespace FarseerPhysics.Collision.Shapes
             float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
             float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
 
-            Vector2 intoVec = new Vector2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
-                            Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
-            Vector2 outoVec = new Vector2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
-                            Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
+            Vector2 intoVec = new Vector2(
+                Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
+                Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
+            Vector2 outoVec = new Vector2(
+                Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
+                Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
 
             //Initialize accumulator
             float area = 0;
@@ -533,7 +534,6 @@ namespace FarseerPhysics.Collision.Shapes
 
                     // Area weighted centroid
                     center += triangleArea * k_inv3 * (intoVec + p2 + p3);
-
                 }
                 //
                 p2 = p3;

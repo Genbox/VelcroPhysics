@@ -17,7 +17,10 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _massFactor;
         private float _targetAngle;
 
-        internal AngleJoint() { JointType = JointType.Angle; }
+        internal AngleJoint()
+        {
+            JointType = JointType.Angle;
+        }
 
         public AngleJoint(Body bodyA, Body bodyB)
             : base(bodyA, bodyB)

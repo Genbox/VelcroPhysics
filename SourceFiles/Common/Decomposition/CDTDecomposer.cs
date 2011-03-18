@@ -62,7 +62,7 @@ namespace FarseerPhysics.Common.Decomposition
                 Vertices v = new Vertices();
                 foreach (TriangulationPoint p in triangle.Points)
                 {
-                    v.Add(new Vector2((float) p.X, (float) p.Y));
+                    v.Add(new Vector2((float)p.X, (float)p.Y));
                 }
                 results.Add(v);
             }
@@ -79,7 +79,7 @@ namespace FarseerPhysics.Common.Decomposition
             if (vertices.Holes != null)
             {
                 foreach (var holeVertices in vertices.Holes)
-                { 
+                {
                     Polygon hole = new Polygon();
                     foreach (var vertex in holeVertices)
                         hole.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
