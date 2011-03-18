@@ -107,7 +107,8 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
                                      minimumHeight);
                 TextLine += 15;
-                DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.", height,
+                DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
+                                     height,
                                      minimumHeight);
                 TextLine += 15;
                 DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);

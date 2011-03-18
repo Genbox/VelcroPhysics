@@ -1,22 +1,22 @@
-﻿using FarseerPhysics.Collision;
+﻿using System.Collections.Generic;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using FarseerPhysics.Common;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.Common.Decomposition;
-using System.Collections.Generic;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    class DestructibleTerrainYuPengTest : Test
+    internal class DestructibleTerrainYuPengTest : Test
     {
+        private Vertices _clipCircle;
         private Vector2 _mousePos;
         private float _radius;
-        private Vertices _clipCircle;
 
         private DestructibleTerrainYuPengTest()
         {
@@ -104,10 +104,10 @@ namespace FarseerPhysics.TestBed.Tests
             List<Fixture> affectedFixtures = new List<Fixture>();
 
             World.QueryAABB(fixture =>
-            {
-                affectedFixtures.Add(fixture);
-                return true;
-            }, ref affected);
+                                {
+                                    affectedFixtures.Add(fixture);
+                                    return true;
+                                }, ref affected);
 
             HashSet<Body> uniqueBodies = new HashSet<Body>();
 
@@ -136,12 +136,10 @@ namespace FarseerPhysics.TestBed.Tests
 
     public class DestructableBody
     {
-        private World _world;
-
-        public Vertices Vertices;
-        public Body Body;
-
         private const float _density = 1.0f;
+        public Body Body;
+        public Vertices Vertices;
+        private World _world;
 
         public DestructableBody(World w, Vertices s)
         {

@@ -23,9 +23,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -58,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.CreateFixture(shape);
 
                 _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
-                _fixedJoint.MotorSpeed = 0.25f*Settings.Pi;
+                _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
                 _fixedJoint.MaxMotorTorque = 5000.0f;
                 _fixedJoint.MotorEnabled = true;
                 World.AddJoint(_fixedJoint);
@@ -70,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
                                            Vector2.Zero);
-                _joint.MotorSpeed = 1.0f*Settings.Pi;
+                _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 5000.0f;
                 _joint.MotorEnabled = true;
                 _joint.CollideConnected = false;

@@ -11,7 +11,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class QuadTreeTest : Test
     {
-        Vector2 worldSize;
+        private Vector2 _worldSize;
 
         public override void Initialize()
         {
@@ -20,11 +20,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             GameInstance.ViewCenter = Vector2.Zero;
 
-            worldSize = 2 * GameInstance.ConvertScreenToWorld(GameInstance.Window.ClientBounds.Width, 0);
+            _worldSize = 2 * GameInstance.ConvertScreenToWorld(GameInstance.Window.ClientBounds.Width, 0);
 
             //Create a World using QuadTree constructor
-            World = new World(new Vector2(0.0f, -10.0f), new AABB(-worldSize / 2, worldSize / 2));
-            
+            World = new World(new Vector2(0.0f, -10.0f), new AABB(-_worldSize / 2, _worldSize / 2));
+
             //Create a World using DynamicTree constructor
             //World = new World(new Vector2(0.0f, -10.0f));
 
@@ -32,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
             //set up border
             //
 
-            float halfWidth = worldSize.X / 2 - 2f;
-            float halfHeight = worldSize.Y / 2 - 2f;
+            float halfWidth = _worldSize.X / 2 - 2f;
+            float halfHeight = _worldSize.Y / 2 - 2f;
 
             Vertices borders = new Vertices(4);
             borders.Add(new Vector2(-halfWidth, halfHeight));
@@ -78,50 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
 
-            /*for (int i = 0; i < 50; i++)
-            {
-                Vector2 pos = new Vector2(Rand.RandomFloat(-worldSize.X / 2, worldSize.X / 2), Rand.RandomFloat(-worldSize.Y / 2, worldSize.Y / 2));
-                Body cBody = BodyFactory.CreateCircle(World, 1.0f, 5f, pos);
-                cBody.BodyType = BodyType.Static;
-            }*/
-
-
             base.Initialize();
-        }
-
-        AABB randomAABB()
-        {
-            AABB aabb = new AABB();
-            aabb.LowerBound.X = Rand.RandomFloat(0.0f, worldSize.X);
-            aabb.LowerBound.Y = Rand.RandomFloat(0.0f, worldSize.Y);
-            aabb.UpperBound.X = aabb.LowerBound.X + Rand.RandomFloat(0.0f, 2.0f);
-            aabb.UpperBound.X = aabb.LowerBound.X + Rand.RandomFloat(0.0f, 2.0f);
-            return aabb;
-        }
-        void testCycle()
-        {
-            for (int i = 0; i < 10000; i++)
-            {
-                var aabb = randomAABB();
-                World.ContactManager.BroadPhase.Query(id => true, ref aabb);
-            }
-
-        }
-
-        public override void Update(GameSettings settings, GameTime gameTime)
-        {
-            GameInstance.ViewCenter = Vector2.Zero;
-
-            /*DateTime start, end;
-
-            start = DateTime.Now;
-            testCycle();
-            end = DateTime.Now;
-            var time = (end - start).TotalMilliseconds;
-
-            DebugView.DrawString(0, 0, time.ToString());*/
-
-            base.Update(settings, gameTime);
         }
 
         internal static Test Create()

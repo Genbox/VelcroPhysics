@@ -7,13 +7,12 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ConvexHullTest : Test
     {
+        private Vertices _chainHull;
+        private Vertices _giftWrap;
+        private Vertices _melkman;
         private Vertices _pointCloud1;
         private Vertices _pointCloud2;
         private Vertices _pointCloud3;
-
-        private Vertices _melkman;
-        private Vertices _giftWrap;
-        private Vertices _chainHull;
 
         private ConvexHullTest()
         {

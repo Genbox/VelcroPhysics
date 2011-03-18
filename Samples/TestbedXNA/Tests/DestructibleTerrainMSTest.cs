@@ -11,21 +11,21 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class DestructibleTerrainMSTest : Test
     {
-        private MSTerrain _terrain;
         private float _circleRadius = 2.5f;
+        private MSTerrain _terrain;
 
         private DestructibleTerrainMSTest()
         {
             World = new World(new Vector2(0, -10));
 
             _terrain = new MSTerrain(World, new AABB(new Vector2(0, 0), 80, 80))
-            {
-                PointsPerUnit = 10,
-                CellSize = 50,
-                SubCellSize = 5,
-                Decomposer = Decomposer.Earclip,
-                Iterations = 2,
-            };
+                           {
+                               PointsPerUnit = 10,
+                               CellSize = 50,
+                               SubCellSize = 5,
+                               Decomposer = Decomposer.Earclip,
+                               Iterations = 2,
+                           };
 
             _terrain.Initialize();
         }

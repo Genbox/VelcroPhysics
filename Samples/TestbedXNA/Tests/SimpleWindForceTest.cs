@@ -38,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int y = 0; y < countY; y++)
                 {
                     Body currentFixture = BodyFactory.CreateRectangle(World, 1f, 1f, 5f,
-                                                                            new Vector2(x*2 - countX, y*2 + 5));
+                                                                      new Vector2(x * 2 - countX, y * 2 + 5));
                     //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
                     currentFixture.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
@@ -84,10 +84,10 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine,
                                  "SimpleWindForce | Mouse: Direction | Left-Click: Position | W/S: Variation");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Wind Strength:" + _simpleWind.Strength.ToString());
+            DebugView.DrawString(50, TextLine, "Wind Strength:" + _simpleWind.Strength);
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Variation:" + _simpleWind.Variation.ToString());
-            
+            DebugView.DrawString(50, TextLine, "Variation:" + _simpleWind.Variation);
+
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             //DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
             DrawPointForce();

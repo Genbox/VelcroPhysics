@@ -83,11 +83,11 @@ namespace FarseerPhysics.TestBed.Tests
                 World.AddJoint(_joint3);
 
                 // Attach first and second circle together with a gear joint
-                _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius/circle1.Radius);
+                _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
                 World.AddJoint(_joint4);
 
                 // Attach second and rectangle together with a gear joint
-                _joint5 = new GearJoint(_joint2, _joint3, -1.0f/circle2.Radius);
+                _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
                 World.AddJoint(_joint5);
             }
         }
@@ -97,12 +97,12 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             float ratio = _joint4.Ratio;
-            float value = _joint1.JointAngle + ratio*_joint2.JointAngle;
+            float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
             DebugView.DrawString(50, TextLine, "theta1 + {0} * theta2 = {1}", ratio, value);
             TextLine += 15;
 
             ratio = _joint5.Ratio;
-            value = _joint2.JointAngle + ratio*_joint3.JointTranslation;
+            value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
             DebugView.DrawString(50, TextLine, "theta2 + {0} * delta = {1}", ratio, value);
             TextLine += 15;
         }

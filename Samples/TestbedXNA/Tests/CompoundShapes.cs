@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f*i);
+                    body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
                     body.CreateFixture(circle1);
@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vertices box = PolygonTools.CreateRectangle(0.25f, 0.5f);
                 PolygonShape polygon1 = new PolygonShape(box, 2);
 
-                box = PolygonTools.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f*Settings.Pi);
+                box = PolygonTools.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
                 PolygonShape polygon2 = new PolygonShape(box, 2);
 
                 for (int i = 0; i < 10; ++i)
@@ -73,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f*i);
+                    body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
                     body.CreateFixture(polygon1);
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f*Settings.Pi);
+                xf1.R.Set(0.3524f * Settings.Pi);
                 xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
 
                 Vertices vertices = new Vertices(3);
@@ -95,7 +95,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape triangle1 = new PolygonShape(vertices, 2);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f*Settings.Pi);
+                xf2.R.Set(-0.3524f * Settings.Pi);
                 xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
 
                 vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
@@ -110,7 +110,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x, 2.05f + 2.5f*i);
+                    body.Position = new Vector2(x, 2.05f + 2.5f * i);
 
                     body.CreateFixture(triangle1);
                     body.CreateFixture(triangle2);

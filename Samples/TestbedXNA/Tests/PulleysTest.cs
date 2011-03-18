@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             float ratio = _joint1.Ratio;
-            float l = _joint1.LengthA + ratio*_joint1.LengthB;
+            float l = _joint1.LengthA + ratio * _joint1.LengthB;
             DebugView.DrawString(50, TextLine, "L1 + {0:n} * L2 = {1:n}", ratio, l);
             TextLine += 15;
         }
