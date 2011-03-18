@@ -12,6 +12,12 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class AdvancedDemo1 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private Body _compound;
+        private Vector2 _origin;
+        private Texture2D _polygonTexture;
+        private float _scale;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -40,12 +46,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Body _compound;
-        private Vector2 _origin;
-        private Texture2D _polygonTexture;
-        private float _scale;
-        private Border _border;
 
         public override void LoadContent()
         {
@@ -106,7 +106,8 @@ namespace FarseerPhysics.SamplesFramework
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             ScreenManager.SpriteBatch.Draw(_polygonTexture, ConvertUnits.ToDisplayUnits(_compound.Position),
-                                           null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None, 0f);
+                                           null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None,
+                                           0f);
             ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);

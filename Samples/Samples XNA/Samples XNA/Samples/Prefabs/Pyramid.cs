@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -13,9 +10,9 @@ namespace FarseerPhysics.SamplesFramework
 {
     public class Pyramid
     {
-        private PhysicsGameScreen _screen;
         private Sprite _box;
         private List<Body> _boxes;
+        private PhysicsGameScreen _screen;
 
         public Pyramid(World world, PhysicsGameScreen screen, Vector2 position, int count, float density)
         {
@@ -26,7 +23,7 @@ namespace FarseerPhysics.SamplesFramework
             rowStart.Y -= 0.5f + count * 1.1f;
 
             Vector2 deltaRow = new Vector2(-0.625f, 1.1f);
-            float spacing = 1.25f;
+            const float spacing = 1.25f;
 
             _boxes = new List<Body>();
 
@@ -51,18 +48,18 @@ namespace FarseerPhysics.SamplesFramework
             _screen = screen;
 
             //GFX
-            AssetCreator _creator = _screen.ScreenManager.Assets;
-            _box = new Sprite(_creator.TextureFromVertices(rect, MaterialType.Dots, Color.SaddleBrown, 2f));
+            AssetCreator creator = _screen.ScreenManager.Assets;
+            _box = new Sprite(creator.TextureFromVertices(rect, MaterialType.Dots, Color.SaddleBrown, 2f));
         }
 
         public void Draw()
         {
-            SpriteBatch _batch = _screen.ScreenManager.SpriteBatch;
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
 
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                _batch.Draw(_box.texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
-                            Color.White, _boxes[i].Rotation, _box.origin, 1f, SpriteEffects.None, 0f);
+                batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                            Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using FarseerPhysics.DebugViews;
+﻿using System.Text;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -10,6 +8,10 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class SimpleDemo8 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private Body[] _circle = new Body[6];
+        private Sprite _circleSprite;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -38,10 +40,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Body[] _circle = new Body[6];
-        private Sprite _circleSprite;
-        private Border _border;
 
         public override void LoadContent()
         {
@@ -74,8 +72,10 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 6; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_circleSprite.texture, ConvertUnits.ToDisplayUnits(_circle[i].Position), null,
-                                               Color.White, _circle[i].Rotation, _circleSprite.origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_circleSprite.Texture, ConvertUnits.ToDisplayUnits(_circle[i].Position),
+                                               null,
+                                               Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f,
+                                               SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
             _border.Draw();

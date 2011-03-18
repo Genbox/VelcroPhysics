@@ -1,33 +1,30 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Common;
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.DebugViews;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
     public class Spiderweb
     {
-        private World world;
-        private Sprite link;
-        private Sprite goo;
+        private Sprite _goo;
+        private Sprite _link;
 
-        private float spriteScale;
-        private float radius;
-
+        private float _radius;
+        private float _spriteScale;
+        private World _world;
 
         public Spiderweb(World world, Vector2 position, float radius, int rings, int sides)
         {
             const float breakpoint = 100f;
 
-            this.world = world;
-
-            this.radius = radius;
+            _world = world;
+            _radius = radius;
 
             List<List<Body>> ringBodys = new List<List<Body>>(rings);
 
@@ -62,7 +59,8 @@ namespace FarseerPhysics.SamplesFramework
                 }
 
                 //Connect the first and the last box
-                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], bodies[bodies.Count - 1], Vector2.Zero, Vector2.Zero);
+                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], bodies[bodies.Count - 1],
+                                                                       Vector2.Zero, Vector2.Zero);
                 djEnd.Frequency = 4.0f;
                 djEnd.DampingRatio = 0.5f;
                 djEnd.Breakpoint = breakpoint;
@@ -79,7 +77,8 @@ namespace FarseerPhysics.SamplesFramework
             //Fix each of the fixtures of the outer ring
             for (int j = 0; j < lastRingFixtures.Count; ++j)
             {
-                FixedDistanceJoint fdj = JointFactory.CreateFixedDistanceJoint(world, lastRingFixtures[j], Vector2.Zero, lastRing[j]);
+                FixedDistanceJoint fdj = JointFactory.CreateFixedDistanceJoint(world, lastRingFixtures[j], Vector2.Zero,
+                                                                               lastRing[j]);
                 fdj.Frequency = 4.0f;
                 fdj.DampingRatio = 0.5f;
                 fdj.Breakpoint = breakpoint;
@@ -96,7 +95,8 @@ namespace FarseerPhysics.SamplesFramework
                     Body prevFixture = prev[j];
                     Body currentFixture = current[j];
 
-                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, currentFixture, Vector2.Zero, Vector2.Zero);
+                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, currentFixture, Vector2.Zero,
+                                                                        Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
                 }
@@ -105,34 +105,34 @@ namespace FarseerPhysics.SamplesFramework
 
         public void LoadContent(ContentManager content)
         {
-            link  = new Sprite(content.Load<Texture2D>("Samples/link"));
-            goo = new Sprite(content.Load<Texture2D>("Samples/goo"));
+            _link = new Sprite(content.Load<Texture2D>("Samples/link"));
+            _goo = new Sprite(content.Load<Texture2D>("Samples/goo"));
 
-            spriteScale = 2f * ConvertUnits.ToDisplayUnits(radius) / goo.texture.Width;
+            _spriteScale = 2f * ConvertUnits.ToDisplayUnits(_radius) / _goo.Texture.Width;
         }
 
         public void Draw(SpriteBatch batch)
         {
-            foreach (Joint j in world.JointList)
+            foreach (Joint j in _world.JointList)
             {
                 if (j.Enabled && j.JointType != JointType.FixedMouse)
                 {
                     Vector2 pos = ConvertUnits.ToDisplayUnits((j.WorldAnchorA + j.WorldAnchorB) / 2f);
                     Vector2 AtoB = j.WorldAnchorB - j.WorldAnchorA;
-                    float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * spriteScale;
-                    Vector2 scale = new Vector2(distance / link.texture.Width, spriteScale);
+                    float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * _spriteScale;
+                    Vector2 scale = new Vector2(distance / _link.Texture.Width, _spriteScale);
                     Vector2 unitx = Vector2.UnitX;
                     float angle = (float)MathUtils.VectorAngle(ref unitx, ref AtoB);
-                    batch.Draw(link.texture, pos, null, Color.White, angle, link.origin, scale, SpriteEffects.None, 0f);
+                    batch.Draw(_link.Texture, pos, null, Color.White, angle, _link.Origin, scale, SpriteEffects.None, 0f);
                 }
             }
 
-            foreach (Body b in world.BodyList)
+            foreach (Body b in _world.BodyList)
             {
                 if (b.Enabled && b.FixtureList[0].ShapeType == ShapeType.Circle)
                 {
-                    batch.Draw(goo.texture, ConvertUnits.ToDisplayUnits(b.Position), null,
-                               Color.White, 0f, goo.origin, spriteScale, SpriteEffects.None, 0f);
+                    batch.Draw(_goo.Texture, ConvertUnits.ToDisplayUnits(b.Position), null,
+                               Color.White, 0f, _goo.Origin, _spriteScale, SpriteEffects.None, 0f);
                 }
             }
         }

@@ -1,13 +1,18 @@
 ﻿using System.Text;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
     internal class SimpleDemo5 : PhysicsGameScreen, IDemoScreen
     {
+        private Agent _agent;
+        private Border _border;
+        private Objects _circles;
+        private Objects _gears;
+        private Objects _rectangles;
+        private Objects _stars;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -45,13 +50,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Agent _agent;
-        private Objects _circles;
-        private Objects _gears;
-        private Objects _rectangles;
-        private Objects _stars;
-        private Border _border;
 
         public override void LoadContent()
         {

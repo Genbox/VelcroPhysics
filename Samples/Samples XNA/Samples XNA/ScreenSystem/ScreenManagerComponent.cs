@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 
 namespace FarseerPhysics.SamplesFramework
@@ -16,24 +14,24 @@ namespace FarseerPhysics.SamplesFramework
     /// </summary>
     public class ScreenManager : DrawableGameComponent
     {
+        private AssetCreator _assetCreator;
         private ContentManager _contentManager;
+
+        private InputHelper _input;
+        private bool _isInitialized;
+        private LineBatch _lineBatch;
+
+        private List<GameScreen> _screens;
+        private List<GameScreen> _screensToUpdate;
+
+        private SpriteBatch _spriteBatch;
 
         /// <summary>
         /// Contains all the fonts avaliable for use.
         /// </summary>
         private SpriteFonts _spriteFonts;
 
-        private InputHelper _input;
-        private bool _isInitialized;
-
-        private List<GameScreen> _screens;
-        private List<GameScreen> _screensToUpdate;
-
-        private SpriteBatch _spriteBatch;
-        private LineBatch _lineBatch;
-        private AssetCreator _assetCreator;
         private List<RenderTarget2D> _transitions;
-
 
         /// <summary>
         /// Constructs a new screen manager component.
@@ -191,8 +189,10 @@ namespace FarseerPhysics.SamplesFramework
                     if (_transitions.Count < transitionCount)
                     {
                         PresentationParameters _pp = GraphicsDevice.PresentationParameters;
-                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
-                                                            SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                        _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight,
+                                                            false,
+                                                            SurfaceFormat.Color, _pp.DepthStencilFormat,
+                                                            _pp.MultiSampleCount,
                                                             RenderTargetUsage.DiscardContents));
                     }
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);

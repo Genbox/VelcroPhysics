@@ -1,7 +1,7 @@
 ﻿using System;
+using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FarseerPhysics.Collision.Shapes;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -25,7 +25,9 @@ namespace FarseerPhysics.SamplesFramework
         private int _lineVertsCount;
 
         public LineBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize) { }
+            : this(graphicsDevice, DefaultBufferSize)
+        {
+        }
 
         public LineBatch(GraphicsDevice graphicsDevice, int bufferSize)
         {

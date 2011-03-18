@@ -1,18 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
     internal class SimpleDemo2 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private Sprite _rectangleSprite;
+        private Body _rectangles;
+        private Vector2 _offset;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -48,11 +50,6 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
-        private Body _rectangles;
-        private Sprite _rectangleSprite;
-        private Vector2 offset;
-        private Border _border;
-
         public override void LoadContent()
         {
             base.LoadContent();
@@ -81,22 +78,22 @@ namespace FarseerPhysics.SamplesFramework
             // create sprite based on rectangle fixture
             _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromVertices(rect1, MaterialType.Squares,
                                                                                    Color.Orange, 1f));
-            offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
+            _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
                                            ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
-                                           _rectangleSprite.origin + offset, 1f, SpriteEffects.None, 0f);
+                                           _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
             // draw second rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture,
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
                                            ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
-                                           _rectangleSprite.origin - offset, 1f, SpriteEffects.None, 0f);
+                                           _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);

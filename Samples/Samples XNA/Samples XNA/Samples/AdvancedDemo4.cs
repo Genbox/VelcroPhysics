@@ -1,12 +1,13 @@
 ﻿using System.Text;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
     internal class AdvancedDemo4 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private Spiderweb _spiderweb;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -36,16 +37,13 @@ namespace FarseerPhysics.SamplesFramework
 
         #endregion
 
-        private Spiderweb _spiderweb;
-        private Border _border;
-
         public override void LoadContent()
         {
             base.LoadContent();
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            _border=new Border(World, this,ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
 #if WINDOWS || XBOX
             _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);

@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Collections.Generic;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -11,6 +9,11 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class SimpleDemo9 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private List<Body> _ramps;
+        private Body[] _rectangle = new Body[5];
+        private Sprite _rectangleSprite;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -39,11 +42,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Body[] _rectangle = new Body[5];
-        private Sprite _rectangleSprite;
-        private List<Body> _ramps;
-        private Border _border;
 
         public override void LoadContent()
         {
@@ -82,8 +80,10 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 5; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_rectangleSprite.texture, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
-                                               Color.White, _rectangle[i].Rotation, _rectangleSprite.origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
+                                               ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                                               Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f,
+                                               SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
             ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);

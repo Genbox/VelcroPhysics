@@ -11,7 +11,6 @@
 
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 
 namespace FarseerPhysics.SamplesFramework
@@ -38,7 +37,6 @@ namespace FarseerPhysics.SamplesFramework
     {
         private GestureType _enabledGestures = GestureType.None;
         private bool _otherScreenHasFocus;
-        private bool _hasCursor;
 
         public GameScreen()
         {
@@ -46,14 +44,10 @@ namespace FarseerPhysics.SamplesFramework
             TransitionPosition = 1;
             TransitionOffTime = TimeSpan.Zero;
             TransitionOnTime = TimeSpan.Zero;
-            _hasCursor = false;
+            HasCursor = false;
         }
 
-        public bool HasCursor
-        {
-            get { return _hasCursor; }
-            set { _hasCursor = value; }
-        }
+        public bool HasCursor { get; set; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -153,12 +147,16 @@ namespace FarseerPhysics.SamplesFramework
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
-        public virtual void LoadContent() { }
+        public virtual void LoadContent()
+        {
+        }
 
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent() { }
+        public virtual void UnloadContent()
+        {
+        }
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -226,7 +224,7 @@ namespace FarseerPhysics.SamplesFramework
             else
             {
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                          time.TotalMilliseconds);
+                                           time.TotalMilliseconds);
             }
 
             // Update the transition position.
@@ -249,12 +247,16 @@ namespace FarseerPhysics.SamplesFramework
         /// is only called when the screen is active, and not when some other
         /// screen has taken the focus.
         /// </summary>
-        public virtual void HandleInput(InputHelper input, GameTime gameTime) { }
+        public virtual void HandleInput(InputHelper input, GameTime gameTime)
+        {
+        }
 
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw(GameTime gameTime) { }
+        public virtual void Draw(GameTime gameTime)
+        {
+        }
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which

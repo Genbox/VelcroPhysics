@@ -11,10 +11,10 @@ namespace FarseerPhysics.SamplesFramework
     /// </summary>
     public class MessageBoxScreen : GameScreen
     {
+        private Rectangle _backgroundRectangle;
         private Texture2D _gradientTexture;
         private string _message;
         private Vector2 _textPosition;
-        private Rectangle _backgroundRectangle;
 
         public MessageBoxScreen(string message)
         {

@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -7,6 +6,9 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class AdvancedDemo3 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private TheoJansenWalker _walker;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -33,9 +35,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        TheoJansenWalker _walker;
-        private Border _border;
 
         public override void LoadContent()
         {

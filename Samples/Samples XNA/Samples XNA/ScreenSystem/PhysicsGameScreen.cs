@@ -1,5 +1,4 @@
 ﻿using System;
-using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -10,41 +9,34 @@ namespace FarseerPhysics.SamplesFramework
 {
     public class PhysicsGameScreen : GameScreen
     {
-        protected World World;
-        protected DebugViewXNA DebugView;
-
         public Camera2D Camera;
+        protected DebugViewXNA DebugView;
+        protected World World;
 
-        private FixedMouseJoint _fixedMouseJoint;
-        private Body _userAgent;
         private float _agentForce;
         private float _agentTorque;
-
-        private bool _enableCameraControl;
+        private FixedMouseJoint _fixedMouseJoint;
+        private Body _userAgent;
 
         protected PhysicsGameScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.75);
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
-            _enableCameraControl = true;
+            EnableCameraControl = true;
             _userAgent = null;
             World = null;
             Camera = null;
             DebugView = null;
         }
 
+        public bool EnableCameraControl { get; set; }
+
         protected void SetUserAgent(Body agent, float force, float torque)
         {
             _userAgent = agent;
             _agentForce = force;
             _agentTorque = torque;
-        }
-
-        public bool EnableCameraControl
-        {
-            get { return _enableCameraControl; }
-            set { _enableCameraControl = value; }
         }
 
         public override void LoadContent()
@@ -178,7 +170,7 @@ namespace FarseerPhysics.SamplesFramework
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);
 
             if ((input.IsNewButtonPress(Buttons.A) ||
-                input.IsNewMouseButtonPress(MouseButtons.LeftButton)) &&
+                 input.IsNewMouseButtonPress(MouseButtons.LeftButton)) &&
                 _fixedMouseJoint == null)
             {
                 Fixture savedFixture = World.TestPoint(position);
@@ -193,7 +185,7 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             if ((input.IsNewButtonRelease(Buttons.A) ||
-                input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) &&
+                 input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) &&
                 _fixedMouseJoint != null)
             {
                 World.RemoveJoint(_fixedMouseJoint);

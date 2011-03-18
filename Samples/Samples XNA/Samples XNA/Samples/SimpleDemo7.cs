@@ -1,15 +1,18 @@
 ﻿using System.Text;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
     internal class SimpleDemo7 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+        private Sprite _obstacle;
+        private Body[] _obstacles = new Body[4];
+        private Ragdoll _ragdoll;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -42,11 +45,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Ragdoll _ragdoll;
-        private Body[] _obstacles = new Body[4];
-        private Sprite _obstacle;
-        private Border _border;
 
         public override void LoadContent()
         {
@@ -86,8 +84,10 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 4; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_obstacle.texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position), null,
-                                               Color.White, _obstacles[i].Rotation, _obstacle.origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                                               null,
+                                               Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
+                                               SpriteEffects.None, 0f);
             }
             _ragdoll.Draw();
             ScreenManager.SpriteBatch.End();
