@@ -118,7 +118,6 @@
     <Compile Include="Samples\AdvancedDemo3.cs" />
     <Compile Include="Samples\AdvancedDemo4.cs" />
     <Compile Include="Samples\AdvancedDemo5.cs" />
-    <Compile Include="Samples\GameDemo3.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="DrawingSystem\AssetCreator.cs" />
     <Compile Include="DrawingSystem\Sprite.cs" />
