@@ -62,13 +62,13 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// <summary>
         /// Two degrees: maximum angle from edges to first ray tested
         /// </summary>
-        private const float MaxEdgeOffset = MathHelper.Pi/90;
+        private const float MaxEdgeOffset = MathHelper.Pi / 90;
 
         /// <summary>
         /// Ratio of arc length to angle from edges to first ray tested.
         /// Defaults to 1/40.
         /// </summary>
-        public float EdgeRatio = 1.0f/40.0f;
+        public float EdgeRatio = 1.0f / 40.0f;
 
         /// <summary>
         /// Ignore Explosion if it happens inside a shape.
@@ -80,7 +80,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// Max angle between rays (used when segment is large).
         /// Defaults to 15 degrees
         /// </summary>
-        public float MaxAngle = MathHelper.Pi/15;
+        public float MaxAngle = MathHelper.Pi / 15;
 
         /// <summary>
         /// Maximum number of shapes involved in the explosion.
@@ -142,22 +142,22 @@ namespace FarseerPhysics.Common.PhysicsLogic
             // Query the world for overlapping shapes.
             World.QueryAABB(
                 fixture =>
+                {
+                    if (fixture.TestPoint(ref pos))
                     {
-                        if (fixture.TestPoint(ref pos))
-                        {
-                            if (IgnoreWhenInsideShape)
-                                exit = true;
-                            else
-                                containedShapes[containedShapeCount++] = fixture;
-                        }
+                        if (IgnoreWhenInsideShape)
+                            exit = true;
                         else
-                        {
-                            shapes[shapeCount++] = fixture;
-                        }
+                            containedShapes[containedShapeCount++] = fixture;
+                    }
+                    else
+                    {
+                        shapes[shapeCount++] = fixture;
+                    }
 
-                        // Continue the query.
-                        return true;
-                    }, ref aabb);
+                    // Continue the query.
+                    return true;
+                }, ref aabb);
 
             if (exit)
             {
@@ -165,7 +165,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
             }
 
             // Per shape max/min angles for now.
-            float[] vals = new float[shapeCount*2];
+            float[] vals = new float[shapeCount * 2];
             int valIndex = 0;
             for (int i = 0; i < shapeCount; ++i)
             {
@@ -191,7 +191,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 if ((shapes[i].Body.BodyType == BodyType.Dynamic) && ps != null)
                 {
                     Vector2 toCentroid = shapes[i].Body.GetWorldPoint(ps.MassData.Centroid) - pos;
-                    float angleToCentroid = (float) Math.Atan2(toCentroid.Y, toCentroid.X);
+                    float angleToCentroid = (float)Math.Atan2(toCentroid.Y, toCentroid.X);
                     float min = float.MaxValue;
                     float max = float.MinValue;
                     float minAbsolute = 0.0f;
@@ -200,14 +200,14 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     for (int j = 0; j < (ps.Vertices.Count()); ++j)
                     {
                         Vector2 toVertex = (shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos);
-                        float newAngle = (float) Math.Atan2(toVertex.Y, toVertex.X);
+                        float newAngle = (float)Math.Atan2(toVertex.Y, toVertex.X);
                         float diff = (newAngle - angleToCentroid);
 
-                        diff = (diff - MathHelper.Pi)%(2*MathHelper.Pi);
+                        diff = (diff - MathHelper.Pi) % (2 * MathHelper.Pi);
                         // the minus pi is important. It means cutoff for going other direction is at 180 deg where it needs to be
 
                         if (diff < 0.0f)
-                            diff += 2*MathHelper.Pi; // correction for not handling negs
+                            diff += 2 * MathHelper.Pi; // correction for not handling negs
 
                         diff -= MathHelper.Pi;
 
@@ -250,18 +250,18 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 if (i == valIndex - 1)
                 {
                     // the single edgecase
-                    midpt = (vals[0] + MathHelper.Pi*2 + vals[i]);
+                    midpt = (vals[0] + MathHelper.Pi * 2 + vals[i]);
                 }
                 else
                 {
                     midpt = (vals[i + 1] + vals[i]);
                 }
 
-                midpt = midpt/2;
+                midpt = midpt / 2;
 
                 Vector2 p1 = pos;
-                Vector2 p2 = radius*new Vector2((float) Math.Cos(midpt),
-                                                (float) Math.Sin(midpt)) + pos;
+                Vector2 p2 = radius * new Vector2((float)Math.Cos(midpt),
+                                                (float)Math.Sin(midpt)) + pos;
 
                 // RaycastOne
                 bool hitClosest = false;
@@ -274,7 +274,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                                       if (body.UserData != null)
                                       {
-                                          int index = (int) body.UserData;
+                                          int index = (int)body.UserData;
                                           if (index == 0)
                                           {
                                               // filter
@@ -318,7 +318,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         _data[0] = fi;
                         while (_data.First().Min >= _data.First().Max)
                         {
-                            fi.Min -= MathHelper.Pi*2;
+                            fi.Min -= MathHelper.Pi * 2;
                             _data[0] = fi;
                         }
                     }
@@ -328,7 +328,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     while ((_data.Count() > 0)
                            && (_data.Last().Min >= _data.Last().Max)) // just making sure min<max
                     {
-                        last.Min = _data.Last().Min - 2*MathHelper.Pi;
+                        last.Min = _data.Last().Min - 2 * MathHelper.Pi;
                         _data[lastPos] = last;
                     }
                     rayMissed = false;
@@ -346,13 +346,13 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 float arclen = _data[i].Max - _data[i].Min;
 
-                float first = MathHelper.Min(MaxEdgeOffset, EdgeRatio*arclen);
-                int insertedRays = (int) Math.Ceiling(((arclen - 2.0f*first) - (MinRays - 1)*MaxAngle)/MaxAngle);
+                float first = MathHelper.Min(MaxEdgeOffset, EdgeRatio * arclen);
+                int insertedRays = (int)Math.Ceiling(((arclen - 2.0f * first) - (MinRays - 1) * MaxAngle) / MaxAngle);
 
                 if (insertedRays < 0)
                     insertedRays = 0;
 
-                float offset = (arclen - first*2.0f)/((float) MinRays + insertedRays - 1);
+                float offset = (arclen - first * 2.0f) / ((float)MinRays + insertedRays - 1);
 
                 //Note: This loop can go into infinite as it operates on floats.
                 //Added FloatEquals with a large epsilon.
@@ -361,7 +361,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                      j += offset)
                 {
                     Vector2 p1 = pos;
-                    Vector2 p2 = pos + radius*new Vector2((float) Math.Cos(j), (float) Math.Sin(j));
+                    Vector2 p2 = pos + radius * new Vector2((float)Math.Cos(j), (float)Math.Sin(j));
                     Vector2 hitpoint = Vector2.Zero;
                     float minlambda = float.MaxValue;
 
@@ -380,20 +380,20 @@ namespace FarseerPhysics.Common.PhysicsLogic
                             if (minlambda > ro.Fraction)
                             {
                                 minlambda = ro.Fraction;
-                                hitpoint = ro.Fraction*p2 + (1 - ro.Fraction)*p1;
+                                hitpoint = ro.Fraction * p2 + (1 - ro.Fraction) * p1;
                             }
                         }
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        float impulse = (arclen/(MinRays + insertedRays))*maxForce*180.0f/MathHelper.Pi*
+                        float impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / MathHelper.Pi *
                                         (1.0f - Math.Min(1.0f, minlambda));
 
                         // We Apply the impulse!!!
-                        Vector2 vectImp = Vector2.Dot(impulse*new Vector2((float) Math.Cos(j),
-                                                                          (float) Math.Sin(j)), -ro.Normal)*
-                                          new Vector2((float) Math.Cos(j),
-                                                      (float) Math.Sin(j));
+                        Vector2 vectImp = Vector2.Dot(impulse * new Vector2((float)Math.Cos(j),
+                                                                          (float)Math.Sin(j)), -ro.Normal) *
+                                          new Vector2((float)Math.Cos(j),
+                                                      (float)Math.Sin(j));
 
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
@@ -433,7 +433,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 if (!IsActiveOn(fix.Body))
                     continue;
 
-                float impulse = MinRays*maxForce*180.0f/MathHelper.Pi;
+                float impulse = MinRays * maxForce * 180.0f / MathHelper.Pi;
                 Vector2 hitPoint;
 
                 CircleShape circShape = fix.Shape as CircleShape;
@@ -447,7 +447,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     hitPoint = fix.Body.GetWorldPoint(shape.MassData.Centroid);
                 }
 
-                Vector2 vectImp = impulse*(hitPoint - pos);
+                Vector2 vectImp = impulse * (hitPoint - pos);
 
                 List<Vector2> vectorList = new List<Vector2>();
                 vectorList.Add(vectImp);

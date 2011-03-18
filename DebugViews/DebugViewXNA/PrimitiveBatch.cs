@@ -25,8 +25,12 @@ namespace FarseerPhysics.DebugViews
         private VertexPositionColor[] _triangleVertices;
         private int _triangleVertsCount;
 
-        // the constructor creates a new PrimitiveBatch and sets up all of the internals
-        // that PrimitiveBatch will need.
+
+        /// <summary>
+        /// the constructor creates a new PrimitiveBatch and sets up all of the internals
+        /// that PrimitiveBatch will need.
+        /// </summary>
+        /// <param name="graphicsDevice">The graphics device.</param>
         public PrimitiveBatch(GraphicsDevice graphicsDevice)
             : this(graphicsDevice, DefaultBufferSize)
         {
@@ -74,8 +78,13 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        // Begin is called to tell the PrimitiveBatch what kind of primitives will be
-        // drawn, and to prepare the graphics card to render those primitives.
+
+        /// <summary>
+        /// Begin is called to tell the PrimitiveBatch what kind of primitives will be
+        /// drawn, and to prepare the graphics card to render those primitives.
+        /// </summary>
+        /// <param name="projection">The projection.</param>
+        /// <param name="view">The view.</param>
         public void Begin(ref Matrix projection, ref Matrix view)
         {
             if (_hasBegun)
@@ -132,9 +141,12 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        // End is called once all the primitives have been drawn using AddVertex.
-        // it will call Flush to actually submit the draw call to the graphics card, and
-        // then tell the basic effect to end.
+
+        /// <summary>
+        /// End is called once all the primitives have been drawn using AddVertex.
+        /// it will call Flush to actually submit the draw call to the graphics card, and
+        /// then tell the basic effect to end.
+        /// </summary>
         public void End()
         {
             if (!_hasBegun)

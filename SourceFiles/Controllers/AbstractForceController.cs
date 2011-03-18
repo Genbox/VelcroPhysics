@@ -230,14 +230,14 @@ namespace FarseerPhysics.Controllers
                             return 1.0f;
                         if (distance > DecayEnd)
                             return 0.0f;
-                        return (DecayEnd - DecayStart/distance - DecayStart);
+                        return (DecayEnd - DecayStart / distance - DecayStart);
                     }
                 case DecayModes.InverseSquare:
                     {
                         if (distance < DecayStart)
                             return 1.0f;
                         else
-                            return 1.0f/((distance - DecayStart)*(distance - DecayStart));
+                            return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
                     }
                 case DecayModes.Curve:
                     {
@@ -299,7 +299,7 @@ namespace FarseerPhysics.Controllers
                         {
                             if (ImpulseTime < ImpulseLength)
                             {
-                                ApplyForce(dt, Strength*StrengthCurve.Evaluate(ImpulseTime));
+                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
                                 ImpulseTime += dt;
                             }
                             else

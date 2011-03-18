@@ -133,7 +133,8 @@ namespace FarseerPhysics.Factories
             return joint;
         }
 
-        public static FixedPrismaticJoint CreateFixedPrismaticJoint(World world, Body body, Vector2 worldAnchor, Vector2 axis)
+        public static FixedPrismaticJoint CreateFixedPrismaticJoint(World world, Body body, Vector2 worldAnchor,
+                                                                    Vector2 axis)
         {
             FixedPrismaticJoint joint = new FixedPrismaticJoint(body, worldAnchor, axis);
             world.AddJoint(joint);

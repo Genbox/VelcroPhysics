@@ -195,10 +195,10 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 P = _impulse * _u;
                 b1.LinearVelocityInternal -= b1.InvMass * P;
                 MathUtils.Cross(ref r1, ref P, out _tmpFloat1);
-                b1.AngularVelocityInternal -= b1.InvI * /* r1 x P */_tmpFloat1;
+                b1.AngularVelocityInternal -= b1.InvI * /* r1 x P */ _tmpFloat1;
                 b2.LinearVelocityInternal += b2.InvMass * P;
                 MathUtils.Cross(ref r2, ref P, out _tmpFloat1);
-                b2.AngularVelocityInternal += b2.InvI * /* r2 x P */_tmpFloat1;
+                b2.AngularVelocityInternal += b2.InvI * /* r2 x P */ _tmpFloat1;
             }
             else
             {

@@ -31,7 +31,6 @@ namespace FarseerPhysics.DebugViewSilverlight
         public Color KinematicShapeColor = Color.FromArgb(255, 128, 128, 230);
         public Color SleepingShapeColor = Color.FromArgb(255, 153, 153, 153);
         public Color StaticShapeColor = Color.FromArgb(255, 128, 230, 128);
-        public Color TextColor = Colors.White;
         private Canvas _debugCanvas;
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
@@ -283,7 +282,7 @@ namespace FarseerPhysics.DebugViewSilverlight
                 output.AppendLine("Proxies: " + World.ProxyCount);
                 output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
                 output.AppendLine("Controllers: " + World.ControllerList.Count);
-                
+
                 output.AppendLine();
 
                 output.AppendLine("Controllers: " + World.ControllersUpdateTime);
@@ -435,7 +434,8 @@ namespace FarseerPhysics.DebugViewSilverlight
 
         public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawPolygon(vertices, count, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawPolygon(vertices, count,
+                        Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawPolygon(Vector2[] vertices, int count, Color color)
@@ -453,7 +453,8 @@ namespace FarseerPhysics.DebugViewSilverlight
 
         public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawSolidPolygon(vertices, count, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)), true);
+            DrawSolidPolygon(vertices, count,
+                             Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)), true);
         }
 
         public void DrawSolidPolygon(Vector2[] vertices, int count, Color color)
@@ -488,7 +489,8 @@ namespace FarseerPhysics.DebugViewSilverlight
 
         public override void DrawCircle(Vector2 center, float radius, float red, float green, float blue)
         {
-            DrawCircle(center, radius, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawCircle(center, radius,
+                       Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawCircle(Vector2 center, float radius, Color color)
@@ -511,7 +513,8 @@ namespace FarseerPhysics.DebugViewSilverlight
         public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green,
                                              float blue)
         {
-            DrawSolidCircle(center, radius, axis, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawSolidCircle(center, radius, axis,
+                            Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)

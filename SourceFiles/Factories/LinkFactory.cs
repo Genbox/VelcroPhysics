@@ -39,7 +39,7 @@ namespace FarseerPhysics.Factories
             if (fixStart)
             {
                 //Fix the first chainlink to the world
-                JointFactory.CreateFixedRevoluteJoint(world, chainLinks[0], new Vector2(0, -(linkHeight/2)),
+                JointFactory.CreateFixedRevoluteJoint(world, chainLinks[0], new Vector2(0, -(linkHeight / 2)),
                                                       chainLinks[0].Position);
             }
 
@@ -47,7 +47,7 @@ namespace FarseerPhysics.Factories
             {
                 //Fix the last chainlink to the world
                 JointFactory.CreateFixedRevoluteJoint(world, chainLinks[chainLinks.Count - 1],
-                                                      new Vector2(0, (linkHeight/2)),
+                                                      new Vector2(0, (linkHeight / 2)),
                                                       chainLinks[chainLinks.Count - 1].Position);
             }
 

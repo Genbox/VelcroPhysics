@@ -235,7 +235,7 @@ namespace FarseerPhysics.Collision
         public T GetUserData(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
-            return (T)_nodes[proxyId].UserData;
+            return _nodes[proxyId].UserData;
         }
 
         /// <summary>

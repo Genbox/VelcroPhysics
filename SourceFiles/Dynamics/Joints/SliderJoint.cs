@@ -61,7 +61,10 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _mass;
         private Vector2 _u;
 
-        internal SliderJoint() { JointType = JointType.Slider; }
+        internal SliderJoint()
+        {
+            JointType = JointType.Slider;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SliderJoint"/> class.

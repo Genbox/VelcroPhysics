@@ -54,9 +54,19 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public float Mass;
 
+        #region IEquatable<MassData> Members
+
+        public bool Equals(MassData other)
+        {
+            return this == other;
+        }
+
+        #endregion
+
         public static bool operator ==(MassData left, MassData right)
         {
-            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia);
+            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid &&
+                    left.Inertia == right.Inertia);
         }
 
         public static bool operator !=(MassData left, MassData right)
@@ -64,16 +74,11 @@ namespace FarseerPhysics.Collision.Shapes
             return !(left == right);
         }
 
-        public bool Equals(MassData other)
-        {
-            return this == other;
-        }
-
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof (MassData)) return false;
-            return Equals((MassData) obj);
+            if (obj.GetType() != typeof(MassData)) return false;
+            return Equals((MassData)obj);
         }
 
         public override int GetHashCode()
@@ -104,15 +109,14 @@ namespace FarseerPhysics.Collision.Shapes
     /// Shapes used for simulation in World are created automatically when a Fixture
     /// is created. Shapes may encapsulate a one or more child shapes.
     /// </summary>
-    public abstract class Shape 
+    public abstract class Shape
     {
+        private static int _shapeIdCounter;
         public MassData MassData;
         public int ShapeId;
 
-        internal float _radius;
         internal float _density;
-
-        private static int _shapeIdCounter;
+        internal float _radius;
 
         protected Shape(float density)
         {
@@ -203,12 +207,12 @@ namespace FarseerPhysics.Collision.Shapes
         {
             if (shape is PolygonShape && this is PolygonShape)
                 return ((PolygonShape)this).CompareTo((PolygonShape)shape);
-            
+
             if (shape is CircleShape && this is CircleShape)
                 return ((CircleShape)this).CompareTo((CircleShape)shape);
 
             if (shape is EdgeShape && this is EdgeShape)
-                return ((EdgeShape) this).CompareTo((EdgeShape) shape);
+                return ((EdgeShape)this).CompareTo((EdgeShape)shape);
 
             return false;
         }

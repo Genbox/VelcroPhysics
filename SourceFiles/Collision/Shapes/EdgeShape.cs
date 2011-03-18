@@ -23,7 +23,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -44,6 +43,11 @@ namespace FarseerPhysics.Collision.Shapes
         public Vector2 Vertex0;
 
         /// <summary>
+        /// Optional adjacent vertices. These are used for smooth collision.
+        /// </summary>
+        public Vector2 Vertex3;
+
+        /// <summary>
         /// Edge start vertex
         /// </summary>
         private Vector2 _vertex1;
@@ -52,11 +56,6 @@ namespace FarseerPhysics.Collision.Shapes
         /// Edge end vertex
         /// </summary>
         private Vector2 _vertex2;
-
-        /// <summary>
-        /// Optional adjacent vertices. These are used for smooth collision.
-        /// </summary>
-        public Vector2 Vertex3;
 
         internal EdgeShape()
             : base(0)

@@ -69,7 +69,10 @@ namespace FarseerPhysics.Dynamics.Joints
         // Cdot = wB - wA
         // J = [0 0 -1 0 0 1]
 
-        internal LineJoint() { JointType = JointType.Line; }
+        internal LineJoint()
+        {
+            JointType = JointType.Line;
+        }
 
         public LineJoint(Body bA, Body bB, Vector2 anchor, Vector2 axis)
             : base(bA, bB)

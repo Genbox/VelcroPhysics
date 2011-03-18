@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.Controllers
@@ -61,7 +60,7 @@ namespace FarseerPhysics.Controllers
             set
             {
                 _maxAngularVelocity = value;
-                _maxAngularSqared = _maxAngularVelocity*_maxAngularVelocity;
+                _maxAngularSqared = _maxAngularVelocity * _maxAngularVelocity;
             }
         }
 
@@ -75,7 +74,7 @@ namespace FarseerPhysics.Controllers
             set
             {
                 _maxLinearVelocity = value;
-                _maxLinearSqared = _maxLinearVelocity*_maxLinearVelocity;
+                _maxLinearSqared = _maxLinearVelocity * _maxLinearVelocity;
             }
         }
 
@@ -90,15 +89,15 @@ namespace FarseerPhysics.Controllers
                 {
                     //Translation
                     // Check for large velocities.
-                    float translationX = dt*body.LinearVelocityInternal.X;
-                    float translationY = dt*body.LinearVelocityInternal.Y;
-                    float result = translationX*translationX + translationY*translationY;
+                    float translationX = dt * body.LinearVelocityInternal.X;
+                    float translationY = dt * body.LinearVelocityInternal.Y;
+                    float result = translationX * translationX + translationY * translationY;
 
                     if (result > _maxLinearSqared)
                     {
-                        float sq = (float) Math.Sqrt(result);
+                        float sq = (float)Math.Sqrt(result);
 
-                        float ratio = _maxLinearVelocity/sq;
+                        float ratio = _maxLinearVelocity / sq;
                         body.LinearVelocityInternal.X *= ratio;
                         body.LinearVelocityInternal.Y *= ratio;
                     }
@@ -107,10 +106,10 @@ namespace FarseerPhysics.Controllers
                 if (LimitAngularVelocity)
                 {
                     //Rotation
-                    float rotation = dt*body.AngularVelocityInternal;
-                    if (rotation*rotation > _maxAngularSqared)
+                    float rotation = dt * body.AngularVelocityInternal;
+                    if (rotation * rotation > _maxAngularSqared)
                     {
-                        float ratio = _maxAngularVelocity/Math.Abs(rotation);
+                        float ratio = _maxAngularVelocity / Math.Abs(rotation);
                         body.AngularVelocityInternal *= ratio;
                     }
                 }

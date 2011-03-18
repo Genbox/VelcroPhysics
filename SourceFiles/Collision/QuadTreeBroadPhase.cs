@@ -16,7 +16,7 @@ public class QuadTreeBroadPhase : IBroadPhase
     private int _treeMoveNum;
 
     /// <summary>
-    /// 
+    /// Creates a new quad tree broadphase with the specified span.
     /// </summary>
     /// <param name="span">the maximum span of the tree (world size)</param>
     public QuadTreeBroadPhase(AABB span)
@@ -29,6 +29,9 @@ public class QuadTreeBroadPhase : IBroadPhase
 
     #region IBroadPhase Members
 
+    ///<summary>
+    /// The number of proxies
+    ///</summary>
     public int ProxyCount
     {
         get { return _idRegister.Count; }
@@ -188,7 +191,7 @@ public class QuadTreeBroadPhase : IBroadPhase
 
     private Func<Element<FixtureProxy>, bool> TransformPredicate(Func<int, bool> idPredicate)
     {
-        Func<Element<FixtureProxy>, bool> qtPred = qtnode => idPredicate(qtnode.Value.ProxyId);     
+        Func<Element<FixtureProxy>, bool> qtPred = qtnode => idPredicate(qtnode.Value.ProxyId);
         return qtPred;
     }
 
@@ -218,7 +221,7 @@ public class QuadTreeBroadPhase : IBroadPhase
     {
         //this is faster than _quadTree.Reconstruct(), since the quadtree method runs a recusive query to find all nodes.
         _quadTree.Clear();
-        foreach (var elem in _idRegister.Values)
+        foreach (Element<FixtureProxy> elem in _idRegister.Values)
             _quadTree.AddNode(elem);
     }
 

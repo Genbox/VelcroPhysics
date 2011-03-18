@@ -42,9 +42,9 @@ namespace FarseerPhysics.Dynamics
     {
         public Category DisabledOnCategories = Category.None;
 
-        public int DisabledOnGroup = 0;
+        public int DisabledOnGroup;
         public Category EnabledOnCategories = Category.All;
-        public int EnabledOnGroup = 0;
+        public int EnabledOnGroup;
 
         public virtual bool IsActiveOn(Body body)
         {
@@ -372,7 +372,8 @@ namespace FarseerPhysics.Dynamics
         /// <param name="body">The body.</param>
         public void RemoveBody(Body body)
         {
-            Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
+            Debug.Assert(!_bodyRemoveList.Contains(body),
+                         "The body is already marked for removal. You are removing the body more than once.");
 
             if (!_bodyRemoveList.Contains(body))
                 _bodyRemoveList.Add(body);
@@ -394,7 +395,8 @@ namespace FarseerPhysics.Dynamics
         {
             if (doCheck)
             {
-                Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
+                Debug.Assert(!_jointRemoveList.Contains(joint),
+                             "The joint is already marked for removal. You are removing the joint more than once.");
             }
 
             if (!_jointRemoveList.Contains(joint))
@@ -824,7 +826,8 @@ namespace FarseerPhysics.Dynamics
                                                       if (hit)
                                                       {
                                                           float fraction = output.Fraction;
-                                                          Vector2 point = (1.0f - fraction) * input.Point1 + fraction * input.Point2;
+                                                          Vector2 point = (1.0f - fraction) * input.Point1 +
+                                                                          fraction * input.Point2;
                                                           return callback(fixture, point, output.Normal, fraction);
                                                       }
 
@@ -1347,7 +1350,8 @@ namespace FarseerPhysics.Dynamics
 
         public void RemoveController(Controller controller)
         {
-            Debug.Assert(ControllerList.Contains(controller), "You are removing a controller that is not in the simulation.");
+            Debug.Assert(ControllerList.Contains(controller),
+                         "You are removing a controller that is not in the simulation.");
 
             if (ControllerList.Contains(controller))
             {

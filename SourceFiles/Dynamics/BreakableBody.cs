@@ -16,13 +16,13 @@ namespace FarseerPhysics.Dynamics
         public bool Broken;
         public Body MainBody;
         public List<Fixture> Parts = new List<Fixture>(8);
-        
+
         /// <summary>
         /// The force needed to break the body apart.
         /// Default: 500
         /// </summary>
         public float Strength = 500.0f;
-        
+
         private float[] _angularVelocitiesCache = new float[8];
         private bool _break;
         private Vector2[] _velocitiesCache = new Vector2[8];

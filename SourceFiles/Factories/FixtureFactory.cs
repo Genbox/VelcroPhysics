@@ -110,6 +110,7 @@ namespace FarseerPhysics.Factories
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
             return body.CreateFixture(polygonShape, userData);
         }
+
         public static List<Fixture> AttachCompoundPolygon(List<Vertices> list, float density, Body body)
         {
             return AttachCompoundPolygon(list, density, body, null);
@@ -137,7 +138,8 @@ namespace FarseerPhysics.Factories
             return res;
         }
 
-        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle, bool closed, Body body)
+        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle,
+                                                  bool closed, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
@@ -158,7 +160,8 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Vector2 position, float angle, Body body)
+        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius,
+                                                   Vector2 position, float angle, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2 + angle);

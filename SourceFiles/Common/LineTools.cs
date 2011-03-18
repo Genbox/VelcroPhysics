@@ -30,7 +30,7 @@ namespace FarseerPhysics.Common
             float c2 = Vector2.Dot(v, v);
             if (c2 <= c1) return DistanceBetweenPointAndPoint(ref point, ref lineEndPoint2);
 
-            float b = c1/c2;
+            float b = c1 / c2;
             Vector2 pointOnLine = Vector2.Add(lineEndPoint1, Vector2.Multiply(v, b));
             return DistanceBetweenPointAndPoint(ref point, ref pointOnLine);
         }
@@ -73,9 +73,9 @@ namespace FarseerPhysics.Common
             if (Math.Max(y1, y2) < Math.Min(y3, y4) || Math.Max(y3, y4) < Math.Min(y1, y2))
                 return false;
 
-            float ua = ((x4 - x3)*(y1 - y3) - (y4 - y3)*(x1 - x3));
-            float ub = ((x2 - x1)*(y1 - y3) - (y2 - y1)*(x1 - x3));
-            float denom = (y4 - y3)*(x2 - x1) - (x4 - x3)*(y2 - y1);
+            float ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3));
+            float ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3));
+            float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
             if (Math.Abs(denom) < Settings.Epsilon)
             {
                 //Lines are too close to parallel to call
@@ -86,8 +86,8 @@ namespace FarseerPhysics.Common
 
             if ((0 < ua) && (ua < 1) && (0 < ub) && (ub < 1))
             {
-                intersectionPoint.X = (x1 + ua*(x2 - x1));
-                intersectionPoint.Y = (y1 + ua*(y2 - y1));
+                intersectionPoint.X = (x1 + ua * (x2 - x1));
+                intersectionPoint.Y = (y1 + ua * (y2 - y1));
                 return true;
             }
 
@@ -100,17 +100,17 @@ namespace FarseerPhysics.Common
             Vector2 i = Vector2.Zero;
             float a1 = p2.Y - p1.Y;
             float b1 = p1.X - p2.X;
-            float c1 = a1*p1.X + b1*p1.Y;
+            float c1 = a1 * p1.X + b1 * p1.Y;
             float a2 = q2.Y - q1.Y;
             float b2 = q1.X - q2.X;
-            float c2 = a2*q1.X + b2*q1.Y;
-            float det = a1*b2 - a2*b1;
+            float c2 = a2 * q1.X + b2 * q1.Y;
+            float det = a1 * b2 - a2 * b1;
 
             if (!MathUtils.FloatEquals(det, 0))
             {
                 // lines are not parallel
-                i.X = (b2*c1 - b1*c2)/det;
-                i.Y = (a1*c2 - a2*c1)/det;
+                i.X = (b2 * c1 - b1 * c2) / det;
+                i.Y = (a1 * c2 - a2 * c1) / det;
             }
             return i;
         }
@@ -154,24 +154,24 @@ namespace FarseerPhysics.Common
             float d = point2.Y - point1.Y;
 
             // denominator to solution of linear system
-            float denom = (a*b) - (c*d);
+            float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
             if (!(denom >= -Settings.Epsilon && denom <= Settings.Epsilon))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;
-                float oneOverDenom = 1.0f/denom;
+                float oneOverDenom = 1.0f / denom;
 
                 // numerator of first equation
-                float ua = (c*e) - (a*f);
+                float ua = (c * e) - (a * f);
                 ua *= oneOverDenom;
 
                 // check if intersection point of the two lines is on line segment 1
                 if (!firstIsSegment || ua >= 0.0f && ua <= 1.0f)
                 {
                     // numerator of second equation
-                    float ub = (b*e) - (d*f);
+                    float ub = (b * e) - (d * f);
                     ub *= oneOverDenom;
 
                     // check if intersection point of the two lines is on line segment 2
@@ -183,8 +183,8 @@ namespace FarseerPhysics.Common
                         if (ua != 0f || ub != 0f)
                         {
                             //There is an intersection
-                            point.X = point1.X + ua*b;
-                            point.Y = point1.Y + ua*d;
+                            point.X = point1.X + ua * b;
+                            point.Y = point1.Y + ua * d;
                             return true;
                         }
                     }

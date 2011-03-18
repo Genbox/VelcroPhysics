@@ -227,7 +227,7 @@ namespace FarseerPhysics.Common.Decomposition
         {
             Point a = (p.Next - p);
             Point b = (p.Prev - p);
-            return (float) Math.Atan2(a.Cross(b), a.Dot(b));
+            return (float)Math.Atan2(a.Cross(b), a.Dot(b));
         }
 
         private bool AngleSign()
@@ -609,12 +609,12 @@ namespace FarseerPhysics.Common.Decomposition
 
         public float Cross(Point p)
         {
-            return X*p.Y - Y*p.X;
+            return X * p.Y - Y * p.X;
         }
 
         public float Dot(Point p)
         {
-            return X*p.X + Y*p.Y;
+            return X * p.X + Y * p.Y;
         }
 
         public bool Neq(Point p)
@@ -628,7 +628,7 @@ namespace FarseerPhysics.Common.Decomposition
             float bcx = pb.X - pc.X;
             float acy = Y - pc.Y;
             float bcy = pb.Y - pc.Y;
-            return acx*bcy - acy*bcx;
+            return acx * bcy - acy * bcx;
         }
     }
 
@@ -656,11 +656,11 @@ namespace FarseerPhysics.Common.Decomposition
             Q = q;
 
             if (q.X - p.X != 0)
-                Slope = (q.Y - p.Y)/(q.X - p.X);
+                Slope = (q.Y - p.Y) / (q.X - p.X);
             else
                 Slope = 0;
 
-            B = p.Y - (p.X*Slope);
+            B = p.Y - (p.X * Slope);
             Above = null;
             Below = null;
             MPoints = new HashSet<Point>();
@@ -781,7 +781,7 @@ namespace FarseerPhysics.Common.Decomposition
 
         private Point LineIntersect(Edge edge, float x)
         {
-            float y = edge.Slope*x + edge.B;
+            float y = edge.Slope * x + edge.B;
             return new Point(x, y);
         }
 
@@ -1051,7 +1051,7 @@ namespace FarseerPhysics.Common.Decomposition
         // the degenerate case. See Mark de Berg et al, Chapter 6.3
         private Point ShearTransform(Point point)
         {
-            return new Point(point.X + _sheer*point.Y, point.Y);
+            return new Point(point.X + _sheer * point.Y, point.Y);
         }
     }
 }

@@ -21,7 +21,8 @@ namespace FarseerPhysics.Common
         /// <summary>
         /// All the points that makes up the curve
         /// </summary>
-        [XmlElement("ControlPoints")] public List<Vector2> ControlPoints;
+        [XmlElement("ControlPoints")]
+        public List<Vector2> ControlPoints;
 
         private float _deltaT;
 
@@ -153,7 +154,7 @@ namespace FarseerPhysics.Common
         {
             Vertices verts = new Vertices();
 
-            float timeStep = 1f/divisions;
+            float timeStep = 1f / divisions;
 
             for (float i = 0; i < 1f; i += timeStep)
             {
@@ -174,9 +175,9 @@ namespace FarseerPhysics.Common
             {
                 Add(ControlPoints[0]);
 
-                _deltaT = 1f/(ControlPoints.Count - 1);
+                _deltaT = 1f / (ControlPoints.Count - 1);
 
-                int p = (int) (time/_deltaT);
+                int p = (int)(time / _deltaT);
 
                 // use a circular indexing system
                 int p0 = p - 1;
@@ -193,7 +194,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = p3 - (ControlPoints.Count - 1);
 
                 // relative time
-                float lt = (time - _deltaT*p)/_deltaT;
+                float lt = (time - _deltaT * p) / _deltaT;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
 
@@ -201,7 +202,7 @@ namespace FarseerPhysics.Common
             }
             else
             {
-                int p = (int) (time/_deltaT);
+                int p = (int)(time / _deltaT);
 
                 // 
                 int p0 = p - 1;
@@ -218,7 +219,7 @@ namespace FarseerPhysics.Common
                 else if (p3 >= ControlPoints.Count - 1) p3 = ControlPoints.Count - 1;
 
                 // relative time
-                float lt = (time - _deltaT*p)/_deltaT;
+                float lt = (time - _deltaT * p) / _deltaT;
 
                 temp = Vector2.CatmullRom(ControlPoints[p0], ControlPoints[p1], ControlPoints[p2], ControlPoints[p3], lt);
             }
@@ -256,24 +257,24 @@ output = new Vector2();
         public void Add(Vector2 point)
         {
             ControlPoints.Add(point);
-            _deltaT = 1f/(ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public void Remove(Vector2 point)
         {
             ControlPoints.Remove(point);
-            _deltaT = 1f/(ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public void RemoveAt(int index)
         {
             ControlPoints.RemoveAt(index);
-            _deltaT = 1f/(ControlPoints.Count - 1);
+            _deltaT = 1f / (ControlPoints.Count - 1);
         }
 
         public float GetLength()
         {
-            List<Vector2> verts = GetVertices(ControlPoints.Count*25);
+            List<Vector2> verts = GetVertices(ControlPoints.Count * 25);
             float length = 0;
 
             for (int i = 1; i < verts.Count; i++)
@@ -293,7 +294,7 @@ output = new Vector2();
 
             float length = GetLength();
 
-            float deltaLength = length/divisions + 0.001f;
+            float deltaLength = length / divisions + 0.001f;
             float t = 0.000f;
 
             // we always start at the first control point
@@ -301,7 +302,7 @@ output = new Vector2();
             Vector2 end = GetPosition(t);
 
             // increment t until we are at half the distance
-            while (deltaLength*0.5f >= Vector2.Distance(start, end))
+            while (deltaLength * 0.5f >= Vector2.Distance(start, end))
             {
                 end = GetPosition(t);
                 t += 0.0001f;
@@ -316,7 +317,7 @@ output = new Vector2();
             for (int i = 1; i < divisions; i++)
             {
                 Vector2 normal = GetPositionNormal(t);
-                float angle = (float) Math.Atan2(normal.Y, normal.X);
+                float angle = (float)Math.Atan2(normal.Y, normal.X);
 
                 verts.Add(new Vector3(end, angle));
 

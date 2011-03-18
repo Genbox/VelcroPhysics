@@ -70,6 +70,11 @@ namespace FarseerPhysics
         public static int TOIPositionIterations = 20;
 
         /// <summary>
+        /// Maximum number of sub-steps per contact in continuous physics simulation.
+        /// </summary>
+        public const int MaxSubSteps = 8;
+
+        /// <summary>
         /// Enable/Disable warmstarting
         /// </summary>
         public static bool EnableWarmstarting = true;
@@ -89,7 +94,7 @@ namespace FarseerPhysics
         /// We have both FPE and Box2D filtering in the engine. If you are upgrading
         /// from earlier versions of FPE, set this to true.
         /// </summary>
-        public static bool UseFPECollisionCategories = false;
+        public static bool UseFPECollisionCategories;
 
         /// <summary>
         /// Conserve memory makes sure that objects are used by reference instead of cloned.
@@ -129,14 +134,14 @@ namespace FarseerPhysics
         /// A small angle used as a collision and constraint tolerance. Usually it is
         /// chosen to be numerically significant, but visually insignificant.
         /// </summary>
-        public const float AngularSlop = (2.0f/180.0f*Pi);
+        public const float AngularSlop = (2.0f / 180.0f * Pi);
 
         /// <summary>
         /// The radius of the polygon/edge shape skin. This should not be modified. Making
         /// this smaller means polygons will have an insufficient buffer for continuous collision.
         /// Making it larger may create artifacts for vertex collision.
         /// </summary>
-        public const float PolygonRadius = (2.0f*LinearSlop);
+        public const float PolygonRadius = (2.0f * LinearSlop);
 
         // Dynamics
 
@@ -161,7 +166,7 @@ namespace FarseerPhysics
         /// The maximum angular position correction used when solving constraints. This helps to
         /// prevent overshoot.
         /// </summary>
-        public const float MaxAngularCorrection = (8.0f/180.0f*Pi);
+        public const float MaxAngularCorrection = (8.0f / 180.0f * Pi);
 
         /// <summary>
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so
@@ -185,7 +190,7 @@ namespace FarseerPhysics
         /// <summary>
         /// A body cannot sleep if its angular velocity is above this tolerance.
         /// </summary>
-        public const float AngularSleepTolerance = (2.0f/180.0f*Pi);
+        public const float AngularSleepTolerance = (2.0f / 180.0f * Pi);
 
         /// <summary>
         /// The maximum linear velocity of a body. This limit is very large and is used
@@ -193,20 +198,15 @@ namespace FarseerPhysics
         /// </summary>
         public const float MaxTranslation = 2.0f;
 
-        public const float MaxTranslationSquared = (MaxTranslation*MaxTranslation);
+        public const float MaxTranslationSquared = (MaxTranslation * MaxTranslation);
 
         /// <summary>
         /// The maximum angular velocity of a body. This limit is very large and is used
         /// to prevent numerical problems. You shouldn't need to adjust this.
         /// </summary>
-        public const float MaxRotation = (0.5f*Pi);
+        public const float MaxRotation = (0.5f * Pi);
 
-        public const float MaxRotationSquared = (MaxRotation*MaxRotation);
-
-        /// <summary>
-        /// Maximum number of sub-steps per contact in continuous physics simulation.
-        /// </summary>
-        public const int MaxSubSteps = 8;
+        public const float MaxRotationSquared = (MaxRotation * MaxRotation);
 
         /// <summary>
         /// Friction mixing law. Feel free to customize this.
@@ -216,7 +216,7 @@ namespace FarseerPhysics
         /// <returns></returns>
         public static float MixFriction(float friction1, float friction2)
         {
-            return (float) Math.Sqrt(friction1*friction2);
+            return (float) Math.Sqrt(friction1 * friction2);
         }
 
         /// <summary>

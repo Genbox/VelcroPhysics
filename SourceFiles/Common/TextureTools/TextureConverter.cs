@@ -54,7 +54,7 @@ namespace FarseerPhysics.Common
                 this[i] = Vector2.Transform(this[i], transform);
 
             // Transform holes
-            Vector2[] temp = null; 
+            Vector2[] temp = null;
             if (_holes != null && _holes.Count > 0)
             {
                 for (int i = 0; i < _holes.Count; i++)
@@ -465,7 +465,7 @@ namespace FarseerPhysics.Common
             if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
                 throw new Exception("Couldn't detect any vertices.");
 
-            
+
             // Post processing.
             if (PolygonDetectionType == VerticesDetectionType.Separated) // Only when VerticesDetectionType.Separated? -> Recheck.
                 ApplyTriangulationCompatibleWinding(ref detectedPolygons);

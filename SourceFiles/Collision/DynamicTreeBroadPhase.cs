@@ -90,6 +90,8 @@ namespace FarseerPhysics.Collision
             _moveBuffer = new int[_moveCapacity];
         }
 
+        #region IBroadPhase Members
+
         /// <summary>
         /// Get the number of proxies.
         /// </summary>
@@ -253,6 +255,13 @@ namespace FarseerPhysics.Collision
             _tree.RayCast(callback, ref input);
         }
 
+        public void TouchProxy(int proxyId)
+        {
+            BufferMove(proxyId);
+        }
+
+        #endregion
+
         /// <summary>
         /// Compute the height of the embedded tree.
         /// </summary>
@@ -310,11 +319,6 @@ namespace FarseerPhysics.Collision
             ++_pairCount;
 
             return true;
-        }
-
-        public void TouchProxy(int proxyId)
-        {
-            BufferMove(proxyId);
         }
     }
 }

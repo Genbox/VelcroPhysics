@@ -259,7 +259,7 @@ namespace FarseerPhysics.DebugViews
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 IBroadPhase bp = World.ContactManager.BroadPhase;
-                
+
                 foreach (Body b in World.BodyList)
                 {
                     if (b.Enabled == false)
@@ -338,14 +338,19 @@ namespace FarseerPhysics.DebugViews
                 // continue until no values are left
                 for (int i = _graphValues.Count - 1; i > 0; i--)
                 {
-                    float y1 = PerformancePanelBounds.Bottom - ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
-                    float y2 = PerformancePanelBounds.Bottom - ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
+                    float y1 = PerformancePanelBounds.Bottom -
+                               ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
+                    float y2 = PerformancePanelBounds.Bottom -
+                               ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
 
-                    Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
-                                             MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+                    Vector2 x1 =
+                        new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                                    MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
 
-                    Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
-                                             MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+                    Vector2 x2 =
+                        new Vector2(
+                            MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
+                            MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
 
                     DrawSegment(x1, x2, Color.LightGreen);
 
@@ -359,9 +364,12 @@ namespace FarseerPhysics.DebugViews
 
             //Draw background.
             _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
-            _background[1] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
-            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
-            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y);
+            _background[1] = new Vector2(PerformancePanelBounds.X,
+                                         PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width,
+                                         PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width,
+                                         PerformancePanelBounds.Y);
 
             DrawSolidPolygon(_background, 4, Color.DarkGray, true);
         }
@@ -619,7 +627,9 @@ namespace FarseerPhysics.DebugViews
             for (int i = 0; i < CircleSegments; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v2 = center +
+                             radius *
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _primitiveBatch.AddVertex(v1, color, PrimitiveType.LineList);
                 _primitiveBatch.AddVertex(v2, color, PrimitiveType.LineList);
@@ -651,7 +661,9 @@ namespace FarseerPhysics.DebugViews
             for (int i = 1; i < CircleSegments - 1; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v2 = center +
+                             radius *
+                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _primitiveBatch.AddVertex(v0, colorFill, PrimitiveType.TriangleList);
                 _primitiveBatch.AddVertex(v1, colorFill, PrimitiveType.TriangleList);
@@ -823,7 +835,8 @@ namespace FarseerPhysics.DebugViews
             _font = content.Load<SpriteFont>("font");
             _stringData = new List<StringData>();
 
-            _localProjection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, 0f, 1f);
+            _localProjection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height,
+                                                                  0f, 0f, 1f);
             _localView = Matrix.Identity;
         }
 

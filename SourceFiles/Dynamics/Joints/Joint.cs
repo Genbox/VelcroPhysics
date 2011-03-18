@@ -136,7 +136,9 @@ namespace FarseerPhysics.Dynamics.Joints
         internal bool IslandFlag;
         protected Vector2 LocalCenterA, LocalCenterB;
 
-        protected Joint() { }
+        protected Joint()
+        {
+        }
 
         protected Joint(Body body, Body bodyB)
         {

@@ -105,12 +105,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float inv_dt)
         {
-            return inv_dt*_impulse;
+            return inv_dt * _impulse;
         }
 
         public override float GetReactionTorque(float inv_dt)
         {
-            return inv_dt*0.0f;
+            return inv_dt * 0.0f;
         }
 
         internal override void InitVelocityConstraints(ref TimeStep step)
@@ -120,26 +120,26 @@ namespace FarseerPhysics.Dynamics.Joints
             float mass = b.Mass;
 
             // Frequency
-            float omega = 2.0f*Settings.Pi*Frequency;
+            float omega = 2.0f * Settings.Pi * Frequency;
 
             // Damping coefficient
-            float d = 2.0f*mass*DampingRatio*omega;
+            float d = 2.0f * mass * DampingRatio * omega;
 
             // Spring stiffness
-            float k = mass*(omega*omega);
+            float k = mass * (omega * omega);
 
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            Debug.Assert(d + step.dt*k > Settings.Epsilon);
+            Debug.Assert(d + step.dt * k > Settings.Epsilon);
 
-            _gamma = step.dt*(d + step.dt*k);
+            _gamma = step.dt * (d + step.dt * k);
             if (_gamma != 0.0f)
             {
-                _gamma = 1.0f/_gamma;
+                _gamma = 1.0f / _gamma;
             }
 
-            _beta = step.dt*k*_gamma;
+            _beta = step.dt * k * _gamma;
 
             // Compute the effective mass matrix.
             Transform xf1;
@@ -153,8 +153,8 @@ namespace FarseerPhysics.Dynamics.Joints
             float invI = b.InvI;
 
             Mat22 K1 = new Mat22(new Vector2(invMass, 0.0f), new Vector2(0.0f, invMass));
-            Mat22 K2 = new Mat22(new Vector2(invI*r.Y*r.Y, -invI*r.X*r.Y),
-                                 new Vector2(-invI*r.X*r.Y, invI*r.X*r.X));
+            Mat22 K2 = new Mat22(new Vector2(invI * r.Y * r.Y, -invI * r.X * r.Y),
+                                 new Vector2(-invI * r.X * r.Y, invI * r.X * r.X));
 
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);
@@ -171,8 +171,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Warm starting.
             _impulse *= step.dtRatio;
-            b.LinearVelocityInternal += invMass*_impulse;
-            b.AngularVelocityInternal += invI*MathUtils.Cross(r, _impulse);
+            b.LinearVelocityInternal += invMass * _impulse;
+            b.AngularVelocityInternal += invI * MathUtils.Cross(r, _impulse);
         }
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
@@ -186,19 +186,19 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b.LinearVelocityInternal + MathUtils.Cross(b.AngularVelocityInternal, r);
-            Vector2 impulse = MathUtils.Multiply(ref _mass, -(Cdot + _beta*_C + _gamma*_impulse));
+            Vector2 impulse = MathUtils.Multiply(ref _mass, -(Cdot + _beta * _C + _gamma * _impulse));
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = step.dt*MaxForce;
-            if (_impulse.LengthSquared() > maxImpulse*maxImpulse)
+            float maxImpulse = step.dt * MaxForce;
+            if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
             {
-                _impulse *= maxImpulse/_impulse.Length();
+                _impulse *= maxImpulse / _impulse.Length();
             }
             impulse = _impulse - oldImpulse;
 
-            b.LinearVelocityInternal += b.InvMass*impulse;
-            b.AngularVelocityInternal += b.InvI*MathUtils.Cross(r, impulse);
+            b.LinearVelocityInternal += b.InvMass * impulse;
+            b.AngularVelocityInternal += b.InvI * MathUtils.Cross(r, impulse);
         }
 
         internal override bool SolvePositionConstraints()

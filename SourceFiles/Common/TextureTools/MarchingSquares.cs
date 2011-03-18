@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FarseerPhysics.Collision;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace FarseerPhysics.Common
 {
@@ -35,50 +33,53 @@ namespace FarseerPhysics.Common
 
     public static class MarchingSquares
     {
-        
-
-
         /// <summary>
         /// Marching squares over the given domain using the mesh defined via the dimensions
-        ///    (wid,hei) to build a set of polygons such that f(x,y) < 0, using the given number
+        ///    (wid,hei) to build a set of polygons such that f(x,y) less than 0, using the given number
         ///    'bin' for recursive linear inteprolation along cell boundaries.
         ///
         ///    if 'comb' is true, then the polygons will also be composited into larger possible concave
         ///    polygons.
         /// </summary>
         /// <param name="domain"></param>
-        /// <param name="cell_width"></param>
-        /// <param name="cell_height"></param>
+        /// <param name="cellWidth"></param>
+        /// <param name="cellHeight"></param>
         /// <param name="f"></param>
-        /// <param name="lerp_count"></param>
+        /// <param name="lerpCount"></param>
         /// <param name="combine"></param>
         /// <returns></returns>
-        public static List<Vertices> DetectSquares(AABB domain, float cell_width, float cell_height, sbyte[,] f, int lerp_count, bool combine)
+        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, sbyte[,] f,
+                                                   int lerpCount, bool combine)
         {
-            var ret = new CxFastList<GeomPoly>();
+            CxFastList<GeomPoly> ret = new CxFastList<GeomPoly>();
 
             List<Vertices> verticesList = new List<Vertices>();
 
-            List<GeomPoly> polyList = ret.GetListOfElements();
+            //NOTE: removed assignments as they were not used.
+            List<GeomPoly> polyList;
+            GeomPoly gp;
 
-            GeomPoly gp = new GeomPoly();
-
-            var xn = (int)(domain.Extents.X * 2 / cell_width); var xp = xn == (domain.Extents.X * 2 / cell_width);
-            var yn = (int)(domain.Extents.Y * 2 / cell_height); var yp = yn == (domain.Extents.Y * 2 / cell_height);
+            int xn = (int)(domain.Extents.X * 2 / cellWidth);
+            bool xp = xn == (domain.Extents.X * 2 / cellWidth);
+            int yn = (int)(domain.Extents.Y * 2 / cellHeight);
+            bool yp = yn == (domain.Extents.Y * 2 / cellHeight);
             if (!xp) xn++;
             if (!yp) yn++;
 
-            var fs = new sbyte[xn + 1, yn + 1];
-            var ps = new GeomPolyVal[xn + 1, yn + 1];
+            sbyte[,] fs = new sbyte[xn + 1, yn + 1];
+            GeomPolyVal[,] ps = new GeomPolyVal[xn + 1, yn + 1];
+
             //populate shared function lookups.
             for (int x = 0; x < xn + 1; x++)
             {
                 int x0;
-                if (x == xn) x0 = (int)domain.UpperBound.X; else x0 = (int)(x * cell_width + domain.LowerBound.X);
+                if (x == xn) x0 = (int)domain.UpperBound.X;
+                else x0 = (int)(x * cellWidth + domain.LowerBound.X);
                 for (int y = 0; y < yn + 1; y++)
                 {
                     int y0;
-                    if (y == yn) y0 = (int)domain.UpperBound.Y; else y0 = (int)(y * cell_height + domain.LowerBound.Y);
+                    if (y == yn) y0 = (int)domain.UpperBound.Y;
+                    else y0 = (int)(y * cellHeight + domain.LowerBound.Y);
                     fs[x, y] = f[x0, y0];
                 }
             }
@@ -86,16 +87,22 @@ namespace FarseerPhysics.Common
             //generate sub-polys and combine to scan lines
             for (int y = 0; y < yn; y++)
             {
-                var y0 = y * cell_height + domain.LowerBound.Y; float y1; if (y == yn - 1) y1 = domain.UpperBound.Y; else y1 = y0 + cell_height;
+                float y0 = y * cellHeight + domain.LowerBound.Y;
+                float y1;
+                if (y == yn - 1) y1 = domain.UpperBound.Y;
+                else y1 = y0 + cellHeight;
                 GeomPoly pre = null;
                 for (int x = 0; x < xn; x++)
                 {
-                    var x0 = x * cell_width + domain.LowerBound.X; float x1; if (x == xn - 1) x1 = domain.UpperBound.X; else x1 = x0 + cell_width;
-                    
+                    float x0 = x * cellWidth + domain.LowerBound.X;
+                    float x1;
+                    if (x == xn - 1) x1 = domain.UpperBound.X;
+                    else x1 = x0 + cellWidth;
+
                     gp = new GeomPoly();
 
-                    var key = marchSquare(f, fs, ref gp, x, y, x0, y0, x1, y1, lerp_count);
-                    if (gp.length != 0)
+                    int key = MarchSquare(f, fs, ref gp, x, y, x0, y0, x1, y1, lerpCount);
+                    if (gp.Length != 0)
                     {
                         if (combine && pre != null && (key & 9) != 0)
                         {
@@ -103,7 +110,7 @@ namespace FarseerPhysics.Common
                             gp = pre;
                         }
                         else
-                            ret.add(gp);
+                            ret.Add(gp);
                         ps[x, y] = new GeomPolyVal(gp, key);
                     }
                     else
@@ -115,9 +122,9 @@ namespace FarseerPhysics.Common
             {
                 polyList = ret.GetListOfElements();
 
-                foreach (var poly in polyList)
+                foreach (GeomPoly poly in polyList)
                 {
-                    verticesList.Add(new Vertices(poly.points.GetListOfElements()));
+                    verticesList.Add(new Vertices(poly.Points.GetListOfElements()));
                 }
 
                 return verticesList;
@@ -126,92 +133,131 @@ namespace FarseerPhysics.Common
             //combine scan lines together
             for (int y = 1; y < yn; y++)
             {
-                var x = 0;
+                int x = 0;
                 while (x < xn)
                 {
-                    var p = ps[x, y];
+                    GeomPolyVal p = ps[x, y];
 
                     //skip along scan line if no polygon exists at this point
-                    if (p == null) { x++; continue; }
+                    if (p == null)
+                    {
+                        x++;
+                        continue;
+                    }
 
                     //skip along if current polygon cannot be combined above.
-                    if ((p.key & 12) == 0) { x++; continue; }
+                    if ((p.Key & 12) == 0)
+                    {
+                        x++;
+                        continue;
+                    }
 
                     //skip along if no polygon exists above.
-                    var u = ps[x, y - 1];
-                    if (u == null) { x++; continue; }
+                    GeomPolyVal u = ps[x, y - 1];
+                    if (u == null)
+                    {
+                        x++;
+                        continue;
+                    }
 
                     //skip along if polygon above cannot be combined with.
-                    if ((u.key & 3) == 0) { x++; continue; }
+                    if ((u.Key & 3) == 0)
+                    {
+                        x++;
+                        continue;
+                    }
 
-                    var ax = x * cell_width + domain.LowerBound.X;
-                    var ay = y * cell_height + domain.LowerBound.Y;
+                    float ax = x * cellWidth + domain.LowerBound.X;
+                    float ay = y * cellHeight + domain.LowerBound.Y;
 
-                    var bp = p.p.points;
-                    var ap = u.p.points;
+                    CxFastList<Vector2> bp = p.GeomP.Points;
+                    CxFastList<Vector2> ap = u.GeomP.Points;
 
                     //skip if it's already been combined with above polygon
-                    if (u.p == p.p) { x++; continue; }
+                    if (u.GeomP == p.GeomP)
+                    {
+                        x++;
+                        continue;
+                    }
 
                     //combine above (but disallow the hole thingies
-                    var bi = bp.begin();
-                    while (square(bi.elem().Y - ay) > float.Epsilon || bi.elem().X < ax) bi = bi.next();
+                    CxFastListNode<Vector2> bi = bp.Begin();
+                    while (Square(bi.Elem().Y - ay) > float.Epsilon || bi.Elem().X < ax) bi = bi.Next();
 
-                    Vector2 b0 = bi.elem();
-                    var b1 = bi.next().elem();
-                    if (square(b1.Y - ay) > float.Epsilon) { x++; continue; }
-
-                    var brk = true;
-                    var ai = ap.begin();
-                    while (ai != ap.end())
+                    //NOTE: Unused
+                    //Vector2 b0 = bi.elem();
+                    Vector2 b1 = bi.Next().Elem();
+                    if (Square(b1.Y - ay) > float.Epsilon)
                     {
-                        if (vec_dsq(ai.elem(), b1) < float.Epsilon)
+                        x++;
+                        continue;
+                    }
+
+                    bool brk = true;
+                    CxFastListNode<Vector2> ai = ap.Begin();
+                    while (ai != ap.End())
+                    {
+                        if (VecDsq(ai.Elem(), b1) < float.Epsilon)
                         {
                             brk = false;
                             break;
                         }
-                        ai = ai.next();
+                        ai = ai.Next();
                     }
-                    if (brk) { x++; continue; }
+                    if (brk)
+                    {
+                        x++;
+                        continue;
+                    }
 
-                    var bj = bi.next().next(); if (bj == bp.end()) bj = bp.begin();
+                    CxFastListNode<Vector2> bj = bi.Next().Next();
+                    if (bj == bp.End()) bj = bp.Begin();
                     while (bj != bi)
                     {
-                        ai = ap.insert(ai, bj.elem());  // .clone()
-                        bj = bj.next(); if (bj == bp.end()) bj = bp.begin();
-                        u.p.length++;
+                        ai = ap.Insert(ai, bj.Elem()); // .clone()
+                        bj = bj.Next();
+                        if (bj == bp.End()) bj = bp.Begin();
+                        u.GeomP.Length++;
                     }
                     //u.p.simplify(float.Epsilon,float.Epsilon);
                     //
                     ax = x + 1;
                     while (ax < xn)
                     {
-                        var p2 = ps[(int)ax, y];
-                        if (p2 == null || p2.p != p.p) { ax++; continue; }
-                        p2.p = u.p;
+                        GeomPolyVal p2 = ps[(int)ax, y];
+                        if (p2 == null || p2.GeomP != p.GeomP)
+                        {
+                            ax++;
+                            continue;
+                        }
+                        p2.GeomP = u.GeomP;
                         ax++;
                     }
                     ax = x - 1;
                     while (ax >= 0)
                     {
-                        var p2 = ps[(int)ax, y];
-                        if (p2 == null || p2.p != p.p) { ax--; continue; }
-                        p2.p = u.p;
+                        GeomPolyVal p2 = ps[(int)ax, y];
+                        if (p2 == null || p2.GeomP != p.GeomP)
+                        {
+                            ax--;
+                            continue;
+                        }
+                        p2.GeomP = u.GeomP;
                         ax--;
                     }
-                    ret.remove(p.p);
-                    p.p = u.p;
+                    ret.Remove(p.GeomP);
+                    p.GeomP = u.GeomP;
 
-                    x = (int)((bi.next().elem().X - domain.LowerBound.X) / cell_width) + 1;
+                    x = (int)((bi.Next().Elem().X - domain.LowerBound.X) / cellWidth) + 1;
                     //x++; this was already commented out!
                 }
             }
 
             polyList = ret.GetListOfElements();
 
-            foreach (var poly in polyList)
+            foreach (GeomPoly poly in polyList)
             {
-               verticesList.Add(new Vertices(poly.points.GetListOfElements()));
+                verticesList.Add(new Vertices(poly.Points.GetListOfElements()));
             }
 
             return verticesList;
@@ -224,9 +270,15 @@ namespace FarseerPhysics.Common
         /** Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1)
             such as to approximate value(return) = 0
         **/
-        private static float lerp(float x0, float x1, float v0, float v1)
+
+        private static int[] _lookMarch = {
+                                              0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D,
+                                              0x6D, 0xB5, 0x55
+                                          };
+
+        private static float Lerp(float x0, float x1, float v0, float v1)
         {
-            var dv = v0 - v1;
+            float dv = v0 - v1;
             float t;
             if (dv * dv < float.Epsilon)
                 t = 0.5f;
@@ -237,41 +289,51 @@ namespace FarseerPhysics.Common
         //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
         /** Recursive linear interpolation for use in marching squares **/
-        private static float xlerp(float x0, float x1, float y, float v0, float v1, sbyte[,] f, int c)
+
+        private static float Xlerp(float x0, float x1, float y, float v0, float v1, sbyte[,] f, int c)
         {
-            var xm = lerp(x0, x1, v0, v1);
-            if (c == 0) return xm;
-            else
-            {
-                var vm = f[(int)xm, (int)y];
-                if (v0 * vm < 0) return xlerp(x0, xm, y, v0, vm, f, c - 1);
-                else return xlerp(xm, x1, y, vm, v1, f, c - 1);
-            }
+            float xm = Lerp(x0, x1, v0, v1);
+            if (c == 0)
+                return xm;
+
+            sbyte vm = f[(int)xm, (int)y];
+
+            if (v0 * vm < 0)
+                return Xlerp(x0, xm, y, v0, vm, f, c - 1);
+
+            return Xlerp(xm, x1, y, vm, v1, f, c - 1);
         }
 
         /** Recursive linear interpolation for use in marching squares **/
-        private static float ylerp(float y0, float y1, float x, float v0, float v1, sbyte[,] f, int c)
+
+        private static float Ylerp(float y0, float y1, float x, float v0, float v1, sbyte[,] f, int c)
         {
-            var ym = lerp(y0, y1, v0, v1);
-            if (c == 0) return ym;
-            else
-            {
-                var vm = f[(int)x, (int)ym];
-                if (v0 * vm < 0) return ylerp(y0, ym, x, v0, vm, f, c - 1);
-                else return ylerp(ym, y1, x, vm, v1, f, c - 1);
-            }
+            float ym = Lerp(y0, y1, v0, v1);
+            if (c == 0)
+                return ym;
+
+            sbyte vm = f[(int)x, (int)ym];
+
+            if (v0 * vm < 0)
+                return Ylerp(y0, ym, x, v0, vm, f, c - 1);
+
+            return Ylerp(ym, y1, x, vm, v1, f, c - 1);
         }
 
         /** Square value for use in marching squares **/
-        private static float square(float x) { return x * x; }
 
-        private static float vec_dsq(Vector2 a, Vector2 b)
+        private static float Square(float x)
+        {
+            return x * x;
+        }
+
+        private static float VecDsq(Vector2 a, Vector2 b)
         {
             Vector2 d = a - b;
             return d.X * d.X + d.Y * d.Y;
         }
 
-        private static float vec_cross(Vector2 a, Vector2 b)
+        private static float VecCross(Vector2 a, Vector2 b)
         {
             return a.X * b.Y - a.Y * b.X;
         }
@@ -279,22 +341,28 @@ namespace FarseerPhysics.Common
         /** Look-up table to relate polygon key with the vertices that should be used for
             the sub polygon in marching squares
         **/
-        private static int[] look_march = { 0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D, 0x6D, 0xB5, 0x55 };
+
         /** Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1)
             using the function f for recursive interpolation, given the look-up table 'fs' of
             the values of 'f' at cell vertices with the result to be stored in 'poly' given the actual
             coordinates of 'ax' 'ay' in the marching squares mesh.
         **/
-        private static int marchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0, float x1, float y1, int bin)
+
+        private static int MarchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0,
+                                       float x1, float y1, int bin)
         {
             //key lookup
-            var key = 0;
-            var v0 = fs[ax, ay]; if (v0 < 0) key |= 8;
-            var v1 = fs[ax + 1, ay]; if (v1 < 0) key |= 4;
-            var v2 = fs[ax + 1, ay + 1]; if (v2 < 0) key |= 2;
-            var v3 = fs[ax, ay + 1]; if (v3 < 0) key |= 1;
+            int key = 0;
+            sbyte v0 = fs[ax, ay];
+            if (v0 < 0) key |= 8;
+            sbyte v1 = fs[ax + 1, ay];
+            if (v1 < 0) key |= 4;
+            sbyte v2 = fs[ax + 1, ay + 1];
+            if (v2 < 0) key |= 2;
+            sbyte v3 = fs[ax, ay + 1];
+            if (v3 < 0) key |= 1;
 
-            var val = look_march[key];
+            int val = _lookMarch[key];
             if (val != 0)
             {
                 CxFastListNode<Vector2> pi = null;
@@ -304,7 +372,7 @@ namespace FarseerPhysics.Common
                     if ((val & (1 << i)) != 0)
                     {
                         if (i == 7 && (val & 1) == 0)
-                            poly.points.add(p = new Vector2(x0, ylerp(y0, y1, x0, v0, v3, f, bin)));
+                            poly.Points.Add(p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
                         else
                         {
                             if (i == 0) p = new Vector2(x0, y0);
@@ -312,15 +380,15 @@ namespace FarseerPhysics.Common
                             else if (i == 4) p = new Vector2(x1, y1);
                             else if (i == 6) p = new Vector2(x0, y1);
 
-                            else if (i == 1) p = new Vector2(xlerp(x0, x1, y0, v0, v1, f, bin), y0);
-                            else if (i == 5) p = new Vector2(xlerp(x0, x1, y1, v3, v2, f, bin), y1);
+                            else if (i == 1) p = new Vector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
+                            else if (i == 5) p = new Vector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
 
-                            else if (i == 3) p = new Vector2(x1, ylerp(y0, y1, x1, v1, v2, f, bin));
-                            else p = new Vector2(x0, ylerp(y0, y1, x0, v0, v3, f, bin));
+                            else if (i == 3) p = new Vector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
+                            else p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
 
-                            pi = poly.points.insert(pi, p);
+                            pi = poly.Points.Insert(pi, p);
                         }
-                        poly.length++;
+                        poly.Length++;
                     }
                 }
                 //poly.simplify(float.Epsilon,float.Epsilon);
@@ -331,76 +399,78 @@ namespace FarseerPhysics.Common
         /** Used in polygon composition to composit polygons into scan lines
             Combining polya and polyb into one super-polygon stored in polya.
         **/
+
         private static void combLeft(ref GeomPoly polya, ref GeomPoly polyb)
         {
-            var ap = polya.points;
-            var bp = polyb.points;
-            var ai = ap.begin();
-            var bi = bp.begin();
+            CxFastList<Vector2> ap = polya.Points;
+            CxFastList<Vector2> bp = polyb.Points;
+            CxFastListNode<Vector2> ai = ap.Begin();
+            CxFastListNode<Vector2> bi = bp.Begin();
 
-            var b = bi.elem();
+            Vector2 b = bi.Elem();
             CxFastListNode<Vector2> prea = null;
-            while (ai != ap.end())
+            while (ai != ap.End())
             {
-                var a = ai.elem();
-                if (vec_dsq(a, b) < float.Epsilon)
+                Vector2 a = ai.Elem();
+                if (VecDsq(a, b) < float.Epsilon)
                 {
                     //ignore shared vertex if parallel
                     if (prea != null)
                     {
-                        var a0 = prea.elem();
-                        b = bi.next().elem();
+                        Vector2 a0 = prea.Elem();
+                        b = bi.Next().Elem();
 
                         Vector2 u = a - a0;
                         //vec_new(u); vec_sub(a.p.p, a0.p.p, u);
                         Vector2 v = b - a;
                         //vec_new(v); vec_sub(b.p.p, a.p.p, v);
-                        var dot = vec_cross(u, v);
+                        float dot = VecCross(u, v);
                         if (dot * dot < float.Epsilon)
                         {
-                            ap.erase(prea, ai);
-                            polya.length--;
+                            ap.Erase(prea, ai);
+                            polya.Length--;
                             ai = prea;
                         }
                     }
 
                     //insert polyb into polya
-                    var fst = true;
+                    bool fst = true;
                     CxFastListNode<Vector2> preb = null;
-                    while (!bp.empty())
+                    while (!bp.Empty())
                     {
-                        var bb = bp.front();
-                        bp.pop();
-                        if (!fst && !bp.empty())
+                        Vector2 bb = bp.Front();
+                        bp.Pop();
+                        if (!fst && !bp.Empty())
                         {
-                            ai = ap.insert(ai, bb);
-                            polya.length++;
+                            ai = ap.Insert(ai, bb);
+                            polya.Length++;
                             preb = ai;
                         }
                         fst = false;
                     }
 
                     //ignore shared vertex if parallel
-                    ai = ai.next();
-                    var a1 = ai.elem();
-                    ai = ai.next(); if (ai == ap.end()) ai = ap.begin();
-                    var a2 = ai.elem();
-                    var a00 = preb.elem();
+                    ai = ai.Next();
+                    Vector2 a1 = ai.Elem();
+                    ai = ai.Next();
+                    if (ai == ap.End()) ai = ap.Begin();
+                    Vector2 a2 = ai.Elem();
+                    Vector2 a00 = preb.Elem();
                     Vector2 uu = a1 - a00;
                     //vec_new(u); vec_sub(a1.p, a0.p, u);
                     Vector2 vv = a2 - a1;
                     //vec_new(v); vec_sub(a2.p, a1.p, v);
-                    var dot1 = vec_cross(uu, vv);
+                    float dot1 = VecCross(uu, vv);
                     if (dot1 * dot1 < float.Epsilon)
                     {
-                        ap.erase(preb, preb.next());
-                        polya.length--;
+                        ap.Erase(preb, preb.Next());
+                        polya.Length--;
                     }
 
                     return;
                 }
                 prea = ai;
-                ai = ai.next();
+                ai = ai.Next();
             }
         }
 
@@ -408,27 +478,7 @@ namespace FarseerPhysics.Common
 
         #region CxFastList from nape physics
 
-        internal class CxFastListNode<T>
-        {
-            internal T _elt;
-            internal CxFastListNode<T> _next;
-
-            public T elem()
-            {
-                return _elt;
-            }
-
-            public CxFastListNode<T> next()
-            {
-                return _next;
-            }
-
-            public CxFastListNode(T obj)
-            {
-                _elt = obj;
-            }
-        }
-
+        #region Nested type: CxFastList
 
         /// <summary>
         /// Designed as a complete port of CxFastList from CxStd.
@@ -436,13 +486,13 @@ namespace FarseerPhysics.Common
         internal class CxFastList<T>
         {
             // first node in the list
-            private CxFastListNode<T> _head = null;
-            private int count;
+            private CxFastListNode<T> _head;
+            private int _count;
 
             /// <summary>
             /// Iterator to start of list (O(1))
             /// </summary>
-            public CxFastListNode<T> begin()
+            public CxFastListNode<T> Begin()
             {
                 return _head;
             }
@@ -450,7 +500,7 @@ namespace FarseerPhysics.Common
             /// <summary>
             /// Iterator to end of list (O(1))
             /// </summary>
-            public CxFastListNode<T> end()
+            public CxFastListNode<T> End()
             {
                 return null;
             }
@@ -458,84 +508,36 @@ namespace FarseerPhysics.Common
             /// <summary>
             /// Returns first element of list (O(1))
             /// </summary>
-            public T front()
+            public T Front()
             {
-                return _head.elem();
-            }
-
-            /// <summary>
-            /// Returns last element of list (O(n))
-            /// </summary>
-            public T back()
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Returns element at index 'ind' (O(ind))
-            /// </summary>
-            public T at(int i)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Returns iterator to element at 'ind' (O(ind))
-            /// </summary>
-            //public CxFastListNode<T> at(int i)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            /// <summary>
-            /// Reverses the list (O(n))
-            /// </summary>
-            public void reverse()
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Element pointed to by iterator
-            /// </summary>
-            public T elem()
-            {
-                return _head.elem();
+                return _head.Elem();
             }
 
             /// <summary>
             /// add object to list (O(1))
             /// </summary>
-            public CxFastListNode<T> add(T value)
+            public CxFastListNode<T> Add(T value)
             {
                 CxFastListNode<T> newNode = new CxFastListNode<T>(value);
-                if (this._head == null)
+                if (_head == null)
                 {
                     newNode._next = null;
-                    this._head = newNode;
-                    this.count++;
+                    _head = newNode;
+                    _count++;
                     return newNode;
                 }
-                newNode._next = this._head;
-                this._head = newNode;
+                newNode._next = _head;
+                _head = newNode;
 
-                this.count++;
+                _count++;
 
                 return newNode;
             }
 
             /// <summary>
-            /// add all elements of the list of same type. (O(n)) with n length of the argument list.
-            /// </summary>
-            public void addAll(CxFastList<T> list)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
             /// remove object from list, returns true if an element was removed (O(n))
             /// </summary>
-            public bool remove(T value)
+            public bool Remove(T value)
             {
                 CxFastListNode<T> head = _head;
                 CxFastListNode<T> prev = _head;
@@ -556,22 +558,21 @@ namespace FarseerPhysics.Common
                                 if (head == _head)
                                 {
                                     _head = head._next;
-                                    this.count--;
+                                    _count--;
                                     return true;
                                 }
                                 else
                                 {
                                     // were not at the head
                                     prev._next = head._next;
-                                    this.count--;
+                                    _count--;
                                     return true;
                                 }
                             }
                             // cache the current as the previous for the next go around
                             prev = head;
                             head = head._next;
-                        }
-                        while (head != null);
+                        } while (head != null);
                     }
                 }
                 return false;
@@ -584,26 +585,26 @@ namespace FarseerPhysics.Common
             /// through pop or else that object may suddenly be used by another piece of code which 
             /// retrieves it from the object pool.
             /// </summary>
-            public CxFastListNode<T> pop()
+            public CxFastListNode<T> Pop()
             {
-                return erase(null, _head);
+                return Erase(null, _head);
             }
 
             /// <summary>
             /// insert object after 'node' returning an iterator to the inserted object.
             /// </summary>
-            public CxFastListNode<T> insert(CxFastListNode<T> node, T value)
+            public CxFastListNode<T> Insert(CxFastListNode<T> node, T value)
             {
                 if (node == null)
                 {
-                    return add(value);
+                    return Add(value);
                 }
                 CxFastListNode<T> newNode = new CxFastListNode<T>(value);
                 CxFastListNode<T> nextNode = node._next;
                 newNode._next = nextNode;
                 node._next = newNode;
 
-                this.count++;
+                _count++;
 
                 return newNode;
             }
@@ -612,7 +613,7 @@ namespace FarseerPhysics.Common
             /// removes the element pointed to by 'node' with 'prev' being the previous iterator, 
             /// returning an iterator to the element following that of 'node' (O(1))
             /// </summary>
-            public CxFastListNode<T> erase(CxFastListNode<T> prev, CxFastListNode<T> node)
+            public CxFastListNode<T> Erase(CxFastListNode<T> prev, CxFastListNode<T> node)
             {
                 // cache the node after the node to be removed
                 CxFastListNode<T> nextNode = node._next;
@@ -623,23 +624,14 @@ namespace FarseerPhysics.Common
                 else
                     return null;
 
-                this.count--;
+                _count--;
                 return nextNode;
-            }
-
-            /// <summary>
-            /// removes 'cnt' elements starting at 'cur' with 'pre' being the previous iterator, 
-            /// returning an iterator to the element following those deleted. (O(cnt)).
-            /// </summary>
-            public CxFastListNode<T> splice(CxFastListNode<T> pre, CxFastListNode<T> curr, int cnt)
-            {
-                throw new NotImplementedException();
             }
 
             /// <summary>
             /// whether the list is empty (O(1))
             /// </summary>
-            public bool empty()
+            public bool Empty()
             {
                 if (_head == null)
                     return true;
@@ -649,15 +641,15 @@ namespace FarseerPhysics.Common
             /// <summary>
             /// computes size of list (O(n))
             /// </summary>
-            public int size()
+            public int Size()
             {
-                var i = begin();
-                var count = 0;
+                CxFastListNode<T> i = Begin();
+                int count = 0;
 
                 do
                 {
                     count++;
-                } while (i.next() != null);
+                } while (i.Next() != null);
 
                 return count;
             }
@@ -665,32 +657,32 @@ namespace FarseerPhysics.Common
             /// <summary>
             /// empty the list (O(1) if CxMixList, O(n) otherwise)
             /// </summary>
-            public void clear()
+            public void Clear()
             {
-                CxFastListNode<T> head = this._head;
+                CxFastListNode<T> head = _head;
                 while (head != null)
                 {
                     CxFastListNode<T> node2 = head;
                     head = head._next;
                     node2._next = null;
                 }
-                this._head = null;
-                this.count = 0;
+                _head = null;
+                _count = 0;
             }
 
             /// <summary>
             /// returns true if 'value' is an element of the list (O(n))
             /// </summary>
-            public bool has(T value)
+            public bool Has(T value)
             {
-                return (this.Find(value) != null);
+                return (Find(value) != null);
             }
 
             // Non CxFastList Methods 
             public CxFastListNode<T> Find(T value)
             {
                 // start at head
-                CxFastListNode<T> head = this._head;
+                CxFastListNode<T> head = _head;
                 EqualityComparer<T> comparer = EqualityComparer<T>.Default;
                 if (head != null)
                 {
@@ -703,8 +695,7 @@ namespace FarseerPhysics.Common
                                 return head;
                             }
                             head = head._next;
-                        }
-                        while (head != this._head);
+                        } while (head != _head);
                     }
                     else
                     {
@@ -715,8 +706,7 @@ namespace FarseerPhysics.Common
                                 return head;
                             }
                             head = head._next;
-                        }
-                        while (head != this._head);
+                        } while (head != _head);
                     }
                 }
                 return null;
@@ -726,7 +716,7 @@ namespace FarseerPhysics.Common
             {
                 List<T> list = new List<T>();
 
-                var iter = begin();
+                CxFastListNode<T> iter = Begin();
 
                 if (iter != null)
                 {
@@ -735,7 +725,6 @@ namespace FarseerPhysics.Common
                         list.Add(iter._elt);
                         iter = iter._next;
                     } while (iter != null);
-
                 }
                 return list;
             }
@@ -743,34 +732,68 @@ namespace FarseerPhysics.Common
 
         #endregion
 
-        #region Internal Stuff
+        #region Nested type: CxFastListNode
 
-        internal class GeomPolyVal
+        internal class CxFastListNode<T>
         {
-            /** Associated polygon at coordinate **/
-            public GeomPoly p;
-            /** Key of original sub-polygon **/
-            public int key;
+            internal T _elt;
+            internal CxFastListNode<T> _next;
 
-            public GeomPolyVal(GeomPoly P, int K)
+            public CxFastListNode(T obj)
             {
-                p = P;
-                key = K;
+                _elt = obj;
+            }
+
+            public T Elem()
+            {
+                return _elt;
+            }
+
+            public CxFastListNode<T> Next()
+            {
+                return _next;
             }
         }
+
+        #endregion
+
+        #endregion
+
+        #region Internal Stuff
+
+        #region Nested type: GeomPoly
 
         internal class GeomPoly
         {
-            public CxFastList<Vector2> points;
-
-            public int length;
+            public int Length;
+            public CxFastList<Vector2> Points;
 
             public GeomPoly()
             {
-                points = new CxFastList<Vector2>();
-                length = 0;
+                Points = new CxFastList<Vector2>();
+                Length = 0;
             }
         }
+
+        #endregion
+
+        #region Nested type: GeomPolyVal
+
+        private class GeomPolyVal
+        {
+            /** Associated polygon at coordinate **/
+            /** Key of original sub-polygon **/
+            public int Key;
+            public GeomPoly GeomP;
+
+            public GeomPolyVal(GeomPoly geomP, int K)
+            {
+                GeomP = geomP;
+                Key = K;
+            }
+        }
+
+        #endregion
 
         #endregion
     }
