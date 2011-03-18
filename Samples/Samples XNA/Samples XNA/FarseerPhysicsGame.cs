@@ -75,7 +75,6 @@ namespace FarseerPhysics.SamplesFramework
             AdvancedDemo5 advanced5 = new AdvancedDemo5();
 
             GameDemo1 game1 = new GameDemo1();
-            GameDemo2 game2 = new GameDemo2();
 
             MenuScreen menuScreen = new MenuScreen("Farseer Samples");
 
@@ -99,7 +98,6 @@ namespace FarseerPhysics.SamplesFramework
 
             menuScreen.AddMenuItem("Game Samples", EntryType.Separator, null);
             menuScreen.AddMenuItem(game1.GetTitle(), EntryType.Screen, game1);
-            menuScreen.AddMenuItem(game2.GetTitle(), EntryType.Screen, game2);
 
             menuScreen.AddMenuItem("", EntryType.Separator, null);
             menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
