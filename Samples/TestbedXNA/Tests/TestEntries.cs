@@ -97,7 +97,6 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Destructible Terrain YuPeng Test", CreateFcn = DestructibleTerrainYuPengTest.Create},
                 new TestEntry {Name = "Destructible Terrain MS Test", CreateFcn = DestructibleTerrainMSTest.Create},
                 new TestEntry {Name = "Deletion test", CreateFcn = DeletionTest.Create},
-                new TestEntry {Name = "Marching Squares Terrain test", CreateFcn = MSTerrainTest.Create},
                 new TestEntry {Name = "Buoyancy test", CreateFcn = BuoyancyTest.Create},
                 new TestEntry {Name = "Convex hull test", CreateFcn = ConvexHullTest.Create},
                 new TestEntry {Name = "Simple Wind Force Test", CreateFcn = SimpleWindForceTest.Create},
