@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -13,34 +11,26 @@ namespace FarseerPhysics.SamplesFramework
 {
     public class TheoJansenWalker
     {
+        private Sprite _body;
         private Body _chassis;
+        private Sprite _engine;
+        private Sprite _leftLeg;
+        private Body[] _leftLegs;
+        private Sprite _leftShoulder;
+        private Body[] _leftShoulders;
         private RevoluteJoint _motorJoint;
         private bool _motorOn;
         private float _motorSpeed;
         private Vector2 _position;
-        private Body _wheel;
-        private PhysicsGameScreen _screen;
-
-        private Body[] _leftShoulders;
-        private Body[] _rightShoulders;
-        private Body[] _leftLegs;
+        private Sprite _rightLeg;
         private Body[] _rightLegs;
 
-        private Sprite _body;
-        private Sprite _engine;
-        private Sprite _leftShoulder;
         private Sprite _rightShoulder;
-        private Sprite _leftLeg;
-        private Sprite _rightLeg;
+        private Body[] _rightShoulders;
+        private PhysicsGameScreen _screen;
 
         private List<DistanceJoint> _walkerJoints;
-
-
-        public void Reverse()
-        {
-            _motorSpeed *= -1f;
-            _motorJoint.MotorSpeed = _motorSpeed;
-        }
+        private Body _wheel;
 
         public TheoJansenWalker(World world, PhysicsGameScreen screen, Vector2 position)
         {
@@ -63,7 +53,9 @@ namespace FarseerPhysics.SamplesFramework
                 PolygonShape shape = new PolygonShape(1f);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _body = new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank, Color.DarkSlateBlue, 1f));
+                _body =
+                    new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank,
+                                                                             Color.DarkSlateBlue, 1f));
 
                 _chassis = BodyFactory.CreateBody(world);
                 _chassis.BodyType = BodyType.Dynamic;
@@ -75,7 +67,9 @@ namespace FarseerPhysics.SamplesFramework
 
             {
                 CircleShape shape = new CircleShape(1.6f, 1f);
-                _engine = new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Waves, Color.MediumSlateBlue * 0.8f, 1f));
+                _engine =
+                    new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Waves,
+                                                                             Color.MediumSlateBlue * 0.8f, 1f));
 
                 _wheel = BodyFactory.CreateBody(world);
                 _wheel.BodyType = BodyType.Dynamic;
@@ -101,10 +95,10 @@ namespace FarseerPhysics.SamplesFramework
             CreateLeg(world, -1f, wheelAnchor, 0);
             CreateLeg(world, 1f, wheelAnchor, 0);
 
-            _leftLeg.origin = AssetCreator.CalculateOrigin(_leftLegs[0]);
-            _leftShoulder.origin = AssetCreator.CalculateOrigin(_leftShoulders[0]);
-            _rightLeg.origin = AssetCreator.CalculateOrigin(_rightLegs[0]);
-            _rightShoulder.origin = AssetCreator.CalculateOrigin(_rightShoulders[0]);
+            _leftLeg.Origin = AssetCreator.CalculateOrigin(_leftLegs[0]);
+            _leftShoulder.Origin = AssetCreator.CalculateOrigin(_leftShoulders[0]);
+            _rightLeg.Origin = AssetCreator.CalculateOrigin(_rightLegs[0]);
+            _rightShoulder.Origin = AssetCreator.CalculateOrigin(_rightShoulders[0]);
 
             _wheel.SetTransform(_wheel.Position, 120f * Settings.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 1);
@@ -113,6 +107,12 @@ namespace FarseerPhysics.SamplesFramework
             _wheel.SetTransform(_wheel.Position, -120f * Settings.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 2);
             CreateLeg(world, 1f, wheelAnchor, 2);
+        }
+
+        public void Reverse()
+        {
+            _motorSpeed *= -1f;
+            _motorJoint.MotorSpeed = _motorSpeed;
         }
 
         private void CreateLeg(World world, float s, Vector2 wheelAnchor, int index)
@@ -240,12 +240,16 @@ namespace FarseerPhysics.SamplesFramework
             vertices.Add(p1);
             vertices.Add(p2);
             vertices.Add(p3);
-            _leftLeg = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.DarkSlateBlue * 0.8f, 1f));
+            _leftLeg =
+                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
+                                                                            Color.DarkSlateBlue * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p4;
             vertices[2] = p5;
-            _leftShoulder = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.MediumSlateBlue * 0.8f, 1f));
+            _leftShoulder =
+                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
+                                                                            Color.MediumSlateBlue * 0.8f, 1f));
 
             p1.X *= -1f;
             p2.X *= -1f;
@@ -256,12 +260,16 @@ namespace FarseerPhysics.SamplesFramework
             vertices[0] = p1;
             vertices[1] = p3;
             vertices[2] = p2;
-            _rightLeg = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.DarkSlateBlue * 0.8f, 1f));
+            _rightLeg =
+                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
+                                                                            Color.DarkSlateBlue * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p5;
             vertices[2] = p4;
-            _rightShoulder = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.MediumSlateBlue * 0.8f, 1f));
+            _rightShoulder =
+                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
+                                                                            Color.MediumSlateBlue * 0.8f, 1f));
         }
 
         public void Draw()
@@ -270,8 +278,8 @@ namespace FarseerPhysics.SamplesFramework
             SpriteBatch _spriteBatch = _screen.ScreenManager.SpriteBatch;
 
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
-            _spriteBatch.Draw(_body.texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null,
-                              Color.White, _chassis.Rotation, _body.origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null,
+                              Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
 
             _batch.Begin(_screen.Camera.SimProjection, _screen.Camera.SimView);
@@ -284,17 +292,19 @@ namespace FarseerPhysics.SamplesFramework
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
             for (int i = 0; i < 3; ++i)
             {
-                _spriteBatch.Draw(_leftLeg.texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
-                                  Color.White, _leftLegs[i].Rotation, _leftLeg.origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_leftShoulder.texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
-                                  Color.White, _leftShoulders[i].Rotation, _leftShoulder.origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_rightLeg.texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
-                                  Color.White, _rightLegs[i].Rotation, _rightLeg.origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_rightShoulder.texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
-                                  Color.White, _rightShoulders[i].Rotation, _rightShoulder.origin, 1f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
+                                  Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
+                                  Color.White, _leftShoulders[i].Rotation, _leftShoulder.Origin, 1f, SpriteEffects.None,
+                                  0f);
+                _spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
+                                  Color.White, _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
+                                  Color.White, _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f,
+                                  SpriteEffects.None, 0f);
             }
-            _spriteBatch.Draw(_engine.texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null,
-                              Color.White, _wheel.Rotation, _engine.origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null,
+                              Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
         }
     }

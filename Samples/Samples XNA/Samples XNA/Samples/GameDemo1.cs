@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.DebugViews;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +14,29 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class GameDemo1 : PhysicsGameScreen, IDemoScreen
     {
+        private float _acceleration;
+        private Body _board;
+        private Sprite _box;
+        private List<Body> _boxes;
+
+        private Sprite _bridge;
+        private List<Body> _bridgeSegments;
+        private Body _car;
+        private Sprite _carBody;
+        private Body _ground;
+        private float _hzBack;
+        private float _hzFront;
+        private float _maxSpeed;
+
+        private float _scale;
+        private LineJoint _springBack;
+        private LineJoint _springFront;
+        private Sprite _teeter;
+        private Sprite _wheel;
+        private Body _wheelBack;
+        private Body _wheelFront;
+        private float _zeta;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -36,30 +58,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Body _car;
-        private Body _wheelBack;
-        private Body _wheelFront;
-        private Body _ground;
-        private Body _board;
-        private List<Body> _bridgeSegments;
-        private List<Body> _boxes;
-
-        private Sprite _carBody;
-        private Sprite _wheel;
-        private Sprite _teeter;
-        private Sprite _bridge;
-        private Sprite _box;
-
-        private LineJoint _springBack;
-        private LineJoint _springFront;
-        private float _hzFront;
-        private float _hzBack;
-        private float _zeta;
-        private float _maxSpeed;
-        private float _acceleration;
-
-        private float _scale;
 
         public override void LoadContent()
         {
@@ -136,7 +134,8 @@ namespace FarseerPhysics.SamplesFramework
 
                 PolygonShape box = new PolygonShape(1f);
                 box.SetAsBox(10.0f, 0.25f);
-                _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
+                _teeter =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
 
                 _board.CreateFixture(box);
 
@@ -156,7 +155,8 @@ namespace FarseerPhysics.SamplesFramework
                 const int segmentCount = 20;
                 PolygonShape shape = new PolygonShape(1f);
                 shape.SetAsBox(1.0f, 0.125f);
-                _bridge = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+                _bridge =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
                 Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
@@ -179,7 +179,8 @@ namespace FarseerPhysics.SamplesFramework
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
                 box.SetAsBox(0.5f, 0.5f);
-                _box = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
+                _box =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
@@ -261,7 +262,8 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
+            _springBack.MotorSpeed = Math.Sign(_acceleration) *
+                                     MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
             if (Math.Abs(_springBack.MotorSpeed) < _maxSpeed * 0.06f)
             {
                 _springBack.MotorEnabled = false;
@@ -299,29 +301,33 @@ namespace FarseerPhysics.SamplesFramework
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw car
-            ScreenManager.SpriteBatch.Draw(_wheel.texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
-                                           Color.White, _wheelBack.Rotation, _wheel.origin, _scale, SpriteEffects.None, 0f);
-            ScreenManager.SpriteBatch.Draw(_wheel.texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
-                                           Color.White, _wheelFront.Rotation, _wheel.origin, _scale, SpriteEffects.None, 0f);
-            ScreenManager.SpriteBatch.Draw(_carBody.texture, ConvertUnits.ToDisplayUnits(_car.Position), null,
-                                           Color.White, _car.Rotation, _carBody.origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
+                                           Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
+                                           0f);
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
+                                           Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
+                                           0f);
+            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.Position), null,
+                                           Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
             // draw teeter
-            ScreenManager.SpriteBatch.Draw(_teeter.texture, ConvertUnits.ToDisplayUnits(_board.Position), null,
-                                           Color.White, _board.Rotation, _teeter.origin, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.Position), null,
+                                           Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_bridge.texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position), null,
-                                               Color.White, _bridgeSegments[i].Rotation, _bridge.origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
+                                               null,
+                                               Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f,
+                                               SpriteEffects.None, 0f);
             }
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_box.texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
-                                               Color.White, _boxes[i].Rotation, _box.origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                                               Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
-            
+
             ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
             // draw ground
             for (int i = 0; i < _ground.FixtureList.Count; ++i)

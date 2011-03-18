@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
@@ -12,9 +12,9 @@ namespace FarseerPhysics.SamplesFramework
         private const float LogoWidthHeightRatio = 1.4f;
 
         private ContentManager _content;
-        private Texture2D _farseerLogoTexture;
         private Rectangle _destination;
         private TimeSpan _duration;
+        private Texture2D _farseerLogoTexture;
 
         public LogoScreen(TimeSpan duration)
         {

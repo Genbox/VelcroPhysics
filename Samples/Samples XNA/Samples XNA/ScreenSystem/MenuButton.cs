@@ -12,19 +12,19 @@ namespace FarseerPhysics.SamplesFramework
     /// </summary>
     public sealed class MenuButton
     {
-        private GameScreen _screen;
+        private Vector2 _baseOrigin;
+        private bool _flip;
+        private bool _hover;
 
         /// <summary>
         /// The position at which the entry is drawn. This is set by the MenuScreen
         /// each frame in Update.
         /// </summary>
         private Vector2 _position;
-        private Vector2 _baseOrigin;
-        private Texture2D _sprite;
-        private bool _selectable;
-        private bool _hover;
-        private bool _flip;
+
         private float _scale;
+        private GameScreen _screen;
+        private bool _selectable;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -33,6 +33,8 @@ namespace FarseerPhysics.SamplesFramework
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
         private float _selectionFade;
+
+        private Texture2D _sprite;
 
         /// <summary>
         /// Constructs a new menu entry with the specified text.
@@ -93,8 +95,8 @@ namespace FarseerPhysics.SamplesFramework
         {
             Rectangle collisonBox = new Rectangle((int)(Position.X - _sprite.Width / 2f),
                                                   (int)(Position.Y - _sprite.Height / 2f),
-                                                  (int)(_sprite.Width),
-                                                  (int)(_sprite.Height));
+                                                  (_sprite.Width),
+                                                  (_sprite.Height));
 
             if (collisonBox.Contains((int)position.X, (int)position.Y))
             {
@@ -111,10 +113,10 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         public void Draw()
         {
-            SpriteBatch _batch = _screen.ScreenManager.SpriteBatch;
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
             Color color = Color.Lerp(Color.White, new Color(255, 210, 0), _selectionFade);
 
-            _batch.Draw(_sprite, _position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero,
+            batch.Draw(_sprite, _position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero,
                         _scale, _flip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
         }
     }

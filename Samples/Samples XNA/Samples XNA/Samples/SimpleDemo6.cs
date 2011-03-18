@@ -1,12 +1,14 @@
 ﻿using System.Text;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
     public class SimpleDemo6 : PhysicsGameScreen, IDemoScreen
     {
+        private Agent _agent;
+        private Border _border;
+        private Spider[] _spiders;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -40,10 +42,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Agent _agent;
-        private Spider[] _spiders;
-        private Border _border;
 
         public override void LoadContent()
         {

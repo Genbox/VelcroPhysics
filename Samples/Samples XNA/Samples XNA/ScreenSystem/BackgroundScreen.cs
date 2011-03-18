@@ -16,8 +16,8 @@ namespace FarseerPhysics.SamplesFramework
         private const float LogoWidthHeightRatio = 1.4f;
 
         private Texture2D _backgroundTexture;
-        private Texture2D _logoTexture;
         private Rectangle _logoDestination;
+        private Texture2D _logoTexture;
         private Rectangle _viewport;
 
         /// <summary>

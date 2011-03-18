@@ -1,5 +1,4 @@
-﻿using FarseerPhysics.DebugViews;
-using FarseerPhysics.Dynamics;
+﻿using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
@@ -14,83 +13,82 @@ namespace FarseerPhysics.SamplesFramework
         private float _kneeTargetAngle = -0.4f;
         private AngleJoint _leftKneeAngleJoint;
         private AngleJoint _leftShoulderAngleJoint;
+        private Sprite _lowerLeg;
         private Vector2 _lowerLegSize = new Vector2(1.8f, 0.3f);
 
         private AngleJoint _rightKneeAngleJoint;
         private AngleJoint _rightShoulderAngleJoint;
         private float _s;
+        private PhysicsGameScreen _screen;
         private bool _shoulderFlexed;
         private float _shoulderTargetAngle = -0.2f;
-        private Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
-
-        private Body circle;
-        private Body leftUpper;
-        private Body leftLower;
-        private Body rightUpper;
-        private Body rightLower;
-
-        private PhysicsGameScreen _screen;
         private Sprite _torso;
         private Sprite _upperLeg;
-        private Sprite _lowerLeg;
+        private Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
+
+        private Body _circle;
+        private Body _leftLower;
+        private Body _leftUpper;
+        private Body _rightLower;
+        private Body _rightUpper;
 
         public Spider(World world, PhysicsGameScreen screen, Vector2 position)
         {
             //Load bodies
-            circle = BodyFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position);
-            circle.BodyType = BodyType.Dynamic;
+            _circle = BodyFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position);
+            _circle.BodyType = BodyType.Dynamic;
 
             //Left upper leg
-            leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                        circle.Position - new Vector2(SpiderBodyRadius, 0f) -
-                                                        new Vector2(_upperLegSize.X / 2f, 0f));
-            leftUpper.BodyType = BodyType.Dynamic;
+            _leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
+                                                    _circle.Position - new Vector2(SpiderBodyRadius, 0f) -
+                                                    new Vector2(_upperLegSize.X / 2f, 0f));
+            _leftUpper.BodyType = BodyType.Dynamic;
 
             //Left lower leg
-            leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                        circle.Position - new Vector2(SpiderBodyRadius, 0f) -
-                                                        new Vector2(_upperLegSize.X, 0f) -
-                                                        new Vector2(_lowerLegSize.X / 2f, 0f));
-            leftLower.BodyType = BodyType.Dynamic;
+            _leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
+                                                    _circle.Position - new Vector2(SpiderBodyRadius, 0f) -
+                                                    new Vector2(_upperLegSize.X, 0f) -
+                                                    new Vector2(_lowerLegSize.X / 2f, 0f));
+            _leftLower.BodyType = BodyType.Dynamic;
 
             //Right upper leg
-            rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                         circle.Position + new Vector2(SpiderBodyRadius, 0f) +
-                                                         new Vector2(_upperLegSize.X / 2f, 0f));
-            rightUpper.BodyType = BodyType.Dynamic;
+            _rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
+                                                     _circle.Position + new Vector2(SpiderBodyRadius, 0f) +
+                                                     new Vector2(_upperLegSize.X / 2f, 0f));
+            _rightUpper.BodyType = BodyType.Dynamic;
 
             //Right lower leg
-            rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                         circle.Position + new Vector2(SpiderBodyRadius, 0f) +
-                                                         new Vector2(_upperLegSize.X, 0f) +
-                                                         new Vector2(_lowerLegSize.X / 2f, 0f));
-            rightLower.BodyType = BodyType.Dynamic;
+            _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
+                                                     _circle.Position + new Vector2(SpiderBodyRadius, 0f) +
+                                                     new Vector2(_upperLegSize.X, 0f) +
+                                                     new Vector2(_lowerLegSize.X / 2f, 0f));
+            _rightLower.BodyType = BodyType.Dynamic;
 
             //Create joints
-            JointFactory.CreateRevoluteJoint(world, circle, leftUpper, new Vector2(_upperLegSize.X / 2f, 0f));
-            _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, leftUpper);
+            JointFactory.CreateRevoluteJoint(world, _circle, _leftUpper, new Vector2(_upperLegSize.X / 2f, 0f));
+            _leftShoulderAngleJoint = JointFactory.CreateAngleJoint(world, _circle, _leftUpper);
             _leftShoulderAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, circle, rightUpper, new Vector2(-_upperLegSize.X / 2f, 0f));
-            _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, circle, rightUpper);
+            JointFactory.CreateRevoluteJoint(world, _circle, _rightUpper, new Vector2(-_upperLegSize.X / 2f, 0f));
+            _rightShoulderAngleJoint = JointFactory.CreateAngleJoint(world, _circle, _rightUpper);
             _rightShoulderAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, leftUpper, leftLower, new Vector2(_lowerLegSize.X / 2f, 0f));
-            _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, leftUpper, leftLower);
+            JointFactory.CreateRevoluteJoint(world, _leftUpper, _leftLower, new Vector2(_lowerLegSize.X / 2f, 0f));
+            _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, _leftUpper, _leftLower);
             _leftKneeAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, rightUpper, rightLower, new Vector2(-_lowerLegSize.X / 2f, 0f));
-            _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, rightUpper, rightLower);
+            JointFactory.CreateRevoluteJoint(world, _rightUpper, _rightLower, new Vector2(-_lowerLegSize.X / 2f, 0f));
+            _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, _rightUpper, _rightLower);
             _rightKneeAngleJoint.MaxImpulse = 3;
 
             _screen = screen;
 
             //GFX
-            AssetCreator _creator = _screen.ScreenManager.Assets;
-            _torso = new Sprite(_creator.CircleTexture(SpiderBodyRadius, MaterialType.Waves, Color.Gray, 1f));
-            _upperLeg = new Sprite(_creator.TextureFromShape(leftUpper.FixtureList[0].Shape,
+            AssetCreator creator = _screen.ScreenManager.Assets;
+            _torso = new Sprite(creator.CircleTexture(SpiderBodyRadius, MaterialType.Waves, Color.Gray, 1f));
+            _upperLeg = new Sprite(creator.TextureFromShape(_leftUpper.FixtureList[0].Shape,
                                                              MaterialType.Blank, Color.DimGray, 1f));
-            _lowerLeg = new Sprite(_creator.TextureFromShape(leftLower.FixtureList[0].Shape,
+            _lowerLeg = new Sprite(creator.TextureFromShape(_leftLower.FixtureList[0].Shape,
                                                              MaterialType.Blank, Color.DarkSlateGray, 1f));
         }
 
@@ -124,20 +122,20 @@ namespace FarseerPhysics.SamplesFramework
 
         public void Draw()
         {
-            SpriteBatch _batch = _screen.ScreenManager.SpriteBatch;
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
 
-            _batch.Draw(_lowerLeg.texture, ConvertUnits.ToDisplayUnits(leftLower.Position), null,
-                        Color.White, leftLower.Rotation, _lowerLeg.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_lowerLeg.texture, ConvertUnits.ToDisplayUnits(rightLower.Position), null,
-                        Color.White, rightLower.Rotation, _lowerLeg.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLower.Position), null,
+                        Color.White, _leftLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLower.Position), null,
+                        Color.White, _rightLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_upperLeg.texture, ConvertUnits.ToDisplayUnits(leftUpper.Position), null,
-                        Color.White, leftUpper.Rotation, _upperLeg.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_upperLeg.texture, ConvertUnits.ToDisplayUnits(rightUpper.Position), null,
-                        Color.White, rightUpper.Rotation, _upperLeg.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_leftUpper.Position), null,
+                        Color.White, _leftUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_rightUpper.Position), null,
+                        Color.White, _rightUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_torso.texture, ConvertUnits.ToDisplayUnits(circle.Position), null,
-                        Color.White, circle.Rotation, _torso.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_circle.Position), null,
+                        Color.White, _circle.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

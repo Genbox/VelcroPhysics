@@ -6,7 +6,9 @@ namespace FarseerPhysics.SamplesFramework
 {
     public enum EntryType
     {
-        Screen, Separator, ExitItem
+        Screen,
+        Separator,
+        ExitItem
     }
 
     /// <summary>
@@ -17,8 +19,10 @@ namespace FarseerPhysics.SamplesFramework
     /// </summary>
     public sealed class MenuEntry
     {
-        private EntryType _type;
-        private GameScreen _screen;
+        private float _alpha;
+        private Vector2 _baseOrigin;
+
+        private float _height;
         private MenuScreen _menu;
 
         /// <summary>
@@ -26,13 +30,9 @@ namespace FarseerPhysics.SamplesFramework
         /// each frame in Update.
         /// </summary>
         private Vector2 _position;
-        private Vector2 _baseOrigin;
-
-        private float _width;
-        private float _height;
-        private float _alpha;
 
         private float _scale;
+        private GameScreen _screen;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -47,6 +47,9 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         private string _text;
 
+        private EntryType _type;
+        private float _width;
+
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
@@ -60,16 +63,6 @@ namespace FarseerPhysics.SamplesFramework
             _alpha = 1.0f;
         }
 
-
-        public void Initialize()
-        {
-            SpriteFont _font = _menu.ScreenManager.Fonts.MenuSpriteFont;
-
-            _baseOrigin = new Vector2(_font.MeasureString(Text).X, _font.MeasureString("M").Y) * 0.5f;
-
-            _width = _font.MeasureString(Text).X * 0.8f;
-            _height = _font.MeasureString("M").Y * 0.8f;
-        }
 
         /// <summary>
         /// Gets or sets the text of this menu entry.
@@ -95,6 +88,21 @@ namespace FarseerPhysics.SamplesFramework
             set { _alpha = value; }
         }
 
+        public GameScreen Screen
+        {
+            get { return _screen; }
+        }
+
+        public void Initialize()
+        {
+            SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
+
+            _baseOrigin = new Vector2(font.MeasureString(Text).X, font.MeasureString("M").Y) * 0.5f;
+
+            _width = font.MeasureString(Text).X * 0.8f;
+            _height = font.MeasureString("M").Y * 0.8f;
+        }
+
         public bool IsExitItem()
         {
             return _type == EntryType.ExitItem;
@@ -103,11 +111,6 @@ namespace FarseerPhysics.SamplesFramework
         public bool IsSelectable()
         {
             return _type != EntryType.Separator;
-        }
-
-        public GameScreen Screen
-        {
-            get { return _screen; }
         }
 
         /// <summary>
@@ -141,16 +144,11 @@ namespace FarseerPhysics.SamplesFramework
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public void Draw(bool isSelected)
+        public void Draw()
         {
-            SpriteFont _font = _menu.ScreenManager.Fonts.MenuSpriteFont;
-            SpriteBatch _batch = _menu.ScreenManager.SpriteBatch;
+            SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
+            SpriteBatch batch = _menu.ScreenManager.SpriteBatch;
 
-            // there is no such thing as a selected item on Windows Phone, so we always
-            // force isSelected to be false
-#if WINDOWS_PHONE
-            isSelected = false;
-#endif
             Color color;
             if (_type == EntryType.Separator)
             {
@@ -164,9 +162,10 @@ namespace FarseerPhysics.SamplesFramework
             color *= _alpha;
 
             // Draw text, centered on the middle of each line.
-            _batch.DrawString(_font, _text, _position - _baseOrigin * _scale + Vector2.One,
+            batch.DrawString(font, _text, _position - _baseOrigin * _scale + Vector2.One,
                               Color.DarkSlateGray * _alpha * _alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-            _batch.DrawString(_font, _text, _position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+            batch.DrawString(font, _text, _position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale,
+                              SpriteEffects.None, 0);
         }
 
         /// <summary>

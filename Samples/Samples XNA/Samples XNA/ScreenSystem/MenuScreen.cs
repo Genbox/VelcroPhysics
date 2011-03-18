@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -20,8 +19,8 @@ namespace FarseerPhysics.SamplesFramework
 #endif
         private List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private string _menuTitle;
-        private Vector2 titlePosition;
-        private Vector2 titleOrigin;
+        private Vector2 _titlePosition;
+        private Vector2 _titleOrigin;
         private int _selectedEntry;
         private float _menuBorderTop;
         private float _menuBorderBottom;
@@ -29,8 +28,8 @@ namespace FarseerPhysics.SamplesFramework
         private float _menuOffset;
         private float _maxOffset;
 
-        private Texture2D texScrollButton;
-        private Texture2D texSlider;
+        private Texture2D _texScrollButton;
+        private Texture2D _texSlider;
 
         private MenuButton _scrollUp;
         private MenuButton _scrollDown;
@@ -61,20 +60,20 @@ namespace FarseerPhysics.SamplesFramework
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             SpriteFont font = ScreenManager.Fonts.MenuSpriteFont;
 
-            texScrollButton = ScreenManager.Content.Load<Texture2D>("Common/arrow");
-            texSlider = ScreenManager.Content.Load<Texture2D>("Common/slider");
+            _texScrollButton = ScreenManager.Content.Load<Texture2D>("Common/arrow");
+            _texSlider = ScreenManager.Content.Load<Texture2D>("Common/slider");
 
-            float _scrollBarPos = viewport.Width / 2f;
+            float scrollBarPos = viewport.Width / 2f;
             for (int i = 0; i < _menuEntries.Count; ++i)
             {
                 _menuEntries[i].Initialize();
-                _scrollBarPos = Math.Min(_scrollBarPos,
+                scrollBarPos = Math.Min(scrollBarPos,
                                          (viewport.Width - _menuEntries[i].GetWidth()) / 2f);
             }
-            _scrollBarPos -= texScrollButton.Width + 2f;
+            scrollBarPos -= _texScrollButton.Width + 2f;
 
-            titleOrigin = font.MeasureString(_menuTitle) / 2f;
-            titlePosition = new Vector2(viewport.Width / 2f, font.MeasureString("M").Y / 2f + 10f);
+            _titleOrigin = font.MeasureString(_menuTitle) / 2f;
+            _titlePosition = new Vector2(viewport.Width / 2f, font.MeasureString("M").Y / 2f + 10f);
 
             _menuBorderMargin = font.MeasureString("M").Y * 0.8f;
             _menuBorderTop = (viewport.Height - _menuBorderMargin * (NumEntries - 1)) / 2f;
@@ -83,17 +82,16 @@ namespace FarseerPhysics.SamplesFramework
             _menuOffset = 0f;
             _maxOffset = Math.Max(0f, (_menuEntries.Count - NumEntries) * _menuBorderMargin);
 
-            _scrollUp = new MenuButton(texScrollButton, false, true,
-                                       new Vector2(_scrollBarPos, _menuBorderTop - texScrollButton.Height), this);
-            _scrollDown = new MenuButton(texScrollButton, true, true,
-                                         new Vector2(_scrollBarPos, _menuBorderBottom + texScrollButton.Height), this);
-            _scrollSlider = new MenuButton(texSlider, false, false, new Vector2(_scrollBarPos, _menuBorderTop), this);
+            _scrollUp = new MenuButton(_texScrollButton, false, true,
+                                       new Vector2(scrollBarPos, _menuBorderTop - _texScrollButton.Height), this);
+            _scrollDown = new MenuButton(_texScrollButton, true, true,
+                                         new Vector2(scrollBarPos, _menuBorderBottom + _texScrollButton.Height), this);
+            _scrollSlider = new MenuButton(_texSlider, false, false, new Vector2(scrollBarPos, _menuBorderTop), this);
         }
 
         /// <summary>
         /// Returns the index of the menu entry at the position of the given mouse state.
         /// </summary>
-        /// <param name="state">Mouse state to use for the test</param>
         /// <returns>Index of menu entry if valid, -1 otherwise</returns>
         private int GetMenuEntryAt(Vector2 position)
         {
@@ -146,7 +144,8 @@ namespace FarseerPhysics.SamplesFramework
                     ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
                     if (_menuEntries[_selectedEntry].Screen is IDemoScreen)
                     {
-                        ScreenManager.AddScreen(new MessageBoxScreen((_menuEntries[_selectedEntry].Screen as IDemoScreen).GetDetails()));
+                        ScreenManager.AddScreen(
+                            new MessageBoxScreen((_menuEntries[_selectedEntry].Screen as IDemoScreen).GetDetails()));
                     }
                 }
             }
@@ -163,7 +162,8 @@ namespace FarseerPhysics.SamplesFramework
                 }
                 if (_scrollDown.Hover)
                 {
-                    _menuOffset = Math.Min(_menuOffset + 160f * (float)gameTime.ElapsedGameTime.TotalSeconds, _maxOffset);
+                    _menuOffset = Math.Min(_menuOffset + 160f * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                                           _maxOffset);
                 }
             }
         }
@@ -200,11 +200,14 @@ namespace FarseerPhysics.SamplesFramework
 
                 if (position.Y < _menuBorderTop)
                 {
-                    _menuEntries[i].Alpha = 1f - Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
+                    _menuEntries[i].Alpha = 1f -
+                                            Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
                 }
                 if (position.Y > _menuBorderBottom)
                 {
-                    _menuEntries[i].Alpha = 1f - Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) / _menuBorderMargin;
+                    _menuEntries[i].Alpha = 1f -
+                                            Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) /
+                                            _menuBorderMargin;
                 }
 
                 // move down for the next entry the size of this entry
@@ -251,7 +254,7 @@ namespace FarseerPhysics.SamplesFramework
             for (int i = 0; i < _menuEntries.Count; ++i)
             {
                 bool isSelected = IsActive && (i == _selectedEntry);
-                _menuEntries[i].Draw(isSelected);
+                _menuEntries[i].Draw();
             }
 
             // Make the menu slide into place during transitions, using a
@@ -259,10 +262,10 @@ namespace FarseerPhysics.SamplesFramework
             // the movement slow down as it nears the end).
             Vector2 transitionOffset = new Vector2(0f, (float)Math.Pow(TransitionPosition, 2) * 100f);
 
-            spriteBatch.DrawString(font, _menuTitle, titlePosition - transitionOffset + Vector2.One * 2f, Color.Black, 0,
-                                   titleOrigin, 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(font, _menuTitle, titlePosition - transitionOffset, new Color(255, 210, 0), 0,
-                                   titleOrigin, 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset + Vector2.One * 2f, Color.Black, 0,
+                                   _titleOrigin, 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset, new Color(255, 210, 0), 0,
+                                   _titleOrigin, 1f, SpriteEffects.None, 0);
             _scrollUp.Draw();
             _scrollSlider.Draw();
             _scrollDown.Draw();

@@ -3,9 +3,7 @@ using System.Text;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PhysicsLogic;
 using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +13,8 @@ namespace FarseerPhysics.SamplesFramework
 {
     internal class AdvancedDemo5 : PhysicsGameScreen, IDemoScreen
     {
+        private Border _border;
+
         #region IDemoScreen Members
 
         public string GetTitle()
@@ -45,8 +45,6 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         #endregion
-
-        private Border _border;
 
         public override void LoadContent()
         {
@@ -117,13 +115,13 @@ namespace FarseerPhysics.SamplesFramework
                 AABB aabb = new AABB(ref min, ref max);
 
                 World.QueryAABB(fixture =>
-                                {
-                                    Vector2 fv = fixture.Body.Position - cursorPos;
-                                    fv.Normalize();
-                                    fv *= 40;
-                                    fixture.Body.ApplyLinearImpulse(ref fv);
-                                    return true;
-                                }, ref aabb);
+                                    {
+                                        Vector2 fv = fixture.Body.Position - cursorPos;
+                                        fv.Normalize();
+                                        fv *= 40;
+                                        fixture.Body.ApplyLinearImpulse(ref fv);
+                                        return true;
+                                    }, ref aabb);
             }
 
             base.HandleInput(input, gameTime);

@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -14,8 +13,8 @@ namespace FarseerPhysics.SamplesFramework
         private NumberFormatInfo _format;
         private int _frameCounter;
         private int _frameRate;
-        private ScreenManager _screenManager;
         private Vector2 _position;
+        private ScreenManager _screenManager;
 
         public FrameRateCounter(ScreenManager screenManager)
             : base(screenManager.Game)

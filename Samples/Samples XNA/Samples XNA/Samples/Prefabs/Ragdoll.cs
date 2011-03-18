@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
+﻿using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -16,27 +14,24 @@ namespace FarseerPhysics.SamplesFramework
         private const float LimbAngularDamping = 7;
 
         private Body _body;
+        private Sprite _face;
         private Body _head;
+        private Sprite _lowerArm;
 
         private Body _lowerLeftArm;
         private Body _lowerLeftLeg;
+        private Sprite _lowerLeg;
         private Body _lowerRightArm;
         private Body _lowerRightLeg;
+        private PhysicsGameScreen _screen;
+        private Sprite _torso;
+        private Sprite _upperArm;
 
         private Body _upperLeftArm;
         private Body _upperLeftLeg;
+        private Sprite _upperLeg;
         private Body _upperRightArm;
         private Body _upperRightLeg;
-
-        private Sprite _face;
-        private Sprite _torso;
-        private Sprite _upperArm;
-        private Sprite _lowerArm;
-        private Sprite _upperLeg;
-        private Sprite _lowerLeg;
-
-
-        private PhysicsGameScreen _screen;
 
         public Ragdoll(World world, PhysicsGameScreen screen, Vector2 position)
         {
@@ -224,50 +219,50 @@ namespace FarseerPhysics.SamplesFramework
 
         private void CreateGFX()
         {
-            AssetCreator _creator = _screen.ScreenManager.Assets;
-            _face = new Sprite(_creator.CircleTexture(0.9f, MaterialType.Squares, Color.Gray, 1f));
-            _torso = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2),
+            AssetCreator creator = _screen.ScreenManager.Assets;
+            _face = new Sprite(creator.CircleTexture(0.9f, MaterialType.Squares, Color.Gray, 1f));
+            _torso = new Sprite(creator.TextureFromVertices(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2),
                                                              MaterialType.Squares, Color.LightSlateGray, 0.8f));
 
-            _upperArm = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
-                                                                 MaterialType.Squares, Color.DimGray, 0.8f));
-            _lowerArm = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
-                                                                 MaterialType.Squares, Color.DarkSlateGray, 0.8f));
+            _upperArm = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
+                                                                MaterialType.Squares, Color.DimGray, 0.8f));
+            _lowerArm = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
+                                                                MaterialType.Squares, Color.DarkSlateGray, 0.8f));
 
-            _upperLeg = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
-                                                                 MaterialType.Squares, Color.DimGray, 0.8f));
-            _lowerLeg = new Sprite(_creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
-                                                                 MaterialType.Squares, Color.DarkSlateGray, 0.8f));
+            _upperLeg = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
+                                                                MaterialType.Squares, Color.DimGray, 0.8f));
+            _lowerLeg = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
+                                                                MaterialType.Squares, Color.DarkSlateGray, 0.8f));
         }
 
         public void Draw()
         {
-            SpriteBatch _batch = _screen.ScreenManager.SpriteBatch;
-            _batch.Draw(_lowerLeg.texture, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
-                        Color.White, _lowerLeftLeg.Rotation, _lowerLeg.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_lowerLeg.texture, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
-                        Color.White, _lowerRightLeg.Rotation, _lowerLeg.origin, 1f, SpriteEffects.None, 0f);
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
+                        Color.White, _lowerLeftLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
+                        Color.White, _lowerRightLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_upperLeg.texture, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
-                        Color.White, _upperLeftLeg.Rotation, _upperLeg.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_upperLeg.texture, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
-                        Color.White, _upperRightLeg.Rotation, _upperLeg.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
+                        Color.White, _upperLeftLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
+                        Color.White, _upperRightLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_lowerArm.texture, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
-                        Color.White, _lowerLeftArm.Rotation, _lowerArm.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_lowerArm.texture, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
-                        Color.White, _lowerRightArm.Rotation, _lowerArm.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
+                        Color.White, _lowerLeftArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
+                        Color.White, _lowerRightArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_upperArm.texture, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
-                        Color.White, _upperLeftArm.Rotation, _upperArm.origin, 1f, SpriteEffects.None, 0f);
-            _batch.Draw(_upperArm.texture, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
-                        Color.White, _upperRightArm.Rotation, _upperArm.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
+                        Color.White, _upperLeftArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
+                        Color.White, _upperRightArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_torso.texture, ConvertUnits.ToDisplayUnits(_body.Position), null,
-                        Color.White, _body.Rotation, _torso.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_body.Position), null,
+                        Color.White, _body.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
 
-            _batch.Draw(_face.texture, ConvertUnits.ToDisplayUnits(_head.Position), null,
-                        Color.White, _head.Rotation, _face.origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_face.Texture, ConvertUnits.ToDisplayUnits(_head.Position), null,
+                        Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

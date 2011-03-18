@@ -7,30 +7,29 @@ namespace FarseerPhysics.SamplesFramework
 {
     public class Camera2D
     {
-        private static GraphicsDevice _graphics;
-
-        private Matrix _view;
-        private Matrix _batchView;
-        private Matrix _projection;
-
-        private Vector2 _currentPosition;
-        private Vector2 _targetPosition;
-        private Vector2 _minPosition;
-        private Vector2 _maxPosition;
-        private Vector2 _translateCenter;
-
-        private float _currentRotation;
-        private float _targetRotation;
-        private float _minRotation;
-        private float _maxRotation;
-
-        private float _currentZoom;
         private const float _minZoom = 0.02f;
         private const float _maxZoom = 20f;
+        private static GraphicsDevice _graphics;
 
-        private Body _trackingBody;
+        private Matrix _batchView;
+
+        private Vector2 _currentPosition;
+
+        private float _currentRotation;
+
+        private float _currentZoom;
+        private Vector2 _maxPosition;
+        private float _maxRotation;
+        private Vector2 _minPosition;
+        private float _minRotation;
         private bool _positionTracking;
+        private Matrix _projection;
         private bool _rotationTracking;
+        private Vector2 _targetPosition;
+        private float _targetRotation;
+        private Body _trackingBody;
+        private Vector2 _translateCenter;
+        private Matrix _view;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -40,7 +39,8 @@ namespace FarseerPhysics.SamplesFramework
         {
             _graphics = graphics;
             _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f, 1f);
+                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
+                                                             1f);
             _view = Matrix.Identity;
             _batchView = Matrix.Identity;
 
@@ -76,7 +76,7 @@ namespace FarseerPhysics.SamplesFramework
                 _targetPosition = ConvertUnits.ToSimUnits(value);
                 if (_minPosition != _maxPosition)
                 {
-                    Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out  _targetPosition);
+                    Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
                 }
             }
         }
@@ -168,12 +168,13 @@ namespace FarseerPhysics.SamplesFramework
                 }
             }
         }
+
         public bool EnablePositionTracking
         {
             get { return _positionTracking; }
             set
             {
-                if (value == true && _trackingBody != null)
+                if (value && _trackingBody != null)
                 {
                     _positionTracking = true;
                 }
@@ -189,7 +190,7 @@ namespace FarseerPhysics.SamplesFramework
             get { return _rotationTracking; }
             set
             {
-                if (value == true && _trackingBody != null)
+                if (value && _trackingBody != null)
                 {
                     _rotationTracking = true;
                 }
@@ -214,7 +215,7 @@ namespace FarseerPhysics.SamplesFramework
             _currentPosition += amount;
             if (_minPosition != _maxPosition)
             {
-                Vector2.Clamp(ref _currentPosition, ref _minPosition, ref _maxPosition, out  _currentPosition);
+                Vector2.Clamp(ref _currentPosition, ref _minPosition, ref _maxPosition, out _currentPosition);
             }
             _targetPosition = _currentPosition;
             _positionTracking = false;
@@ -297,7 +298,7 @@ namespace FarseerPhysics.SamplesFramework
                     _targetPosition = _trackingBody.Position;
                     if (_minPosition != _maxPosition)
                     {
-                        Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out  _targetPosition);
+                        Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
                     }
                 }
                 if (_rotationTracking)
@@ -309,40 +310,40 @@ namespace FarseerPhysics.SamplesFramework
                     }
                 }
             }
-            Vector2 _delta = _targetPosition - _currentPosition;
-            float _distance = _delta.Length();
-            if (_distance > 0f)
+            Vector2 delta = _targetPosition - _currentPosition;
+            float distance = delta.Length();
+            if (distance > 0f)
             {
-                _delta /= _distance;
+                delta /= distance;
             }
-            float _inertia;
-            if (_distance < 10f)
+            float inertia;
+            if (distance < 10f)
             {
-                _inertia = (float)Math.Pow(_distance / 10.0, 2.0);
-            }
-            else
-            {
-                _inertia = 1f;
-            }
-
-            float _rotDelta = _targetRotation - _currentRotation;
-
-            float _rotInertia;
-            if (Math.Abs(_rotDelta) < 5f)
-            {
-                _rotInertia = (float)Math.Pow(_rotDelta / 5.0, 2.0);
+                inertia = (float) Math.Pow(distance / 10.0, 2.0);
             }
             else
             {
-                _rotInertia = 1f;
-            }
-            if (Math.Abs(_rotDelta) > 0f)
-            {
-                _rotDelta /= Math.Abs(_rotDelta);
+                inertia = 1f;
             }
 
-            _currentPosition += 100f * _delta * _inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _currentRotation += 80f * _rotDelta * _rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float rotDelta = _targetRotation - _currentRotation;
+
+            float rotInertia;
+            if (Math.Abs(rotDelta) < 5f)
+            {
+                rotInertia = (float) Math.Pow(rotDelta / 5.0, 2.0);
+            }
+            else
+            {
+                rotInertia = 1f;
+            }
+            if (Math.Abs(rotDelta) > 0f)
+            {
+                rotDelta /= Math.Abs(rotDelta);
+            }
+
+            _currentPosition += 100f * delta * inertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _currentRotation += 80f * rotDelta * rotInertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }

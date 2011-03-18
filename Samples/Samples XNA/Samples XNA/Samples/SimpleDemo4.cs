@@ -1,11 +1,5 @@
 ﻿using System.Text;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.SamplesFramework
 {
@@ -42,10 +36,11 @@ namespace FarseerPhysics.SamplesFramework
             sb.AppendLine("  - Drag grabbed object: move mouse / finger");
             return sb.ToString();
         }
+
         #endregion
 
 #if XBOX || WINDOWS_PHONE
-        //Xbox360 / WP7 can't handle as many geometries
+    //Xbox360 / WP7 can't handle as many geometries
         private const int PyramidBaseBodyCount = 10;
 #else
         private const int PyramidBaseBodyCount = 14;

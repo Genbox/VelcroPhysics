@@ -1,28 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.SamplesFramework
 {
     public enum MaterialType
     {
-        Blank, Dots, Squares, Waves, Pavement
+        Blank,
+        Dots,
+        Squares,
+        Waves,
+        Pavement
     }
 
     public class AssetCreator
     {
         private const int CircleSegments = 32;
 
-        private Dictionary<MaterialType, Texture2D> _materials = new Dictionary<MaterialType, Texture2D>();
-        private BasicEffect _effect;
         private GraphicsDevice _device;
+        private BasicEffect _effect;
+        private Dictionary<MaterialType, Texture2D> _materials = new Dictionary<MaterialType, Texture2D>();
+
+        public AssetCreator(GraphicsDevice device)
+        {
+            _device = device;
+            _effect = new BasicEffect(_device);
+        }
 
         public static Vector2 CalculateOrigin(Body b)
         {
@@ -44,12 +54,6 @@ namespace FarseerPhysics.SamplesFramework
             return ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1f);
         }
 
-        public AssetCreator(GraphicsDevice device)
-        {
-            _device = device;
-            _effect = new BasicEffect(_device);
-        }
-
         public void LoadContent(ContentManager contentManager)
         {
             _materials[MaterialType.Blank] = contentManager.Load<Texture2D>("Materials/blank");
@@ -64,9 +68,9 @@ namespace FarseerPhysics.SamplesFramework
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    return CircleTexture((shape as CircleShape).Radius, type, color, materialScale);
+                    return CircleTexture(shape.Radius, type, color, materialScale);
                 case ShapeType.Polygon:
-                    return TextureFromVertices((shape as PolygonShape).Vertices, type, color, materialScale);
+                    return TextureFromVertices(((PolygonShape) shape).Vertices, type, color, materialScale);
                 default:
                     throw new NotSupportedException("The specified shape type is not supported.");
             }
@@ -96,7 +100,8 @@ namespace FarseerPhysics.SamplesFramework
                 decomposedVerts = new List<Vertices>();
                 decomposedVerts.Add(verts);
             }
-            List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVerts.Count);
+            List<VertexPositionColorTexture[]> verticesFill =
+                new List<VertexPositionColorTexture[]>(decomposedVerts.Count);
 
             materialScale /= _materials[type].Width;
 
@@ -112,7 +117,8 @@ namespace FarseerPhysics.SamplesFramework
                     verticesFill[i][3 * j].TextureCoordinate = decomposedVerts[i][0] * materialScale;
                     verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVerts[i].NextVertex(j) * materialScale;
                     verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVerts[i].NextVertex(j + 1) * materialScale;
-                    verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
+                    verticesFill[i][3 * j].Color =
+                        verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
                 }
             }
 
@@ -136,7 +142,8 @@ namespace FarseerPhysics.SamplesFramework
             return EllipseTexture(radius, radius, type, color, materialScale);
         }
 
-        public Texture2D EllipseTexture(float radiusX, float radiusY, MaterialType type, Color color, float materialScale)
+        public Texture2D EllipseTexture(float radiusX, float radiusY, MaterialType type, Color color,
+                                        float materialScale)
         {
             VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
             VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
@@ -152,7 +159,8 @@ namespace FarseerPhysics.SamplesFramework
             for (int i = 0; i < CircleSegments - 2; ++i)
             {
                 Vector2 p1 = new Vector2(radiusX * (float)Math.Cos(theta), radiusY * (float)Math.Sin(theta));
-                Vector2 p2 = new Vector2(radiusX * (float)Math.Cos(theta + segmentSize), radiusY * (float)Math.Sin(theta + segmentSize));
+                Vector2 p2 = new Vector2(radiusX * (float)Math.Cos(theta + segmentSize),
+                                         radiusY * (float)Math.Sin(theta + segmentSize));
                 // fill vertices
                 verticesFill[3 * i].Position = new Vector3(start, 0f);
                 verticesFill[3 * i + 1].Position = new Vector3(p1, 0f);
@@ -173,7 +181,8 @@ namespace FarseerPhysics.SamplesFramework
                 {
                     verticesOutline[2 * CircleSegments - 2].Position = new Vector3(p2, 0f);
                     verticesOutline[2 * CircleSegments - 1].Position = new Vector3(start, 0f);
-                    verticesOutline[2 * CircleSegments - 2].Color = verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
+                    verticesOutline[2 * CircleSegments - 2].Color =
+                        verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
                 }
                 verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
                 verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
@@ -202,7 +211,8 @@ namespace FarseerPhysics.SamplesFramework
             Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
             PresentationParameters pp = _device.PresentationParameters;
             RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, SurfaceFormat.Color,
-                                                        DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+                                                        DepthFormat.None, pp.MultiSampleCount,
+                                                        RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
             _device.SamplerStates[0] = SamplerState.LinearWrap;
 
@@ -224,7 +234,7 @@ namespace FarseerPhysics.SamplesFramework
             _effect.Techniques[0].Passes[0].Apply();
             _device.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
             _device.SetRenderTarget(null);
-            return (Texture2D)texture;
+            return texture;
         }
     }
 }
