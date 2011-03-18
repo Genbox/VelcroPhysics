@@ -51,15 +51,15 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Mouse(MouseState state, MouseState oldState)
         {
             _mousePos = GameInstance.ConvertScreenToWorld(state.X, state.Y);
-            base.Mouse(state, oldState);
+
+            if (state.LeftButton == ButtonState.Pressed)
+            {
+                Explode();
+            }
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.Space))
-            {
-                Explode();
-            }
             if (keyboardManager.IsKeyDown(Keys.A))
             {
                 Radius = MathHelper.Clamp(Radius - 0.1f, 0, 20);
@@ -76,9 +76,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(50, TextLine, "Press: (Space) to explode at mouse position.");
+            DebugView.DrawString(50, TextLine, "Press: left mouse button to remove at mouse position.");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press: (A) to decrease the explosion radius, (S) to increase it.");
+            DebugView.DrawString(50, TextLine, "Press: (A) to decrease the removal radius, (S) to increase it.");
             TextLine += 15;
             // Fighting against float decimals
             float radiusnumber = (float)((int)(Radius * 10)) / 10;
