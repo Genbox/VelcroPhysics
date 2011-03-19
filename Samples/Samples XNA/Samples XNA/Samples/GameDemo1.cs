@@ -277,15 +277,15 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.KeyboardState.IsKeyDown(Keys.S))
+            if (input.KeyboardState.IsKeyDown(Keys.S) || input.GamePadState.Buttons.A == ButtonState.Pressed)
             {
                 _acceleration = 0f;
             }
-            else if (input.KeyboardState.IsKeyDown(Keys.D))
+            else if (input.KeyboardState.IsKeyDown(Keys.D) || input.GamePadState.Buttons.B == ButtonState.Pressed)
             {
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
             }
-            else if (input.KeyboardState.IsKeyDown(Keys.A))
+            else if (input.KeyboardState.IsKeyDown(Keys.A) || input.GamePadState.Buttons.X == ButtonState.Pressed)
             {
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
             }
