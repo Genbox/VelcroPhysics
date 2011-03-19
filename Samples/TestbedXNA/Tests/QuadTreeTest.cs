@@ -79,6 +79,14 @@ namespace FarseerPhysics.TestBed.Tests
 
 
             base.Initialize();
+
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            GameInstance.ViewCenter = Vector2.Zero;
+
+            base.Update(settings, gameTime);
         }
 
         internal static Test Create()
