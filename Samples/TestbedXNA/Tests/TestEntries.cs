@@ -92,9 +92,11 @@ namespace FarseerPhysics.TestBed.Tests
                 new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmark.Create},
                 new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
                 new TestEntry {Name = "Clone Test", CreateFcn = CloneTest.Create},
+                //Can crash the application on Xbox360
+#if (!XBOX360)
                 new TestEntry {Name = "Serialization Test", CreateFcn = SerializationTest.Create},
-                new TestEntry
-                    {Name = "Destructible Terrain YuPeng Test", CreateFcn = DestructibleTerrainYuPengTest.Create},
+#endif
+                new TestEntry {Name = "Destructible Terrain YuPeng Test", CreateFcn = DestructibleTerrainYuPengTest.Create},
                 new TestEntry {Name = "Destructible Terrain MS Test", CreateFcn = DestructibleTerrainMSTest.Create},
                 new TestEntry {Name = "Deletion test", CreateFcn = DeletionTest.Create},
                 new TestEntry {Name = "Buoyancy test", CreateFcn = BuoyancyTest.Create},
