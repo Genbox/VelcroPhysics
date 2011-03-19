@@ -50,6 +50,8 @@ namespace FarseerPhysics.SamplesFramework
         {
             base.LoadContent();
 
+            DebugView.AppendFlags(DebugViewFlags.Shape);
+
             World.Gravity = Vector2.Zero;
 
             _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
@@ -83,11 +85,11 @@ namespace FarseerPhysics.SamplesFramework
                 List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
 
 #if WINDOWS_PHONE
-                float _scale = 0.6f;
+                const float scale = 0.6f;
 #else
-                float _scale = 1f;
+                const float scale = 1f;
 #endif
-                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * _scale;
+                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * scale;
                 foreach (Vertices vertices in triangulated)
                 {
                     vertices.Scale(ref vertScale);
@@ -131,6 +133,13 @@ namespace FarseerPhysics.SamplesFramework
         {
             _border.Draw();
             base.Draw(gameTime);
+        }
+
+        public override void UnloadContent()
+        {
+            DebugView.RemoveFlags(DebugViewFlags.Shape);
+            
+            base.UnloadContent();
         }
     }
 }
