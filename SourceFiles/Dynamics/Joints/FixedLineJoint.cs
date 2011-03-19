@@ -76,7 +76,6 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.FixedLine;
 
-            //David: Start here
             BodyB = BodyA;
 
             LocalAnchorA = worldAnchor;
@@ -95,7 +94,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            //get { return BodyB.GetWorldPoint(LocalAnchorB); }
             get { return BodyA.GetWorldPoint(LocalAnchorB); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
@@ -186,30 +184,27 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref TimeStep step)
         {
-            //Body bA = BodyA;
             Body bB = BodyB;
 
             LocalCenterA = Vector2.Zero;
             LocalCenterB = bB.LocalCenter;
 
-            //Transform xfA;
-            //bA.GetTransform(out xfA);
             Transform xfB;
             bB.GetTransform(out xfB);
 
             // Compute the effective masses.
-            Vector2 rA = LocalAnchorA;// MathUtils.Multiply(ref xfA.R, LocalAnchorA - LocalCenterA);
+            Vector2 rA = LocalAnchorA;
             Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - LocalCenterB);
-            Vector2 d = bB.Sweep.C + rB - /*bA.Sweep.C -*/ rA;
+            Vector2 d = bB.Sweep.C + rB - rA;
 
-            InvMassA = 0.0f;// bA.InvMass;
-            InvIA = 0.0f;//bA.InvI;
+            InvMassA = 0.0f;
+            InvIA = 0.0f;
             InvMassB = bB.InvMass;
             InvIB = bB.InvI;
 
             // Point to line constraint
             {
-                _ay = _localYAxisA;// MathUtils.Multiply(ref xfA.R, _localYAxisA);
+                _ay = _localYAxisA;
                 _sAy = MathUtils.Cross(d + rA, _ay);
                 _sBy = MathUtils.Cross(rB, _ay);
 
@@ -225,7 +220,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _springMass = 0.0f;
             if (Frequency > 0.0f)
             {
-                _ax = LocalXAxis;// MathUtils.Multiply(ref xfA.R, LocalXAxis);
+                _ax = LocalXAxis;
                 _sAx = MathUtils.Cross(d + rA, _ax);
                 _sBx = MathUtils.Cross(rB, _ax);
 
@@ -291,11 +286,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 _motorImpulse *= step.dtRatio;
 
                 Vector2 P = _impulse * _ay + _springImpulse * _ax;
-                float LA = _impulse * _sAy + _springImpulse * _sAx + _motorImpulse;
                 float LB = _impulse * _sBy + _springImpulse * _sBx + _motorImpulse;
-
-                //bA.LinearVelocityInternal -= InvMassA * P;
-                //bA.AngularVelocityInternal -= InvIA * LA;
 
                 bB.LinearVelocityInternal += InvMassB * P;
                 bB.AngularVelocityInternal += InvIB * LB;
@@ -310,11 +301,10 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void SolveVelocityConstraints(ref TimeStep step)
         {
-            //Body bA = BodyA;
             Body bB = BodyB;
 
             Vector2 vA = Vector2.Zero;
-            float wA = 0.0f;// bA.AngularVelocityInternal;
+            float wA = 0.0f;
             Vector2 vB = bB.LinearVelocityInternal;
             float wB = bB.AngularVelocityInternal;
 
@@ -356,29 +346,22 @@ namespace FarseerPhysics.Dynamics.Joints
                 _impulse += impulse;
 
                 Vector2 P = impulse * _ay;
-                float LA = impulse * _sAy;
                 float LB = impulse * _sBy;
-
-                vA -= InvMassA * P;
-                wA -= InvIA * LA;
 
                 vB += InvMassB * P;
                 wB += InvIB * LB;
             }
 
-            //bA.LinearVelocityInternal = vA;
-            //bA.AngularVelocityInternal = wA;
             bB.LinearVelocityInternal = vB;
             bB.AngularVelocityInternal = wB;
         }
 
         internal override bool SolvePositionConstraints()
         {
-            //Body bA = BodyA;
             Body bB = BodyB;
 
-            Vector2 xA = Vector2.Zero;// bA.Sweep.C;
-            float angleA = 0.0f;// bA.Sweep.A;
+            Vector2 xA = Vector2.Zero;
+            const float angleA = 0.0f;
 
             Vector2 xB = bB.Sweep.C;
             float angleB = bB.Sweep.A;
@@ -392,7 +375,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
             Vector2 ay = MathUtils.Multiply(ref RA, _localYAxisA);
 
-            float sAy = MathUtils.Cross(d + rA, ay);
             float sBy = MathUtils.Cross(rB, ay);
 
             float C = Vector2.Dot(d, ay);
@@ -410,20 +392,14 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             Vector2 P = impulse * ay;
-            float LA = impulse * sAy;
             float LB = impulse * sBy;
 
-            xA -= InvMassA * P;
-            angleA -= InvIA * LA;
             xB += InvMassB * P;
             angleB += InvIB * LB;
 
             // TODO_ERIN remove need for this.
-            //bA.Sweep.C = xA;
-            //bA.Sweep.A = angleA;
             bB.Sweep.C = xB;
             bB.Sweep.A = angleB;
-            //bA.SynchronizeTransform();
             bB.SynchronizeTransform();
 
             return Math.Abs(C) <= Settings.LinearSlop;
