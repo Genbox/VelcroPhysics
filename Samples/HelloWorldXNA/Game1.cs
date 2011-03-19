@@ -13,7 +13,8 @@ namespace FarseerPhysics.HelloWorld
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _batch;
-        private KeyboardState _oldState;
+        private KeyboardState _oldKeyState;
+        private GamePadState _oldPadState;
         private SpriteFont _font;
 
         private World _world;
@@ -29,10 +30,16 @@ namespace FarseerPhysics.HelloWorld
         private Vector2 _cameraPosition;
         private Vector2 _screenCenter;
 
+
+#if !XBOX360
         const string Text = "Press A or D to rotate the ball\n" +
                             "Press Space to jump\n" +
                             "Press Shift + W/S/A/D to move the camera";
-
+#else
+                const string Text = "Use left stick to move\n" +
+                                    "Use right stick to move camera\n" +
+                                    "Press A to jump\n";
+#endif
         // Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
         // 1 meters equals 64 pixels here
         // (Objects should be scaled to be between 0.1 and 10 meters in size)
@@ -98,6 +105,39 @@ namespace FarseerPhysics.HelloWorld
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            HandleGamePad();
+            HandleKeyboard();
+
+            //We update the world
+            _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
+
+            base.Update(gameTime);
+        }
+
+        private void HandleGamePad()
+        {
+            GamePadState padState = GamePad.GetState(0);
+
+            if (padState.IsConnected)
+            {
+                if (padState.Buttons.Back == ButtonState.Pressed)
+                    Exit();
+
+                if (padState.Buttons.A == ButtonState.Pressed && _oldPadState.Buttons.A == ButtonState.Released)
+                    _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
+
+                _circleBody.ApplyForce(padState.ThumbSticks.Left);
+                _cameraPosition.X -= padState.ThumbSticks.Right.X;
+                _cameraPosition.Y += padState.ThumbSticks.Right.Y;
+
+                _view = Matrix.CreateTranslation(new Vector3(_cameraPosition - _screenCenter, 0f)) * Matrix.CreateTranslation(new Vector3(_screenCenter, 0f));
+
+                _oldPadState = padState;
+            }
+        }
+
+        private void HandleKeyboard()
+        {
             KeyboardState state = Keyboard.GetState();
 
             // Switch between circle body and camera control
@@ -128,19 +168,14 @@ namespace FarseerPhysics.HelloWorld
                 if (state.IsKeyDown(Keys.D))
                     _circleBody.ApplyTorque(10);
 
-                if (state.IsKeyDown(Keys.Space) && _oldState.IsKeyUp(Keys.Space))
+                if (state.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
                     _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
             }
 
             if (state.IsKeyDown(Keys.Escape))
                 Exit();
 
-            _oldState = state;
-
-            //We update the world
-            _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
-
-            base.Update(gameTime);
+            _oldKeyState = state;
         }
 
         /// <summary>
