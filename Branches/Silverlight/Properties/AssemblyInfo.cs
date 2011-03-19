@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
 [assembly: AssemblyProduct("Farseer Physics Engine Silverlight")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2010")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -30,5 +30,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("3.2.*")]
-[assembly: AssemblyFileVersion("3.2.*")]
+[assembly: AssemblyVersion("3.3.*")]
+[assembly: AssemblyFileVersion("3.3.*")]

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Farseer Physics XNA")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics 2010")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,4 +31,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("3.2.*")]
+[assembly: AssemblyVersion("3.3.*")]
