@@ -95,8 +95,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
     <Compile Include="Samples\GameDemo1.cs" />
-    <Compile Include="Samples\GameDemo2.cs" />
-    <Compile Include="Samples\GameDemo3.cs" />
     <Compile Include="Samples\Prefabs\Agent.cs" />
     <Compile Include="Samples\Prefabs\Border.cs" />
     <Compile Include="Samples\Prefabs\Objects.cs" />
