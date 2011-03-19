@@ -45,9 +45,10 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 7.0f);
+                
                 body.CreateFixture(shape);
 
-                Vector2 axis = new Vector2(2.0f, 1.0f);
+                Vector2 axis = new Vector2(-1000.0f, -2.0f);
                 axis.Normalize();
 
                 LineJoint jd = new LineJoint(ground, body, new Vector2(0, 8.5f), axis);
@@ -57,6 +58,20 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.Frequency = 1.0f;
                 jd.DampingRatio = 0.2f;
                 World.AddJoint(jd);
+
+                PolygonShape shape2 = new PolygonShape(1);
+                shape2.SetAsBox(0.5f, 2.0f);
+                Body body2 = BodyFactory.CreatePolygon(World, shape2.Vertices, 0.5f);
+                body2.BodyType = BodyType.Dynamic;
+                body2.Position = new Vector2(10.0f, 7.0f);
+
+                FixedLineJoint jdf = new FixedLineJoint(body2, new Vector2(10, 8.5f), axis);
+                jdf.MotorSpeed = 1.0f;
+                jdf.MaxMotorTorque = 1000.0f;
+                jdf.MotorEnabled = true;
+                jdf.Frequency = 1.0f;
+                jdf.DampingRatio = 0.2f;
+                World.AddJoint(jdf);
             }
         }
 
