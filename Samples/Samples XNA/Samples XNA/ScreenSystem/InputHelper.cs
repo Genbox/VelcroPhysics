@@ -110,6 +110,11 @@ namespace FarseerPhysics.SamplesFramework
             get { return _cursorMoved; }
         }
 
+        public bool IsCursorValid
+        {
+            get { return _cursorIsValid; }
+        }
+
         public void LoadContent()
         {
             _cursorSprite = _manager.Content.Load<Texture2D>("Common/cursor");

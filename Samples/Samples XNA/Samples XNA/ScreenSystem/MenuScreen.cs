@@ -129,8 +129,16 @@ namespace FarseerPhysics.SamplesFramework
                 _selectedEntry = -1;
             }
 
-            _scrollUp.Collide(input.Cursor);
-            _scrollDown.Collide(input.Cursor);
+            if (input.IsCursorValid)
+            {
+                _scrollUp.Collide(input.Cursor);
+                _scrollDown.Collide(input.Cursor);
+            }
+            else
+            {
+                _scrollUp.Hover = false;
+                _scrollDown.Hover = false;
+            }
 
             // Accept or cancel the menu? 
             if (input.IsMenuSelect() && _selectedEntry != -1)
@@ -158,11 +166,11 @@ namespace FarseerPhysics.SamplesFramework
             {
                 if (_scrollUp.Hover)
                 {
-                    _menuOffset = Math.Max(_menuOffset - 160f * (float)gameTime.ElapsedGameTime.TotalSeconds, 0f);
+                    _menuOffset = Math.Max(_menuOffset - 200f * (float)gameTime.ElapsedGameTime.TotalSeconds, 0f);
                 }
                 if (_scrollDown.Hover)
                 {
-                    _menuOffset = Math.Min(_menuOffset + 160f * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                    _menuOffset = Math.Min(_menuOffset + 200f * (float)gameTime.ElapsedGameTime.TotalSeconds,
                                            _maxOffset);
                 }
             }
