@@ -24,7 +24,6 @@ namespace FarseerPhysics.SamplesFramework
 
         private float _scale;
         private GameScreen _screen;
-        private bool _selectable;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -39,12 +38,11 @@ namespace FarseerPhysics.SamplesFramework
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuButton(Texture2D sprite, bool flip, bool selectable, Vector2 position, GameScreen screen)
+        public MenuButton(Texture2D sprite, bool flip, Vector2 position, GameScreen screen)
         {
             _screen = screen;
             _scale = 1f;
             _sprite = sprite;
-            _selectable = selectable;
             _baseOrigin = new Vector2(_sprite.Width / 2f, _sprite.Height / 2f);
             _hover = false;
             _flip = flip;
@@ -76,19 +74,16 @@ namespace FarseerPhysics.SamplesFramework
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            if (_selectable)
+            float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
+            if (_hover)
             {
-                float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
-                if (_hover)
-                {
-                    _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1f);
-                }
-                else
-                {
-                    _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
-                }
-                _scale = 1f + 0.1f * _selectionFade;
+                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1f);
             }
+            else
+            {
+                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
+            }
+            _scale = 1f + 0.1f * _selectionFade;
         }
 
         public void Collide(Vector2 position)

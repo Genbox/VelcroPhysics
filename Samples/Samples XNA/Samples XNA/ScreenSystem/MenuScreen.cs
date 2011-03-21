@@ -82,11 +82,11 @@ namespace FarseerPhysics.SamplesFramework
             _menuOffset = 0f;
             _maxOffset = Math.Max(0f, (_menuEntries.Count - NumEntries) * _menuBorderMargin);
 
-            _scrollUp = new MenuButton(_texScrollButton, false, true,
+            _scrollUp = new MenuButton(_texScrollButton, false,
                                        new Vector2(scrollBarPos, _menuBorderTop - _texScrollButton.Height), this);
-            _scrollDown = new MenuButton(_texScrollButton, true, true,
+            _scrollDown = new MenuButton(_texScrollButton, true,
                                          new Vector2(scrollBarPos, _menuBorderBottom + _texScrollButton.Height), this);
-            _scrollSlider = new MenuButton(_texSlider, false, false, new Vector2(scrollBarPos, _menuBorderTop), this);
+            _scrollSlider = new MenuButton(_texSlider, false, new Vector2(scrollBarPos, _menuBorderTop), this);
         }
 
         /// <summary>
@@ -133,11 +133,13 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _scrollUp.Collide(input.Cursor);
                 _scrollDown.Collide(input.Cursor);
+                _scrollSlider.Collide(input.Cursor);
             }
             else
             {
                 _scrollUp.Hover = false;
                 _scrollDown.Hover = false;
+                _scrollSlider.Hover = false;
             }
 
             // Accept or cancel the menu? 
@@ -172,6 +174,10 @@ namespace FarseerPhysics.SamplesFramework
                 {
                     _menuOffset = Math.Min(_menuOffset + 200f * (float)gameTime.ElapsedGameTime.TotalSeconds,
                                            _maxOffset);
+                }
+                if (_scrollSlider.Hover)
+                {
+                    _menuOffset = Math.Max(Math.Min(((input.Cursor.Y - _menuBorderTop) / (_menuBorderBottom - _menuBorderTop)) * _maxOffset, _maxOffset), 0f);
                 }
             }
         }
