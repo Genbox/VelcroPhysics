@@ -302,10 +302,16 @@ namespace FarseerPhysics.Dynamics
 
         #region IDisposable Members
 
+        public bool IsDisposed { get; set; }
+
         public void Dispose()
         {
-            Body.Dispose();
-            GC.SuppressFinalize(this);
+            if (!IsDisposed)
+            {
+                Body.DestroyFixture(this);
+                IsDisposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         #endregion
