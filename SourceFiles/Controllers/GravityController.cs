@@ -50,7 +50,7 @@ namespace FarseerPhysics.Controllers
                     if (body1 == body2 || (body1.IsStatic && body2.IsStatic) || !body2.Enabled)
                         continue;
 
-                    Vector2 d = body2.Position - body1.Position;
+                    Vector2 d = body2.WorldCenter - body1.WorldCenter;
                     float r2 = d.LengthSquared();
 
                     if (r2 < Settings.Epsilon)
