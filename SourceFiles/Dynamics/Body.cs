@@ -677,10 +677,17 @@ namespace FarseerPhysics.Dynamics
 
         #region IDisposable Members
 
+        public bool IsDisposed { get; set; }
+
         public void Dispose()
         {
-            World.RemoveBody(this);
-            GC.SuppressFinalize(this);
+            if (!IsDisposed)
+            {
+
+                World.RemoveBody(this);
+                IsDisposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         #endregion
