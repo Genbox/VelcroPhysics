@@ -874,7 +874,7 @@ namespace FarseerPhysics.Dynamics
             Debug.Assert(!float.IsNaN(force.X));
             Debug.Assert(!float.IsNaN(force.Y));
             Debug.Assert(!float.IsNaN(point.X));
-            Debug.Assert(!float.IsNaN(point.X));
+            Debug.Assert(!float.IsNaN(point.Y));
 
             if (_bodyType == BodyType.Dynamic)
             {
