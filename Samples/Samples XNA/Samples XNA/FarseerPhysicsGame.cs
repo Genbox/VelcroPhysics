@@ -12,16 +12,13 @@ namespace FarseerPhysics.SamplesFramework
 
         public FarseerPhysicsGame()
         {
-            Window.Title = "Farseer Physics Engine Samples Framework";
+            Window.Title = "Farseer Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
 #if WINDOWS || XBOX
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             ConvertUnits.SetDisplayUnitToSimUnitRatio(24f);
-            //_graphics.PreferredBackBufferWidth = 800;  //TODO remove me - emulate WP7 debug mode
-            //_graphics.PreferredBackBufferHeight = 480;  //TODO remove me - emulate WP7 debug mode
-            //ConvertUnits.SetDisplayUnitToSimUnitRatio(16f);  //TODO remove me - emulate WP7 debug mode
             IsFixedTimeStep = true;
 #elif WINDOWS_PHONE
             _graphics.PreferredBackBufferWidth = 800;

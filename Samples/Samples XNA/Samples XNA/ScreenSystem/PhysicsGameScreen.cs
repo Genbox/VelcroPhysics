@@ -24,6 +24,7 @@ namespace FarseerPhysics.SamplesFramework
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
             EnableCameraControl = true;
+            HasGameControl = false;
             _userAgent = null;
             World = null;
             Camera = null;
@@ -31,6 +32,7 @@ namespace FarseerPhysics.SamplesFramework
         }
 
         public bool EnableCameraControl { get; set; }
+        public bool HasGameControl { get; set; }
 
         protected void SetUserAgent(Body agent, float force, float torque)
         {

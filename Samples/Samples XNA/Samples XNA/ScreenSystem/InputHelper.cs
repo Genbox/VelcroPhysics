@@ -24,17 +24,22 @@ namespace FarseerPhysics.SamplesFramework
         private GamePadState _currentGamePadState;
         private KeyboardState _currentKeyboardState;
         private MouseState _currentMouseState;
+        private GamePadState _currentVirtualState;
 
         private GamePadState _lastGamePadState;
         private KeyboardState _lastKeyboardState;
         private MouseState _lastMouseState;
+        private GamePadState _lastVirtualState;
 
         private Vector2 _cursor;
         private bool _cursorIsValid;
         private bool _cursorIsVisible;
         private bool _cursorMoved;
-        private Vector2 _cursorOffset;
-        private Texture2D _cursorSprite;
+        private Sprite _cursorSprite;
+        private Sprite _socketSprite;
+        private Sprite _stickSprite;
+        private Texture2D _texButtons;
+        private Vector2 _buttonOrigin;
 
         private ScreenManager _manager;
         private Viewport _viewport;
@@ -47,10 +52,12 @@ namespace FarseerPhysics.SamplesFramework
             _currentKeyboardState = new KeyboardState();
             _currentGamePadState = new GamePadState();
             _currentMouseState = new MouseState();
+            _currentVirtualState = new GamePadState();
 
             _lastKeyboardState = new KeyboardState();
             _lastGamePadState = new GamePadState();
             _lastMouseState = new MouseState();
+            _lastVirtualState = new GamePadState();
 
             _manager = manager;
 
@@ -79,6 +86,11 @@ namespace FarseerPhysics.SamplesFramework
             get { return _currentMouseState; }
         }
 
+        public GamePadState VirtualState
+        {
+            get { return _currentVirtualState; }
+        }
+
         public GamePadState PreviousGamePadState
         {
             get { return _lastGamePadState; }
@@ -92,6 +104,11 @@ namespace FarseerPhysics.SamplesFramework
         public MouseState PreviousMouseState
         {
             get { return _lastMouseState; }
+        }
+
+        public GamePadState PreviousVirtualState
+        {
+            get { return _lastVirtualState; }
         }
 
         public bool ShowCursor
@@ -117,8 +134,11 @@ namespace FarseerPhysics.SamplesFramework
 
         public void LoadContent()
         {
-            _cursorSprite = _manager.Content.Load<Texture2D>("Common/cursor");
-            _cursorOffset = new Vector2(_cursorSprite.Width, _cursorSprite.Height) / 2f;
+            _cursorSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/cursor"));
+            _socketSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/socket"));
+            _stickSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/stick"));
+            _texButtons = _manager.Content.Load<Texture2D>("Common/buttons");
+            _buttonOrigin = new Vector2(20f, 20f);
 
             _viewport = _manager.GraphicsDevice.Viewport;
         }
@@ -131,10 +151,26 @@ namespace FarseerPhysics.SamplesFramework
             _lastKeyboardState = _currentKeyboardState;
             _lastGamePadState = _currentGamePadState;
             _lastMouseState = _currentMouseState;
+            _lastVirtualState = _currentVirtualState;
 
             _currentKeyboardState = Keyboard.GetState();
             _currentGamePadState = GamePad.GetState(PlayerIndex.One);
             _currentMouseState = Mouse.GetState();
+
+#if XBOX
+            _currentVirtualState= GamePad.GetState(PlayerIndex.One);
+#elif WINDOWS
+            if (GamePad.GetState(PlayerIndex.One).IsConnected)
+            {
+                _currentVirtualState = GamePad.GetState(PlayerIndex.One);
+            }
+            else
+            {
+                _currentVirtualState = HandleVirtualStickWin();
+            }
+#elif WINDOWS_PHONE
+            _currentVirtualState= HandleVirtualStickWP7();
+#endif
 
             _gestures.Clear();
             while (TouchPanel.IsGestureAvailable)
@@ -193,9 +229,69 @@ namespace FarseerPhysics.SamplesFramework
             if (_cursorIsVisible && _cursorIsValid)
             {
                 _manager.SpriteBatch.Begin();
-                _manager.SpriteBatch.Draw(_cursorSprite, _cursor - _cursorOffset, Color.White);
+                _manager.SpriteBatch.Draw(_cursorSprite.Texture, _cursor, null, Color.White, 0f, _cursorSprite.Origin, 1f, SpriteEffects.None, 0f);
                 _manager.SpriteBatch.End();
             }
+#if WINDOWS_PHONE
+
+#endif
+        }
+
+        private GamePadState HandleVirtualStickWin()
+        {
+            Buttons _virtualButtons;
+
+
+            GamePadButtons _buttons = new GamePadButtons();
+
+          /*      GamePadState _state = new GamePadState(Vector2.Zero, Vector2.Zero, 0f, 0f, );
+         /*   Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X,
+                                                      -input.GamePadState.ThumbSticks.Right.Y);
+            float torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
+
+            _userAgent.ApplyForce(force);
+            _userAgent.ApplyTorque(torque);
+
+            float forceAmount = _agentForce * 0.6f;
+
+            force = Vector2.Zero;
+            torque = 0;
+
+            if (input.KeyboardState.IsKeyDown(Keys.A))
+            {
+                force += new Vector2(-forceAmount, 0);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.S))
+            {
+                force += new Vector2(0, forceAmount);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.D))
+            {
+                force += new Vector2(forceAmount, 0);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.W))
+            {
+                force += new Vector2(0, -forceAmount);
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.Q))
+            {
+                torque -= _agentTorque;
+            }
+            if (input.KeyboardState.IsKeyDown(Keys.E))
+            {
+                torque += _agentTorque;
+            }
+
+            _userAgent.ApplyForce(force);
+            _userAgent.ApplyTorque(torque);*/
+
+
+            return new GamePadState();
+        }
+
+        private GamePadState HandleVirtualStickWP7()
+        {
+            return new GamePadState();
         }
 
         /// <summary>
@@ -303,6 +399,15 @@ namespace FarseerPhysics.SamplesFramework
                    _currentGamePadState.IsButtonDown(Buttons.A) ||
                    _currentGamePadState.IsButtonDown(Buttons.Start) ||
                    _currentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
+        public bool IsMenuReleased()
+        {
+            return IsNewKeyRelease(Keys.Space) ||
+                   IsNewKeyRelease(Keys.Enter) ||
+                   IsNewButtonRelease(Buttons.A) ||
+                   IsNewButtonRelease(Buttons.Start) ||
+                   IsNewMouseButtonRelease(MouseButtons.LeftButton);
         }
 
         /// <summary>
