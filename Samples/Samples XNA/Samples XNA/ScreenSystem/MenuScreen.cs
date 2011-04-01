@@ -13,7 +13,6 @@ namespace FarseerPhysics.SamplesFramework
     {
 #if WINDOWS || XBOX
         private const float NumEntries = 15;
-        //private const float NumEntries = 9;  //TODO remove me - emulate WP7 debug mode
 #elif WINDOWS_PHONE
         private const float NumEntries = 9;
 #endif
@@ -34,6 +33,7 @@ namespace FarseerPhysics.SamplesFramework
         private MenuButton _scrollUp;
         private MenuButton _scrollDown;
         private MenuButton _scrollSlider;
+        private bool _scrollLock;
 
         /// <summary>
         /// Constructor.
@@ -87,6 +87,8 @@ namespace FarseerPhysics.SamplesFramework
             _scrollDown = new MenuButton(_texScrollButton, true,
                                          new Vector2(scrollBarPos, _menuBorderBottom + _texScrollButton.Height), this);
             _scrollSlider = new MenuButton(_texSlider, false, new Vector2(scrollBarPos, _menuBorderTop), this);
+
+            _scrollLock = false;
         }
 
         /// <summary>
@@ -120,7 +122,7 @@ namespace FarseerPhysics.SamplesFramework
         {
             // Mouse or touch on a menu item
             int hoverIndex = GetMenuEntryAt(input.Cursor);
-            if (hoverIndex > -1 && _menuEntries[hoverIndex].IsSelectable())
+            if (hoverIndex > -1 && _menuEntries[hoverIndex].IsSelectable() && !_scrollLock)
             {
                 _selectedEntry = hoverIndex;
             }
@@ -129,6 +131,7 @@ namespace FarseerPhysics.SamplesFramework
                 _selectedEntry = -1;
             }
 
+            _scrollSlider.Hover = false;
             if (input.IsCursorValid)
             {
                 _scrollUp.Collide(input.Cursor);
@@ -139,7 +142,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _scrollUp.Hover = false;
                 _scrollDown.Hover = false;
-                _scrollSlider.Hover = false;
+                _scrollLock = false;
             }
 
             // Accept or cancel the menu? 
@@ -169,16 +172,26 @@ namespace FarseerPhysics.SamplesFramework
                 if (_scrollUp.Hover)
                 {
                     _menuOffset = Math.Max(_menuOffset - 200f * (float)gameTime.ElapsedGameTime.TotalSeconds, 0f);
+                    _scrollLock = false;
                 }
                 if (_scrollDown.Hover)
                 {
-                    _menuOffset = Math.Min(_menuOffset + 200f * (float)gameTime.ElapsedGameTime.TotalSeconds,
-                                           _maxOffset);
+                    _menuOffset = Math.Min(_menuOffset + 200f * (float)gameTime.ElapsedGameTime.TotalSeconds, _maxOffset);
+                    _scrollLock = false;
                 }
                 if (_scrollSlider.Hover)
                 {
-                    _menuOffset = Math.Max(Math.Min(((input.Cursor.Y - _menuBorderTop) / (_menuBorderBottom - _menuBorderTop)) * _maxOffset, _maxOffset), 0f);
+                    _scrollLock = true;
                 }
+            }
+            if (input.IsMenuReleased())
+            {
+                _scrollLock = false;
+            }
+            if (_scrollLock)
+            {
+                _scrollSlider.Hover = true;
+                _menuOffset = Math.Max(Math.Min(((input.Cursor.Y - _menuBorderTop) / (_menuBorderBottom - _menuBorderTop)) * _maxOffset, _maxOffset), 0f);
             }
         }
 
@@ -217,11 +230,15 @@ namespace FarseerPhysics.SamplesFramework
                     _menuEntries[i].Alpha = 1f -
                                             Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
                 }
-                if (position.Y > _menuBorderBottom)
+                else if (position.Y > _menuBorderBottom)
                 {
                     _menuEntries[i].Alpha = 1f -
                                             Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) /
                                             _menuBorderMargin;
+                }
+                else
+                {
+                    _menuEntries[i].Alpha = 1f;
                 }
 
                 // move down for the next entry the size of this entry
