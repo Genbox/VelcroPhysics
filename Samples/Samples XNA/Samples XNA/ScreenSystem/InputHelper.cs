@@ -30,16 +30,19 @@ namespace FarseerPhysics.SamplesFramework
         private KeyboardState _lastKeyboardState;
         private MouseState _lastMouseState;
         private GamePadState _lastVirtualState;
+        private bool _handleVirtualStick;
 
         private Vector2 _cursor;
         private bool _cursorIsValid;
         private bool _cursorIsVisible;
         private bool _cursorMoved;
         private Sprite _cursorSprite;
-        private Sprite _socketSprite;
-        private Sprite _stickSprite;
-        private Texture2D _texButtons;
-        private Vector2 _buttonOrigin;
+
+#if WINDOWS_PHONE
+        private VirtualStick _phoneStick;
+        private VirtualButton _phoneA;
+        private VirtualButton _phoneB;
+#endif
 
         private ScreenManager _manager;
         private Viewport _viewport;
@@ -69,6 +72,8 @@ namespace FarseerPhysics.SamplesFramework
             _cursorIsValid = true;
 #endif
             _cursor = Vector2.Zero;
+
+            _handleVirtualStick = false;
         }
 
         public GamePadState GamePadState
@@ -117,6 +122,12 @@ namespace FarseerPhysics.SamplesFramework
             set { _cursorIsVisible = value; }
         }
 
+        public bool EnableVirtualStick
+        {
+            get { return _handleVirtualStick; }
+            set { _handleVirtualStick = value; }
+        }
+
         public Vector2 Cursor
         {
             get { return _cursor; }
@@ -135,11 +146,15 @@ namespace FarseerPhysics.SamplesFramework
         public void LoadContent()
         {
             _cursorSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/cursor"));
-            _socketSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/socket"));
-            _stickSprite = new Sprite(_manager.Content.Load<Texture2D>("Common/stick"));
-            _texButtons = _manager.Content.Load<Texture2D>("Common/buttons");
-            _buttonOrigin = new Vector2(20f, 20f);
+#if WINDOWS_PHONE
+            // virtual stick content
+            _phoneStick = new VirtualStick(_manager.Content.Load<Texture2D>("Common/socket"),
+                                           _manager.Content.Load<Texture2D>("Common/stick"), new Vector2(80f, 400f));
 
+            Texture2D temp = _manager.Content.Load<Texture2D>("Common/buttons");
+            _phoneA = new VirtualButton(temp, new Vector2(695f, 380f), new Rectangle(0, 0, 40, 40), new Rectangle(0, 40, 40, 40));
+            _phoneB = new VirtualButton(temp, new Vector2(745f, 360f), new Rectangle(40, 0, 40, 40), new Rectangle(40, 40, 40, 40));
+#endif
             _viewport = _manager.GraphicsDevice.Viewport;
         }
 
@@ -151,26 +166,32 @@ namespace FarseerPhysics.SamplesFramework
             _lastKeyboardState = _currentKeyboardState;
             _lastGamePadState = _currentGamePadState;
             _lastMouseState = _currentMouseState;
-            _lastVirtualState = _currentVirtualState;
+            if (_handleVirtualStick)
+            {
+                _lastVirtualState = _currentVirtualState;
+            }
 
             _currentKeyboardState = Keyboard.GetState();
             _currentGamePadState = GamePad.GetState(PlayerIndex.One);
             _currentMouseState = Mouse.GetState();
 
+            if (_handleVirtualStick)
+            {
 #if XBOX
             _currentVirtualState= GamePad.GetState(PlayerIndex.One);
 #elif WINDOWS
-            if (GamePad.GetState(PlayerIndex.One).IsConnected)
-            {
-                _currentVirtualState = GamePad.GetState(PlayerIndex.One);
-            }
-            else
-            {
-                _currentVirtualState = HandleVirtualStickWin();
-            }
+                if (GamePad.GetState(PlayerIndex.One).IsConnected)
+                {
+                    _currentVirtualState = GamePad.GetState(PlayerIndex.One);
+                }
+                else
+                {
+                    _currentVirtualState = HandleVirtualStickWin();
+                }
 #elif WINDOWS_PHONE
-            _currentVirtualState= HandleVirtualStickWP7();
+                _currentVirtualState = HandleVirtualStickWP7();
 #endif
+            }
 
             _gestures.Clear();
             while (TouchPanel.IsGestureAvailable)
@@ -233,65 +254,79 @@ namespace FarseerPhysics.SamplesFramework
                 _manager.SpriteBatch.End();
             }
 #if WINDOWS_PHONE
-
+            if (_handleVirtualStick)
+            {
+                _manager.SpriteBatch.Begin();
+                _phoneA.Draw(_manager.SpriteBatch);
+                _phoneB.Draw(_manager.SpriteBatch);
+                _phoneStick.Draw(_manager.SpriteBatch);
+                _manager.SpriteBatch.End();
+            }
 #endif
         }
 
         private GamePadState HandleVirtualStickWin()
         {
-            Buttons _virtualButtons;
+            Vector2 _leftStick = Vector2.Zero;
+            List<Buttons> _buttons = new List<Buttons>();
 
-
-            GamePadButtons _buttons = new GamePadButtons();
-
-          /*      GamePadState _state = new GamePadState(Vector2.Zero, Vector2.Zero, 0f, 0f, );
-         /*   Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X,
-                                                      -input.GamePadState.ThumbSticks.Right.Y);
-            float torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
-
-            _userAgent.ApplyForce(force);
-            _userAgent.ApplyTorque(torque);
-
-            float forceAmount = _agentForce * 0.6f;
-
-            force = Vector2.Zero;
-            torque = 0;
-
-            if (input.KeyboardState.IsKeyDown(Keys.A))
+            if (_currentKeyboardState.IsKeyDown(Keys.A))
             {
-                force += new Vector2(-forceAmount, 0);
+                _leftStick.X -= 1f;
             }
-            if (input.KeyboardState.IsKeyDown(Keys.S))
+            if (_currentKeyboardState.IsKeyDown(Keys.S))
             {
-                force += new Vector2(0, forceAmount);
+                _leftStick.Y -= 1f;
             }
-            if (input.KeyboardState.IsKeyDown(Keys.D))
+            if (_currentKeyboardState.IsKeyDown(Keys.D))
             {
-                force += new Vector2(forceAmount, 0);
+                _leftStick.X += 1f;
             }
-            if (input.KeyboardState.IsKeyDown(Keys.W))
+            if (_currentKeyboardState.IsKeyDown(Keys.W))
             {
-                force += new Vector2(0, -forceAmount);
+                _leftStick.Y += 1f;
             }
-            if (input.KeyboardState.IsKeyDown(Keys.Q))
+            if (_currentKeyboardState.IsKeyDown(Keys.Space))
             {
-                torque -= _agentTorque;
+                _buttons.Add(Buttons.A);
             }
-            if (input.KeyboardState.IsKeyDown(Keys.E))
+            if (_currentKeyboardState.IsKeyDown(Keys.LeftControl))
             {
-                torque += _agentTorque;
+                _buttons.Add(Buttons.B);
+            }
+            if (_leftStick != Vector2.Zero)
+            {
+                _leftStick.Normalize();
             }
 
-            _userAgent.ApplyForce(force);
-            _userAgent.ApplyTorque(torque);*/
-
-
-            return new GamePadState();
+            return new GamePadState(_leftStick, Vector2.Zero, 0f, 0f, _buttons.ToArray());
         }
 
         private GamePadState HandleVirtualStickWP7()
         {
-            return new GamePadState();
+            List<Buttons> _buttons = new List<Buttons>();
+            Vector2 _stick = Vector2.Zero;
+#if WINDOWS_PHONE
+            _phoneA.Pressed = false;
+            _phoneB.Pressed = false;
+            TouchCollection touchLocations = TouchPanel.GetState();
+            foreach (TouchLocation touchLocation in touchLocations)
+            {
+                _phoneA.Update(touchLocation);
+                _phoneB.Update(touchLocation);
+                _phoneStick.Update(touchLocation);
+            }
+            if (_phoneA.Pressed)
+            {
+                _buttons.Add(Buttons.A);
+            }
+            if (_phoneB.Pressed)
+            {
+                _buttons.Add(Buttons.B);
+            }
+            _stick = _phoneStick.StickPosition;
+#endif
+            return new GamePadState(_stick, Vector2.Zero, 0f, 0f, _buttons.ToArray());
         }
 
         /// <summary>

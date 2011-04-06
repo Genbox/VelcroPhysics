@@ -156,6 +156,8 @@
     <Compile Include="Samples\SimpleDemo7.cs" />
     <Compile Include="Samples\SimpleDemo8.cs" />
     <Compile Include="Samples\SimpleDemo9.cs" />
+    <Compile Include="ScreenSystem\VirtualButton.cs" />
+    <Compile Include="ScreenSystem\VirtualStick.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

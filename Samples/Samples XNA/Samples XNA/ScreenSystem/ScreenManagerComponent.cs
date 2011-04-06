@@ -160,6 +160,7 @@ namespace FarseerPhysics.SamplesFramework
                     if (!otherScreenHasFocus)
                     {
                         _input.ShowCursor = screen.HasCursor;
+                        _input.EnableVirtualStick = screen.HasVirtualStick;
                         screen.HandleInput(_input, gameTime);
                         otherScreenHasFocus = true;
                     }
