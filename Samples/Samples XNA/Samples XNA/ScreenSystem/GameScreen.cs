@@ -45,9 +45,12 @@ namespace FarseerPhysics.SamplesFramework
             TransitionOffTime = TimeSpan.Zero;
             TransitionOnTime = TimeSpan.Zero;
             HasCursor = false;
+            HasVirtualStick = false;
         }
 
         public bool HasCursor { get; set; }
+
+        public bool HasVirtualStick { get; set; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,

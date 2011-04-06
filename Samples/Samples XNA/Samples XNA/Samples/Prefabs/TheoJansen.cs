@@ -55,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
 
                 _body =
                     new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank,
-                                                                             Color.DarkSlateBlue, 1f));
+                                                                             Color.Beige, 1f));
 
                 _chassis = BodyFactory.CreateBody(world);
                 _chassis.BodyType = BodyType.Dynamic;
@@ -69,7 +69,7 @@ namespace FarseerPhysics.SamplesFramework
                 CircleShape shape = new CircleShape(1.6f, 1f);
                 _engine =
                     new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Waves,
-                                                                             Color.MediumSlateBlue * 0.8f, 1f));
+                                                                             Color.Beige * 0.8f, 1f));
 
                 _wheel = BodyFactory.CreateBody(world);
                 _wheel.BodyType = BodyType.Dynamic;
@@ -242,14 +242,14 @@ namespace FarseerPhysics.SamplesFramework
             vertices.Add(p3);
             _leftLeg =
                 new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.DarkSlateBlue * 0.8f, 1f));
+                                                                            Color.IndianRed * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p4;
             vertices[2] = p5;
             _leftShoulder =
                 new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.MediumSlateBlue * 0.8f, 1f));
+                                                                            Color.Beige * 0.8f, 1f));
 
             p1.X *= -1f;
             p2.X *= -1f;
@@ -262,14 +262,14 @@ namespace FarseerPhysics.SamplesFramework
             vertices[2] = p2;
             _rightLeg =
                 new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.DarkSlateBlue * 0.8f, 1f));
+                                                                            Color.IndianRed * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p5;
             vertices[2] = p4;
             _rightShoulder =
                 new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.MediumSlateBlue * 0.8f, 1f));
+                                                                            Color.Beige * 0.8f, 1f));
         }
 
         public void Draw()

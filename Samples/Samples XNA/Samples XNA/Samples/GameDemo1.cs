@@ -66,7 +66,8 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = new Vector2(0f, 10f);
 
             HasCursor = false;
-            EnableCameraControl = false;
+            EnableCameraControl = true;
+            HasVirtualStick = true;
 
             _hzFront = 8.5f;
             _hzBack = 5.0f;
@@ -74,7 +75,7 @@ namespace FarseerPhysics.SamplesFramework
             _maxSpeed = 50.0f;
 
 #if WINDOWS_PHONE
-            _scale = 0.6f;
+            _scale = 2f / 3f;
 #else
             _scale = 1f;
 #endif
@@ -249,7 +250,7 @@ namespace FarseerPhysics.SamplesFramework
                 World.AddJoint(_springFront);
 
                 _carBody = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/car"),
-                                      AssetCreator.CalculateOrigin(_car));
+                                      AssetCreator.CalculateOrigin(_car) / _scale);
                 _wheel = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/wheel"));
             }
 
@@ -277,17 +278,17 @@ namespace FarseerPhysics.SamplesFramework
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.KeyboardState.IsKeyDown(Keys.S) || input.GamePadState.Buttons.A == ButtonState.Pressed)
-            {
-                _acceleration = 0f;
-            }
-            else if (input.KeyboardState.IsKeyDown(Keys.D) || input.GamePadState.Buttons.B == ButtonState.Pressed)
+            if (input.VirtualState.ThumbSticks.Left.X > 0.5f)
             {
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
             }
-            else if (input.KeyboardState.IsKeyDown(Keys.A) || input.GamePadState.Buttons.X == ButtonState.Pressed)
+            else if (input.VirtualState.ThumbSticks.Left.X < -0.5f)
             {
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
+            }
+            else if (input.VirtualState.Buttons.A == ButtonState.Pressed)
+            {
+                _acceleration = 0f;
             }
             else
             {
