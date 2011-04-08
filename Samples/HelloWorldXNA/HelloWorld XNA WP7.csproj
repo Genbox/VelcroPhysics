@@ -90,6 +90,8 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <None Include="Properties\WMAppManifest.xml" />
+    <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Background.png">
