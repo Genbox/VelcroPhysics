@@ -39,6 +39,10 @@
     <TileImage Condition="$(XnaOutputType)=='Game'">Background.png</TileImage>
     <TileTitle Condition="$(XnaOutputType)=='Game'">$(AssemblyName)</TileTitle>
     <SupportedCultures />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Debug</OutputPath>
@@ -89,12 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Background.png">
-      <XnaPlatformSpecific>true</XnaPlatformSpecific>
-    </None>
-    <None Include="Properties\AppManifest.xml">
-      <XnaPlatformSpecific>true</XnaPlatformSpecific>
-    </None>
-    <None Include="Properties\WMAppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
   </ItemGroup>
