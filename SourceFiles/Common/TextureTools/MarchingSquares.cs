@@ -182,12 +182,12 @@ namespace FarseerPhysics.Common
 
                     //combine above (but disallow the hole thingies
                     CxFastListNode<Vector2> bi = bp.Begin();
-                    while (Square(bi.Elem().Y - ay) > float.Epsilon || bi.Elem().X < ax) bi = bi.Next();
+                    while (Square(bi.Elem().Y - ay) > Settings.Epsilon || bi.Elem().X < ax) bi = bi.Next();
 
                     //NOTE: Unused
                     //Vector2 b0 = bi.elem();
                     Vector2 b1 = bi.Next().Elem();
-                    if (Square(b1.Y - ay) > float.Epsilon)
+                    if (Square(b1.Y - ay) > Settings.Epsilon)
                     {
                         x++;
                         continue;
@@ -197,7 +197,7 @@ namespace FarseerPhysics.Common
                     CxFastListNode<Vector2> ai = ap.Begin();
                     while (ai != ap.End())
                     {
-                        if (VecDsq(ai.Elem(), b1) < float.Epsilon)
+                        if (VecDsq(ai.Elem(), b1) < Settings.Epsilon)
                         {
                             brk = false;
                             break;
@@ -280,7 +280,7 @@ namespace FarseerPhysics.Common
         {
             float dv = v0 - v1;
             float t;
-            if (dv * dv < float.Epsilon)
+            if (dv * dv < Settings.Epsilon)
                 t = 0.5f;
             else t = v0 / dv;
             return x0 + t * (x1 - x0);
@@ -412,7 +412,7 @@ namespace FarseerPhysics.Common
             while (ai != ap.End())
             {
                 Vector2 a = ai.Elem();
-                if (VecDsq(a, b) < float.Epsilon)
+                if (VecDsq(a, b) < Settings.Epsilon)
                 {
                     //ignore shared vertex if parallel
                     if (prea != null)
@@ -425,7 +425,7 @@ namespace FarseerPhysics.Common
                         Vector2 v = b - a;
                         //vec_new(v); vec_sub(b.p.p, a.p.p, v);
                         float dot = VecCross(u, v);
-                        if (dot * dot < float.Epsilon)
+                        if (dot * dot < Settings.Epsilon)
                         {
                             ap.Erase(prea, ai);
                             polya.Length--;
@@ -461,7 +461,7 @@ namespace FarseerPhysics.Common
                     Vector2 vv = a2 - a1;
                     //vec_new(v); vec_sub(a2.p, a1.p, v);
                     float dot1 = VecCross(uu, vv);
-                    if (dot1 * dot1 < float.Epsilon)
+                    if (dot1 * dot1 < Settings.Epsilon)
                     {
                         ap.Erase(preb, preb.Next());
                         polya.Length--;
