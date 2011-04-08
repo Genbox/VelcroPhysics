@@ -527,6 +527,11 @@ namespace FarseerPhysics.Dynamics
             {
                 Body.World.FixtureRemoved(this);
             }
+
+            Body.World.FixtureAdded = null;
+            Body.World.FixtureRemoved = null;
+            OnSeparation = null;
+            OnCollision = null;
         }
 
         // These support body activation/deactivation.

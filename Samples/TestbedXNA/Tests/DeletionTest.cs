@@ -23,7 +23,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private void OnSeparation(Fixture fixtureA, Fixture fixtureB)
         {
-            fixtureB.Dispose();
+            fixtureB.Body.Dispose();
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
