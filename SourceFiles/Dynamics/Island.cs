@@ -318,12 +318,6 @@ namespace FarseerPhysics.Dynamics
                         continue;
                     }
 
-                    if ((b.Flags & BodyFlags.AutoSleep) == 0)
-                    {
-                        b.SleepTime = 0.0f;
-                        minSleepTime = 0.0f;
-                    }
-
                     if ((b.Flags & BodyFlags.AutoSleep) == 0 ||
                         b.AngularVelocityInternal * b.AngularVelocityInternal > AngTolSqr ||
                         Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > LinTolSqr)
