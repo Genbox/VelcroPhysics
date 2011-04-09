@@ -6,7 +6,7 @@
 * Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com 
+* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -25,7 +25,6 @@
 
 using System;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
 using FarseerPhysics.TestBed.Framework;
 using FarseerPhysics.TestBed.Tests;
 using Microsoft.Xna.Framework;
