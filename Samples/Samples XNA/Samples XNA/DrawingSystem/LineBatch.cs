@@ -1,5 +1,6 @@
 ﻿using System;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -125,6 +126,30 @@ namespace FarseerPhysics.SamplesFramework
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
                     _lineVertsCount += 2;
                 }
+            }
+        }
+
+        public void DrawVertices(Vertices verts)
+        {
+            DrawVertices(verts, Color.Black);
+        }
+
+        public void DrawVertices(Vertices verts, Color color)
+        {
+            if (!_hasBegun)
+            {
+                throw new InvalidOperationException("Begin must be called before DrawVertices can be called.");
+            }
+            for (int i = 0; i < verts.Count; ++i)
+            {
+                if (_lineVertsCount >= _lineVertices.Length)
+                {
+                    Flush();
+                }
+                _lineVertices[_lineVertsCount].Position = new Vector3(verts[i], 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(verts.NextVertex(i), 0f);
+                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
+                _lineVertsCount += 2;
             }
         }
 
