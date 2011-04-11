@@ -4,6 +4,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,7 @@ namespace FarseerPhysics.SamplesFramework
     internal class AdvancedDemo5 : PhysicsGameScreen, IDemoScreen
     {
         private Border _border;
+        private List<Vertices> _breakableObject;
 
         #region IDemoScreen Members
 
@@ -50,11 +52,10 @@ namespace FarseerPhysics.SamplesFramework
         {
             base.LoadContent();
 
-            DebugView.AppendFlags(DebugViewFlags.Shape);
-
             World.Gravity = Vector2.Zero;
 
             _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _breakableObject = new List<Vertices>();
 
             Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
 
@@ -98,7 +99,11 @@ namespace FarseerPhysics.SamplesFramework
                 BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);
                 breakableBody.MainBody.Position = new Vector2(xOffset, yOffset);
                 breakableBody.Strength = 100;
+                breakableBody.MainBody.UserData = i;
                 World.AddBreakableBody(breakableBody);
+
+                polygon.Scale(ref vertScale);
+                _breakableObject.Add(polygon);
 
                 xOffset += 3.5f;
             }
@@ -132,14 +137,38 @@ namespace FarseerPhysics.SamplesFramework
         public override void Draw(GameTime gameTime)
         {
             _border.Draw();
+            ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
+            for (int i = 0; i < World.BodyList.Count; ++i)
+            {
+                Body b = World.BodyList[i];
+                if (b.FixtureList.Count == 1 &&
+                    b.FixtureList[0].ShapeType == ShapeType.Polygon)
+                {
+                    PolygonShape s = (PolygonShape)b.FixtureList[0].Shape;
+                    Vertices temp = new Vertices();
+                    Transform t;
+                    b.GetTransform(out t);
+                    for (int j = 0; j < s.Vertices.Count; ++j)
+                    {
+                        temp.Add(MathUtils.Multiply(ref t, s.Vertices[j]));
+                    }
+                    ScreenManager.LineBatch.DrawVertices(temp);
+                }
+            }
+            for (int i = 0; i < World.BreakableBodyList.Count; ++i)
+            {
+                Vertices temp = new Vertices();
+                Transform t;
+                World.BreakableBodyList[i].MainBody.GetTransform(out t);
+                int index = (int)World.BreakableBodyList[i].MainBody.UserData;
+                for (int j = 0; j < _breakableObject[index].Count; ++j)
+                {
+                    temp.Add(MathUtils.Multiply(ref t, _breakableObject[index][j]));
+                }
+                ScreenManager.LineBatch.DrawVertices(temp);
+            }
+            ScreenManager.LineBatch.End();
             base.Draw(gameTime);
-        }
-
-        public override void UnloadContent()
-        {
-            DebugView.RemoveFlags(DebugViewFlags.Shape);
-            
-            base.UnloadContent();
         }
     }
 }
