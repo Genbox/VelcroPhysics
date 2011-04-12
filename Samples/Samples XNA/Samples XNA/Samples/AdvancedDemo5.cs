@@ -15,7 +15,7 @@ namespace FarseerPhysics.SamplesFramework
     internal class AdvancedDemo5 : PhysicsGameScreen, IDemoScreen
     {
         private Border _border;
-        private List<Vertices> _breakableObject;
+        private List<List<Vertices>> _breakableObject;
 
         #region IDemoScreen Members
 
@@ -55,7 +55,7 @@ namespace FarseerPhysics.SamplesFramework
             World.Gravity = Vector2.Zero;
 
             _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
-            _breakableObject = new List<Vertices>();
+            _breakableObject = new List<List<Vertices>>();
 
             Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
 
@@ -81,8 +81,8 @@ namespace FarseerPhysics.SamplesFramework
                 Vertices polygon = list[i];
                 Vector2 centroid = -polygon.GetCentroid();
                 polygon.Translate(ref centroid);
-                polygon = SimplifyTools.CollinearSimplify(polygon);
-                polygon = SimplifyTools.ReduceByDistance(polygon, 4);
+                //polygon = SimplifyTools.CollinearSimplify(polygon); // this breaks the split hole function
+                polygon = SimplifyTools.ReduceByDistance(polygon, 4); 
                 List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
 
 #if WINDOWS_PHONE
@@ -103,7 +103,7 @@ namespace FarseerPhysics.SamplesFramework
                 World.AddBreakableBody(breakableBody);
 
                 polygon.Scale(ref vertScale);
-                _breakableObject.Add(polygon);
+                _breakableObject.Add(polygon.SplitAtHoles());
 
                 xOffset += 3.5f;
             }
@@ -157,15 +157,18 @@ namespace FarseerPhysics.SamplesFramework
             }
             for (int i = 0; i < World.BreakableBodyList.Count; ++i)
             {
-                Vertices temp = new Vertices();
                 Transform t;
                 World.BreakableBodyList[i].MainBody.GetTransform(out t);
                 int index = (int)World.BreakableBodyList[i].MainBody.UserData;
                 for (int j = 0; j < _breakableObject[index].Count; ++j)
                 {
-                    temp.Add(MathUtils.Multiply(ref t, _breakableObject[index][j]));
+                    Vertices temp = new Vertices();
+                    for (int k = 0; k < _breakableObject[index][j].Count; ++k)
+                    {
+                        temp.Add(MathUtils.Multiply(ref t, _breakableObject[index][j][k]));
+                    }
+                    ScreenManager.LineBatch.DrawVertices(temp);
                 }
-                ScreenManager.LineBatch.DrawVertices(temp);
             }
             ScreenManager.LineBatch.End();
             base.Draw(gameTime);
