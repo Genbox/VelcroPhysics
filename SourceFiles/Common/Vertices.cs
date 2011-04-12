@@ -708,6 +708,56 @@ namespace FarseerPhysics.Common
             return new Vertices();
         }
 
+        // Split up a vertices object with holes returned from the texture trace into
+        // several vertices objects (one for the outline and one for each hole
+        // outline and holes should have opposing winding orders (not fully tested, not efficient)
+        public List<Vertices> SplitAtHoles()
+        {
+            List<Vertices> result = new List<Vertices>();
+            List<Vector2> duplicate = new List<Vector2>();
+            int holeCount = 0;
+            int index = 0;
+            bool ignoreNext = false;
+
+            result.Add(new Vertices());
+
+            // search for duplicate points and trace the polygon
+            // point by point
+            for (int i = 0; i < Count; ++i)
+            {
+                for (int j = i + 1; j < Count; ++j)
+                {
+                    if (this[i] == this[j])
+                    {
+                        duplicate.Add(this[i]);
+                    }
+                }
+                if (ignoreNext)
+                {
+                    ignoreNext = false;
+                }
+                else
+                {
+                    result[index].Add(this[i]);
+                    if (duplicate.Contains(this[i]))
+                    {
+                        if (index == 0) // jump to new shape
+                        {
+                            holeCount++;
+                            index = holeCount;
+                            result.Add(new Vertices());
+                        }
+                        else // jump back to starting shape
+                        {
+                            index = 0;
+                        }
+                        ignoreNext = true;
+                    }
+                }
+            }
+            return result;
+        }
+
         private class PolyNode
         {
             private const int MaxConnected = 32;
