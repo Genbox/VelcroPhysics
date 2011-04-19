@@ -129,8 +129,12 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _enableLimit; }
             set
             {
-                WakeBodies();
-                _enableLimit = value;
+				if (value != _enableLimit)
+				{
+					WakeBodies();
+					_enableLimit = value;
+					_impulse.Z = 0.0f;
+				}
             }
         }
 
@@ -143,9 +147,13 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _lowerAngle; }
             set
             {
-                WakeBodies();
-                _lowerAngle = value;
-            }
+				if (_lowerAngle != value)
+				{
+					WakeBodies();
+					_lowerAngle = value;
+					_impulse.Z = 0.0f;
+				}
+			}
         }
 
         /// <summary>
@@ -157,12 +165,32 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _upperAngle; }
             set
             {
-                WakeBodies();
-                _upperAngle = value;
-            }
+				if (_upperAngle != value)
+				{
+					WakeBodies();
+					_upperAngle = value;
+					_impulse.Z = 0.0f;
+				}
+			}
         }
 
-        /// <summary>
+		/// <summary>
+		/// Set the joint limits, usually in meters.
+		/// </summary>
+		/// <param name="lower"></param>
+		/// <param name="upper"></param>
+		public void SetLimits(float lower, float upper)
+		{
+			if (upper != _upperAngle || lower != _lowerAngle)
+			{
+				WakeBodies();
+				_upperAngle = upper;
+				_lowerAngle = lower;
+				_impulse.Z = 0.0f;
+			}
+		}
+
+		/// <summary>
         /// Is the joint motor enabled?
         /// </summary>
         /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
@@ -205,10 +233,10 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Get the current motor torque, usually in N-m.
+        /// Get the current motor impulse.
         /// </summary>
         /// <value></value>
-        public float MotorTorque
+        public float MotorImpulse
         {
             get { return _motorImpulse; }
             set
@@ -218,7 +246,16 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        /// <summary>
+        /// Get the current motor torque, usually in N-m.
+        /// </summary>
+        /// <value></value>
+		public float GetMotorTorque(float inv_dt)
+		{
+			return inv_dt * _motorImpulse;
+		}
+
+		public override Vector2 GetReactionForce(float inv_dt)
         {
             return inv_dt * new Vector2(_impulse.X, _impulse.Y);
         }
@@ -383,7 +420,8 @@ namespace FarseerPhysics.Dynamics.Joints
                     float newImpulse = _impulse.Z + impulse.Z;
                     if (newImpulse < 0.0f)
                     {
-                        Vector2 reduced = _mass.Solve22(-Cdot1);
+						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.Col3.X, _mass.Col3.Y);
+						Vector2 reduced = _mass.Solve22(rhs);
                         impulse.X = reduced.X;
                         impulse.Y = reduced.Y;
                         impulse.Z = -_impulse.Z;
@@ -391,21 +429,30 @@ namespace FarseerPhysics.Dynamics.Joints
                         _impulse.Y += reduced.Y;
                         _impulse.Z = 0.0f;
                     }
-                }
+					else
+					{
+						_impulse += impulse;
+					}
+				}
                 else if (_limitState == LimitState.AtUpper)
                 {
                     float newImpulse = _impulse.Z + impulse.Z;
                     if (newImpulse > 0.0f)
                     {
-                        Vector2 reduced = _mass.Solve22(-Cdot1);
-                        impulse.X = reduced.X;
+						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.Col3.X, _mass.Col3.Y);
+						Vector2 reduced = _mass.Solve22(rhs);
+						impulse.X = reduced.X;
                         impulse.Y = reduced.Y;
                         impulse.Z = -_impulse.Z;
                         _impulse.X += reduced.X;
                         _impulse.Y += reduced.Y;
                         _impulse.Z = 0.0f;
                     }
-                }
+					else
+					{
+						_impulse += impulse;
+					}
+				}
 
                 Vector2 P = new Vector2(impulse.X, impulse.Y);
 

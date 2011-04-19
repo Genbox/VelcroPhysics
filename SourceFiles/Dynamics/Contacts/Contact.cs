@@ -22,6 +22,7 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
+#define USE_ACTIVE_CONTACT_SET
 
 using System;
 using System.Collections.Generic;
@@ -478,7 +479,10 @@ namespace FarseerPhysics.Dynamics.Contacts
         }
 
         internal void Destroy()
-        {
+       {
+#if USE_ACTIVE_CONTACT_SET
+			FixtureA.Body.World.ContactManager.RemoveActiveContact(this);
+#endif
             FixtureA.Body.World.ContactPool.Enqueue(this);
             Reset(null, 0, null, 0);
         }

@@ -224,8 +224,12 @@ namespace FarseerPhysics.Dynamics.Joints
                 Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false,
                              "Warning: limits does currently not work with fixed rotation");
 
-                WakeBodies();
-                _enableLimit = value;
+				if (value != _enableLimit)
+				{
+					WakeBodies();
+					_enableLimit = value;
+					_impulse.Z = 0;
+				}
             }
         }
 
@@ -238,8 +242,12 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _lowerTranslation; }
             set
             {
-                WakeBodies();
-                _lowerTranslation = value;
+				if (value != _lowerTranslation)
+				{
+					WakeBodies();
+					_lowerTranslation = value;
+					_impulse.Z = 0.0f;
+				}
             }
         }
 
@@ -252,10 +260,30 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return _upperTranslation; }
             set
             {
-                WakeBodies();
-                _upperTranslation = value;
+				if (value != _upperTranslation)
+				{
+					WakeBodies();
+					_upperTranslation = value;
+					_impulse.Z = 0.0f;
+				}
             }
         }
+
+		/// <summary>
+		/// Set the joint limits, usually in meters.
+		/// </summary>
+		/// <param name="lower"></param>
+		/// <param name="upper"></param>
+		public void SetLimits(float lower, float upper)
+		{
+			if (upper != _upperTranslation || lower != _lowerTranslation)
+			{
+				WakeBodies();
+				_upperTranslation = upper;
+				_lowerTranslation = lower;
+				_impulse.Z = 0.0f;
+			}
+		}
 
         /// <summary>
         /// Is the joint motor enabled?
@@ -300,14 +328,19 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Get the current motor force, usually in N.
+        /// Get the current motor impulse, usually in N.
         /// </summary>
         /// <value></value>
-        public float MotorForce
+        public float MotorImpulse
         {
             get { return _motorImpulse; }
             set { _motorImpulse = value; }
         }
+
+		public float GetMotorForce(float inv_dt)
+		{
+			return inv_dt * _motorImpulse;
+		}
 
         public Vector2 LocalXAxis1
         {

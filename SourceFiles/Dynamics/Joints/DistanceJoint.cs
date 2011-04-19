@@ -126,12 +126,23 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
+		/// <summary>
+		/// Get the reaction force given the inverse time step. Unit is N.
+		/// </summary>
+		/// <param name="inv_dt"></param>
+		/// <returns></returns>
         public override Vector2 GetReactionForce(float inv_dt)
         {
             Vector2 F = (inv_dt * _impulse) * _u;
             return F;
         }
 
+		/// <summary>
+		/// Get the reaction torque given the inverse time step.
+		/// Unit is N*m. This is always zero for a distance joint.
+		/// </summary>
+		/// <param name="inv_dt"></param>
+		/// <returns></returns>
         public override float GetReactionTorque(float inv_dt)
         {
             return 0.0f;

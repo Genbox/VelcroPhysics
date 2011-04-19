@@ -227,7 +227,7 @@ namespace FarseerPhysics.Collision
             }
 
             // Try to keep the tree balanced.
-            _tree.Rebalance(4);
+            //_tree.Rebalance(4);
         }
 
         /// <summary>

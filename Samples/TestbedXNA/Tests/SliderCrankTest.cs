@@ -154,7 +154,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
             TextLine += 15;
-            float torque = _joint1.MotorTorque;
+			float torque = _joint1.GetMotorTorque(settings.Hz);
             DebugView.DrawString(50, TextLine, "Motor Torque = {0:n}", torque);
             TextLine += 15;
         }

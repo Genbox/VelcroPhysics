@@ -191,42 +191,6 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
-        /// Perform some iterations to re-balance the tree.
-        /// </summary>
-        /// <param name="iterations">The iterations.</param>
-        public void Rebalance(int iterations)
-        {
-            if (_root == NullNode)
-            {
-                return;
-            }
-
-            // Rebalance the tree by removing and re-inserting leaves.
-            for (int i = 0; i < iterations; ++i)
-            {
-                int node = _root;
-
-                int bit = 0;
-                while (_nodes[node].IsLeaf() == false)
-                {
-                    // Child selector based on a bit in the path
-                    int selector = (_path >> bit) & 1;
-
-                    // Select the child nod
-                    node = (selector == 0) ? _nodes[node].Child1 : _nodes[node].Child2;
-
-                    // Keep bit between 0 and 31 because _path has 32 bits
-                    // bit = (bit + 1) % 31
-                    bit = (bit + 1) & 0x1F;
-                }
-                ++_path;
-
-                RemoveLeaf(node);
-                InsertLeaf(node);
-            }
-        }
-
-        /// <summary>
         /// Get proxy user data.
         /// </summary>
         /// <typeparam name="T"></typeparam>

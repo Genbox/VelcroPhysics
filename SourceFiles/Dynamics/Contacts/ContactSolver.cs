@@ -237,7 +237,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     float k12 = invMassA + invMassB + invIA * rn1A * rn2A + invIB * rn1B * rn2B;
 
                     // Ensure a reasonable condition number.
-                    const float k_maxConditionNumber = 100.0f;
+                    const float k_maxConditionNumber = 1000.0f;
                     if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
                     {
                         // K is safe to invert.
