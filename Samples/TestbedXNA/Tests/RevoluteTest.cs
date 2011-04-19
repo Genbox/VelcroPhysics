@@ -43,38 +43,59 @@ namespace FarseerPhysics.TestBed.Tests
         private RevoluteTest()
         {
             //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            var ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            {
-                //The big fixed wheel
-                CircleShape shape = new CircleShape(5.0f, 5);
+			{
+				//The big fixed wheel
+				CircleShape shape = new CircleShape(5.0f, 5);
 
-                Body body = BodyFactory.CreateBody(World);
-                body.Position = new Vector2(0.0f, 15.0f);
-                body.BodyType = BodyType.Dynamic;
+				Body body = BodyFactory.CreateBody(World);
+				body.Position = new Vector2(-10.0f, 15.0f);
+				body.BodyType = BodyType.Dynamic;
 
-                body.CreateFixture(shape);
+				body.CreateFixture(shape);
 
-                _fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
-                _fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
-                _fixedJoint.MaxMotorTorque = 5000.0f;
-                _fixedJoint.MotorEnabled = true;
-                World.AddJoint(_fixedJoint);
+				_fixedJoint = new FixedRevoluteJoint(body, Vector2.Zero, body.Position);
+				_fixedJoint.MotorSpeed = 0.25f * Settings.Pi;
+				_fixedJoint.MaxMotorTorque = 5000.0f;
+				_fixedJoint.MotorEnabled = true;
+				World.AddJoint(_fixedJoint);
 
-                // The small gear attached to the big one
-                Body body1 = BodyFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
-                body1.Position = new Vector2(0.0f, 12.0f);
-                body1.BodyType = BodyType.Dynamic;
+				// The small gear attached to the big one
+				Body body1 = BodyFactory.CreateGear(World, 1.5f, 10, 0.1f, 1, 1);
+				body1.Position = new Vector2(-10.0f, 12.0f);
+				body1.BodyType = BodyType.Dynamic;
 
-                _joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
-                                           Vector2.Zero);
-                _joint.MotorSpeed = 1.0f * Settings.Pi;
-                _joint.MaxMotorTorque = 5000.0f;
-                _joint.MotorEnabled = true;
-                _joint.CollideConnected = false;
+				_joint = new RevoluteJoint(body, body1, body.GetLocalPoint(body1.Position),
+										   Vector2.Zero);
+				_joint.MotorSpeed = 1.0f * Settings.Pi;
+				_joint.MaxMotorTorque = 5000.0f;
+				_joint.MotorEnabled = true;
+				_joint.CollideConnected = false;
 
-                World.AddJoint(_joint);
-            }
+				World.AddJoint(_joint);
+
+				// Box2d rev 167
+				{
+					CircleShape circle_shape = new CircleShape(3.0f, 5);
+					var circleBody = BodyFactory.CreateBody(World);
+					circleBody.Position = new Vector2(5.0f, 30.0f);
+					circleBody.BodyType = BodyType.Dynamic;
+					circleBody.CreateFixture(circle_shape);
+					PolygonShape polygonShape = new PolygonShape(2.0f);
+					polygonShape.SetAsBox(10.0f, 0.2f, new Vector2(-10.0f, 0.0f), 0.0f);
+					var polygon_body = BodyFactory.CreateBody(World);
+					polygon_body.Position = new Vector2(20.0f, 10.0f);
+					polygon_body.BodyType = BodyType.Dynamic;
+					polygon_body.IsBullet = true;
+					polygon_body.CreateFixture(polygonShape);
+					RevoluteJoint rjd = new RevoluteJoint(ground, polygon_body, new Vector2(20.0f, 10.0f));
+					rjd.LowerLimit = -0.25f * Settings.Pi;
+					rjd.UpperLimit = 0.0f;
+					rjd.LimitEnabled = true;
+					World.AddJoint(rjd);
+				}
+			}
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)

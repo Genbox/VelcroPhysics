@@ -46,7 +46,10 @@ namespace FarseerPhysics.Common
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+			foreach (var item in _dict.Keys)
+			{
+				array[arrayIndex++] = item;
+			}
         }
 
         public bool Remove(T item)

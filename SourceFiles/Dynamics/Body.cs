@@ -22,6 +22,7 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
+#define USE_AWAKE_BODY_SET
 
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace FarseerPhysics.Dynamics
         FixedRotation = (1 << 4),
         Enabled = (1 << 5),
         IgnoreGravity = (1 << 6),
-        IgnoreCCD = (1 << 7),
+		IgnoreCCD = (1 << 7),
     }
 
     public class Body : IDisposable
@@ -114,7 +115,9 @@ namespace FarseerPhysics.Dynamics
             FixedRotation = false;
             IsBullet = false;
             SleepingAllowed = true;
+#if !USE_AWAKE_BODY_SET
             Awake = true;
+#endif
             BodyType = BodyType.Static;
             Enabled = true;
 
@@ -152,11 +155,14 @@ namespace FarseerPhysics.Dynamics
 
                 if (_bodyType == BodyType.Static)
                 {
+					Awake = false;
                     LinearVelocityInternal = Vector2.Zero;
                     AngularVelocityInternal = 0.0f;
                 }
-
-                Awake = true;
+				else
+				{
+					Awake = true;
+				}
 
                 Force = Vector2.Zero;
                 Torque = 0.0f;
@@ -299,19 +305,36 @@ namespace FarseerPhysics.Dynamics
                     {
                         Flags |= BodyFlags.Awake;
                         SleepTime = 0.0f;
-                    }
+						World.ContactManager.UpdateContacts(ContactList, true);
+#if USE_AWAKE_BODY_SET
+						if (InWorld && !World.AwakeBodySet.Contains(this))
+						{
+							World.AwakeBodySet.Add(this);
+						}
+#endif
+					}
                 }
                 else
                 {
+#if USE_AWAKE_BODY_SET
+					// Check even for BodyType.Static because if this body had just been changed to Static it will have
+					// set Awake = false in the process.
+					if (InWorld && World.AwakeBodySet.Contains(this))
+					{
+						World.AwakeBodySet.Remove(this);
+					}
+#endif
                     Flags &= ~BodyFlags.Awake;
                     SleepTime = 0.0f;
                     LinearVelocityInternal = Vector2.Zero;
                     AngularVelocityInternal = 0.0f;
                     Force = Vector2.Zero;
                     Torque = 0.0f;
+ 					World.ContactManager.UpdateContacts(ContactList, false);
+
                 }
-            }
-            get { return (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
+           }
+            get { return (BodyType != Dynamics.BodyType.Static) && (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
         }
 
         /// <summary>
@@ -400,6 +423,8 @@ namespace FarseerPhysics.Dynamics
             }
             get { return (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
         }
+
+		public bool InWorld { get; internal set; }
 
         /// <summary>
         /// Gets all the fixtures attached to this body.
@@ -639,6 +664,24 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+		/// <summary>
+		/// Body objects can define which categories of bodies they wish to ignore CCD with. 
+		/// This allows certain bodies to be configured to ignore CCD with objects that
+		/// aren't a penetration problem due to the way content has been prepared.
+		/// This is compared against the other Body's fixture CollisionCategories within World.SolveTOI().
+		/// </summary>
+		public Category IgnoreCCDWith
+		{
+            set
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture f = FixtureList[i];
+					f.IgnoreCCDWith = value;
+                }
+            }
+		}
+
         public short CollisionGroup
         {
             set
@@ -674,7 +717,6 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.IgnoreCCD;
             }
         }
-
         #region IDisposable Members
 
         public bool IsDisposed { get; set; }
