@@ -65,12 +65,12 @@ namespace FarseerPhysics.Factories
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localAnchor"></param>
+		/// <param name="worldAnchor">World space coordinates of weld joint</param>
         /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 localAnchor)
+		public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 worldAnchor)
         {
-            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(localAnchor),
-                                            bodyB.GetLocalPoint(localAnchor));
+			WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(worldAnchor),
+											bodyB.GetLocalPoint(worldAnchor));
             return joint;
         }
 
@@ -80,11 +80,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
+		/// <param name="worldAnchor">World space coordinates of weld joint</param>
         /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB)
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 worldAnchor)
         {
-            WeldJoint joint = CreateWeldJoint(bodyA, bodyB, localanchorB);
+			WeldJoint joint = CreateWeldJoint(bodyA, bodyB, worldAnchor);
             world.AddJoint(joint);
             return joint;
         }
