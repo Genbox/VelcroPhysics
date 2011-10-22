@@ -32,9 +32,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class LineJointTest : Test
+    public class WheelJointTest : Test
     {
-        private LineJointTest()
+        private WheelJointTest()
         {
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
@@ -51,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 axis = new Vector2(-1000.0f, -2.0f);
                 axis.Normalize();
 
-                LineJoint jd = new LineJoint(ground, body, new Vector2(0, 8.5f), axis);
+                WheelJoint jd = new WheelJoint(ground, body, new Vector2(0, 8.5f), axis);
                 jd.MotorSpeed = 1.0f;
                 jd.MaxMotorTorque = 1000.0f;
                 jd.MotorEnabled = true;
@@ -65,7 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, 7.0f);
 
-                FixedLineJoint jdf = new FixedLineJoint(body2, new Vector2(10, 8.5f), axis);
+                FixedWheelJoint jdf = new FixedWheelJoint(body2, new Vector2(10, 8.5f), axis);
                 jdf.MotorSpeed = 1.0f;
                 jdf.MaxMotorTorque = 1000.0f;
                 jdf.MotorEnabled = true;
@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new LineJointTest();
+            return new WheelJointTest();
         }
     }
 }

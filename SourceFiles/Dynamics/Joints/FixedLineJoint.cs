@@ -30,7 +30,7 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
-    public class FixedLineJoint : Joint
+    public class FixedWheelJoint : Joint
     {
         private Vector2 _ax, _ay;
         private float _bias;
@@ -69,9 +69,9 @@ namespace FarseerPhysics.Dynamics.Joints
         // Cdot = wB - wA
         // J = [0 0 -1 0 0 1]
 
-        internal FixedLineJoint() { JointType = JointType.FixedLine; }
+        internal FixedWheelJoint() { JointType = JointType.FixedLine; }
 
-        public FixedLineJoint(Body body, Vector2 worldAnchor, Vector2 axis)
+        public FixedWheelJoint(Body body, Vector2 worldAnchor, Vector2 axis)
             : base(body)
         {
             JointType = JointType.FixedLine;
