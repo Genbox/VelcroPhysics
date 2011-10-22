@@ -115,6 +115,7 @@ namespace FarseerPhysics.Collision.Shapes
             HasVertex0 = false;
             HasVertex3 = false;
 
+            //Added here to speed things up
             ComputeProperties();
         }
 
@@ -185,7 +186,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             float t = numerator / denominator;
-            if (t < 0.0f || 1.0f < t)
+            if (t < 0.0f || input.MaxFraction < t)
             {
                 return false;
             }
@@ -242,7 +243,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        public override void ComputeProperties()
+        protected override void ComputeProperties()
         {
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }

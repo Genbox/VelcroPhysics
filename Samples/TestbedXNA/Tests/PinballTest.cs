@@ -1,9 +1,6 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
 * Copyright (c) 2010 Ian Qvist
-* 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
 *
 * Original source Box2D:
 * Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
@@ -31,7 +28,7 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
+ 
 namespace FarseerPhysics.TestBed.Tests
 {
     /// <summary>
@@ -57,8 +54,9 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
 
-                LoopShape loop = new LoopShape(vertices);
-                ground.CreateFixture(loop);
+                ChainShape chain = new ChainShape(vertices);
+                chain.CreateLoop(vertices);
+                ground.CreateFixture(chain);
             }
 
             // Flippers

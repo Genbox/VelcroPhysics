@@ -115,7 +115,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                                ContactType.Circle,
                                                                ContactType.EdgeAndCircle,
                                                                ContactType.PolygonAndCircle,
-                                                               ContactType.LoopAndCircle,
+                                                               ContactType.ChainAndCircle,
                                                            },
                                                            {
                                                                ContactType.EdgeAndCircle,
@@ -129,13 +129,13 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                                ContactType.PolygonAndCircle,
                                                                ContactType.EdgeAndPolygon,
                                                                ContactType.Polygon,
-                                                               ContactType.LoopAndPolygon,
+                                                               ContactType.ChainAndPolygon,
                                                            },
                                                            {
-                                                               ContactType.LoopAndCircle,
+                                                               ContactType.ChainAndCircle,
                                                                ContactType.NotSupported,
                                                                // 3,1 is invalid (no ContactType.EdgeAndLoop)
-                                                               ContactType.LoopAndPolygon,
+                                                               ContactType.ChainAndPolygon,
                                                                ContactType.NotSupported,
                                                                // 3,3 is invalid (no ContactType.Loop)
                                                            },
@@ -475,14 +475,14 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                               (EdgeShape)FixtureA.Shape, ref transformA,
                                                               (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
-                case ContactType.LoopAndCircle:
-                    LoopShape loop = (LoopShape)FixtureA.Shape;
-                    loop.GetChildEdge(ref _edge, ChildIndexA);
+                case ContactType.ChainAndCircle:
+                    ChainShape chain = (ChainShape)FixtureA.Shape;
+                    chain.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA,
                                                              (CircleShape)FixtureB.Shape, ref transformB);
                     break;
-                case ContactType.LoopAndPolygon:
-                    LoopShape loop2 = (LoopShape)FixtureA.Shape;
+                case ContactType.ChainAndPolygon:
+                    ChainShape loop2 = (ChainShape)FixtureA.Shape;
                     loop2.GetChildEdge(ref _edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA,
                                                               (PolygonShape)FixtureB.Shape, ref transformB);
@@ -558,8 +558,8 @@ namespace FarseerPhysics.Dynamics.Contacts
             Circle,
             EdgeAndPolygon,
             EdgeAndCircle,
-            LoopAndPolygon,
-            LoopAndCircle,
+            ChainAndPolygon,
+            ChainAndCircle,
         }
 
         #endregion

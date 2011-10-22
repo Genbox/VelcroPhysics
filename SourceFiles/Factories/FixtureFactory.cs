@@ -24,14 +24,14 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(edgeShape, userData);
         }
 
-        public static Fixture AttachLoopShape(Vertices vertices, Body body)
+        public static Fixture AttachChainShape(Vertices vertices, Body body)
         {
-            return AttachLoopShape(vertices, body, null);
+            return AttachChainShape(vertices, body, null);
         }
 
-        public static Fixture AttachLoopShape(Vertices vertices, Body body, object userData)
+        public static Fixture AttachChainShape(Vertices vertices, Body body, object userData)
         {
-            LoopShape shape = new LoopShape(vertices);
+            ChainShape shape = new ChainShape(vertices);
             return body.CreateFixture(shape, userData);
         }
 
@@ -149,7 +149,7 @@ namespace FarseerPhysics.Factories
 
             if (closed)
             {
-                fixtures.Add(AttachLoopShape(arc, body));
+                fixtures.Add(AttachChainShape(arc, body));
             }
 
             for (int i = 1; i < arc.Count; i++)

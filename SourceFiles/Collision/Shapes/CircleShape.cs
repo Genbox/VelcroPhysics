@@ -1,26 +1,23 @@
 ﻿/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
+* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org
+*
+* This software is provided 'as-is', without any express or implied
+* warranty.  In no event will the authors be held liable for any damages
+* arising from the use of this software.
+* Permission is granted to anyone to use this software for any purpose,
+* including commercial applications, and to alter it and redistribute it
+* freely, subject to the following restrictions:
+* 1. The origin of this software must not be misrepresented; you must not
+* claim that you wrote the original software. If you use this software
+* in a product, an acknowledgment in the product documentation would be
+* appreciated but is not required.
+* 2. Altered source versions must be plainly marked as such, and must not be
+* misrepresented as being the original software.
+* 3. This notice may not be removed or altered from any source distribution.
 */
 
 using System;
@@ -131,9 +128,10 @@ namespace FarseerPhysics.Collision.Shapes
             {
                 a /= rr;
                 output.Fraction = a;
-                Vector2 norm = (s + a * r);
-                norm.Normalize();
-                output.Normal = norm;
+
+                //TODO: Check results here
+                output.Normal = s + a * r;
+                output.Normal.Normalize();
                 return true;
             }
 
@@ -157,7 +155,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        public override sealed void ComputeProperties()
+        protected override sealed void ComputeProperties()
         {
             float area = Settings.Pi * Radius * Radius;
             MassData.Area = area;
@@ -168,12 +166,19 @@ namespace FarseerPhysics.Collision.Shapes
             MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
         }
 
+        /// <summary>
+        /// Compare the circle to another circle
+        /// </summary>
+        /// <param name="shape">The other circle</param>
+        /// <returns>True if the two circles are the same size and have the same position</returns>
         public bool CompareTo(CircleShape shape)
         {
-            return (Radius == shape.Radius &&
-                    Position == shape.Position);
+            return (Radius == shape.Radius && Position == shape.Position);
         }
 
+        /// <summary>
+        /// Method used by the BuoyancyController
+        /// </summary>
         public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
