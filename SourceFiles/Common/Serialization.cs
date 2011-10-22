@@ -197,7 +197,7 @@ namespace FarseerPhysics.Common
                     throw new Exception("Gear joint not supported by serialization");
                 case JointType.Line:
                     {
-                        LineJoint ljd = (LineJoint)joint;
+                        WheelJoint ljd = (WheelJoint)joint;
 
                         WriteElement("EnableMotor", ljd.MotorEnabled);
                         WriteElement("LocalAnchorA", ljd.LocalAnchorA);
@@ -786,7 +786,7 @@ namespace FarseerPhysics.Common
                                 joint = new FrictionJoint();
                                 break;
                             case JointType.Line:
-                                joint = new LineJoint();
+                                joint = new WheelJoint();
                                 break;
                             case JointType.Prismatic:
                                 joint = new PrismaticJoint();
@@ -873,28 +873,28 @@ namespace FarseerPhysics.Common
                                         switch (sn.Name.ToLower())
                                         {
                                             case "enablemotor":
-                                                ((LineJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
                                                 break;
                                             case "localanchora":
-                                                ((LineJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
                                                 break;
                                             case "localanchorb":
-                                                ((LineJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
                                                 break;
                                             case "motorspeed":
-                                                ((LineJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
                                                 break;
                                             case "dampingratio":
-                                                ((LineJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
                                                 break;
                                             case "maxmotortorque":
-                                                ((LineJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
                                                 break;
                                             case "frequencyhz":
-                                                ((LineJoint)joint).Frequency = float.Parse(sn.Value);
+                                                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
                                                 break;
                                             case "localxaxis":
-                                                ((LineJoint)joint).LocalXAxis = ReadVector(sn);
+                                                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
                                                 break;
                                         }
                                     }

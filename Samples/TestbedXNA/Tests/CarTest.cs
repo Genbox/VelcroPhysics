@@ -41,8 +41,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private float _hz;
         private float _speed;
-        private LineJoint _spring1;
-        private LineJoint _spring2;
+        private WheelJoint _spring1;
+        private WheelJoint _spring2;
         private Body _wheel1;
         private Body _wheel2;
         private float _zeta;
@@ -202,7 +202,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _wheel2.CreateFixture(circle);
 
                 Vector2 axis = new Vector2(0.0f, 1.0f);
-                _spring1 = new LineJoint(_car, _wheel1, _wheel1.Position, axis);
+                _spring1 = new WheelJoint(_car, _wheel1, _wheel1.Position, axis);
                 _spring1.MotorSpeed = 0.0f;
                 _spring1.MaxMotorTorque = 20.0f;
                 _spring1.MotorEnabled = true;
@@ -210,7 +210,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _spring1.DampingRatio = _zeta;
                 World.AddJoint(_spring1);
 
-                _spring2 = new LineJoint(_car, _wheel2, _wheel2.Position, axis);
+                _spring2 = new WheelJoint(_car, _wheel2, _wheel2.Position, axis);
                 _spring2.MotorSpeed = 0.0f;
                 _spring2.MaxMotorTorque = 10.0f;
                 _spring2.MotorEnabled = false;

@@ -143,24 +143,24 @@ namespace FarseerPhysics.Factories
 
         #endregion
 
-        #region Line Joint
+        #region Wheel Joint
 
         /// <summary>
-        /// Creates a line joint
+        /// Creates a Wheel Joint
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static LineJoint CreateLineJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
+        public static WheelJoint CreateWheelJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
         {
-            LineJoint joint = new LineJoint(bodyA, bodyB, anchor, axis);
+            WheelJoint joint = new WheelJoint(bodyA, bodyB, anchor, axis);
             return joint;
         }
 
         /// <summary>
-        /// Creates a line joint and adds it to the world
+        /// Creates a Wheel Joint and adds it to the world
         /// </summary>
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
@@ -168,9 +168,9 @@ namespace FarseerPhysics.Factories
         /// <param name="localanchorB"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static LineJoint CreateLineJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
+        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
         {
-            LineJoint joint = CreateLineJoint(bodyA, bodyB, localanchorB, axis);
+            WheelJoint joint = CreateWheelJoint(bodyA, bodyB, localanchorB, axis);
             world.AddJoint(joint);
             return joint;
         }
