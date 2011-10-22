@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
             borders.Add(new Vector2(halfWidth, -halfHeight));
             borders.Add(new Vector2(-halfWidth, -halfHeight));
 
-            Body anchor = BodyFactory.CreateLoopShape(World, borders);
+            Body anchor = BodyFactory.CreateChainShape(World, borders);
             anchor.CollisionCategories = Category.All;
             anchor.CollidesWith = Category.All;
 

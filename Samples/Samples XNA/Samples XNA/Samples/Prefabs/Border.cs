@@ -28,7 +28,7 @@ namespace FarseerPhysics.SamplesFramework
             borders.Add(new Vector2(halfWidth, -halfHeight));
             borders.Add(new Vector2(-halfWidth, -halfHeight));
 
-            _anchor = BodyFactory.CreateLoopShape(_world, borders);
+            _anchor = BodyFactory.CreateChainShape(_world, borders);
             _anchor.CollisionCategories = Category.All;
             _anchor.CollidesWith = Category.All;
 

@@ -96,7 +96,7 @@ namespace FarseerPhysics.SamplesFramework
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
             }
             if (shape.ShapeType != ShapeType.Edge &&
-                shape.ShapeType != ShapeType.Loop)
+                shape.ShapeType != ShapeType.Chain)
             {
                 throw new NotSupportedException("The specified shapeType is not supported by LineBatch.");
             }
@@ -112,17 +112,17 @@ namespace FarseerPhysics.SamplesFramework
                 _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
                 _lineVertsCount += 2;
             }
-            else if (shape.ShapeType == ShapeType.Loop)
+            else if (shape.ShapeType == ShapeType.Chain)
             {
-                LoopShape loop = (LoopShape)shape;
-                for (int i = 0; i < loop.Vertices.Count; ++i)
+                ChainShape chain = (ChainShape)shape;
+                for (int i = 0; i < chain.Vertices.Count; ++i)
                 {
                     if (_lineVertsCount >= _lineVertices.Length)
                     {
                         Flush();
                     }
-                    _lineVertices[_lineVertsCount].Position = new Vector3(loop.Vertices[i], 0f);
-                    _lineVertices[_lineVertsCount + 1].Position = new Vector3(loop.Vertices.NextVertex(i), 0f);
+                    _lineVertices[_lineVertsCount].Position = new Vector3(chain.Vertices[i], 0f);
+                    _lineVertices[_lineVertsCount + 1].Position = new Vector3(chain.Vertices.NextVertex(i), 0f);
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
                     _lineVertsCount += 2;
                 }

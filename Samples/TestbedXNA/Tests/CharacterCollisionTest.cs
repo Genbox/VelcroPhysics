@@ -60,16 +60,16 @@ namespace FarseerPhysics.TestBed.Tests
             tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
 
-            // Square made from an edge loop.
+            // Square made from an edge chain.
             Vertices vertices = new Vertices(4);
             vertices.Add(new Vector2(-1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
-            LoopShape loopShape = new LoopShape(vertices);
-            ground.CreateFixture(loopShape);
+            ChainShape chainShape = new ChainShape(vertices);
+            ground.CreateFixture(chainShape);
 
-            // Edge loop.
+            // Edge chain.
             vertices = new Vertices(10);
             vertices.Add(new Vector2(0.0f, 0.0f));
             vertices.Add(new Vector2(6.0f, 0.0f));
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(-6.0f, 2.0f));
             vertices.Add(new Vector2(-6.0f, 0.0f));
 
-            BodyFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
+            BodyFactory.CreateChainShape(World, vertices, new Vector2(-10, 4));
 
             // Square character
             Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);

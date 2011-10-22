@@ -534,16 +534,16 @@ namespace FarseerPhysics.DebugViews
                     }
                     break;
 
-                case ShapeType.Loop:
+                case ShapeType.Chain:
                     {
-                        LoopShape loop = (LoopShape)fixture.Shape;
-                        int count = loop.Vertices.Count;
+                        ChainShape chain = (ChainShape)fixture.Shape;
+                        int count = chain.Vertices.Count;
 
-                        Vector2 v1 = MathUtils.Multiply(ref xf, loop.Vertices[count - 1]);
+                        Vector2 v1 = MathUtils.Multiply(ref xf, chain.Vertices[count - 1]);
                         DrawCircle(v1, 0.05f, color);
                         for (int i = 0; i < count; ++i)
                         {
-                            Vector2 v2 = MathUtils.Multiply(ref xf, loop.Vertices[i]);
+                            Vector2 v2 = MathUtils.Multiply(ref xf, chain.Vertices[i]);
                             DrawSegment(v1, v2, color);
                             v1 = v2;
                         }

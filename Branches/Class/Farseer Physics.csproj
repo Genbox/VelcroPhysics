@@ -110,14 +110,14 @@
     <Compile Include="..\..\SourceFiles\Collision\QuadTreeBroadPhase.cs">
       <Link>Collision\QuadTreeBroadPhase.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\Collision\Shapes\ChainShape.cs">
+      <Link>Collision\Shapes\ChainShape.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\Collision\Shapes\CircleShape.cs">
       <Link>Collision\Shapes\CircleShape.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Collision\Shapes\EdgeShape.cs">
       <Link>Collision\Shapes\EdgeShape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Collision\Shapes\LoopShape.cs">
-      <Link>Collision\Shapes\LoopShape.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Collision\Shapes\PolygonShape.cs">
       <Link>Collision\Shapes\PolygonShape.cs</Link>

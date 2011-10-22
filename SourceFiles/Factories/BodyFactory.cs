@@ -45,26 +45,26 @@ namespace FarseerPhysics.Factories
             return body;
         }
 
-        public static Body CreateLoopShape(World world, Vertices vertices)
+        public static Body CreateChainShape(World world, Vertices vertices)
         {
-            return CreateLoopShape(world, vertices, null);
+            return CreateChainShape(world, vertices, null);
         }
 
-        public static Body CreateLoopShape(World world, Vertices vertices, object userData)
+        public static Body CreateChainShape(World world, Vertices vertices, object userData)
         {
-            return CreateLoopShape(world, vertices, Vector2.Zero, userData);
+            return CreateChainShape(world, vertices, Vector2.Zero, userData);
         }
 
-        public static Body CreateLoopShape(World world, Vertices vertices, Vector2 position)
+        public static Body CreateChainShape(World world, Vertices vertices, Vector2 position)
         {
-            return CreateLoopShape(world, vertices, position, null);
+            return CreateChainShape(world, vertices, position, null);
         }
 
-        public static Body CreateLoopShape(World world, Vertices vertices, Vector2 position,
+        public static Body CreateChainShape(World world, Vertices vertices, Vector2 position,
                                            object userData)
         {
             Body body = CreateBody(world, position);
-            FixtureFactory.AttachLoopShape(vertices, body, userData);
+            FixtureFactory.AttachChainShape(vertices, body, userData);
             return body;
         }
 

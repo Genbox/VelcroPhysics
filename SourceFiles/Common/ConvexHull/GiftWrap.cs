@@ -1,99 +1,82 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.ConvexHull
 {
     public static class GiftWrap
     {
-        // From Eric Jordan's convex decomposition library (box2D rev 32)
+        //Extracted from Box2D
 
         /// <summary>
-        /// Find the convex hull of a point cloud using "Gift-wrap" algorithm - start
-        /// with an extremal point, and walk around the outside edge by testing
-        /// angles.
-        /// 
-        /// Runs in O(N*S) time where S is number of sides of resulting polygon.
-        /// Worst case: point cloud is all vertices of convex polygon: O(N^2).
-        /// There may be faster algorithms to do this, should you need one -
-        /// this is just the simplest. You can get O(N log N) expected time if you
-        /// try, I think, and O(N) if you restrict inputs to simple polygons.
-        /// Returns null if number of vertices passed is less than 3.
-        /// Results should be passed through convex decomposition afterwards
-        /// to ensure that each shape has few enough points to be used in Box2d.
-        /// 
-        /// Warning: May be buggy with colinear points on hull.
+        /// Giftwrap convex hull algorithm
+        /// O(nh) time complexity, where n is the number of points and h is the number of points on the convex hull.
+        /// See http://en.wikipedia.org/wiki/Gift_wrapping_algorithm for more details.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <returns></returns>
         public static Vertices GetConvexHull(Vertices vertices)
         {
-            if (vertices.Count < 3)
-                return vertices;
-
-            int[] edgeList = new int[vertices.Count];
-            int numEdges = 0;
-
-            float minY = float.MaxValue;
-            int minYIndex = vertices.Count;
-            for (int i = 0; i < vertices.Count; ++i)
+            // Find the right most point on the hull
+            int i0 = 0;
+            float x0 = vertices[0].X;
+            for (int i = 1; i < vertices.Count; ++i)
             {
-                if (vertices[i].Y < minY)
+                float x = vertices[i].X;
+                if (x > x0 || (x == x0 && vertices[i].Y < vertices[i0].Y))
                 {
-                    minY = vertices[i].Y;
-                    minYIndex = i;
+                    i0 = i;
+                    x0 = x;
                 }
             }
 
-            int startIndex = minYIndex;
-            int winIndex = -1;
-            float dx = -1.0f;
-            float dy = 0.0f;
-            while (winIndex != minYIndex)
+            int[] hull = new int[vertices.Count];
+            int m = 0;
+            int ih = i0;
+
+            for (; ; )
             {
-                float maxDot = -2.0f;
-                float nrm;
+                hull[m] = ih;
 
-                for (int i = 0; i < vertices.Count; ++i)
+                int ie = 0;
+                for (int j = 1; j < vertices.Count; ++j)
                 {
-                    if (i == startIndex)
-                        continue;
-                    float newdx = vertices[i].X - vertices[startIndex].X;
-                    float newdy = vertices[i].Y - vertices[startIndex].Y;
-                    nrm = (float)Math.Sqrt(newdx * newdx + newdy * newdy);
-                    nrm = (nrm == 0.0f) ? 1.0f : nrm;
-                    newdx /= nrm;
-                    newdy /= nrm;
-
-                    //Dot products act as proxy for angle
-                    //without requiring inverse trig.
-                    float newDot = newdx * dx + newdy * dy;
-                    if (newDot > maxDot)
+                    if (ie == ih)
                     {
-                        maxDot = newDot;
-                        winIndex = i;
+                        ie = j;
+                        continue;
+                    }
+
+                    Vector2 r = vertices[ie] - vertices[hull[m]];
+                    Vector2 v = vertices[j] - vertices[hull[m]];
+                    float c = MathUtils.Cross(r, v);
+                    if (c < 0.0f)
+                    {
+                        ie = j;
+                    }
+
+                    // Collinearity check
+                    if (c == 0.0f && v.LengthSquared() > r.LengthSquared())
+                    {
+                        ie = j;
                     }
                 }
-                edgeList[numEdges++] = winIndex;
-                dx = vertices[winIndex].X - vertices[startIndex].X;
-                dy = vertices[winIndex].Y - vertices[startIndex].Y;
-                nrm = (float)Math.Sqrt(dx * dx + dy * dy);
-                nrm = (nrm == 0.0f) ? 1.0f : nrm;
-                dx /= nrm;
-                dy /= nrm;
-                startIndex = winIndex;
+
+                ++m;
+                ih = ie;
+
+                if (ie == i0)
+                {
+                    break;
+                }
             }
 
-            Vertices returnVal = new Vertices(numEdges);
+            Vertices result = new Vertices();
 
-            for (int i = 0; i < numEdges; i++)
+            // Copy vertices.
+            for (int i = 0; i < m; ++i)
             {
-                returnVal.Add(vertices[edgeList[i]]);
-                //Debug.WriteLine(string.Format("{0}, {1}", vertices[edgeList[i]].X, vertices[edgeList[i]].Y));
+                result.Add(vertices[hull[i]]);
             }
-
-            //Not sure if we need this
-            //returnVal.MergeParallelEdges(Settings.b2_angularSlop);
-
-            return returnVal;
+            return result;
         }
     }
 }

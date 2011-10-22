@@ -71,15 +71,15 @@ namespace FarseerPhysics.Collision
                     }
                     break;
 
-                case ShapeType.Loop:
+                case ShapeType.Chain:
                     {
-                        LoopShape loop = (LoopShape)shape;
-                        Debug.Assert(0 <= index && index < loop.Vertices.Count);
+                        ChainShape chain = (ChainShape)shape;
+                        Debug.Assert(0 <= index && index < chain.Vertices.Count);
                         Vertices.Clear();
-                        Vertices.Add(loop.Vertices[index]);
-                        Vertices.Add(index + 1 < loop.Vertices.Count ? loop.Vertices[index + 1] : loop.Vertices[0]);
+                        Vertices.Add(chain.Vertices[index]);
+                        Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
 
-                        Radius = loop.Radius;
+                        Radius = chain.Radius;
                     }
                     break;
 

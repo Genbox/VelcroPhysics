@@ -100,7 +100,7 @@ namespace FarseerPhysics.Collision.Shapes
         Circle = 0,
         Edge = 1,
         Polygon = 2,
-        Loop = 3,
+        Chain = 3,
         TypeCount = 4,
     }
 
@@ -201,7 +201,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// Compute the mass properties of this shape using its dimensions and density.
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
-        public abstract void ComputeProperties();
+        protected abstract void ComputeProperties();
 
         public bool CompareTo(Shape shape)
         {
