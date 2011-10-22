@@ -105,7 +105,6 @@ namespace FarseerPhysics.Collision
         /// Create a proxy with an initial AABB. Pairs are not reported until
         /// UpdatePairs is called.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
         /// <param name="proxy">The user data.</param>
         /// <returns></returns>
         public int AddProxy(ref FixtureProxy proxy)

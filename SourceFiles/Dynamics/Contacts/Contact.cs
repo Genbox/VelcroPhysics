@@ -321,7 +321,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                     mp2.NormalImpulse = 0.0f;
                     mp2.TangentImpulse = 0.0f;
                     ContactID id2 = mp2.Id;
-                    bool found = false;
 
                     for (int j = 0; j < oldManifold.PointCount; ++j)
                     {
@@ -331,14 +330,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                         {
                             mp2.NormalImpulse = mp1.NormalImpulse;
                             mp2.TangentImpulse = mp1.TangentImpulse;
-                            found = true;
                             break;
                         }
-                    }
-                    if (found == false)
-                    {
-                        mp2.NormalImpulse = 0.0f;
-                        mp2.TangentImpulse = 0.0f;
                     }
 
                     Manifold.Points[i] = mp2;
