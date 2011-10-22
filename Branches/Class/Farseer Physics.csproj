@@ -362,9 +362,6 @@
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\Joint.cs">
       <Link>Dynamics\Joints\Joint.cs</Link>
     </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\LineJoint.cs">
-      <Link>Dynamics\Joints\LineJoint.cs</Link>
-    </Compile>
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\PrismaticJoint.cs">
       <Link>Dynamics\Joints\PrismaticJoint.cs</Link>
     </Compile>
@@ -382,6 +379,9 @@
     </Compile>
     <Compile Include="..\..\SourceFiles\Dynamics\Joints\WeldJoint.cs">
       <Link>Dynamics\Joints\WeldJoint.cs</Link>
+    </Compile>
+    <Compile Include="..\..\SourceFiles\Dynamics\Joints\WheelJoint.cs">
+      <Link>Dynamics\Joints\WheelJoint.cs</Link>
     </Compile>
     <Compile Include="..\..\SourceFiles\Dynamics\TimeStep.cs">
       <Link>Dynamics\TimeStep.cs</Link>

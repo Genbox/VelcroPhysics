@@ -122,6 +122,12 @@ namespace FarseerPhysics.Common
             b = tmp;
         }
 
+        /// Get the skew vector such that dot(skew_vec, other) == cross(vec, other)
+        public static Vector2 Skew(Vector2 input)
+        {
+            return new Vector2(-input.Y, input.X);
+        }
+
         /// <summary>
         /// This function is used to ensure that a floating point number is
         /// not a NaN or infinity.

@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     _bodies[i].CreateFixture(shape);
 
-                    //_bodies[i].SetLinearVelocity(new Vector2(0.0f, -100.0f));
+                    _bodies[i].LinearVelocity = new Vector2(0.0f, -50.0f);
                 }
             }
         }
