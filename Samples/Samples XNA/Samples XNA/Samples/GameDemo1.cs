@@ -131,7 +131,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _board = new Body(World);
                 _board.BodyType = BodyType.Dynamic;
-                _board.Position = new Vector2(140.0f, -1.0f);
+                _board.P = new Vector2(140.0f, -1.0f);
 
                 PolygonShape box = new PolygonShape(1f);
                 box.SetAsBox(10.0f, 0.25f);
@@ -164,7 +164,7 @@ namespace FarseerPhysics.SamplesFramework
                 {
                     Body body = new Body(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(161f + 2f * i, 0.125f);
+                    body.P = new Vector2(161f + 2f * i, 0.125f);
                     Fixture fix = body.CreateFixture(shape);
                     fix.Friction = 0.6f;
                     JointFactory.CreateRevoluteJoint(World, prevBody, body, -Vector2.UnitX);
@@ -185,19 +185,19 @@ namespace FarseerPhysics.SamplesFramework
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220f, -0.5f);
+                body.P = new Vector2(220f, -0.5f);
                 body.CreateFixture(box);
                 _boxes.Add(body);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220f, -1.5f);
+                body.P = new Vector2(220f, -1.5f);
                 body.CreateFixture(box);
                 _boxes.Add(body);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(220f, -2.5f);
+                body.P = new Vector2(220f, -2.5f);
                 body.CreateFixture(box);
                 _boxes.Add(body);
             }
@@ -218,22 +218,22 @@ namespace FarseerPhysics.SamplesFramework
 
                 _car = new Body(World);
                 _car.BodyType = BodyType.Dynamic;
-                _car.Position = new Vector2(0.0f, -1.0f);
+                _car.P = new Vector2(0.0f, -1.0f);
                 _car.CreateFixture(chassis);
 
                 _wheelBack = new Body(World);
                 _wheelBack.BodyType = BodyType.Dynamic;
-                _wheelBack.Position = new Vector2(-1.709f, -0.78f);
+                _wheelBack.P = new Vector2(-1.709f, -0.78f);
                 Fixture fix = _wheelBack.CreateFixture(new CircleShape(0.5f, 0.8f));
                 fix.Friction = 0.9f;
 
                 _wheelFront = new Body(World);
                 _wheelFront.BodyType = BodyType.Dynamic;
-                _wheelFront.Position = new Vector2(1.54f, -0.8f);
+                _wheelFront.P = new Vector2(1.54f, -0.8f);
                 _wheelFront.CreateFixture(new CircleShape(0.5f, 1f));
 
                 Vector2 axis = new Vector2(0.0f, -1.2f);
-                _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis);
+                _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.P, axis);
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
                 _springBack.MotorEnabled = true;
@@ -241,7 +241,7 @@ namespace FarseerPhysics.SamplesFramework
                 _springBack.DampingRatio = _zeta;
                 World.AddJoint(_springBack);
 
-                _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis);
+                _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.P, axis);
                 _springFront.MotorSpeed = 0.0f;
                 _springFront.MaxMotorTorque = 10.0f;
                 _springFront.MotorEnabled = false;
@@ -302,21 +302,21 @@ namespace FarseerPhysics.SamplesFramework
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw car
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.P), null,
                                            Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
                                            0f);
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.P), null,
                                            Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
                                            0f);
-            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.Position), null,
+            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.P), null,
                                            Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
             // draw teeter
-            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.Position), null,
+            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.P), null,
                                            Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
+                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].P),
                                                null,
                                                Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f,
                                                SpriteEffects.None, 0f);
@@ -324,7 +324,7 @@ namespace FarseerPhysics.SamplesFramework
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].P), null,
                                                Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();

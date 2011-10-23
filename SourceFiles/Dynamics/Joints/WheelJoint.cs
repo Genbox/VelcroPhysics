@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -197,8 +194,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bB.GetTransform(out xfB);
 
             // Compute the effective masses.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - LocalCenterA);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - LocalCenterB);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - LocalCenterA);
+            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - LocalCenterB);
             Vector2 d = bB.Sweep.C + rB - bA.Sweep.C - rA;
 
             InvMassA = bA.InvMass;
@@ -208,7 +205,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Point to line constraint
             {
-                _ay = MathUtils.Multiply(ref xfA.R, _localYAxisA);
+                _ay = MathUtils.Mul(ref xfA.q, _localYAxisA);
                 _sAy = MathUtils.Cross(d + rA, _ay);
                 _sBy = MathUtils.Cross(rB, _ay);
 
@@ -224,7 +221,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _springMass = 0.0f;
             if (Frequency > 0.0f)
             {
-                _ax = MathUtils.Multiply(ref xfA.R, LocalXAxis);
+                _ax = MathUtils.Mul(ref xfA.q, LocalXAxis);
                 _sAx = MathUtils.Cross(d + rA, _ax);
                 _sBx = MathUtils.Cross(rB, _ax);
 
@@ -385,11 +382,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 RA = new Mat22(angleA);
             Mat22 RB = new Mat22(angleB);
 
-            Vector2 rA = MathUtils.Multiply(ref RA, LocalAnchorA - LocalCenterA);
-            Vector2 rB = MathUtils.Multiply(ref RB, LocalAnchorB - LocalCenterB);
+            Vector2 rA = MathUtils.Mul(ref RA, LocalAnchorA - LocalCenterA);
+            Vector2 rB = MathUtils.Mul(ref RB, LocalAnchorB - LocalCenterB);
             Vector2 d = xB + rB - xA - rA;
 
-            Vector2 ay = MathUtils.Multiply(ref RA, _localYAxisA);
+            Vector2 ay = MathUtils.Mul(ref RA, _localYAxisA);
 
             float sAy = MathUtils.Cross(d + rA, ay);
             float sBy = MathUtils.Cross(rB, ay);

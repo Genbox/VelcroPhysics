@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -100,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(140.0f, 1.0f);
+                body.P = new Vector2(140.0f, 1.0f);
 
                 PolygonShape box = new PolygonShape(1);
                 box.SetAsBox(10.0f, 0.25f);
@@ -126,7 +123,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = new Body(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(161.0f + 2.0f * i, -0.125f);
+                    body.P = new Vector2(161.0f + 2.0f * i, -0.125f);
                     Fixture fix = body.CreateFixture(shape);
                     fix.Friction = 0.6f;
 
@@ -147,27 +144,27 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(230.0f, 0.5f);
+                body.P = new Vector2(230.0f, 0.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(230.0f, 1.5f);
+                body.P = new Vector2(230.0f, 1.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(230.0f, 2.5f);
+                body.P = new Vector2(230.0f, 2.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(230.0f, 3.5f);
+                body.P = new Vector2(230.0f, 3.5f);
                 body.CreateFixture(box);
 
                 body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(230.0f, 4.5f);
+                body.P = new Vector2(230.0f, 4.5f);
                 body.CreateFixture(box);
             }
 
@@ -187,22 +184,22 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _car = new Body(World);
                 _car.BodyType = BodyType.Dynamic;
-                _car.Position = new Vector2(0.0f, 1.0f);
+                _car.P = new Vector2(0.0f, 1.0f);
                 _car.CreateFixture(chassis);
 
                 _wheel1 = new Body(World);
                 _wheel1.BodyType = BodyType.Dynamic;
-                _wheel1.Position = new Vector2(-1.0f, 0.35f);
+                _wheel1.P = new Vector2(-1.0f, 0.35f);
                 Fixture fix = _wheel1.CreateFixture(circle);
                 fix.Friction = 0.9f;
 
                 _wheel2 = new Body(World);
                 _wheel2.BodyType = BodyType.Dynamic;
-                _wheel2.Position = new Vector2(1.0f, 0.4f);
+                _wheel2.P = new Vector2(1.0f, 0.4f);
                 _wheel2.CreateFixture(circle);
 
                 Vector2 axis = new Vector2(0.0f, 1.0f);
-                _spring1 = new WheelJoint(_car, _wheel1, _wheel1.Position, axis);
+                _spring1 = new WheelJoint(_car, _wheel1, _wheel1.P, axis);
                 _spring1.MotorSpeed = 0.0f;
                 _spring1.MaxMotorTorque = 20.0f;
                 _spring1.MotorEnabled = true;
@@ -210,7 +207,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _spring1.DampingRatio = _zeta;
                 World.AddJoint(_spring1);
 
-                _spring2 = new WheelJoint(_car, _wheel2, _wheel2.Position, axis);
+                _spring2 = new WheelJoint(_car, _wheel2, _wheel2.P, axis);
                 _spring2.MotorSpeed = 0.0f;
                 _spring2.MaxMotorTorque = 10.0f;
                 _spring2.MotorEnabled = false;
@@ -259,7 +256,7 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "actual speed = {0} rad/sec", _spring1.JointSpeed);
             TextLine += 15;
 
-            GameInstance.ViewCenter = _car.Position;
+            GameInstance.ViewCenter = _car.P;
 
             base.Update(settings, gameTime);
         }

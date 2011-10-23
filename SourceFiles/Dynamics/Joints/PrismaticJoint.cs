@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -194,8 +191,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 BodyA.GetTransform(out xf1);
                 BodyB.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - BodyA.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - BodyB.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - BodyA.LocalCenter);
+                Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - BodyB.LocalCenter);
                 Vector2 p1 = BodyA.Sweep.C + r1;
                 Vector2 p2 = BodyB.Sweep.C + r2;
                 Vector2 d = p2 - p1;
@@ -381,8 +378,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.GetTransform(out xf2);
 
             // Compute the effective masses.
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - LocalCenterA);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - LocalCenterB);
+            Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - LocalCenterA);
+            Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - LocalCenterB);
             Vector2 d = b2.Sweep.C + r2 - b1.Sweep.C - r1;
 
             InvMassA = b1.InvMass;
@@ -392,7 +389,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Compute motor Jacobian and effective mass.
             {
-                _axis = MathUtils.Multiply(ref xf1.R, _localXAxis1);
+                _axis = MathUtils.Mul(ref xf1.q, _localXAxis1);
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
 
@@ -406,7 +403,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Prismatic constraint.
             {
-                _perp = MathUtils.Multiply(ref xf1.R, _localYAxis1);
+                _perp = MathUtils.Mul(ref xf1.q, _localYAxis1);
 
                 _s1 = MathUtils.Cross(d + r1, _perp);
                 _s2 = MathUtils.Cross(r2, _perp);
@@ -421,9 +418,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k23 = i1 * _a1 + i2 * _a2;
                 float k33 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.Col1 = new Vector3(k11, k12, k13);
-                _K.Col2 = new Vector3(k12, k22, k23);
-                _K.Col3 = new Vector3(k13, k23, k33);
+                _K.ex = new Vector3(k11, k12, k13);
+                _K.ey = new Vector3(k12, k22, k23);
+                _K.ez = new Vector3(k13, k23, k33);
             }
 
             // Compute motor and limit terms.
@@ -542,7 +539,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.Col3.X, _K.Col3.Y);
+                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.ez.X, _K.ez.Y);
                 Vector2 f2r = _K.Solve22(b) + new Vector2(f1.X, f1.Y);
                 _impulse.X = f2r.X;
                 _impulse.Y = f2r.Y;
@@ -602,13 +599,13 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 R1 = new Mat22(a1);
             Mat22 R2 = new Mat22(a2);
 
-            Vector2 r1 = MathUtils.Multiply(ref R1, LocalAnchorA - LocalCenterA);
-            Vector2 r2 = MathUtils.Multiply(ref R2, LocalAnchorB - LocalCenterB);
+            Vector2 r1 = MathUtils.Mul(ref R1, LocalAnchorA - LocalCenterA);
+            Vector2 r2 = MathUtils.Mul(ref R2, LocalAnchorB - LocalCenterB);
             Vector2 d = c2 + r2 - c1 - r1;
 
             if (_enableLimit)
             {
-                _axis = MathUtils.Multiply(ref R1, _localXAxis1);
+                _axis = MathUtils.Mul(ref R1, _localXAxis1);
 
                 _a1 = MathUtils.Cross(d + r1, _axis);
                 _a2 = MathUtils.Cross(r2, _axis);
@@ -639,7 +636,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 }
             }
 
-            _perp = MathUtils.Multiply(ref R1, _localYAxis1);
+            _perp = MathUtils.Mul(ref R1, _localYAxis1);
 
             _s1 = MathUtils.Cross(d + r1, _perp);
             _s2 = MathUtils.Cross(r2, _perp);
@@ -662,9 +659,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k23 = i1 * _a1 + i2 * _a2;
                 float k33 = m1 + m2 + i1 * _a1 * _a1 + i2 * _a2 * _a2;
 
-                _K.Col1 = new Vector3(k11, k12, k13);
-                _K.Col2 = new Vector3(k12, k22, k23);
-                _K.Col3 = new Vector3(k13, k23, k33);
+                _K.ex = new Vector3(k11, k12, k13);
+                _K.ey = new Vector3(k12, k22, k23);
+                _K.ez = new Vector3(k13, k23, k33);
 
                 Vector3 C = new Vector3(-C1.X, -C1.Y, -C2);
                 impulse = _K.Solve33(C); // negated above
@@ -678,8 +675,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k12 = i1 * _s1 + i2 * _s2;
                 float k22 = i1 + i2;
 
-                _K.Col1 = new Vector3(k11, k12, 0.0f);
-                _K.Col2 = new Vector3(k12, k22, 0.0f);
+                _K.ex = new Vector3(k11, k12, 0.0f);
+                _K.ey = new Vector3(k12, k22, 0.0f);
 
                 Vector2 impulse1 = _K.Solve22(-C1);
                 impulse.X = impulse1.X;

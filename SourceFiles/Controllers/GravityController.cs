@@ -78,7 +78,7 @@ namespace FarseerPhysics.Controllers
 
                 foreach (Vector2 point in Points)
                 {
-                    Vector2 d = point - body1.Position;
+                    Vector2 d = point - body1.P;
                     float r2 = d.LengthSquared();
 
                     if (r2 < Settings.Epsilon)

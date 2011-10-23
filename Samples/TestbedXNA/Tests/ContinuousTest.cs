@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -47,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             BodyFactory.CreateCompoundPolygon(World, list, 0);
 
             _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
-            _box.Position = new Vector2(0, 20);
+            _box.P = new Vector2(0, 20);
             _box.BodyType = BodyType.Dynamic;
             //_box.Body.Rotation = 0.1f;
 

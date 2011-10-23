@@ -1,9 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -119,8 +119,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf2;
             bB.GetTransform(out xf2);
 
-            _rA = MathUtils.Multiply(ref xf1.R, LocalAnchorA - bA.LocalCenter);
-            _rB = MathUtils.Multiply(ref xf2.R, LocalAnchorB - bB.LocalCenter);
+            _rA = MathUtils.Mul(ref xf1.q, LocalAnchorA - bA.LocalCenter);
+            _rB = MathUtils.Mul(ref xf2.q, LocalAnchorB - bB.LocalCenter);
 
             // Rope axis
             _u = bB.Sweep.C + _rB - bA.Sweep.C - _rA;
@@ -213,8 +213,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf2;
             bB.GetTransform(out xf2);
 
-            Vector2 rA = MathUtils.Multiply(ref xf1.R, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xf2.R, LocalAnchorB - bB.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xf1.q, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Mul(ref xf2.q, LocalAnchorB - bB.LocalCenter);
 
             Vector2 u = bB.Sweep.C + rB - bA.Sweep.C - rA;
 

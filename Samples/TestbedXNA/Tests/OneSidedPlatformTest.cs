@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -47,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 Body body = BodyFactory.CreateBody(World);
-                body.Position = new Vector2(0.0f, 10.0f);
+                body.P = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(3.0f, 0.5f);
@@ -60,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 12.0f);
+                body.P = new Vector2(0.0f, 12.0f);
 
                 _radius = 0.5f;
                 CircleShape shape = new CircleShape(_radius, 20);
@@ -87,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return;
             }
 
-            Vector2 position = _character.Body.Position;
+            Vector2 position = _character.Body.P;
 
             if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
             {

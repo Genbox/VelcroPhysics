@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -65,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                    body.P = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
 
                     _bodies[n] = body;
@@ -94,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _bullet = BodyFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.IsBullet = true;
-                    _bullet.Position = new Vector2(-31.0f, 5.0f);
+                    _bullet.P = new Vector2(-31.0f, 5.0f);
 
                     Fixture fixture = _bullet.CreateFixture(shape);
                     fixture.Restitution = 0.05f;

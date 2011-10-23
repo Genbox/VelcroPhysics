@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -144,7 +141,7 @@ namespace FarseerPhysics.Dynamics.Joints
             // Compute the effective mass matrix.
             Transform xf1;
             b.GetTransform(out xf1);
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
+            Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchorA - b.LocalCenter);
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
@@ -159,8 +156,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 K;
             Mat22.Add(ref K1, ref K2, out K);
 
-            K.Col1.X += _gamma;
-            K.Col2.Y += _gamma;
+            K.ex.X += _gamma;
+            K.ey.Y += _gamma;
 
             _mass = K.Inverse;
 
@@ -182,11 +179,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             b.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b.LocalCenter);
+            Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchorA - b.LocalCenter);
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = b.LinearVelocityInternal + MathUtils.Cross(b.AngularVelocityInternal, r);
-            Vector2 impulse = MathUtils.Multiply(ref _mass, -(Cdot + _beta * _C + _gamma * _impulse));
+            Vector2 impulse = MathUtils.Mul(ref _mass, -(Cdot + _beta * _C + _gamma * _impulse));
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;

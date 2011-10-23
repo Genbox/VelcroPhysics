@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Create a single body with multiple fixtures
             Body compund = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
             compund.BodyType = BodyType.Dynamic;
-            compund.Position = new Vector2(0, 20);
+            compund.P = new Vector2(0, 20);
 
             base.Initialize();
         }

@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -208,8 +205,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - b2.LocalCenter);
 
             Vector2 p1 = b1.Sweep.C + r1;
             Vector2 p2 = b2.Sweep.C + r2;
@@ -319,8 +316,8 @@ namespace FarseerPhysics.Dynamics.Joints
             b1.GetTransform(out xf1);
             b2.GetTransform(out xf2);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - b2.LocalCenter);
 
             if (_state == LimitState.AtUpper)
             {
@@ -388,8 +385,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 b1.GetTransform(out xf1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
+                Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - b2.LocalCenter);
 
                 Vector2 p1 = b1.Sweep.C + r1;
                 Vector2 p2 = b2.Sweep.C + r2;
@@ -442,7 +439,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf1;
                 b1.GetTransform(out xf1);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
                 Vector2 p1 = b1.Sweep.C + r1;
 
                 _u1 = p1 - s1;
@@ -474,7 +471,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf2;
                 b2.GetTransform(out xf2);
 
-                Vector2 r2 = MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+                Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - b2.LocalCenter);
                 Vector2 p2 = b2.Sweep.C + r2;
 
                 _u2 = p2 - s2;

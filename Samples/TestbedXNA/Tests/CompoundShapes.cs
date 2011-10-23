@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -52,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
+                    body.P = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
                     body.CreateFixture(circle1);
@@ -73,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
+                    body.P = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
                     body.Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
                     body.CreateFixture(polygon1);
@@ -83,24 +80,24 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * Settings.Pi);
-                xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
+                xf1.q.Set(0.3524f * Settings.Pi);
+                xf1.p = MathUtils.Mul(ref xf1.q, new Vector2(1.0f, 0.0f));
 
                 Vertices vertices = new Vertices(3);
 
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f)));
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f)));
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(-1.0f, 0.0f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(1.0f, 0.0f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(0.0f, 0.5f)));
 
                 PolygonShape triangle1 = new PolygonShape(vertices, 2);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * Settings.Pi);
-                xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
+                xf2.q.Set(-0.3524f * Settings.Pi);
+                xf2.p = MathUtils.Mul(ref xf2.q, new Vector2(-1.0f, 0.0f));
 
-                vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
-                vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
-                vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
+                vertices[0] = MathUtils.Mul(ref xf2, new Vector2(-1.0f, 0.0f));
+                vertices[1] = MathUtils.Mul(ref xf2, new Vector2(1.0f, 0.0f));
+                vertices[2] = MathUtils.Mul(ref xf2, new Vector2(0.0f, 0.5f));
 
                 PolygonShape triangle2 = new PolygonShape(vertices, 2);
 
@@ -110,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x, 2.05f + 2.5f * i);
+                    body.P = new Vector2(x, 2.05f + 2.5f * i);
 
                     body.CreateFixture(triangle1);
                     body.CreateFixture(triangle2);
@@ -129,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 2.0f);
+                body.P = new Vector2(0.0f, 2.0f);
 
                 body.CreateFixture(bottom);
                 body.CreateFixture(left);

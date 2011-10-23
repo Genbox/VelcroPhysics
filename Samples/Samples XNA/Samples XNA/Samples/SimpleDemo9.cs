@@ -65,7 +65,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _rectangle[i] = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 1f);
                 _rectangle[i].BodyType = BodyType.Dynamic;
-                _rectangle[i].Position = new Vector2(-18f + 5.2f * i, -13.0f + 1.282f * i);
+                _rectangle[i].P = new Vector2(-18f + 5.2f * i, -13.0f + 1.282f * i);
                 _rectangle[i].Friction = friction[i];
             }
 
@@ -81,7 +81,7 @@ namespace FarseerPhysics.SamplesFramework
             for (int i = 0; i < 5; ++i)
             {
                 ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                               ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                                               ConvertUnits.ToDisplayUnits(_rectangle[i].P), null,
                                                Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f,
                                                SpriteEffects.None, 0f);
             }

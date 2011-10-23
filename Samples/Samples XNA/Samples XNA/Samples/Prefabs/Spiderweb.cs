@@ -36,7 +36,7 @@ namespace FarseerPhysics.SamplesFramework
                 //Create the first goo
                 Body prev = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[0]);
                 prev.FixedRotation = true;
-                prev.Position += position;
+                prev.P += position;
                 prev.BodyType = BodyType.Dynamic;
 
                 bodies.Add(prev);
@@ -47,7 +47,7 @@ namespace FarseerPhysics.SamplesFramework
                     Body bod = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[j]);
                     bod.FixedRotation = true;
                     bod.BodyType = BodyType.Dynamic;
-                    bod.Position += position;
+                    bod.P += position;
 
                     DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prev, bod, Vector2.Zero, Vector2.Zero);
                     dj.Frequency = 4.0f;
@@ -131,7 +131,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 if (b.Enabled && b.FixtureList[0].ShapeType == ShapeType.Circle)
                 {
-                    batch.Draw(_goo.Texture, ConvertUnits.ToDisplayUnits(b.Position), null,
+                    batch.Draw(_goo.Texture, ConvertUnits.ToDisplayUnits(b.P), null,
                                Color.White, 0f, _goo.Origin, _spriteScale, SpriteEffects.None, 0f);
                 }
             }

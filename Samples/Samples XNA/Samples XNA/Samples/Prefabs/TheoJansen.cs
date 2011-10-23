@@ -59,7 +59,7 @@ namespace FarseerPhysics.SamplesFramework
 
                 _chassis = BodyFactory.CreateBody(world);
                 _chassis.BodyType = BodyType.Dynamic;
-                _chassis.Position = pivot + _position;
+                _chassis.P = pivot + _position;
 
                 Fixture fixture = _chassis.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
@@ -73,14 +73,14 @@ namespace FarseerPhysics.SamplesFramework
 
                 _wheel = BodyFactory.CreateBody(world);
                 _wheel.BodyType = BodyType.Dynamic;
-                _wheel.Position = pivot + _position;
+                _wheel.P = pivot + _position;
 
                 Fixture fixture = _wheel.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
             }
 
             {
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.Position), Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.P), Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400f;
@@ -100,11 +100,11 @@ namespace FarseerPhysics.SamplesFramework
             _rightLeg.Origin = AssetCreator.CalculateOrigin(_rightLegs[0]);
             _rightShoulder.Origin = AssetCreator.CalculateOrigin(_rightShoulders[0]);
 
-            _wheel.SetTransform(_wheel.Position, 120f * Settings.Pi / 180f);
+            _wheel.SetTransform(_wheel.P, 120f * Settings.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 1);
             CreateLeg(world, 1f, wheelAnchor, 1);
 
-            _wheel.SetTransform(_wheel.Position, -120f * Settings.Pi / 180f);
+            _wheel.SetTransform(_wheel.P, -120f * Settings.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 2);
             CreateLeg(world, 1f, wheelAnchor, 2);
         }
@@ -156,7 +156,7 @@ namespace FarseerPhysics.SamplesFramework
 
             Body body1 = BodyFactory.CreateBody(world);
             body1.BodyType = BodyType.Dynamic;
-            body1.Position = _position;
+            body1.P = _position;
             body1.AngularDamping = 10f;
             if (s < 0f)
             {
@@ -169,7 +169,7 @@ namespace FarseerPhysics.SamplesFramework
 
             Body body2 = BodyFactory.CreateBody(world);
             body2.BodyType = BodyType.Dynamic;
-            body2.Position = p4 + _position;
+            body2.P = p4 + _position;
             body2.AngularDamping = 10f;
             if (s < 0f)
             {
@@ -278,7 +278,7 @@ namespace FarseerPhysics.SamplesFramework
             SpriteBatch _spriteBatch = _screen.ScreenManager.SpriteBatch;
 
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
-            _spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null,
+            _spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.P), null,
                               Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
 
@@ -292,18 +292,18 @@ namespace FarseerPhysics.SamplesFramework
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
             for (int i = 0; i < 3; ++i)
             {
-                _spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
+                _spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].P), null,
                                   Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
+                _spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].P), null,
                                   Color.White, _leftShoulders[i].Rotation, _leftShoulder.Origin, 1f, SpriteEffects.None,
                                   0f);
-                _spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
+                _spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].P), null,
                                   Color.White, _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
+                _spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].P), null,
                                   Color.White, _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f,
                                   SpriteEffects.None, 0f);
             }
-            _spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null,
+            _spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.P), null,
                               Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
         }

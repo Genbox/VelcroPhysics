@@ -29,7 +29,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             Body body = BodyFactory.CreateCircle(World, 0.4f, 1);
-            body.Position = new Vector2(Rand.RandomFloat(-35, 35), 10);
+            body.P = new Vector2(Rand.RandomFloat(-35, 35), 10);
             body.BodyType = BodyType.Dynamic;
             body.Restitution = 1f;
 

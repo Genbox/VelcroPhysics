@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < 7; ++i)
             {
                 DestructableBody db = new DestructableBody(World, v);
-                db.Body.Position = new Vector2(-15.0f + size * 3 * i, 20.0f);
+                db.Body.P = new Vector2(-15.0f + size * 3 * i, 20.0f);
             }
 
             Radius = 3;
@@ -208,8 +208,8 @@ namespace FarseerPhysics.TestBed.Tests
             foreach (Vector2 v in clipVertices)
             {
                 Vector2 newv = v;
-                newv = MathUtils.Multiply(ref t, ref newv);
-                newv = MathUtils.MultiplyT(ref thistransform, ref newv);
+                newv = MathUtils.Mul(ref t, ref newv);
+                newv = MathUtils.MulT(ref thistransform, ref newv);
                 transformedshape.Add(newv);
             }
 
@@ -229,7 +229,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 1; i < result.Count; i++)
                 {
                     DestructableBody db = new DestructableBody(_world, result[i]);
-                    db.Body.Position = Body.Position;
+                    db.Body.P = Body.P;
                 }
             }
 

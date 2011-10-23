@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -44,7 +41,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public Vector2 rB;
     }
 
-    public sealed class ContactConstraint
+    public sealed class ContactVelocityConstraint
     {
         public Body BodyA;
         public Body BodyB;
@@ -62,7 +59,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public float Restitution;
         public ManifoldType Type;
 
-        public ContactConstraint()
+        public ContactVelocityConstraint()
         {
             for (int i = 0; i < Settings.MaxManifoldPoints; i++)
             {
@@ -73,7 +70,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
     public class ContactSolver
     {
-        public ContactConstraint[] Constraints;
+        public ContactVelocityConstraint[] VelocityConstraints;
         private int _constraintCount; // collection can be bigger.
         private Contact[] _contacts;
 
@@ -84,13 +81,13 @@ namespace FarseerPhysics.Dynamics.Contacts
             _constraintCount = contactCount;
 
             // grow the array
-            if (Constraints == null || Constraints.Length < _constraintCount)
+            if (VelocityConstraints == null || VelocityConstraints.Length < _constraintCount)
             {
-                Constraints = new ContactConstraint[_constraintCount * 2];
+                VelocityConstraints = new ContactVelocityConstraint[_constraintCount * 2];
 
-                for (int i = 0; i < Constraints.Length; i++)
+                for (int i = 0; i < VelocityConstraints.Length; i++)
                 {
-                    Constraints[i] = new ContactConstraint();
+                    VelocityConstraints[i] = new ContactVelocityConstraint();
                 }
             }
 
@@ -111,7 +108,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
                 Debug.Assert(manifold.PointCount > 0);
 
-                ContactConstraint cc = Constraints[i];
+                ContactVelocityConstraint cc = VelocityConstraints[i];
                 cc.Friction = Settings.MixFriction(fixtureA.Friction, fixtureB.Friction);
                 cc.Restitution = Settings.MixRestitution(fixtureA.Restitution, fixtureB.Restitution);
                 cc.BodyA = bodyA;
@@ -159,7 +156,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint cc = Constraints[i];
+                ContactVelocityConstraint cc = VelocityConstraints[i];
 
                 float radiusA = cc.RadiusA;
                 float radiusB = cc.RadiusB;
@@ -241,22 +238,22 @@ namespace FarseerPhysics.Dynamics.Contacts
                     if (k11 * k11 < k_maxConditionNumber * (k11 * k22 - k12 * k12))
                     {
                         // K is safe to invert.
-                        cc.K.Col1.X = k11;
-                        cc.K.Col1.Y = k12;
-                        cc.K.Col2.X = k12;
-                        cc.K.Col2.Y = k22;
+                        cc.K.ex.X = k11;
+                        cc.K.ex.Y = k12;
+                        cc.K.ey.X = k12;
+                        cc.K.ey.Y = k22;
 
-                        float a = cc.K.Col1.X, b = cc.K.Col2.X, c = cc.K.Col1.Y, d = cc.K.Col2.Y;
+                        float a = cc.K.ex.X, b = cc.K.ey.X, c = cc.K.ex.Y, d = cc.K.ey.Y;
                         float det = a * d - b * c;
                         if (det != 0.0f)
                         {
                             det = 1.0f / det;
                         }
 
-                        cc.NormalMass.Col1.X = det * d;
-                        cc.NormalMass.Col1.Y = -det * c;
-                        cc.NormalMass.Col2.X = -det * b;
-                        cc.NormalMass.Col2.Y = det * a;
+                        cc.NormalMass.ex.X = det * d;
+                        cc.NormalMass.ex.Y = -det * c;
+                        cc.NormalMass.ey.X = -det * b;
+                        cc.NormalMass.ey.Y = det * a;
                     }
                     else
                     {
@@ -273,7 +270,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             // Warm start.
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint c = Constraints[i];
+                ContactVelocityConstraint c = VelocityConstraints[i];
 
                 float tangentx = c.Normal.Y;
                 float tangenty = -c.Normal.X;
@@ -297,7 +294,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint c = Constraints[i];
+                ContactVelocityConstraint c = VelocityConstraints[i];
                 float wA = c.BodyA.AngularVelocityInternal;
                 float wB = c.BodyB.AngularVelocityInternal;
 
@@ -418,11 +415,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                                 (c.BodyB.LinearVelocityInternal.Y + (wB * cp2.rB.X) - c.BodyA.LinearVelocityInternal.Y -
                                  (wA * cp2.rA.X)) * c.Normal.Y;
 
-                    float bx = vn1 - cp1.VelocityBias - (c.K.Col1.X * ax + c.K.Col2.X * ay);
-                    float by = vn2 - cp2.VelocityBias - (c.K.Col1.Y * ax + c.K.Col2.Y * ay);
+                    float bx = vn1 - cp1.VelocityBias - (c.K.ex.X * ax + c.K.ey.X * ay);
+                    float by = vn2 - cp2.VelocityBias - (c.K.ex.Y * ax + c.K.ey.Y * ay);
 
-                    float xx = -(c.NormalMass.Col1.X * bx + c.NormalMass.Col2.X * by);
-                    float xy = -(c.NormalMass.Col1.Y * bx + c.NormalMass.Col2.Y * by);
+                    float xx = -(c.NormalMass.ex.X * bx + c.NormalMass.ey.X * by);
+                    float xy = -(c.NormalMass.ex.Y * bx + c.NormalMass.ey.Y * by);
 
                     while (true)
                     {
@@ -490,7 +487,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         xx = -cp1.NormalMass * bx;
                         xy = 0.0f;
                         vn1 = 0.0f;
-                        vn2 = c.K.Col1.Y * xx + by;
+                        vn2 = c.K.ex.Y * xx + by;
 
                         if (xx >= 0.0f && vn2 >= 0.0f)
                         {
@@ -541,7 +538,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                         //
                         xx = 0.0f;
                         xy = -cp2.NormalMass * by;
-                        vn1 = c.K.Col2.X * xy + bx;
+                        vn1 = c.K.ey.X * xy + bx;
                         vn2 = 0.0f;
 
                         if (xy >= 0.0f && vn1 >= 0.0f)
@@ -639,7 +636,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint c = Constraints[i];
+                ContactVelocityConstraint c = VelocityConstraints[i];
                 Manifold m = c.Manifold;
 
                 for (int j = 0; j < c.PointCount; ++j)
@@ -664,7 +661,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             for (int i = 0; i < _constraintCount; ++i)
             {
-                ContactConstraint c = Constraints[i];
+                ContactVelocityConstraint c = VelocityConstraints[i];
 
                 Body bodyA = c.BodyA;
                 Body bodyB = c.BodyB;
@@ -725,7 +722,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             return minSeparation >= -1.5f * Settings.LinearSlop;
         }
 
-        private static void Solve(ContactConstraint cc, int index, out Vector2 normal, out Vector2 point,
+        private static void Solve(ContactVelocityConstraint cc, int index, out Vector2 normal, out Vector2 point,
                                   out float separation)
         {
             Debug.Assert(cc.PointCount > 0);

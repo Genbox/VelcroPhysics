@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -44,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(-4.0f, 22.0f);
+                ground.P = new Vector2(-4.0f, 22.0f);
                 ground.Rotation = -0.25f;
 
                 ground.CreateFixture(shape);
@@ -55,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(10.5f, 19.0f);
+                ground.P = new Vector2(10.5f, 19.0f);
 
                 ground.CreateFixture(shape);
             }
@@ -65,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(4.0f, 14.0f);
+                ground.P = new Vector2(4.0f, 14.0f);
                 ground.Rotation = 0.25f;
 
                 ground.CreateFixture(shape);
@@ -76,7 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(-10.5f, 11.0f);
+                ground.P = new Vector2(-10.5f, 11.0f);
 
                 ground.CreateFixture(shape);
             }
@@ -86,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(-4.0f, 6.0f);
+                ground.P = new Vector2(-4.0f, 6.0f);
                 ground.Rotation = -0.25f;
 
                 ground.CreateFixture(shape);
@@ -102,7 +99,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);
+                    body.P = new Vector2(-15.0f + 4.0f * i, 28.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = friction[i];

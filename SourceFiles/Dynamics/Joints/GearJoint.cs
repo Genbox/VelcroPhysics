@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -191,7 +188,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             BodyB.GetTransform(out xf1);
 
-            Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor2 - BodyB.LocalCenter);
+            Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchor2 - BodyB.LocalCenter);
             Vector2 P = _impulse * _J.LinearB;
             float L = _impulse * _J.AngularB - MathUtils.Cross(r, P);
             return inv_dt * L;
@@ -214,16 +211,16 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 Vector2 ug;
                 if (_prismatic1 != null)
-                    ug = _prismatic1.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _prismatic1.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic1.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic1.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
 
                 Transform xf1 /*, xfg1*/;
                 b1.GetTransform(out xf1);
                 //g1.GetTransform(out xfg1);
 
 
-                Vector2 r = MathUtils.Multiply(ref xf1.R, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchor1 - b1.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
@@ -239,15 +236,15 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 Vector2 ug;
                 if (_prismatic2 != null)
-                    ug = _prismatic2.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _prismatic2.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic2.LocalXAxis1; // MathUtils.Multiply(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic2.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
 
                 Transform /*xfg1,*/ xf2;
                 //g1.GetTransform(out xfg1);
                 b2.GetTransform(out xf2);
 
-                Vector2 r = MathUtils.Multiply(ref xf2.R, LocalAnchor2 - b2.LocalCenter);
+                Vector2 r = MathUtils.Mul(ref xf2.q, LocalAnchor2 - b2.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearB = -Ratio * ug;
                 _J.AngularB = -Ratio * crug;

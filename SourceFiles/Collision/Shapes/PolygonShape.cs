@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -255,7 +252,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
-            Vector2 pLocal = MathUtils.MultiplyT(ref transform.R, point - transform.Position);
+            Vector2 pLocal = MathUtils.MulT(ref transform.q, point - transform.p);
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
@@ -283,8 +280,8 @@ namespace FarseerPhysics.Collision.Shapes
             output = new RayCastOutput();
 
             // Put the ray into the polygon's frame of reference.
-            Vector2 p1 = MathUtils.MultiplyT(ref transform.R, input.Point1 - transform.Position);
-            Vector2 p2 = MathUtils.MultiplyT(ref transform.R, input.Point2 - transform.Position);
+            Vector2 p1 = MathUtils.MulT(ref transform.q, input.Point1 - transform.p);
+            Vector2 p2 = MathUtils.MulT(ref transform.q, input.Point2 - transform.p);
             Vector2 d = p2 - p1;
 
             float lower = 0.0f, upper = input.MaxFraction;
@@ -342,7 +339,7 @@ namespace FarseerPhysics.Collision.Shapes
             if (index >= 0)
             {
                 output.Fraction = lower;
-                output.Normal = MathUtils.Multiply(ref transform.R, Normals[index]);
+                output.Normal = MathUtils.Mul(ref transform.q, Normals[index]);
                 return true;
             }
 
@@ -357,12 +354,12 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            Vector2 lower = MathUtils.Multiply(ref transform, Vertices[0]);
+            Vector2 lower = MathUtils.Mul(ref transform, Vertices[0]);
             Vector2 upper = lower;
 
             for (int i = 1; i < Vertices.Count; ++i)
             {
-                Vector2 v = MathUtils.Multiply(ref transform, Vertices[i]);
+                Vector2 v = MathUtils.Mul(ref transform, Vertices[i]);
                 lower = Vector2.Min(lower, v);
                 upper = Vector2.Max(upper, v);
             }
@@ -392,8 +389,8 @@ namespace FarseerPhysics.Collision.Shapes
             sc = Vector2.Zero;
 
             //Transform plane into shape co-ordinates
-            Vector2 normalL = MathUtils.MultiplyT(ref xf.R, normal);
-            float offsetL = offset - Vector2.Dot(normal, xf.Position);
+            Vector2 normalL = MathUtils.MulT(ref xf.q, normal);
+            float offsetL = offset - Vector2.Dot(normal, xf.p);
 
             float[] depths = new float[Settings.MaxPolygonVertices];
             int diveCount = 0;
@@ -433,7 +430,7 @@ namespace FarseerPhysics.Collision.Shapes
                     if (lastSubmerged)
                     {
                         //Completely submerged
-                        sc = MathUtils.Multiply(ref xf, MassData.Centroid);
+                        sc = MathUtils.Mul(ref xf, MassData.Centroid);
                         return MassData.Mass / Density;
                     }
                     else
@@ -504,7 +501,7 @@ namespace FarseerPhysics.Collision.Shapes
             //Normalize and transform centroid
             center *= 1.0f / area;
 
-            sc = MathUtils.Multiply(ref xf, center);
+            sc = MathUtils.Mul(ref xf, center);
 
             return area;
         }

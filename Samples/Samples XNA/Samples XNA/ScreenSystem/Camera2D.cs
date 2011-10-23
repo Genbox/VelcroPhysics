@@ -295,7 +295,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 if (_positionTracking)
                 {
-                    _targetPosition = _trackingBody.Position;
+                    _targetPosition = _trackingBody.P;
                     if (_minPosition != _maxPosition)
                     {
                         Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);

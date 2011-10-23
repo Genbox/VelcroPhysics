@@ -129,7 +129,7 @@ namespace FarseerPhysics.Common
             _writer.WriteElementString("FixedRotation", body.FixedRotation.ToString());
             _writer.WriteElementString("LinearDamping", body.LinearDamping.ToString());
             WriteElement("LinearVelocity", body.LinearVelocity);
-            WriteElement("Position", body.Position);
+            WriteElement("Position", body.P);
 
             if (body.UserData != null)
             {
@@ -680,7 +680,7 @@ namespace FarseerPhysics.Common
                                     break;
                                 case "angle":
                                     {
-                                        Vector2 position = body.Position;
+                                        Vector2 position = body.P;
                                         body.SetTransformIgnoreContacts(ref position, float.Parse(sn.Value));
                                     }
                                     break;

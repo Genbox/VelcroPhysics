@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -55,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    body.P = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Friction = 0.2f;
@@ -85,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                body.P = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
                 body.CreateFixture(shape);
             }
@@ -96,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                body.P = new Vector2(-6.0f + 6.0f * i, 10.0f);
 
                 body.CreateFixture(shape);
             }

@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -92,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             sweepA.GetTransform(out transformA, 0.0f);
             for (int i = 0; i < _shapeA.Vertices.Count; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformA, _shapeA.Vertices[i]);
+                vertices[i] = MathUtils.Mul(ref transformA, _shapeA.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
 
@@ -101,21 +98,21 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Mul(ref transformB, _shapeB.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.9f, 0.5f));
 
             sweepB.GetTransform(out transformB, output.T);
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Mul(ref transformB, _shapeB.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.5f, 0.7f, 0.9f));
 
             sweepB.GetTransform(out transformB, 1.0f);
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {
-                vertices[i] = MathUtils.Multiply(ref transformB, _shapeB.Vertices[i]);
+                vertices[i] = MathUtils.Mul(ref transformB, _shapeB.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeB.Vertices.Count, new Color(0.9f, 0.5f, 0.5f));
             DebugView.EndCustomDraw();

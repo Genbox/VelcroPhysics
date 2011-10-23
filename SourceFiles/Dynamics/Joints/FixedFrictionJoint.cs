@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -110,7 +107,7 @@ namespace FarseerPhysics.Dynamics.Joints
             bA.GetTransform(out xfA);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -125,16 +122,16 @@ namespace FarseerPhysics.Dynamics.Joints
             float iA = bA.InvI;
 
             Mat22 K1 = new Mat22();
-            K1.Col1.X = mA;
-            K1.Col2.X = 0.0f;
-            K1.Col1.Y = 0.0f;
-            K1.Col2.Y = mA;
+            K1.ex.X = mA;
+            K1.ey.X = 0.0f;
+            K1.ex.Y = 0.0f;
+            K1.ey.Y = mA;
 
             Mat22 K2 = new Mat22();
-            K2.Col1.X = iA * rA.Y * rA.Y;
-            K2.Col2.X = -iA * rA.X * rA.Y;
-            K2.Col1.Y = -iA * rA.X * rA.Y;
-            K2.Col2.Y = iA * rA.X * rA.X;
+            K2.ex.X = iA * rA.Y * rA.Y;
+            K2.ey.X = -iA * rA.X * rA.Y;
+            K2.ex.Y = -iA * rA.X * rA.Y;
+            K2.ey.Y = iA * rA.X * rA.X;
 
             Mat22 K12;
             Mat22.Add(ref K1, ref K2, out K12);
@@ -178,7 +175,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xfA;
             bA.GetTransform(out xfA);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
 
             // Solve angular friction
             {
@@ -197,7 +194,7 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 Vector2 Cdot = -vA - MathUtils.Cross(wA, rA);
 
-                Vector2 impulse = -MathUtils.Multiply(ref _linearMass, Cdot);
+                Vector2 impulse = -MathUtils.Mul(ref _linearMass, Cdot);
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 

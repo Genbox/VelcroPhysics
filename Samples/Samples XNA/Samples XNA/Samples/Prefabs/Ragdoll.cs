@@ -55,13 +55,13 @@ namespace FarseerPhysics.SamplesFramework
             _head.BodyType = BodyType.Dynamic;
             _head.AngularDamping = LimbAngularDamping;
             _head.Mass = 2f;
-            _head.Position = position;
+            _head.P = position;
 
             //Body
             _body = BodyFactory.CreateRoundedRectangle(world, 2f, 4f, 0.5f, 0.7f, 2, 10f);
             _body.BodyType = BodyType.Dynamic;
             _body.Mass = 2f;
-            _body.Position = position + new Vector2(0f, 3f);
+            _body.P = position + new Vector2(0f, 3f);
 
             //Left Arm
             _lowerLeftArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
@@ -69,14 +69,14 @@ namespace FarseerPhysics.SamplesFramework
             _lowerLeftArm.AngularDamping = LimbAngularDamping;
             _lowerLeftArm.Mass = 2f;
             _lowerLeftArm.Rotation = 1.4f;
-            _lowerLeftArm.Position = position + new Vector2(-4f, 2.2f);
+            _lowerLeftArm.P = position + new Vector2(-4f, 2.2f);
 
             _upperLeftArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _upperLeftArm.BodyType = BodyType.Dynamic;
             _upperLeftArm.AngularDamping = LimbAngularDamping;
             _upperLeftArm.Mass = 2f;
             _upperLeftArm.Rotation = 1.4f;
-            _upperLeftArm.Position = position + new Vector2(-2f, 1.8f);
+            _upperLeftArm.P = position + new Vector2(-2f, 1.8f);
 
             //Right Arm
             _lowerRightArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
@@ -84,40 +84,40 @@ namespace FarseerPhysics.SamplesFramework
             _lowerRightArm.AngularDamping = LimbAngularDamping;
             _lowerRightArm.Mass = 2f;
             _lowerRightArm.Rotation = -1.4f;
-            _lowerRightArm.Position = position + new Vector2(4f, 2.2f);
+            _lowerRightArm.P = position + new Vector2(4f, 2.2f);
 
             _upperRightArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _upperRightArm.BodyType = BodyType.Dynamic;
             _upperRightArm.AngularDamping = LimbAngularDamping;
             _upperRightArm.Mass = 2f;
             _upperRightArm.Rotation = -1.4f;
-            _upperRightArm.Position = position + new Vector2(2f, 1.8f);
+            _upperRightArm.P = position + new Vector2(2f, 1.8f);
 
             //Left Leg
             _lowerLeftLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerLeftLeg.BodyType = BodyType.Dynamic;
             _lowerLeftLeg.AngularDamping = LimbAngularDamping;
             _lowerLeftLeg.Mass = 2f;
-            _lowerLeftLeg.Position = position + new Vector2(-0.6f, 8f);
+            _lowerLeftLeg.P = position + new Vector2(-0.6f, 8f);
 
             _upperLeftLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _upperLeftLeg.BodyType = BodyType.Dynamic;
             _upperLeftLeg.AngularDamping = LimbAngularDamping;
             _upperLeftLeg.Mass = 2f;
-            _upperLeftLeg.Position = position + new Vector2(-0.6f, 6f);
+            _upperLeftLeg.P = position + new Vector2(-0.6f, 6f);
 
             //Right Leg
             _lowerRightLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerRightLeg.BodyType = BodyType.Dynamic;
             _lowerRightLeg.AngularDamping = LimbAngularDamping;
             _lowerRightLeg.Mass = 2f;
-            _lowerRightLeg.Position = position + new Vector2(0.6f, 8f);
+            _lowerRightLeg.P = position + new Vector2(0.6f, 8f);
 
             _upperRightLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _upperRightLeg.BodyType = BodyType.Dynamic;
             _upperRightLeg.AngularDamping = LimbAngularDamping;
             _upperRightLeg.Mass = 2f;
-            _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
+            _upperRightLeg.P = position + new Vector2(0.6f, 6f);
         }
 
         private void CreateJoints(World world)
@@ -238,30 +238,30 @@ namespace FarseerPhysics.SamplesFramework
         public void Draw()
         {
             SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
-            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.P), null,
                         Color.White, _lowerLeftLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerRightLeg.P), null,
                         Color.White, _lowerRightLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperLeftLeg.P), null,
                         Color.White, _upperLeftLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperRightLeg.P), null,
                         Color.White, _upperRightLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftArm.P), null,
                         Color.White, _lowerLeftArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerRightArm.P), null,
                         Color.White, _lowerRightArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperLeftArm.P), null,
                         Color.White, _upperLeftArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperRightArm.P), null,
                         Color.White, _upperRightArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_body.Position), null,
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_body.P), null,
                         Color.White, _body.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_face.Texture, ConvertUnits.ToDisplayUnits(_head.Position), null,
+            batch.Draw(_face.Texture, ConvertUnits.ToDisplayUnits(_head.P), null,
                         Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }
     }

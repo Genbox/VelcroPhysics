@@ -74,9 +74,9 @@ namespace FarseerPhysics.SamplesFramework
 
             //Attach the first and last fixtures to the world
             JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
-                                                  _bridgeBodies[0].Position);
+                                                  _bridgeBodies[0].P);
             JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
-                                                  _bridgeBodies[_bridgeBodies.Count - 1].Position);
+                                                  _bridgeBodies[_bridgeBodies.Count - 1].P);
 
             PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f),
                                                       new Vector2(0f, 0.5f),
@@ -116,21 +116,21 @@ namespace FarseerPhysics.SamplesFramework
             for (int i = 0; i < _softBodies.Count; ++i)
             {
                 ScreenManager.SpriteBatch.Draw(_softBodyBox.Texture,
-                                               ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
+                                               ConvertUnits.ToDisplayUnits(_softBodies[i].P), null,
                                                Color.White, _softBodies[i].Rotation, _softBodyBox.Origin, 1f,
                                                SpriteEffects.None, 0f);
             }
             for (int i = 0; i < _softBodies.Count; ++i)
             {
                 ScreenManager.SpriteBatch.Draw(_softBodyCircle.Texture,
-                                               ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
+                                               ConvertUnits.ToDisplayUnits(_softBodies[i].P), null,
                                                Color.White, _softBodies[i].Rotation, _softBodyCircle.Origin, 1f,
                                                SpriteEffects.None, 0f);
             }
             for (int i = 0; i < _bridgeBodies.Count; ++i)
             {
                 ScreenManager.SpriteBatch.Draw(_bridgeBox.Texture,
-                                               ConvertUnits.ToDisplayUnits(_bridgeBodies[i].Position), null,
+                                               ConvertUnits.ToDisplayUnits(_bridgeBodies[i].P), null,
                                                Color.White, _bridgeBodies[i].Rotation, _bridgeBox.Origin, 1f,
                                                SpriteEffects.None, 0f);
             }

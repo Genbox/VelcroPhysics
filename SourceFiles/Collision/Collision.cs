@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -606,17 +603,17 @@ namespace FarseerPhysics.Collision
                 case ManifoldType.Circles:
                     {
                         Vector2 tmp = manifold.Points[0].LocalPoint;
-                        float pointAx = transformA.Position.X + transformA.R.Col1.X * manifold.LocalPoint.X +
-                                        transformA.R.Col2.X * manifold.LocalPoint.Y;
+                        float pointAx = transformA.p.X + transformA.q.ex.X * manifold.LocalPoint.X +
+                                        transformA.q.ey.X * manifold.LocalPoint.Y;
 
-                        float pointAy = transformA.Position.Y + transformA.R.Col1.Y * manifold.LocalPoint.X +
-                                        transformA.R.Col2.Y * manifold.LocalPoint.Y;
+                        float pointAy = transformA.p.Y + transformA.q.ex.Y * manifold.LocalPoint.X +
+                                        transformA.q.ey.Y * manifold.LocalPoint.Y;
 
-                        float pointBx = transformB.Position.X + transformB.R.Col1.X * tmp.X +
-                                        transformB.R.Col2.X * tmp.Y;
+                        float pointBx = transformB.p.X + transformB.q.ex.X * tmp.X +
+                                        transformB.q.ey.X * tmp.Y;
 
-                        float pointBy = transformB.Position.Y + transformB.R.Col1.Y * tmp.X +
-                                        transformB.R.Col2.Y * tmp.Y;
+                        float pointBy = transformB.p.Y + transformB.q.ex.Y * tmp.X +
+                                        transformB.q.ey.Y * tmp.Y;
 
                         normal.X = 1;
                         normal.Y = 0;
@@ -642,26 +639,26 @@ namespace FarseerPhysics.Collision
 
                 case ManifoldType.FaceA:
                     {
-                        normal.X = transformA.R.Col1.X * manifold.LocalNormal.X +
-                                   transformA.R.Col2.X * manifold.LocalNormal.Y;
-                        normal.Y = transformA.R.Col1.Y * manifold.LocalNormal.X +
-                                   transformA.R.Col2.Y * manifold.LocalNormal.Y;
+                        normal.X = transformA.q.ex.X * manifold.LocalNormal.X +
+                                   transformA.q.ey.X * manifold.LocalNormal.Y;
+                        normal.Y = transformA.q.ex.Y * manifold.LocalNormal.X +
+                                   transformA.q.ey.Y * manifold.LocalNormal.Y;
 
-                        float planePointx = transformA.Position.X + transformA.R.Col1.X * manifold.LocalPoint.X +
-                                            transformA.R.Col2.X * manifold.LocalPoint.Y;
+                        float planePointx = transformA.p.X + transformA.q.ex.X * manifold.LocalPoint.X +
+                                            transformA.q.ey.X * manifold.LocalPoint.Y;
 
-                        float planePointy = transformA.Position.Y + transformA.R.Col1.Y * manifold.LocalPoint.X +
-                                            transformA.R.Col2.Y * manifold.LocalPoint.Y;
+                        float planePointy = transformA.p.Y + transformA.q.ex.Y * manifold.LocalPoint.X +
+                                            transformA.q.ey.Y * manifold.LocalPoint.Y;
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 tmp = manifold.Points[i].LocalPoint;
 
-                            float clipPointx = transformB.Position.X + transformB.R.Col1.X * tmp.X +
-                                               transformB.R.Col2.X * tmp.Y;
+                            float clipPointx = transformB.p.X + transformB.q.ex.X * tmp.X +
+                                               transformB.q.ey.X * tmp.Y;
 
-                            float clipPointy = transformB.Position.Y + transformB.R.Col1.Y * tmp.X +
-                                               transformB.R.Col2.Y * tmp.Y;
+                            float clipPointy = transformB.p.Y + transformB.q.ex.Y * tmp.X +
+                                               transformB.q.ey.Y * tmp.Y;
 
                             float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
 
@@ -676,26 +673,26 @@ namespace FarseerPhysics.Collision
 
                 case ManifoldType.FaceB:
                     {
-                        normal.X = transformB.R.Col1.X * manifold.LocalNormal.X +
-                                   transformB.R.Col2.X * manifold.LocalNormal.Y;
-                        normal.Y = transformB.R.Col1.Y * manifold.LocalNormal.X +
-                                   transformB.R.Col2.Y * manifold.LocalNormal.Y;
+                        normal.X = transformB.q.ex.X * manifold.LocalNormal.X +
+                                   transformB.q.ey.X * manifold.LocalNormal.Y;
+                        normal.Y = transformB.q.ex.Y * manifold.LocalNormal.X +
+                                   transformB.q.ey.Y * manifold.LocalNormal.Y;
 
-                        float planePointx = transformB.Position.X + transformB.R.Col1.X * manifold.LocalPoint.X +
-                                            transformB.R.Col2.X * manifold.LocalPoint.Y;
+                        float planePointx = transformB.p.X + transformB.q.ex.X * manifold.LocalPoint.X +
+                                            transformB.q.ey.X * manifold.LocalPoint.Y;
 
-                        float planePointy = transformB.Position.Y + transformB.R.Col1.Y * manifold.LocalPoint.X +
-                                            transformB.R.Col2.Y * manifold.LocalPoint.Y;
+                        float planePointy = transformB.p.Y + transformB.q.ex.Y * manifold.LocalPoint.X +
+                                            transformB.q.ey.Y * manifold.LocalPoint.Y;
 
                         for (int i = 0; i < manifold.PointCount; ++i)
                         {
                             Vector2 tmp = manifold.Points[i].LocalPoint;
 
-                            float clipPointx = transformA.Position.X + transformA.R.Col1.X * tmp.X +
-                                               transformA.R.Col2.X * tmp.Y;
+                            float clipPointx = transformA.p.X + transformA.q.ex.X * tmp.X +
+                                               transformA.q.ey.X * tmp.Y;
 
-                            float clipPointy = transformA.Position.Y + transformA.R.Col1.Y * tmp.X +
-                                               transformA.R.Col2.Y * tmp.Y;
+                            float clipPointy = transformA.p.Y + transformA.q.ex.Y * tmp.X +
+                                               transformA.q.ey.Y * tmp.Y;
 
                             float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
 
@@ -764,10 +761,10 @@ namespace FarseerPhysics.Collision
         {
             manifold.PointCount = 0;
 
-            float pAx = xfA.Position.X + xfA.R.Col1.X * circleA.Position.X + xfA.R.Col2.X * circleA.Position.Y;
-            float pAy = xfA.Position.Y + xfA.R.Col1.Y * circleA.Position.X + xfA.R.Col2.Y * circleA.Position.Y;
-            float pBx = xfB.Position.X + xfB.R.Col1.X * circleB.Position.X + xfB.R.Col2.X * circleB.Position.Y;
-            float pBy = xfB.Position.Y + xfB.R.Col1.Y * circleB.Position.X + xfB.R.Col2.Y * circleB.Position.Y;
+            float pAx = xfA.p.X + xfA.q.ex.X * circleA.Position.X + xfA.q.ey.X * circleA.Position.Y;
+            float pAy = xfA.p.Y + xfA.q.ex.Y * circleA.Position.X + xfA.q.ey.Y * circleA.Position.Y;
+            float pBx = xfB.p.X + xfB.q.ex.X * circleB.Position.X + xfB.q.ey.X * circleB.Position.Y;
+            float pBy = xfB.p.Y + xfB.q.ex.Y * circleB.Position.X + xfB.q.ey.Y * circleB.Position.Y;
 
             float distSqr = (pBx - pAx) * (pBx - pAx) + (pBy - pAy) * (pBy - pAy);
             float radius = circleA.Radius + circleB.Radius;
@@ -806,16 +803,16 @@ namespace FarseerPhysics.Collision
             // Compute circle position in the frame of the polygon.
             Vector2 c =
                 new Vector2(
-                    transformB.Position.X + transformB.R.Col1.X * circleB.Position.X +
-                    transformB.R.Col2.X * circleB.Position.Y,
-                    transformB.Position.Y + transformB.R.Col1.Y * circleB.Position.X +
-                    transformB.R.Col2.Y * circleB.Position.Y);
+                    transformB.p.X + transformB.q.ex.X * circleB.Position.X +
+                    transformB.q.ey.X * circleB.Position.Y,
+                    transformB.p.Y + transformB.q.ex.Y * circleB.Position.X +
+                    transformB.q.ey.Y * circleB.Position.Y);
             Vector2 cLocal =
                 new Vector2(
-                    (c.X - transformA.Position.X) * transformA.R.Col1.X +
-                    (c.Y - transformA.Position.Y) * transformA.R.Col1.Y,
-                    (c.X - transformA.Position.X) * transformA.R.Col2.X +
-                    (c.Y - transformA.Position.Y) * transformA.R.Col2.Y);
+                    (c.X - transformA.p.X) * transformA.q.ex.X +
+                    (c.Y - transformA.p.Y) * transformA.q.ex.Y,
+                    (c.X - transformA.p.X) * transformA.q.ey.X +
+                    (c.Y - transformA.p.Y) * transformA.q.ey.Y);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -1022,15 +1019,15 @@ namespace FarseerPhysics.Collision
             Vector2 localNormal = new Vector2(localTangentY, -localTangentX);
             Vector2 planePoint = 0.5f * (v11 + v12);
 
-            Vector2 tangent = new Vector2(xf1.R.Col1.X * localTangentX + xf1.R.Col2.X * localTangentY,
-                                          xf1.R.Col1.Y * localTangentX + xf1.R.Col2.Y * localTangentY);
+            Vector2 tangent = new Vector2(xf1.q.ex.X * localTangentX + xf1.q.ey.X * localTangentY,
+                                          xf1.q.ex.Y * localTangentX + xf1.q.ey.Y * localTangentY);
             float normalx = tangent.Y;
             float normaly = -tangent.X;
 
-            v11 = new Vector2(xf1.Position.X + xf1.R.Col1.X * v11.X + xf1.R.Col2.X * v11.Y,
-                              xf1.Position.Y + xf1.R.Col1.Y * v11.X + xf1.R.Col2.Y * v11.Y);
-            v12 = new Vector2(xf1.Position.X + xf1.R.Col1.X * v12.X + xf1.R.Col2.X * v12.Y,
-                              xf1.Position.Y + xf1.R.Col1.Y * v12.X + xf1.R.Col2.Y * v12.Y);
+            v11 = new Vector2(xf1.p.X + xf1.q.ex.X * v11.X + xf1.q.ey.X * v11.Y,
+                              xf1.p.Y + xf1.q.ex.Y * v11.X + xf1.q.ey.Y * v11.Y);
+            v12 = new Vector2(xf1.p.X + xf1.q.ex.X * v12.X + xf1.q.ey.X * v12.Y,
+                              xf1.p.Y + xf1.q.ex.Y * v12.X + xf1.q.ey.Y * v12.Y);
 
             // Face offset.
             float frontOffset = normalx * v11.X + normaly * v11.Y;
@@ -1071,10 +1068,10 @@ namespace FarseerPhysics.Collision
                 {
                     ManifoldPoint cp = manifold.Points[pointCount];
                     Vector2 tmp = clipPoints2[i].V;
-                    float tmp1X = tmp.X - xf2.Position.X;
-                    float tmp1Y = tmp.Y - xf2.Position.Y;
-                    cp.LocalPoint.X = tmp1X * xf2.R.Col1.X + tmp1Y * xf2.R.Col1.Y;
-                    cp.LocalPoint.Y = tmp1X * xf2.R.Col2.X + tmp1Y * xf2.R.Col2.Y;
+                    float tmp1X = tmp.X - xf2.p.X;
+                    float tmp1Y = tmp.Y - xf2.p.Y;
+                    cp.LocalPoint.X = tmp1X * xf2.q.ex.X + tmp1Y * xf2.q.ex.Y;
+                    cp.LocalPoint.Y = tmp1X * xf2.q.ey.X + tmp1Y * xf2.q.ey.Y;
                     cp.Id = clipPoints2[i].ID;
 
                     if (flip)
@@ -1112,7 +1109,7 @@ namespace FarseerPhysics.Collision
             manifold.PointCount = 0;
 
             // Compute circle in frame of edge
-            Vector2 Q = MathUtils.MultiplyT(ref transformA, MathUtils.Multiply(ref transformB, ref circleB._position));
+            Vector2 Q = MathUtils.MulT(ref transformA, MathUtils.Mul(ref transformB, ref circleB._position));
 
             Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;
@@ -1256,7 +1253,7 @@ namespace FarseerPhysics.Collision
                                                  EdgeShape edgeA, ref Transform xfA,
                                                  PolygonShape polygonB, ref Transform xfB)
         {
-            MathUtils.MultiplyT(ref xfA, ref xfB, out _xf);
+            MathUtils.MulT(ref xfA, ref xfB, out _xf);
 
             // Edge geometry
             _edgeA.V0 = edgeA.Vertex0;
@@ -1281,11 +1278,11 @@ namespace FarseerPhysics.Collision
 
             // Proxy for polygon
             _proxyB.Count = polygonB.Vertices.Count;
-            _proxyB.Centroid = MathUtils.Multiply(ref _xf, ref polygonB.MassData.Centroid);
+            _proxyB.Centroid = MathUtils.Mul(ref _xf, ref polygonB.MassData.Centroid);
             for (int i = 0; i < polygonB.Vertices.Count; ++i)
             {
-                _proxyB.Vertices[i] = MathUtils.Multiply(ref _xf, polygonB.Vertices[i]);
-                _proxyB.Normals[i] = MathUtils.Multiply(ref _xf.R, polygonB.Normals[i]);
+                _proxyB.Vertices[i] = MathUtils.Mul(ref _xf, polygonB.Vertices[i]);
+                _proxyB.Normals[i] = MathUtils.Mul(ref _xf.q, polygonB.Normals[i]);
             }
 
             _radius = 2.0f * Settings.PolygonRadius;
@@ -1509,8 +1506,8 @@ namespace FarseerPhysics.Collision
             }
             else
             {
-                manifold.LocalNormal = MathUtils.MultiplyT(ref _xf.R, ref normal);
-                manifold.LocalPoint = MathUtils.MultiplyT(ref _xf, ref planePoint);
+                manifold.LocalNormal = MathUtils.MulT(ref _xf.q, ref normal);
+                manifold.LocalPoint = MathUtils.MulT(ref _xf, ref planePoint);
             }
 
             int pointCount = 0;
@@ -1524,7 +1521,7 @@ namespace FarseerPhysics.Collision
 
                     if (primaryAxis.Type == EPAxisType.EdgeA)
                     {
-                        cp.LocalPoint = MathUtils.MultiplyT(ref _xf, clipPoints2[i1].V);
+                        cp.LocalPoint = MathUtils.MulT(ref _xf, clipPoints2[i1].V);
                         cp.Id = clipPoints2[i1].ID;
                     }
                     else
@@ -1757,11 +1754,11 @@ namespace FarseerPhysics.Collision
             // Convert normal from poly1's frame into poly2's frame.
             Vector2 p1n = poly1.Normals[edge1];
 
-            float normalWorldx = xf1.R.Col1.X * p1n.X + xf1.R.Col2.X * p1n.Y;
-            float normalWorldy = xf1.R.Col1.Y * p1n.X + xf1.R.Col2.Y * p1n.Y;
+            float normalWorldx = xf1.q.ex.X * p1n.X + xf1.q.ey.X * p1n.Y;
+            float normalWorldy = xf1.q.ex.Y * p1n.X + xf1.q.ey.Y * p1n.Y;
 
-            Vector2 normal = new Vector2(normalWorldx * xf2.R.Col1.X + normalWorldy * xf2.R.Col1.Y,
-                                         normalWorldx * xf2.R.Col2.X + normalWorldy * xf2.R.Col2.Y);
+            Vector2 normal = new Vector2(normalWorldx * xf2.q.ex.X + normalWorldy * xf2.q.ex.Y,
+                                         normalWorldx * xf2.q.ey.X + normalWorldy * xf2.q.ey.Y);
 
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -1781,10 +1778,10 @@ namespace FarseerPhysics.Collision
             Vector2 p1ve = poly1.Vertices[edge1];
             Vector2 p2vi = poly2.Vertices[index];
 
-            return ((xf2.Position.X + xf2.R.Col1.X * p2vi.X + xf2.R.Col2.X * p2vi.Y) -
-                    (xf1.Position.X + xf1.R.Col1.X * p1ve.X + xf1.R.Col2.X * p1ve.Y)) * normalWorldx +
-                   ((xf2.Position.Y + xf2.R.Col1.Y * p2vi.X + xf2.R.Col2.Y * p2vi.Y) -
-                    (xf1.Position.Y + xf1.R.Col1.Y * p1ve.X + xf1.R.Col2.Y * p1ve.Y)) * normalWorldy;
+            return ((xf2.p.X + xf2.q.ex.X * p2vi.X + xf2.q.ey.X * p2vi.Y) -
+                    (xf1.p.X + xf1.q.ex.X * p1ve.X + xf1.q.ey.X * p1ve.Y)) * normalWorldx +
+                   ((xf2.p.Y + xf2.q.ex.Y * p2vi.X + xf2.q.ey.Y * p2vi.Y) -
+                    (xf1.p.Y + xf1.q.ex.Y * p1ve.X + xf1.q.ey.Y * p1ve.Y)) * normalWorldy;
         }
 
         /// <summary>
@@ -1803,15 +1800,15 @@ namespace FarseerPhysics.Collision
             int count1 = poly1.Vertices.Count;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            float dx = (xf2.Position.X + xf2.R.Col1.X * poly2.MassData.Centroid.X +
-                        xf2.R.Col2.X * poly2.MassData.Centroid.Y) -
-                       (xf1.Position.X + xf1.R.Col1.X * poly1.MassData.Centroid.X +
-                        xf1.R.Col2.X * poly1.MassData.Centroid.Y);
-            float dy = (xf2.Position.Y + xf2.R.Col1.Y * poly2.MassData.Centroid.X +
-                        xf2.R.Col2.Y * poly2.MassData.Centroid.Y) -
-                       (xf1.Position.Y + xf1.R.Col1.Y * poly1.MassData.Centroid.X +
-                        xf1.R.Col2.Y * poly1.MassData.Centroid.Y);
-            Vector2 dLocal1 = new Vector2(dx * xf1.R.Col1.X + dy * xf1.R.Col1.Y, dx * xf1.R.Col2.X + dy * xf1.R.Col2.Y);
+            float dx = (xf2.p.X + xf2.q.ex.X * poly2.MassData.Centroid.X +
+                        xf2.q.ey.X * poly2.MassData.Centroid.Y) -
+                       (xf1.p.X + xf1.q.ex.X * poly1.MassData.Centroid.X +
+                        xf1.q.ey.X * poly1.MassData.Centroid.Y);
+            float dy = (xf2.p.Y + xf2.q.ex.Y * poly2.MassData.Centroid.X +
+                        xf2.q.ey.Y * poly2.MassData.Centroid.Y) -
+                       (xf1.p.Y + xf1.q.ex.Y * poly1.MassData.Centroid.X +
+                        xf1.q.ey.Y * poly1.MassData.Centroid.Y);
+            Vector2 dLocal1 = new Vector2(dx * xf1.q.ex.X + dy * xf1.q.ex.Y, dx * xf1.q.ey.X + dy * xf1.q.ey.Y);
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;
@@ -1896,10 +1893,10 @@ namespace FarseerPhysics.Collision
 
             // Get the normal of the reference edge in poly2's frame.
             Vector2 v = poly1.Normals[edge1];
-            float tmpx = xf1.R.Col1.X * v.X + xf1.R.Col2.X * v.Y;
-            float tmpy = xf1.R.Col1.Y * v.X + xf1.R.Col2.Y * v.Y;
-            Vector2 normal1 = new Vector2(tmpx * xf2.R.Col1.X + tmpy * xf2.R.Col1.Y,
-                                          tmpx * xf2.R.Col2.X + tmpy * xf2.R.Col2.Y);
+            float tmpx = xf1.q.ex.X * v.X + xf1.q.ey.X * v.Y;
+            float tmpy = xf1.q.ex.Y * v.X + xf1.q.ey.Y * v.Y;
+            Vector2 normal1 = new Vector2(tmpx * xf2.q.ex.X + tmpy * xf2.q.ex.Y,
+                                          tmpx * xf2.q.ey.X + tmpy * xf2.q.ey.Y);
 
             // Find the incident edge on poly2.
             int index = 0;
@@ -1921,8 +1918,8 @@ namespace FarseerPhysics.Collision
             ClipVertex cv0 = c[0];
 
             Vector2 v1 = poly2.Vertices[i1];
-            cv0.V.X = xf2.Position.X + xf2.R.Col1.X * v1.X + xf2.R.Col2.X * v1.Y;
-            cv0.V.Y = xf2.Position.Y + xf2.R.Col1.Y * v1.X + xf2.R.Col2.Y * v1.Y;
+            cv0.V.X = xf2.p.X + xf2.q.ex.X * v1.X + xf2.q.ey.X * v1.Y;
+            cv0.V.Y = xf2.p.Y + xf2.q.ex.Y * v1.X + xf2.q.ey.Y * v1.Y;
             cv0.ID.Features.IndexA = (byte)edge1;
             cv0.ID.Features.IndexB = (byte)i1;
             cv0.ID.Features.TypeA = (byte)ContactFeatureType.Face;
@@ -1932,8 +1929,8 @@ namespace FarseerPhysics.Collision
 
             ClipVertex cv1 = c[1];
             Vector2 v2 = poly2.Vertices[i2];
-            cv1.V.X = xf2.Position.X + xf2.R.Col1.X * v2.X + xf2.R.Col2.X * v2.Y;
-            cv1.V.Y = xf2.Position.Y + xf2.R.Col1.Y * v2.X + xf2.R.Col2.Y * v2.Y;
+            cv1.V.X = xf2.p.X + xf2.q.ex.X * v2.X + xf2.q.ey.X * v2.Y;
+            cv1.V.Y = xf2.p.Y + xf2.q.ex.Y * v2.X + xf2.q.ey.Y * v2.Y;
             cv1.ID.Features.IndexA = (byte)edge1;
             cv1.ID.Features.IndexB = (byte)i2;
             cv1.ID.Features.TypeA = (byte)ContactFeatureType.Face;
