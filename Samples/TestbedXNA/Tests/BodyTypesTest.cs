@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -49,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _attachment = BodyFactory.CreateBody(World);
                 _attachment.BodyType = BodyType.Dynamic;
-                _attachment.Position = new Vector2(0.0f, 3.0f);
+                _attachment.P = new Vector2(0.0f, 3.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
                 PolygonShape shape = new PolygonShape(box, 2);
@@ -60,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _platform = BodyFactory.CreateBody(World);
                 _platform.BodyType = BodyType.Dynamic;
-                _platform.Position = new Vector2(0.0f, 5.0f);
+                _platform.P = new Vector2(0.0f, 5.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 2);
@@ -69,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fixture.Friction = 0.6f;
 
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
-                                                      _attachment.GetLocalPoint(_platform.Position),
+                                                      _attachment.GetLocalPoint(_platform.P),
                                                       Vector2.Zero);
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
@@ -92,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 8.0f);
+                body.P = new Vector2(0.0f, 8.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
                 PolygonShape shape = new PolygonShape(box, 2);
@@ -129,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Transform tf;
                 _platform.GetTransform(out tf);
-                Vector2 p = tf.Position;
+                Vector2 p = tf.p;
                 Vector2 v = _platform.LinearVelocity;
 
                 if ((p.X < -10.0f && v.X < 0.0f) ||

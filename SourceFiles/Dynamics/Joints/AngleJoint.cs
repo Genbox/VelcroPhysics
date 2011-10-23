@@ -47,12 +47,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.Position; }
+            get { return BodyA.P; }
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.Position; }
+            get { return BodyB.P; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 

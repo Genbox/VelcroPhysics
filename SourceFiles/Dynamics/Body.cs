@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -94,6 +91,9 @@ namespace FarseerPhysics.Dynamics
         private float _linearDamping;
         private float _mass;
 
+        /// Scale the gravity applied to this body.
+        public float GravityScale { get; set; }
+
         internal Body()
         {
             FixtureList = new List<Fixture>(32);
@@ -121,7 +121,7 @@ namespace FarseerPhysics.Dynamics
             BodyType = BodyType.Static;
             Enabled = true;
 
-            Xf.R.Set(0);
+            Xf.q.Set(0);
 
             world.AddBody(this);
         }
@@ -155,18 +155,41 @@ namespace FarseerPhysics.Dynamics
 
                 if (_bodyType == BodyType.Static)
                 {
-					Awake = false;
                     LinearVelocityInternal = Vector2.Zero;
                     AngularVelocityInternal = 0.0f;
+                    Sweep.A0 = Sweep.A;
+                    Sweep.C0 = Sweep.C;
+                    SynchronizeFixtures();
                 }
-				else
-				{
-					Awake = true;
-				}
+					
+                Awake = true;
 
                 Force = Vector2.Zero;
                 Torque = 0.0f;
 
+                // Delete the attached contacts.
+                ContactEdge ce = ContactList;
+                while (ce != null)
+                {
+                    ContactEdge ce0 = ce;
+                    ce = ce.Next;
+                    World.ContactManager.Destroy(ce0.Contact);
+                }
+                
+                ContactList = null;
+
+                // Touch the proxies so that new contacts will be created (when appropriate)
+                IBroadPhase broadPhase = World.ContactManager.BroadPhase;
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    Fixture fixture = FixtureList[i];
+                    int proxyCount = fixture.ProxyCount;
+                    for (int j = 0; j < proxyCount; j++)
+                    {
+                        broadPhase.TouchProxy(fixture.Proxies[j].ProxyId);
+                    }
+                }
+                
                 // Since the body type changed, we need to flag contacts for filtering.
                 for (int i = 0; i < FixtureList.Count; i++)
                 {
@@ -456,9 +479,9 @@ namespace FarseerPhysics.Dynamics
         /// Get the world body origin position.
         /// </summary>
         /// <returns>Return the world position of the body's origin.</returns>
-        public Vector2 Position
+        public Vector2 P
         {
-            get { return Xf.Position; }
+            get { return Xf.p; }
             set
             {
                 Debug.Assert(!float.IsNaN(value.X) && !float.IsNaN(value.Y));
@@ -478,7 +501,7 @@ namespace FarseerPhysics.Dynamics
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                SetTransform(ref Xf.Position, value);
+                SetTransform(ref Xf.p, value);
             }
         }
 
@@ -538,7 +561,7 @@ namespace FarseerPhysics.Dynamics
                 // Move center of mass.
                 Vector2 oldCenter = Sweep.C;
                 Sweep.LocalCenter = value;
-                Sweep.C0 = Sweep.C = MathUtils.Multiply(ref Xf, ref Sweep.LocalCenter);
+                Sweep.C0 = Sweep.C = MathUtils.Mul(ref Xf, ref Sweep.LocalCenter);
 
                 // Update center of mass velocity.
                 Vector2 a = Sweep.C - oldCenter;
@@ -856,14 +879,14 @@ namespace FarseerPhysics.Dynamics
         /// <param name="angle">The angle.</param>
         public void SetTransformIgnoreContacts(ref Vector2 position, float angle)
         {
-            Xf.R.Set(angle);
-            Xf.Position = position;
+            Xf.q.Set(angle);
+            Xf.p = position;
 
-            Sweep.C0 =
-                Sweep.C =
-                new Vector2(Xf.Position.X + Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y,
-                            Xf.Position.Y + Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y);
-            Sweep.A0 = Sweep.A = angle;
+            Sweep.C = MathUtils.Mul(ref Xf, Sweep.LocalCenter);
+            Sweep.A = angle;
+
+            Sweep.C0 = Sweep.C;
+            Sweep.A0 = angle;
 
             IBroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
@@ -899,7 +922,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="force">The force.</param>
         public void ApplyForce(ref Vector2 force)
         {
-            ApplyForce(ref force, ref Xf.Position);
+            ApplyForce(ref force, ref Xf.p);
         }
 
         /// <summary>
@@ -908,7 +931,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="force">The force.</param>
         public void ApplyForce(Vector2 force)
         {
-            ApplyForce(ref force, ref Xf.Position);
+            ApplyForce(ref force, ref Xf.p);
         }
 
         /// <summary>
@@ -1055,14 +1078,16 @@ namespace FarseerPhysics.Dynamics
             // Kinematic bodies have zero mass.
             if (BodyType == BodyType.Kinematic)
             {
-                Sweep.C0 = Sweep.C = Xf.Position;
+                Sweep.C0 = Xf.p;
+                Sweep.C = Xf.p;
+                Sweep.A0 = Sweep.A;
                 return;
             }
 
             Debug.Assert(BodyType == BodyType.Dynamic || BodyType == BodyType.Static);
 
             // Accumulate mass over all fixtures.
-            Vector2 center = Vector2.Zero;
+            Vector2 localCenter = Vector2.Zero;
             foreach (Fixture f in FixtureList)
             {
                 if (f.Shape._density == 0)
@@ -1072,14 +1097,14 @@ namespace FarseerPhysics.Dynamics
 
                 MassData massData = f.Shape.MassData;
                 _mass += massData.Mass;
-                center += massData.Mass * massData.Centroid;
+                localCenter += massData.Mass * massData.Centroid;
                 _inertia += massData.Inertia;
             }
 
             //Static bodies only have mass, they don't have other properties. A little hacky tho...
             if (BodyType == BodyType.Static)
             {
-                Sweep.C0 = Sweep.C = Xf.Position;
+                Sweep.C0 = Sweep.C = Xf.p;
                 return;
             }
 
@@ -1087,7 +1112,7 @@ namespace FarseerPhysics.Dynamics
             if (_mass > 0.0f)
             {
                 InvMass = 1.0f / _mass;
-                center *= InvMass;
+                localCenter *= InvMass;
             }
             else
             {
@@ -1099,7 +1124,7 @@ namespace FarseerPhysics.Dynamics
             if (_inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
             {
                 // Center the inertia about the center of mass.
-                _inertia -= _mass * Vector2.Dot(center, center);
+                _inertia -= _mass * Vector2.Dot(localCenter, localCenter);
 
                 Debug.Assert(_inertia > 0.0f);
                 InvI = 1.0f / _inertia;
@@ -1112,8 +1137,8 @@ namespace FarseerPhysics.Dynamics
 
             // Move center of mass.
             Vector2 oldCenter = Sweep.C;
-            Sweep.LocalCenter = center;
-            Sweep.C0 = Sweep.C = MathUtils.Multiply(ref Xf, ref Sweep.LocalCenter);
+            Sweep.LocalCenter = localCenter;
+            Sweep.C0 = Sweep.C = MathUtils.Mul(ref Xf, ref Sweep.LocalCenter);
 
             // Update center of mass velocity.
             Vector2 a = Sweep.C - oldCenter;
@@ -1127,8 +1152,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(ref Vector2 localPoint)
         {
-            return new Vector2(Xf.Position.X + Xf.R.Col1.X * localPoint.X + Xf.R.Col2.X * localPoint.Y,
-                               Xf.Position.Y + Xf.R.Col1.Y * localPoint.X + Xf.R.Col2.Y * localPoint.Y);
+            return new Vector2(Xf.p.X + Xf.q.ex.X * localPoint.X + Xf.q.ey.X * localPoint.Y,
+                               Xf.p.Y + Xf.q.ex.Y * localPoint.X + Xf.q.ey.Y * localPoint.Y);
         }
 
         /// <summary>
@@ -1149,8 +1174,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(ref Vector2 localVector)
         {
-            return new Vector2(Xf.R.Col1.X * localVector.X + Xf.R.Col2.X * localVector.Y,
-                               Xf.R.Col1.Y * localVector.X + Xf.R.Col2.Y * localVector.Y);
+            return new Vector2(Xf.q.ex.X * localVector.X + Xf.q.ey.X * localVector.Y,
+                               Xf.q.ex.Y * localVector.X + Xf.q.ey.Y * localVector.Y);
         }
 
         /// <summary>
@@ -1172,8 +1197,8 @@ namespace FarseerPhysics.Dynamics
         public Vector2 GetLocalPoint(ref Vector2 worldPoint)
         {
             return
-                new Vector2((worldPoint.X - Xf.Position.X) * Xf.R.Col1.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col1.Y,
-                            (worldPoint.X - Xf.Position.X) * Xf.R.Col2.X + (worldPoint.Y - Xf.Position.Y) * Xf.R.Col2.Y);
+                new Vector2((worldPoint.X - Xf.p.X) * Xf.q.ex.X + (worldPoint.Y - Xf.p.Y) * Xf.q.ex.Y,
+                            (worldPoint.X - Xf.p.X) * Xf.q.ey.X + (worldPoint.Y - Xf.p.Y) * Xf.q.ey.Y);
         }
 
         /// <summary>
@@ -1194,8 +1219,8 @@ namespace FarseerPhysics.Dynamics
         /// <returns>The corresponding local vector.</returns>
         public Vector2 GetLocalVector(ref Vector2 worldVector)
         {
-            return new Vector2(worldVector.X * Xf.R.Col1.X + worldVector.Y * Xf.R.Col1.Y,
-                               worldVector.X * Xf.R.Col2.X + worldVector.Y * Xf.R.Col2.Y);
+            return new Vector2(worldVector.X * Xf.q.ex.X + worldVector.Y * Xf.q.ex.Y,
+                               worldVector.X * Xf.q.ey.X + worldVector.Y * Xf.q.ey.Y);
         }
 
         /// <summary>
@@ -1272,7 +1297,7 @@ namespace FarseerPhysics.Dynamics
             body.LinearVelocityInternal = LinearVelocityInternal;
             body.AngularDamping = AngularDamping;
             body.AngularVelocityInternal = AngularVelocityInternal;
-            body.Position = Position;
+            body.P = P;
             body.Rotation = Rotation;
             body._bodyType = _bodyType;
             body.Flags = Flags;
@@ -1286,13 +1311,13 @@ namespace FarseerPhysics.Dynamics
         {
             Transform xf1 = new Transform();
             float c = (float)Math.Cos(Sweep.A0), s = (float)Math.Sin(Sweep.A0);
-            xf1.R.Col1.X = c;
-            xf1.R.Col2.X = -s;
-            xf1.R.Col1.Y = s;
-            xf1.R.Col2.Y = c;
+            xf1.q.ex.X = c;
+            xf1.q.ey.X = -s;
+            xf1.q.ex.Y = s;
+            xf1.q.ey.Y = c;
 
-            xf1.Position.X = Sweep.C0.X - (xf1.R.Col1.X * Sweep.LocalCenter.X + xf1.R.Col2.X * Sweep.LocalCenter.Y);
-            xf1.Position.Y = Sweep.C0.Y - (xf1.R.Col1.Y * Sweep.LocalCenter.X + xf1.R.Col2.Y * Sweep.LocalCenter.Y);
+            xf1.p.X = Sweep.C0.X - (xf1.q.ex.X * Sweep.LocalCenter.X + xf1.q.ey.X * Sweep.LocalCenter.Y);
+            xf1.p.Y = Sweep.C0.Y - (xf1.q.ex.Y * Sweep.LocalCenter.X + xf1.q.ey.Y * Sweep.LocalCenter.Y);
 
             IBroadPhase broadPhase = World.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
@@ -1303,13 +1328,13 @@ namespace FarseerPhysics.Dynamics
 
         internal void SynchronizeTransform()
         {
-            Xf.R.Set(Sweep.A);
+            Xf.q.Set(Sweep.A);
 
-            float vx = Xf.R.Col1.X * Sweep.LocalCenter.X + Xf.R.Col2.X * Sweep.LocalCenter.Y;
-            float vy = Xf.R.Col1.Y * Sweep.LocalCenter.X + Xf.R.Col2.Y * Sweep.LocalCenter.Y;
+            float vx = Xf.q.ex.X * Sweep.LocalCenter.X + Xf.q.ey.X * Sweep.LocalCenter.Y;
+            float vy = Xf.q.ex.Y * Sweep.LocalCenter.X + Xf.q.ey.Y * Sweep.LocalCenter.Y;
 
-            Xf.Position.X = Sweep.C.X - vx;
-            Xf.Position.Y = Sweep.C.Y - vy;
+            Xf.p.X = Sweep.C.X - vx;
+            Xf.p.Y = Sweep.C.Y - vy;
         }
 
         /// <summary>
@@ -1343,11 +1368,12 @@ namespace FarseerPhysics.Dynamics
 
         internal void Advance(float alpha)
         {
-            // Advance to the new safe time.
+            // Advance to the new safe time. This doesn't sync the broad-phase.
             Sweep.Advance(alpha);
             Sweep.C = Sweep.C0;
             Sweep.A = Sweep.A0;
-            SynchronizeTransform();
+            Xf.q.Set(Sweep.A);
+            Xf.p = Sweep.C - MathUtils.Mul(ref Xf.q, Sweep.LocalCenter);
         }
 
         public event OnCollisionEventHandler OnCollision

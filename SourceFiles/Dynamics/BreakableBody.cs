@@ -48,7 +48,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        private void PostSolve(Contact contact, ContactConstraint impulse)
+        private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             if (!Broken)
             {
@@ -115,7 +115,7 @@ namespace FarseerPhysics.Dynamics
 
                 Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
-                body.Position = MainBody.Position;
+                body.P = MainBody.P;
                 body.Rotation = MainBody.Rotation;
                 body.UserData = MainBody.UserData;
 

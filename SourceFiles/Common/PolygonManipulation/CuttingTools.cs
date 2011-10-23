@@ -177,7 +177,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     if (SanityCheck(first))
                     {
                         Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density,
-                                                                            fixtures[i].Body.Position);
+                                                                            fixtures[i].Body.P);
                         firstFixture.Rotation = fixtures[i].Body.Rotation;
                         firstFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
                         firstFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
@@ -187,7 +187,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     if (SanityCheck(second))
                     {
                         Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density,
-                                                                             fixtures[i].Body.Position);
+                                                                             fixtures[i].Body.P);
                         secondFixture.Rotation = fixtures[i].Body.Rotation;
                         secondFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
                         secondFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;

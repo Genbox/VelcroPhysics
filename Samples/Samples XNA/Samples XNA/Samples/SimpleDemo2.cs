@@ -86,12 +86,12 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.P), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
             // draw second rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.P), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();

@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -53,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Create the planet
             Body planet = BodyFactory.CreateBody(World);
-            planet.Position = new Vector2(0, 20);
+            planet.P = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2, 1);
             planet.CreateFixture(planetShape);
@@ -66,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body circle = BodyFactory.CreateBody(World);
                 circle.BodyType = BodyType.Dynamic;
-                circle.Position = startPosition + offset * i;
+                circle.P = startPosition + offset * i;
                 circle.SleepingAllowed = false;
 
                 CircleShape circleShape = new CircleShape(1, 0.1f);

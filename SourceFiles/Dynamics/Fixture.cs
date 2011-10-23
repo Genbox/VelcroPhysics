@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -251,11 +248,21 @@ namespace FarseerPhysics.Dynamics
         /// <value>The shape.</value>
         public Shape Shape { get; internal set; }
 
+        private bool _isSensor;
+
         /// <summary>
         /// Gets or sets a value indicating whether this fixture is a sensor.
         /// </summary>
         /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
-        public bool IsSensor { get; set; }
+        public bool IsSensor
+        {
+            get { return _isSensor; }
+            set
+            {
+                Body.Awake = true;
+                _isSensor = value;
+            }
+        }
 
         /// <summary>
         /// Get the parent body of this fixture. This is null if the fixture is not attached.
@@ -276,7 +283,8 @@ namespace FarseerPhysics.Dynamics
         public long UserBits { get; set; }
 
         /// <summary>
-        /// Get or set the coefficient of friction.
+        /// Set the coefficient of friction. This will _not_ change the friction of
+        /// existing contacts.
         /// </summary>
         /// <value>The friction.</value>
         public float Friction
@@ -291,7 +299,8 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get or set the coefficient of restitution.
+        /// Set the coefficient of restitution. This will _not_ change the restitution of
+        /// existing contacts.
         /// </summary>
         /// <value>The restitution.</value>
         public float Restitution
@@ -597,7 +606,7 @@ namespace FarseerPhysics.Dynamics
 
                 proxy.AABB.Combine(ref aabb1, ref aabb2);
 
-                Vector2 displacement = transform2.Position - transform1.Position;
+                Vector2 displacement = transform2.p - transform1.p;
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }

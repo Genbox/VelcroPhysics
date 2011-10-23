@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -194,7 +191,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Compute the effective masses.
             Vector2 rA = LocalAnchorA;
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - LocalCenterB);
+            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - LocalCenterB);
             Vector2 d = bB.Sweep.C + rB - rA;
 
             InvMassA = 0.0f;
@@ -369,11 +366,11 @@ namespace FarseerPhysics.Dynamics.Joints
             Mat22 RA = new Mat22(angleA);
             Mat22 RB = new Mat22(angleB);
 
-            Vector2 rA = MathUtils.Multiply(ref RA, LocalAnchorA - LocalCenterA);
-            Vector2 rB = MathUtils.Multiply(ref RB, LocalAnchorB - LocalCenterB);
+            Vector2 rA = MathUtils.Mul(ref RA, LocalAnchorA - LocalCenterA);
+            Vector2 rB = MathUtils.Mul(ref RB, LocalAnchorB - LocalCenterB);
             Vector2 d = xB + rB - xA - rA;
 
-            Vector2 ay = MathUtils.Multiply(ref RA, _localYAxisA);
+            Vector2 ay = MathUtils.Mul(ref RA, _localYAxisA);
 
             float sBy = MathUtils.Cross(rB, ay);
 

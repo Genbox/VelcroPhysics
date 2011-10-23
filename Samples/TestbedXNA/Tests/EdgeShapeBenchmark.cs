@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
 
-                body.Position = new Vector2(x, y);
+                body.P = new Vector2(x, y);
                 body.BodyType = BodyType.Dynamic;
 
                 Fixture fixture = body.CreateFixture(_polyShape);

@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -71,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + 1.0f * i, y);
+                    body.P = new Vector2(0.5f + 1.0f * i, y);
 
                     if (i == Count - 1)
                     {
@@ -79,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                         fixture.Friction = 0.2f;
                         fixture.CollisionCategories = Category.Cat2;
                         fixture.CollidesWith = Category.All & ~Category.Cat2;
-                        body.Position = new Vector2(1.0f * i, y);
+                        body.P = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
                     else

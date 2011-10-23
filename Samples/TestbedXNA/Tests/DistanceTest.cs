@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -45,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             {
                 _transformA.SetIdentity();
-                _transformA.Position = new Vector2(0.0f, -0.2f);
+                _transformA.p = new Vector2(0.0f, -0.2f);
                 Vertices vertices = PolygonTools.CreateRectangle(10.0f, 0.2f);
                 _polygonA = new PolygonShape(vertices, 1);
             }
@@ -92,13 +89,13 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2[] v = new Vector2[Settings.MaxPolygonVertices];
                 for (int i = 0; i < _polygonA.Vertices.Count; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformA, _polygonA.Vertices[i]);
+                    v[i] = MathUtils.Mul(ref _transformA, _polygonA.Vertices[i]);
                 }
                 DebugView.DrawPolygon(v, _polygonA.Vertices.Count, color);
 
                 for (int i = 0; i < _polygonB.Vertices.Count; ++i)
                 {
-                    v[i] = MathUtils.Multiply(ref _transformB, _polygonB.Vertices[i]);
+                    v[i] = MathUtils.Mul(ref _transformB, _polygonB.Vertices[i]);
                 }
                 DebugView.DrawPolygon(v, _polygonB.Vertices.Count, color);
             }

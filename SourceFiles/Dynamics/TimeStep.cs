@@ -1,9 +1,6 @@
 ﻿/*
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -19,6 +16,8 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
+
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
@@ -41,5 +40,27 @@ namespace FarseerPhysics.Dynamics
         /// Inverse time step (0 if dt == 0).
         /// </summary>
         public float inv_dt;
+    }
+
+    /// This is an internal structure.
+    public struct b2Position
+    {
+        public Vector2 c;
+        public float a;
+    }
+
+    /// This is an internal structure.
+    public struct b2Velocity
+    {
+        public Vector2 v;
+        public float w;
+    }
+
+    /// Solver Data
+    public struct b2SolverData
+    {
+        public TimeStep step;
+        public b2Position positions;
+        public b2Velocity velocities;
     }
 }

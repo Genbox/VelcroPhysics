@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
                     const float x = 0.0f;
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                    body.P = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 

@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -117,8 +114,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bB.GetTransform(out xfB);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - bB.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -132,15 +129,15 @@ namespace FarseerPhysics.Dynamics.Joints
             float mA = bA.InvMass, mB = bB.InvMass;
             float iA = bA.InvI, iB = bB.InvI;
 
-            _mass.Col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-            _mass.Col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-            _mass.Col3.X = -rA.Y * iA - rB.Y * iB;
-            _mass.Col1.Y = _mass.Col2.X;
-            _mass.Col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-            _mass.Col3.Y = rA.X * iA + rB.X * iB;
-            _mass.Col1.Z = _mass.Col3.X;
-            _mass.Col2.Z = _mass.Col3.Y;
-            _mass.Col3.Z = iA + iB;
+            _mass.ex.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
+            _mass.ey.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
+            _mass.ez.X = -rA.Y * iA - rB.Y * iB;
+            _mass.ex.Y = _mass.ey.X;
+            _mass.ey.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
+            _mass.ez.Y = rA.X * iA + rB.X * iB;
+            _mass.ex.Z = _mass.ez.X;
+            _mass.ey.Z = _mass.ez.Y;
+            _mass.ez.Z = iA + iB;
 
             if (Settings.EnableWarmstarting)
             {
@@ -178,8 +175,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - bB.LocalCenter);
 
             //  Solve point-to-point constraint
             Vector2 Cdot1 = vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA);
@@ -216,8 +213,8 @@ namespace FarseerPhysics.Dynamics.Joints
             bA.GetTransform(out xfA);
             bB.GetTransform(out xfB);
 
-            Vector2 rA = MathUtils.Multiply(ref xfA.R, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Multiply(ref xfB.R, LocalAnchorB - bB.LocalCenter);
+            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
+            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - bB.LocalCenter);
 
             Vector2 C1 = bB.Sweep.C + rB - bA.Sweep.C - rA;
             float C2 = bB.Sweep.A - bA.Sweep.A - ReferenceAngle;
@@ -232,15 +229,15 @@ namespace FarseerPhysics.Dynamics.Joints
                 iB *= 1.0f;
             }
 
-            _mass.Col1.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
-            _mass.Col2.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
-            _mass.Col3.X = -rA.Y * iA - rB.Y * iB;
-            _mass.Col1.Y = _mass.Col2.X;
-            _mass.Col2.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-            _mass.Col3.Y = rA.X * iA + rB.X * iB;
-            _mass.Col1.Z = _mass.Col3.X;
-            _mass.Col2.Z = _mass.Col3.Y;
-            _mass.Col3.Z = iA + iB;
+            _mass.ex.X = mA + mB + rA.Y * rA.Y * iA + rB.Y * rB.Y * iB;
+            _mass.ey.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
+            _mass.ez.X = -rA.Y * iA - rB.Y * iB;
+            _mass.ex.Y = _mass.ey.X;
+            _mass.ey.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
+            _mass.ez.Y = rA.X * iA + rB.X * iB;
+            _mass.ex.Z = _mass.ez.X;
+            _mass.ey.Z = _mass.ez.Y;
+            _mass.ez.Z = iA + iB;
 
             Vector3 C = new Vector3(C1.X, C1.Y, C2);
 

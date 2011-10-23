@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -53,11 +50,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(0.0f, 10.0f);
+            body.P = new Vector2(0.0f, 10.0f);
 
             body.CreateFixture(shape);
 
-            _fixedJoint = new FixedPrismaticJoint(body, body.Position, new Vector2(0.5f, 1.0f));
+            _fixedJoint = new FixedPrismaticJoint(body, body.P, new Vector2(0.5f, 1.0f));
             _fixedJoint.MotorSpeed = 5.0f;
             _fixedJoint.MaxMotorForce = 1000.0f;
             _fixedJoint.MotorEnabled = true;
@@ -72,11 +69,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
-            body2.Position = new Vector2(10.0f, 10.0f);
+            body2.P = new Vector2(10.0f, 10.0f);
 
             body2.CreateFixture(shape2);
 
-            _joint = new PrismaticJoint(ground, body2, ground.GetLocalPoint(body2.Position), Vector2.Zero,
+            _joint = new PrismaticJoint(ground, body2, ground.GetLocalPoint(body2.P), Vector2.Zero,
                                         new Vector2(0.5f, 1.0f));
             _joint.MotorSpeed = 5.0f;
             _joint.MaxMotorForce = 1000.0f;

@@ -19,7 +19,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             //Single body that moves around path
             _movingBody = BodyFactory.CreateBody(World);
-            _movingBody.Position = new Vector2(-25, 25);
+            _movingBody.P = new Vector2(-25, 25);
             _movingBody.BodyType = BodyType.Dynamic;
             _movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f), 1));
 
@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Static shape made up of edges
             PathManager.ConvertPathToEdges(_path, body, 25);
-            body.Position -= new Vector2(0, 10);
+            body.P -= new Vector2(0, 10);
 
             xform = new Vector2(0, 15);
             _path.Translate(ref xform);

@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -85,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Square character
             Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
-            squareCharacter.Position = new Vector2(-3.0f, 5.0f);
+            squareCharacter.P = new Vector2(-3.0f, 5.0f);
             squareCharacter.BodyType = BodyType.Dynamic;
             squareCharacter.FixedRotation = true;
             squareCharacter.SleepingAllowed = false;
@@ -95,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Square character 2
             Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
-            squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
+            squareCharacter2.P = new Vector2(-5.0f, 5.0f);
             squareCharacter2.BodyType = BodyType.Dynamic;
             squareCharacter2.FixedRotation = true;
             squareCharacter2.SleepingAllowed = false;
@@ -112,14 +109,14 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
-            hexCharacter.Position = new Vector2(-5.0f, 8.0f);
+            hexCharacter.P = new Vector2(-5.0f, 8.0f);
             hexCharacter.BodyType = BodyType.Dynamic;
             hexCharacter.FixedRotation = true;
             hexCharacter.SleepingAllowed = false;
 
             // Circle character
             Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
-            circleCharacter.Position = new Vector2(3.0f, 5.0f);
+            circleCharacter.P = new Vector2(3.0f, 5.0f);
             circleCharacter.BodyType = BodyType.Dynamic;
             circleCharacter.FixedRotation = true;
             circleCharacter.SleepingAllowed = false;

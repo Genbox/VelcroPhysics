@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -56,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Breakable dynamic body
             _body1 = BodyFactory.CreateBody(World);
             _body1.BodyType = BodyType.Dynamic;
-            _body1.Position = new Vector2(0.0f, 40.0f);
+            _body1.P = new Vector2(0.0f, 40.0f);
             _body1.Rotation = 0.25f * Settings.Pi;
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
@@ -93,7 +90,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Initialize();
         }
 
-        protected override void PostSolve(Contact contact, ContactConstraint impulse)
+        protected override void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             if (_broke)
             {
@@ -129,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
-            body2.Position = body1.Position;
+            body2.P = body1.P;
             body2.Rotation = body1.Rotation;
 
             _piece2 = body2.CreateFixture(_shape2);

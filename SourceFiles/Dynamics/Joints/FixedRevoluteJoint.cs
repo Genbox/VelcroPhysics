@@ -1,12 +1,9 @@
 ﻿/*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -280,8 +277,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Transform xf1;
             b1.GetTransform(out xf1);
 
-            Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
-            Vector2 r2 = _worldAnchor; // MathUtils.Multiply(ref xf2.R, LocalAnchorB - b2.LocalCenter);
+            Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
+            Vector2 r2 = _worldAnchor; // MathUtils.Mul(ref xf2.R, LocalAnchorB - b2.LocalCenter);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -297,15 +294,15 @@ namespace FarseerPhysics.Dynamics.Joints
             float i1 = b1.InvI;
             const float i2 = 0;
 
-            _mass.Col1.X = m1 + m2 + r1.Y * r1.Y * i1 + r2.Y * r2.Y * i2;
-            _mass.Col2.X = -r1.Y * r1.X * i1 - r2.Y * r2.X * i2;
-            _mass.Col3.X = -r1.Y * i1 - r2.Y * i2;
-            _mass.Col1.Y = _mass.Col2.X;
-            _mass.Col2.Y = m1 + m2 + r1.X * r1.X * i1 + r2.X * r2.X * i2;
-            _mass.Col3.Y = r1.X * i1 + r2.X * i2;
-            _mass.Col1.Z = _mass.Col3.X;
-            _mass.Col2.Z = _mass.Col3.Y;
-            _mass.Col3.Z = i1 + i2;
+            _mass.ex.X = m1 + m2 + r1.Y * r1.Y * i1 + r2.Y * r2.Y * i2;
+            _mass.ey.X = -r1.Y * r1.X * i1 - r2.Y * r2.X * i2;
+            _mass.ez.X = -r1.Y * i1 - r2.Y * i2;
+            _mass.ex.Y = _mass.ey.X;
+            _mass.ey.Y = m1 + m2 + r1.X * r1.X * i1 + r2.X * r2.X * i2;
+            _mass.ez.Y = r1.X * i1 + r2.X * i2;
+            _mass.ex.Z = _mass.ez.X;
+            _mass.ey.Z = _mass.ez.Y;
+            _mass.ez.Z = i1 + i2;
 
             _motorMass = i1 + i2;
             if (_motorMass > 0.0f)
@@ -401,7 +398,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf1;
                 b1.GetTransform(out xf1);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = _worldAnchor;
 
                 // Solve point-to-point constraint
@@ -420,7 +417,7 @@ namespace FarseerPhysics.Dynamics.Joints
                     float newImpulse = _impulse.Z + impulse.Z;
                     if (newImpulse < 0.0f)
                     {
-						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.Col3.X, _mass.Col3.Y);
+						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.ez.X, _mass.ez.Y);
 						Vector2 reduced = _mass.Solve22(rhs);
                         impulse.X = reduced.X;
                         impulse.Y = reduced.Y;
@@ -439,7 +436,7 @@ namespace FarseerPhysics.Dynamics.Joints
                     float newImpulse = _impulse.Z + impulse.Z;
                     if (newImpulse > 0.0f)
                     {
-						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.Col3.X, _mass.Col3.Y);
+						Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.ez.X, _mass.ez.Y);
 						Vector2 reduced = _mass.Solve22(rhs);
 						impulse.X = reduced.X;
                         impulse.Y = reduced.Y;
@@ -464,7 +461,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf1;
                 b1.GetTransform(out xf1);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = _worldAnchor;
 
                 // Solve point-to-point constraint
@@ -534,7 +531,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Transform xf1;
                 b1.GetTransform(out xf1);
 
-                Vector2 r1 = MathUtils.Multiply(ref xf1.R, LocalAnchorA - b1.LocalCenter);
+                Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
                 Vector2 r2 = _worldAnchor;
 
                 Vector2 C = Vector2.Zero + r2 - b1.Sweep.C - r1;

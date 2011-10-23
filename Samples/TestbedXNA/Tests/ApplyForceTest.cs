@@ -1,12 +1,9 @@
 /*
 * Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2010 Ian Qvist
+* Copyright (c) 2011 Ian Qvist
 * 
-* Box2D.XNA port of Box2D:
-* Copyright (c) 2009 Brandon Furtwangler, Nathan Furtwangler
-*
 * Original source Box2D:
-* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org 
+* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
 * 
 * This software is provided 'as-is', without any express or implied 
 * warranty.  In no event will the authors be held liable for any damages 
@@ -48,7 +45,7 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground;
             {
                 ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(0.0f, 20.0f);
+                ground.P = new Vector2(0.0f, 20.0f);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
 
@@ -71,29 +68,29 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.R.Set(0.3524f * Settings.Pi);
-                xf1.Position = MathUtils.Multiply(ref xf1.R, new Vector2(1.0f, 0.0f));
+                xf1.q.Set(0.3524f * Settings.Pi);
+                xf1.p = MathUtils.Mul(ref xf1.q, new Vector2(1.0f, 0.0f));
 
                 Vertices vertices = new Vertices(3);
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(-1.0f, 0.0f)));
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(1.0f, 0.0f)));
-                vertices.Add(MathUtils.Multiply(ref xf1, new Vector2(0.0f, 0.5f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(-1.0f, 0.0f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(1.0f, 0.0f)));
+                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(0.0f, 0.5f)));
 
                 PolygonShape poly1 = new PolygonShape(vertices, 4);
 
                 Transform xf2 = new Transform();
-                xf2.R.Set(-0.3524f * Settings.Pi);
-                xf2.Position = MathUtils.Multiply(ref xf2.R, new Vector2(-1.0f, 0.0f));
+                xf2.q.Set(-0.3524f * Settings.Pi);
+                xf2.p = MathUtils.Mul(ref xf2.q, new Vector2(-1.0f, 0.0f));
 
-                vertices[0] = MathUtils.Multiply(ref xf2, new Vector2(-1.0f, 0.0f));
-                vertices[1] = MathUtils.Multiply(ref xf2, new Vector2(1.0f, 0.0f));
-                vertices[2] = MathUtils.Multiply(ref xf2, new Vector2(0.0f, 0.5f));
+                vertices[0] = MathUtils.Mul(ref xf2, new Vector2(-1.0f, 0.0f));
+                vertices[1] = MathUtils.Mul(ref xf2, new Vector2(1.0f, 0.0f));
+                vertices[2] = MathUtils.Mul(ref xf2, new Vector2(0.0f, 0.5f));
 
                 PolygonShape poly2 = new PolygonShape(vertices, 2);
 
                 _body = BodyFactory.CreateBody(World);
                 _body.BodyType = BodyType.Dynamic;
-                _body.Position = new Vector2(0.0f, 2.0f);
+                _body.P = new Vector2(0.0f, 2.0f);
                 _body.Rotation = Settings.Pi;
                 _body.AngularDamping = 5.0f;
                 _body.LinearDamping = 0.8f;
@@ -110,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 0; i < 10; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
-                    body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
+                    body.P = new Vector2(0.0f, 5.0f + 1.54f * i);
                     body.BodyType = BodyType.Dynamic;
 
                     Fixture fixture = body.CreateFixture(shape);

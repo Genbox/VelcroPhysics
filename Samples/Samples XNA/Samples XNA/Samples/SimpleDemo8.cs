@@ -72,7 +72,7 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 6; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_circleSprite.Texture, ConvertUnits.ToDisplayUnits(_circle[i].Position),
+                ScreenManager.SpriteBatch.Draw(_circleSprite.Texture, ConvertUnits.ToDisplayUnits(_circle[i].P),
                                                null,
                                                Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f,
                                                SpriteEffects.None, 0f);
