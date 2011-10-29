@@ -309,7 +309,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
 
-            _bodies[_bodyIndex].P = new Vector2(x, y);
+            _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
             _bodies[_bodyIndex].UserData = index;
 

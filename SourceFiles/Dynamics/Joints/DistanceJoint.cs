@@ -145,7 +145,7 @@ namespace FarseerPhysics.Dynamics.Joints
             return 0.0f;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
@@ -187,9 +187,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 float k = _mass * omega * omega;
 
                 // magic formulas
-                _gamma = step.dt * (d + step.dt * k);
+                _gamma = data.step.dt * (d + data.step.dt * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
-                _bias = C * step.dt * k * _gamma;
+                _bias = C * data.step.dt * k * _gamma;
 
                 _mass = invMass + _gamma;
                 _mass = _mass != 0.0f ? 1.0f / _mass : 0.0f;
@@ -198,7 +198,7 @@ namespace FarseerPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= step.dtRatio;
+                _impulse *= data.step.dtRatio;
 
                 Vector2 P = _impulse * _u;
                 b1.LinearVelocityInternal -= b1.InvMass * P;
@@ -245,7 +245,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.AngularVelocityInternal += b2.InvI * _tmpFloat1;
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             if (Frequency > 0.0f)
             {

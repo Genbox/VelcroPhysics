@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body triangleBody = BodyFactory.CreateBody(World);
                 triangleBody.BodyType = BodyType.Dynamic;
-                triangleBody.P = new Vector2(-5.0f, 2.0f);
+                triangleBody.Position = new Vector2(-5.0f, 2.0f);
 
                 Fixture triangleFixture = triangleBody.CreateFixture(polygon);
                 triangleFixture.CollisionGroup = SmallGroup;
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body triangleBody2 = BodyFactory.CreateBody(World);
                 triangleBody2.BodyType = BodyType.Dynamic;
-                triangleBody2.P = new Vector2(-5.0f, 6.0f);
+                triangleBody2.Position = new Vector2(-5.0f, 6.0f);
                 triangleBody2.FixedRotation = true; // look at me!
 
                 Fixture triangleFixture2 = triangleBody2.CreateFixture(polygon);
@@ -92,14 +92,14 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-5.0f, 10.0f);
+                    body.Position = new Vector2(-5.0f, 10.0f);
 
                     Vertices box = PolygonTools.CreateRectangle(0.5f, 1.0f);
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
                     PrismaticJoint jd = new PrismaticJoint(triangleBody2, body,
-                                                           triangleBody2.GetLocalPoint(body.P),
+                                                           triangleBody2.GetLocalPoint(body.Position),
                                                            Vector2.Zero, new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
@@ -113,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body boxBody = BodyFactory.CreateBody(World);
                 boxBody.BodyType = BodyType.Dynamic;
-                boxBody.P = new Vector2(0.0f, 2.0f);
+                boxBody.Position = new Vector2(0.0f, 2.0f);
 
                 Fixture boxFixture = boxBody.CreateFixture(polygon);
                 boxFixture.Restitution = 0.1f;
@@ -127,7 +127,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body boxBody2 = BodyFactory.CreateBody(World);
                 boxBody2.BodyType = BodyType.Dynamic;
-                boxBody2.P = new Vector2(0.0f, 6.0f);
+                boxBody2.Position = new Vector2(0.0f, 6.0f);
 
                 Fixture boxFixture2 = boxBody2.CreateFixture(polygon);
                 boxFixture2.CollisionGroup = LargeGroup;
@@ -139,7 +139,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body circleBody = BodyFactory.CreateBody(World);
                 circleBody.BodyType = BodyType.Dynamic;
-                circleBody.P = new Vector2(5.0f, 2.0f);
+                circleBody.Position = new Vector2(5.0f, 2.0f);
 
                 Fixture circleFixture = circleBody.CreateFixture(circle);
 
@@ -152,7 +152,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body circleBody2 = BodyFactory.CreateBody(World);
                 circleBody2.BodyType = BodyType.Dynamic;
-                circleBody2.P = new Vector2(5.0f, 6.0f);
+                circleBody2.Position = new Vector2(5.0f, 6.0f);
 
                 Fixture circleFixture2 = circleBody2.CreateFixture(circle);
                 circleFixture2.CollisionGroup = LargeGroup;
@@ -162,7 +162,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Large circle - Ignore with other large circle
                 Body circleBody3 = BodyFactory.CreateBody(World);
                 circleBody3.BodyType = BodyType.Dynamic;
-                circleBody3.P = new Vector2(6.0f, 9.0f);
+                circleBody3.Position = new Vector2(6.0f, 9.0f);
 
                 //Another large circle. This one uses IgnoreCollisionWith() logic instead of categories.
                 Fixture circleFixture3 = circleBody3.CreateFixture(circle);

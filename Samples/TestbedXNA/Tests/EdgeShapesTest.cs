@@ -129,7 +129,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
             }
-            _bodies[_bodyIndex].P = new Vector2(x, y);
+            _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float)Math.PI, (float)Math.PI);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
 

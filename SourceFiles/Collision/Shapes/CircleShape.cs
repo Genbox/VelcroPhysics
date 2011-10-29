@@ -81,7 +81,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
-            Vector2 center = transform.p + MathUtils.Mul(ref transform.q, Position);
+            Vector2 center = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 d = point - center;
             return Vector2.Dot(d, d) <= Radius * Radius;
         }
@@ -104,7 +104,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             output = new RayCastOutput();
 
-            Vector2 position = transform.p + MathUtils.Mul(ref transform.q, Position);
+            Vector2 position = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 s = input.Point1 - position;
             float b = Vector2.Dot(s, s) - Radius * Radius;
 
@@ -146,7 +146,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
-            Vector2 p = transform.p + MathUtils.Mul(ref transform.q, Position);
+            Vector2 p = transform.p + MathUtils.Mul(transform.q, Position);
             aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
             aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }

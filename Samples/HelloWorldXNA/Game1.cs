@@ -188,11 +188,11 @@ namespace FarseerPhysics.HelloWorld
 
             /* Circle position and rotation */
             // Convert physics position (meters) to screen coordinates (pixels)
-            Vector2 circlePos = _circleBody.P * MeterInPixels;
+            Vector2 circlePos = _circleBody.Position * MeterInPixels;
             float circleRotation = _circleBody.Rotation;
 
             /* Ground position and origin */
-            Vector2 groundPos = _groundBody.P * MeterInPixels;
+            Vector2 groundPos = _groundBody.Position * MeterInPixels;
             Vector2 groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
 
             // Align sprite center to body position

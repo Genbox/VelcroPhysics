@@ -253,7 +253,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
-            Vector2 pLocal = MathUtils.MulT(ref transform.q, point - transform.p);
+            Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
 
             for (int i = 0; i < Vertices.Count; ++i)
             {
@@ -281,8 +281,8 @@ namespace FarseerPhysics.Collision.Shapes
             output = new RayCastOutput();
 
             // Put the ray into the polygon's frame of reference.
-            Vector2 p1 = MathUtils.MulT(ref transform.q, input.Point1 - transform.p);
-            Vector2 p2 = MathUtils.MulT(ref transform.q, input.Point2 - transform.p);
+            Vector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
+            Vector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
             Vector2 d = p2 - p1;
 
             float lower = 0.0f, upper = input.MaxFraction;
@@ -340,7 +340,7 @@ namespace FarseerPhysics.Collision.Shapes
             if (index >= 0)
             {
                 output.Fraction = lower;
-                output.Normal = MathUtils.Mul(ref transform.q, Normals[index]);
+                output.Normal = MathUtils.Mul(transform.q, Normals[index]);
                 return true;
             }
 
@@ -390,7 +390,7 @@ namespace FarseerPhysics.Collision.Shapes
             sc = Vector2.Zero;
 
             //Transform plane into shape co-ordinates
-            Vector2 normalL = MathUtils.MulT(ref xf.q, normal);
+            Vector2 normalL = MathUtils.MulT(xf.q, normal);
             float offsetL = offset - Vector2.Dot(normal, xf.p);
 
             float[] depths = new float[Settings.MaxPolygonVertices];

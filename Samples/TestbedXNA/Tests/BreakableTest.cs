@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Breakable dynamic body
             _body1 = BodyFactory.CreateBody(World);
             _body1.BodyType = BodyType.Dynamic;
-            _body1.P = new Vector2(0.0f, 40.0f);
+            _body1.Position = new Vector2(0.0f, 40.0f);
             _body1.Rotation = 0.25f * Settings.Pi;
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
@@ -126,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
-            body2.P = body1.P;
+            body2.Position = body1.Position;
             body2.Rotation = body1.Rotation;
 
             _piece2 = body2.CreateFixture(_shape2);

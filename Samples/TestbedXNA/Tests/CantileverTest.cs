@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
 
                     body.CreateFixture(shape);
 
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-14.5f + 1.0f * i, 15.0f);
+                    body.Position = new Vector2(-14.5f + 1.0f * i, 15.0f);
 
                     body.CreateFixture(shape);
 
@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-4.5f + 1.0f * i, 5.0f);
+                    body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
 
                     body.CreateFixture(shape);
 
@@ -124,7 +124,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(5.5f + 1.0f * i, 10.0f);
+                    body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
 
                     body.CreateFixture(shape);
 
@@ -153,7 +153,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
 
                 body.CreateFixture(shape);
             }
@@ -165,7 +165,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
 
                 body.CreateFixture(shape);
             }

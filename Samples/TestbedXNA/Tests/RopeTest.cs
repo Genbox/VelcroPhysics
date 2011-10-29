@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(0.5f + 1.0f * i, y);
+                    body.Position = new Vector2(0.5f + 1.0f * i, y);
 
                     if (i == Count - 1)
                     {
@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                         fixture.Friction = 0.2f;
                         fixture.CollisionCategories = Category.Cat2;
                         fixture.CollidesWith = Category.All & ~Category.Cat2;
-                        body.P = new Vector2(1.0f * i, y);
+                        body.Position = new Vector2(1.0f * i, y);
                         body.AngularDamping = 0.4f;
                     }
                     else

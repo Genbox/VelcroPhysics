@@ -54,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body bigbody = BodyFactory.CreateBody(World);
             bigbody.BodyType = BodyType.Dynamic;
-            bigbody.P = Vector2.UnitX * 25;
+            bigbody.Position = Vector2.UnitX * 25;
             bigbody.CreateFixture(bigshape);
 
             //

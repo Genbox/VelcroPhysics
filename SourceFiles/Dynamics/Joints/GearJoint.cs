@@ -94,25 +94,25 @@ namespace FarseerPhysics.Dynamics.Joints
                 case JointType.Revolute:
                     BodyA = jointA.BodyB;
                     _revolute1 = (RevoluteJoint)jointA;
-                    LocalAnchor1 = _revolute1.LocalAnchorB;
+                    LocalAnchorA = _revolute1.LocalAnchorB;
                     coordinate1 = _revolute1.JointAngle;
                     break;
                 case JointType.Prismatic:
                     BodyA = jointA.BodyB;
                     _prismatic1 = (PrismaticJoint)jointA;
-                    LocalAnchor1 = _prismatic1.LocalAnchorB;
+                    LocalAnchorA = _prismatic1.LocalAnchorB;
                     coordinate1 = _prismatic1.JointTranslation;
                     break;
                 case JointType.FixedRevolute:
                     BodyA = jointA.BodyA;
                     _fixedRevolute1 = (FixedRevoluteJoint)jointA;
-                    LocalAnchor1 = _fixedRevolute1.LocalAnchorA;
+                    LocalAnchorA = _fixedRevolute1.LocalAnchorA;
                     coordinate1 = _fixedRevolute1.JointAngle;
                     break;
                 case JointType.FixedPrismatic:
                     BodyA = jointA.BodyA;
                     _fixedPrismatic1 = (FixedPrismaticJoint)jointA;
-                    LocalAnchor1 = _fixedPrismatic1.LocalAnchorA;
+                    LocalAnchorA = _fixedPrismatic1.LocalAnchorA;
                     coordinate1 = _fixedPrismatic1.JointTranslation;
                     break;
             }
@@ -150,7 +150,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchor1); }
+            get { return BodyA.GetWorldPoint(LocalAnchorA); }
         }
 
         public override Vector2 WorldAnchorB
@@ -174,7 +174,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         public Joint JointB { get; set; }
 
-        public Vector2 LocalAnchor1 { get; private set; }
+        public Vector2 LocalAnchorA { get; private set; }
         public Vector2 LocalAnchor2 { get; private set; }
 
         public override Vector2 GetReactionForce(float inv_dt)
@@ -194,7 +194,7 @@ namespace FarseerPhysics.Dynamics.Joints
             return inv_dt * L;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
@@ -211,16 +211,16 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 Vector2 ug;
                 if (_prismatic1 != null)
-                    ug = _prismatic1.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _prismatic1.LocalXAxisA; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic1.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic1.LocalXAxisA; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
 
                 Transform xf1 /*, xfg1*/;
                 b1.GetTransform(out xf1);
                 //g1.GetTransform(out xfg1);
 
 
-                Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchor1 - b1.LocalCenter);
+                Vector2 r = MathUtils.Mul(ref xf1.q, LocalAnchorA - b1.LocalCenter);
                 float crug = MathUtils.Cross(r, ug);
                 _J.LinearA = -ug;
                 _J.AngularA = -crug;
@@ -236,9 +236,9 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 Vector2 ug;
                 if (_prismatic2 != null)
-                    ug = _prismatic2.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _prismatic2.LocalXAxisA; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
                 else
-                    ug = _fixedPrismatic2.LocalXAxis1; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
+                    ug = _fixedPrismatic2.LocalXAxisA; // MathUtils.Mul(ref xfg1.R, _prismatic1.LocalXAxis1);
 
                 Transform /*xfg1,*/ xf2;
                 //g1.GetTransform(out xfg1);
@@ -286,7 +286,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.AngularVelocityInternal += b2.InvI * impulse * _J.AngularB;
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             const float linearError = 0.0f;
 

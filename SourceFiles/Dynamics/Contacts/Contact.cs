@@ -239,8 +239,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
-            Collision.Collision.GetWorldManifold(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius,
-                                                 out normal, out points);
+            ContactSolver.WorldManifold.Initialize(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius, out normal, out points);
         }
 
         /// <summary>

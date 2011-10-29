@@ -42,12 +42,12 @@ namespace FarseerPhysics.Dynamics
         public Velocity[] _velocities;
         public Position[] _positions;
 
-        private int _bodyCapacity;
-        private int _contactCapacity;
+        public int BodyCapacity;
+        public int ContactCapacity;
         private ContactManager _contactManager;
         private ContactSolver _contactSolver = new ContactSolver();
         private Contact[] _contacts;
-        private int _jointCapacity;
+        public int JointCapacity;
         private Joint[] _joints;
         public float JointUpdateTime;
 
@@ -60,9 +60,9 @@ namespace FarseerPhysics.Dynamics
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
-            _bodyCapacity = bodyCapacity;
-            _contactCapacity = contactCapacity;
-            _jointCapacity = jointCapacity;
+            BodyCapacity = bodyCapacity;
+            ContactCapacity = contactCapacity;
+            JointCapacity = jointCapacity;
 
             BodyCount = 0;
             ContactCount = 0;
@@ -139,23 +139,13 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Solver data
-            b2SolverData solverData;
+            SolverData solverData = new SolverData();
             solverData.step = step;
             solverData.positions = _positions;
             solverData.velocities = _velocities;
 
             // Initialize velocity constraints.
-            b2ContactSolverDef contactSolverDef;
-            contactSolverDef.step = step;
-            contactSolverDef.contacts = _contacts;
-            contactSolverDef.count = _contactCount;
-            contactSolverDef.positions = _positions;
-            contactSolverDef.velocities = _velocities;
-            contactSolverDef.allocator = _allocator;
-
-                //b2ContactSolver contactSolver(&contactSolverDef);
-
-            _contactSolver.Reset(_contacts, ContactCount, step.dtRatio, Settings.EnableWarmstarting);
+            _contactSolver.Reset(step, ContactCount, _contacts, _positions, _velocities);
             _contactSolver.InitializeVelocityConstraints();
 
             if (Settings.EnableWarmstarting)
@@ -237,7 +227,7 @@ namespace FarseerPhysics.Dynamics
                 float rotation = h * w;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    float ratio = Settings.MaxRotation / MathUtils.Abs(rotation);
+                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
                     w *= ratio;
                 }
 
@@ -268,7 +258,7 @@ namespace FarseerPhysics.Dynamics
                     if (!joint.Enabled)
                         continue;
 
-                    bool jointOkay = joint.SolvePositionConstraints(solverData);
+                    bool jointOkay = joint.SolvePositionConstraints(ref solverData);
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -296,9 +286,9 @@ namespace FarseerPhysics.Dynamics
 #endif
 
             // Copy state buffers back to the bodies
-            for (int i = 0; i < _bodyCount; ++i)
+            for (int i = 0; i < BodyCount; ++i)
             {
-                Body body = _bodies[i];
+                Body body = Bodies[i];
                 body.Sweep.C = _positions[i].c;
                 body.Sweep.A = _positions[i].a;
                 body.LinearVelocity = _velocities[i].v;
@@ -306,7 +296,7 @@ namespace FarseerPhysics.Dynamics
                 body.SynchronizeTransform();
             }
 
-            Report(contactSolver._velocityConstraints);
+            Report(_contactSolver._velocityConstraints);
 
             if (Settings.AllowSleep)
             {
@@ -347,13 +337,13 @@ namespace FarseerPhysics.Dynamics
 
         internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB)
         {
-            Debug.Assert(toiIndexA < _bodyCount);
-            Debug.Assert(toiIndexB < _bodyCount);
+            Debug.Assert(toiIndexA < BodyCount);
+            Debug.Assert(toiIndexB < BodyCount);
 
             // Initialize the body state.
-            for (int i = 0; i < _bodyCount; ++i)
+            for (int i = 0; i < BodyCount; ++i)
             {
-                Body b = _bodies[i];
+                Body b = Bodies[i];
                 _positions[i].c = b.Sweep.C;
                 _positions[i].a = b.Sweep.A;
                 _velocities[i].v = b.LinearVelocity;
@@ -369,12 +359,12 @@ namespace FarseerPhysics.Dynamics
             //contactSolverDef.velocities = _velocities;
             //b2ContactSolver contactSolver(&contactSolverDef);
 
-            _contactSolver.Reset(_contacts, ContactCount, subStep.dtRatio, false);
+            _contactSolver.Reset(subStep, ContactCount, _contacts, _positions, _velocities);
 
             // Solve position constraints.
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
             {
-                bool contactsOkay = _contactSolver.SolvePositionConstraints(toiIndexA,toiIndexB);
+                bool contactsOkay = _contactSolver.SolvePositionConstraints();
                 if (contactsOkay)
                 {
                     break;
@@ -382,10 +372,10 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Leap of faith to new safe state.
-            _bodies[toiIndexA]._sweep.c0 = _positions[toiIndexA].c;
-            _bodies[toiIndexA]._sweep.a0 = _positions[toiIndexA].a;
-            _bodies[toiIndexB]._sweep.c0 = _positions[toiIndexB].c;
-            _bodies[toiIndexB]._sweep.a0 = _positions[toiIndexB].a;
+            Bodies[toiIndexA].Sweep.C0 = _positions[toiIndexA].c;
+            Bodies[toiIndexA].Sweep.A0 = _positions[toiIndexA].a;
+            Bodies[toiIndexB].Sweep.C0 = _positions[toiIndexB].c;
+            Bodies[toiIndexB].Sweep.A0 = _positions[toiIndexB].a;
 
             // No warm starting is needed for TOI events because warm
             // starting impulses were applied in the discrete solver.
@@ -421,7 +411,7 @@ namespace FarseerPhysics.Dynamics
                 float rotation = h * w;
                 if (rotation * rotation > Settings.MaxRotationSquared)
                 {
-                    float ratio = Settings.MaxRotation / MathUtils.Abs(rotation);
+                    float ratio = Settings.MaxRotation / Math.Abs(rotation);
                     w *= ratio;
                 }
 
@@ -435,7 +425,7 @@ namespace FarseerPhysics.Dynamics
                 _velocities[i].w = w;
 
                 // Sync bodies
-                Body body = _bodies[i];
+                Body body = Bodies[i];
                 body.Sweep.C = c;
                 body.Sweep.A = a;
                 body.LinearVelocity = v;
@@ -443,25 +433,26 @@ namespace FarseerPhysics.Dynamics
                 body.SynchronizeTransform();
             }
 
-            Report(_contactSolver.VelosityConstraints);
+            Report(_contactSolver._velocityConstraints);
         }
 
         public void Add(Body body)
         {
-            Debug.Assert(BodyCount < _bodyCapacity);
+            Debug.Assert(BodyCount < BodyCapacity);
+            body.IslandIndex = BodyCount;
             Bodies[BodyCount] = body;
             ++BodyCount;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(ContactCount < _contactCapacity);
+            Debug.Assert(ContactCount < ContactCapacity);
             _contacts[ContactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Debug.Assert(JointCount < _jointCapacity);
+            Debug.Assert(JointCount < JointCapacity);
             _joints[JointCount++] = joint;
         }
 

@@ -32,7 +32,7 @@ namespace FarseerPhysics.TestBed.Tests
             for (int i = 0; i < 7; ++i)
             {
                 DestructableBody db = new DestructableBody(World, v);
-                db.Body.P = new Vector2(-15.0f + size * 3 * i, 20.0f);
+                db.Body.Position = new Vector2(-15.0f + size * 3 * i, 20.0f);
             }
 
             Radius = 3;
@@ -229,7 +229,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 1; i < result.Count; i++)
                 {
                     DestructableBody db = new DestructableBody(_world, result[i]);
-                    db.Body.P = Body.P;
+                    db.Body.Position = body.Position;
                 }
             }
 

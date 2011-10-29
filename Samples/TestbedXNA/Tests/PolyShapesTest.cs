@@ -195,7 +195,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             float x = Rand.RandomFloat(-2.0f, 2.0f);
 
-            _bodies[_bodyIndex].P = new Vector2(x, 10.0f);
+            _bodies[_bodyIndex].Position = new Vector2(x, 10.0f);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)

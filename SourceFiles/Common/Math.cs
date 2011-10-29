@@ -33,7 +33,7 @@ namespace FarseerPhysics.Common
         {
             return a.X * b.Y - a.Y * b.X;
         }
-        
+
         /// Perform the cross product on two vectors.
         public static Vector3 Cross(Vector3 a, Vector3 b)
         {
@@ -169,6 +169,16 @@ namespace FarseerPhysics.Common
             qr.s = q.c * r.s - q.s * r.c;
             qr.c = q.c * r.c + q.s * r.s;
             return qr;
+        }
+
+        // v2 = A.q' * (B.q * v1 + B.p - A.p)
+        //    = A.q' * B.q * v1 + A.q' * (B.p - A.p)
+        public static Transform MulT(Transform A, Transform B)
+        {
+            Transform C = new Transform();
+            C.q = MulT(A.q, B.q);
+            C.p = MulT(A.q, B.p - A.p);
+            return C;
         }
 
         /// Rotate a vector
@@ -364,6 +374,16 @@ namespace FarseerPhysics.Common
         }
 
         #endregion
+
+        public static Vector2 Mul(ref Rot rot, Vector2 axis)
+        {
+            return Mul(rot, axis);
+        }
+
+        public static Vector2 MulT(ref Rot rot, Vector2 axis)
+        {
+            return MulT(rot, axis);
+        }
     }
 
     /// <summary>

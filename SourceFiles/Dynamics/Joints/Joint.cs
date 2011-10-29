@@ -251,7 +251,7 @@ namespace FarseerPhysics.Dynamics.Joints
                    JointType == JointType.FixedFriction;
         }
 
-        internal abstract void InitVelocityConstraints(ref TimeStep step);
+        internal abstract void InitVelocityConstraints(ref SolverData data);
 
         internal void Validate(float invDT)
         {
@@ -273,7 +273,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Solves the position constraints.
         /// </summary>
+        /// <param name="solverData"></param>
         /// <returns>returns true if the position errors are within tolerance.</returns>
-        internal abstract bool SolvePositionConstraints();
+        internal abstract bool SolvePositionConstraints(ref SolverData solverData);
     }
 }

@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Square character
             Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
-            squareCharacter.P = new Vector2(-3.0f, 5.0f);
+            squareCharacter.Position = new Vector2(-3.0f, 5.0f);
             squareCharacter.BodyType = BodyType.Dynamic;
             squareCharacter.FixedRotation = true;
             squareCharacter.SleepingAllowed = false;
@@ -92,7 +92,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Square character 2
             Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
-            squareCharacter2.P = new Vector2(-5.0f, 5.0f);
+            squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
             squareCharacter2.BodyType = BodyType.Dynamic;
             squareCharacter2.FixedRotation = true;
             squareCharacter2.SleepingAllowed = false;
@@ -109,14 +109,14 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
-            hexCharacter.P = new Vector2(-5.0f, 8.0f);
+            hexCharacter.Position = new Vector2(-5.0f, 8.0f);
             hexCharacter.BodyType = BodyType.Dynamic;
             hexCharacter.FixedRotation = true;
             hexCharacter.SleepingAllowed = false;
 
             // Circle character
             Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
-            circleCharacter.P = new Vector2(3.0f, 5.0f);
+            circleCharacter.Position = new Vector2(3.0f, 5.0f);
             circleCharacter.BodyType = BodyType.Dynamic;
             circleCharacter.FixedRotation = true;
             circleCharacter.SleepingAllowed = false;

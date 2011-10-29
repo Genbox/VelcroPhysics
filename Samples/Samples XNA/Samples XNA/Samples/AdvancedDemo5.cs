@@ -97,7 +97,7 @@ namespace FarseerPhysics.SamplesFramework
                 }
 
                 BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);
-                breakableBody.MainBody.P = new Vector2(xOffset, yOffset);
+                breakableBody.MainBody.Position = new Vector2(xOffset, yOffset);
                 breakableBody.Strength = 100;
                 breakableBody.MainBody.UserData = i;
                 World.AddBreakableBody(breakableBody);
@@ -123,7 +123,7 @@ namespace FarseerPhysics.SamplesFramework
 
                 World.QueryAABB(fixture =>
                                     {
-                                        Vector2 fv = fixture.Body.P - cursorPos;
+                                        Vector2 fv = fixture.Body.Position - cursorPos;
                                         fv.Normalize();
                                         fv *= 40;
                                         fixture.Body.ApplyLinearImpulse(ref fv);

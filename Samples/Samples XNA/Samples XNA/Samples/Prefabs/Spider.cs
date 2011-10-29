@@ -40,26 +40,26 @@ namespace FarseerPhysics.SamplesFramework
 
             //Left upper leg
             _leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                    _circle.P - new Vector2(SpiderBodyRadius, 0f) -
+                                                    _circle.Position - new Vector2(SpiderBodyRadius, 0f) -
                                                     new Vector2(_upperLegSize.X / 2f, 0f));
             _leftUpper.BodyType = BodyType.Dynamic;
 
             //Left lower leg
             _leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                    _circle.P - new Vector2(SpiderBodyRadius, 0f) -
+                                                    _circle.Position - new Vector2(SpiderBodyRadius, 0f) -
                                                     new Vector2(_upperLegSize.X, 0f) -
                                                     new Vector2(_lowerLegSize.X / 2f, 0f));
             _leftLower.BodyType = BodyType.Dynamic;
 
             //Right upper leg
             _rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                     _circle.P + new Vector2(SpiderBodyRadius, 0f) +
+                                                     _circle.Position + new Vector2(SpiderBodyRadius, 0f) +
                                                      new Vector2(_upperLegSize.X / 2f, 0f));
             _rightUpper.BodyType = BodyType.Dynamic;
 
             //Right lower leg
             _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                     _circle.P + new Vector2(SpiderBodyRadius, 0f) +
+                                                     _circle.Position + new Vector2(SpiderBodyRadius, 0f) +
                                                      new Vector2(_upperLegSize.X, 0f) +
                                                      new Vector2(_lowerLegSize.X / 2f, 0f));
             _rightLower.BodyType = BodyType.Dynamic;
@@ -124,17 +124,17 @@ namespace FarseerPhysics.SamplesFramework
         {
             SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
 
-            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLower.P), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLower.Position), null,
                         Color.White, _leftLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLower.P), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLower.Position), null,
                         Color.White, _rightLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_leftUpper.P), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_leftUpper.Position), null,
                         Color.White, _leftUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_rightUpper.P), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_rightUpper.Position), null,
                         Color.White, _rightUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_circle.P), null,
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_circle.Position), null,
                         Color.White, _circle.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
         }
     }

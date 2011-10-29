@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Create the planet
             Body planet = BodyFactory.CreateBody(World);
-            planet.P = new Vector2(0, 20);
+            planet.Position = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2, 1);
             planet.CreateFixture(planetShape);
@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body circle = BodyFactory.CreateBody(World);
                 circle.BodyType = BodyType.Dynamic;
-                circle.P = startPosition + offset * i;
+                circle.Position = startPosition + offset * i;
                 circle.SleepingAllowed = false;
 
                 CircleShape circleShape = new CircleShape(1, 0.1f);

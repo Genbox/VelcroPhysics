@@ -46,7 +46,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _attachment = BodyFactory.CreateBody(World);
                 _attachment.BodyType = BodyType.Dynamic;
-                _attachment.P = new Vector2(0.0f, 3.0f);
+                _attachment.Position = new Vector2(0.0f, 3.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
                 PolygonShape shape = new PolygonShape(box, 2);
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _platform = BodyFactory.CreateBody(World);
                 _platform.BodyType = BodyType.Dynamic;
-                _platform.P = new Vector2(0.0f, 5.0f);
+                _platform.Position = new Vector2(0.0f, 5.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 2);
@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 fixture.Friction = 0.6f;
 
                 RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
-                                                      _attachment.GetLocalPoint(_platform.P),
+                                                      _attachment.GetLocalPoint(_platform.Position),
                                                       Vector2.Zero);
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
@@ -89,7 +89,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(0.0f, 8.0f);
+                body.Position = new Vector2(0.0f, 8.0f);
 
                 Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
                 PolygonShape shape = new PolygonShape(box, 2);

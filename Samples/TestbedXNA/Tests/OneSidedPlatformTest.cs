@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 Body body = BodyFactory.CreateBody(World);
-                body.P = new Vector2(0.0f, 10.0f);
+                body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(1);
                 shape.SetAsBox(3.0f, 0.5f);
@@ -57,7 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(0.0f, 12.0f);
+                body.Position = new Vector2(0.0f, 12.0f);
 
                 _radius = 0.5f;
                 CircleShape shape = new CircleShape(_radius, 20);
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return;
             }
 
-            Vector2 position = _character.Body.P;
+            Vector2 position = _character.body.Position;
 
             if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
             {

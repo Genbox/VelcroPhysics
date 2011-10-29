@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FarseerPhysics.Collision.Shapes;
@@ -574,147 +575,6 @@ namespace FarseerPhysics.Collision
         private static float _radius;
         private static Vector2[] _tmpNormals = new Vector2[2];
 
-        /// <summary>
-        /// Evaluate the manifold with supplied transforms. This assumes
-        /// modest motion from the original state. This does not change the
-        /// point count, impulses, etc. The radii must come from the Shapes
-        /// that generated the manifold.
-        /// </summary>
-        /// <param name="manifold">The manifold.</param>
-        /// <param name="transformA">The transform for A.</param>
-        /// <param name="radiusA">The radius for A.</param>
-        /// <param name="transformB">The transform for B.</param>
-        /// <param name="radiusB">The radius for B.</param>
-        /// <param name="normal">World vector pointing from A to B</param>
-        /// <param name="points">Torld contact point (point of intersection).</param>
-        public static void GetWorldManifold(ref Manifold manifold,
-                                            ref Transform transformA, float radiusA,
-                                            ref Transform transformB, float radiusB, out Vector2 normal,
-                                            out FixedArray2<Vector2> points)
-        {
-            points = new FixedArray2<Vector2>();
-            normal = Vector2.Zero;
-
-            if (manifold.PointCount == 0)
-            {
-                normal = Vector2.UnitY;
-                return;
-            }
-
-            switch (manifold.Type)
-            {
-                case ManifoldType.Circles:
-                    {
-                        Vector2 tmp = manifold.Points[0].LocalPoint;
-                        float pointAx = transformA.p.X + transformA.q.ex.X * manifold.LocalPoint.X +
-                                        transformA.q.ey.X * manifold.LocalPoint.Y;
-
-                        float pointAy = transformA.p.Y + transformA.q.ex.Y * manifold.LocalPoint.X +
-                                        transformA.q.ey.Y * manifold.LocalPoint.Y;
-
-                        float pointBx = transformB.p.X + transformB.q.ex.X * tmp.X +
-                                        transformB.q.ey.X * tmp.Y;
-
-                        float pointBy = transformB.p.Y + transformB.q.ex.Y * tmp.X +
-                                        transformB.q.ey.Y * tmp.Y;
-
-                        normal.X = 1;
-                        normal.Y = 0;
-
-                        float result = (pointAx - pointBx) * (pointAx - pointBx) +
-                                       (pointAy - pointBy) * (pointAy - pointBy);
-                        if (result > Settings.Epsilon * Settings.Epsilon)
-                        {
-                            float tmpNormalx = pointBx - pointAx;
-                            float tmpNormaly = pointBy - pointAy;
-                            float factor = 1f / (float)Math.Sqrt(tmpNormalx * tmpNormalx + tmpNormaly * tmpNormaly);
-                            normal.X = tmpNormalx * factor;
-                            normal.Y = tmpNormaly * factor;
-                        }
-
-                        Vector2 c = Vector2.Zero;
-                        c.X = (pointAx + radiusA * normal.X) + (pointBx - radiusB * normal.X);
-                        c.Y = (pointAy + radiusA * normal.Y) + (pointBy - radiusB * normal.Y);
-
-                        points[0] = 0.5f * c;
-                    }
-                    break;
-
-                case ManifoldType.FaceA:
-                    {
-                        normal.X = transformA.q.ex.X * manifold.LocalNormal.X +
-                                   transformA.q.ey.X * manifold.LocalNormal.Y;
-                        normal.Y = transformA.q.ex.Y * manifold.LocalNormal.X +
-                                   transformA.q.ey.Y * manifold.LocalNormal.Y;
-
-                        float planePointx = transformA.p.X + transformA.q.ex.X * manifold.LocalPoint.X +
-                                            transformA.q.ey.X * manifold.LocalPoint.Y;
-
-                        float planePointy = transformA.p.Y + transformA.q.ex.Y * manifold.LocalPoint.X +
-                                            transformA.q.ey.Y * manifold.LocalPoint.Y;
-
-                        for (int i = 0; i < manifold.PointCount; ++i)
-                        {
-                            Vector2 tmp = manifold.Points[i].LocalPoint;
-
-                            float clipPointx = transformB.p.X + transformB.q.ex.X * tmp.X +
-                                               transformB.q.ey.X * tmp.Y;
-
-                            float clipPointy = transformB.p.Y + transformB.q.ex.Y * tmp.X +
-                                               transformB.q.ey.Y * tmp.Y;
-
-                            float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
-
-                            Vector2 c = Vector2.Zero;
-                            c.X = (clipPointx + (radiusA - value) * normal.X) + (clipPointx - radiusB * normal.X);
-                            c.Y = (clipPointy + (radiusA - value) * normal.Y) + (clipPointy - radiusB * normal.Y);
-
-                            points[i] = 0.5f * c;
-                        }
-                    }
-                    break;
-
-                case ManifoldType.FaceB:
-                    {
-                        normal.X = transformB.q.ex.X * manifold.LocalNormal.X +
-                                   transformB.q.ey.X * manifold.LocalNormal.Y;
-                        normal.Y = transformB.q.ex.Y * manifold.LocalNormal.X +
-                                   transformB.q.ey.Y * manifold.LocalNormal.Y;
-
-                        float planePointx = transformB.p.X + transformB.q.ex.X * manifold.LocalPoint.X +
-                                            transformB.q.ey.X * manifold.LocalPoint.Y;
-
-                        float planePointy = transformB.p.Y + transformB.q.ex.Y * manifold.LocalPoint.X +
-                                            transformB.q.ey.Y * manifold.LocalPoint.Y;
-
-                        for (int i = 0; i < manifold.PointCount; ++i)
-                        {
-                            Vector2 tmp = manifold.Points[i].LocalPoint;
-
-                            float clipPointx = transformA.p.X + transformA.q.ex.X * tmp.X +
-                                               transformA.q.ey.X * tmp.Y;
-
-                            float clipPointy = transformA.p.Y + transformA.q.ex.Y * tmp.X +
-                                               transformA.q.ey.Y * tmp.Y;
-
-                            float value = (clipPointx - planePointx) * normal.X + (clipPointy - planePointy) * normal.Y;
-
-                            Vector2 c = Vector2.Zero;
-                            c.X = (clipPointx - radiusA * normal.X) + (clipPointx + (radiusB - value) * normal.X);
-                            c.Y = (clipPointy - radiusA * normal.Y) + (clipPointy + (radiusB - value) * normal.Y);
-
-                            points[i] = 0.5f * c;
-                        }
-                        // Ensure normal points from A to B.
-                        normal *= -1;
-                    }
-                    break;
-                default:
-                    normal = Vector2.UnitY;
-                    break;
-            }
-        }
-
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
                                           ref Manifold manifold1, ref Manifold manifold2)
         {
@@ -764,12 +624,11 @@ namespace FarseerPhysics.Collision
         {
             manifold.PointCount = 0;
 
-            float pAx = xfA.p.X + xfA.q.ex.X * circleA.Position.X + xfA.q.ey.X * circleA.Position.Y;
-            float pAy = xfA.p.Y + xfA.q.ex.Y * circleA.Position.X + xfA.q.ey.Y * circleA.Position.Y;
-            float pBx = xfB.p.X + xfB.q.ex.X * circleB.Position.X + xfB.q.ey.X * circleB.Position.Y;
-            float pBy = xfB.p.Y + xfB.q.ex.Y * circleB.Position.X + xfB.q.ey.Y * circleB.Position.Y;
+            Vector2 pA = MathUtils.Mul(ref xfA, circleA.Position);
+            Vector2 pB = MathUtils.Mul(ref xfB, circleB.Position);
 
-            float distSqr = (pBx - pAx) * (pBx - pAx) + (pBy - pAy) * (pBy - pAy);
+            Vector2 d = pB - pA;
+            float distSqr = Vector2.Dot(d, d);
             float radius = circleA.Radius + circleB.Radius;
             if (distSqr > radius * radius)
             {
@@ -794,28 +653,18 @@ namespace FarseerPhysics.Collision
         /// </summary>
         /// <param name="manifold">The manifold.</param>
         /// <param name="polygonA">The polygon A.</param>
-        /// <param name="transformA">The transform of A.</param>
+        /// <param name="xfA">The transform of A.</param>
         /// <param name="circleB">The circle B.</param>
-        /// <param name="transformB">The transform of B.</param>
+        /// <param name="xfB">The transform of B.</param>
         public static void CollidePolygonAndCircle(ref Manifold manifold,
-                                                   PolygonShape polygonA, ref Transform transformA,
-                                                   CircleShape circleB, ref Transform transformB)
+                                                   PolygonShape polygonA, ref Transform xfA,
+                                                   CircleShape circleB, ref Transform xfB)
         {
             manifold.PointCount = 0;
 
             // Compute circle position in the frame of the polygon.
-            Vector2 c =
-                new Vector2(
-                    transformB.p.X + transformB.q.ex.X * circleB.Position.X +
-                    transformB.q.ey.X * circleB.Position.Y,
-                    transformB.p.Y + transformB.q.ex.Y * circleB.Position.X +
-                    transformB.q.ey.Y * circleB.Position.Y);
-            Vector2 cLocal =
-                new Vector2(
-                    (c.X - transformA.p.X) * transformA.q.ex.X +
-                    (c.Y - transformA.p.Y) * transformA.q.ex.Y,
-                    (c.X - transformA.p.X) * transformA.q.ey.X +
-                    (c.Y - transformA.p.Y) * transformA.q.ey.Y);
+            Vector2 c = MathUtils.Mul(ref xfB, circleB.Position);
+            Vector2 cLocal = MathUtils.MulT(ref xfA, c);
 
             // Find the min separating edge.
             int normalIndex = 0;
@@ -1012,25 +861,19 @@ namespace FarseerPhysics.Collision
             Vector2 v11 = poly1.Vertices[iv1];
             Vector2 v12 = poly1.Vertices[iv2];
 
-            float localTangentX = v12.X - v11.X;
-            float localTangentY = v12.Y - v11.Y;
+            Vector2 localTangent = v12 - v11;
+            localTangent.Normalize();
 
-            float factor = 1f / (float)Math.Sqrt(localTangentX * localTangentX + localTangentY * localTangentY);
-            localTangentX = localTangentX * factor;
-            localTangentY = localTangentY * factor;
-
-            Vector2 localNormal = new Vector2(localTangentY, -localTangentX);
+            Vector2 localNormal = new Vector2(localTangent.Y, -localTangent.X);
             Vector2 planePoint = 0.5f * (v11 + v12);
 
-            Vector2 tangent = new Vector2(xf1.q.ex.X * localTangentX + xf1.q.ey.X * localTangentY,
-                                          xf1.q.ex.Y * localTangentX + xf1.q.ey.Y * localTangentY);
+            Vector2 tangent = MathUtils.Mul(xf1.q, localTangent);
+
             float normalx = tangent.Y;
             float normaly = -tangent.X;
 
-            v11 = new Vector2(xf1.p.X + xf1.q.ex.X * v11.X + xf1.q.ey.X * v11.Y,
-                              xf1.p.Y + xf1.q.ex.Y * v11.X + xf1.q.ey.Y * v11.Y);
-            v12 = new Vector2(xf1.p.X + xf1.q.ex.X * v12.X + xf1.q.ey.X * v12.Y,
-                              xf1.p.Y + xf1.q.ex.Y * v12.X + xf1.q.ey.Y * v12.Y);
+            v11 = MathUtils.Mul(ref xf1, v11);
+            v12 = MathUtils.Mul(ref xf1, v12);
 
             // Face offset.
             float frontOffset = normalx * v11.X + normaly * v11.Y;
@@ -1070,11 +913,7 @@ namespace FarseerPhysics.Collision
                 if (separation <= totalRadius)
                 {
                     ManifoldPoint cp = manifold.Points[pointCount];
-                    Vector2 tmp = clipPoints2[i].V;
-                    float tmp1X = tmp.X - xf2.p.X;
-                    float tmp1Y = tmp.Y - xf2.p.Y;
-                    cp.LocalPoint.X = tmp1X * xf2.q.ex.X + tmp1Y * xf2.q.ex.Y;
-                    cp.LocalPoint.Y = tmp1X * xf2.q.ey.X + tmp1Y * xf2.q.ey.Y;
+                    cp.LocalPoint = MathUtils.MulT(ref xf2, clipPoints2[i].V);
                     cp.Id = clipPoints2[i].ID;
 
                     if (flip)
@@ -1256,433 +1095,508 @@ namespace FarseerPhysics.Collision
                                                  EdgeShape edgeA, ref Transform xfA,
                                                  PolygonShape polygonB, ref Transform xfB)
         {
-            MathUtils.MulT(ref xfA, ref xfB, out _xf);
-
-            // Edge geometry
-            _edgeA.V0 = edgeA.Vertex0;
-            _edgeA.V1 = edgeA.Vertex1;
-            _edgeA.V2 = edgeA.Vertex2;
-            _edgeA.V3 = edgeA.Vertex3;
-            Vector2 e = _edgeA.V2 - _edgeA.V1;
-
-            // Normal points outwards in CCW order.
-            _edgeA.Normal = new Vector2(e.Y, -e.X);
-            _edgeA.Normal.Normalize();
-            _edgeA.HasVertex0 = edgeA.HasVertex0;
-            _edgeA.HasVertex3 = edgeA.HasVertex3;
-
-            // Proxy for edge
-            _proxyA.Vertices[0] = _edgeA.V1;
-            _proxyA.Vertices[1] = _edgeA.V2;
-            _proxyA.Normals[0] = _edgeA.Normal;
-            _proxyA.Normals[1] = -_edgeA.Normal;
-            _proxyA.Centroid = 0.5f * (_edgeA.V1 + _edgeA.V2);
-            _proxyA.Count = 2;
-
-            // Proxy for polygon
-            _proxyB.Count = polygonB.Vertices.Count;
-            _proxyB.Centroid = MathUtils.Mul(ref _xf, ref polygonB.MassData.Centroid);
-            for (int i = 0; i < polygonB.Vertices.Count; ++i)
-            {
-                _proxyB.Vertices[i] = MathUtils.Mul(ref _xf, polygonB.Vertices[i]);
-                _proxyB.Normals[i] = MathUtils.Mul(ref _xf.q, polygonB.Normals[i]);
-            }
-
-            _radius = 2.0f * Settings.PolygonRadius;
-
-            _limit11 = Vector2.Zero;
-            _limit12 = Vector2.Zero;
-            _limit21 = Vector2.Zero;
-            _limit22 = Vector2.Zero;
-
-            //Collide(ref manifold); inline start
-            manifold.PointCount = 0;
-
-            //ComputeAdjacency(); inline start
-            Vector2 v0 = _edgeA.V0;
-            Vector2 v1 = _edgeA.V1;
-            Vector2 v2 = _edgeA.V2;
-            Vector2 v3 = _edgeA.V3;
-
-            // Determine allowable the normal regions based on adjacency.
-            // Note: it may be possible that no normal is admissable.
-            Vector2 centerB = _proxyB.Centroid;
-            if (_edgeA.HasVertex0)
-            {
-                Vector2 e0 = v1 - v0;
-                Vector2 e1 = v2 - v1;
-                Vector2 n0 = new Vector2(e0.Y, -e0.X);
-                Vector2 n1 = new Vector2(e1.Y, -e1.X);
-                n0.Normalize();
-                n1.Normalize();
-
-                bool convex = MathUtils.Cross(n0, n1) >= 0.0f;
-                bool front0 = Vector2.Dot(n0, centerB - v0) >= 0.0f;
-                bool front1 = Vector2.Dot(n1, centerB - v1) >= 0.0f;
-
-                if (convex)
-                {
-                    if (front0 || front1)
-                    {
-                        _limit11 = n1;
-                        _limit12 = n0;
-                    }
-                    else
-                    {
-                        _limit11 = -n1;
-                        _limit12 = -n0;
-                    }
-                }
-                else
-                {
-                    if (front0 && front1)
-                    {
-                        _limit11 = n0;
-                        _limit12 = n1;
-                    }
-                    else
-                    {
-                        _limit11 = -n0;
-                        _limit12 = -n1;
-                    }
-                }
-            }
-            else
-            {
-                _limit11 = Vector2.Zero;
-                _limit12 = Vector2.Zero;
-            }
-
-            if (_edgeA.HasVertex3)
-            {
-                Vector2 e1 = v2 - v1;
-                Vector2 e2 = v3 - v2;
-                Vector2 n1 = new Vector2(e1.Y, -e1.X);
-                Vector2 n2 = new Vector2(e2.Y, -e2.X);
-                n1.Normalize();
-                n2.Normalize();
-
-                bool convex = MathUtils.Cross(n1, n2) >= 0.0f;
-                bool front1 = Vector2.Dot(n1, centerB - v1) >= 0.0f;
-                bool front2 = Vector2.Dot(n2, centerB - v2) >= 0.0f;
-
-                if (convex)
-                {
-                    if (front1 || front2)
-                    {
-                        _limit21 = n2;
-                        _limit22 = n1;
-                    }
-                    else
-                    {
-                        _limit21 = -n2;
-                        _limit22 = -n1;
-                    }
-                }
-                else
-                {
-                    if (front1 && front2)
-                    {
-                        _limit21 = n1;
-                        _limit22 = n2;
-                    }
-                    else
-                    {
-                        _limit21 = -n1;
-                        _limit22 = -n2;
-                    }
-                }
-            }
-            else
-            {
-                _limit21 = Vector2.Zero;
-                _limit22 = Vector2.Zero;
-            }
-
-            //ComputeAdjacency(); inline end
-
-            //EPAxis edgeAxis = ComputeEdgeSeparation(); inline start
-            EPAxis edgeAxis = ComputeEdgeSeparation();
-
-            // If no valid normal can be found than this edge should not collide.
-            // This can happen on the middle edge of a 3-edge zig-zag chain.
-            if (edgeAxis.Type == EPAxisType.Unknown)
-            {
-                return;
-            }
-
-            if (edgeAxis.Separation > _radius)
-            {
-                return;
-            }
-
-            EPAxis polygonAxis = ComputePolygonSeparation();
-            if (polygonAxis.Type != EPAxisType.Unknown && polygonAxis.Separation > _radius)
-            {
-                return;
-            }
-
-            // Use hysteresis for jitter reduction.
-            const float k_relativeTol = 0.98f;
-            const float k_absoluteTol = 0.001f;
-
-            EPAxis primaryAxis;
-            if (polygonAxis.Type == EPAxisType.Unknown)
-            {
-                primaryAxis = edgeAxis;
-            }
-            else if (polygonAxis.Separation > k_relativeTol * edgeAxis.Separation + k_absoluteTol)
-            {
-                primaryAxis = polygonAxis;
-            }
-            else
-            {
-                primaryAxis = edgeAxis;
-            }
-
-            TempPolygon proxy1;
-            TempPolygon proxy2;
-            FixedArray2<ClipVertex> incidentEdge = new FixedArray2<ClipVertex>();
-            if (primaryAxis.Type == EPAxisType.EdgeA)
-            {
-                proxy1 = _proxyA;
-                proxy2 = _proxyB;
-                manifold.Type = ManifoldType.FaceA;
-            }
-            else
-            {
-                proxy1 = _proxyB;
-                proxy2 = _proxyA;
-                manifold.Type = ManifoldType.FaceB;
-            }
-
-            int edge1 = primaryAxis.Index;
-
-            FindIncidentEdge(ref incidentEdge, proxy1, primaryAxis.Index, proxy2);
-            int count1 = proxy1.Count;
-
-            int iv1 = edge1;
-            int iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
-
-            Vector2 v11 = proxy1.Vertices[iv1];
-            Vector2 v12 = proxy1.Vertices[iv2];
-
-            Vector2 tangent = v12 - v11;
-            tangent.Normalize();
-
-            Vector2 normal = MathUtils.Cross(tangent, 1.0f);
-            Vector2 planePoint = 0.5f * (v11 + v12);
-
-            // Face offset.
-            float frontOffset = Vector2.Dot(normal, v11);
-
-            // Side offsets, extended by polytope skin thickness.
-            float sideOffset1 = -Vector2.Dot(tangent, v11) + _radius;
-            float sideOffset2 = Vector2.Dot(tangent, v12) + _radius;
-
-            // Clip incident edge against extruded edge1 side edges.
-            FixedArray2<ClipVertex> clipPoints1;
-            FixedArray2<ClipVertex> clipPoints2;
-            int np;
-
-            // Clip to box side 1
-            np = ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1, iv1);
-
-            if (np < Settings.MaxManifoldPoints)
-            {
-                return;
-            }
-
-            // Clip to negative box side 1
-            np = ClipSegmentToLine(out clipPoints2, ref clipPoints1, tangent, sideOffset2, iv2);
-
-            if (np < Settings.MaxManifoldPoints)
-            {
-                return;
-            }
-
-            // Now clipPoints2 contains the clipped points.
-            if (primaryAxis.Type == EPAxisType.EdgeA)
-            {
-                manifold.LocalNormal = normal;
-                manifold.LocalPoint = planePoint;
-            }
-            else
-            {
-                manifold.LocalNormal = MathUtils.MulT(ref _xf.q, ref normal);
-                manifold.LocalPoint = MathUtils.MulT(ref _xf, ref planePoint);
-            }
-
-            int pointCount = 0;
-            for (int i1 = 0; i1 < Settings.MaxManifoldPoints; ++i1)
-            {
-                float separation = Vector2.Dot(normal, clipPoints2[i1].V) - frontOffset;
-
-                if (separation <= _radius)
-                {
-                    ManifoldPoint cp = manifold.Points[pointCount];
-
-                    if (primaryAxis.Type == EPAxisType.EdgeA)
-                    {
-                        cp.LocalPoint = MathUtils.MulT(ref _xf, clipPoints2[i1].V);
-                        cp.Id = clipPoints2[i1].ID;
-                    }
-                    else
-                    {
-                        cp.LocalPoint = clipPoints2[i1].V;
-                        cp.Id.Features.TypeA = clipPoints2[i1].ID.Features.TypeB;
-                        cp.Id.Features.TypeB = clipPoints2[i1].ID.Features.TypeA;
-                        cp.Id.Features.IndexA = clipPoints2[i1].ID.Features.IndexB;
-                        cp.Id.Features.IndexB = clipPoints2[i1].ID.Features.IndexA;
-                    }
-
-                    manifold.Points[pointCount] = cp;
-
-                    ++pointCount;
-                }
-            }
-
-            manifold.PointCount = pointCount;
-
-            //Collide(ref manifold); inline end
+            EPCollider collider = new EPCollider();
+            collider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
         }
 
-        private static EPAxis ComputeEdgeSeparation()
+        public class EPCollider
         {
-            // EdgeA separation
-            EPAxis bestAxis;
-            bestAxis.Type = EPAxisType.Unknown;
-            bestAxis.Index = -1;
-            bestAxis.Separation = -Settings.MaxFloat;
-            _tmpNormals[0] = _edgeA.Normal;
-            _tmpNormals[1] = -_edgeA.Normal;
+            TempPolygon _polygonB;
 
-            for (int i = 0; i < 2; ++i)
+            Transform _xf;
+            Vector2 _centroidB;
+            Vector2 _v0, _v1, _v2, _v3;
+            Vector2 _normal0, _normal1, _normal2;
+            Vector2 _normal;
+            VertexType _type1, _type2;
+            Vector2 _lowerLimit, _upperLimit;
+            float _radius;
+            bool _front;
+
+            enum VertexType
             {
-                Vector2 n = _tmpNormals[i];
+                e_isolated,
+                e_concave,
+                e_convex
+            }
 
-                // Adjacency
-                bool valid1 = MathUtils.Cross(n, _limit11) >= -Settings.AngularSlop &&
-                              MathUtils.Cross(_limit12, n) >= -Settings.AngularSlop;
-                bool valid2 = MathUtils.Cross(n, _limit21) >= -Settings.AngularSlop &&
-                              MathUtils.Cross(_limit22, n) >= -Settings.AngularSlop;
+            // Algorithm:
+            // 1. Classify v1 and v2
+            // 2. Classify polygon centroid as front or back
+            // 3. Flip normal if necessary
+            // 4. Initialize normal range to [-pi, pi] about face normal
+            // 5. Adjust normal range according to adjacent edges
+            // 6. Visit each separating axes, only accept axes within the range
+            // 7. Return if _any_ axis indicates separation
+            // 8. Clip
+            public void Collide(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
+            {
+                _xf = MathUtils.MulT(xfA, xfB);
 
-                if (valid1 == false || valid2 == false)
+                _centroidB = MathUtils.Mul(ref _xf, polygonB.MassData.Centroid);
+
+                _v0 = edgeA.Vertex0;
+                _v1 = edgeA._vertex1;
+                _v2 = edgeA._vertex2;
+                _v3 = edgeA.Vertex3;
+
+                bool hasVertex0 = edgeA.HasVertex0;
+                bool hasVertex3 = edgeA.HasVertex3;
+
+                Vector2 edge1 = _v2 - _v1;
+                edge1.Normalize();
+                _normal1 = new Vector2(edge1.Y, -edge1.X);
+                float offset1 = Vector2.Dot(_normal1, _centroidB - _v1);
+                float offset0 = 0.0f, offset2 = 0.0f;
+                bool convex1 = false, convex2 = false;
+
+                // Is there a preceding edge?
+                if (hasVertex0)
                 {
-                    continue;
+                    Vector2 edge0 = _v1 - _v0;
+                    edge0.Normalize();
+                    _normal0 = new Vector2(edge0.Y, -edge0.X);
+                    convex1 = MathUtils.Cross(edge0, edge1) >= 0.0f;
+                    offset0 = Vector2.Dot(_normal0, _centroidB - _v0);
                 }
 
+                // Is there a following edge?
+                if (hasVertex3)
+                {
+                    Vector2 edge2 = _v3 - _v2;
+                    edge2.Normalize();
+                    _normal2 = new Vector2(edge2.Y, -edge2.X);
+                    convex2 = MathUtils.Cross(edge1, edge2) > 0.0f;
+                    offset2 = Vector2.Dot(_normal2, _centroidB - _v2);
+                }
+
+                // Determine front or back collision. Determine collision normal limits.
+                if (hasVertex0 && hasVertex3)
+                {
+                    if (convex1 && convex2)
+                    {
+                        _front = offset0 >= 0.0f || offset1 >= 0.0f || offset2 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal0;
+                            _upperLimit = _normal2;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal1;
+                            _upperLimit = -_normal1;
+                        }
+                    }
+                    else if (convex1)
+                    {
+                        _front = offset0 >= 0.0f || (offset1 >= 0.0f && offset2 >= 0.0f);
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal0;
+                            _upperLimit = _normal1;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal2;
+                            _upperLimit = -_normal1;
+                        }
+                    }
+                    else if (convex2)
+                    {
+                        _front = offset2 >= 0.0f || (offset0 >= 0.0f && offset1 >= 0.0f);
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal1;
+                            _upperLimit = _normal2;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal1;
+                            _upperLimit = -_normal0;
+                        }
+                    }
+                    else
+                    {
+                        _front = offset0 >= 0.0f && offset1 >= 0.0f && offset2 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal1;
+                            _upperLimit = _normal1;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal2;
+                            _upperLimit = -_normal0;
+                        }
+                    }
+                }
+                else if (hasVertex0)
+                {
+                    if (convex1)
+                    {
+                        _front = offset0 >= 0.0f || offset1 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal0;
+                            _upperLimit = -_normal1;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = _normal1;
+                            _upperLimit = -_normal1;
+                        }
+                    }
+                    else
+                    {
+                        _front = offset0 >= 0.0f && offset1 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = _normal1;
+                            _upperLimit = -_normal1;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = _normal1;
+                            _upperLimit = -_normal0;
+                        }
+                    }
+                }
+                else if (hasVertex3)
+                {
+                    if (convex2)
+                    {
+                        _front = offset1 >= 0.0f || offset2 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = -_normal1;
+                            _upperLimit = _normal2;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal1;
+                            _upperLimit = _normal1;
+                        }
+                    }
+                    else
+                    {
+                        _front = offset1 >= 0.0f && offset2 >= 0.0f;
+                        if (_front)
+                        {
+                            _normal = _normal1;
+                            _lowerLimit = -_normal1;
+                            _upperLimit = _normal1;
+                        }
+                        else
+                        {
+                            _normal = -_normal1;
+                            _lowerLimit = -_normal2;
+                            _upperLimit = _normal1;
+                        }
+                    }
+                }
+                else
+                {
+                    _front = offset1 >= 0.0f;
+                    if (_front)
+                    {
+                        _normal = _normal1;
+                        _lowerLimit = -_normal1;
+                        _upperLimit = -_normal1;
+                    }
+                    else
+                    {
+                        _normal = -_normal1;
+                        _lowerLimit = _normal1;
+                        _upperLimit = _normal1;
+                    }
+                }
+
+                // Get polygonB in frameA
+                _polygonB.Count = polygonB.Vertices.Count;
+                for (int i = 0; i < polygonB.Vertices.Count; ++i)
+                {
+                    _polygonB.Vertices[i] = MathUtils.Mul(ref _xf, polygonB.Vertices[i]);
+                    _polygonB.Normals[i] = MathUtils.Mul(_xf.q, polygonB.Normals[i]);
+                }
+
+                _radius = 2.0f * Settings.PolygonRadius;
+
+                manifold.PointCount = 0;
+
+                EPAxis edgeAxis = ComputeEdgeSeparation();
+
+                // If no valid normal can be found than this edge should not collide.
+                if (edgeAxis.Type == EPAxisType.Unknown)
+                {
+                    return;
+                }
+
+                if (edgeAxis.Separation > _radius)
+                {
+                    return;
+                }
+
+                EPAxis polygonAxis = ComputePolygonSeparation();
+                if (polygonAxis.Type != EPAxisType.Unknown && polygonAxis.Separation > _radius)
+                {
+                    return;
+                }
+
+                // Use hysteresis for jitter reduction.
+                const float k_relativeTol = 0.98f;
+                const float k_absoluteTol = 0.001f;
+
+                EPAxis primaryAxis;
+                if (polygonAxis.Type == EPAxisType.Unknown)
+                {
+                    primaryAxis = edgeAxis;
+                }
+                else if (polygonAxis.Separation > k_relativeTol * edgeAxis.Separation + k_absoluteTol)
+                {
+                    primaryAxis = polygonAxis;
+                }
+                else
+                {
+                    primaryAxis = edgeAxis;
+                }
+
+                FixedArray2<ClipVertex> ie = new FixedArray2<ClipVertex>();
+                ReferenceFace rf;
+                if (primaryAxis.Type == EPAxisType.EdgeA)
+                {
+                    manifold.Type = ManifoldType.FaceA;
+
+                    // Search for the polygon normal that is most anti-parallel to the edge normal.
+                    int bestIndex = 0;
+                    float bestValue = Vector2.Dot(_normal, _polygonB.Normals[0]);
+                    for (int i = 1; i < _polygonB.Count; ++i)
+                    {
+                        float value = Vector2.Dot(_normal, _polygonB.Normals[i]);
+                        if (value < bestValue)
+                        {
+                            bestValue = value;
+                            bestIndex = i;
+                        }
+                    }
+
+                    int i1 = bestIndex;
+                    int i2 = i1 + 1 < _polygonB.Count ? i1 + 1 : 0;
+
+                    ClipVertex c0 = ie[0];
+                    c0.V = _polygonB.Vertices[i1];
+                    c0.ID.Features.IndexA = 0;
+                    c0.ID.Features.IndexB = (byte)i1;
+                    c0.ID.Features.TypeA = (byte)ContactFeatureType.Face;
+                    c0.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
+                    ie[0] = c0;
+
+                    ClipVertex c1 = ie[1];
+                    c1.V = _polygonB.Vertices[i2];
+                    c1.ID.Features.IndexA = 0;
+                    c1.ID.Features.IndexB = (byte)i2;
+                    c1.ID.Features.TypeA = (byte)ContactFeatureType.Face;
+                    c1.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
+                    ie[1] = c1;
+
+                    if (_front)
+                    {
+                        rf.i1 = 0;
+                        rf.i2 = 1;
+                        rf.v1 = _v1;
+                        rf.v2 = _v2;
+                        rf.normal = _normal1;
+                    }
+                    else
+                    {
+                        rf.i1 = 1;
+                        rf.i2 = 0;
+                        rf.v1 = _v2;
+                        rf.v2 = _v1;
+                        rf.normal = -_normal1;
+                    }
+                }
+                else
+                {
+                    manifold.Type = ManifoldType.FaceB;
+                    ClipVertex c0 = ie[0];
+                    c0.V = _v1;
+                    c0.ID.Features.IndexA = 0;
+                    c0.ID.Features.IndexB = (byte)primaryAxis.Index;
+                    c0.ID.Features.TypeA = (byte)ContactFeatureType.Vertex;
+                    c0.ID.Features.TypeB = (byte)ContactFeatureType.Face;
+                    ie[0] = c0;
+
+                    ClipVertex c1 = ie[1];
+                    c1.V = _v2;
+                    c1.ID.Features.IndexA = 0;
+                    c1.ID.Features.IndexB = (byte)primaryAxis.Index;
+                    c1.ID.Features.TypeA = (byte)ContactFeatureType.Vertex;
+                    c1.ID.Features.TypeB = (byte)ContactFeatureType.Face;
+                    ie[1] = c1;
+
+                    rf.i1 = primaryAxis.Index;
+                    rf.i2 = rf.i1 + 1 < _polygonB.Count ? rf.i1 + 1 : 0;
+                    rf.v1 = _polygonB.Vertices[rf.i1];
+                    rf.v2 = _polygonB.Vertices[rf.i2];
+                    rf.normal = _polygonB.Normals[rf.i1];
+                }
+
+                rf.sideNormal1 = new Vector2(rf.normal.Y, -rf.normal.X);
+                rf.sideNormal2 = -rf.sideNormal1;
+                rf.sideOffset1 = Vector2.Dot(rf.sideNormal1, rf.v1);
+                rf.sideOffset2 = Vector2.Dot(rf.sideNormal2, rf.v2);
+
+                // Clip incident edge against extruded edge1 side edges.
+                FixedArray2<ClipVertex> clipPoints1;
+                FixedArray2<ClipVertex> clipPoints2;
+                int np;
+
+                // Clip to box side 1
+                np = ClipSegmentToLine(out clipPoints1, ref ie, rf.sideNormal1, rf.sideOffset1, rf.i1);
+
+                if (np < Settings.MaxManifoldPoints)
+                {
+                    return;
+                }
+
+                // Clip to negative box side 1
+                np = ClipSegmentToLine(out clipPoints2, ref clipPoints1, rf.sideNormal2, rf.sideOffset2, rf.i2);
+
+                if (np < Settings.MaxManifoldPoints)
+                {
+                    return;
+                }
+
+                // Now clipPoints2 contains the clipped points.
+                if (primaryAxis.Type == EPAxisType.EdgeA)
+                {
+                    manifold.LocalNormal = rf.normal;
+                    manifold.LocalPoint = rf.v1;
+                }
+                else
+                {
+                    manifold.LocalNormal = polygonB.Normals[rf.i1];
+                    manifold.LocalPoint = polygonB.Vertices[rf.i1];
+                }
+
+                int pointCount = 0;
+                for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
+                {
+                    float separation;
+
+                    separation = Vector2.Dot(rf.normal, clipPoints2[i].V - rf.v1);
+
+                    if (separation <= _radius)
+                    {
+                        ManifoldPoint cp = manifold.Points[pointCount];
+
+                        if (primaryAxis.Type == EPAxisType.EdgeA)
+                        {
+                            cp.LocalPoint = MathUtils.MulT(ref _xf, clipPoints2[i].V);
+                            cp.Id = clipPoints2[i].ID;
+                        }
+                        else
+                        {
+                            cp.LocalPoint = clipPoints2[i].V;
+                            cp.Id.Features.TypeA = clipPoints2[i].ID.Features.TypeB;
+                            cp.Id.Features.TypeB = clipPoints2[i].ID.Features.TypeA;
+                            cp.Id.Features.IndexA = clipPoints2[i].ID.Features.IndexB;
+                            cp.Id.Features.IndexB = clipPoints2[i].ID.Features.IndexA;
+                        }
+
+                        manifold.Points[pointCount] = cp;
+                        ++pointCount;
+                    }
+                }
+
+                manifold.PointCount = pointCount;
+            }
+
+            private EPAxis ComputeEdgeSeparation()
+            {
                 EPAxis axis;
                 axis.Type = EPAxisType.EdgeA;
-                axis.Index = i;
+                axis.Index = _front ? 0 : 1;
                 axis.Separation = Settings.MaxFloat;
 
-                for (int j = 0; j < _proxyB.Count; ++j)
+                for (int i = 0; i < _polygonB.Count; ++i)
                 {
-                    float s = Vector2.Dot(n, _proxyB.Vertices[j] - _edgeA.V1);
+                    float s = Vector2.Dot(_normal, _polygonB.Vertices[i] - _v1);
                     if (s < axis.Separation)
                     {
                         axis.Separation = s;
                     }
                 }
 
-                if (axis.Separation > _radius)
-                {
-                    return axis;
-                }
-
-                if (axis.Separation > bestAxis.Separation)
-                {
-                    bestAxis = axis;
-                }
+                return axis;
             }
 
-            return bestAxis;
-        }
-
-        private static EPAxis ComputePolygonSeparation()
-        {
-            EPAxis axis;
-            axis.Type = EPAxisType.Unknown;
-            axis.Index = -1;
-            axis.Separation = -Settings.MaxFloat;
-            for (int i = 0; i < _proxyB.Count; ++i)
+            private EPAxis ComputePolygonSeparation()
             {
-                Vector2 n = -_proxyB.Normals[i];
+                EPAxis axis;
+                axis.Type = EPAxisType.Unknown;
+                axis.Index = -1;
+                axis.Separation = -Settings.MaxFloat;
 
-                // Adjacency
-                bool valid1 = MathUtils.Cross(n, _limit11) >= -Settings.AngularSlop &&
-                              MathUtils.Cross(_limit12, n) >= -Settings.AngularSlop;
-                bool valid2 = MathUtils.Cross(n, _limit21) >= -Settings.AngularSlop &&
-                              MathUtils.Cross(_limit22, n) >= -Settings.AngularSlop;
+                Vector2 perp = new Vector2(-_normal.Y, _normal.X);
 
-                if (valid1 == false && valid2 == false)
+                for (int i = 0; i < _polygonB.Count; ++i)
                 {
-                    continue;
+                    Vector2 n = -_polygonB.Normals[i];
+
+                    float s1 = Vector2.Dot(n, _polygonB.Vertices[i] - _v1);
+                    float s2 = Vector2.Dot(n, _polygonB.Vertices[i] - _v2);
+                    float s = Math.Min(s1, s2);
+
+                    if (s > _radius)
+                    {
+                        // No collision
+                        axis.Type = EPAxisType.EdgeB;
+                        axis.Index = i;
+                        axis.Separation = s;
+                        return axis;
+                    }
+
+                    // Adjacency
+                    if (Vector2.Dot(n, perp) >= 0.0f)
+                    {
+                        if (Vector2.Dot(n - _upperLimit, _normal) < -Settings.AngularSlop)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (Vector2.Dot(n - _lowerLimit, _normal) < -Settings.AngularSlop)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (s > axis.Separation)
+                    {
+                        axis.Type = EPAxisType.EdgeB;
+                        axis.Index = i;
+                        axis.Separation = s;
+                    }
                 }
 
-                float s1 = Vector2.Dot(n, _proxyB.Vertices[i] - _edgeA.V1);
-                float s2 = Vector2.Dot(n, _proxyB.Vertices[i] - _edgeA.V2);
-                float s = Math.Min(s1, s2);
-
-                if (s > _radius)
-                {
-                    axis.Type = EPAxisType.EdgeB;
-                    axis.Index = i;
-                    axis.Separation = s;
-                }
-
-                if (s > axis.Separation)
-                {
-                    axis.Type = EPAxisType.EdgeB;
-                    axis.Index = i;
-                    axis.Separation = s;
-                }
+                return axis;
             }
-
-            return axis;
-        }
-
-        private static void FindIncidentEdge(ref FixedArray2<ClipVertex> c, TempPolygon proxy1, int edge1, TempPolygon proxy2)
-        {
-            int count2 = proxy2.Count;
-
-            Debug.Assert(0 <= edge1 && edge1 < proxy1.Count);
-
-            // Get the normal of the reference edge in proxy2's frame.
-            Vector2 normal1 = proxy1.Normals[edge1];
-
-            // Find the incident edge on proxy2.
-            int index = 0;
-            float minDot = float.MaxValue;
-            for (int i = 0; i < count2; ++i)
-            {
-                float dot = Vector2.Dot(normal1, proxy2.Normals[i]);
-                if (dot < minDot)
-                {
-                    minDot = dot;
-                    index = i;
-                }
-            }
-
-            // Build the clip vertices for the incident edge.
-            int i1 = index;
-            int i2 = i1 + 1 < count2 ? i1 + 1 : 0;
-
-            ClipVertex cTemp = new ClipVertex();
-            cTemp.V = proxy2.Vertices[i1];
-            cTemp.ID.Features.IndexA = (byte)edge1;
-            cTemp.ID.Features.IndexB = (byte)i1;
-            cTemp.ID.Features.TypeA = (byte)ContactFeatureType.Face;
-            cTemp.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
-            c[0] = cTemp;
-
-            cTemp.V = proxy2.Vertices[i2];
-            cTemp.ID.Features.IndexA = (byte)edge1;
-            cTemp.ID.Features.IndexB = (byte)i2;
-            cTemp.ID.Features.TypeA = (byte)ContactFeatureType.Face;
-            cTemp.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
-            c[1] = cTemp;
         }
 
         /// <summary>
@@ -1750,18 +1664,17 @@ namespace FarseerPhysics.Collision
         private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
                                             PolygonShape poly2, ref Transform xf2)
         {
+            List<Vector2> vertices1 = poly1.Vertices;
+            List<Vector2> normals1 = poly1.Normals;
+
             int count2 = poly2.Vertices.Count;
+            List<Vector2> vertices2 = poly2.Vertices;
 
             Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Convert normal from poly1's frame into poly2's frame.
-            Vector2 p1n = poly1.Normals[edge1];
-
-            float normalWorldx = xf1.q.ex.X * p1n.X + xf1.q.ey.X * p1n.Y;
-            float normalWorldy = xf1.q.ex.Y * p1n.X + xf1.q.ey.Y * p1n.Y;
-
-            Vector2 normal = new Vector2(normalWorldx * xf2.q.ex.X + normalWorldy * xf2.q.ex.Y,
-                                         normalWorldx * xf2.q.ey.X + normalWorldy * xf2.q.ey.Y);
+            Vector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
+            Vector2 normal1 = MathUtils.MulT(xf2.q, normal1World);
 
             // Find support vertex on poly2 for -normal.
             int index = 0;
@@ -1769,8 +1682,7 @@ namespace FarseerPhysics.Collision
 
             for (int i = 0; i < count2; ++i)
             {
-                float dot = Vector2.Dot(poly2.Vertices[i], normal);
-
+                float dot = Vector2.Dot(vertices2[i], normal1);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -1778,13 +1690,10 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            Vector2 p1ve = poly1.Vertices[edge1];
-            Vector2 p2vi = poly2.Vertices[index];
-
-            return ((xf2.p.X + xf2.q.ex.X * p2vi.X + xf2.q.ey.X * p2vi.Y) -
-                    (xf1.p.X + xf1.q.ex.X * p1ve.X + xf1.q.ey.X * p1ve.Y)) * normalWorldx +
-                   ((xf2.p.Y + xf2.q.ex.Y * p2vi.X + xf2.q.ey.Y * p2vi.Y) -
-                    (xf1.p.Y + xf1.q.ex.Y * p1ve.X + xf1.q.ey.Y * p1ve.Y)) * normalWorldy;
+            Vector2 v1 = MathUtils.Mul(ref xf1, vertices1[edge1]);
+            Vector2 v2 = MathUtils.Mul(ref xf2, vertices2[index]);
+            float separation = Vector2.Dot(v2 - v1, normal1World);
+            return separation;
         }
 
         /// <summary>
@@ -1801,24 +1710,18 @@ namespace FarseerPhysics.Collision
                                                PolygonShape poly2, ref Transform xf2)
         {
             int count1 = poly1.Vertices.Count;
+            List<Vector2> normals1 = poly1.Normals;
 
             // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            float dx = (xf2.p.X + xf2.q.ex.X * poly2.MassData.Centroid.X +
-                        xf2.q.ey.X * poly2.MassData.Centroid.Y) -
-                       (xf1.p.X + xf1.q.ex.X * poly1.MassData.Centroid.X +
-                        xf1.q.ey.X * poly1.MassData.Centroid.Y);
-            float dy = (xf2.p.Y + xf2.q.ex.Y * poly2.MassData.Centroid.X +
-                        xf2.q.ey.Y * poly2.MassData.Centroid.Y) -
-                       (xf1.p.Y + xf1.q.ex.Y * poly1.MassData.Centroid.X +
-                        xf1.q.ey.Y * poly1.MassData.Centroid.Y);
-            Vector2 dLocal1 = new Vector2(dx * xf1.q.ex.X + dy * xf1.q.ex.Y, dx * xf1.q.ey.X + dy * xf1.q.ey.Y);
+            Vector2 d = MathUtils.Mul(ref xf2, poly2.MassData.Centroid) - MathUtils.Mul(ref xf1, poly1.MassData.Centroid);
+            Vector2 dLocal1 = MathUtils.MulT(xf1.q, d);
 
             // Find edge normal on poly1 that has the largest projection onto d.
             int edge = 0;
             float maxDot = -Settings.MaxFloat;
             for (int i = 0; i < count1; ++i)
             {
-                float dot = Vector2.Dot(poly1.Normals[i], dLocal1);
+                float dot = Vector2.Dot(normals1[i], dLocal1);
                 if (dot > maxDot)
                 {
                     maxDot = dot;
@@ -1827,11 +1730,11 @@ namespace FarseerPhysics.Collision
             }
 
             // Get the separation for the edge normal.
-            float s = EdgeSeparation(poly1, ref xf1, edge, poly2, ref xf2);
+            float s = EdgeSeparation(poly1, ref  xf1, edge, poly2, ref xf2);
 
             // Check the separation for the previous edge normal.
             int prevEdge = edge - 1 >= 0 ? edge - 1 : count1 - 1;
-            float sPrev = EdgeSeparation(poly1, ref xf1, prevEdge, poly2, ref xf2);
+            float sPrev = EdgeSeparation(poly1, ref  xf1, prevEdge, poly2, ref xf2);
 
             // Check the separation for the next edge normal.
             int nextEdge = edge + 1 < count1 ? edge + 1 : 0;

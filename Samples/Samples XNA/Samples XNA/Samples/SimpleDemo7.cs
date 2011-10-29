@@ -68,10 +68,10 @@ namespace FarseerPhysics.SamplesFramework
                 _obstacles[i].IsStatic = true;
             }
 
-            _obstacles[0].P = new Vector2(-9f, 5f);
-            _obstacles[1].P = new Vector2(-8f, -7f);
-            _obstacles[2].P = new Vector2(9f, 7f);
-            _obstacles[3].P = new Vector2(7f, -5f);
+            _obstacles[0].Position = new Vector2(-9f, 5f);
+            _obstacles[1].Position = new Vector2(-8f, -7f);
+            _obstacles[2].Position = new Vector2(9f, 7f);
+            _obstacles[3].Position = new Vector2(7f, -5f);
 
             // create sprite based on body
             _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
@@ -84,7 +84,7 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 4; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].P),
+                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
                                                null,
                                                Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
                                                SpriteEffects.None, 0f);

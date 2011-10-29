@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 Body circle = BodyFactory.CreateCircle(World, 1, 1);
                 circle.BodyType = BodyType.Dynamic;
-                circle.P = position;
+                circle.Position = position;
             }
         }
 

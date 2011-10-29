@@ -104,7 +104,7 @@ namespace FarseerPhysics.Dynamics.Joints
             return inv_dt * _impulse.Z;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             Body bA = BodyA;
             Body bB = BodyB;
@@ -142,7 +142,7 @@ namespace FarseerPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
-                _impulse *= step.dtRatio;
+                _impulse *= data.step.dtRatio;
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
@@ -200,7 +200,7 @@ namespace FarseerPhysics.Dynamics.Joints
             bB.AngularVelocityInternal = wB;
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             Body bA = BodyA;
             Body bB = BodyB;

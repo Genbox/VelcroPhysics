@@ -43,24 +43,24 @@ namespace FarseerPhysics.Dynamics
     }
 
     /// This is an internal structure.
-    public struct b2Position
+    public struct Position
     {
         public Vector2 c;
         public float a;
     }
 
     /// This is an internal structure.
-    public struct b2Velocity
+    public struct Velocity
     {
         public Vector2 v;
         public float w;
     }
 
     /// Solver Data
-    public struct b2SolverData
+    public struct SolverData
     {
         public TimeStep step;
-        public b2Position positions;
-        public b2Velocity velocities;
+        public Position[] positions;
+        public Velocity[] velocities;
     }
 }

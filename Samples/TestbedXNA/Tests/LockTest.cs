@@ -16,7 +16,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _rectangle = BodyFactory.CreateRectangle(World, 2, 2, 1);
             _rectangle.BodyType = BodyType.Dynamic;
-            _rectangle.P = new Vector2(0, 10);
+            _rectangle.Position = new Vector2(0, 10);
             _rectangle.OnCollision += OnCollision;
 
             //Properties and methods that were checking for lock before
