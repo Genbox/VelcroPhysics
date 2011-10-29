@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
-            body1.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body1.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
             Fixture fixture = body1.CreateFixture(polygon);
             fixture.OnCollision += OnCollision;
@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
-            body2.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body2.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             fixture = body2.CreateFixture(polygon);
             fixture.OnCollision += OnCollision;
 
@@ -78,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body3 = BodyFactory.CreateBody(World);
             body3.BodyType = BodyType.Dynamic;
-            body3.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body3.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             fixture = body3.CreateFixture(polygon);
             fixture.OnCollision += OnCollision;
 
@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body4 = BodyFactory.CreateBody(World);
             body4.BodyType = BodyType.Dynamic;
-            body4.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body4.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             fixture = body4.CreateFixture(polygon);
             fixture.OnCollision += OnCollision;
 
@@ -97,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body5 = BodyFactory.CreateBody(World);
             body5.BodyType = BodyType.Dynamic;
-            body5.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body5.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             fixture = body5.CreateFixture(circle);
             fixture.OnCollision += OnCollision;
 
@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body6 = BodyFactory.CreateBody(World);
             body6.BodyType = BodyType.Dynamic;
-            body6.P = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            body6.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
             fixture = body6.CreateFixture(circle);
             fixture.OnCollision += OnCollision;
         }

@@ -185,7 +185,6 @@ namespace FarseerPhysics.Dynamics
         /// Fires whenever a fixture has been added
         /// </summary>
         public FixtureDelegate FixtureAdded;
-
         /// <summary>
         /// Fires whenever a fixture has been removed
         /// </summary>
@@ -357,25 +356,6 @@ namespace FarseerPhysics.Dynamics
         public List<Contact> ContactList
         {
             get { return ContactManager.ContactList; }
-        }
-
-        /// Get the height of the dynamic tree.
-        int GetTreeHeight()
-        {
-            return ContactManager.BroadPhase.GetTreeHeight();
-        }
-
-        /// Get the balance of the dynamic tree.
-        int GetTreeBalance()
-        {
-            return ContactManager.BroadPhase.GetTreeBalance();
-        }
-
-        /// Get the quality metric of the dynamic tree. The smaller the better.
-        /// The minimum is 1.
-        float GetTreeQuality()
-        {
-            return ContactManager.BroadPhase.GetTreeQuality();
         }
 
         /// <summary>
@@ -1357,14 +1337,14 @@ namespace FarseerPhysics.Dynamics
                 // Advance the bodies to the TOI.
                 Fixture fA1 = minContact.FixtureA;
                 Fixture fB1 = minContact.FixtureB;
-                Body bA = fA1.Body;
-                Body bB = fB1.Body;
+                Body bA0 = fA1.Body;
+                Body bB0 = fB1.Body;
 
-                Sweep backup1 = bA.Sweep;
-                Sweep backup2 = bB.Sweep;
+                Sweep backup1 = bA0.Sweep;
+                Sweep backup2 = bB0.Sweep;
 
-                bA.Advance(minAlpha);
-                bB.Advance(minAlpha);
+                bA0.Advance(minAlpha);
+                bB0.Advance(minAlpha);
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(ContactManager);
@@ -1376,28 +1356,28 @@ namespace FarseerPhysics.Dynamics
                 {
                     // Restore the sweeps.
                     minContact.Enabled = false;
-                    bA.Sweep = backup1;
-                    bB.Sweep = backup2;
-                    bA.SynchronizeTransform();
-                    bB.SynchronizeTransform();
+                    bA0.Sweep = backup1;
+                    bB0.Sweep = backup2;
+                    bA0.SynchronizeTransform();
+                    bB0.SynchronizeTransform();
                     continue;
                 }
 
-                bA.Awake = true;
-                bB.Awake = true;
+                bA0.Awake = true;
+                bB0.Awake = true;
 
                 // Build the island
                 Island.Clear();
-                Island.Add(bA);
-                Island.Add(bB);
+                Island.Add(bA0);
+                Island.Add(bB0);
                 Island.Add(minContact);
 
-                bA.Flags |= BodyFlags.Island;
-                bB.Flags |= BodyFlags.Island;
+                bA0.Flags |= BodyFlags.Island;
+                bB0.Flags |= BodyFlags.Island;
                 minContact.Flags |= ContactFlags.Island;
 
                 // Get contacts on bodyA and bodyB.
-                Body[] bodies = { bA, bB };
+                Body[] bodies = { bA0, bB0 };
                 for (int i = 0; i < 2; ++i)
                 {
                     Body body = bodies[i];
@@ -1502,7 +1482,7 @@ namespace FarseerPhysics.Dynamics
                 //subStep.positionIterations = 20;
                 //subStep.velocityIterations = step.velocityIterations;
                 //subStep.warmStarting = false;
-                Island.SolveTOI(ref subStep, bA.IslandIndex, bB.IslandIndex);
+                Island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
                 for (int i = 0; i < Island.BodyCount; ++i)

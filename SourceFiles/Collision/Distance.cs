@@ -703,10 +703,10 @@ namespace FarseerPhysics.Collision
 
                 // Compute a tentative new simplex vertex using support points.
                 SimplexVertex vertex = simplex.V[simplex.Count];
-                vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MulT(ref input.TransformA.q, -d));
+                vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MulT(input.TransformA.q, -d));
                 vertex.WA = MathUtils.Mul(ref input.TransformA, input.ProxyA.Vertices[vertex.IndexA]);
 
-                vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MulT(ref input.TransformB.q, d));
+                vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MulT(input.TransformB.q, d));
                 vertex.WB = MathUtils.Mul(ref input.TransformB, input.ProxyB.Vertices[vertex.IndexB]);
                 vertex.W = vertex.WB - vertex.WA;
                 simplex.V[simplex.Count] = vertex;

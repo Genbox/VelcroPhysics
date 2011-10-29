@@ -129,7 +129,7 @@ namespace FarseerPhysics.Common
             _writer.WriteElementString("FixedRotation", body.FixedRotation.ToString());
             _writer.WriteElementString("LinearDamping", body.LinearDamping.ToString());
             WriteElement("LinearVelocity", body.LinearVelocity);
-            WriteElement("Position", body.P);
+            WriteElement("Position", body.Position);
 
             if (body.UserData != null)
             {
@@ -219,7 +219,7 @@ namespace FarseerPhysics.Common
                         WriteElement("EnableMotor", pjd.MotorEnabled);
                         WriteElement("LocalAnchorA", pjd.LocalAnchorA);
                         WriteElement("LocalAnchorB", pjd.LocalAnchorB);
-                        WriteElement("LocalXAxis1", pjd.LocalXAxis1);
+                        WriteElement("LocalXAxis1", pjd.LocalXAxisA);
                         WriteElement("LowerTranslation", pjd.LowerLimit);
                         WriteElement("UpperTranslation", pjd.UpperLimit);
                         WriteElement("MaxMotorForce", pjd.MaxMotorForce);
@@ -680,7 +680,7 @@ namespace FarseerPhysics.Common
                                     break;
                                 case "angle":
                                     {
-                                        Vector2 position = body.P;
+                                        Vector2 position = body.Position;
                                         body.SetTransformIgnoreContacts(ref position, float.Parse(sn.Value));
                                     }
                                     break;
@@ -916,7 +916,7 @@ namespace FarseerPhysics.Common
                                                 ((PrismaticJoint)joint).LocalAnchorB = ReadVector(sn);
                                                 break;
                                             case "local1axis1":
-                                                ((PrismaticJoint)joint).LocalXAxis1 = ReadVector(sn);
+                                                ((PrismaticJoint)joint).LocalXAxisA = ReadVector(sn);
                                                 break;
                                             case "maxmotorforce":
                                                 ((PrismaticJoint)joint).MaxMotorForce = float.Parse(sn.Value);

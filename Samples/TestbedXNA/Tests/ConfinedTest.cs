@@ -66,7 +66,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
+                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
                                                 (2.0f * i + 1.0f) * radius);
 
                     Fixture fixture = body.CreateFixture(shape2);
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
-            body.P = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
+            body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
 
             Fixture fixture = body.CreateFixture(shape);
             fixture.Friction = 0;
@@ -134,7 +134,7 @@ namespace FarseerPhysics.TestBed.Tests
                     continue;
                 }
 
-                Vector2 p = b.P;
+                Vector2 p = b.Position;
                 if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
                 {
                     p.X += 0.0f;

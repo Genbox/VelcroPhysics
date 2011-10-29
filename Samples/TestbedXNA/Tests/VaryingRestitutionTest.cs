@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    body.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
                     Fixture fixture = body.CreateFixture(shape);
                     fixture.Restitution = restitution[i];

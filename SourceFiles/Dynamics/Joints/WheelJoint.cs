@@ -180,7 +180,7 @@ namespace FarseerPhysics.Dynamics.Joints
             return invDt * _motorImpulse;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             Body bA = BodyA;
             Body bB = BodyB;
@@ -243,13 +243,13 @@ namespace FarseerPhysics.Dynamics.Joints
                     float k = _springMass * omega * omega;
 
                     // magic formulas
-                    _gamma = step.dt * (da + step.dt * k);
+                    _gamma = data.step.dt * (da + data.step.dt * k);
                     if (_gamma > 0.0f)
                     {
                         _gamma = 1.0f / _gamma;
                     }
 
-                    _bias = C * step.dt * k * _gamma;
+                    _bias = C * data.step.dt * k * _gamma;
 
                     _springMass = invMass + _gamma;
                     if (_springMass > 0.0f)
@@ -282,9 +282,9 @@ namespace FarseerPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
-                _impulse *= step.dtRatio;
-                _springImpulse *= step.dtRatio;
-                _motorImpulse *= step.dtRatio;
+                _impulse *= data.step.dtRatio;
+                _springImpulse *= data.step.dtRatio;
+                _motorImpulse *= data.step.dtRatio;
 
                 Vector2 P = _impulse * _ay + _springImpulse * _ax;
                 float LA = _impulse * _sAy + _springImpulse * _sAx + _motorImpulse;
@@ -368,7 +368,7 @@ namespace FarseerPhysics.Dynamics.Joints
             bB.AngularVelocityInternal = wB;
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             Body bA = BodyA;
             Body bB = BodyB;
@@ -379,8 +379,16 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 xB = bB.Sweep.C;
             float angleB = bB.Sweep.A;
 
-            Mat22 RA = new Mat22(angleA);
-            Mat22 RB = new Mat22(angleB);
+            Mat22 RA = new Mat22();
+            float c = (float)Math.Cos(angleA), s = (float)Math.Sin(angleA);
+            RA.ex.X = c; RA.ey.X = -s;
+            RA.ey.Y = s; RA.ey.Y = c;
+
+            Mat22 RB = new Mat22();
+            c = (float)Math.Cos(angleB);
+            s = (float)Math.Sin(angleB);
+            RB.ex.X = c; RB.ey.X = -s;
+            RB.ey.Y = s; RB.ey.Y = c;
 
             Vector2 rA = MathUtils.Mul(ref RA, LocalAnchorA - LocalCenterA);
             Vector2 rB = MathUtils.Mul(ref RB, LocalAnchorB - LocalCenterB);

@@ -47,12 +47,12 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Edge start vertex
         /// </summary>
-        private Vector2 _vertex1;
+        internal Vector2 _vertex1;
 
         /// <summary>
         /// Edge end vertex
         /// </summary>
-        private Vector2 _vertex2;
+        internal Vector2 _vertex2;
 
         internal EdgeShape()
             : base(0)
@@ -161,8 +161,8 @@ namespace FarseerPhysics.Collision.Shapes
             output = new RayCastOutput();
 
             // Put the ray into the edge's frame of reference.
-            Vector2 p1 = MathUtils.MulT(ref transform.q, input.Point1 - transform.p);
-            Vector2 p2 = MathUtils.MulT(ref transform.q, input.Point2 - transform.p);
+            Vector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
+            Vector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
             Vector2 d = p2 - p1;
 
             Vector2 v1 = _vertex1;

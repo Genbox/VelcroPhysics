@@ -63,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _touching[i] = false;
                     _bodies[i] = BodyFactory.CreateBody(World);
                     _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].P = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
                     _bodies[i].UserData = i;
 
                     _bodies[i].CreateFixture(shape);
@@ -126,7 +126,7 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape circle = (CircleShape)_sensor.Shape;
                 Vector2 center = ground.GetWorldPoint(circle.Position);
 
-                Vector2 position = body.P;
+                Vector2 position = body.Position;
 
                 Vector2 d = center - position;
                 if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)

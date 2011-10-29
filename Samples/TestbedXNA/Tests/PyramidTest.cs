@@ -53,7 +53,7 @@ namespace FarseerPhysics.TestBed.Tests
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = y;
+                    body.Position = y;
                     body.CreateFixture(shape);
 
                     y += deltaY;

@@ -503,7 +503,7 @@ namespace FarseerPhysics.DebugViews
 
                         Vector2 center = MathUtils.Mul(ref xf, circle.Position);
                         float radius = circle.Radius;
-                        Vector2 axis = xf.q.ex;
+                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
 
                         DrawSolidCircle(center, radius, axis, color);
                     }
@@ -696,10 +696,10 @@ namespace FarseerPhysics.DebugViews
             const float axisScale = 0.4f;
             Vector2 p1 = transform.p;
 
-            Vector2 p2 = p1 + axisScale * transform.q.ex;
+            Vector2 p2 = p1 + axisScale * transform.q.GetXAxis();
             DrawSegment(p1, p2, Color.Red);
 
-            p2 = p1 + axisScale * transform.q.ey;
+            p2 = p1 + axisScale * transform.q.GetYAxis();
             DrawSegment(p1, p2, Color.Green);
         }
 

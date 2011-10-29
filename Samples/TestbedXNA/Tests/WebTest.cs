@@ -52,25 +52,25 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _bodies[0] = BodyFactory.CreateBody(World);
                 _bodies[0].BodyType = BodyType.Dynamic;
-                _bodies[0].P = new Vector2(-5.0f, 5.0f);
+                _bodies[0].Position = new Vector2(-5.0f, 5.0f);
 
                 _bodies[0].CreateFixture(shape);
 
                 _bodies[1] = BodyFactory.CreateBody(World);
                 _bodies[1].BodyType = BodyType.Dynamic;
-                _bodies[1].P = new Vector2(5.0f, 5.0f);
+                _bodies[1].Position = new Vector2(5.0f, 5.0f);
 
                 _bodies[1].CreateFixture(shape);
 
                 _bodies[2] = BodyFactory.CreateBody(World);
                 _bodies[2].BodyType = BodyType.Dynamic;
-                _bodies[2].P = new Vector2(5.0f, 15.0f);
+                _bodies[2].Position = new Vector2(5.0f, 15.0f);
 
                 _bodies[2].CreateFixture(shape);
 
                 _bodies[3] = BodyFactory.CreateBody(World);
                 _bodies[3].BodyType = BodyType.Dynamic;
-                _bodies[3].P = new Vector2(-5.0f, 15.0f);
+                _bodies[3].Position = new Vector2(-5.0f, 15.0f);
 
                 _bodies[3].CreateFixture(shape);
 

@@ -59,7 +59,7 @@ namespace FarseerPhysics.Dynamics
 
                     for (int i = 0; i < count; ++i)
                     {
-                        maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
+                        maxImpulse = Math.Max(maxImpulse, impulse.points[i].normalImpulse);
                     }
 
                     if (maxImpulse > Strength)
@@ -115,7 +115,7 @@ namespace FarseerPhysics.Dynamics
 
                 Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
-                body.P = MainBody.P;
+                body.Position = MainBody.Position;
                 body.Rotation = MainBody.Rotation;
                 body.UserData = MainBody.UserData;
 

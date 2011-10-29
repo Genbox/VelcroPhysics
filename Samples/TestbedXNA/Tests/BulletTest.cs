@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Bar
             _body = BodyFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f));
-            _body.P = new Vector2(0, 4);
+            _body.Position = new Vector2(0, 4);
             _body.BodyType = BodyType.Dynamic;
 
             //Bullet
@@ -49,7 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             _bullet.IsBullet = true;
             _bullet.BodyType = BodyType.Dynamic;
             _x = 0.20352793f;
-            _bullet.P = new Vector2(_x, 10);
+            _bullet.Position = new Vector2(_x, 10);
 
             _bullet.LinearVelocity = new Vector2(0, -50);
         }

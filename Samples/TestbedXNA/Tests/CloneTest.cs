@@ -19,7 +19,7 @@ namespace FarseerPhysics.TestBed.Tests
             box.Restitution = 0.8f;
             box.Friction = 0.9f;
             box.BodyType = BodyType.Dynamic;
-            box.P = new Vector2(10, 10);
+            box.Position = new Vector2(10, 10);
             box.SleepingAllowed = false;
             box.LinearDamping = 1;
             box.AngularDamping = 0.5f;
@@ -29,11 +29,11 @@ namespace FarseerPhysics.TestBed.Tests
             Body boxClone1 = box.DeepClone();
             //Swiching the body type to static will reset all forces. This will affect the next clone.
             boxClone1.BodyType = BodyType.Static;
-            boxClone1.P += new Vector2(-10, 0);
+            boxClone1.Position += new Vector2(-10, 0);
 
             Body boxClone2 = boxClone1.DeepClone();
             boxClone2.BodyType = BodyType.Dynamic;
-            boxClone2.P += new Vector2(-10, 0);
+            boxClone2.Position += new Vector2(-10, 0);
         }
 
         public override void Initialize()
@@ -51,10 +51,10 @@ namespace FarseerPhysics.TestBed.Tests
             verts.Translate(ref centroid);
 
             Body compund = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
-            compund.P = new Vector2(-25, 30);
+            compund.Position = new Vector2(-25, 30);
 
             Body b = compund.DeepClone();
-            b.P = new Vector2(20, 30);
+            b.Position = new Vector2(20, 30);
             b.BodyType = BodyType.Dynamic;
 
             base.Initialize();

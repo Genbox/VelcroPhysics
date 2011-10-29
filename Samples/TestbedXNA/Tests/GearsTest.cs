@@ -46,14 +46,14 @@ namespace FarseerPhysics.TestBed.Tests
                 CircleShape circle1 = new CircleShape(1.0f, 5);
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
-                body1.P = new Vector2(-3.0f, 12.0f);
+                body1.Position = new Vector2(-3.0f, 12.0f);
                 body1.CreateFixture(circle1);
 
                 // Second circle
                 CircleShape circle2 = new CircleShape(2.0f, 5);
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
-                body2.P = new Vector2(0.0f, 12.0f);
+                body2.Position = new Vector2(0.0f, 12.0f);
                 body2.CreateFixture(circle2);
 
                 // Rectangle
@@ -61,19 +61,19 @@ namespace FarseerPhysics.TestBed.Tests
                 PolygonShape polygonBox = new PolygonShape(box, 5);
                 Body body3 = BodyFactory.CreateBody(World);
                 body3.BodyType = BodyType.Dynamic;
-                body3.P = new Vector2(2.5f, 12.0f);
+                body3.Position = new Vector2(2.5f, 12.0f);
                 body3.CreateFixture(polygonBox);
 
                 // Fix first circle
-                _joint1 = new FixedRevoluteJoint(body1, Vector2.Zero, body1.P);
+                _joint1 = new FixedRevoluteJoint(body1, Vector2.Zero, body1.Position);
                 World.AddJoint(_joint1);
 
                 // Fix second circle
-                _joint2 = new FixedRevoluteJoint(body2, Vector2.Zero, body2.P);
+                _joint2 = new FixedRevoluteJoint(body2, Vector2.Zero, body2.Position);
                 World.AddJoint(_joint2);
 
                 // Fix rectangle
-                _joint3 = new FixedPrismaticJoint(body3, body3.P, new Vector2(0.0f, 1.0f));
+                _joint3 = new FixedPrismaticJoint(body3, body3.Position, new Vector2(0.0f, 1.0f));
                 _joint3.LowerLimit = -5.0f;
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;

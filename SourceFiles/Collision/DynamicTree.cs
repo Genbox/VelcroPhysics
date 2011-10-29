@@ -96,6 +96,11 @@ namespace FarseerPhysics.Collision
             }
             _nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
             _nodes[_nodeCapacity - 1].Height = 1;
+            _freeList = 0;
+
+            _path = 0;
+
+            _insertionCount = 0;
         }
 
         /// <summary>
@@ -902,7 +907,7 @@ namespace FarseerPhysics.Collision
             ValidateMetrics(_root);
 
             int freeCount = 0;
-            int freeIndex = freeList;
+            int freeIndex = _freeList;
             while (freeIndex != NullNode)
             {
                 Debug.Assert(0 <= freeIndex && freeIndex < _nodeCapacity);

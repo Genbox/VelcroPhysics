@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(0.0f, 7.0f);
+                body.Position = new Vector2(0.0f, 7.0f);
                 
                 body.CreateFixture(shape);
 
@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 shape2.SetAsBox(0.5f, 2.0f);
                 Body body2 = BodyFactory.CreatePolygon(World, shape2.Vertices, 0.5f);
                 body2.BodyType = BodyType.Dynamic;
-                body2.P = new Vector2(10.0f, 7.0f);
+                body2.Position = new Vector2(10.0f, 7.0f);
 
                 FixedWheelJoint jdf = new FixedWheelJoint(body2, new Vector2(10, 8.5f), axis);
                 jdf.MotorSpeed = 1.0f;

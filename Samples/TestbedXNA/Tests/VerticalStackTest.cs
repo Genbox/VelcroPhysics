@@ -62,7 +62,7 @@ namespace FarseerPhysics.TestBed.Tests
                     //float x = i % 2 == 0 ? -0.025f : 0.025f;
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
+                    body.Position = new Vector2(xs[j] + x, 0.752f + 1.54f * i);
                     body.UserData = _indices[n];
 
                     _bodies[n] = body;
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
                     _bullet = BodyFactory.CreateBody(World);
                     _bullet.BodyType = BodyType.Dynamic;
                     _bullet.IsBullet = true;
-                    _bullet.P = new Vector2(-31.0f, 5.0f);
+                    _bullet.Position = new Vector2(-31.0f, 5.0f);
 
                     Fixture fixture = _bullet.CreateFixture(shape);
                     fixture.Restitution = 0.05f;

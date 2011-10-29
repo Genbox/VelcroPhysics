@@ -110,7 +110,7 @@ namespace FarseerPhysics.Dynamics.Joints
             return inv_dt * 0.0f;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             Body b = BodyA;
 
@@ -128,15 +128,15 @@ namespace FarseerPhysics.Dynamics.Joints
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            Debug.Assert(d + step.dt * k > Settings.Epsilon);
+            Debug.Assert(d + data.step.dt * k > Settings.Epsilon);
 
-            _gamma = step.dt * (d + step.dt * k);
+            _gamma = data.step.dt * (d + data.step.dt * k);
             if (_gamma != 0.0f)
             {
                 _gamma = 1.0f / _gamma;
             }
 
-            _beta = step.dt * k * _gamma;
+            _beta = data.step.dt * k * _gamma;
 
             // Compute the effective mass matrix.
             Transform xf1;
@@ -167,7 +167,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b.AngularVelocityInternal *= 0.98f;
 
             // Warm starting.
-            _impulse *= step.dtRatio;
+            _impulse *= data.step.dtRatio;
             b.LinearVelocityInternal += invMass * _impulse;
             b.AngularVelocityInternal += invI * MathUtils.Cross(r, _impulse);
         }
@@ -198,7 +198,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b.AngularVelocityInternal += b.InvI * MathUtils.Cross(r, impulse);
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             return true;
         }

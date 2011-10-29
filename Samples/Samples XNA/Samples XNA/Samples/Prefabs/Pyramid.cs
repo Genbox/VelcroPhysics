@@ -35,7 +35,7 @@ namespace FarseerPhysics.SamplesFramework
                 {
                     Body body = BodyFactory.CreateBody(world);
                     body.BodyType = BodyType.Dynamic;
-                    body.P = pos;
+                    body.Position = pos;
                     body.CreateFixture(shape);
                     _boxes.Add(body);
 
@@ -58,7 +58,7 @@ namespace FarseerPhysics.SamplesFramework
 
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].P), null,
+                batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
                             Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
         }

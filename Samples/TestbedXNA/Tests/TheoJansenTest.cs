@@ -68,7 +68,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
-                body.P = new Vector2(-40.0f + 2.0f * i, 0.5f);
+                body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
                 body.CreateFixture(shape);
             }
@@ -80,7 +80,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _chassis = BodyFactory.CreateBody(World);
                 _chassis.BodyType = BodyType.Dynamic;
-                _chassis.P = pivot + _offset;
+                _chassis.Position = pivot + _offset;
 
                 Fixture fixture = _chassis.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
@@ -91,7 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 _wheel = BodyFactory.CreateBody(World);
                 _wheel.BodyType = BodyType.Dynamic;
-                _wheel.P = pivot + _offset;
+                _wheel.Position = pivot + _offset;
 
                 Fixture fixture = _wheel.CreateFixture(shape);
                 fixture.CollisionGroup = -1;
@@ -99,7 +99,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 //_motorJoint = new RevoluteJoint(_wheel, _chassis, pivot + _offset);
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.P), Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.Position), Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
@@ -112,11 +112,11 @@ namespace FarseerPhysics.TestBed.Tests
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.P, 120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, 120.0f * Settings.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.P, -120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, -120.0f * Settings.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
         }
@@ -163,12 +163,12 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
-            body1.P = _offset;
+            body1.Position = _offset;
             body1.AngularDamping = 10.0f;
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
-            body2.P = p4 + _offset;
+            body2.Position = p4 + _offset;
             body2.AngularDamping = 10.0f;
 
             Fixture f1 = body1.CreateFixture(poly1);

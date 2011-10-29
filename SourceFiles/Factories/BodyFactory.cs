@@ -29,7 +29,7 @@ namespace FarseerPhysics.Factories
         public static Body CreateBody(World world, Vector2 position, object userData)
         {
             Body body = CreateBody(world, userData);
-            body.P = position;
+            body.Position = position;
             return body;
         }
 
@@ -246,13 +246,13 @@ namespace FarseerPhysics.Factories
             {
                 List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
                 body = CreateCompoundPolygon(world, vertList, density, userData);
-                body.P = position;
+                body.Position = position;
 
                 return body;
             }
 
             body = CreatePolygon(world, verts, density, userData);
-            body.P = position;
+            body.Position = position;
 
             return body;
         }
@@ -316,7 +316,7 @@ namespace FarseerPhysics.Factories
             {
                 List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
                 Body body = CreateCompoundPolygon(world, vertList, density, userData);
-                body.P = position;
+                body.Position = position;
                 return body;
             }
 
@@ -369,7 +369,7 @@ namespace FarseerPhysics.Factories
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
 
             BreakableBody breakableBody = new BreakableBody(triangles, world, density, userData);
-            breakableBody.MainBody.P = position;
+            breakableBody.MainBody.Position = position;
             world.AddBreakableBody(breakableBody);
 
             return breakableBody;

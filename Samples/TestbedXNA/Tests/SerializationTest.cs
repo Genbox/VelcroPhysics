@@ -17,11 +17,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             Body circle = BodyFactory.CreateCircle(World, 1, 1);
             circle.BodyType = BodyType.Dynamic;
-            circle.P = new Vector2(-10, 5);
+            circle.Position = new Vector2(-10, 5);
 
             Body rectangle = BodyFactory.CreateRectangle(World, 1, 1, 1);
             rectangle.BodyType = BodyType.Dynamic;
-            rectangle.P = new Vector2(-5, 10);
+            rectangle.Position = new Vector2(-5, 10);
 
             FixtureFactory.AttachRectangle(2, 2, 2, new Vector2(1, 1), rectangle);
 

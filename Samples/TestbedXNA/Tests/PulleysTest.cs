@@ -49,12 +49,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
-                body1.P = new Vector2(-10.0f, y);
+                body1.Position = new Vector2(-10.0f, y);
                 body1.CreateFixture(shape);
 
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
-                body2.P = new Vector2(10.0f, y);
+                body2.Position = new Vector2(10.0f, y);
 
                 body2.CreateFixture(shape);
 

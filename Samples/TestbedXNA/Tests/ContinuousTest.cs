@@ -44,7 +44,7 @@ namespace FarseerPhysics.TestBed.Tests
             BodyFactory.CreateCompoundPolygon(World, list, 0);
 
             _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
-            _box.P = new Vector2(0, 20);
+            _box.Position = new Vector2(0, 20);
             _box.BodyType = BodyType.Dynamic;
             //_box.Body.Rotation = 0.1f;
 

@@ -53,7 +53,7 @@ namespace FarseerPhysics.SamplesFramework
             {
                 Body body = _bodies[i];
                 body.BodyType = BodyType.Dynamic;
-                body.P = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
+                body.Position = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
                 body.Restitution = .7f;
                 body.Friction = .2f;
                 body.CollisionCategories = CollisionCategories;
@@ -119,7 +119,7 @@ namespace FarseerPhysics.SamplesFramework
 
             for (int i = 0; i < _bodies.Count; ++i)
             {
-                batch.Draw(_object.Texture, ConvertUnits.ToDisplayUnits(_bodies[i].P), null,
+                batch.Draw(_object.Texture, ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
                             Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
             }
         }

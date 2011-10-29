@@ -47,12 +47,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.P; }
+            get { return BodyA.Position; }
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.P; }
+            get { return BodyB.Position; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
@@ -68,11 +68,11 @@ namespace FarseerPhysics.Dynamics.Joints
             return 0;
         }
 
-        internal override void InitVelocityConstraints(ref TimeStep step)
+        internal override void InitVelocityConstraints(ref SolverData data)
         {
             _jointError = (BodyB.Sweep.A - BodyA.Sweep.A - TargetAngle);
 
-            _bias = -BiasFactor * step.inv_dt * _jointError;
+            _bias = -BiasFactor * data.step.inv_dt * _jointError;
 
             _massFactor = (1 - Softness) / (BodyA.InvI + BodyB.InvI);
         }
@@ -84,7 +84,7 @@ namespace FarseerPhysics.Dynamics.Joints
             BodyB.AngularVelocity += BodyB.InvI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
         }
 
-        internal override bool SolvePositionConstraints()
+        internal override bool SolvePositionConstraints(ref SolverData solverData)
         {
             //no position solving for this joint
             return true;

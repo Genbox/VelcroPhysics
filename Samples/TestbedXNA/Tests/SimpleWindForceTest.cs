@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
                     //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
                     currentFixture.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
-                    currentFixture.SetTransform(currentFixture.P, 0.6f);
+                    currentFixture.SetTransform(currentFixture.Position, 0.6f);
                     //currentFixture.CollidesWith = Category.Cat10;
                 }
             }

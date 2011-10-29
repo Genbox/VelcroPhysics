@@ -41,7 +41,7 @@ namespace FarseerPhysics.Controllers
 
                     if (ForceType == ForceTypes.Point)
                     {
-                        forceVector = body.P - Position;
+                        forceVector = body.Position - Position;
                     }
                     else
                     {

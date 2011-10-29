@@ -69,7 +69,7 @@ namespace FarseerPhysics.SamplesFramework
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle.P),
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle.Position),
                                            null,
                                            Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f,
                                            SpriteEffects.None, 0f);

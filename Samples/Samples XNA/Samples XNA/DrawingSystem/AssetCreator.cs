@@ -51,7 +51,7 @@ namespace FarseerPhysics.SamplesFramework
             }
             // calculate body offset from its center and add a 1 pixel border
             // because we generate the textures a little bigger than the actual body's fixtures
-            return ConvertUnits.ToDisplayUnits(b.P - lBound) + new Vector2(1f);
+            return ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1f);
         }
 
         public void LoadContent(ContentManager contentManager)
