@@ -523,22 +523,11 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Edge shape plus more stuff.
-    /// </summary>
-    public struct FatEdge
-    {
-        public bool HasVertex0, HasVertex3;
-        public Vector2 Normal;
-        public Vector2 V0, V1, V2, V3;
-    }
-
-    /// <summary>
     /// This lets us treate and edge shape and a polygon in the same
     /// way in the SAT collider.
     /// </summary>
-    public class EPProxy
+    public class TempPolygon
     {
-        public Vector2 Centroid;
         public int Count;
         public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
         public Vector2[] Vertices = new Vector2[Settings.MaxPolygonVertices];
@@ -551,6 +540,22 @@ namespace FarseerPhysics.Collision
         public EPAxisType Type;
     }
 
+    // Reference face used for clipping
+    public struct ReferenceFace
+    {
+        public int i1, i2;
+
+        public Vector2 v1, v2;
+
+        public Vector2 normal;
+
+        public Vector2 sideNormal1;
+        public float sideOffset1;
+
+        public Vector2 sideNormal2;
+        public float sideOffset2;
+    }
+
     public enum EPAxisType
     {
         Unknown,
@@ -560,10 +565,8 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
-        private static FatEdge _edgeA;
-
-        private static EPProxy _proxyA = new EPProxy();
-        private static EPProxy _proxyB = new EPProxy();
+        private static TempPolygon _proxyA = new TempPolygon();
+        private static TempPolygon _proxyB = new TempPolygon();
 
         private static Transform _xf;
         private static Vector2 _limit11, _limit12;
@@ -1437,8 +1440,8 @@ namespace FarseerPhysics.Collision
                 primaryAxis = edgeAxis;
             }
 
-            EPProxy proxy1;
-            EPProxy proxy2;
+            TempPolygon proxy1;
+            TempPolygon proxy2;
             FixedArray2<ClipVertex> incidentEdge = new FixedArray2<ClipVertex>();
             if (primaryAxis.Type == EPAxisType.EdgeA)
             {
@@ -1640,7 +1643,7 @@ namespace FarseerPhysics.Collision
             return axis;
         }
 
-        private static void FindIncidentEdge(ref FixedArray2<ClipVertex> c, EPProxy proxy1, int edge1, EPProxy proxy2)
+        private static void FindIncidentEdge(ref FixedArray2<ClipVertex> c, TempPolygon proxy1, int edge1, TempPolygon proxy2)
         {
             int count2 = proxy2.Count;
 
@@ -1886,24 +1889,24 @@ namespace FarseerPhysics.Collision
                                              PolygonShape poly2, ref Transform xf2)
         {
             c = new FixedArray2<ClipVertex>();
+            Vertices normals1 = poly1.Normals;
 
             int count2 = poly2.Vertices.Count;
+            Vertices vertices2 = poly2.Vertices;
+            Vertices normals2 = poly2.Normals;
 
             Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Get the normal of the reference edge in poly2's frame.
-            Vector2 v = poly1.Normals[edge1];
-            float tmpx = xf1.q.ex.X * v.X + xf1.q.ey.X * v.Y;
-            float tmpy = xf1.q.ex.Y * v.X + xf1.q.ey.Y * v.Y;
-            Vector2 normal1 = new Vector2(tmpx * xf2.q.ex.X + tmpy * xf2.q.ex.Y,
-                                          tmpx * xf2.q.ey.X + tmpy * xf2.q.ey.Y);
+            Vector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));
+
 
             // Find the incident edge on poly2.
             int index = 0;
             float minDot = Settings.MaxFloat;
             for (int i = 0; i < count2; ++i)
             {
-                float dot = Vector2.Dot(normal1, poly2.Normals[i]);
+                float dot = Vector2.Dot(normal1, normals2[i]);
                 if (dot < minDot)
                 {
                     minDot = dot;
@@ -1917,9 +1920,7 @@ namespace FarseerPhysics.Collision
 
             ClipVertex cv0 = c[0];
 
-            Vector2 v1 = poly2.Vertices[i1];
-            cv0.V.X = xf2.p.X + xf2.q.ex.X * v1.X + xf2.q.ey.X * v1.Y;
-            cv0.V.Y = xf2.p.Y + xf2.q.ex.Y * v1.X + xf2.q.ey.Y * v1.Y;
+            cv0.V = MathUtils.Mul(ref xf2, vertices2[i1]);
             cv0.ID.Features.IndexA = (byte)edge1;
             cv0.ID.Features.IndexB = (byte)i1;
             cv0.ID.Features.TypeA = (byte)ContactFeatureType.Face;
@@ -1928,9 +1929,7 @@ namespace FarseerPhysics.Collision
             c[0] = cv0;
 
             ClipVertex cv1 = c[1];
-            Vector2 v2 = poly2.Vertices[i2];
-            cv1.V.X = xf2.p.X + xf2.q.ex.X * v2.X + xf2.q.ey.X * v2.Y;
-            cv1.V.Y = xf2.p.Y + xf2.q.ex.Y * v2.X + xf2.q.ey.Y * v2.Y;
+            cv1.V = MathUtils.Mul(ref xf2, vertices2[i2]);
             cv1.ID.Features.IndexA = (byte)edge1;
             cv1.ID.Features.IndexB = (byte)i2;
             cv1.ID.Features.TypeA = (byte)ContactFeatureType.Face;

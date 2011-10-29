@@ -264,7 +264,7 @@ namespace FarseerPhysics.Collision
         /// <returns></returns>
         public int ComputeHeight()
         {
-            return _tree.ComputeHeight();
+            return _tree.GetHeight();
         }
 
         private void BufferMove(int proxyId)

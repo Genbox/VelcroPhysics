@@ -63,6 +63,7 @@ namespace FarseerPhysics.Collision.Shapes
                 Vertices = new Vertices(vertices);
         }
 
+        /// Create a loop. This automatically adjusts connectivity.
         public void CreateLoop(Vertices vertices)
         {
             Debug.Assert(vertices.Count >= 3);
@@ -74,9 +75,9 @@ namespace FarseerPhysics.Collision.Shapes
             _hasNextVertex = true;
         }
 
+        /// Create a chain with isolated end vertices.
         public void CreateChain(Vertices vertices)
         {
-            Debug.Assert(vertices == null && vertices.Count == 0);
             Debug.Assert(vertices.Count >= 2);
             Vertices = new Vertices(vertices);
             _hasPrevVertex = false;
@@ -99,12 +100,16 @@ namespace FarseerPhysics.Collision.Shapes
             return loop;
         }
 
+        /// Establish connectivity to a vertex that precedes the first vertex.
+        /// Don't call this for loops.
         public void SetPrevVertex(Vector2 prevVertex)
         {
             _prevVertex = prevVertex;
             _hasPrevVertex = true;
         }
 
+        /// Establish connectivity to a vertex that follows the last vertex.
+        /// Don't call this for loops.
         public void SetNextVertex(Vector2 nextVertex)
         {
             _nextVertex = nextVertex;

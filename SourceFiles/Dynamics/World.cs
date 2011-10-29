@@ -1403,7 +1403,6 @@ namespace FarseerPhysics.Dynamics
                     Body body = bodies[i];
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        // for (ContactEdge ce = body.ContactList; ce && Island.BodyCount < Settings.MaxTOIContacts; ce = ce.Next)
                         for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                         {
                             Contact contact = ce.Contact;
