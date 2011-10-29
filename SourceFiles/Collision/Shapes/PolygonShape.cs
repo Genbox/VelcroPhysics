@@ -30,8 +30,7 @@ namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
     /// Represents a simple non-selfintersecting convex polygon.
-    /// If you want to have concave polygons, you will have to use the <see cref="BayazitDecomposer"/> or the <see cref="EarclipDecomposer"/>
-    /// to decompose the concave polygon into 2 or more convex polygons.
+    /// Create a convex hull from the given array of points.
     /// </summary>
     public class PolygonShape : Shape
     {
@@ -101,6 +100,9 @@ namespace FarseerPhysics.Collision.Shapes
         /// Copy vertices. This assumes the vertices define a convex polygon.
         /// It is assumed that the exterior is the the right of each edge.
         /// </summary>
+        /// @warning the points may be re-ordered, even if they form a convex polygon
+        /// @warning collinear points are handled but not removed. Collinear points
+        /// may lead to poor stacking behavior.
         /// <param name="input">The vertices.</param>
         public void Set(Vertices input)
         {
@@ -214,12 +216,11 @@ namespace FarseerPhysics.Collision.Shapes
             center *= 1.0f / area;
             MassData.Centroid = center + s;
 
-            // Inertia tensor relative to the local origin.
+            // Inertia tensor relative to the local origin (point s).
             MassData.Inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
             MassData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(center, center));
-
         }
 
         /// <summary>
@@ -504,6 +505,34 @@ namespace FarseerPhysics.Collision.Shapes
             sc = MathUtils.Mul(ref xf, center);
 
             return area;
+        }
+
+        public bool Validate()
+        {
+            for (int i = 0; i < Vertices.Count; ++i)
+            {
+                int i1 = i;
+                int i2 = i < Vertices.Count - 1 ? i1 + 1 : 0;
+                Vector2 p = Vertices[i1];
+                Vector2 e = Vertices[i2] - p;
+
+                for (int j = 0; j < Vertices.Count; ++j)
+                {
+                    if (j == i1 || j == i2)
+                    {
+                        continue;
+                    }
+
+                    Vector2 v = Vertices[j] - p;
+                    float c = MathUtils.Cross(e, v);
+                    if (c < 0.0f)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
