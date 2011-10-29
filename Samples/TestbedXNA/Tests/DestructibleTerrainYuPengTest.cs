@@ -196,8 +196,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public bool Clip(Vertices clipVertices, Vector2 position)
         {
-            Mat22 mat = new Mat22(0);
-            Transform t = new Transform(ref position, ref mat);
+            Rot rot = new Rot(0);
+            Transform t = new Transform(ref position, ref rot);
 
             //Transform shape
             Transform thistransform;
@@ -229,7 +229,7 @@ namespace FarseerPhysics.TestBed.Tests
                 for (int i = 1; i < result.Count; i++)
                 {
                     DestructableBody db = new DestructableBody(_world, result[i]);
-                    db.Body.Position = body.Position;
+                    db.Body.Position = Body.Position;
                 }
             }
 

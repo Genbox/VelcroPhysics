@@ -23,6 +23,7 @@
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -66,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vector2 normal;
             FixedArray2<Vector2> points;
-            Collision.Collision.GetWorldManifold(ref manifold, ref _transformA, _polygonA.Radius,
+            ContactSolver.WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius,
                                                  ref _transformB, _polygonB.Radius, out normal, out points);
 
             DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);

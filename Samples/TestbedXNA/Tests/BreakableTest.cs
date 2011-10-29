@@ -105,7 +105,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < manifold.PointCount; ++i)
             {
-                maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
+                maxImpulse = Math.Max(maxImpulse, impulse.points[i].normalImpulse);
             }
 
             if (maxImpulse > 40.0f)

@@ -96,20 +96,20 @@ namespace FarseerPhysics.TestBed.Tests
             DynamicTreeBroadPhase dt = cm.BroadPhase as DynamicTreeBroadPhase;
             if (dt != null)
             {
-                int height = dt.ComputeHeight();
+                //int height = dt.ComputeHeight();
 
-                int leafCount = dt.ProxyCount;
-                int minimumNodeCount = 2 * leafCount - 1;
-                float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-                DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
-                                     minimumHeight);
-                TextLine += 15;
-                DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
-                                     height,
-                                     minimumHeight);
-                TextLine += 15;
-                DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
-                TextLine += 15;
+                //int leafCount = dt.ProxyCount;
+                //int minimumNodeCount = 2 * leafCount - 1;
+                //float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+                //DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
+                //                     minimumHeight);
+                //TextLine += 15;
+                //DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
+                //                     height,
+                //                     minimumHeight);
+                //TextLine += 15;
+                //DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
+                //TextLine += 15;
             }
 
             base.Update(settings, gameTime);

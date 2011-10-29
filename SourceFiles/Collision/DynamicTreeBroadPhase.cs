@@ -83,11 +83,14 @@ namespace FarseerPhysics.Collision
         public DynamicTreeBroadPhase()
         {
             _queryCallback = QueryCallback;
+            _proxyCount = 0;
 
             _pairCapacity = 16;
+            _pairCount = 0;
             _pairBuffer = new Pair[_pairCapacity];
 
             _moveCapacity = 16;
+            _moveCount = 0;
             _moveBuffer = new int[_moveCapacity];
         }
 
@@ -167,6 +170,7 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        // This is called from b2DynamicTree::Query when we are gathering pairs.
         private bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.

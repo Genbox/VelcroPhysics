@@ -151,9 +151,9 @@ namespace FarseerPhysics.Dynamics
             Friction = 0.2f;
             Restitution = 0;
 
+            Body = body;
             IsSensor = false;
 
-            Body = body;
             UserData = userData;
 
             if (Settings.ConserveMemory)

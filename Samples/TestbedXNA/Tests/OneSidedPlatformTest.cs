@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 return;
             }
 
-            Vector2 position = _character.body.Position;
+            Vector2 position = _character.Body.Position;
 
             if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
             {

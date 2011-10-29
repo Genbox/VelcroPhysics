@@ -86,6 +86,7 @@ namespace FarseerPhysics.Collision
             _root = NullNode;
 
             _nodeCapacity = 16;
+            _nodeCount = 0;
             _nodes = new TreeNode<T>[_nodeCapacity];
 
             // Build a linked list for the free list.
@@ -407,7 +408,6 @@ namespace FarseerPhysics.Collision
             _nodes[nodeId].Child2 = NullNode;
             _nodes[nodeId].Height = 0;
             _nodes[nodeId].UserData = default(T);
-
             ++_nodeCount;
             return nodeId;
         }
@@ -417,7 +417,7 @@ namespace FarseerPhysics.Collision
             Debug.Assert(0 <= nodeId && nodeId < _nodeCapacity);
             Debug.Assert(0 < _nodeCount);
             _nodes[nodeId].ParentOrNext = _freeList;
-            _nodes[nodeId].Height = 1;
+            _nodes[nodeId].Height = -1;
             _freeList = nodeId;
             --_nodeCount;
         }
@@ -470,6 +470,7 @@ namespace FarseerPhysics.Collision
                     cost1 = (newArea - oldArea) + inheritanceCost;
                 }
 
+                // Cost of descending into child2
                 float cost2;
                 if (_nodes[child2].IsLeaf())
                 {
@@ -510,13 +511,13 @@ namespace FarseerPhysics.Collision
             int newParent = AllocateNode();
             _nodes[newParent].ParentOrNext = oldParent;
             _nodes[newParent].UserData = default(T);
-            _nodes[newParent].AABB.Combine(ref leafAABB, ref _nodes[index].AABB);
-            _nodes[newParent].Height = _nodes[index].Height + 1;
+            _nodes[newParent].AABB.Combine(ref leafAABB, ref _nodes[sibling].AABB);
+            _nodes[newParent].Height = _nodes[sibling].Height + 1;
 
             if (oldParent != NullNode)
             {
                 // The sibling was not the root.
-                if (_nodes[oldParent].Child1 == index)
+                if (_nodes[oldParent].Child1 == sibling)
                 {
                     _nodes[oldParent].Child1 = newParent;
                 }
@@ -525,7 +526,7 @@ namespace FarseerPhysics.Collision
                     _nodes[oldParent].Child2 = newParent;
                 }
 
-                _nodes[newParent].Child1 = index;
+                _nodes[newParent].Child1 = sibling;
                 _nodes[newParent].Child2 = leaf;
                 _nodes[index].ParentOrNext = newParent;
                 _nodes[leaf].ParentOrNext = newParent;
@@ -533,7 +534,7 @@ namespace FarseerPhysics.Collision
             else
             {
                 // The sibling was the root.
-                _nodes[newParent].Child1 = index;
+                _nodes[newParent].Child1 = sibling;
                 _nodes[newParent].Child2 = leaf;
                 _nodes[index].ParentOrNext = newParent;
                 _nodes[leaf].ParentOrNext = newParent;

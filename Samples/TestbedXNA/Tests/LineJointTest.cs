@@ -61,14 +61,6 @@ namespace FarseerPhysics.TestBed.Tests
                 Body body2 = BodyFactory.CreatePolygon(World, shape2.Vertices, 0.5f);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, 7.0f);
-
-                FixedWheelJoint jdf = new FixedWheelJoint(body2, new Vector2(10, 8.5f), axis);
-                jdf.MotorSpeed = 1.0f;
-                jdf.MaxMotorTorque = 1000.0f;
-                jdf.MotorEnabled = true;
-                jdf.Frequency = 1.0f;
-                jdf.DampingRatio = 0.2f;
-                World.AddJoint(jdf);
             }
         }
 
