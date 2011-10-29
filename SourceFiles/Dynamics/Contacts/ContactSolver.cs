@@ -84,7 +84,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         // Sequential position solver for position constraints.
         public bool SolveTOIPositionConstraints(int toiIndexA, int toiIndexB)
         {
-
             float minSeparation = 0.0f;
 
             for (int i = 0; i < _count; ++i)

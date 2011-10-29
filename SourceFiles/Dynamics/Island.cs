@@ -63,7 +63,6 @@ namespace FarseerPhysics.Dynamics
             BodyCapacity = bodyCapacity;
             ContactCapacity = contactCapacity;
             JointCapacity = jointCapacity;
-
             BodyCount = 0;
             ContactCount = 0;
             JointCount = 0;
@@ -145,6 +144,14 @@ namespace FarseerPhysics.Dynamics
             solverData.velocities = _velocities;
 
             // Initialize velocity constraints.
+            //b2ContactSolverDef contactSolverDef;
+            //contactSolverDef.step = step;
+            //contactSolverDef.contacts = m_contacts;
+            //contactSolverDef.count = m_contactCount;
+            //contactSolverDef.positions = m_positions;
+            //contactSolverDef.velocities = m_velocities;
+            //contactSolverDef.allocator = m_allocator;
+
             _contactSolver.Reset(step, ContactCount, _contacts, _positions, _velocities);
             _contactSolver.InitializeVelocityConstraints();
 
@@ -217,7 +224,6 @@ namespace FarseerPhysics.Dynamics
 
                 // Check for large velocities
                 Vector2 translation = h * v;
-
                 if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
                 {
                     float ratio = Settings.MaxTranslation / translation.Length();
@@ -246,6 +252,7 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < Settings.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints();
+
                 bool jointsOkay = true;
 
 #if (!SILVERLIGHT)
@@ -364,7 +371,7 @@ namespace FarseerPhysics.Dynamics
             // Solve position constraints.
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
             {
-                bool contactsOkay = _contactSolver.SolvePositionConstraints();
+                bool contactsOkay = _contactSolver.SolveTOIPositionConstraints(toiIndexA, toiIndexB);
                 if (contactsOkay)
                 {
                     break;
