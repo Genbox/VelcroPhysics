@@ -31,7 +31,7 @@ namespace FarseerPhysics.Collision
     /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.
     /// </summary>
-    internal struct TreeNode<T>
+    internal class TreeNode<T>
     {
         /// <summary>
         /// Enlarged AABB
@@ -92,9 +92,12 @@ namespace FarseerPhysics.Collision
             // Build a linked list for the free list.
             for (int i = 0; i < _nodeCapacity - 1; ++i)
             {
+                _nodes[i] = new TreeNode<T>();
                 _nodes[i].ParentOrNext = i + 1;
                 _nodes[i].Height = 1;
             }
+
+            _nodes[_nodeCapacity - 1] = new TreeNode<T>();
             _nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
             _nodes[_nodeCapacity - 1].Height = 1;
             _freeList = 0;
@@ -392,9 +395,11 @@ namespace FarseerPhysics.Collision
                 // pointer becomes the "next" pointer.
                 for (int i = _nodeCount; i < _nodeCapacity - 1; ++i)
                 {
+                    _nodes[i] = new TreeNode<T>();
                     _nodes[i].ParentOrNext = i + 1;
                     _nodes[i].Height = 1;
                 }
+                _nodes[_nodeCapacity - 1] = new TreeNode<T>();
                 _nodes[_nodeCapacity - 1].ParentOrNext = NullNode;
                 _nodes[_nodeCapacity - 1].Height = 1;
                 _freeList = _nodeCount;

@@ -1101,7 +1101,7 @@ namespace FarseerPhysics.Collision
 
         public class EPCollider
         {
-            TempPolygon _polygonB;
+            private TempPolygon _polygonB = new TempPolygon();
 
             Transform _xf;
             Vector2 _centroidB;

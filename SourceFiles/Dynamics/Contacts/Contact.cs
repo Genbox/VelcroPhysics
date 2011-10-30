@@ -284,8 +284,13 @@ namespace FarseerPhysics.Dynamics.Contacts
             NodeB.Other = null;
 
             TOICount = 0;
-            Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
-            Restitution = Settings.MixRestitution(FixtureA.Restitution, FixtureB.Restitution);
+
+            //FPE: We only set the friction and restitution if we are not destroying the contact
+            if (FixtureA != null && FixtureB != null)
+            {
+                Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
+                Restitution = Settings.MixRestitution(FixtureA.Restitution, FixtureB.Restitution);
+            }
         }
 
         /// <summary>
