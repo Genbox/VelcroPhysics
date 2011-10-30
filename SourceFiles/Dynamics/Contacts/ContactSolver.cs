@@ -185,22 +185,26 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             _step = step;
             _count = count;
-            _positionConstraints = new ContactPositionConstraint[count];
-            _velocityConstraints = new ContactVelocityConstraint[count];
             _positions = positions;
             _velocities = velocities;
             _contacts = contacts;
 
             // grow the array
-            //if (VelocityConstraints == null || VelocityConstraints.Length < _constraintCount)
-            //{
-            //    VelocityConstraints = new ContactVelocityConstraint[_constraintCount * 2];
+            if (_velocityConstraints == null || _velocityConstraints.Length < count)
+            {
+                _velocityConstraints = new ContactVelocityConstraint[count * 2];
+                _positionConstraints = new ContactPositionConstraint[count * 2];
 
-            //    for (int i = 0; i < VelocityConstraints.Length; i++)
-            //    {
-            //        VelocityConstraints[i] = new ContactVelocityConstraint();
-            //    }
-            //}
+                for (int i = 0; i < _velocityConstraints.Length; i++)
+                {
+                    _velocityConstraints[i] = new ContactVelocityConstraint();
+                }
+
+                for (int i = 0; i < _positionConstraints.Length; i++)
+                {
+                    _positionConstraints[i] = new ContactPositionConstraint();
+                }
+            }
 
             // Initialize position independent portions of the constraints.
             for (int i = 0; i < _count; ++i)
