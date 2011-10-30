@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -38,24 +39,30 @@ namespace FarseerPhysics.TestBed.Tests
     public class TilesTest : Test
     {
         private const int Count = 20;
+        private int _fixtureCount;
+        private long _createTime;
 
         private TilesTest()
         {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+
             {
                 const float a = 0.5f;
                 Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
-                const int n = 200;
-                const int m = 10;
+                const int N = 200;
+                const int M = 10;
                 Vector2 position = Vector2.Zero;
                 position.Y = 0.0f;
-                for (int j = 0; j < m; ++j)
+                for (int j = 0; j < M; ++j)
                 {
-                    position.X = -n * a;
-                    for (int i = 0; i < n; ++i)
+                    position.X = -N * a;
+                    for (int i = 0; i < N; ++i)
                     {
                         PolygonShape shape = new PolygonShape(0);
                         shape.SetAsBox(a, a, position, 0.0f);
-                        ground.CreateFixture(shape);
+                        Fixture fix = ground.CreateFixture(shape);
+                        ++_fixtureCount;
                         position.X += 2.0f * a;
                     }
                     position.Y -= 2.0f * a;
@@ -81,36 +88,32 @@ namespace FarseerPhysics.TestBed.Tests
                         body.BodyType = BodyType.Dynamic;
                         body.Position = y;
                         body.CreateFixture(shape);
-
+                        ++_fixtureCount;
                         y += deltaY;
                     }
 
                     x += deltaX;
                 }
             }
+
+            timer.Stop();
+            _createTime = timer.ElapsedMilliseconds;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             ContactManager cm = World.ContactManager;
-            DynamicTreeBroadPhase dt = cm.BroadPhase as DynamicTreeBroadPhase;
-            if (dt != null)
-            {
-                //int height = dt.ComputeHeight();
+            DynamicTreeBroadPhase dt = (DynamicTreeBroadPhase)cm.BroadPhase;
 
-                //int leafCount = dt.ProxyCount;
-                //int minimumNodeCount = 2 * leafCount - 1;
-                //float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-                //DebugView.DrawString(50, TextLine, "Test of dynamic tree performance in worse case scenario.", height,
-                //                     minimumHeight);
-                //TextLine += 15;
-                //DebugView.DrawString(50, TextLine, "I know this is slow. I hope to address this in a future update.",
-                //                     height,
-                //                     minimumHeight);
-                //TextLine += 15;
-                //DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}, min = {1}", height, minimumHeight);
-                //TextLine += 15;
-            }
+            int height = dt.TreeHeight;
+            int leafCount = dt.ProxyCount;
+            float minimumNodeCount = 2 * leafCount - 1;
+            float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+            DebugView.DrawString(5, TextLine, "dynamic tree height = {0}, min = {1}", height, (int)minimumHeight);
+            TextLine += 15;
+
+            DebugView.DrawString(5, TextLine, "create time = {0} ms, fixture count = {1}", _createTime, _fixtureCount);
+            TextLine += 15;
 
             base.Update(settings, gameTime);
         }

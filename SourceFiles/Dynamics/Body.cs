@@ -19,7 +19,7 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-#define USE_AWAKE_BODY_SET
+//#define USE_AWAKE_BODY_SET
 
 using System;
 using System.Collections.Generic;
@@ -113,6 +113,7 @@ namespace FarseerPhysics.Dynamics
             World = world;
             UserData = userData;
 
+            GravityScale = 1.0f;
             FixedRotation = false;
             IsBullet = false;
             SleepingAllowed = true;
@@ -618,6 +619,7 @@ namespace FarseerPhysics.Dynamics
 
         public float Restitution
         {
+            //TODO: Fix bug when fixturecount = 0;
             get
             {
                 float res = 0;
@@ -642,6 +644,7 @@ namespace FarseerPhysics.Dynamics
 
         public float Friction
         {
+            //TODO: Fix bug when fixturecount = 0;
             get
             {
                 float res = 0;

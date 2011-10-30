@@ -128,8 +128,9 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
-            // added
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            // TODO: uncomment and remove the other line
+            //float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = (1f / 60f);
 
             if (settings.Pause)
             {

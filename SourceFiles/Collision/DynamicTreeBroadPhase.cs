@@ -316,5 +316,10 @@ namespace FarseerPhysics.Collision
         }
 
         #endregion
+
+        public int TreeHeight
+        {
+            get { return _tree.GetHeight(); }
+        }
     }
 }
