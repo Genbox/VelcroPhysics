@@ -81,98 +81,6 @@ namespace FarseerPhysics.Dynamics.Contacts
 
     public class ContactSolver
     {
-        // Sequential position solver for position constraints.
-        public bool SolveTOIPositionConstraints(int toiIndexA, int toiIndexB)
-        {
-            float minSeparation = 0.0f;
-
-            for (int i = 0; i < _count; ++i)
-            {
-                ContactPositionConstraint pc = _positionConstraints[i];
-
-                int indexA = pc.indexA;
-                int indexB = pc.indexB;
-                Vector2 localCenterA = pc.localCenterA;
-                Vector2 localCenterB = pc.localCenterB;
-                int pointCount = pc.pointCount;
-
-                float mA = 0.0f;
-                float iA = 0.0f;
-                if (indexA == toiIndexA || indexA == toiIndexB)
-                {
-                    mA = pc.invMassA;
-                    iA = pc.invIA;
-                }
-
-                float mB = pc.invMassB;
-                float iB = pc.invIB;
-                if (indexB == toiIndexA || indexB == toiIndexB)
-                {
-                    mB = pc.invMassB;
-                    iB = pc.invIB;
-                }
-
-                Vector2 cA = _positions[indexA].c;
-                float aA = _positions[indexA].a;
-
-                Vector2 cB = _positions[indexB].c;
-                float aB = _positions[indexB].a;
-
-                // Solve normal constraints
-                for (int j = 0; j < pointCount; ++j)
-                {
-                    Transform xfA = new Transform();
-                    Transform xfB = new Transform();
-                    xfA.q.Set(aA);
-                    xfB.q.Set(aB);
-                    xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
-                    xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
-
-                    PositionSolverManifold psm = new PositionSolverManifold();
-                    psm.Initialize(pc, xfA, xfB, j);
-                    Vector2 normal = psm.normal;
-
-                    Vector2 point = psm.point;
-                    float separation = psm.separation;
-
-                    Vector2 rA = point - cA;
-                    Vector2 rB = point - cB;
-
-                    // Track max constraint error.
-                    minSeparation = Math.Min(minSeparation, separation);
-
-                    // Prevent large corrections and allow slop.
-                    float C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
-
-                    // Compute the effective mass.
-                    float rnA = MathUtils.Cross(rA, normal);
-                    float rnB = MathUtils.Cross(rB, normal);
-                    float K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
-
-                    // Compute normal impulse
-                    float impulse = K > 0.0f ? -C / K : 0.0f;
-
-                    Vector2 P = impulse * normal;
-
-                    cA -= mA * P;
-                    aA -= iA * MathUtils.Cross(rA, P);
-
-                    cB += mB * P;
-                    aB += iB * MathUtils.Cross(rB, P);
-                }
-
-                _positions[indexA].c = cA;
-                _positions[indexA].a = aA;
-
-                _positions[indexB].c = cB;
-                _positions[indexB].a = aB;
-            }
-
-            // We can't expect minSpeparation >= -b2_linearSlop because we don't
-            // push the separation above -b2_linearSlop.
-            return minSeparation >= -1.5f * Settings.LinearSlop;
-        }
-
         public TimeStep _step;
         public Position[] _positions;
         public Velocity[] _velocities;
@@ -390,86 +298,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                         // TODO_ERIN use deepest?
                         vc.pointCount = 1;
                     }
-                }
-            }
-        }
-
-        public static class WorldManifold
-        {
-            /// <summary>
-            /// Evaluate the manifold with supplied transforms. This assumes
-            /// modest motion from the original state. This does not change the
-            /// point count, impulses, etc. The radii must come from the Shapes
-            /// that generated the manifold.
-            /// </summary>
-            /// <param name="manifold">The manifold.</param>
-            /// <param name="xfA">The transform for A.</param>
-            /// <param name="radiusA">The radius for A.</param>
-            /// <param name="xfB">The transform for B.</param>
-            /// <param name="radiusB">The radius for B.</param>
-            /// <param name="normal">World vector pointing from A to B</param>
-            /// <param name="points">Torld contact point (point of intersection).</param>
-            public static void Initialize(ref Manifold manifold, ref Transform xfA, float radiusA, ref Transform xfB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points)
-            {
-                normal = Vector2.Zero;
-                points = new FixedArray2<Vector2>();
-
-                if (manifold.PointCount == 0)
-                {
-                    return;
-                }
-
-                switch (manifold.Type)
-                {
-                    case ManifoldType.Circles:
-                        {
-                            normal = new Vector2(1.0f, 0.0f);
-                            Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
-                            Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
-                            if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
-                            {
-                                normal = pointB - pointA;
-                                normal.Normalize();
-                            }
-
-                            Vector2 cA = pointA + radiusA * normal;
-                            Vector2 cB = pointB - radiusB * normal;
-                            points[0] = 0.5f * (cA + cB);
-                        }
-                        break;
-
-                    case ManifoldType.FaceA:
-                        {
-                            normal = MathUtils.Mul(xfA.q, manifold.LocalPoint);
-                            Vector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
-
-                            for (int i = 0; i < manifold.PointCount; ++i)
-                            {
-                                Vector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
-                                Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                Vector2 cB = clipPoint - radiusB * normal;
-                                points[i] = 0.5f * (cA + cB);
-                            }
-                        }
-                        break;
-
-                    case ManifoldType.FaceB:
-                        {
-                            normal = MathUtils.Mul(xfB.q, manifold.LocalPoint);
-                            Vector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
-
-                            for (int i = 0; i < manifold.PointCount; ++i)
-                            {
-                                Vector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
-                                Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                Vector2 cA = clipPoint - radiusA * normal;
-                                points[i] = 0.5f * (cA + cB);
-                            }
-
-                            // Ensure normal points from A to B.
-                            normal = -normal;
-                        }
-                        break;
                 }
             }
         }
@@ -838,6 +666,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     point.TangentImpulse = vc.points[j].tangentImpulse;
                     manifold.Points[j] = point;
                 }
+
+                _contacts[vc.contactIndex].Manifold = manifold;
             }
         }
 
@@ -875,12 +705,11 @@ namespace FarseerPhysics.Dynamics.Contacts
                     xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                     xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                    PositionSolverManifold psm = new PositionSolverManifold();
-                    psm.Initialize(pc, xfA, xfB, j);
-                    Vector2 normal = psm.normal;
+                    Vector2 normal;
+                    Vector2 point;
+                    float separation;
 
-                    Vector2 point = psm.point;
-                    float separation = psm.separation;
+                    PositionSolverManifold.Initialize(pc, xfA, xfB, j, out normal, out point, out separation);
 
                     Vector2 rA = point - cA;
                     Vector2 rB = point - cB;
@@ -920,11 +749,183 @@ namespace FarseerPhysics.Dynamics.Contacts
             return minSeparation >= -3.0f * Settings.LinearSlop;
         }
 
-        public struct PositionSolverManifold
+        // Sequential position solver for position constraints.
+        public bool SolveTOIPositionConstraints(int toiIndexA, int toiIndexB)
         {
-            public void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index)
+            float minSeparation = 0.0f;
+
+            for (int i = 0; i < _count; ++i)
+            {
+                ContactPositionConstraint pc = _positionConstraints[i];
+
+                int indexA = pc.indexA;
+                int indexB = pc.indexB;
+                Vector2 localCenterA = pc.localCenterA;
+                Vector2 localCenterB = pc.localCenterB;
+                int pointCount = pc.pointCount;
+
+                float mA = 0.0f;
+                float iA = 0.0f;
+                if (indexA == toiIndexA || indexA == toiIndexB)
+                {
+                    mA = pc.invMassA;
+                    iA = pc.invIA;
+                }
+
+                float mB = pc.invMassB;
+                float iB = pc.invIB;
+                if (indexB == toiIndexA || indexB == toiIndexB)
+                {
+                    mB = pc.invMassB;
+                    iB = pc.invIB;
+                }
+
+                Vector2 cA = _positions[indexA].c;
+                float aA = _positions[indexA].a;
+
+                Vector2 cB = _positions[indexB].c;
+                float aB = _positions[indexB].a;
+
+                // Solve normal constraints
+                for (int j = 0; j < pointCount; ++j)
+                {
+                    Transform xfA = new Transform();
+                    Transform xfB = new Transform();
+                    xfA.q.Set(aA);
+                    xfB.q.Set(aB);
+                    xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
+                    xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
+
+                    Vector2 normal;
+                    Vector2 point;
+                    float separation;
+
+                    PositionSolverManifold.Initialize(pc, xfA, xfB, j, out normal, out point, out separation);
+
+                    Vector2 rA = point - cA;
+                    Vector2 rB = point - cB;
+
+                    // Track max constraint error.
+                    minSeparation = Math.Min(minSeparation, separation);
+
+                    // Prevent large corrections and allow slop.
+                    float C = MathUtils.Clamp(Settings.Baumgarte * (separation + Settings.LinearSlop), -Settings.MaxLinearCorrection, 0.0f);
+
+                    // Compute the effective mass.
+                    float rnA = MathUtils.Cross(rA, normal);
+                    float rnB = MathUtils.Cross(rB, normal);
+                    float K = mA + mB + iA * rnA * rnA + iB * rnB * rnB;
+
+                    // Compute normal impulse
+                    float impulse = K > 0.0f ? -C / K : 0.0f;
+
+                    Vector2 P = impulse * normal;
+
+                    cA -= mA * P;
+                    aA -= iA * MathUtils.Cross(rA, P);
+
+                    cB += mB * P;
+                    aB += iB * MathUtils.Cross(rB, P);
+                }
+
+                _positions[indexA].c = cA;
+                _positions[indexA].a = aA;
+
+                _positions[indexB].c = cB;
+                _positions[indexB].a = aB;
+            }
+
+            // We can't expect minSpeparation >= -b2_linearSlop because we don't
+            // push the separation above -b2_linearSlop.
+            return minSeparation >= -1.5f * Settings.LinearSlop;
+        }
+
+        public static class WorldManifold
+        {
+            /// <summary>
+            /// Evaluate the manifold with supplied transforms. This assumes
+            /// modest motion from the original state. This does not change the
+            /// point count, impulses, etc. The radii must come from the Shapes
+            /// that generated the manifold.
+            /// </summary>
+            /// <param name="manifold">The manifold.</param>
+            /// <param name="xfA">The transform for A.</param>
+            /// <param name="radiusA">The radius for A.</param>
+            /// <param name="xfB">The transform for B.</param>
+            /// <param name="radiusB">The radius for B.</param>
+            /// <param name="normal">World vector pointing from A to B</param>
+            /// <param name="points">Torld contact point (point of intersection).</param>
+            public static void Initialize(ref Manifold manifold, ref Transform xfA, float radiusA, ref Transform xfB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points)
+            {
+                normal = Vector2.Zero;
+                points = new FixedArray2<Vector2>();
+
+                if (manifold.PointCount == 0)
+                {
+                    return;
+                }
+
+                switch (manifold.Type)
+                {
+                    case ManifoldType.Circles:
+                        {
+                            normal = new Vector2(1.0f, 0.0f);
+                            Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+                            Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
+                            if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
+                            {
+                                normal = pointB - pointA;
+                                normal.Normalize();
+                            }
+
+                            Vector2 cA = pointA + radiusA * normal;
+                            Vector2 cB = pointB - radiusB * normal;
+                            points[0] = 0.5f * (cA + cB);
+                        }
+                        break;
+
+                    case ManifoldType.FaceA:
+                        {
+                            normal = MathUtils.Mul(xfA.q, manifold.LocalNormal);
+                            Vector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+
+                            for (int i = 0; i < manifold.PointCount; ++i)
+                            {
+                                Vector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
+                                Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                                Vector2 cB = clipPoint - radiusB * normal;
+                                points[i] = 0.5f * (cA + cB);
+                            }
+                        }
+                        break;
+
+                    case ManifoldType.FaceB:
+                        {
+                            normal = MathUtils.Mul(xfB.q, manifold.LocalNormal);
+                            Vector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
+
+                            for (int i = 0; i < manifold.PointCount; ++i)
+                            {
+                                Vector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
+                                Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                                Vector2 cA = clipPoint - radiusA * normal;
+                                points[i] = 0.5f * (cA + cB);
+                            }
+
+                            // Ensure normal points from A to B.
+                            normal = -normal;
+                        }
+                        break;
+                }
+            }
+        }
+
+        private static class PositionSolverManifold
+        {
+            public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out Vector2 normal, out Vector2 point, out float separation)
             {
                 Debug.Assert(pc.pointCount > 0);
+
 
                 switch (pc.type)
                 {
@@ -963,12 +964,14 @@ namespace FarseerPhysics.Dynamics.Contacts
                             normal = -normal;
                         }
                         break;
+                    default:
+                        normal = Vector2.Zero;
+                        point = Vector2.Zero;
+                        separation = 0;
+                        break;
+
                 }
             }
-
-            public Vector2 normal;
-            public Vector2 point;
-            public float separation;
         }
     }
 }

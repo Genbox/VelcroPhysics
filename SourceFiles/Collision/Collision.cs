@@ -566,15 +566,6 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
-        private static TempPolygon _proxyA = new TempPolygon();
-        private static TempPolygon _proxyB = new TempPolygon();
-
-        private static Transform _xf;
-        private static Vector2 _limit11, _limit12;
-        private static Vector2 _limit21, _limit22;
-        private static float _radius;
-        private static Vector2[] _tmpNormals = new Vector2[2];
-
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
                                           ref Manifold manifold1, ref Manifold manifold2)
         {

@@ -49,7 +49,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 _polygonB.SetAsBox(0.5f, 0.5f);
-                _positionB = new Vector2(19.345284f, 1.5632932f);
+                //_positionB = new Vector2(19.345284f, 1.5632932f);
+                _positionB = new Vector2(0.345284f, 0.5632932f);
+
                 _angleB = 1.9160721f;
                 _transformB.Set(_positionB, _angleB);
             }
@@ -91,7 +93,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < manifold.PointCount; ++i)
             {
+                TextLine += 15;
                 DebugView.DrawPoint(points[i], 0.1f, new Color(0.9f, 0.3f, 0.3f));
+                DebugView.DrawString(50, TextLine, "{0}", points[i].ToString());
+                TextLine += 15;
             }
             DebugView.EndCustomDraw();
         }

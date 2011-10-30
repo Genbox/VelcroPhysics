@@ -107,6 +107,12 @@ namespace FarseerPhysics.Collision
             _insertionCount = 0;
         }
 
+        public int TreeHeight
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
         /// <summary>
         /// Create a proxy in the tree as a leaf node. We return the index
         /// of the node instead of a pointer so that we can grow
@@ -628,7 +634,7 @@ namespace FarseerPhysics.Collision
 
         /// Compute the height of the binary tree in O(N) time. Should not be
         /// called often.
-        private int GetHeight()
+        public int GetHeight()
         {
             if (_root == NullNode)
             {

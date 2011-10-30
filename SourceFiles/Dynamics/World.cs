@@ -19,11 +19,11 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-#define USE_ACTIVE_CONTACT_SET
-#define USE_AWAKE_BODY_SET
-#define USE_ISLAND_SET
-#define OPTIMIZE_TOI
-#define USE_IGNORE_CCD_CATEGORIES
+//#define USE_ACTIVE_CONTACT_SET
+//#define USE_AWAKE_BODY_SET
+//#define USE_ISLAND_SET
+//#define OPTIMIZE_TOI
+//#define USE_IGNORE_CCD_CATEGORIES
 
 using System;
 using System.Collections.Generic;

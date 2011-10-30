@@ -108,7 +108,9 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Debug.Assert(input.Count >= 3 && input.Count <= Settings.MaxPolygonVertices);
 
-            Vertices = GiftWrap.GetConvexHull(input);
+            //TODO: Uncomment and remove the other line
+            //Vertices = GiftWrap.GetConvexHull(input);
+            Vertices = input;
             Normals = new Vertices(Vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.
