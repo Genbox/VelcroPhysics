@@ -110,7 +110,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             //TODO: Uncomment and remove the other line
             //Vertices = GiftWrap.GetConvexHull(input);
-            Vertices = input;
+            Vertices = new Vertices(input);
             Normals = new Vertices(Vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.

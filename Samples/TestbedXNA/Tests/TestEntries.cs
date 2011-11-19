@@ -28,6 +28,9 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
             {
+                new TestEntry {Name = "Lock Test", CreateFcn = LockTest.Create},
+                new TestEntry {Name = "Deletion test", CreateFcn = DeletionTest.Create},
+                new TestEntry {Name = "Apply Force", CreateFcn = ApplyForceTest.Create},
                 new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
                 new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
 

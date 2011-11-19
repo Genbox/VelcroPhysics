@@ -31,11 +31,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool OnCollision(Fixture fixturea, Fixture fixtureb, Contact manifold)
         {
-            //_rectangle.Body.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
-            //_rectangle.Body.DestroyFixture(_rectangle);
-            //_rectangle.Body.Inertia = 40;
-            //_rectangle.Body.LocalCenter = new Vector2(-1,-1);
-            //_rectangle.Body.Mass = 10;
+            //_rectangle.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
+            //_rectangle.DestroyFixture(_rectangle);
+            //_rectangle.Inertia = 40;
+            //_rectangle.LocalCenter = new Vector2(-1, -1);
+            //_rectangle.Mass = 10;
             _rectangle.Enabled = false;
             return false;
         }

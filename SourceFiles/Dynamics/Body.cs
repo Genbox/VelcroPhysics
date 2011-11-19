@@ -359,7 +359,7 @@ namespace FarseerPhysics.Dynamics
 
                 }
            }
-            get { return (BodyType != Dynamics.BodyType.Static) && (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
+            get { return (BodyType != BodyType.Static) && (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
         }
 
         /// <summary>
