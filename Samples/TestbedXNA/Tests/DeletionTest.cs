@@ -18,7 +18,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            return false;
+            return true;
         }
 
         private void OnSeparation(Fixture fixtureA, Fixture fixtureB)

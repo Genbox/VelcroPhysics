@@ -372,6 +372,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 if (touching)
                 {
+
 #if true
                     bool enabledA, enabledB;
 
@@ -403,15 +404,6 @@ namespace FarseerPhysics.Dynamics.Contacts
                     if (!Enabled)
                     {
                         Flags &= ~ContactFlags.Touching;
-
-                        if (enabledA && FixtureA.OnSeparation != null)
-                        {
-                            FixtureA.OnSeparation(FixtureA, FixtureB);
-                        }
-                        if (enabledB && FixtureB.OnSeparation != null)
-                        {
-                            FixtureB.OnSeparation(FixtureB, FixtureA);
-                        }
                     }
 
 #else
