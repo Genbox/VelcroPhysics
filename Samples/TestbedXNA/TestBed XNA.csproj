@@ -125,6 +125,7 @@
     <Compile Include="Tests\CarTest.cs" />
     <Compile Include="Tests\BuoyancyTest.cs" />
     <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\ConveyorBeltTest.cs" />
     <Compile Include="Tests\DeletionTest.cs" />
     <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
