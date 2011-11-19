@@ -67,6 +67,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         public float invIA, invIB;
         public float friction;
         public float restitution;
+        public float tangentSpeed;
         public int pointCount;
         public int contactIndex;
 
@@ -135,6 +136,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 ContactVelocityConstraint vc = _velocityConstraints[i];
                 vc.friction = contact.Friction;
                 vc.restitution = contact.Restitution;
+                vc.tangentSpeed = contact.TangentSpeed;
                 vc.indexA = bodyA.IslandIndex;
                 vc.indexB = bodyB.IslandIndex;
                 vc.invMassA = bodyA.InvMass;
@@ -377,7 +379,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     Vector2 dv = vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA);
 
                     // Compute tangent force
-                    float vt = Vector2.Dot(dv, tangent);
+                    float vt = Vector2.Dot(dv, tangent) - vc.tangentSpeed;
                     float lambda = vcp.tangentMass * (-vt);
 
                     // b2Clamp the accumulated force

@@ -143,6 +143,9 @@ namespace FarseerPhysics.Dynamics.Contacts
         internal ContactFlags Flags;
         public float Friction { get; set; }
         public float Restitution { get; set; }
+        
+        /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
+        public float TangentSpeed { get; set; }
 
         public void ResetRestitution()
         {
@@ -291,6 +294,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                 Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
                 Restitution = Settings.MixRestitution(FixtureA.Restitution, FixtureB.Restitution);
             }
+
+            TangentSpeed = 0;
         }
 
         /// <summary>

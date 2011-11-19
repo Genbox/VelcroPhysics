@@ -165,7 +165,6 @@ namespace FarseerPhysics.Collision
                 if (_moveBuffer[i] == proxyId)
                 {
                     _moveBuffer[i] = -1;
-                    return;
                 }
             }
         }
