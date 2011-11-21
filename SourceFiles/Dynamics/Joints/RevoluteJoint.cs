@@ -41,9 +41,6 @@ namespace FarseerPhysics.Dynamics.Joints
         public Vector2 LocalAnchorA;
         public Vector2 LocalAnchorB;
 
-        private float _tmpFloat1;
-        private Vector2 _tmpVector1, _tmpVector2;
-
         private Vector3 _impulse;
         private float _motorImpulse;
 
