@@ -43,7 +43,6 @@ namespace FarseerPhysics.TestBed.Tests
     /// </summary>
     public class RopeTest : Test
     {
-        private const int Count = 10;
         private RopeJoint _rj;
         private bool _useRopeJoint = true;
 
@@ -58,19 +57,20 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                const float y = 15;
-
                 Body prevBody = ground;
                 PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
                 PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
+        
+                const int N = 10;
+                const float y = 15;
 
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < N; ++i)
                 {
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(0.5f + 1.0f * i, y);
 
-                    if (i == Count - 1)
+                    if (i == N - 1)
                     {
                         Fixture fixture = body.CreateFixture(largeShape);
                         fixture.Friction = 0.2f;
@@ -98,8 +98,10 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
+                
+                //FPE: The two following lines are actually not needed as FPE sets the MaxLength to a default value
                 const float extraLength = 0.01f;
-                _rj.MaxLength = Count - 1.0f + extraLength;
+                _rj.MaxLength = N - 1.0f + extraLength;
 
                 World.AddJoint(_rj);
             }
