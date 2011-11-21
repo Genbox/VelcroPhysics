@@ -164,6 +164,16 @@ namespace FarseerPhysics.Common
             return qr;
         }
 
+        public static Vector2 MulT(Transform T, Vector2 v)
+        {
+            float px = v.X - T.p.X;
+            float py = v.Y - T.p.Y;
+            float x = (T.q.c * px + T.q.s * py);
+            float y = (-T.q.s * px + T.q.c * py);
+
+            return new Vector2(x, y);
+        }
+
         /// Transpose multiply two rotations: qT * r
         public static Rot MulT(Rot q, Rot r)
         {

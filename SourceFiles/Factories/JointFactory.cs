@@ -284,5 +284,12 @@ namespace FarseerPhysics.Factories
         }
 
         #endregion
+
+        public static FixedMouseJoint CreateFixedMouseJoint(World world, Body body, Vector2 target)
+        {
+            FixedMouseJoint joint = new FixedMouseJoint(body, target);
+            world.AddJoint(joint);
+            return joint;
+        }
     }
 }
