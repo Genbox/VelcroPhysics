@@ -98,9 +98,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, b3.GetLocalPoint(anchor), anchor);
-            jd.CollideConnected = true;
-            World.AddJoint(jd);
+            //FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, b3.GetLocalPoint(anchor), anchor);
+            //jd.CollideConnected = true;
+            //World.AddJoint(jd);
 
             Body b4;
             {
@@ -115,8 +115,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, b4.GetLocalPoint(anchor), anchor);
-            World.AddJoint(jd2);
+            //FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, b4.GetLocalPoint(anchor), anchor);
+            //World.AddJoint(jd2);
 
             Body b5;
             {
@@ -144,8 +144,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, b5.GetLocalPoint(anchor), anchor);
-            World.AddJoint(jd3);
+            //FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, b5.GetLocalPoint(anchor), anchor);
+            //World.AddJoint(jd3);
 
             Body b6;
             {

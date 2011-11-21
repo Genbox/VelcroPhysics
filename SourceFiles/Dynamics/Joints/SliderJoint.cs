@@ -207,7 +207,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        internal override void SolveVelocityConstraints(ref TimeStep step)
+        internal override void SolveVelocityConstraints(ref SolverData data)
         {
             Body b1 = BodyA;
             Body b2 = BodyB;
@@ -243,7 +243,7 @@ namespace FarseerPhysics.Dynamics.Joints
             b2.AngularVelocityInternal += b2.InvI * MathUtils.Cross(r2, P);
         }
 
-        internal override bool SolvePositionConstraints(ref SolverData solverData)
+        internal override bool SolvePositionConstraints(ref SolverData data)
         {
             if (Frequency > 0.0f)
             {

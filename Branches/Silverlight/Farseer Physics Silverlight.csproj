@@ -304,23 +304,8 @@
     <Compile Include="..\..\sourcefiles\dynamics\joints\FixedAngleJoint.cs">
       <Link>Dynamics\Joints\FixedAngleJoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\sourcefiles\dynamics\joints\FixedDistanceJoint.cs">
-      <Link>Dynamics\Joints\FixedDistanceJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedFrictionJoint.cs">
-      <Link>Dynamics\Joints\FixedFrictionJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedLineJoint.cs">
-      <Link>Dynamics\Joints\FixedLineJoint.cs</Link>
-    </Compile>
     <Compile Include="..\..\sourcefiles\dynamics\joints\FixedMouseJoint.cs">
       <Link>Dynamics\Joints\FixedMouseJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\dynamics\joints\FixedPrismaticJoint.cs">
-      <Link>Dynamics\Joints\FixedPrismaticJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\dynamics\joints\FixedRevoluteJoint.cs">
-      <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
     </Compile>
     <Compile Include="..\..\sourcefiles\dynamics\joints\FrictionJoint.cs">
       <Link>Dynamics\Joints\FrictionJoint.cs</Link>

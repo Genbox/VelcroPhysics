@@ -73,10 +73,10 @@ namespace FarseerPhysics.SamplesFramework
                 new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
             //Attach the first and last fixtures to the world
-            JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
-                                                  _bridgeBodies[0].Position);
-            JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
-                                                  _bridgeBodies[_bridgeBodies.Count - 1].Position);
+            //JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
+            //                                      _bridgeBodies[0].Position);
+            //JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
+            //                                      _bridgeBodies[_bridgeBodies.Count - 1].Position);
 
             PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f),
                                                       new Vector2(0f, 0.5f),

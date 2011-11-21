@@ -72,15 +72,15 @@ namespace FarseerPhysics.TestBed.Tests
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);
 
-                FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
-                                                                  new Vector2(1.0f, 0.0f));
-                pjd.MaxMotorForce = 1000.0f;
-                pjd.MotorEnabled = true;
-                pjd.LowerLimit = -10.0f;
-                pjd.UpperLimit = 10.0f;
-                pjd.LimitEnabled = true;
+                //FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
+                //                                                  new Vector2(1.0f, 0.0f));
+                //pjd.MaxMotorForce = 1000.0f;
+                //pjd.MotorEnabled = true;
+                //pjd.LowerLimit = -10.0f;
+                //pjd.UpperLimit = 10.0f;
+                //pjd.LimitEnabled = true;
 
-                World.AddJoint(pjd);
+                //World.AddJoint(pjd);
 
                 _speed = 3.0f;
             }

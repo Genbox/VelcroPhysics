@@ -113,6 +113,12 @@ namespace FarseerPhysics.Common
             C.ey.Y = A.ey.X * B.ey.X + A.ey.Y * B.ey.Y;
         }
 
+        /// Multiply a matrix times a vector.
+        public static Vector3 Mul(Mat33 A, Vector3 v)
+        {
+            return v.X * A.ex + v.Y * A.ey + v.Z * A.ez;
+        }
+
         // v2 = A.q.Rot(B.q.Rot(v1) + B.p) + A.p
         //    = (A.q * B.q).Rot(v1) + A.q.Rot(B.p) + A.p
         public static Transform Mul(Transform A, Transform B)

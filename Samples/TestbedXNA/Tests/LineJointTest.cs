@@ -52,8 +52,8 @@ namespace FarseerPhysics.TestBed.Tests
                 jd.MotorSpeed = 1.0f;
                 jd.MaxMotorTorque = 1000.0f;
                 jd.MotorEnabled = true;
-                jd.Frequency = 1.0f;
-                jd.DampingRatio = 0.2f;
+                jd.SpringFrequencyHz = 1.0f;
+                jd.SpringDampingRatio = 0.2f;
                 World.AddJoint(jd);
 
                 PolygonShape shape2 = new PolygonShape(1);

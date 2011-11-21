@@ -46,9 +46,24 @@ namespace FarseerPhysics.Dynamics.Joints
     {
         public Vector2 LocalAnchorA;
         public Vector2 LocalAnchorB;
-        private float _angularImpulse;
-        private float _angularMass;
+
+        // Solver shared
         private Vector2 _linearImpulse;
+        private float _angularImpulse;
+
+
+        // Solver temp
+        private int m_indexA;
+        private int m_indexB;
+        private Vector2 m_rA;
+        private Vector2 m_rB;
+        private Vector2 m_localCenterA;
+        private Vector2 m_localCenterB;
+        private float m_invMassA;
+        private float m_invMassB;
+        private float m_invIA;
+        private float m_invIB;
+        private float _angularMass;
         private Mat22 _linearMass;
 
         internal FrictionJoint()
@@ -97,16 +112,28 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            Body bA = BodyA;
-            Body bB = BodyB;
+            m_indexA = BodyA.IslandIndex;
+            m_indexB = BodyB.IslandIndex;
+            m_localCenterA = BodyA.Sweep.LocalCenter;
+            m_localCenterB = BodyB.Sweep.LocalCenter;
+            m_invMassA = BodyA.InvMass;
+            m_invMassB = BodyB.InvMass;
+            m_invIA = BodyA.InvI;
+            m_invIB = BodyB.InvI;
 
-            Transform xfA, xfB;
-            bA.GetTransform(out xfA);
-            bB.GetTransform(out xfB);
+            float aA = data.positions[m_indexA].a;
+            Vector2 vA = data.velocities[m_indexA].v;
+            float wA = data.velocities[m_indexA].w;
+
+            float aB = data.positions[m_indexB].a;
+            Vector2 vB = data.velocities[m_indexB].v;
+            float wB = data.velocities[m_indexB].w;
+
+            Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective mass matrix.
-            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - bB.LocalCenter);
+            m_rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
+            m_rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -117,32 +144,14 @@ namespace FarseerPhysics.Dynamics.Joints
             //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
             //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
 
-            float mA = bA.InvMass, mB = bB.InvMass;
-            float iA = bA.InvI, iB = bB.InvI;
+            float mA = m_invMassA, mB = m_invMassB;
+            float iA = m_invIA, iB = m_invIB;
 
-            Mat22 K1 = new Mat22();
-            K1.ex.X = mA + mB;
-            K1.ey.X = 0.0f;
-            K1.ex.Y = 0.0f;
-            K1.ey.Y = mA + mB;
-
-            Mat22 K2 = new Mat22();
-            K2.ex.X = iA * rA.Y * rA.Y;
-            K2.ey.X = -iA * rA.X * rA.Y;
-            K2.ex.Y = -iA * rA.X * rA.Y;
-            K2.ey.Y = iA * rA.X * rA.X;
-
-            Mat22 K3 = new Mat22();
-            K3.ex.X = iB * rB.Y * rB.Y;
-            K3.ey.X = -iB * rB.X * rB.Y;
-            K3.ex.Y = -iB * rB.X * rB.Y;
-            K3.ey.Y = iB * rB.X * rB.X;
-
-            Mat22 K12;
-            Mat22.Add(ref K1, ref K2, out K12);
-
-            Mat22 K;
-            Mat22.Add(ref K12, ref K3, out K);
+            Mat22 K = new Mat22();
+            K.ex.X = mA + mB + iA * m_rA.Y * m_rA.Y + iB * m_rB.Y * m_rB.Y;
+            K.ex.Y = -iA * m_rA.X * m_rA.Y - iB * m_rB.X * m_rB.Y;
+            K.ey.X = K.ex.Y;
+            K.ey.Y = mA + mB + iA * m_rA.X * m_rA.X + iB * m_rB.X * m_rB.X;
 
             _linearMass = K.Inverse;
 
@@ -160,38 +169,35 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
-                bA.LinearVelocityInternal -= mA * P;
-                bA.AngularVelocityInternal -= iA * (MathUtils.Cross(rA, P) + _angularImpulse);
-
-                bB.LinearVelocityInternal += mB * P;
-                bB.AngularVelocityInternal += iB * (MathUtils.Cross(rB, P) + _angularImpulse);
+                vA -= mA * P;
+                wA -= iA * (MathUtils.Cross(m_rA, P) + _angularImpulse);
+                vB += mB * P;
+                wB += iB * (MathUtils.Cross(m_rB, P) + _angularImpulse);
             }
             else
             {
                 _linearImpulse = Vector2.Zero;
                 _angularImpulse = 0.0f;
             }
+
+            data.velocities[m_indexA].v = vA;
+            data.velocities[m_indexA].w = wA;
+            data.velocities[m_indexB].v = vB;
+            data.velocities[m_indexB].w = wB;
+
         }
 
-        internal override void SolveVelocityConstraints(ref TimeStep step)
+        internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Body bA = BodyA;
-            Body bB = BodyB;
+            Vector2 vA = data.velocities[m_indexA].v;
+            float wA = data.velocities[m_indexA].w;
+            Vector2 vB = data.velocities[m_indexB].v;
+            float wB = data.velocities[m_indexB].w;
 
-            Vector2 vA = bA.LinearVelocityInternal;
-            float wA = bA.AngularVelocityInternal;
-            Vector2 vB = bB.LinearVelocityInternal;
-            float wB = bB.AngularVelocityInternal;
+            float mA = m_invMassA, mB = m_invMassB;
+            float iA = m_invIA, iB = m_invIB;
 
-            float mA = bA.InvMass, mB = bB.InvMass;
-            float iA = bA.InvI, iB = bB.InvI;
-
-            Transform xfA, xfB;
-            bA.GetTransform(out xfA);
-            bB.GetTransform(out xfB);
-
-            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - bA.LocalCenter);
-            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - bB.LocalCenter);
+            float h = data.step.dt;
 
             // Solve angular friction
             {
@@ -199,7 +205,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
-                float maxImpulse = step.dt * MaxTorque;
+                float maxImpulse = h * MaxTorque;
                 _angularImpulse = MathUtils.Clamp(_angularImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _angularImpulse - oldImpulse;
 
@@ -209,13 +215,13 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Solve linear friction
             {
-                Vector2 Cdot = vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA);
+                Vector2 Cdot = vB + MathUtils.Cross(wB, m_rB) - vA - MathUtils.Cross(wA, m_rA);
 
                 Vector2 impulse = -MathUtils.Mul(ref _linearMass, Cdot);
                 Vector2 oldImpulse = _linearImpulse;
                 _linearImpulse += impulse;
 
-                float maxImpulse = step.dt * MaxForce;
+                float maxImpulse = h * MaxForce;
 
                 if (_linearImpulse.LengthSquared() > maxImpulse * maxImpulse)
                 {
@@ -226,19 +232,20 @@ namespace FarseerPhysics.Dynamics.Joints
                 impulse = _linearImpulse - oldImpulse;
 
                 vA -= mA * impulse;
-                wA -= iA * MathUtils.Cross(rA, impulse);
+                wA -= iA * MathUtils.Cross(m_rA, impulse);
 
                 vB += mB * impulse;
-                wB += iB * MathUtils.Cross(rB, impulse);
+                wB += iB * MathUtils.Cross(m_rB, impulse);
             }
 
-            bA.LinearVelocityInternal = vA;
-            bA.AngularVelocityInternal = wA;
-            bB.LinearVelocityInternal = vB;
-            bB.AngularVelocityInternal = wB;
+            data.velocities[m_indexA].v = vA;
+            data.velocities[m_indexA].w = wA;
+            data.velocities[m_indexB].v = vB;
+            data.velocities[m_indexB].w = wB;
+
         }
 
-        internal override bool SolvePositionConstraints(ref SolverData solverData)
+        internal override bool SolvePositionConstraints(ref SolverData data)
         {
             return true;
         }

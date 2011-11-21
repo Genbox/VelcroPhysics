@@ -195,20 +195,20 @@ namespace FarseerPhysics.Common
                     break;
                 case JointType.Gear:
                     throw new Exception("Gear joint not supported by serialization");
-                case JointType.Line:
-                    {
-                        WheelJoint ljd = (WheelJoint)joint;
+                //case JointType.Wheel:
+                //    {
+                //        WheelJoint ljd = (WheelJoint)joint;
 
-                        WriteElement("EnableMotor", ljd.MotorEnabled);
-                        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
-                        WriteElement("MotorSpeed", ljd.MotorSpeed);
-                        WriteElement("DampingRatio", ljd.DampingRatio);
-                        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
-                        WriteElement("FrequencyHz", ljd.Frequency);
-                        WriteElement("LocalXAxis", ljd.LocalXAxis);
-                    }
-                    break;
+                //        WriteElement("EnableMotor", ljd.MotorEnabled);
+                //        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
+                //        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
+                //        WriteElement("MotorSpeed", ljd.MotorSpeed);
+                //        WriteElement("DampingRatio", ljd.DampingRatio);
+                //        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
+                //        WriteElement("FrequencyHz", ljd.Frequency);
+                //        WriteElement("LocalXAxis", ljd.LocalXAxis);
+                //    }
+                //    break;
                 case JointType.Prismatic:
                     {
                         PrismaticJoint pjd = (PrismaticJoint)joint;
@@ -226,21 +226,21 @@ namespace FarseerPhysics.Common
                         WriteElement("MotorSpeed", pjd.MotorSpeed);
                     }
                     break;
-                case JointType.Pulley:
-                    {
-                        PulleyJoint pjd = (PulleyJoint)joint;
+                //case JointType.Pulley:
+                //    {
+                //        PulleyJoint pjd = (PulleyJoint)joint;
 
-                        WriteElement("GroundAnchorA", pjd.GroundAnchorA);
-                        WriteElement("GroundAnchorB", pjd.GroundAnchorB);
-                        WriteElement("LengthA", pjd.LengthA);
-                        WriteElement("LengthB", pjd.LengthB);
-                        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
-                        WriteElement("MaxLengthA", pjd.MaxLengthA);
-                        WriteElement("MaxLengthB", pjd.MaxLengthB);
-                        WriteElement("Ratio", pjd.Ratio);
-                    }
-                    break;
+                //        WriteElement("GroundAnchorA", pjd.GroundAnchorA);
+                //        WriteElement("GroundAnchorB", pjd.GroundAnchorB);
+                //        WriteElement("LengthA", pjd.LengthA);
+                //        WriteElement("LengthB", pjd.LengthB);
+                //        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
+                //        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
+                //        WriteElement("MaxLengthA", pjd.MaxLengthA);
+                //        WriteElement("MaxLengthB", pjd.MaxLengthB);
+                //        WriteElement("Ratio", pjd.Ratio);
+                //    }
+                //    break;
                 case JointType.Revolute:
                     {
                         RevoluteJoint rjd = (RevoluteJoint)joint;
@@ -785,7 +785,7 @@ namespace FarseerPhysics.Common
                             case JointType.Friction:
                                 joint = new FrictionJoint();
                                 break;
-                            case JointType.Line:
+                            case JointType.Wheel:
                                 joint = new WheelJoint();
                                 break;
                             case JointType.Prismatic:
@@ -868,37 +868,37 @@ namespace FarseerPhysics.Common
                                         }
                                     }
                                     break;
-                                case JointType.Line:
-                                    {
-                                        switch (sn.Name.ToLower())
-                                        {
-                                            case "enablemotor":
-                                                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                                break;
-                                            case "localanchora":
-                                                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
-                                                break;
-                                            case "localanchorb":
-                                                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
-                                                break;
-                                            case "motorspeed":
-                                                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                                break;
-                                            case "dampingratio":
-                                                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                                break;
-                                            case "maxmotortorque":
-                                                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
-                                                break;
-                                            case "frequencyhz":
-                                                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
-                                                break;
-                                            case "localxaxis":
-                                                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
-                                                break;
-                                        }
-                                    }
-                                    break;
+                                //case JointType.Wheel:
+                                //    {
+                                //        switch (sn.Name.ToLower())
+                                //        {
+                                //            case "enablemotor":
+                                //                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                //                break;
+                                //            case "localanchora":
+                                //                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
+                                //                break;
+                                //            case "localanchorb":
+                                //                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
+                                //                break;
+                                //            case "motorspeed":
+                                //                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                //                break;
+                                //            case "dampingratio":
+                                //                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                //                break;
+                                //            case "maxmotortorque":
+                                //                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                //                break;
+                                //            case "frequencyhz":
+                                //                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
+                                //                break;
+                                //            case "localxaxis":
+                                //                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
+                                //                break;
+                                //        }
+                                //    }
+                                //    break;
                                 case JointType.Prismatic:
                                     {
                                         switch (sn.Name.ToLower())
@@ -936,40 +936,40 @@ namespace FarseerPhysics.Common
                                         }
                                     }
                                     break;
-                                case JointType.Pulley:
-                                    {
-                                        switch (sn.Name.ToLower())
-                                        {
-                                            case "groundanchora":
-                                                ((PulleyJoint)joint).GroundAnchorA = ReadVector(sn);
-                                                break;
-                                            case "groundanchorb":
-                                                ((PulleyJoint)joint).GroundAnchorB = ReadVector(sn);
-                                                break;
-                                            case "lengtha":
-                                                ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
-                                                break;
-                                            case "lengthb":
-                                                ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
-                                                break;
-                                            case "localanchora":
-                                                ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
-                                                break;
-                                            case "localanchorb":
-                                                ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
-                                                break;
-                                            case "maxlengtha":
-                                                ((PulleyJoint)joint).MaxLengthA = float.Parse(sn.Value);
-                                                break;
-                                            case "maxlengthb":
-                                                ((PulleyJoint)joint).MaxLengthB = float.Parse(sn.Value);
-                                                break;
-                                            case "ratio":
-                                                ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
-                                                break;
-                                        }
-                                    }
-                                    break;
+                                //case JointType.Pulley:
+                                //    {
+                                //        switch (sn.Name.ToLower())
+                                //        {
+                                //            case "groundanchora":
+                                //                ((PulleyJoint)joint).GroundAnchorA = ReadVector(sn);
+                                //                break;
+                                //            case "groundanchorb":
+                                //                ((PulleyJoint)joint).GroundAnchorB = ReadVector(sn);
+                                //                break;
+                                //            case "lengtha":
+                                //                ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
+                                //                break;
+                                //            case "lengthb":
+                                //                ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
+                                //                break;
+                                //            case "localanchora":
+                                //                ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
+                                //                break;
+                                //            case "localanchorb":
+                                //                ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
+                                //                break;
+                                //            case "maxlengtha":
+                                //                ((PulleyJoint)joint).MaxLengthA = float.Parse(sn.Value);
+                                //                break;
+                                //            case "maxlengthb":
+                                //                ((PulleyJoint)joint).MaxLengthB = float.Parse(sn.Value);
+                                //                break;
+                                //            case "ratio":
+                                //                ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
+                                //                break;
+                                //        }
+                                //    }
+                                //    break;
                                 case JointType.Revolute:
                                     {
                                         switch (sn.Name.ToLower())

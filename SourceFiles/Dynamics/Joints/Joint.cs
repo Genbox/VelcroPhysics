@@ -33,7 +33,7 @@ namespace FarseerPhysics.Dynamics.Joints
         Distance,
         Pulley,
         Gear,
-        Line,
+        Wheel,
         Weld,
         Friction,
         Slider,
@@ -60,28 +60,13 @@ namespace FarseerPhysics.Dynamics.Joints
     {
         public float AngularA;
         public float AngularB;
-        public Vector2 LinearA;
-        public Vector2 LinearB;
+        public Vector2 Linear;
 
         public void SetZero()
         {
-            LinearA = Vector2.Zero;
             AngularA = 0.0f;
-            LinearB = Vector2.Zero;
+            Linear = Vector2.Zero;
             AngularB = 0.0f;
-        }
-
-        public void Set(Vector2 x1, float a1, Vector2 x2, float a2)
-        {
-            LinearA = x1;
-            AngularA = a1;
-            LinearB = x2;
-            AngularB = a2;
-        }
-
-        public float Compute(Vector2 x1, float a1, Vector2 x2, float a2)
-        {
-            return Vector2.Dot(LinearA, x1) + AngularA * a1 + Vector2.Dot(LinearB, x2) + AngularB * a2;
         }
     }
 
@@ -126,12 +111,8 @@ namespace FarseerPhysics.Dynamics.Joints
         internal JointEdge EdgeA = new JointEdge();
         internal JointEdge EdgeB = new JointEdge();
         public bool Enabled = true;
-        protected float InvIA;
-        protected float InvIB;
-        protected float InvMassA;
-        protected float InvMassB;
         internal bool IslandFlag;
-        protected Vector2 LocalCenterA, LocalCenterB;
+        protected int m_index;
 
         protected Joint()
         {
@@ -178,13 +159,13 @@ namespace FarseerPhysics.Dynamics.Joints
         public Body BodyB { get; set; }
 
         /// <summary>
-        /// Get the anchor point on body1 in world coordinates.
+        /// Get the anchor point on bodyA in world coordinates.
         /// </summary>
         /// <value></value>
         public abstract Vector2 WorldAnchorA { get; }
 
         /// <summary>
-        /// Get the anchor point on body2 in world coordinates.
+        /// Get the anchor point on bodyB in world coordinates.
         /// </summary>
         /// <value></value>
         public abstract Vector2 WorldAnchorB { get; set; }
@@ -215,14 +196,14 @@ namespace FarseerPhysics.Dynamics.Joints
         public event Action<Joint, float> Broke;
 
         /// <summary>
-        /// Get the reaction force on body2 at the joint anchor in Newtons.
+        /// Get the reaction force on bodyB at the joint anchor in Newtons.
         /// </summary>
         /// <param name="inv_dt">The inv_dt.</param>
         /// <returns></returns>
         public abstract Vector2 GetReactionForce(float inv_dt);
 
         /// <summary>
-        /// Get the reaction torque on body2 in N*m.
+        /// Get the reaction torque on bodyB in N*m.
         /// </summary>
         /// <param name="inv_dt">The inv_dt.</param>
         /// <returns></returns>
@@ -268,13 +249,13 @@ namespace FarseerPhysics.Dynamics.Joints
                 Broke(this, jointError);
         }
 
-        internal abstract void SolveVelocityConstraints(ref TimeStep step);
+        internal abstract void SolveVelocityConstraints(ref SolverData data);
 
         /// <summary>
         /// Solves the position constraints.
         /// </summary>
-        /// <param name="solverData"></param>
+        /// <param name="data"></param>
         /// <returns>returns true if the position errors are within tolerance.</returns>
-        internal abstract bool SolvePositionConstraints(ref SolverData solverData);
+        internal abstract bool SolvePositionConstraints(ref SolverData data);
     }
 }
