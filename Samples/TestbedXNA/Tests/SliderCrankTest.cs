@@ -36,7 +36,7 @@ namespace FarseerPhysics.TestBed.Tests
     public class SliderCrankTest : Test
     {
         private RevoluteJoint _joint1;
-        private FixedPrismaticJoint _joint2;
+        //private FixedPrismaticJoint _joint2;
 
         private SliderCrankTest()
         {
@@ -109,11 +109,11 @@ namespace FarseerPhysics.TestBed.Tests
                                                            prevBody.GetLocalPoint(body.GetWorldPoint(anchor)), anchor);
                     World.AddJoint(rjd2);
 
-                    _joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
-                    _joint2.MaxMotorForce = 1000.0f;
-                    _joint2.MotorEnabled = true;
+                    //_joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    //_joint2.MaxMotorForce = 1000.0f;
+                    //_joint2.MotorEnabled = true;
 
-                    World.AddJoint(_joint2);
+                    //World.AddJoint(_joint2);
                 }
 
                 // Create a payload
@@ -134,8 +134,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.F))
             {
-                _joint2.MotorEnabled = !_joint2.MotorEnabled;
-                _joint2.BodyB.Awake = true;
+                //_joint2.MotorEnabled = !_joint2.MotorEnabled;
+                //_joint2.BodyB.Awake = true;
             }
             if (keyboardManager.IsNewKeyPress(Keys.M))
             {

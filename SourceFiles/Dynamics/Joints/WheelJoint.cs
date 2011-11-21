@@ -27,28 +27,47 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
+    /// <summary>
+    /// A wheel joint. This joint provides two degrees of freedom: translation
+    /// along an axis fixed in bodyA and rotation in the plane. You can use a
+    /// joint limit to restrict the range of motion and a joint motor to drive
+    /// the rotation or to model rotational friction.
+    /// This joint is designed for vehicle suspensions.
+    /// </summary>
     public class WheelJoint : Joint
     {
-        private Vector2 _ax, _ay;
-        private float _bias;
-        private bool _enableMotor;
-        private float _gamma;
-        private float _impulse;
-        private Vector2 _localXAxis;
-        private Vector2 _localYAxisA;
-        private float _mass;
-        private float _maxMotorTorque;
-        private float _motorImpulse;
-        private float _motorMass;
-        private float _motorSpeed;
+        // Solver shared
+        private Vector2 m_localXAxisA;
+        private Vector2 m_localYAxisA;
 
-        private float _sAx;
-        private float _sAy;
-        private float _sBx;
-        private float _sBy;
+        private float m_impulse;
+        private float m_motorImpulse;
+        private float m_springImpulse;
 
-        private float _springImpulse;
-        private float _springMass;
+        private float m_maxMotorTorque;
+        private float m_motorSpeed;
+        private bool m_enableMotor;
+
+        // Solver temp
+        private int m_indexA;
+        private int m_indexB;
+        private Vector2 m_localCenterA;
+        private Vector2 m_localCenterB;
+        private float m_invMassA;
+        private float m_invMassB;
+        private float m_invIA;
+        private float m_invIB;
+
+        private Vector2 m_ax, m_ay;
+        private float m_sAx, m_sBx;
+        private float m_sAy, m_sBy;
+
+        private float m_mass;
+        private float m_motorMass;
+        private float m_springMass;
+
+        private float m_bias;
+        private float m_gamma;
 
         // Linear constraint (point-to-line)
         // d = pB - pA = xB + rB - xA - rA
@@ -68,17 +87,17 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal WheelJoint()
         {
-            JointType = JointType.Line;
+            JointType = JointType.Wheel;
         }
 
         public WheelJoint(Body bA, Body bB, Vector2 anchor, Vector2 axis)
             : base(bA, bB)
         {
-            JointType = JointType.Line;
-
+            JointType = JointType.Wheel;
             LocalAnchorA = bA.GetLocalPoint(anchor);
             LocalAnchorB = bB.GetLocalPoint(anchor);
-            LocalXAxis = bA.GetLocalVector(axis);
+            m_localXAxisA = bA.GetLocalVector(axis);
+            m_localYAxisA = MathUtils.Cross(1.0f, m_localXAxisA);
         }
 
         public Vector2 LocalAnchorA { get; set; }
@@ -96,312 +115,268 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public float JointTranslation
-        {
-            get
-            {
-                Body bA = BodyA;
-                Body bB = BodyB;
-
-                Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
-                Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
-                Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(LocalXAxis);
-
-                float translation = Vector2.Dot(d, axis);
-                return translation;
-            }
-        }
-
-        public float JointSpeed
-        {
-            get
-            {
-                float wA = BodyA.AngularVelocityInternal;
-                float wB = BodyB.AngularVelocityInternal;
-                return wB - wA;
-            }
-        }
-
-        public bool MotorEnabled
-        {
-            get { return _enableMotor; }
-            set
-            {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-                _enableMotor = value;
-            }
-        }
-
+        /// The desired motor speed in radians per second.
         public float MotorSpeed
         {
+            get { return m_motorSpeed; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-                _motorSpeed = value;
+                WakeBodies();
+                m_motorSpeed = value;
             }
-            get { return _motorSpeed; }
         }
 
+        /// The maximum motor torque, usually in N-m.
         public float MaxMotorTorque
         {
+            get { return m_maxMotorTorque; }
             set
             {
-                BodyA.Awake = true;
-                BodyB.Awake = true;
-                _maxMotorTorque = value;
-            }
-            get { return _maxMotorTorque; }
-        }
-
-        public float Frequency { get; set; }
-
-        public float DampingRatio { get; set; }
-
-        public Vector2 LocalXAxis
-        {
-            get { return _localXAxis; }
-            set
-            {
-                _localXAxis = value;
-                _localYAxisA = MathUtils.Cross(1.0f, _localXAxis);
+                WakeBodies();
+                m_maxMotorTorque = value;
             }
         }
+
+        /// Suspension frequency, zero indicates no suspension
+        public float SpringFrequencyHz { get; set; }
+
+        /// Suspension damping ratio, one indicates critical damping
+        public float SpringDampingRatio { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            return invDt * (_impulse * _ay + _springImpulse * _ax);
+            return invDt * (m_impulse * m_ay + m_springImpulse * m_ax);
         }
 
         public override float GetReactionTorque(float invDt)
         {
-            return invDt * _motorImpulse;
+            return invDt * m_motorImpulse;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            Body bA = BodyA;
-            Body bB = BodyB;
+            m_indexA = BodyA.IslandIndex;
+            m_indexB = BodyB.IslandIndex;
+            m_localCenterA = BodyA.Sweep.LocalCenter;
+            m_localCenterB = BodyB.Sweep.LocalCenter;
+            m_invMassA = BodyA.InvMass;
+            m_invMassB = BodyB.InvMass;
+            m_invIA = BodyA.InvI;
+            m_invIB = BodyB.InvI;
 
-            LocalCenterA = bA.LocalCenter;
-            LocalCenterB = bB.LocalCenter;
+            float mA = m_invMassA, mB = m_invMassB;
+            float iA = m_invIA, iB = m_invIB;
 
-            Transform xfA;
-            bA.GetTransform(out xfA);
-            Transform xfB;
-            bB.GetTransform(out xfB);
+            Vector2 cA = data.positions[m_indexA].c;
+            float aA = data.positions[m_indexA].a;
+            Vector2 vA = data.velocities[m_indexA].v;
+            float wA = data.velocities[m_indexA].w;
+
+            Vector2 cB = data.positions[m_indexB].c;
+            float aB = data.positions[m_indexB].a;
+            Vector2 vB = data.velocities[m_indexB].v;
+            float wB = data.velocities[m_indexB].w;
+
+            Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective masses.
-            Vector2 rA = MathUtils.Mul(ref xfA.q, LocalAnchorA - LocalCenterA);
-            Vector2 rB = MathUtils.Mul(ref xfB.q, LocalAnchorB - LocalCenterB);
-            Vector2 d = bB.Sweep.C + rB - bA.Sweep.C - rA;
-
-            InvMassA = bA.InvMass;
-            InvIA = bA.InvI;
-            InvMassB = bB.InvMass;
-            InvIB = bB.InvI;
+            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
+            Vector2 d1 = cB + rB - cA - rA;
 
             // Point to line constraint
             {
-                _ay = MathUtils.Mul(ref xfA.q, _localYAxisA);
-                _sAy = MathUtils.Cross(d + rA, _ay);
-                _sBy = MathUtils.Cross(rB, _ay);
+                m_ay = MathUtils.Mul(qA, m_localYAxisA);
+                m_sAy = MathUtils.Cross(d1 + rA, m_ay);
+                m_sBy = MathUtils.Cross(rB, m_ay);
 
-                _mass = InvMassA + InvMassB + InvIA * _sAy * _sAy + InvIB * _sBy * _sBy;
+                m_mass = mA + mB + iA * m_sAy * m_sAy + iB * m_sBy * m_sBy;
 
-                if (_mass > 0.0f)
+                if (m_mass > 0.0f)
                 {
-                    _mass = 1.0f / _mass;
+                    m_mass = 1.0f / m_mass;
                 }
             }
 
             // Spring constraint
-            _springMass = 0.0f;
-            if (Frequency > 0.0f)
+            m_springMass = 0.0f;
+            m_bias = 0.0f;
+            m_gamma = 0.0f;
+            if (SpringFrequencyHz > 0.0f)
             {
-                _ax = MathUtils.Mul(ref xfA.q, LocalXAxis);
-                _sAx = MathUtils.Cross(d + rA, _ax);
-                _sBx = MathUtils.Cross(rB, _ax);
+                m_ax = MathUtils.Mul(qA, m_localXAxisA);
+                m_sAx = MathUtils.Cross(d1 + rA, m_ax);
+                m_sBx = MathUtils.Cross(rB, m_ax);
 
-                float invMass = InvMassA + InvMassB + InvIA * _sAx * _sAx + InvIB * _sBx * _sBx;
+                float invMass = mA + mB + iA * m_sAx * m_sAx + iB * m_sBx * m_sBx;
 
                 if (invMass > 0.0f)
                 {
-                    _springMass = 1.0f / invMass;
+                    m_springMass = 1.0f / invMass;
 
-                    float C = Vector2.Dot(d, _ax);
+                    float C = Vector2.Dot(d1, m_ax);
 
                     // Frequency
-                    float omega = 2.0f * Settings.Pi * Frequency;
+                    float omega = 2.0f * Settings.Pi * SpringFrequencyHz;
 
                     // Damping coefficient
-                    float da = 2.0f * _springMass * DampingRatio * omega;
+                    float d = 2.0f * m_springMass * SpringDampingRatio * omega;
 
                     // Spring stiffness
-                    float k = _springMass * omega * omega;
+                    float k = m_springMass * omega * omega;
 
                     // magic formulas
-                    _gamma = data.step.dt * (da + data.step.dt * k);
-                    if (_gamma > 0.0f)
+                    float h = data.step.dt;
+                    m_gamma = h * (d + h * k);
+                    if (m_gamma > 0.0f)
                     {
-                        _gamma = 1.0f / _gamma;
+                        m_gamma = 1.0f / m_gamma;
                     }
 
-                    _bias = C * data.step.dt * k * _gamma;
+                    m_bias = C * h * k * m_gamma;
 
-                    _springMass = invMass + _gamma;
-                    if (_springMass > 0.0f)
+                    m_springMass = invMass + m_gamma;
+                    if (m_springMass > 0.0f)
                     {
-                        _springMass = 1.0f / _springMass;
+                        m_springMass = 1.0f / m_springMass;
                     }
                 }
             }
             else
             {
-                _springImpulse = 0.0f;
-                _springMass = 0.0f;
+                m_springImpulse = 0.0f;
             }
 
             // Rotational motor
-            if (_enableMotor)
+            if (m_enableMotor)
             {
-                _motorMass = InvIA + InvIB;
-                if (_motorMass > 0.0f)
+                m_motorMass = iA + iB;
+                if (m_motorMass > 0.0f)
                 {
-                    _motorMass = 1.0f / _motorMass;
+                    m_motorMass = 1.0f / m_motorMass;
                 }
             }
             else
             {
-                _motorMass = 0.0f;
-                _motorImpulse = 0.0f;
+                m_motorMass = 0.0f;
+                m_motorImpulse = 0.0f;
             }
 
             if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
-                _impulse *= data.step.dtRatio;
-                _springImpulse *= data.step.dtRatio;
-                _motorImpulse *= data.step.dtRatio;
+                m_impulse *= data.step.dtRatio;
+                m_springImpulse *= data.step.dtRatio;
+                m_motorImpulse *= data.step.dtRatio;
 
-                Vector2 P = _impulse * _ay + _springImpulse * _ax;
-                float LA = _impulse * _sAy + _springImpulse * _sAx + _motorImpulse;
-                float LB = _impulse * _sBy + _springImpulse * _sBx + _motorImpulse;
+                Vector2 P = m_impulse * m_ay + m_springImpulse * m_ax;
+                float LA = m_impulse * m_sAy + m_springImpulse * m_sAx + m_motorImpulse;
+                float LB = m_impulse * m_sBy + m_springImpulse * m_sBx + m_motorImpulse;
 
-                bA.LinearVelocityInternal -= InvMassA * P;
-                bA.AngularVelocityInternal -= InvIA * LA;
+                vA -= m_invMassA * P;
+                wA -= m_invIA * LA;
 
-                bB.LinearVelocityInternal += InvMassB * P;
-                bB.AngularVelocityInternal += InvIB * LB;
+                vB += m_invMassB * P;
+                wB += m_invIB * LB;
             }
             else
             {
-                _impulse = 0.0f;
-                _springImpulse = 0.0f;
-                _motorImpulse = 0.0f;
+                m_impulse = 0.0f;
+                m_springImpulse = 0.0f;
+                m_motorImpulse = 0.0f;
             }
+
+            data.velocities[m_indexA].v = vA;
+            data.velocities[m_indexA].w = wA;
+            data.velocities[m_indexB].v = vB;
+            data.velocities[m_indexB].w = wB;
         }
 
-        internal override void SolveVelocityConstraints(ref TimeStep step)
+        internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Body bA = BodyA;
-            Body bB = BodyB;
+            float mA = m_invMassA, mB = m_invMassB;
+            float iA = m_invIA, iB = m_invIB;
 
-            Vector2 vA = bA.LinearVelocity;
-            float wA = bA.AngularVelocityInternal;
-            Vector2 vB = bB.LinearVelocityInternal;
-            float wB = bB.AngularVelocityInternal;
+            Vector2 vA = data.velocities[m_indexA].v;
+            float wA = data.velocities[m_indexA].w;
+            Vector2 vB = data.velocities[m_indexB].v;
+            float wB = data.velocities[m_indexB].w;
 
             // Solve spring constraint
             {
-                float Cdot = Vector2.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
-                float impulse = -_springMass * (Cdot + _bias + _gamma * _springImpulse);
-                _springImpulse += impulse;
+                float Cdot = Vector2.Dot(m_ax, vB - vA) + m_sBx * wB - m_sAx * wA;
+                float impulse = -m_springMass * (Cdot + m_bias + m_gamma * m_springImpulse);
+                m_springImpulse += impulse;
 
-                Vector2 P = impulse * _ax;
-                float LA = impulse * _sAx;
-                float LB = impulse * _sBx;
+                Vector2 P = impulse * m_ax;
+                float LA = impulse * m_sAx;
+                float LB = impulse * m_sBx;
 
-                vA -= InvMassA * P;
-                wA -= InvIA * LA;
+                vA -= mA * P;
+                wA -= iA * LA;
 
-                vB += InvMassB * P;
-                wB += InvIB * LB;
+                vB += mB * P;
+                wB += iB * LB;
             }
 
             // Solve rotational motor constraint
             {
-                float Cdot = wB - wA - _motorSpeed;
-                float impulse = -_motorMass * Cdot;
+                float Cdot = wB - wA - m_motorSpeed;
+                float impulse = -m_motorMass * Cdot;
 
-                float oldImpulse = _motorImpulse;
-                float maxImpulse = step.dt * _maxMotorTorque;
-                _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
-                impulse = _motorImpulse - oldImpulse;
+                float oldImpulse = m_motorImpulse;
+                float maxImpulse = data.step.dt * m_maxMotorTorque;
+                m_motorImpulse = MathUtils.Clamp(m_motorImpulse + impulse, -maxImpulse, maxImpulse);
+                impulse = m_motorImpulse - oldImpulse;
 
-                wA -= InvIA * impulse;
-                wB += InvIB * impulse;
+                wA -= iA * impulse;
+                wB += iB * impulse;
             }
 
             // Solve point to line constraint
             {
-                float Cdot = Vector2.Dot(_ay, vB - vA) + _sBy * wB - _sAy * wA;
-                float impulse = _mass * (-Cdot);
-                _impulse += impulse;
+                float Cdot = Vector2.Dot(m_ay, vB - vA) + m_sBy * wB - m_sAy * wA;
+                float impulse = -m_mass * Cdot;
+                m_impulse += impulse;
 
-                Vector2 P = impulse * _ay;
-                float LA = impulse * _sAy;
-                float LB = impulse * _sBy;
+                Vector2 P = impulse * m_ay;
+                float LA = impulse * m_sAy;
+                float LB = impulse * m_sBy;
 
-                vA -= InvMassA * P;
-                wA -= InvIA * LA;
+                vA -= mA * P;
+                wA -= iA * LA;
 
-                vB += InvMassB * P;
-                wB += InvIB * LB;
+                vB += mB * P;
+                wB += iB * LB;
             }
 
-            bA.LinearVelocityInternal = vA;
-            bA.AngularVelocityInternal = wA;
-            bB.LinearVelocityInternal = vB;
-            bB.AngularVelocityInternal = wB;
+            data.velocities[m_indexA].v = vA;
+            data.velocities[m_indexA].w = wA;
+            data.velocities[m_indexB].v = vB;
+            data.velocities[m_indexB].w = wB;
         }
 
-        internal override bool SolvePositionConstraints(ref SolverData solverData)
+        internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            Body bA = BodyA;
-            Body bB = BodyB;
+            Vector2 cA = data.positions[m_indexA].c;
+            float aA = data.positions[m_indexA].a;
+            Vector2 cB = data.positions[m_indexB].c;
+            float aB = data.positions[m_indexB].a;
 
-            Vector2 xA = bA.Sweep.C;
-            float angleA = bA.Sweep.A;
+            Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            Vector2 xB = bB.Sweep.C;
-            float angleB = bB.Sweep.A;
+            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
+            Vector2 d = (cB - cA) + rB - rA;
 
-            Mat22 RA = new Mat22();
-            float c = (float)Math.Cos(angleA), s = (float)Math.Sin(angleA);
-            RA.ex.X = c; RA.ey.X = -s;
-            RA.ey.Y = s; RA.ey.Y = c;
-
-            Mat22 RB = new Mat22();
-            c = (float)Math.Cos(angleB);
-            s = (float)Math.Sin(angleB);
-            RB.ex.X = c; RB.ey.X = -s;
-            RB.ey.Y = s; RB.ey.Y = c;
-
-            Vector2 rA = MathUtils.Mul(ref RA, LocalAnchorA - LocalCenterA);
-            Vector2 rB = MathUtils.Mul(ref RB, LocalAnchorB - LocalCenterB);
-            Vector2 d = xB + rB - xA - rA;
-
-            Vector2 ay = MathUtils.Mul(ref RA, _localYAxisA);
+            Vector2 ay = MathUtils.Mul(qA, m_localYAxisA);
 
             float sAy = MathUtils.Cross(d + rA, ay);
             float sBy = MathUtils.Cross(rB, ay);
 
             float C = Vector2.Dot(d, ay);
 
-            float k = InvMassA + InvMassB + InvIA * _sAy * _sAy + InvIB * _sBy * _sBy;
+            float k = m_invMassA + m_invMassB + m_invIA * m_sAy * m_sAy + m_invIB * m_sBy * m_sBy;
 
             float impulse;
             if (k != 0.0f)
@@ -417,25 +392,60 @@ namespace FarseerPhysics.Dynamics.Joints
             float LA = impulse * sAy;
             float LB = impulse * sBy;
 
-            xA -= InvMassA * P;
-            angleA -= InvIA * LA;
-            xB += InvMassB * P;
-            angleB += InvIB * LB;
+            cA -= m_invMassA * P;
+            aA -= m_invIA * LA;
+            cB += m_invMassB * P;
+            aB += m_invIB * LB;
 
-            // TODO_ERIN remove need for this.
-            bA.Sweep.C = xA;
-            bA.Sweep.A = angleA;
-            bB.Sweep.C = xB;
-            bB.Sweep.A = angleB;
-            bA.SynchronizeTransform();
-            bB.SynchronizeTransform();
+            data.positions[m_indexA].c = cA;
+            data.positions[m_indexA].a = aA;
+            data.positions[m_indexB].c = cB;
+            data.positions[m_indexB].a = aB;
 
             return Math.Abs(C) <= Settings.LinearSlop;
         }
 
-        public float GetMotorTorque(float invDt)
+        public float JointTranslation
         {
-            return invDt * _motorImpulse;
+            get
+            {
+                Body bA = BodyA;
+                Body bB = BodyB;
+
+                Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
+                Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
+                Vector2 d = pB - pA;
+                Vector2 axis = bA.GetWorldVector(m_localXAxisA);
+
+                float translation = Vector2.Dot(d, axis);
+                return translation;
+            }
+        }
+
+        public float JointSpeed
+        {
+            get
+            {
+                float wA = BodyA.AngularVelocity;
+                float wB = BodyB.AngularVelocity;
+                return wB - wA;
+            }
+        }
+
+        /// Enable/disable the joint motor.
+        public bool MotorEnabled
+        {
+            get { return m_enableMotor; }
+            set
+            {
+                WakeBodies();
+                m_enableMotor = value;
+            }
+        }
+
+        public float GetMotorTorque(float inv_dt)
+        {
+            return inv_dt * m_motorImpulse;
         }
     }
 }

@@ -75,14 +75,14 @@ namespace FarseerPhysics.SamplesFramework
             List<Body> lastRingFixtures = ringBodys[ringBodys.Count - 1];
 
             //Fix each of the fixtures of the outer ring
-            for (int j = 0; j < lastRingFixtures.Count; ++j)
-            {
-                FixedDistanceJoint fdj = JointFactory.CreateFixedDistanceJoint(world, lastRingFixtures[j], Vector2.Zero,
-                                                                               lastRing[j]);
-                fdj.Frequency = 4.0f;
-                fdj.DampingRatio = 0.5f;
-                fdj.Breakpoint = breakpoint;
-            }
+            //for (int j = 0; j < lastRingFixtures.Count; ++j)
+            //{
+            //    FixedDistanceJoint fdj = JointFactory.CreateFixedDistanceJoint(world, lastRingFixtures[j], Vector2.Zero,
+            //                                                                   lastRing[j]);
+            //    fdj.Frequency = 4.0f;
+            //    fdj.DampingRatio = 0.5f;
+            //    fdj.Breakpoint = breakpoint;
+            //}
 
             //Interconnect the rings
             for (int i = 1; i < ringBodys.Count; i++)

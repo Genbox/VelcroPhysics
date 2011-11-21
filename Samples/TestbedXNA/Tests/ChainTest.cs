@@ -58,8 +58,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             //Fix the first chainlink to the world
-            FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
-            World.AddJoint(fixedJoint);
+            //FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
+            //World.AddJoint(fixedJoint);
 
             //Attach all the chainlinks together with a revolute joint
             List<RevoluteJoint> joints = PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks,

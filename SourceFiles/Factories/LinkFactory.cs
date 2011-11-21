@@ -33,23 +33,22 @@ namespace FarseerPhysics.Factories
             PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(linkWidth, linkHeight), linkDensity);
 
             //Use PathManager to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(world, path, shape, BodyType.Dynamic,
-                                                                                numberOfLinks);
+            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(world, path, shape, BodyType.Dynamic, numberOfLinks);
 
-            if (fixStart)
-            {
-                //Fix the first chainlink to the world
-                JointFactory.CreateFixedRevoluteJoint(world, chainLinks[0], new Vector2(0, -(linkHeight / 2)),
-                                                      chainLinks[0].Position);
-            }
+            //if (fixStart)
+            //{
+            //    //Fix the first chainlink to the world
+            //    JointFactory.CreateFixedRevoluteJoint(world, chainLinks[0], new Vector2(0, -(linkHeight / 2)),
+            //                                          chainLinks[0].Position);
+            //}
 
-            if (fixEnd)
-            {
-                //Fix the last chainlink to the world
-                JointFactory.CreateFixedRevoluteJoint(world, chainLinks[chainLinks.Count - 1],
-                                                      new Vector2(0, (linkHeight / 2)),
-                                                      chainLinks[chainLinks.Count - 1].Position);
-            }
+            //if (fixEnd)
+            //{
+            //    //Fix the last chainlink to the world
+            //    JointFactory.CreateFixedRevoluteJoint(world, chainLinks[chainLinks.Count - 1],
+            //                                          new Vector2(0, (linkHeight / 2)),
+            //                                          chainLinks[chainLinks.Count - 1].Position);
+            //}
 
             //Attach all the chainlinks together with a revolute joint
             PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new Vector2(0, -linkHeight),

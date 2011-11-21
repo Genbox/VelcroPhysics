@@ -195,7 +195,9 @@ namespace FarseerPhysics.Dynamics
                     if (!joint.Enabled)
                         continue;
 
-                    joint.SolveVelocityConstraints(ref step);
+                    joint.SolveVelocityConstraints(ref solverData);
+                    
+                    //TODO: Move up before solve?
                     joint.Validate(step.inv_dt);
                 }
 

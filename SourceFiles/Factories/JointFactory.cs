@@ -40,21 +40,21 @@ namespace FarseerPhysics.Factories
             return joint;
         }
 
-        /// <summary>
-        /// Creates the fixed revolute joint.
-        /// </summary>
-        /// <param name="world">The world.</param>
-        /// <param name="body">The body.</param>
-        /// <param name="bodyAnchor">The body anchor.</param>
-        /// <param name="worldAnchor">The world anchor.</param>
-        /// <returns></returns>
-        public static FixedRevoluteJoint CreateFixedRevoluteJoint(World world, Body body, Vector2 bodyAnchor,
-                                                                  Vector2 worldAnchor)
-        {
-            FixedRevoluteJoint fixedRevoluteJoint = new FixedRevoluteJoint(body, bodyAnchor, worldAnchor);
-            world.AddJoint(fixedRevoluteJoint);
-            return fixedRevoluteJoint;
-        }
+        ///// <summary>
+        ///// Creates the fixed revolute joint.
+        ///// </summary>
+        ///// <param name="world">The world.</param>
+        ///// <param name="body">The body.</param>
+        ///// <param name="bodyAnchor">The body anchor.</param>
+        ///// <param name="worldAnchor">The world anchor.</param>
+        ///// <returns></returns>
+        //public static FixedRevoluteJoint CreateFixedRevoluteJoint(World world, Body body, Vector2 bodyAnchor,
+        //                                                          Vector2 worldAnchor)
+        //{
+        //    FixedRevoluteJoint fixedRevoluteJoint = new FixedRevoluteJoint(body, bodyAnchor, worldAnchor);
+        //    world.AddJoint(fixedRevoluteJoint);
+        //    return fixedRevoluteJoint;
+        //}
 
         #endregion
 
@@ -133,13 +133,13 @@ namespace FarseerPhysics.Factories
             return joint;
         }
 
-        public static FixedPrismaticJoint CreateFixedPrismaticJoint(World world, Body body, Vector2 worldAnchor,
-                                                                    Vector2 axis)
-        {
-            FixedPrismaticJoint joint = new FixedPrismaticJoint(body, worldAnchor, axis);
-            world.AddJoint(joint);
-            return joint;
-        }
+        //public static FixedPrismaticJoint CreateFixedPrismaticJoint(World world, Body body, Vector2 worldAnchor,
+        //                                                            Vector2 axis)
+        //{
+        //    FixedPrismaticJoint joint = new FixedPrismaticJoint(body, worldAnchor, axis);
+        //    world.AddJoint(joint);
+        //    return joint;
+        //}
 
         #endregion
 
@@ -220,13 +220,13 @@ namespace FarseerPhysics.Factories
             return distanceJoint;
         }
 
-        public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor,
-                                                                  Vector2 worldAnchor)
-        {
-            FixedDistanceJoint distanceJoint = new FixedDistanceJoint(body, localAnchor, worldAnchor);
-            world.AddJoint(distanceJoint);
-            return distanceJoint;
-        }
+        //public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor,
+        //                                                          Vector2 worldAnchor)
+        //{
+        //    FixedDistanceJoint distanceJoint = new FixedDistanceJoint(body, localAnchor, worldAnchor);
+        //    world.AddJoint(distanceJoint);
+        //    return distanceJoint;
+        //}
 
         #endregion
 
@@ -240,12 +240,12 @@ namespace FarseerPhysics.Factories
             return frictionJoint;
         }
 
-        public static FixedFrictionJoint CreateFixedFrictionJoint(World world, Body body, Vector2 bodyAnchor)
-        {
-            FixedFrictionJoint frictionJoint = new FixedFrictionJoint(body, bodyAnchor);
-            world.AddJoint(frictionJoint);
-            return frictionJoint;
-        }
+        //public static FixedFrictionJoint CreateFixedFrictionJoint(World world, Body body, Vector2 bodyAnchor)
+        //{
+        //    FixedFrictionJoint frictionJoint = new FixedFrictionJoint(body, bodyAnchor);
+        //    world.AddJoint(frictionJoint);
+        //    return frictionJoint;
+        //}
 
         #endregion
 
