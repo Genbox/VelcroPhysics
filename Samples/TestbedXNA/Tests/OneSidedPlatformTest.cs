@@ -24,6 +24,7 @@ using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -90,6 +91,13 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 contact.Enabled = false;
             }
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            
+            
+            base.Update(settings, gameTime);
         }
 
         internal static Test Create()

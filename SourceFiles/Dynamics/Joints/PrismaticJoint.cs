@@ -162,6 +162,22 @@ namespace FarseerPhysics.Dynamics.Joints
             _limitState = LimitState.Inactive;
         }
 
+        public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
+            : base(bodyA, bodyB)
+        {
+            JointType = JointType.Prismatic;
+
+            LocalAnchorA = bodyA.GetLocalPoint(anchor);
+            LocalAnchorB = bodyB.GetLocalPoint(anchor);
+
+            _localXAxisA = BodyA.GetLocalVector(axis);
+            _localXAxisA.Normalize();
+            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+            m_referenceAngle = BodyB.Rotation - BodyA.Rotation;
+
+            _limitState = LimitState.Inactive;
+        }
+
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }

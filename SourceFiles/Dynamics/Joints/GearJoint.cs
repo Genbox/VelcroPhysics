@@ -58,9 +58,6 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class GearJoint : Joint
     {
-        private Joint m_joint1;
-        private Joint m_joint2;
-
         private JointType m_typeA;
         private JointType m_typeB;
 
@@ -120,8 +117,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // TODO_ERIN there might be some problem with the joint edges in b2Joint.
 
-            m_bodyC = m_joint1.BodyA;
-            BodyA = m_joint1.BodyB;
+            m_bodyC = JointA.BodyA;
+            BodyA = JointB.BodyB;
 
             // Get geometry of joint1
             Transform xfA = BodyA.Xf;
@@ -152,8 +149,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 coordinateA = Vector2.Dot(pA - pC, m_localAxisC);
             }
 
-            m_bodyD = m_joint2.BodyA;
-            BodyB = m_joint2.BodyB;
+            m_bodyD = JointB.BodyA;
+            BodyB = JointB.BodyB;
 
             // Get geometry of joint2
             Transform xfB = BodyB.Xf;

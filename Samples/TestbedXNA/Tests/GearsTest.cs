@@ -21,7 +21,6 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -32,60 +31,90 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class GearsTest : Test
     {
-        //private FixedRevoluteJoint _joint1;
-        //private FixedRevoluteJoint _joint2;
-        //private FixedPrismaticJoint _joint3;
-
-        private GearJoint _joint4;
         private GearJoint _joint5;
+        private GearJoint _joint4;
+        private PrismaticJoint _joint3;
+        private RevoluteJoint _joint2;
+        private RevoluteJoint _joint1;
 
         private GearsTest()
         {
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
+
             {
-                // First circle
-                CircleShape circle1 = new CircleShape(1.0f, 5);
-                Body body1 = BodyFactory.CreateBody(World);
-                body1.BodyType = BodyType.Dynamic;
-                body1.Position = new Vector2(-3.0f, 12.0f);
+                CircleShape circle1 = new CircleShape(1.0f, 5f);
+
+                PolygonShape box = new PolygonShape(1f);
+                box.SetAsBox(0.5f, 5.0f);
+
+                CircleShape circle2 = new CircleShape(2.0f, 5f);
+
+                Body body1 = BodyFactory.CreateBody(World, new Vector2(10.0f, 9.0f));
                 body1.CreateFixture(circle1);
 
-                // Second circle
-                CircleShape circle2 = new CircleShape(2.0f, 5);
-                Body body2 = BodyFactory.CreateBody(World);
+                Body body2 = BodyFactory.CreateBody(World, new Vector2(10.0f, 8.0f));
                 body2.BodyType = BodyType.Dynamic;
-                body2.Position = new Vector2(0.0f, 12.0f);
+                body2.CreateFixture(box);
+
+                Body body3 = BodyFactory.CreateBody(World, new Vector2(10.0f, 6.0f));
+                body3.BodyType = BodyType.Dynamic;
+                body3.CreateFixture(circle2);
+
+                RevoluteJoint joint1 = new RevoluteJoint(body2, body1, body1.Position);
+                World.AddJoint(joint1);
+
+                RevoluteJoint joint2 = new RevoluteJoint(body2, body3, body3.Position);
+                World.AddJoint(joint2);
+
+                GearJoint joint4 = new GearJoint(joint1, joint2, circle2.Radius / circle1.Radius);
+                joint4.BodyA = body1;
+                joint4.BodyB = body3;
+                World.AddJoint(joint4);
+            }
+
+            {
+                CircleShape circle1 = new CircleShape(1.0f, 5.0f);
+
+                CircleShape circle2 = new CircleShape(2.0f, 5.0f);
+
+                PolygonShape box = new PolygonShape(1f);
+                box.SetAsBox(0.5f, 5.0f);
+
+                Body body1 = BodyFactory.CreateBody(World, new Vector2(-3.0f, 12.0f));
+                body1.BodyType = BodyType.Dynamic;
+                body1.CreateFixture(circle1);
+
+                _joint1 = new RevoluteJoint(ground, body1, body1.Position, body1.Position);
+                _joint1.ReferenceAngle = body1.Rotation - ground.Rotation;
+                World.AddJoint(_joint1);
+
+                Body body2 = BodyFactory.CreateBody(World, new Vector2(0.0f, 12.0f));
+                body2.BodyType = BodyType.Dynamic;
                 body2.CreateFixture(circle2);
 
-                // Rectangle
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 5.0f);
-                PolygonShape polygonBox = new PolygonShape(box, 5);
-                Body body3 = BodyFactory.CreateBody(World);
+                _joint2 = new RevoluteJoint(ground,body2,body2.Position);
+                World.AddJoint(_joint2);
+
+                Body body3 = BodyFactory.CreateBody(World, new Vector2(2.5f, 12.0f));
                 body3.BodyType = BodyType.Dynamic;
-                body3.Position = new Vector2(2.5f, 12.0f);
-                body3.CreateFixture(polygonBox);
+                body3.CreateFixture(box);
 
-                //// Fix first circle
-                //_joint1 = new FixedRevoluteJoint(body1, Vector2.Zero, body1.Position);
-                //World.AddJoint(_joint1);
+                _joint3 = new PrismaticJoint(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
+                _joint3.LowerLimit = -5.0f;
+                _joint3.UpperLimit = 5.0f;
+                _joint3.LimitEnabled = true;
 
-                //// Fix second circle
-                //_joint2 = new FixedRevoluteJoint(body2, Vector2.Zero, body2.Position);
-                //World.AddJoint(_joint2);
+                World.AddJoint(_joint3);
 
-                //// Fix rectangle
-                //_joint3 = new FixedPrismaticJoint(body3, body3.Position, new Vector2(0.0f, 1.0f));
-                //_joint3.LowerLimit = -5.0f;
-                //_joint3.UpperLimit = 5.0f;
-                //_joint3.LimitEnabled = true;
-                //World.AddJoint(_joint3);
+                _joint4 = new GearJoint(_joint1,_joint2,circle2.Radius/circle1.Radius);
+                _joint4.BodyA = body1;
+                _joint4.BodyB = body2;
+                World.AddJoint(_joint4);
 
-                //// Attach first and second circle together with a gear joint
-                //_joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
-                //World.AddJoint(_joint4);
-
-                //// Attach second and rectangle together with a gear joint
-                //_joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
-                //World.AddJoint(_joint5);
+                _joint5 = new GearJoint(_joint2,_joint3,-1.0f / circle2.Radius);
+                _joint5.BodyA = body2;
+                _joint5.BodyB = body3;
+                World.AddJoint(_joint5);
             }
         }
 
@@ -93,14 +122,16 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            float ratio = _joint4.Ratio;
-            //float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            //DebugView.DrawString(50, TextLine, "theta1 + {0} * theta2 = {1}", ratio, value);
+            float ratio, value;
+
+            ratio = _joint4.Ratio;
+            value = _joint1.JointAngle + ratio * _joint2.JointAngle;
+            DebugView.DrawString(50, TextLine, "theta1 + {0} * theta2 = {1}", ratio, value);
             TextLine += 15;
 
             ratio = _joint5.Ratio;
-            //value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            //DebugView.DrawString(50, TextLine, "theta2 + {0} * delta = {1}", ratio, value);
+            value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
+            DebugView.DrawString(50, TextLine, "theta2 + {0} * delta = {1}", ratio, value);
             TextLine += 15;
         }
 
