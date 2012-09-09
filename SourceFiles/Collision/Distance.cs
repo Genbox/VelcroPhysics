@@ -37,6 +37,8 @@ namespace FarseerPhysics.Collision
         internal float Radius;
         internal Vertices Vertices = new Vertices();
 
+        // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
+
         /// <summary>
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
@@ -286,6 +288,7 @@ namespace FarseerPhysics.Collision
                 v.WA = MathUtils.Mul(ref transformA, wALocal);
                 v.WB = MathUtils.Mul(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
+                v.A = 1.0f;
                 V[0] = v;
                 Count = 1;
             }
@@ -391,7 +394,6 @@ namespace FarseerPhysics.Collision
                 case 0:
                     Debug.Assert(false);
                     return 0.0f;
-
                 case 1:
                     return 0.0f;
 
@@ -635,8 +637,7 @@ namespace FarseerPhysics.Collision
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
 
-            Vector2 closestPoint = simplex.GetClosestPoint();
-            float distanceSqr1 = closestPoint.LengthSquared();
+            float distanceSqr1 = Settings.MaxFloat;
             float distanceSqr2 = distanceSqr1;
 
             // Main iteration loop.

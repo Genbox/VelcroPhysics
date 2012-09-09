@@ -774,8 +774,8 @@ namespace FarseerPhysics.Dynamics.Contacts
                     iA = pc.invIA;
                 }
 
-                float mB = pc.invMassB;
-                float iB = pc.invIB;
+                float mB = 0.0f;
+                float iB = 0.0f;
                 if (indexB == toiIndexA || indexB == toiIndexB)
                 {
                     mB = pc.invMassB;

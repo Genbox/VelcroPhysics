@@ -26,8 +26,8 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A line segment (edge) Shape. These can be connected in chains or loops
-    /// to other edge Shapes. The connectivity information is used to ensure
+    /// A line segment (edge) shape. These can be connected in chains or loops
+    /// to other edge shapes. The connectivity information is used to ensure
     /// correct contact normals.
     /// </summary>
     public class EdgeShape : Shape
@@ -112,7 +112,7 @@ namespace FarseerPhysics.Collision.Shapes
             HasVertex0 = false;
             HasVertex3 = false;
 
-            //Added here to speed things up
+            //Added here to speed things up //TODO: revise
             ComputeProperties();
         }
 
@@ -150,8 +150,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <returns>True if the ray-cast hits the shape</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
-                                     ref Transform transform, int childIndex)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             // p = p1 + t * d
             // v = v1 + s * e
@@ -194,7 +193,7 @@ namespace FarseerPhysics.Collision.Shapes
             // s = dot(q - v1, r) / dot(r, r)
             Vector2 r = v2 - v1;
             float rr = Vector2.Dot(r, r);
-            if (rr == 0.0f)
+            if (rr == 0.0f) //TODO: float range?
             {
                 return false;
             }

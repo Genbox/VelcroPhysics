@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Common;
 
 namespace FarseerPhysics.Dynamics
 {
@@ -141,6 +140,7 @@ namespace FarseerPhysics.Dynamics
             if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                 return;
 
+            //FPE feature: BeforeCollision delegate
             if (fixtureA.BeforeCollision != null && fixtureA.BeforeCollision(fixtureA, fixtureB) == false)
                 return;
 
@@ -149,6 +149,9 @@ namespace FarseerPhysics.Dynamics
 
             // Call the factory.
             Contact c = Contact.Create(fixtureA, indexA, fixtureB, indexB);
+
+            if (c == null)
+                return;
 
             // Contact creation may swap fixtures.
             fixtureA = c.FixtureA;
@@ -187,6 +190,13 @@ namespace FarseerPhysics.Dynamics
                 bodyB.ContactList.Prev = c.NodeB;
             }
             bodyB.ContactList = c.NodeB;
+
+            // Wake up the bodies
+            if (fixtureA.IsSensor == false && fixtureB.IsSensor == false)
+            {
+                bodyA.Awake = true;
+                bodyB.Awake = true;
+            }
         }
 
         internal void FindNewContacts()
@@ -247,7 +257,7 @@ namespace FarseerPhysics.Dynamics
 				ActiveContacts.Remove(contact);
 			}
 #endif
-			contact.Destroy();
+            contact.Destroy();
         }
 
         internal void Collide()
@@ -269,14 +279,6 @@ namespace FarseerPhysics.Dynamics
                 int indexB = c.ChildIndexB;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
-
-                if (bodyA.Awake == false && bodyB.Awake == false)
-                {
-#if USE_ACTIVE_CONTACT_SET
-					ActiveContacts.Remove(c);
-#endif
-					continue;
-                }
 
                 // Is this contact flagged for filtering?
                 if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
@@ -307,6 +309,18 @@ namespace FarseerPhysics.Dynamics
 
                     // Clear the filtering flag.
                     c.Flags &= ~ContactFlags.Filter;
+                }
+
+                bool activeA = bodyA.Awake && bodyA.BodyType != BodyType.Static;
+                bool activeB = bodyB.Awake && bodyB.BodyType != BodyType.Static;
+
+                // At least one body must be awake and it must be dynamic or kinematic.
+                if (activeA == false && activeB == false)
+                {
+#if USE_ACTIVE_CONTACT_SET
+					ActiveContacts.Remove(c);
+#endif
+                    continue;
                 }
 
                 int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
@@ -373,8 +387,8 @@ namespace FarseerPhysics.Dynamics
             return collide;
         }
 
-		internal void UpdateContacts(ContactEdge contactEdge, bool value)
-		{
+        internal void UpdateContacts(ContactEdge contactEdge, bool value)
+        {
 #if USE_ACTIVE_CONTACT_SET
 			if(value)
 			{
@@ -404,7 +418,7 @@ namespace FarseerPhysics.Dynamics
 				}
 			}
 #endif
-		}
+        }
 
 #if USE_ACTIVE_CONTACT_SET
 		internal void RemoveActiveContact(Contact contact)
@@ -413,5 +427,5 @@ namespace FarseerPhysics.Dynamics
 				ActiveContacts.Remove(contact);
 		}
 #endif
-	}
+    }
 }

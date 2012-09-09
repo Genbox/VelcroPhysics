@@ -23,7 +23,6 @@
 using System.Diagnostics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.ConvexHull;
-using FarseerPhysics.Common.Decomposition;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision.Shapes
@@ -96,21 +95,27 @@ namespace FarseerPhysics.Collision.Shapes
             return clone;
         }
 
-        /// <summary>
-        /// Copy vertices. This assumes the vertices define a convex polygon.
-        /// It is assumed that the exterior is the the right of each edge.
-        /// </summary>
+        /// Create a convex hull from the given array of local points.
+        /// The count must be in the range [3, b2_maxPolygonVertices].
         /// @warning the points may be re-ordered, even if they form a convex polygon
         /// @warning collinear points are handled but not removed. Collinear points
         /// may lead to poor stacking behavior.
-        /// <param name="input">The vertices.</param>
         public void Set(Vertices input)
         {
             Debug.Assert(input.Count >= 3 && input.Count <= Settings.MaxPolygonVertices);
 
-            //TODO: Uncomment and remove the other line
-            //Vertices = GiftWrap.GetConvexHull(input);
+            if (input.Count < 3)
+            {
+                SetAsBox(1.0f, 1.0f);
+                return;
+            }
+
+            // Copy vertices into local buffer
             Vertices = new Vertices(input);
+
+            // Create the convex hull using the Gift wrapping algorithm
+            // http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
+            Vertices = GiftWrap.GetConvexHull(Vertices);
             Normals = new Vertices(Vertices.Count);
 
             // Compute normals. Ensure the edges have non-zero length.
@@ -121,6 +126,7 @@ namespace FarseerPhysics.Collision.Shapes
                 Vector2 edge = Vertices[i2] - Vertices[i1];
                 Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
+                //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
                 Vector2 temp = new Vector2(edge.Y, -edge.X);
                 temp.Normalize();
                 Normals.Add(temp);
@@ -162,8 +168,11 @@ namespace FarseerPhysics.Collision.Shapes
 
             Debug.Assert(Vertices.Count >= 3);
 
+            //FPE optimization: Early exit
             if (_density <= 0)
                 return;
+
+            //FPE optimization: Consolidated the calculate centroid and mass code to a single method.
 
             Vector2 center = Vector2.Zero;
             float area = 0.0f;

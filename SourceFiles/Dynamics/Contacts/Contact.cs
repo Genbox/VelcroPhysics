@@ -143,7 +143,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         internal ContactFlags Flags;
         public float Friction { get; set; }
         public float Restitution { get; set; }
-        
+
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
         public float TangentSpeed { get; set; }
 
@@ -468,41 +468,29 @@ namespace FarseerPhysics.Dynamics.Contacts
             switch (_type)
             {
                 case ContactType.Polygon:
-                    Collision.Collision.CollidePolygons(ref manifold,
-                                                        (PolygonShape)FixtureA.Shape, ref transformA,
-                                                        (PolygonShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.PolygonAndCircle:
-                    Collision.Collision.CollidePolygonAndCircle(ref manifold,
-                                                                (PolygonShape)FixtureA.Shape, ref transformA,
-                                                                (CircleShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollidePolygonAndCircle(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndCircle:
-                    Collision.Collision.CollideEdgeAndCircle(ref manifold,
-                                                             (EdgeShape)FixtureA.Shape, ref transformA,
-                                                             (CircleShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollideEdgeAndCircle(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndPolygon:
-                    Collision.Collision.CollideEdgeAndPolygon(ref manifold,
-                                                              (EdgeShape)FixtureA.Shape, ref transformA,
-                                                              (PolygonShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.ChainAndCircle:
                     ChainShape chain = (ChainShape)FixtureA.Shape;
                     chain.GetChildEdge(ref _edge, ChildIndexA);
-                    Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA,
-                                                             (CircleShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.ChainAndPolygon:
                     ChainShape loop2 = (ChainShape)FixtureA.Shape;
                     loop2.GetChildEdge(ref _edge, ChildIndexA);
-                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA,
-                                                              (PolygonShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.Circle:
-                    Collision.Collision.CollideCircles(ref manifold,
-                                                       (CircleShape)FixtureA.Shape, ref transformA,
-                                                       (CircleShape)FixtureB.Shape, ref transformB);
+                    Collision.Collision.CollideCircles(ref manifold, (CircleShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
             }
         }
@@ -557,6 +545,13 @@ namespace FarseerPhysics.Dynamics.Contacts
             FixtureA.Body.World.ContactManager.RemoveActiveContact(this);
 #endif
             FixtureA.Body.World.ContactPool.Enqueue(this);
+
+            if (Manifold.PointCount > 0 && FixtureA.IsSensor == false && FixtureB.IsSensor == false)
+            {
+                FixtureA.Body.Awake = true;
+                FixtureB.Body.Awake = true;
+            }
+
             Reset(null, 0, null, 0);
         }
 

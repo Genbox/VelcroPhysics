@@ -28,17 +28,22 @@ namespace FarseerPhysics.Dynamics.Joints
 {
     public enum JointType
     {
+        Unknown,
         Revolute,
         Prismatic,
         Distance,
         Pulley,
+        Mouse,
         Gear,
         Wheel,
         Weld,
         Friction,
+        Rope,
+        Motor,
+
+        //FPE note: From here on and down, it is only FPE joints
         Slider,
         Angle,
-        Rope,
         FixedMouse,
         FixedRevolute,
         FixedDistance,
@@ -56,7 +61,7 @@ namespace FarseerPhysics.Dynamics.Joints
         Equal,
     }
 
-    internal struct Jacobian
+    internal struct Jacobian //TODO
     {
         public float AngularA;
         public float AngularB;
@@ -107,10 +112,10 @@ namespace FarseerPhysics.Dynamics.Joints
         /// The default value is float.MaxValue
         /// </summary>
         public float Breakpoint = float.MaxValue;
+        public bool Enabled = true;
 
         internal JointEdge EdgeA = new JointEdge();
         internal JointEdge EdgeB = new JointEdge();
-        public bool Enabled = true;
         internal bool IslandFlag;
         protected int m_index;
 
@@ -180,7 +185,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Short-cut function to determine if either body is inactive.
         /// </summary>
         /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
-        public bool Active
+        public bool BodiesActive
         {
             get { return BodyA.Enabled && BodyB.Enabled; }
         }

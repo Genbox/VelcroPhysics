@@ -139,6 +139,7 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Gets or sets the body type.
+        /// Warning: Calling this mid-update might cause a crash.
         /// </summary>
         /// <value>The type of body.</value>
         public BodyType BodyType
@@ -182,21 +183,13 @@ namespace FarseerPhysics.Dynamics
 
                 // Touch the proxies so that new contacts will be created (when appropriate)
                 IBroadPhase broadPhase = World.ContactManager.BroadPhase;
-                for (int i = 0; i < FixtureList.Count; i++)
+                foreach (Fixture fixture in FixtureList)
                 {
-                    Fixture fixture = FixtureList[i];
                     int proxyCount = fixture.ProxyCount;
                     for (int j = 0; j < proxyCount; j++)
                     {
                         broadPhase.TouchProxy(fixture.Proxies[j].ProxyId);
                     }
-                }
-                
-                // Since the body type changed, we need to flag contacts for filtering.
-                for (int i = 0; i < FixtureList.Count; i++)
-                {
-                    Fixture f = FixtureList[i];
-                    f.Refilter();
                 }
             }
         }
@@ -435,6 +428,12 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
+                bool status = (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation;
+                if (status == value)
+                {
+                    return;
+                }
+
                 if (value)
                 {
                     Flags |= BodyFlags.FixedRotation;
@@ -443,6 +442,8 @@ namespace FarseerPhysics.Dynamics
                 {
                     Flags &= ~BodyFlags.FixedRotation;
                 }
+
+                AngularVelocityInternal = 0f;
 
                 ResetMassData();
             }

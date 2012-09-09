@@ -474,16 +474,17 @@ namespace FarseerPhysics.Dynamics
             {
                 Contact c = _contacts[i];
 
+                //FPE feature: added after collision
                 if (c.FixtureA.AfterCollision != null)
                     c.FixtureA.AfterCollision(c.FixtureA, c.FixtureB, c);
 
                 if (c.FixtureB.AfterCollision != null)
                     c.FixtureB.AfterCollision(c.FixtureB, c.FixtureA, c);
 
+                //FPE optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
                 if (_contactManager.PostSolve != null)
                 {
                     ContactVelocityConstraint cc = constraints[i];
-
                     _contactManager.PostSolve(c, cc);
                 }
             }

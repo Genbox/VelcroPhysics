@@ -898,8 +898,7 @@ namespace FarseerPhysics.Collision
 
             int height1 = _nodes[child1].Height;
             int height2 = _nodes[child2].Height;
-            int height;
-            height = 1 + Math.Max(height1, height2);
+            int height = 1 + Math.Max(height1, height2);
             Debug.Assert(node.Height == height);
 
             AABB AABB = new AABB();
@@ -1030,6 +1029,16 @@ namespace FarseerPhysics.Collision
             _root = nodes[0];
 
             Validate();
+        }
+
+        public void ShiftOrigin(Vector2 newOrigin)
+        {
+            // Build array of leaves. Free the rest.
+            for (int i = 0; i < _nodeCapacity; ++i)
+            {
+                _nodes[i].AABB.LowerBound -= newOrigin;
+                _nodes[i].AABB.UpperBound -= newOrigin;
+            }
         }
     }
 }

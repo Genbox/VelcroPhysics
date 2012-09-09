@@ -181,6 +181,11 @@ public class QuadTreeBroadPhase : IBroadPhase
         _quadTree.RayCast(TransformRayCallback(callback), ref input);
     }
 
+    public void ShiftOrigin(Vector2 newOrigin)
+    {
+        //TODO
+    }
+
     #endregion
 
     private AABB Fatten(ref AABB aabb)
