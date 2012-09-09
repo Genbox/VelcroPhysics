@@ -134,7 +134,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
-    <Compile Include="ScreenSystem\ConvertUnits.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\IDemoScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
