@@ -347,6 +347,9 @@
     <Compile Include="..\..\SourceFiles\Controllers\VelocityLimitController.cs">
       <Link>Controllers\VelocityLimitController.cs</Link>
     </Compile>
+    <Compile Include="..\..\SourceFiles\ConvertUnits.cs">
+      <Link>ConvertUnits.cs</Link>
+    </Compile>
     <Compile Include="..\..\SourceFiles\DebugView.cs">
       <Link>DebugView.cs</Link>
     </Compile>

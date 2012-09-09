@@ -6,9 +6,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.HelloWorld
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -29,21 +26,19 @@ namespace FarseerPhysics.HelloWorld
         private Matrix _view;
         private Vector2 _cameraPosition;
         private Vector2 _screenCenter;
+        private Vector2 _groundOrigin;
+        private Vector2 _circleOrigin;
 
 
 #if !XBOX360
         const string Text = "Press A or D to rotate the ball\n" +
                             "Press Space to jump\n" +
-                            "Press Shift + W/S/A/D to move the camera";
+                            "Use arrow keys to move the camera";
 #else
                 const string Text = "Use left stick to move\n" +
                                     "Use right stick to move camera\n" +
                                     "Press A to jump\n";
 #endif
-        // Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
-        // 1 meters equals 64 pixels here
-        // (Objects should be scaled to be between 0.1 and 10 meters in size)
-        private const float MeterInPixels = 64f;
 
         public Game1()
         {
@@ -53,22 +48,16 @@ namespace FarseerPhysics.HelloWorld
 
             Content.RootDirectory = "Content";
 
-            _world = new World(new Vector2(0, 20));
+            //Create a world with gravity.
+            _world = new World(new Vector2(0, 9.82f));
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             // Initialize camera controls
             _view = Matrix.Identity;
             _cameraPosition = Vector2.Zero;
-
-            _screenCenter = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2f,
-                                                _graphics.GraphicsDevice.Viewport.Height / 2f);
-
+            _screenCenter = new Vector2(_graphics.GraphicsDevice.Viewport.Width / 2f, _graphics.GraphicsDevice.Viewport.Height / 2f);
             _batch = new SpriteBatch(_graphics.GraphicsDevice);
             _font = Content.Load<SpriteFont>("font");
 
@@ -76,12 +65,20 @@ namespace FarseerPhysics.HelloWorld
             _circleSprite = Content.Load<Texture2D>("circleSprite"); //  96px x 96px => 1.5m x 1.5m
             _groundSprite = Content.Load<Texture2D>("groundSprite"); // 512px x 64px =>   8m x 1m
 
+            /* We need XNA to draw the ground and circle at the center of the shapes */
+            _groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
+            _circleOrigin = new Vector2(_circleSprite.Width / 2f, _circleSprite.Height / 2f);
+
+            // Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
+            // 1 meters equals 64 pixels here
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(64f);
+
             /* Circle */
             // Convert screen center from pixels to meters
-            Vector2 circlePosition = (_screenCenter / MeterInPixels) + new Vector2(0, -1.5f);
+            Vector2 circlePosition = ConvertUnits.ToSimUnits(_screenCenter) + new Vector2(0, -1.5f);
 
             // Create the circle fixture
-            _circleBody = BodyFactory.CreateCircle(_world, 96f / (2f * MeterInPixels), 1f, circlePosition);
+            _circleBody = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(96 / 2f), 1f, circlePosition);
             _circleBody.BodyType = BodyType.Dynamic;
 
             // Give it some bounce and friction
@@ -89,10 +86,10 @@ namespace FarseerPhysics.HelloWorld
             _circleBody.Friction = 0.5f;
 
             /* Ground */
-            Vector2 groundPosition = (_screenCenter / MeterInPixels) + new Vector2(0, 1.25f);
+            Vector2 groundPosition = ConvertUnits.ToSimUnits(_screenCenter) + new Vector2(0, 1.25f);
 
             // Create the ground fixture
-            _groundBody = BodyFactory.CreateRectangle(_world, 512f / MeterInPixels, 64f / MeterInPixels, 1f, groundPosition);
+            _groundBody = BodyFactory.CreateRectangle(_world, ConvertUnits.ToSimUnits(512f), ConvertUnits.ToSimUnits(64f), 1f, groundPosition);
             _groundBody.IsStatic = true;
             _groundBody.Restitution = 0.3f;
             _groundBody.Friction = 0.5f;
@@ -140,37 +137,30 @@ namespace FarseerPhysics.HelloWorld
         {
             KeyboardState state = Keyboard.GetState();
 
-            // Switch between circle body and camera control
-            if (state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift))
-            {
-                // Move camera
-                if (state.IsKeyDown(Keys.A))
-                    _cameraPosition.X += 1.5f;
+            // Move camera
+            if (state.IsKeyDown(Keys.Left))
+                _cameraPosition.X += 1.5f;
 
-                if (state.IsKeyDown(Keys.D))
-                    _cameraPosition.X -= 1.5f;
+            if (state.IsKeyDown(Keys.Right))
+                _cameraPosition.X -= 1.5f;
 
-                if (state.IsKeyDown(Keys.W))
-                    _cameraPosition.Y += 1.5f;
+            if (state.IsKeyDown(Keys.Up))
+                _cameraPosition.Y += 1.5f;
 
-                if (state.IsKeyDown(Keys.S))
-                    _cameraPosition.Y -= 1.5f;
+            if (state.IsKeyDown(Keys.Down))
+                _cameraPosition.Y -= 1.5f;
 
-                _view = Matrix.CreateTranslation(new Vector3(_cameraPosition - _screenCenter, 0f)) *
-                        Matrix.CreateTranslation(new Vector3(_screenCenter, 0f));
-            }
-            else
-            {
-                // We make it possible to rotate the circle body
-                if (state.IsKeyDown(Keys.A))
-                    _circleBody.ApplyTorque(-10);
+            _view = Matrix.CreateTranslation(new Vector3(_cameraPosition - _screenCenter, 0f)) * Matrix.CreateTranslation(new Vector3(_screenCenter, 0f));
 
-                if (state.IsKeyDown(Keys.D))
-                    _circleBody.ApplyTorque(10);
+            // We make it possible to rotate the circle body
+            if (state.IsKeyDown(Keys.A))
+                _circleBody.ApplyTorque(-10);
 
-                if (state.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
-                    _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
-            }
+            if (state.IsKeyDown(Keys.D))
+                _circleBody.ApplyTorque(10);
+
+            if (state.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyUp(Keys.Space))
+                _circleBody.ApplyLinearImpulse(new Vector2(0, -10));
 
             if (state.IsKeyDown(Keys.Escape))
                 Exit();
@@ -186,34 +176,16 @@ namespace FarseerPhysics.HelloWorld
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            /* Circle position and rotation */
-            // Convert physics position (meters) to screen coordinates (pixels)
-            Vector2 circlePos = _circleBody.Position * MeterInPixels;
-            float circleRotation = _circleBody.Rotation;
-
-            /* Ground position and origin */
-            Vector2 groundPos = _groundBody.Position * MeterInPixels;
-            Vector2 groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
-
-            // Align sprite center to body position
-            Vector2 circleOrigin = new Vector2(_circleSprite.Width / 2f, _circleSprite.Height / 2f);
-
+            //Draw circle and ground
             _batch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _view);
-
-            //Draw circle
-            _batch.Draw(_circleSprite, circlePos, null, Color.White, circleRotation, circleOrigin, 1f, SpriteEffects.None, 0f);
-
-            //Draw ground
-            _batch.Draw(_groundSprite, groundPos, null, Color.White, 0f, groundOrigin, 1f, SpriteEffects.None, 0f);
-
+            _batch.Draw(_circleSprite, ConvertUnits.ToDisplayUnits(_circleBody.Position), null, Color.White, _circleBody.Rotation, _circleOrigin, 1f, SpriteEffects.None, 0f);
+            _batch.Draw(_groundSprite, ConvertUnits.ToDisplayUnits(_groundBody.Position), null, Color.White, 0f, _groundOrigin, 1f, SpriteEffects.None, 0f);
             _batch.End();
 
-            _batch.Begin();
-
             // Display instructions
+            _batch.Begin();
             _batch.DrawString(_font, Text, new Vector2(14f, 14f), Color.Black);
             _batch.DrawString(_font, Text, new Vector2(12f, 12f), Color.White);
-
             _batch.End();
 
             base.Draw(gameTime);
