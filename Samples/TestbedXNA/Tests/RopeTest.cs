@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Body prevBody = ground;
                 PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
                 PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
-        
+
                 const int N = 10;
                 const float y = 15;
 
@@ -88,8 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(ref anchor),
-                                                         body.GetLocalPoint(ref anchor));
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, anchor); //TODO: Check
                     jd.CollideConnected = false;
 
                     World.AddJoint(jd);
@@ -98,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
-                
+
                 //FPE: The two following lines are actually not needed as FPE sets the MaxLength to a default value
                 const float extraLength = 0.01f;
                 _rj.MaxLength = N - 1.0f + extraLength;

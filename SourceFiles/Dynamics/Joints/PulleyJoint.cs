@@ -112,18 +112,17 @@ namespace FarseerPhysics.Dynamics.Joints
 
             GroundAnchorA = groundA;
             GroundAnchorB = groundB;
-            LocalAnchorA = anchorA;
-            LocalAnchorB = anchorB;
+            LocalAnchorA = BodyA.GetLocalPoint(anchorA);
+            LocalAnchorB = BodyB.GetLocalPoint(anchorB);
 
             Debug.Assert(ratio != 0.0f);
             Debug.Assert(ratio > Settings.Epsilon);
 
             Ratio = ratio;
 
-            Vector2 dA = BodyA.GetWorldPoint(anchorA) - groundA;
+            Vector2 dA = anchorA - groundA;
             LengthA = dA.Length();
-
-            Vector2 dB = BodyB.GetWorldPoint(anchorB) - groundB;
+            Vector2 dB = anchorB - groundB;
             LengthB = dB.Length();
 
             m_constant = LengthA + ratio * LengthB;
@@ -266,6 +265,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 // Warm starting.
                 Vector2 PA = -(_impulse + _limitImpulse1) * m_uA;
                 Vector2 PB = (-Ratio * _impulse - _limitImpulse2) * m_uB;
+
                 vA += m_invMassA * PA;
                 wA += m_invIA * MathUtils.Cross(m_rA, PA);
                 vB += m_invMassB * PB;
@@ -280,7 +280,6 @@ namespace FarseerPhysics.Dynamics.Joints
             data.velocities[m_indexA].w = wA;
             data.velocities[m_indexB].v = vB;
             data.velocities[m_indexB].w = wB;
-
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)

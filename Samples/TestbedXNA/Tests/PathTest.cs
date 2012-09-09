@@ -49,8 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20);
 
             //Attach the bodies together with revolute joints
-            PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true,
-                                                      true);
+            PathManager.AttachBodiesWithRevoluteJoint(World, bodies, new Vector2(0, 0.5f), new Vector2(0, -0.5f), true, true);
 
             xform = new Vector2(-25, 0);
             _path.Translate(ref xform);

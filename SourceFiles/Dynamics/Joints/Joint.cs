@@ -33,7 +33,7 @@ namespace FarseerPhysics.Dynamics.Joints
         Prismatic,
         Distance,
         Pulley,
-        Mouse,
+        //Mouse, <- We have fixed mouse
         Gear,
         Wheel,
         Weld,

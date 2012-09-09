@@ -99,15 +99,12 @@ namespace FarseerPhysics.SamplesFramework
             //We distribute the shapes in the rectangular path.
             _softBodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes,
                                                                       BodyType.Dynamic, 30);
-            _softBodyBox =
-                new Sprite(ScreenManager.Assets.TextureFromShape(shapes[0], MaterialType.Blank, Color.Silver * 0.8f, 1f));
+            _softBodyBox = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[0], MaterialType.Blank, Color.Silver * 0.8f, 1f));
             _softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
-            _softBodyCircle =
-                new Sprite(ScreenManager.Assets.TextureFromShape(shapes[1], MaterialType.Waves, Color.Silver, 1f));
+            _softBodyCircle = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[1], MaterialType.Waves, Color.Silver, 1f));
 
             //Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
-            PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f),
-                                                      true, true);
+            PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
         }
 
         public override void Draw(GameTime gameTime)
@@ -115,24 +112,15 @@ namespace FarseerPhysics.SamplesFramework
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < _softBodies.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_softBodyBox.Texture,
-                                               ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
-                                               Color.White, _softBodies[i].Rotation, _softBodyBox.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_softBodyBox.Texture, ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null, Color.White, _softBodies[i].Rotation, _softBodyBox.Origin, 1f, SpriteEffects.None, 0f);
             }
             for (int i = 0; i < _softBodies.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_softBodyCircle.Texture,
-                                               ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null,
-                                               Color.White, _softBodies[i].Rotation, _softBodyCircle.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_softBodyCircle.Texture, ConvertUnits.ToDisplayUnits(_softBodies[i].Position), null, Color.White, _softBodies[i].Rotation, _softBodyCircle.Origin, 1f, SpriteEffects.None, 0f);
             }
             for (int i = 0; i < _bridgeBodies.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_bridgeBox.Texture,
-                                               ConvertUnits.ToDisplayUnits(_bridgeBodies[i].Position), null,
-                                               Color.White, _bridgeBodies[i].Rotation, _bridgeBox.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_bridgeBox.Texture, ConvertUnits.ToDisplayUnits(_bridgeBodies[i].Position), null, Color.White, _bridgeBodies[i].Rotation, _bridgeBox.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
             _border.Draw();

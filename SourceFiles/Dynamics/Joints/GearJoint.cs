@@ -113,11 +113,12 @@ namespace FarseerPhysics.Dynamics.Joints
             m_typeA = jointA.JointType;
             m_typeB = jointB.JointType;
 
-            // Make sure its the right kind of joint
             Debug.Assert(m_typeA == JointType.Revolute || m_typeA == JointType.Prismatic || m_typeA == JointType.FixedRevolute || m_typeA == JointType.FixedPrismatic);
             Debug.Assert(m_typeB == JointType.Revolute || m_typeB == JointType.Prismatic || m_typeB == JointType.FixedRevolute || m_typeB == JointType.FixedPrismatic);
 
-            float coordinateA = 0.0f, coordinateB = 0.0f;
+            float coordinateA, coordinateB;
+
+            // TODO_ERIN there might be some problem with the joint edges in b2Joint.
 
             m_bodyC = m_joint1.BodyA;
             BodyA = m_joint1.BodyB;
@@ -184,7 +185,10 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             _ratio = ratio;
+
             m_constant = coordinateA + _ratio * coordinateB;
+
+            m_impulse = 0.0f;
         }
 
         public override Vector2 WorldAnchorA
@@ -254,22 +258,18 @@ namespace FarseerPhysics.Dynamics.Joints
             m_iC = m_bodyC.InvI;
             m_iD = m_bodyD.InvI;
 
-            Vector2 cA = data.positions[m_indexA].c;
             float aA = data.positions[m_indexA].a;
             Vector2 vA = data.velocities[m_indexA].v;
             float wA = data.velocities[m_indexA].w;
 
-            Vector2 cB = data.positions[m_indexB].c;
             float aB = data.positions[m_indexB].a;
             Vector2 vB = data.velocities[m_indexB].v;
             float wB = data.velocities[m_indexB].w;
 
-            Vector2 cC = data.positions[m_indexC].c;
             float aC = data.positions[m_indexC].a;
             Vector2 vC = data.velocities[m_indexC].v;
             float wC = data.velocities[m_indexC].w;
 
-            Vector2 cD = data.positions[m_indexD].c;
             float aD = data.positions[m_indexD].a;
             Vector2 vD = data.velocities[m_indexD].v;
             float wD = data.velocities[m_indexD].w;

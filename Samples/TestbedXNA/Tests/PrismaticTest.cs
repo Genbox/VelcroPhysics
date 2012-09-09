@@ -73,8 +73,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             body2.CreateFixture(shape2);
 
-            _joint = new PrismaticJoint(ground, body2, ground.GetLocalPoint(body2.Position), Vector2.Zero,
-                                        new Vector2(0.5f, 1.0f));
+            _joint = new PrismaticJoint(ground, body2, body2.Position, Vector2.Zero, new Vector2(0.5f, 1.0f));
             _joint.MotorSpeed = 5.0f;
             _joint.MaxMotorForce = 1000.0f;
             _joint.MotorEnabled = true;

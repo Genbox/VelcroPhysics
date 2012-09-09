@@ -53,9 +53,7 @@ namespace FarseerPhysics.SamplesFramework
                 PolygonShape shape = new PolygonShape(1f);
                 shape.SetAsBox(2.5f, 1.0f);
 
-                _body =
-                    new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank,
-                                                                             Color.Beige, 1f));
+                _body = new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank, Color.Beige, 1f));
 
                 _chassis = BodyFactory.CreateBody(world);
                 _chassis.BodyType = BodyType.Dynamic;
@@ -67,9 +65,7 @@ namespace FarseerPhysics.SamplesFramework
 
             {
                 CircleShape shape = new CircleShape(1.6f, 1f);
-                _engine =
-                    new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Waves,
-                                                                             Color.Beige * 0.8f, 1f));
+                _engine = new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Waves, Color.Beige * 0.8f, 1f));
 
                 _wheel = BodyFactory.CreateBody(world);
                 _wheel.BodyType = BodyType.Dynamic;
@@ -80,7 +76,7 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             {
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.Position), Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position, Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400f;
@@ -189,32 +185,28 @@ namespace FarseerPhysics.SamplesFramework
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            DistanceJoint djd = new DistanceJoint(body1, body2, body1.GetLocalPoint(p2 + _position),
-                                                  body2.GetLocalPoint(p5 + _position));
+            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _position, p5 + _position);
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10f;
 
             world.AddJoint(djd);
             _walkerJoints.Add(djd);
 
-            DistanceJoint djd2 = new DistanceJoint(body1, body2, body1.GetLocalPoint(p3 + _position),
-                                                   body2.GetLocalPoint(p4 + _position));
+            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _position, p4 + _position);
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10f;
 
             world.AddJoint(djd2);
             _walkerJoints.Add(djd2);
 
-            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, body1.GetLocalPoint(p3 + _position),
-                                                   _wheel.GetLocalPoint(wheelAnchor + _position));
+            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _position, wheelAnchor + _position);
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10f;
 
             world.AddJoint(djd3);
             _walkerJoints.Add(djd3);
 
-            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, body2.GetLocalPoint(p6 + _position),
-                                                   _wheel.GetLocalPoint(wheelAnchor + _position));
+            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _position, wheelAnchor + _position);
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10f;
 
@@ -222,8 +214,7 @@ namespace FarseerPhysics.SamplesFramework
             _walkerJoints.Add(djd4);
 
             Vector2 anchor = p4 - new Vector2(0f, -0.8f);
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)),
-                                                  anchor);
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, _chassis.GetWorldPoint(anchor), anchor);
             world.AddJoint(rjd);
         }
 
@@ -240,16 +231,12 @@ namespace FarseerPhysics.SamplesFramework
             vertices.Add(p1);
             vertices.Add(p2);
             vertices.Add(p3);
-            _leftLeg =
-                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.IndianRed * 0.8f, 1f));
+            _leftLeg = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.IndianRed * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p4;
             vertices[2] = p5;
-            _leftShoulder =
-                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.Beige * 0.8f, 1f));
+            _leftShoulder = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.Beige * 0.8f, 1f));
 
             p1.X *= -1f;
             p2.X *= -1f;
@@ -260,52 +247,40 @@ namespace FarseerPhysics.SamplesFramework
             vertices[0] = p1;
             vertices[1] = p3;
             vertices[2] = p2;
-            _rightLeg =
-                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.IndianRed * 0.8f, 1f));
+            _rightLeg = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.IndianRed * 0.8f, 1f));
 
             vertices[0] = Vector2.Zero;
             vertices[1] = p5;
             vertices[2] = p4;
-            _rightShoulder =
-                new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank,
-                                                                            Color.Beige * 0.8f, 1f));
+            _rightShoulder = new Sprite(_screen.ScreenManager.Assets.TextureFromVertices(vertices, MaterialType.Blank, Color.Beige * 0.8f, 1f));
         }
 
         public void Draw()
         {
-            LineBatch _batch = _screen.ScreenManager.LineBatch;
-            SpriteBatch _spriteBatch = _screen.ScreenManager.SpriteBatch;
+            LineBatch batch = _screen.ScreenManager.LineBatch;
+            SpriteBatch spriteBatch = _screen.ScreenManager.SpriteBatch;
 
-            _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
-            _spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null,
-                              Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
-            _spriteBatch.End();
+            spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
+            spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null, Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.End();
 
-            _batch.Begin(_screen.Camera.SimProjection, _screen.Camera.SimView);
+            batch.Begin(_screen.Camera.SimProjection, _screen.Camera.SimView);
             for (int i = 0; i < _walkerJoints.Count; ++i)
             {
-                _batch.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, Color.DarkRed);
+                batch.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, Color.DarkRed);
             }
-            _batch.End();
+            batch.End();
 
-            _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
+            spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
             for (int i = 0; i < 3; ++i)
             {
-                _spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
-                                  Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
-                                  Color.White, _leftShoulders[i].Rotation, _leftShoulder.Origin, 1f, SpriteEffects.None,
-                                  0f);
-                _spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
-                                  Color.White, _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
-                                  Color.White, _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f,
-                                  SpriteEffects.None, 0f);
+                spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null, Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null, Color.White, _leftShoulders[i].Rotation, _leftShoulder.Origin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null, Color.White, _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null, Color.White, _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f, SpriteEffects.None, 0f);
             }
-            _spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null,
-                              Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
-            _spriteBatch.End();
+            spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null, Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.End();
         }
     }
 }

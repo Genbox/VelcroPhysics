@@ -73,8 +73,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="localAnchorB">The second body anchor.</param>
         /// <param name="minLength">The minimum length between anchorpoints</param>
         /// <param name="maxlength">The maximum length between anchorpoints.</param>
-        public SliderJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, float minLength,
-                           float maxlength)
+        public SliderJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, float minLength, float maxlength)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Slider;

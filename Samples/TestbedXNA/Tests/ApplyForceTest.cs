@@ -120,7 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
                     float radius = (float)Math.Sqrt(2.0 * (I / mass));
 
-                    FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero, Vector2.Zero);
+                    FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero);
                     jd.CollideConnected = true;
                     jd.MaxForce = mass * gravity;
                     jd.MaxTorque = mass * radius * gravity;

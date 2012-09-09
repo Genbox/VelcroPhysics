@@ -71,12 +71,12 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Friction;
         }
 
-        public FrictionJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
+        public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
-            LocalAnchorA = localAnchorA;
-            LocalAnchorB = localAnchorB;
+            LocalAnchorA = bodyA.GetLocalPoint(anchor);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor);
         }
 
         public override Vector2 WorldAnchorA
@@ -168,7 +168,6 @@ namespace FarseerPhysics.Dynamics.Joints
                 _angularImpulse *= data.step.dtRatio;
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
-
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(m_rA, P) + _angularImpulse);
                 vB += mB * P;

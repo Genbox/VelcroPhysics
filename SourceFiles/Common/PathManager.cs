@@ -170,10 +170,7 @@ namespace FarseerPhysics.Factories
         /// <param name="localAnchorB">The local anchor B.</param>
         /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
         /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies,
-                                                                        Vector2 localAnchorA,
-                                                                        Vector2 localAnchorB, bool connectFirstAndLast,
-                                                                        bool collideConnected)
+        public static List<RevoluteJoint> AttachBodiesWithRevoluteJoint(World world, List<Body> bodies, Vector2 localAnchorA, Vector2 localAnchorB, bool connectFirstAndLast, bool collideConnected)
         {
             List<RevoluteJoint> joints = new List<RevoluteJoint>(bodies.Count + 1);
 
@@ -187,8 +184,7 @@ namespace FarseerPhysics.Factories
 
             if (connectFirstAndLast)
             {
-                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA,
-                                                            localAnchorB);
+                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
                 joints.Add(lastjoint);
