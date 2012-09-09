@@ -100,10 +100,10 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.Distance;
 
-            LocalAnchorA = localAnchorA;
-            LocalAnchorB = localAnchorB;
+            LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
+            LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
 
-            Vector2 d = WorldAnchorB - WorldAnchorA;
+            Vector2 d = localAnchorB - localAnchorA;
             Length = d.Length();
         }
 
@@ -288,33 +288,33 @@ namespace FarseerPhysics.Dynamics.Joints
                 return true;
             }
 
-	        Vector2 cA = data.positions[m_indexA].c;
-	        float aA = data.positions[m_indexA].a;
-	        Vector2 cB = data.positions[m_indexB].c;
-	        float aB = data.positions[m_indexB].a;
+            Vector2 cA = data.positions[m_indexA].c;
+            float aA = data.positions[m_indexA].a;
+            Vector2 cB = data.positions[m_indexB].c;
+            float aB = data.positions[m_indexB].a;
 
-	        Rot qA = new Rot(aA), qB = new Rot(aB);
+            Rot qA = new Rot(aA), qB = new Rot(aB);
 
-	        Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
-	        Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
-	        Vector2 u = cB + rB - cA - rA;
+            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
+            Vector2 u = cB + rB - cA - rA;
 
             float length = u.Length(); u.Normalize();
-	        float C = length - Length;
-	        C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+            float C = length - Length;
+            C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 
-	        float impulse = -_mass * C;
-	        Vector2 P = impulse * u;
+            float impulse = -_mass * C;
+            Vector2 P = impulse * u;
 
-	        cA -= m_invMassA * P;
-	        aA -= m_invIA * MathUtils.Cross(rA, P);
-	        cB += m_invMassB * P;
-	        aB += m_invIB * MathUtils.Cross(rB, P);
+            cA -= m_invMassA * P;
+            aA -= m_invIA * MathUtils.Cross(rA, P);
+            cB += m_invMassB * P;
+            aB += m_invIB * MathUtils.Cross(rB, P);
 
-	        data.positions[m_indexA].c = cA;
-	        data.positions[m_indexA].a = aA;
-	        data.positions[m_indexB].c = cB;
-	        data.positions[m_indexB].a = aB;
+            data.positions[m_indexA].c = cA;
+            data.positions[m_indexA].a = aA;
+            data.positions[m_indexB].c = cB;
+            data.positions[m_indexB].a = aB;
 
             return Math.Abs(C) < Settings.LinearSlop;
         }

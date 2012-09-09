@@ -65,9 +65,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Fixture fixture = _platform.CreateFixture(shape);
                 fixture.Friction = 0.6f;
 
-                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform,
-                                                      _attachment.GetLocalPoint(_platform.Position),
-                                                      Vector2.Zero);
+                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, _platform.Position, Vector2.Zero);
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);

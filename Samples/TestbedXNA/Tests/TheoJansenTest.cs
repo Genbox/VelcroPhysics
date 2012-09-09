@@ -99,7 +99,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 //_motorJoint = new RevoluteJoint(_wheel, _chassis, pivot + _offset);
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _wheel.GetLocalPoint(_chassis.Position), Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position, Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
@@ -180,37 +180,32 @@ namespace FarseerPhysics.TestBed.Tests
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            DistanceJoint djd = new DistanceJoint(body1, body2, body1.GetLocalPoint(p2 + _offset),
-                                                  body2.GetLocalPoint(p5 + _offset));
+            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset);
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10.0f;
 
             World.AddJoint(djd);
 
-            DistanceJoint djd2 = new DistanceJoint(body1, body2, body1.GetLocalPoint(p3 + _offset),
-                                                   body2.GetLocalPoint(p4 + _offset));
+            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset);
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10.0f;
 
             World.AddJoint(djd2);
 
-            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, body1.GetLocalPoint(p3 + _offset),
-                                                   _wheel.GetLocalPoint(wheelAnchor + _offset));
+            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10.0f;
 
             World.AddJoint(djd3);
 
-            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, body2.GetLocalPoint(p6 + _offset),
-                                                   _wheel.GetLocalPoint(wheelAnchor + _offset));
+            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10.0f;
 
             World.AddJoint(djd4);
 
             Vector2 anchor = p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/;
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, body2.GetLocalPoint(_chassis.GetWorldPoint(anchor)),
-                                                  anchor);
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, _chassis.GetWorldPoint(anchor), anchor);
             World.AddJoint(rjd);
         }
 

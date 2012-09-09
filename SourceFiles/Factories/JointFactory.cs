@@ -232,10 +232,9 @@ namespace FarseerPhysics.Factories
 
         #region Friction Joint
 
-        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-                                                        Vector2 anchorB)
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
         {
-            FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchorA, anchorB);
+            FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchor);
             world.AddJoint(frictionJoint);
             return frictionJoint;
         }

@@ -63,8 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(0.0f, -2.0f);
-                    _joint1 = new RevoluteJoint(prevBody, body, prevBody.GetLocalPoint(body.GetWorldPoint(anchor)),
-                                                anchor);
+                    _joint1 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
                     _joint1.MotorSpeed = 1.0f * Settings.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
@@ -85,8 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(0.0f, -4.0f);
-                    RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body,
-                                                           prevBody.GetLocalPoint(body.GetWorldPoint(anchor)), anchor);
+                    RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
                     rjd3.MotorEnabled = false;
                     World.AddJoint(rjd3);
 
@@ -105,8 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = Vector2.Zero;
-                    RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body,
-                                                           prevBody.GetLocalPoint(body.GetWorldPoint(anchor)), anchor);
+                    RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
                     World.AddJoint(rjd2);
 
                     //_joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
@@ -151,7 +148,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
             DebugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
             TextLine += 15;
-			float torque = _joint1.GetMotorTorque(settings.Hz);
+            float torque = _joint1.GetMotorTorque(settings.Hz);
             DebugView.DrawString(50, TextLine, "Motor Torque = {0:n}", torque);
             TextLine += 15;
         }

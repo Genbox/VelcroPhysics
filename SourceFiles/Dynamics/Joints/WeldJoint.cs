@@ -91,8 +91,8 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.Weld;
 
-            LocalAnchorA = localAnchorA;
-            LocalAnchorB = localAnchorB;
+            LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
+            LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
         }
 
@@ -133,12 +133,10 @@ namespace FarseerPhysics.Dynamics.Joints
             m_invIA = BodyA.InvI;
             m_invIB = BodyB.InvI;
 
-            Vector2 cA = data.positions[m_indexA].c;
             float aA = data.positions[m_indexA].a;
             Vector2 vA = data.velocities[m_indexA].v;
             float wA = data.velocities[m_indexA].w;
 
-            Vector2 cB = data.positions[m_indexB].c;
             float aB = data.positions[m_indexB].a;
             Vector2 vB = data.velocities[m_indexB].v;
             float wB = data.velocities[m_indexB].w;

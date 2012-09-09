@@ -102,29 +102,25 @@ namespace FarseerPhysics.TestBed.Tests
                 //dj3.DampingRatio = 0.0f;
                 //World.AddJoint(_joints[3]);
 
-                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], Vector2.Zero,
-                                                      Vector2.Zero);
+                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], Vector2.Zero, Vector2.Zero);
                 _joints[4] = dj4;
                 dj4.Frequency = 2.0f;
                 dj4.DampingRatio = 0.0f;
                 World.AddJoint(_joints[4]);
 
-                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], Vector2.Zero,
-                                                      Vector2.Zero);
+                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], Vector2.Zero, Vector2.Zero);
                 _joints[5] = dj5;
                 dj5.Frequency = 2.0f;
                 dj5.DampingRatio = 0.0f;
                 World.AddJoint(_joints[5]);
 
-                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], Vector2.Zero,
-                                                      Vector2.Zero);
+                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], Vector2.Zero, Vector2.Zero);
                 _joints[6] = dj6;
                 dj6.Frequency = 2.0f;
                 dj6.DampingRatio = 0.0f;
                 World.AddJoint(_joints[6]);
 
-                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], Vector2.Zero,
-                                                      Vector2.Zero);
+                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], Vector2.Zero, Vector2.Zero);
                 _joints[7] = dj7;
                 dj7.Frequency = 2.0f;
                 dj7.DampingRatio = 0.0f;

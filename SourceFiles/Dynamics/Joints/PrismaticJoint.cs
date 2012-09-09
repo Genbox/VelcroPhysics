@@ -151,8 +151,8 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.Prismatic;
 
-            LocalAnchorA = localAnchorA;
-            LocalAnchorB = localAnchorB;
+            LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
+            LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
 
             _localXAxisA = BodyA.GetLocalVector(axis);
             _localXAxisA.Normalize();
@@ -475,6 +475,7 @@ namespace FarseerPhysics.Dynamics.Joints
             else
             {
                 _limitState = LimitState.Inactive;
+                _impulse.Z = 0.0f;
             }
 
             if (_enableMotor == false)
@@ -497,7 +498,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 vB += mB * P;
                 wB += iB * LB;
-
             }
             else
             {
@@ -600,17 +600,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 vB += mB * P;
                 wB += iB * LB;
-
-                Vector2 Cdot10 = Cdot1;
-
-                Cdot1.X = Vector2.Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
-                Cdot1.Y = wB - wA;
-
-                if (Math.Abs(Cdot1.X) > 0.01f || Math.Abs(Cdot1.Y) > 0.01f)
-                {
-                    Vector2 test = MathUtils.Mul22(m_K, df);
-                    Cdot1.X += 0.0f;
-                }
             }
 
             data.velocities[m_indexA].v = vA;
@@ -667,16 +656,14 @@ namespace FarseerPhysics.Dynamics.Joints
                 else if (translation <= _lowerTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
-                    C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop,
-                                         -Settings.MaxLinearCorrection, 0.0f);
+                    C2 = MathUtils.Clamp(translation - _lowerTranslation + Settings.LinearSlop, -Settings.MaxLinearCorrection, 0.0f);
                     linearError = Math.Max(linearError, _lowerTranslation - translation);
                     active = true;
                 }
                 else if (translation >= _upperTranslation)
                 {
                     // Prevent large linear corrections and allow some slop.
-                    C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f,
-                                         Settings.MaxLinearCorrection);
+                    C2 = MathUtils.Clamp(translation - _upperTranslation - Settings.LinearSlop, 0.0f, Settings.MaxLinearCorrection);
                     linearError = Math.Max(linearError, translation - _upperTranslation);
                     active = true;
                 }
@@ -742,6 +729,7 @@ namespace FarseerPhysics.Dynamics.Joints
             data.positions[m_indexA].a = aA;
             data.positions[m_indexB].c = cB;
             data.positions[m_indexB].a = aB;
+
             return linearError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
     }
