@@ -101,10 +101,19 @@ namespace FarseerPhysics.Collision
         /// </summary>
         public ContactID Id;
 
+        /// <summary>
+        /// Usage depends on manifold type
+        /// </summary>
         public Vector2 LocalPoint;
 
+        /// <summary>
+        /// The non-penetration impulse
+        /// </summary>
         public float NormalImpulse;
 
+        /// <summary>
+        /// The friction impulse
+        /// </summary>
         public float TangentImpulse;
     }
 
@@ -296,27 +305,32 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
-        /// first quadrant
+        /// First quadrant
         /// </summary>
         public AABB Q1
         {
             get { return new AABB(Center, UpperBound); }
         }
 
+        /// <summary>
+        /// Second quadrant
+        /// </summary>
         public AABB Q2
         {
-            get
-            {
-                return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y));
-                ;
-            }
+            get { return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y)); }
         }
 
+        /// <summary>
+        /// Third quadrant
+        /// </summary>
         public AABB Q3
         {
             get { return new AABB(LowerBound, Center); }
         }
 
+        /// <summary>
+        /// Forth quadrant
+        /// </summary>
         public AABB Q4
         {
             get { return new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y)); }
@@ -420,9 +434,7 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        public static bool TestOverlap(Shape shapeA, int indexA,
-                                       Shape shapeB, int indexB,
-                                       ref Transform xfA, ref Transform xfB)
+        public static bool TestOverlap(Shape shapeA, int indexA, Shape shapeB, int indexB, ref Transform xfA, ref Transform xfB)
         {
             _input.ProxyA.Set(shapeA, indexA);
             _input.ProxyB.Set(shapeB, indexB);
@@ -436,7 +448,6 @@ namespace FarseerPhysics.Collision
 
             return output.Distance < 10.0f * Settings.Epsilon;
         }
-
 
         // From Real-time Collision Detection, p179.
         public bool RayCast(out RayCastOutput output, ref RayCastInput input)
@@ -566,8 +577,7 @@ namespace FarseerPhysics.Collision
 
     public static class Collision
     {
-        public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2,
-                                          ref Manifold manifold1, ref Manifold manifold2)
+        public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2, ref Manifold manifold1, ref Manifold manifold2)
         {
             state1 = new FixedArray2<PointState>();
             state2 = new FixedArray2<PointState>();
@@ -607,11 +617,10 @@ namespace FarseerPhysics.Collision
             }
         }
 
-
+        /// <summary>
         /// Compute the collision manifold between two circles.
-        public static void CollideCircles(ref Manifold manifold,
-                                          CircleShape circleA, ref Transform xfA,
-                                          CircleShape circleB, ref Transform xfB)
+        /// </summary>
+        public static void CollideCircles(ref Manifold manifold, CircleShape circleA, ref Transform xfA, CircleShape circleB, ref Transform xfB)
         {
             manifold.PointCount = 0;
 
@@ -647,9 +656,7 @@ namespace FarseerPhysics.Collision
         /// <param name="xfA">The transform of A.</param>
         /// <param name="circleB">The circle B.</param>
         /// <param name="xfB">The transform of B.</param>
-        public static void CollidePolygonAndCircle(ref Manifold manifold,
-                                                   PolygonShape polygonA, ref Transform xfA,
-                                                   CircleShape circleB, ref Transform xfB)
+        public static void CollidePolygonAndCircle(ref Manifold manifold, PolygonShape polygonA, ref Transform xfA, CircleShape circleB, ref Transform xfB)
         {
             manifold.PointCount = 0;
 
@@ -795,9 +802,7 @@ namespace FarseerPhysics.Collision
         /// <param name="transformA">The transform A.</param>
         /// <param name="polyB">The poly B.</param>
         /// <param name="transformB">The transform B.</param>
-        public static void CollidePolygons(ref Manifold manifold,
-                                           PolygonShape polyA, ref Transform transformA,
-                                           PolygonShape polyB, ref Transform transformB)
+        public static void CollidePolygons(ref Manifold manifold, PolygonShape polyA, ref Transform transformA, PolygonShape polyB, ref Transform transformB)
         {
             manifold.PointCount = 0;
             float totalRadius = polyA.Radius + polyB.Radius;
@@ -935,9 +940,7 @@ namespace FarseerPhysics.Collision
         /// <param name="transformA">The transform A.</param>
         /// <param name="circleB">The circle B.</param>
         /// <param name="transformB">The transform B.</param>
-        public static void CollideEdgeAndCircle(ref Manifold manifold,
-                                                EdgeShape edgeA, ref Transform transformA,
-                                                CircleShape circleB, ref Transform transformB)
+        public static void CollideEdgeAndCircle(ref Manifold manifold, EdgeShape edgeA, ref Transform transformA, CircleShape circleB, ref Transform transformB)
         {
             manifold.PointCount = 0;
 
@@ -1082,9 +1085,7 @@ namespace FarseerPhysics.Collision
         /// <param name="xfA">The xf A.</param>
         /// <param name="polygonB">The polygon B.</param>
         /// <param name="xfB">The xf B.</param>
-        public static void CollideEdgeAndPolygon(ref Manifold manifold,
-                                                 EdgeShape edgeA, ref Transform xfA,
-                                                 PolygonShape polygonB, ref Transform xfB)
+        public static void CollideEdgeAndPolygon(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
         {
             EPCollider collider = new EPCollider();
             collider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
@@ -1599,8 +1600,7 @@ namespace FarseerPhysics.Collision
         /// <param name="offset">The offset.</param>
         /// <param name="vertexIndexA">The vertex index A.</param>
         /// <returns></returns>
-        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn,
-                                             Vector2 normal, float offset, int vertexIndexA)
+        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, Vector2 normal, float offset, int vertexIndexA)
         {
             vOut = new FixedArray2<ClipVertex>();
 
@@ -1652,8 +1652,7 @@ namespace FarseerPhysics.Collision
         /// <param name="poly2">The poly2.</param>
         /// <param name="xf2">The XF2.</param>
         /// <returns></returns>
-        private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1,
-                                            PolygonShape poly2, ref Transform xf2)
+        private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
         {
             List<Vector2> vertices1 = poly1.Vertices;
             List<Vector2> normals1 = poly1.Normals;
@@ -1696,9 +1695,7 @@ namespace FarseerPhysics.Collision
         /// <param name="poly2">The poly2.</param>
         /// <param name="xf2">The XF2.</param>
         /// <returns></returns>
-        private static float FindMaxSeparation(out int edgeIndex,
-                                               PolygonShape poly1, ref Transform xf1,
-                                               PolygonShape poly2, ref Transform xf2)
+        private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
         {
             int count1 = poly1.Vertices.Count;
             List<Vector2> normals1 = poly1.Normals;
@@ -1778,9 +1775,7 @@ namespace FarseerPhysics.Collision
             return bestSeparation;
         }
 
-        private static void FindIncidentEdge(out FixedArray2<ClipVertex> c,
-                                             PolygonShape poly1, ref Transform xf1, int edge1,
-                                             PolygonShape poly2, ref Transform xf2)
+        private static void FindIncidentEdge(out FixedArray2<ClipVertex> c, PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
         {
             c = new FixedArray2<ClipVertex>();
             Vertices normals1 = poly1.Normals;

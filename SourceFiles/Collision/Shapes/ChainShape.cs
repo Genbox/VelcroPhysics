@@ -56,19 +56,29 @@ namespace FarseerPhysics.Collision.Shapes
             ShapeType = ShapeType.Chain;
             _radius = Settings.PolygonRadius;
 
-            if (Settings.ConserveMemory)
-                Vertices = vertices;
-            else
-                // Copy vertices.
-                Vertices = new Vertices(vertices);
+            //Only copy the items if we don't need to conserve memory.
+            Vertices = Settings.ConserveMemory ? vertices : new Vertices(vertices);
         }
 
         /// Create a loop. This automatically adjusts connectivity.
         public void CreateLoop(Vertices vertices)
         {
-            Debug.Assert(vertices.Count >= 3);
+            Debug.Assert(vertices != null && vertices.Count >= 3);
+
+            for (int i = 1; i < vertices.Count; ++i)
+            {
+                Vector2 v1 = vertices[i - 1];
+                Vector2 v2 = vertices[i];
+                // If the code crashes here, it means your vertices are too close together.
+                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
+            }
+
+            //TODO: Conserve mem
             Vertices = new Vertices(vertices);
             Vertices.Add(vertices[0]);
+
+            Vertices[Vertices.Count] = Vertices[0]; //TODO: Check this line
+
             _prevVertex = Vertices[Vertices.Count - 2];
             _nextVertex = Vertices[1];
             _hasPrevVertex = true;
@@ -78,7 +88,17 @@ namespace FarseerPhysics.Collision.Shapes
         /// Create a chain with isolated end vertices.
         public void CreateChain(Vertices vertices)
         {
-            Debug.Assert(vertices.Count >= 2);
+            Debug.Assert(vertices != null && vertices.Count >= 2);
+
+            for (int i = 1; i < vertices.Count; ++i)
+            {
+                Vector2 v1 = vertices[i - 1];
+                Vector2 v2 = vertices[i];
+                // If the code crashes here, it means your vertices are too close together.
+                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
+            }
+
+            //TODO: Conserve mem
             Vertices = new Vertices(vertices);
             _hasPrevVertex = false;
             _hasNextVertex = false;
@@ -100,6 +120,7 @@ namespace FarseerPhysics.Collision.Shapes
             return loop;
         }
 
+        //TODO: Property
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
         public void SetPrevVertex(Vector2 prevVertex)
@@ -108,6 +129,7 @@ namespace FarseerPhysics.Collision.Shapes
             _hasPrevVertex = true;
         }
 
+        //TODO: Property
         /// Establish connectivity to a vertex that follows the last vertex.
         /// Don't call this for loops.
         public void SetNextVertex(Vector2 nextVertex)
@@ -172,8 +194,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <returns>True if the ray-cast hits the shape</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input,
-                                     ref Transform transform, int childIndex)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             Debug.Assert(childIndex < Vertices.Count);
 

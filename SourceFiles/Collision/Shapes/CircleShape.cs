@@ -26,6 +26,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision.Shapes
 {
+    /// <summary>
+    /// A circle shape.
+    /// </summary>
     public class CircleShape : Shape
     {
         internal Vector2 _position;
@@ -52,6 +55,9 @@ namespace FarseerPhysics.Collision.Shapes
             get { return 1; }
         }
 
+        /// <summary>
+        /// Get or set the position of the circle
+        /// </summary>
         public Vector2 Position
         {
             get { return _position; }
@@ -94,8 +100,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <returns>True if the ray-cast hits the shape</returns>
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform,
-                                     int childIndex)
+        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             // Collision Detection in Interactive 3D Environments by Gino van den Bergen
             // From Section 3.1.2
@@ -104,6 +109,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             output = new RayCastOutput();
 
+            //TODO: TestPoint() here, refactor
             Vector2 position = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 s = input.Point1 - position;
             float b = Vector2.Dot(s, s) - Radius * Radius;
@@ -121,7 +127,7 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt(sigma));
+            float a = -(c + (float)Math.Sqrt(sigma)); //TODO: Move to mathhelper?
 
             // Is the intersection point on the segment?
             if (0.0f <= a && a <= input.MaxFraction * rr)

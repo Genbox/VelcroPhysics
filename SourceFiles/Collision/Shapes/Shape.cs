@@ -62,8 +62,7 @@ namespace FarseerPhysics.Collision.Shapes
 
         public static bool operator ==(MassData left, MassData right)
         {
-            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid &&
-                    left.Inertia == right.Inertia);
+            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia);
         }
 
         public static bool operator !=(MassData left, MassData right)
@@ -73,8 +72,12 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(MassData)) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+
+            if (obj.GetType() != typeof(MassData))
+                return false;
+
             return Equals((MassData)obj);
         }
 
@@ -93,7 +96,7 @@ namespace FarseerPhysics.Collision.Shapes
 
     public enum ShapeType
     {
-        Unknown = -1,
+        Unknown = -1, //TODO: remove
         Circle = 0,
         Edge = 1,
         Polygon = 2,

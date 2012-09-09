@@ -164,7 +164,7 @@ namespace FarseerPhysics.Collision
             {
                 if (_moveBuffer[i] == proxyId)
                 {
-                    _moveBuffer[i] = -1;
+                    _moveBuffer[i] = NullProxy;
                 }
             }
         }
@@ -312,6 +312,11 @@ namespace FarseerPhysics.Collision
         public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
         {
             _tree.RayCast(callback, ref input);
+        }
+
+        public void ShiftOrigin(Vector2 newOrigin)
+        {
+            _tree.ShiftOrigin(newOrigin);
         }
 
         #endregion

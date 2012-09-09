@@ -126,6 +126,7 @@ namespace FarseerPhysics
 
         /// <summary>
         /// The maximum number of contact points between two convex shapes.
+        /// DO NOT CHANGE THIS VALUE!
         /// </summary>
         public const int MaxManifoldPoints = 2;
 

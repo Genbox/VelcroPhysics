@@ -557,9 +557,7 @@ namespace FarseerPhysics.Common
                 det = 1.0f / det;
             }
 
-            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(ey, ez)),
-                               det * Vector3.Dot(ex, Vector3.Cross(b, ez)),
-                               det * Vector3.Dot(ex, Vector3.Cross(ey, b)));
+            return new Vector3(det * Vector3.Dot(b, Vector3.Cross(ey, ez)), det * Vector3.Dot(ex, Vector3.Cross(b, ez)), det * Vector3.Dot(ex, Vector3.Cross(ey, b)));
         }
 
         /// <summary>
@@ -623,6 +621,22 @@ namespace FarseerPhysics.Common
             M.ez.X = M.ex.Z;
             M.ez.Y = M.ey.Z;
             M.ez.Z = det * (a11 * a22 - a12 * a12);
+        }
+
+        /// Get the inverse of this matrix as a 2-by-2.
+        /// Returns the zero matrix if singular.
+        public void GetInverse22(Mat33 M)
+        {
+            float a = ex.X, b = ey.X, c = ex.Y, d = ey.Y;
+            float det = a * d - b * c;
+            if (det != 0.0f) //TODO: float tol
+            {
+                det = 1.0f / det;
+            }
+
+            M.ex.X = det * d; M.ey.X = -det * b; M.ex.Z = 0.0f;
+            M.ex.Y = -det * c; M.ey.Y = det * a; M.ey.Z = 0.0f;
+            M.ez.X = 0.0f; M.ez.Y = 0.0f; M.ez.Z = 0.0f;
         }
     }
 

@@ -358,6 +358,7 @@ namespace FarseerPhysics.Dynamics
             get { return ContactManager.ContactList; }
         }
 
+        //TODO: Convert to setting
         /// <summary>
         /// Enable/disable single stepped continuous physics. For testing.
         /// </summary>
@@ -921,7 +922,7 @@ namespace FarseerPhysics.Dynamics
 #if USE_ISLAND_SET
             Debug.Assert(IslandSet.Count == 0);
 #else
-			foreach (Body b in BodyList)
+            foreach (Body b in BodyList)
             {
                 b.Flags &= ~BodyFlags.Island;
             }
@@ -933,7 +934,7 @@ namespace FarseerPhysics.Dynamics
                 c.Flags &= ~ContactFlags.Island;
             }
 #else
-			for (int i = 0; i < ContactManager.ContactList.Count; i++)
+            for (int i = 0; i < ContactManager.ContactList.Count; i++)
             {
                 Contact c = ContactManager.ContactList[i];
                 c.Flags &= ~ContactFlags.Island;
@@ -1169,7 +1170,7 @@ namespace FarseerPhysics.Dynamics
                     b.Sweep.Alpha0 = 0.0f;
                 }
 #else
-				for (int i = 0; i < BodyList.Count; i++)
+                for (int i = 0; i < BodyList.Count; i++)
                 {
                     BodyList[i].Flags &= ~BodyFlags.Island;
                     BodyList[i].Sweep.Alpha0 = 0.0f;
@@ -1179,7 +1180,7 @@ namespace FarseerPhysics.Dynamics
                 foreach (var c in ContactManager.ActiveContacts)
                 {
 #else
-				for (int i = 0; i < ContactManager.ContactList.Count; i++)
+                for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
                     Contact c = ContactManager.ContactList[i];
 #endif
@@ -1201,8 +1202,8 @@ namespace FarseerPhysics.Dynamics
                 foreach (var c in ContactManager.ActiveContacts)
                 {
 #else
-            for (int i = 0; i < ContactManager.ContactList.Count; i++)
-            {
+                for (int i = 0; i < ContactManager.ContactList.Count; i++)
+                {
                     Contact c = ContactManager.ContactList[i];
 #endif
 
@@ -1614,6 +1615,27 @@ namespace FarseerPhysics.Dynamics
                 }, ref aabb);
 
             return fixtures;
+        }
+
+        /// Shift the world origin. Useful for large worlds.
+        /// The body shift formula is: position -= newOrigin
+        /// @param newOrigin the new origin with respect to the old origin
+        /// Warning: Calling this method mid-update might cause a crash.
+        public void ShiftOrigin(Vector2 newOrigin)
+        {
+            foreach (Body b in BodyList)
+            {
+                b.Xf.p -= newOrigin;
+                b.Sweep.C0 -= newOrigin;
+                b.Sweep.C -= newOrigin;
+            }
+
+            foreach (Joint joint in JointList)
+            {
+                //joint.ShiftOrigin(newOrigin); //TODO: uncomment
+            }
+
+            ContactManager.BroadPhase.ShiftOrigin(newOrigin);
         }
 
         public void Clear()
