@@ -22,6 +22,7 @@
 
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
@@ -47,7 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(3.0f, 0.5f);
+                shape.Vertices = PolygonTools.CreateRectangle(3.0f, 0.5f);
                 _platform = body.CreateFixture(shape);
 
                 _top = 10.0f + 0.5f;

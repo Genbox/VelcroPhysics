@@ -100,7 +100,7 @@ namespace FarseerPhysics.Controllers
                     Shape shape = fixture.Shape;
 
                     Vector2 sc;
-                    float sarea = shape.ComputeSubmergedArea(_normal, _offset, body.Xf, out sc);
+                    float sarea = shape.ComputeSubmergedArea(ref _normal, _offset, ref body.Xf, out sc);
                     area += sarea;
                     areac.X += sarea * sc.X;
                     areac.Y += sarea * sc.Y;

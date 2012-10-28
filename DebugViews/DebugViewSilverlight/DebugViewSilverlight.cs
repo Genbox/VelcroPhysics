@@ -199,28 +199,6 @@ namespace FarseerPhysics.DebugViewSilverlight
                 }
             }
 
-            if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
-            {
-                Color color = Color.FromArgb(255, 77, 230, 230);
-                for (int i = 0; i < World.ContactManager.ContactList.Count; i++)
-                {
-                    Contact c = World.ContactManager.ContactList[i];
-
-                    Fixture fixtureA = c.FixtureA;
-                    Fixture fixtureB = c.FixtureB;
-
-                    AABB aabbA;
-                    fixtureA.GetAABB(out aabbA, 0);
-                    AABB aabbB;
-                    fixtureB.GetAABB(out aabbB, 0);
-
-                    Vector2 cA = aabbA.Center;
-                    Vector2 cB = aabbB.Center;
-
-                    DrawSegment(cA, cB, color);
-                }
-            }
-
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = Color.FromArgb(255, 230, 77, 230);

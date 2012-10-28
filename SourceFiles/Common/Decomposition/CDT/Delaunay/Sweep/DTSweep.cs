@@ -54,8 +54,8 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
 {
     public static class DTSweep
     {
-        private const double PI_div2 = Math.PI/2;
-        private const double PI_3div4 = 3*Math.PI/4;
+        private const double PI_div2 = Math.PI / 2;
+        private const double PI_3div4 = 3 * Math.PI / 4;
 
         /// <summary>
         /// Triangulate simple polygon with holes
@@ -635,7 +635,7 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
                 {
                     if (tcx.IsDebugEnabled)
                         Console.WriteLine("[FLIP] - flipping and continuing with triangle still crossing edge");
-                            // TODO: remove
+                    // TODO: remove
                     Orientation o = TriangulationUtil.Orient2d(eq, op, ep);
                     t = NextFlipTriangle(tcx, o, t, ot, p, op);
                     FlipEdgeEvent(tcx, ep, eq, t, p);
@@ -762,18 +762,16 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
         /// </summary>
         private static void FillAdvancingFront(DTSweepContext tcx, AdvancingFrontNode n)
         {
-            AdvancingFrontNode node;
             double angle;
 
             // Fill right holes
-            node = n.Next;
+            AdvancingFrontNode node = n.Next;
             while (node.HasNext)
             {
-                angle = HoleAngle(node);
-                if (angle > PI_div2 || angle < -PI_div2)
-                {
+                // if HoleAngle exceeds 90 degrees then break.
+                if (LargeHole_DontFill(node))
                     break;
-                }
+
                 Fill(tcx, node);
                 node = node.Next;
             }
@@ -782,6 +780,10 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
             node = n.Prev;
             while (node.HasPrev)
             {
+                // if HoleAngle exceeds 90 degrees then break.
+                if (LargeHole_DontFill(node))
+                    break;
+
                 angle = HoleAngle(node);
                 if (angle > PI_div2 || angle < -PI_div2)
                 {
@@ -800,6 +802,65 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
                     FillBasin(tcx, n);
                 }
             }
+        }
+
+        // True if HoleAngle exceeds 90 degrees.
+        private static bool LargeHole_DontFill(AdvancingFrontNode node)
+        {
+
+            AdvancingFrontNode nextNode = node.Next;
+            AdvancingFrontNode prevNode = node.Prev;
+            if (!AngleExceeds90Degrees(node.Point, nextNode.Point, prevNode.Point))
+                return false;
+
+            // Check additional points on front.
+            AdvancingFrontNode next2Node = nextNode.Next;
+            // "..Plus.." because only want angles on same side as point being added.
+            if ((next2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, next2Node.Point, prevNode.Point))
+                return false;
+
+            AdvancingFrontNode prev2Node = prevNode.Prev;
+            // "..Plus.." because only want angles on same side as point being added.
+            if ((prev2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, nextNode.Point, prev2Node.Point))
+                return false;
+
+            return true;
+        }
+
+        private static bool AngleExceeds90Degrees(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
+        {
+            double angle = Angle(origin, pa, pb);
+            bool exceeds90Degrees = ((angle > PI_div2) || (angle < -PI_div2));
+            return exceeds90Degrees;
+        }
+
+        private static bool AngleExceedsPlus90DegreesOrIsNegative(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
+        {
+            double angle = Angle(origin, pa, pb);
+            bool exceedsPlus90DegreesOrIsNegative = (angle > PI_div2) || (angle < 0);
+            return exceedsPlus90DegreesOrIsNegative;
+        }
+
+        private static double Angle(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
+        {
+            /* Complex plane
+            * ab = cosA +i*sinA
+            * ab = (ax + ay*i)(bx + by*i) = (ax*bx + ay*by) + i(ax*by-ay*bx)
+            * atan2(y,x) computes the principal value of the argument function
+            * applied to the complex number x+iy
+            * Where x = ax*bx + ay*by
+            * y = ax*by - ay*bx
+            */
+            double px = origin.X;
+            double py = origin.Y;
+            double ax = pa.X - px;
+            double ay = pa.Y - py;
+            double bx = pb.X - px;
+            double by = pb.Y - py;
+            double x = ax * by - ay * bx;
+            double y = ax * bx + ay * by;
+            double angle = Math.Atan2(x, y);
+            return angle;
         }
 
         /// <summary>
@@ -944,7 +1005,7 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
             double ay = node.Next.Point.Y - py;
             double bx = node.Prev.Point.X - px;
             double by = node.Prev.Point.Y - py;
-            return Math.Atan2(ax*by - ay*bx, ax*bx + ay*by);
+            return Math.Atan2(ax * by - ay * bx, ax * bx + ay * by);
         }
 
         /// <summary>
@@ -1015,7 +1076,7 @@ namespace Poly2Tri.Triangulation.Delaunay.Sweep
                     if (ot.EdgeIsConstrained[oi] || ot.EdgeIsDelaunay[oi])
                     {
                         t.EdgeIsConstrained[i] = ot.EdgeIsConstrained[oi];
-                            // XXX: have no good way of setting this property when creating new triangles so lets set it here
+                        // XXX: have no good way of setting this property when creating new triangles so lets set it here
                         continue;
                     }
 

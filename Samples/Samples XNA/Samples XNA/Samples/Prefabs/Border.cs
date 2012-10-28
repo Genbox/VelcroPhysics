@@ -23,12 +23,12 @@ namespace FarseerPhysics.SamplesFramework
             float halfHeight = ConvertUnits.ToSimUnits(viewport.Height) / 2f - 0.75f;
 
             Vertices borders = new Vertices(4);
-            borders.Add(new Vector2(-halfWidth, halfHeight));
-            borders.Add(new Vector2(halfWidth, halfHeight));
-            borders.Add(new Vector2(halfWidth, -halfHeight));
-            borders.Add(new Vector2(-halfWidth, -halfHeight));
+            borders.Add(new Vector2(-halfWidth, halfHeight)); //Lower left
+            borders.Add(new Vector2(halfWidth, halfHeight)); //Lower right
+            borders.Add(new Vector2(halfWidth, -halfHeight)); //Upper right
+            borders.Add(new Vector2(-halfWidth, -halfHeight)); // Upper left
 
-            _anchor = BodyFactory.CreateChainShape(_world, borders);
+            _anchor = BodyFactory.CreateLoopShape(_world, borders);
             _anchor.CollisionCategories = Category.All;
             _anchor.CollidesWith = Category.All;
 

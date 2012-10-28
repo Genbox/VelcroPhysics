@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            //FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, b3.GetLocalPoint(anchor), anchor);
+            //FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, b3.GetLocalPoint(anchor), anchor); //TODO
             //jd.CollideConnected = true;
             //World.AddJoint(jd);
 
@@ -115,7 +115,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            //FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, b4.GetLocalPoint(anchor), anchor);
+            //FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, b4.GetLocalPoint(anchor), anchor);  //TODO
             //World.AddJoint(jd2);
 
             Body b5;
@@ -132,19 +132,19 @@ namespace FarseerPhysics.TestBed.Tests
 
                 vertices = PolygonTools.CreateRectangle(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
 
-                shape.Set(vertices);
+                shape.Vertices = vertices;
                 fix = b5.CreateFixture(shape);
                 fix.Friction = 0.1f;
 
                 vertices = PolygonTools.CreateRectangle(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
 
-                shape.Set(vertices);
+                shape.Vertices = vertices;
                 fix = b5.CreateFixture(shape);
                 fix.Friction = 0.1f;
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            //FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, b5.GetLocalPoint(anchor), anchor);
+            //FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, b5.GetLocalPoint(anchor), anchor);  //TODO
             //World.AddJoint(jd3);
 
             Body b6;
@@ -160,7 +160,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(1.0f, -0.1f);
-            RevoluteJoint jd4 = new RevoluteJoint(b5, b6,b6.GetWorldPoint(anchor), anchor); //TODO: Check line
+            RevoluteJoint jd4 = new RevoluteJoint(b5,b6.GetWorldPoint(anchor), b6, anchor); //TODO: Check line
             jd4.CollideConnected = true;
             World.AddJoint(jd4);
 

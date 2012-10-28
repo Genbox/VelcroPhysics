@@ -88,16 +88,6 @@ namespace FarseerPhysics.DebugViews
             AppendFlags(DebugViewFlags.Joint);
         }
 
-        public void BeginCustomDraw(ref Matrix projection, ref Matrix view)
-        {
-            _primitiveBatch.Begin(ref projection, ref view);
-        }
-
-        public void EndCustomDraw()
-        {
-            _primitiveBatch.End();
-        }
-
         #region IDisposable Members
 
         public void Dispose()
@@ -235,39 +225,19 @@ namespace FarseerPhysics.DebugViews
                     DrawJoint(j);
                 }
             }
-            if ((Flags & DebugViewFlags.Pair) == DebugViewFlags.Pair)
-            {
-                Color color = new Color(0.3f, 0.9f, 0.9f);
-                for (int i = 0; i < World.ContactManager.ContactList.Count; i++)
-                {
-                    Contact c = World.ContactManager.ContactList[i];
-                    Fixture fixtureA = c.FixtureA;
-                    Fixture fixtureB = c.FixtureB;
-
-                    AABB aabbA;
-                    fixtureA.GetAABB(out aabbA, 0);
-                    AABB aabbB;
-                    fixtureB.GetAABB(out aabbB, 0);
-
-                    Vector2 cA = aabbA.Center;
-                    Vector2 cB = aabbB.Center;
-
-                    DrawSegment(cA, cB, color);
-                }
-            }
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
                 IBroadPhase bp = World.ContactManager.BroadPhase;
 
-                foreach (Body b in World.BodyList)
+                foreach (Body body in World.BodyList)
                 {
-                    if (b.Enabled == false)
+                    if (body.Enabled == false)
                     {
                         continue;
                     }
 
-                    foreach (Fixture f in b.FixtureList)
+                    foreach (Fixture f in body.FixtureList)
                     {
                         for (int t = 0; t < f.ProxyCount; ++t)
                         {
@@ -537,15 +507,12 @@ namespace FarseerPhysics.DebugViews
                 case ShapeType.Chain:
                     {
                         ChainShape chain = (ChainShape)fixture.Shape;
-                        int count = chain.Vertices.Count;
 
-                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[count - 1]);
-                        DrawCircle(v1, 0.05f, color);
-                        for (int i = 0; i < count; ++i)
+                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
                         {
-                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
                             DrawSegment(v1, v2, color);
-                            v1 = v2;
                         }
                     }
                     break;
@@ -575,15 +542,10 @@ namespace FarseerPhysics.DebugViews
 
         public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawSolidPolygon(vertices, count, new Color(red, green, blue), true);
+            DrawSolidPolygon(vertices, count, new Color(red, green, blue));
         }
 
-        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color)
-        {
-            DrawSolidPolygon(vertices, count, color, true);
-        }
-
-        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline)
+        public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline = true)
         {
             if (!_primitiveBatch.IsReady())
             {
@@ -638,8 +600,7 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
-        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green,
-                                             float blue)
+        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green, float blue)
         {
             DrawSolidCircle(center, radius, axis, new Color(red, green, blue));
         }
@@ -774,6 +735,16 @@ namespace FarseerPhysics.DebugViews
             }
         }
 
+        public void BeginCustomDraw(ref Matrix projection, ref Matrix view)
+        {
+            _primitiveBatch.Begin(ref projection, ref view);
+        }
+
+        public void EndCustomDraw()
+        {
+            _primitiveBatch.End();
+        }
+
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
             if (!Enabled)
@@ -805,10 +776,8 @@ namespace FarseerPhysics.DebugViews
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args),
-                                  new Vector2(_stringData[i].X + 1f, _stringData[i].Y + 1f), Color.Black);
-                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args),
-                                  new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X + 1f, _stringData[i].Y + 1f), Color.Black);
+                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
             }
             // end the sprite batch effect
             _batch.End();

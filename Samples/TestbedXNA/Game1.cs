@@ -357,11 +357,15 @@ namespace FarseerPhysics.TestBed
             View = Matrix.CreateTranslation(new Vector3(-ViewCenter.X, -ViewCenter.Y, 0)) * Matrix.CreateScale(ViewZoom);
         }
 
+        public Vector2 ConvertWorldToScreen(Vector2 position)
+        {
+            Vector3 temp = GraphicsDevice.Viewport.Project(new Vector3(position, 0), Projection, View, Matrix.Identity);
+            return new Vector2(temp.X, temp.Y);
+        }
+
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
-            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), Projection, View,
-                                                             Matrix.Identity);
-
+            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), Projection, View, Matrix.Identity);
             return new Vector2(temp.X, temp.Y);
         }
 

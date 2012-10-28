@@ -41,7 +41,7 @@ namespace FarseerPhysics.TestBed.Tests
             borders.Add(new Vector2(halfWidth, -halfHeight));
             borders.Add(new Vector2(-halfWidth, -halfHeight));
 
-            Body anchor = BodyFactory.CreateChainShape(World, borders);
+            Body anchor = BodyFactory.CreateLoopShape(World, borders);
             anchor.CollisionCategories = Category.All;
             anchor.CollidesWith = Category.All;
 
@@ -57,26 +57,27 @@ namespace FarseerPhysics.TestBed.Tests
             bigbody.Position = Vector2.UnitX * 25;
             bigbody.CreateFixture(bigshape);
 
+            World.RemoveBody(bigbody);
+
             //
             //populate
             //
-            const int rad = 12;
-            const float a = 0.6f;
-            const float sep = 0.000f;
+            //const int rad = 12;
+            //const float a = 0.6f;
+            //const float sep = 0.000f;
 
-            Vector2 cent = Vector2.Zero;
+            //Vector2 cent = Vector2.Zero;
 
-            for (int y = -rad; y <= +rad; y++)
-            {
-                int xrad = (int)Math.Round(Math.Sqrt(rad * rad - y * y));
-                for (int x = -xrad; x <= +xrad; x++)
-                {
-                    Vector2 pos = cent + new Vector2(x * (2 * a + sep), y * (2 * a + sep));
-                    Body cBody = BodyFactory.CreateCircle(World, a, 55, pos);
-                    cBody.BodyType = BodyType.Dynamic;
-                }
-            }
-
+            //for (int y = -rad; y <= +rad; y++)
+            //{
+            //    int xrad = (int)Math.Round(Math.Sqrt(rad * rad - y * y));
+            //    for (int x = -xrad; x <= +xrad; x++)
+            //    {
+            //        Vector2 pos = cent + new Vector2(x * (2 * a + sep), y * (2 * a + sep));
+            //        Body cBody = BodyFactory.CreateCircle(World, a, 55, pos);
+            //        cBody.BodyType = BodyType.Dynamic;
+            //    }
+            //}
 
             base.Initialize();
 

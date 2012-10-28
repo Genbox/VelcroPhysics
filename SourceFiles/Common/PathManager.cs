@@ -85,8 +85,7 @@ namespace FarseerPhysics.Factories
         /// <param name="copies">The copies.</param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                 BodyType type, int copies, object userData)
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes, BodyType type, int copies, object userData = null)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -99,22 +98,17 @@ namespace FarseerPhysics.Factories
                 b.BodyType = type;
                 b.Position = new Vector2(centers[i].X, centers[i].Y);
                 b.Rotation = centers[i].Z;
+                b.UserData = userData;
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape, userData);
+                    b.CreateFixture(shape);
                 }
 
                 bodyList.Add(b);
             }
 
             return bodyList;
-        }
-
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes,
-                                                                 BodyType type, int copies)
-        {
-            return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, null);
         }
 
 
@@ -176,7 +170,7 @@ namespace FarseerPhysics.Factories
 
             for (int i = 1; i < bodies.Count; i++)
             {
-                RevoluteJoint joint = new RevoluteJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB);
+                RevoluteJoint joint = new RevoluteJoint(bodies[i], localAnchorA, bodies[i - 1], localAnchorB);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
                 joints.Add(joint);
@@ -184,47 +178,7 @@ namespace FarseerPhysics.Factories
 
             if (connectFirstAndLast)
             {
-                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB);
-                lastjoint.CollideConnected = collideConnected;
-                world.AddJoint(lastjoint);
-                joints.Add(lastjoint);
-            }
-
-            return joints;
-        }
-
-        /// <summary>
-        /// Attaches the bodies with revolute joints.
-        /// </summary>
-        /// <param name="world">The world.</param>
-        /// <param name="bodies">The bodies.</param>
-        /// <param name="localAnchorA">The local anchor A.</param>
-        /// <param name="localAnchorB">The local anchor B.</param>
-        /// <param name="connectFirstAndLast">if set to <c>true</c> [connect first and last].</param>
-        /// <param name="collideConnected">if set to <c>true</c> [collide connected].</param>
-        /// <param name="minLength">Minimum length of the slider joint.</param>
-        /// <param name="maxLength">Maximum length of the slider joint.</param>
-        /// <returns></returns>
-        public static List<SliderJoint> AttachBodiesWithSliderJoint(World world, List<Body> bodies, Vector2 localAnchorA,
-                                                                    Vector2 localAnchorB, bool connectFirstAndLast,
-                                                                    bool collideConnected, float minLength,
-                                                                    float maxLength)
-        {
-            List<SliderJoint> joints = new List<SliderJoint>(bodies.Count + 1);
-
-            for (int i = 1; i < bodies.Count; i++)
-            {
-                SliderJoint joint = new SliderJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB, minLength,
-                                                    maxLength);
-                joint.CollideConnected = collideConnected;
-                world.AddJoint(joint);
-                joints.Add(joint);
-            }
-
-            if (connectFirstAndLast)
-            {
-                SliderJoint lastjoint = new SliderJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB,
-                                                        minLength, maxLength);
+                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], localAnchorA, bodies[bodies.Count - 1], localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
                 joints.Add(lastjoint);

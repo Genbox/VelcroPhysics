@@ -58,9 +58,17 @@ namespace FarseerPhysics
         public static bool ContinuousPhysics = true;
 
         /// <summary>
+        /// If true, it will run a GiftWrap convex hull on all polygon inputs.
+        /// This makes for a more stable engine when given random input,
+        /// but if speed of the creation of polygons are more important,
+        /// you might want to set this to false.
+        /// </summary>
+        public static bool UseConvexHullPolygons = true;
+
+        /// <summary>
         /// The number of velocity iterations in the TOI solver
         /// </summary>
-        public static int TOIVelocityIterations = 8;
+        public static int TOIVelocityIterations = VelocityIterations;
 
         /// <summary>
         /// The number of position iterations in the TOI solver
@@ -75,7 +83,7 @@ namespace FarseerPhysics
         /// <summary>
         /// Enable/Disable warmstarting
         /// </summary>
-        public static bool EnableWarmstarting = true;
+        public const bool EnableWarmstarting = true;
 
         /// <summary>
         /// Enable/Disable sleeping

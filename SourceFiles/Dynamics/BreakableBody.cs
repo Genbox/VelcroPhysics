@@ -29,11 +29,6 @@ namespace FarseerPhysics.Dynamics
         private World _world;
 
         public BreakableBody(IEnumerable<Vertices> vertices, World world, float density)
-            : this(vertices, world, density, null)
-        {
-        }
-
-        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density, object userData)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
@@ -43,7 +38,7 @@ namespace FarseerPhysics.Dynamics
             foreach (Vertices part in vertices)
             {
                 PolygonShape polygonShape = new PolygonShape(part, density);
-                Fixture fixture = MainBody.CreateFixture(polygonShape, userData);
+                Fixture fixture = MainBody.CreateFixture(polygonShape);
                 Parts.Add(fixture);
             }
         }
@@ -106,12 +101,12 @@ namespace FarseerPhysics.Dynamics
 
             for (int i = 0; i < Parts.Count; i++)
             {
-                Fixture fixture = Parts[i];
+                Fixture oldFixture = Parts[i];
 
-                Shape shape = fixture.Shape.Clone();
+                Shape shape = oldFixture.Shape.Clone();
+                object userData = oldFixture.UserData;
 
-                object userdata = fixture.UserData;
-                MainBody.DestroyFixture(fixture);
+                MainBody.DestroyFixture(oldFixture);
 
                 Body body = BodyFactory.CreateBody(_world);
                 body.BodyType = BodyType.Dynamic;
@@ -119,7 +114,8 @@ namespace FarseerPhysics.Dynamics
                 body.Rotation = MainBody.Rotation;
                 body.UserData = MainBody.UserData;
 
-                body.CreateFixture(shape, userdata);
+                Fixture newFixture = body.CreateFixture(shape);
+                newFixture.UserData = userData;
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

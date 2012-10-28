@@ -36,7 +36,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// </summary>
     public static class EarclipDecomposer
     {
-        //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50
+        //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 and http://www.ewjordan.com/earClip/
 
         private const float Tol = .001f;
 

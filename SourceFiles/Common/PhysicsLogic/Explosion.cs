@@ -240,7 +240,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
             for (int i = 0; i < valIndex; ++i)
             {
-                Fixture shape = null;
+                Fixture fixture = null;
                 float midpt;
 
                 int iplus = (i == valIndex - 1 ? 0 : i + 1);
@@ -260,8 +260,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 midpt = midpt / 2;
 
                 Vector2 p1 = pos;
-                Vector2 p2 = radius * new Vector2((float)Math.Cos(midpt),
-                                                (float)Math.Sin(midpt)) + pos;
+                Vector2 p2 = radius * new Vector2((float)Math.Cos(midpt), (float)Math.Sin(midpt)) + pos;
 
                 // RaycastOne
                 bool hitClosest = false;
@@ -272,25 +271,15 @@ namespace FarseerPhysics.Common.PhysicsLogic
                                       if (!IsActiveOn(body))
                                           return 0;
 
-                                      if (body.UserData != null)
-                                      {
-                                          int index = (int)body.UserData;
-                                          if (index == 0)
-                                          {
-                                              // filter
-                                              return -1.0f;
-                                          }
-                                      }
-
                                       hitClosest = true;
-                                      shape = f;
+                                      fixture = f;
                                       return fr;
                                   }, p1, p2);
 
                 //draws radius points
-                if ((hitClosest) && (shape.Body.BodyType == BodyType.Dynamic))
+                if ((hitClosest) && (fixture.Body.BodyType == BodyType.Dynamic))
                 {
-                    if ((_data.Count() > 0) && (_data.Last().Body == shape.Body) && (!rayMissed))
+                    if ((_data.Any()) && (_data.Last().Body == fixture.Body) && (!rayMissed))
                     {
                         int laPos = _data.Count - 1;
                         ShapeData la = _data[laPos];
@@ -301,7 +290,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     {
                         // make new
                         ShapeData d;
-                        d.Body = shape.Body;
+                        d.Body = fixture.Body;
                         d.Min = vals[i];
                         d.Max = vals[iplus];
                         _data.Add(d);

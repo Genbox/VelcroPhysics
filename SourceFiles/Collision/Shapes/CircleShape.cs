@@ -109,7 +109,6 @@ namespace FarseerPhysics.Collision.Shapes
 
             output = new RayCastOutput();
 
-            //TODO: TestPoint() here, refactor
             Vector2 position = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 s = input.Point1 - position;
             float b = Vector2.Dot(s, s) - Radius * Radius;
@@ -185,7 +184,7 @@ namespace FarseerPhysics.Collision.Shapes
         /// <summary>
         /// Method used by the BuoyancyController
         /// </summary>
-        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
 

@@ -181,13 +181,13 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <value></value>
         public float Ratio { get; set; }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
             Vector2 P = _impulse * m_uB;
-            return inv_dt * P;
+            return invDt * P;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
             return 0.0f;
         }

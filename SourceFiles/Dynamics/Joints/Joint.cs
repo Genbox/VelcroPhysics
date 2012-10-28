@@ -117,7 +117,6 @@ namespace FarseerPhysics.Dynamics.Joints
         internal JointEdge EdgeA = new JointEdge();
         internal JointEdge EdgeB = new JointEdge();
         internal bool IslandFlag;
-        protected int m_index;
 
         protected Joint()
         {
@@ -182,15 +181,6 @@ namespace FarseerPhysics.Dynamics.Joints
         public object UserData { get; set; }
 
         /// <summary>
-        /// Short-cut function to determine if either body is inactive.
-        /// </summary>
-        /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
-        public bool BodiesActive
-        {
-            get { return BodyA.Enabled && BodyB.Enabled; }
-        }
-
-        /// <summary>
         /// Set this flag to true if the attached bodies should collide.
         /// </summary>
         public bool CollideConnected { get; set; }
@@ -203,24 +193,24 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the reaction force on bodyB at the joint anchor in Newtons.
         /// </summary>
-        /// <param name="inv_dt">The inv_dt.</param>
+        /// <param name="invDt">The inv_dt.</param>
         /// <returns></returns>
-        public abstract Vector2 GetReactionForce(float inv_dt);
+        public abstract Vector2 GetReactionForce(float invDt);
 
         /// <summary>
         /// Get the reaction torque on bodyB in N*m.
         /// </summary>
-        /// <param name="inv_dt">The inv_dt.</param>
+        /// <param name="invDt">The inv_dt.</param>
         /// <returns></returns>
-        public abstract float GetReactionTorque(float inv_dt);
+        public abstract float GetReactionTorque(float invDt);
 
         protected void WakeBodies()
         {
-            BodyA.Awake = true;
+            //if (BodyA != null)
+                //BodyA.Awake = true;
+
             if (BodyB != null)
-            {
                 BodyB.Awake = true;
-            }
         }
 
         /// <summary>

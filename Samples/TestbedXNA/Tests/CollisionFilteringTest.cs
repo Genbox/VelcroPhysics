@@ -77,7 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices[0] *= 2.0f;
                 vertices[1] *= 2.0f;
                 vertices[2] *= 2.0f;
-                polygon.Set(vertices);
+                polygon.Vertices = vertices;
 
                 Body triangleBody2 = BodyFactory.CreateBody(World);
                 triangleBody2.BodyType = BodyType.Dynamic;
@@ -98,7 +98,7 @@ namespace FarseerPhysics.TestBed.Tests
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
-                    PrismaticJoint jd = new PrismaticJoint(triangleBody2, body, body.Position, Vector2.Zero, new Vector2(0.0f, 1.0f));
+                    PrismaticJoint jd = new PrismaticJoint(triangleBody2, body, new Vector2(0, 4), Vector2.Zero, new Vector2(0.0f, 1.0f));
                     jd.LimitEnabled = true;
                     jd.LowerLimit = -1.0f;
                     jd.UpperLimit = 1.0f;
@@ -107,7 +107,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 // Small box
-                polygon.SetAsBox(1.0f, 0.5f);
+                polygon.Vertices = PolygonTools.CreateRectangle(1.0f, 0.5f);
 
                 Body boxBody = BodyFactory.CreateBody(World);
                 boxBody.BodyType = BodyType.Dynamic;
@@ -121,7 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
                 boxFixture.CollidesWith = BoxMask;
 
                 // Large box (recycle definitions)
-                polygon.SetAsBox(2, 1);
+                polygon.Vertices = PolygonTools.CreateRectangle(2, 1);
 
                 Body boxBody2 = BodyFactory.CreateBody(World);
                 boxBody2.BodyType = BodyType.Dynamic;

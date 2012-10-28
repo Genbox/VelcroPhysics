@@ -1,75 +1,88 @@
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
-using FarseerPhysics.Common.ConvexHull;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ConvexHullTest : Test
+    public class ConvexHull : Test
     {
-        private Vertices _chainHull;
-        private Vertices _giftWrap;
-        private Vertices _melkman;
-        private Vertices _pointCloud1;
-        private Vertices _pointCloud2;
-        private Vertices _pointCloud3;
+        private int _count = Settings.MaxPolygonVertices;
+        private Vector2[] _points = new Vector2[Settings.MaxPolygonVertices];
+        private bool _auto;
 
-        private ConvexHullTest()
+        private ConvexHull()
         {
-            _pointCloud1 = new Vertices(32);
+            Generate();
+            _auto = false;
+        }
 
-            for (int i = 0; i < 32; i++)
+        private void Generate()
+        {
+            Vector2 lowerBound = new Vector2(-8.0f, -8.0f);
+            Vector2 upperBound = new Vector2(8.0f, 8.0f);
+
+            for (int i = 0; i < _count; ++i)
             {
-                float x = Rand.RandomFloat(-10, 10);
-                float y = Rand.RandomFloat(-10, 10);
+                float x = 10.0f * Rand.RandomFloat();
+                float y = 10.0f * Rand.RandomFloat();
 
-                _pointCloud1.Add(new Vector2(x, y));
+                // Clamp onto a square to help create collinearities.
+                // This will stress the convex hull algorithm.
+                Vector2 v = new Vector2(x, y);
+                v = MathUtils.Clamp(v, lowerBound, upperBound);
+                _points[i] = v;
             }
+        }
 
-            _pointCloud2 = new Vertices(_pointCloud1);
-            _pointCloud3 = new Vertices(_pointCloud1);
+        public static Test Create()
+        {
+            return new ConvexHull();
+        }
 
-            //Melkman DOES NOT work on point clouds. It only works on simple polygons.
-            _pointCloud1.Translate(new Vector2(-20, 30));
-            _melkman = Melkman.GetConvexHull(_pointCloud1);
+        public override void Keyboard(KeyboardManager keyboardManager)
+        {
+            if (keyboardManager.IsNewKeyPress(Keys.A))
+                _auto = !_auto;
 
-            //Giftwrap works on point clouds
+            if (keyboardManager.IsNewKeyPress(Keys.G))
+                Generate();
 
-            _pointCloud2.Translate(new Vector2(20, 30));
-            _giftWrap = GiftWrap.GetConvexHull(_pointCloud2);
 
-            _pointCloud3.Translate(new Vector2(20, 10));
-            _chainHull = ChainHull.GetConvexHull(_pointCloud3);
+            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Melkman: Red");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Giftwrap: Green");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "ChainHull: Blue");
+            base.Update(settings, gameTime);
+
+            PolygonShape shape = new PolygonShape(new Vertices(_points), 0f);
+
+            DebugView.DrawString(5, TextLine, "Press g to generate a new random convex hull");
             TextLine += 15;
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            for (int i = 0; i < 32; i++)
+            DebugView.DrawPolygon(shape.Vertices.ToArray(), shape.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
+
+            for (int i = 0; i < _count; ++i)
             {
-                DebugView.DrawPoint(_pointCloud1[i], 0.1f, Color.Yellow);
-                DebugView.DrawPoint(_pointCloud2[i], 0.1f, Color.Yellow);
-                DebugView.DrawPoint(_pointCloud3[i], 0.1f, Color.Yellow);
+                DebugView.DrawPoint(_points[i], 0.1f, new Color(0.9f, 0.5f, 0.5f));
+                Vector2 position = GameInstance.ConvertWorldToScreen(_points[i]);
+                DebugView.DrawString((int)position.X, (int)position.Y, i.ToString());
             }
 
-            DebugView.DrawPolygon(_melkman.ToArray(), _melkman.Count, Color.Red);
-            DebugView.DrawPolygon(_giftWrap.ToArray(), _giftWrap.Count, Color.Green);
-            DebugView.DrawPolygon(_chainHull.ToArray(), _chainHull.Count, Color.Blue);
             DebugView.EndCustomDraw();
 
-            base.Update(settings, gameTime);
-        }
+            if (shape.Vertices.IsConvex() == false)
+            {
+                TextLine += 0;
+            }
 
-        internal static Test Create()
-        {
-            return new ConvexHullTest();
+            if (_auto)
+            {
+                Generate();
+            }
         }
     }
 }

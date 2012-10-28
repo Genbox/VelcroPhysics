@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 public class QuadTreeBroadPhase : IBroadPhase
 {
     private const int TreeUpdateThresh = 10000;
-    private int _currID;
+    private int _currId;
     private Dictionary<int, Element<FixtureProxy>> _idRegister;
     private List<Element<FixtureProxy>> _moveBuffer;
     private List<Pair> _pairBuffer;
@@ -93,15 +93,15 @@ public class QuadTreeBroadPhase : IBroadPhase
 
     public int AddProxy(ref FixtureProxy proxy)
     {
-        int proxyID = _currID++;
-        proxy.ProxyId = proxyID;
+        int proxyId = _currId++;
+        proxy.ProxyId = proxyId;
         AABB aabb = Fatten(ref proxy.AABB);
         Element<FixtureProxy> qtnode = new Element<FixtureProxy>(proxy, aabb);
 
-        _idRegister.Add(proxyID, qtnode);
+        _idRegister.Add(proxyId, qtnode);
         _quadTree.AddNode(qtnode);
 
-        return proxyID;
+        return proxyId;
     }
 
     public void RemoveProxy(int proxyId)
@@ -159,8 +159,8 @@ public class QuadTreeBroadPhase : IBroadPhase
     {
         if (_idRegister.ContainsKey(proxyId))
             return _idRegister[proxyId].Value;
-        else
-            throw new KeyNotFoundException("proxyID not found in register");
+
+        throw new KeyNotFoundException("proxyID not found in register");
     }
 
     public void TouchProxy(int proxyId)
@@ -200,23 +200,22 @@ public class QuadTreeBroadPhase : IBroadPhase
         return qtPred;
     }
 
-    private Func<RayCastInput, Element<FixtureProxy>, float> TransformRayCallback(
-        Func<RayCastInput, int, float> callback)
+    private Func<RayCastInput, Element<FixtureProxy>, float> TransformRayCallback(Func<RayCastInput, int, float> callback)
     {
         Func<RayCastInput, Element<FixtureProxy>, float> newCallback =
             (input, qtnode) => callback(input, qtnode.Value.ProxyId);
         return newCallback;
     }
 
-    private bool PairBufferQueryCallback(int proxyID, int baseID)
+    private bool PairBufferQueryCallback(int proxyId, int baseId)
     {
         // A proxy cannot form a pair with itself.
-        if (proxyID == baseID)
+        if (proxyId == baseId)
             return true;
 
         Pair p = new Pair();
-        p.ProxyIdA = Math.Min(proxyID, baseID);
-        p.ProxyIdB = Math.Max(proxyID, baseID);
+        p.ProxyIdA = Math.Min(proxyId, baseId);
+        p.ProxyIdB = Math.Max(proxyId, baseId);
         _pairBuffer.Add(p);
 
         return true;

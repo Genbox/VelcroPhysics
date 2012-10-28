@@ -34,13 +34,16 @@ namespace FarseerPhysics.TestBed.Tests
     public class CharacterCollisionTest : Test
     {
         private bool _collision;
+        private Body _character;
 
         private CharacterCollisionTest()
         {
             //Ground body
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
 
-            // Collinear edges
+            // Collinear edges with no adjacency information.
+            // This shows the problematic case where a box shape can hit
+            // an internal vertex.
             EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
             ground.CreateFixture(shape);
             shape = new EdgeShape(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
@@ -48,41 +51,53 @@ namespace FarseerPhysics.TestBed.Tests
             shape = new EdgeShape(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
             ground.CreateFixture(shape);
 
-            // Square tiles
+            // Chain shape
+            {
+                Vertices vs = new Vertices(4);
+                vs.Add(new Vector2(5.0f, 7.0f));
+                vs.Add(new Vector2(6.0f, 8.0f));
+                vs.Add(new Vector2(7.0f, 8.0f));
+                vs.Add(new Vector2(8.0f, 7.0f));
+
+                Body body = BodyFactory.CreateChainShape(World, vs);
+                body.Rotation = 0.25f * Settings.Pi;
+            }
+
+            // Square tiles. This shows that adjacency shapes may
+            // have non-smooth collision. There is no solution
+            // to this problem.
             PolygonShape tile = new PolygonShape(1);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
-            tile.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
 
-            // Square made from an edge chain.
+            // Square made from an edge loop. Collision should be smooth.
             Vertices vertices = new Vertices(4);
             vertices.Add(new Vector2(-1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 3.0f));
             vertices.Add(new Vector2(1.0f, 5.0f));
             vertices.Add(new Vector2(-1.0f, 5.0f));
-            ChainShape chainShape = new ChainShape(vertices);
-            ground.CreateFixture(chainShape);
+            FixtureFactory.AttachLoopShape(vertices, ground);
 
-            // Edge chain.
+            // Edge loop. Collision should be smooth.
             vertices = new Vertices(10);
             vertices.Add(new Vector2(0.0f, 0.0f));
             vertices.Add(new Vector2(6.0f, 0.0f));
             vertices.Add(new Vector2(6.0f, 2.0f));
             vertices.Add(new Vector2(4.0f, 1.0f));
             vertices.Add(new Vector2(2.0f, 2.0f));
+            vertices.Add(new Vector2(0.0f, 2.0f));
             vertices.Add(new Vector2(-2.0f, 2.0f));
             vertices.Add(new Vector2(-4.0f, 3.0f));
             vertices.Add(new Vector2(-6.0f, 2.0f));
             vertices.Add(new Vector2(-6.0f, 0.0f));
+            BodyFactory.CreateLoopShape(World, vertices, new Vector2(-10, 4));
 
-            BodyFactory.CreateChainShape(World, vertices, new Vector2(-10, 4));
-
-            // Square character
-            Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20);
-            squareCharacter.Position = new Vector2(-3.0f, 5.0f);
+            // Square character 1
+            Body squareCharacter = BodyFactory.CreateRectangle(World, 1, 1, 20, new Vector2(-3.0f, 8.0f));
             squareCharacter.BodyType = BodyType.Dynamic;
             squareCharacter.FixedRotation = true;
             squareCharacter.SleepingAllowed = false;
@@ -91,8 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
             squareCharacter.OnSeparation += CharacterOnSeparation;
 
             // Square character 2
-            Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20);
-            squareCharacter2.Position = new Vector2(-5.0f, 5.0f);
+            Body squareCharacter2 = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 20, new Vector2(-5.0f, 5.0f));
             squareCharacter2.BodyType = BodyType.Dynamic;
             squareCharacter2.FixedRotation = true;
             squareCharacter2.SleepingAllowed = false;
@@ -108,18 +122,22 @@ namespace FarseerPhysics.TestBed.Tests
                 angle += delta;
             }
 
-            Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20);
-            hexCharacter.Position = new Vector2(-5.0f, 8.0f);
+            Body hexCharacter = BodyFactory.CreatePolygon(World, vertices, 20, new Vector2(-5.0f, 8.0f));
             hexCharacter.BodyType = BodyType.Dynamic;
             hexCharacter.FixedRotation = true;
             hexCharacter.SleepingAllowed = false;
 
             // Circle character
-            Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20);
-            circleCharacter.Position = new Vector2(3.0f, 5.0f);
+            Body circleCharacter = BodyFactory.CreateCircle(World, 0.5f, 20, new Vector2(3.0f, 5.0f));
             circleCharacter.BodyType = BodyType.Dynamic;
             circleCharacter.FixedRotation = true;
             circleCharacter.SleepingAllowed = false;
+
+            // Circle character
+            _character = BodyFactory.CreateCircle(World, 0.25f, 20, new Vector2(-7.0f, 6.0f));
+            _character.BodyType = BodyType.Dynamic;
+            _character.Friction = 1.0f;
+            _character.SleepingAllowed = false;
         }
 
         private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
@@ -135,6 +153,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            Vector2 v = _character.LinearVelocity;
+            v.X = -5.0f;
+            _character.LinearVelocity = v;
+
             DebugView.DrawString(50, TextLine, _collision ? "OnCollision fired" : "OnSeparation fired");
 
             base.Update(settings, gameTime);

@@ -105,6 +105,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Tests\AddPair.cs" />
     <Compile Include="Tests\ApplyForceTest.cs" />
     <Compile Include="Tests\BodyTypesTest.cs" />
     <Compile Include="Tests\BreakableTest.cs" />
@@ -124,8 +125,13 @@
     <Compile Include="Tests\CloneTest.cs" />
     <Compile Include="Tests\CarTest.cs" />
     <Compile Include="Tests\BuoyancyTest.cs" />
-    <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\ConvexHullTest2.cs" />
     <Compile Include="Tests\ConveyorBeltTest.cs" />
+    <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\TumblerTest.cs" />
+    <Compile Include="Tests\MobileBalancedTest.cs" />
+    <Compile Include="Tests\MobileTest.cs" />
+    <Compile Include="Tests\MotorJointTest.cs" />
     <Compile Include="Tests\DeletionTest.cs" />
     <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
@@ -137,7 +143,6 @@
     <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
     <Compile Include="Tests\SimpleWindForceTest.cs" />
-    <Compile Include="Tests\SliderJointTest.cs" />
     <Compile Include="Tests\DistanceTest.cs" />
     <Compile Include="Tests\DominosTest.cs" />
     <Compile Include="Tests\DynamicTreeTest.cs" />

@@ -48,13 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private RopeTest()
         {
-            Body ground;
-            {
-                ground = new Body(World);
-
-                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 Body prevBody = ground;
@@ -88,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, anchor); //TODO: Check
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor); 
                     jd.CollideConnected = false;
 
                     World.AddJoint(jd);

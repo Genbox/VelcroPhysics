@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -40,60 +39,45 @@ namespace FarseerPhysics.TestBed.Tests
         private BodyTypesTest()
         {
             //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
 
             // Define attachment
             {
-                _attachment = BodyFactory.CreateBody(World);
+                _attachment = BodyFactory.CreateRectangle(World, 1, 4, 2);
                 _attachment.BodyType = BodyType.Dynamic;
                 _attachment.Position = new Vector2(0.0f, 3.0f);
-
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 2.0f);
-                PolygonShape shape = new PolygonShape(box, 2);
-                _attachment.CreateFixture(shape);
             }
 
             // Define platform
             {
-                _platform = BodyFactory.CreateBody(World);
+                _platform = BodyFactory.CreateRectangle(World, 8.0f, 1f, 2);
                 _platform.BodyType = BodyType.Dynamic;
                 _platform.Position = new Vector2(0.0f, 5.0f);
+                _platform.Friction = 0.6f;
 
-                Vertices box = PolygonTools.CreateRectangle(4.0f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 2);
-
-                Fixture fixture = _platform.CreateFixture(shape);
-                fixture.Friction = 0.6f;
-
-                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, _platform.Position, Vector2.Zero);
+                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0, 5));
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);
 
-                //FixedPrismaticJoint pjd = new FixedPrismaticJoint(_platform, new Vector2(0.0f, 5.0f),
-                //                                                  new Vector2(1.0f, 0.0f));
-                //pjd.MaxMotorForce = 1000.0f;
-                //pjd.MotorEnabled = true;
-                //pjd.LowerLimit = -10.0f;
-                //pjd.UpperLimit = 10.0f;
-                //pjd.LimitEnabled = true;
+                PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
+                pjd.MaxMotorForce = 1000.0f;
+                pjd.MotorEnabled = true;
+                pjd.LowerLimit = -10.0f;
+                pjd.UpperLimit = 10.0f;
+                pjd.LimitEnabled = true;
 
-                //World.AddJoint(pjd);
+                World.AddJoint(pjd);
 
                 _speed = 3.0f;
             }
 
             // Create a payload
             {
-                Body body = BodyFactory.CreateBody(World);
+                Body body = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 2);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(0.0f, 8.0f);
-
-                Vertices box = PolygonTools.CreateRectangle(0.75f, 0.75f);
-                PolygonShape shape = new PolygonShape(box, 2);
-
-                Fixture fixture = body.CreateFixture(shape);
-                fixture.Friction = 0.6f;
+                body.Friction = 0.6f;
             }
         }
 

@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -99,7 +100,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.SleepingAllowed = false;
 
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(0.5f, 0.5f);
+                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
 
                 body.CreateFixture(shape);
             }

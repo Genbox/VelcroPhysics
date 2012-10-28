@@ -51,7 +51,6 @@ namespace FarseerPhysics.Dynamics.Joints
         private Vector2 _linearImpulse;
         private float _angularImpulse;
 
-
         // Solver temp
         private int m_indexA;
         private int m_indexB;
@@ -75,8 +74,8 @@ namespace FarseerPhysics.Dynamics.Joints
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
-            LocalAnchorA = bodyA.GetLocalPoint(anchor);
-            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAnchorA = anchor;
+            LocalAnchorB = anchor;
         }
 
         public override Vector2 WorldAnchorA
@@ -100,14 +99,14 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         public float MaxTorque { get; set; }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            return inv_dt * _linearImpulse;
+            return invDt * _linearImpulse;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
-            return inv_dt * _angularImpulse;
+            return invDt * _angularImpulse;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)

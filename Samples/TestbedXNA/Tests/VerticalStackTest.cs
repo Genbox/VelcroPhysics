@@ -22,6 +22,7 @@
 
 using System.Diagnostics;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -49,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             for (int j = 0; j < ColumnCount; ++j)
             {
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(0.5f, 0.5f);
+                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
 
                 for (int i = 0; i < RowCount; ++i)
                 {

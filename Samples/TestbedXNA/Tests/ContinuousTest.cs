@@ -98,6 +98,13 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
+        protected override void PostSolve(Dynamics.Contacts.Contact contact, Dynamics.Contacts.ContactVelocityConstraint impulse)
+        {
+            int i = 0;
+            
+            base.PostSolve(contact, impulse);
+        }
+
         internal static Test Create()
         {
             return new ContinuousTest();
