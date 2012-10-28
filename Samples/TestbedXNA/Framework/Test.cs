@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
@@ -48,8 +49,6 @@ namespace FarseerPhysics.TestBed.Framework
             World.JointRemoved += JointRemoved;
             World.ContactManager.PreSolve += PreSolve;
             World.ContactManager.PostSolve += PostSolve;
-            World.ContactManager.BeginContact += BeginContact;
-            World.ContactManager.EndContact += EndContact;
 
             StepCount = 0;
         }
@@ -66,9 +65,7 @@ namespace FarseerPhysics.TestBed.Framework
         protected virtual void JointRemoved(Joint joint)
         {
             if (_fixedMouseJoint == joint)
-            {
                 _fixedMouseJoint = null;
-            }
         }
 
         public void DrawTitle(int x, int y, string title)
@@ -78,20 +75,14 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
-            // TODO: uncomment and remove the other line
-            //float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
-            float timeStep = (1f / 60f);
+            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
 
             if (settings.Pause)
             {
                 if (settings.SingleStep)
-                {
                     settings.SingleStep = false;
-                }
                 else
-                {
                     timeStep = 0.0f;
-                }
 
                 DebugView.DrawString(50, TextLine, "****PAUSED****");
                 TextLine += 15;
@@ -100,22 +91,16 @@ namespace FarseerPhysics.TestBed.Framework
             World.Step(timeStep);
 
             if (timeStep > 0.0f)
-            {
                 ++StepCount;
-            }
         }
 
         public virtual void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.F11))
-            {
                 WorldSerializer.Serialize(World, "out.xml");
-            }
 
             if (keyboardManager.IsNewKeyPress(Keys.F12))
-            {
                 WorldSerializer.Deserialize(World, "out.xml");
-            }
         }
 
         public virtual void Gamepad(GamePadState state, GamePadState oldState)
@@ -127,13 +112,9 @@ namespace FarseerPhysics.TestBed.Framework
             Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
-            {
                 MouseUp();
-            }
             else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
-            {
                 MouseDown(position);
-            }
 
             MouseMove(position);
         }
@@ -141,9 +122,7 @@ namespace FarseerPhysics.TestBed.Framework
         private void MouseDown(Vector2 p)
         {
             if (_fixedMouseJoint != null)
-            {
                 return;
-            }
 
             Fixture fixture = World.TestPoint(p);
 
@@ -169,19 +148,7 @@ namespace FarseerPhysics.TestBed.Framework
         private void MouseMove(Vector2 p)
         {
             if (_fixedMouseJoint != null)
-            {
                 _fixedMouseJoint.WorldAnchorB = p;
-            }
-        }
-
-        // Callbacks for derived classes.
-        protected virtual bool BeginContact(Contact contact)
-        {
-            return true;
-        }
-
-        protected virtual void EndContact(Contact contact)
-        {
         }
 
         protected virtual void PreSolve(Contact contact, ref Manifold oldManifold)

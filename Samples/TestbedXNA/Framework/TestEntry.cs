@@ -4,7 +4,7 @@ namespace FarseerPhysics.TestBed.Framework
 {
     public struct TestEntry
     {
-        public Func<Test> CreateFcn;
+        public Func<Test> CreateTest;
         public string Name;
     }
 }
