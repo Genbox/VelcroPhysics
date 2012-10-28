@@ -8,12 +8,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class EdgeShapeBenchmark : Test
+    public class EdgeShapeBenchmarkTest : Test
     {
         private int _count;
         private PolygonShape _polyShape;
 
-        private EdgeShapeBenchmark()
+        private EdgeShapeBenchmarkTest()
         {
             // Ground body
             {
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new EdgeShapeBenchmark();
+            return new EdgeShapeBenchmarkTest();
         }
     }
 }

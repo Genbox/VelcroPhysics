@@ -1,6 +1,6 @@
 /*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -27,12 +27,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class MobileBalanced : Test
+    public class MobileBalancedTest : Test
     {
         private const int Depth = 4;
         private int _counter;
 
-        private MobileBalanced()
+        private MobileBalancedTest()
         {
             Body ground = BodyFactory.CreateBody(World, new Vector2(0, 20f));
 
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public static Test Create()
         {
-            return new MobileBalanced();
+            return new MobileBalancedTest();
         }
     }
 }

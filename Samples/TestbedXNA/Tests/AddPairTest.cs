@@ -1,6 +1,6 @@
 ﻿/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -27,24 +27,21 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class AddPair : Test
+    public class AddPairTest : Test
     {
-        AddPair()
+        private AddPairTest()
         {
             World.Gravity = Vector2.Zero;
+
+            const float minX = -6.0f;
+            const float maxX = 0.0f;
+            const float minY = 4.0f;
+            const float maxY = 6.0f;
+
+            for (int i = 0; i < 400; ++i)
             {
-                const float minX = -6.0f;
-                const float maxX = 0.0f;
-                const float minY = 4.0f;
-                const float maxY = 6.0f;
-
-                for (int i = 0; i < 400; ++i)
-                {
-                    Body body = BodyFactory.CreateBody(World, new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY)));
-                    body.BodyType = BodyType.Dynamic;
-
-                    FixtureFactory.AttachCircle(0.1f, 0.01f, body);
-                }
+                Body body = BodyFactory.CreateCircle(World, 0.1f, 0.01f, new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY)));
+                body.BodyType = BodyType.Dynamic;
             }
 
             {
@@ -57,7 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public static Test Create()
         {
-            return new AddPair();
+            return new AddPairTest();
         }
     }
 }

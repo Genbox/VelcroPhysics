@@ -1,6 +1,6 @@
 ﻿/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -32,14 +32,14 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Motor joint", CreateFcn = MotorJointTest.Create},
             new TestEntry {Name = "One-Sided Platform", CreateFcn = OneSidedPlatformTest.Create},
             //new TestEntry {Name = "Dump Shell", CreateFcn = DumpShellTest.Create},
-            new TestEntry {Name = "Mobile", CreateFcn = Mobile.Create},
-            new TestEntry {Name = "MobileBalanced", CreateFcn = MobileBalanced.Create},
+            new TestEntry {Name = "Mobile", CreateFcn = MobileTest.Create},
+            new TestEntry {Name = "MobileBalanced", CreateFcn = MobileBalancedTest.Create},
             new TestEntry {Name = "Ray-Cast", CreateFcn = RayCastTest.Create},
             new TestEntry {Name = "Conveyor Belt", CreateFcn = ConveyorBeltTest.Create},
             new TestEntry {Name = "Gears", CreateFcn = GearsTest.Create},
-            new TestEntry {Name = "ConvexHull", CreateFcn = ConvexHull.Create},
+            new TestEntry {Name = "ConvexHull", CreateFcn = ConvexHullTest.Create},
             new TestEntry {Name = "Varying Restitution", CreateFcn = VaryingRestitutionTest.Create},
-            new TestEntry {Name = "Tumbler", CreateFcn = Tumbler.Create},
+            new TestEntry {Name = "Tumbler", CreateFcn = TumblerTest.Create},
 #if (!XBOX360)
             //Can crash the application on Xbox360
             new TestEntry {Name = "Tiles", CreateFcn = TilesTest.Create},
@@ -66,21 +66,21 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Confined", CreateFcn = ConfinedTest.Create},
             new TestEntry {Name = "Pyramid", CreateFcn = PyramidTest.Create},
             new TestEntry {Name = "Theo Jansen's Walker", CreateFcn = TheoJansenTest.Create},
-            new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapes.Create},
+            new TestEntry {Name = "Edge Shapes", CreateFcn = EdgeShapesTest.Create},
             new TestEntry {Name = "PolyCollision", CreateFcn = PolyCollisionTest.Create},
             new TestEntry {Name = "Bridge", CreateFcn = BridgeTest.Create},
             new TestEntry {Name = "Breakable", CreateFcn = BreakableTest.Create},
             new TestEntry {Name = "Chain", CreateFcn = ChainTest.Create},
             new TestEntry {Name = "Collision Filtering", CreateFcn = CollisionFilteringTest.Create},
             new TestEntry {Name = "Collision Processing", CreateFcn = CollisionProcessingTest.Create},
-            new TestEntry {Name = "Compound Shapes", CreateFcn = CompoundShapes.Create},
+            new TestEntry {Name = "Compound Shapes", CreateFcn = CompoundShapesTest.Create},
             new TestEntry {Name = "Distance Test", CreateFcn = DistanceTest.Create},
             new TestEntry {Name = "Dominos", CreateFcn = DominosTest.Create},
             new TestEntry {Name = "Dynamic Tree", CreateFcn = DynamicTreeTest.Create},
             new TestEntry {Name = "Sensor Test", CreateFcn = SensorTest.Create},
             new TestEntry {Name = "Slider Crank", CreateFcn = SliderCrankTest.Create},
             new TestEntry {Name = "Varying Friction", CreateFcn = VaryingFrictionTest.Create},
-            new TestEntry {Name = "Add Pair Stress Test", CreateFcn = AddPair.Create},
+            new TestEntry {Name = "Add Pair Stress Test", CreateFcn = AddPairTest.Create},
 
             //FPE tests
             new TestEntry {Name = "YuPeng Polygon", CreateFcn = YuPengPolygonTest.Create},
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Explosion", CreateFcn = ExplosionTest.Create},
             new TestEntry {Name = "Lock Test", CreateFcn = LockTest.Create},
             new TestEntry {Name = "Sphere benchmark", CreateFcn = CircleBenchmarkTest.Create},
-            new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmark.Create},
+            new TestEntry {Name = "Edgeshape benchmark", CreateFcn = EdgeShapeBenchmarkTest.Create},
             new TestEntry {Name = "Circle penetration", CreateFcn = CirclePenetrationTest.Create},
             new TestEntry {Name = "Clone Test", CreateFcn = CloneTest.Create},
             //Can crash the application on Xbox360

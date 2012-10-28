@@ -6,13 +6,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ConvexHull : Test
+    public class ConvexHullTest : Test
     {
         private int _count = Settings.MaxPolygonVertices;
         private Vector2[] _points = new Vector2[Settings.MaxPolygonVertices];
         private bool _auto;
 
-        private ConvexHull()
+        private ConvexHullTest()
         {
             Generate();
             _auto = false;
@@ -38,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public static Test Create()
         {
-            return new ConvexHull();
+            return new ConvexHullTest();
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)

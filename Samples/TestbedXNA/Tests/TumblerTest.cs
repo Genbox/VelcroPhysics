@@ -1,6 +1,6 @@
 /*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -28,12 +28,12 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class Tumbler : Test
+    public class TumblerTest : Test
     {
         private const int Count = 800;
         private int _count;
 
-        Tumbler()
+        TumblerTest()
         {
             Body ground = BodyFactory.CreateBody(World);
 
@@ -67,7 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public static Test Create()
         {
-            return new Tumbler();
+            return new TumblerTest();
         }
     }
 }
