@@ -31,7 +31,7 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class ConveyorBeltTest : Test
     {
-        private Fixture m_platform;
+        private Fixture _platform;
 
         ConveyorBeltTest()
         {
@@ -44,8 +44,8 @@ namespace FarseerPhysics.TestBed.Tests
             // Platform
             {
                 Body body = BodyFactory.CreateBody(World, new Vector2(-5, 5));
-                m_platform = FixtureFactory.AttachRectangle(20, 1f, 1, Vector2.Zero, body);
-                m_platform.Friction = 0.8f;
+                _platform = FixtureFactory.AttachRectangle(20, 1f, 1, Vector2.Zero, body);
+                _platform.Friction = 0.8f;
             }
 
             // Boxes
@@ -63,12 +63,12 @@ namespace FarseerPhysics.TestBed.Tests
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
 
-            if (fixtureA == m_platform)
+            if (fixtureA == _platform)
             {
                 contact.TangentSpeed = 5.0f;
             }
 
-            if (fixtureB == m_platform)
+            if (fixtureB == _platform)
             {
                 contact.TangentSpeed = -5.0f;
             }
