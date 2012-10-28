@@ -22,7 +22,6 @@
 //#define USE_AWAKE_BODY_SET
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
@@ -71,6 +70,14 @@ namespace FarseerPhysics.Dynamics
 
     public class Body : IDisposable
     {
+        private static int _bodyIdCounter;
+
+        private float _angularDamping;
+        private BodyType _bodyType;
+        private float _inertia;
+        private float _linearDamping;
+        private float _mass;
+
         internal float AngularVelocityInternal;
         internal BodyFlags Flags;
         internal Vector2 Force;
@@ -82,36 +89,25 @@ namespace FarseerPhysics.Dynamics
         internal float Torque;
         internal World World;
         internal Transform Xf; // the body origin transform
-        private float _angularDamping;
-        private BodyType _bodyType;
-        private float _inertia;
-        private float _linearDamping;
-        private float _mass;
-        private static int _bodyIdCounter;
-        public int IslandIndex;
+
         public PhysicsLogicFilter PhysicsLogicFilter;
         public ControllerFilter ControllerFilter;
-        public int BodyId;
-
-        /// Scale the gravity applied to this body.
-        public float GravityScale { get; set; }
 
         internal Body()
         {
-            FixtureList = new List<Fixture>(32);
+            FixtureList = new List<Fixture>();
         }
 
         public Body(World world, Vector2? position = null, float rotation = 0, object userdata = null)
         {
-            FixtureList = new List<Fixture>(32);
+            FixtureList = new List<Fixture>();
             BodyId = _bodyIdCounter++;
             World = world;
 
             UserData = userdata;
             GravityScale = 1.0f;
-            FixedRotation = false;
-            IsBullet = false;
-            SleepingAllowed = true;
+            AppendFlags(BodyFlags.AutoSleep);
+
 #if !USE_AWAKE_BODY_SET
             Awake = true;
 #endif
@@ -131,6 +127,28 @@ namespace FarseerPhysics.Dynamics
 
             world.AddBody(this);
         }
+
+        private void AppendFlags(BodyFlags flag)
+        {
+            Flags |= flag;
+        }
+
+        private void RemoveFlags(BodyFlags flag)
+        {
+            Flags &= ~flag;
+        }
+
+        private bool HasFlag(BodyFlags flag)
+        {
+            return (Flags & flag) == flag;
+        }
+
+        public int IslandIndex { get; set; }
+
+        public int BodyId { get; set; }
+
+        /// Scale the gravity applied to this body.
+        public float GravityScale { get; set; }
 
         /// <summary>
         /// Set the user data. Use this to store your application specific data.
@@ -285,13 +303,9 @@ namespace FarseerPhysics.Dynamics
             set
             {
                 if (value)
-                {
                     Flags |= BodyFlags.Bullet;
-                }
                 else
-                {
                     Flags &= ~BodyFlags.Bullet;
-                }
             }
             get { return (Flags & BodyFlags.Bullet) == BodyFlags.Bullet; }
         }
@@ -306,16 +320,14 @@ namespace FarseerPhysics.Dynamics
             set
             {
                 if (value)
-                {
-                    Flags |= BodyFlags.AutoSleep;
-                }
+                    AppendFlags(BodyFlags.AutoSleep);
                 else
                 {
-                    Flags &= ~BodyFlags.AutoSleep;
+                    RemoveFlags(BodyFlags.AutoSleep);
                     Awake = true;
                 }
             }
-            get { return (Flags & BodyFlags.AutoSleep) == BodyFlags.AutoSleep; }
+            get { return HasFlag(BodyFlags.AutoSleep); }
         }
 
         /// <summary>
@@ -329,9 +341,9 @@ namespace FarseerPhysics.Dynamics
             {
                 if (value)
                 {
-                    if ((Flags & BodyFlags.Awake) == 0)
+                    if (!HasFlag(BodyFlags.Awake))
                     {
-                        Flags |= BodyFlags.Awake;
+                        AppendFlags(BodyFlags.Awake);
                         SleepTime = 0.0f;
                         World.ContactManager.UpdateContacts(ContactList, true);
 #if USE_AWAKE_BODY_SET
@@ -352,7 +364,7 @@ namespace FarseerPhysics.Dynamics
 						World.AwakeBodySet.Remove(this);
 					}
 #endif
-                    Flags &= ~BodyFlags.Awake;
+                    RemoveFlags(BodyFlags.Awake);
                     SleepTime = 0.0f;
                     LinearVelocityInternal = Vector2.Zero;
                     AngularVelocityInternal = 0.0f;
@@ -438,18 +450,12 @@ namespace FarseerPhysics.Dynamics
             {
                 bool status = (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation;
                 if (status == value)
-                {
                     return;
-                }
 
                 if (value)
-                {
                     Flags |= BodyFlags.FixedRotation;
-                }
                 else
-                {
                     Flags &= ~BodyFlags.FixedRotation;
-                }
 
                 AngularVelocityInternal = 0f;
 
