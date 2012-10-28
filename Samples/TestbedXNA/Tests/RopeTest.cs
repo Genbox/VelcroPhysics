@@ -82,7 +82,7 @@ namespace FarseerPhysics.TestBed.Tests
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor); 
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, true); 
                     jd.CollideConnected = false;
 
                     World.AddJoint(jd);
