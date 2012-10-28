@@ -1,23 +1,6 @@
 ﻿/*
 * Farseer Physics Engine:
 * Copyright (c) 2012 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
 */
 
 using System.Collections.Generic;
@@ -73,41 +56,41 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            for (int i = 0; i < _polygons.Count; ++i)
+            foreach (Vertices vertex in _polygons)
             {
-                if (_polygons[i] != null)
+                if (vertex != null)
                 {
-                    Vector2[] array = _polygons[i].ToArray();
+                    Vector2[] array = vertex.ToArray();
                     Color col = Color.SteelBlue;
-                    if (!_polygons[i].IsCounterClockWise())
+                    if (!vertex.IsCounterClockWise())
                     {
                         col = Color.Aquamarine;
                     }
-                    if (_polygons[i] == _selected)
+                    if (vertex == _selected)
                     {
                         col = Color.LightBlue;
                     }
-                    if (_polygons[i] == _subject)
+                    if (vertex == _subject)
                     {
                         col = Color.Green;
-                        if (_polygons[i] == _selected)
+                        if (vertex == _selected)
                         {
                             col = Color.LightGreen;
                         }
                     }
-                    if (_polygons[i] == _clip)
+                    if (vertex == _clip)
                     {
                         col = Color.DarkRed;
-                        if (_polygons[i] == _selected)
+                        if (vertex == _selected)
                         {
                             col = Color.IndianRed;
                         }
                     }
                     DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-                    DebugView.DrawPolygon(array, _polygons[i].Count, col);
-                    for (int j = 0; j < _polygons[i].Count; ++j)
+                    DebugView.DrawPolygon(array, vertex.Count, col);
+                    for (int j = 0; j < vertex.Count; ++j)
                     {
-                        DebugView.DrawPoint(_polygons[i][j], .2f, Color.Red);
+                        DebugView.DrawPoint(vertex[j], .2f, Color.Red);
                     }
                     DebugView.EndCustomDraw();
                 }
@@ -145,65 +128,47 @@ namespace FarseerPhysics.TestBed.Tests
         {
             // Add Circles
             if (keyboardManager.IsNewKeyPress(Keys.Q))
-            {
                 AddCircle(3, 8);
-            }
 
             // Add Circles
             if (keyboardManager.IsNewKeyPress(Keys.W))
-            {
                 AddCircle(4, 16);
-            }
 
             // Add Circles
             if (keyboardManager.IsNewKeyPress(Keys.E))
-            {
                 AddCircle(5, 32);
-            }
 
             // Add Rectangle
             if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
                 AddRectangle(4, 8);
-            }
 
             // Add Rectangle
             if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
                 AddRectangle(5, 2);
-            }
 
             // Add Rectangle
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 AddRectangle(2, 5);
-            }
 
             // Perform a Union
             if (keyboardManager.IsNewKeyPress(Keys.Space))
             {
                 if (_subject != null && _clip != null)
-                {
                     DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
-                }
             }
 
             // Perform a Subtraction
             if (keyboardManager.IsNewKeyPress(Keys.Back))
             {
                 if (_subject != null && _clip != null)
-                {
                     DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
-                }
             }
 
             // Perform a Intersection
             if (keyboardManager.IsNewKeyPress(Keys.LeftShift))
             {
                 if (_subject != null && _clip != null)
-                {
                     DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
-                }
             }
 
             // Select Subject
@@ -212,9 +177,8 @@ namespace FarseerPhysics.TestBed.Tests
                 if (_selected != null)
                 {
                     if (_clip == _selected)
-                    {
                         _clip = null;
-                    }
+
                     _subject = _selected;
                 }
             }
@@ -225,9 +189,8 @@ namespace FarseerPhysics.TestBed.Tests
                 if (_selected != null)
                 {
                     if (_subject == _selected)
-                    {
                         _subject = null;
-                    }
+
                     _clip = _selected;
                 }
             }
@@ -239,14 +202,14 @@ namespace FarseerPhysics.TestBed.Tests
 
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
-                for (int i = 0; i < _polygons.Count; ++i)
+                foreach (Vertices vertices in _polygons)
                 {
-                    if (_polygons[i] == null)
+                    if (vertices == null)
                         continue;
 
-                    if (_polygons[i].PointInPolygon(ref position) == 1)
+                    if (vertices.PointInPolygon(ref position) == 1)
                     {
-                        _selected = _polygons[i];
+                        _selected = vertices;
                         break;
                     }
                 }
@@ -265,8 +228,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (_selected != null)
             {
-                Vector2 trans = new Vector2((state.X - oldState.X) / 12f,
-                                            (oldState.Y - state.Y) / 12f);
+                Vector2 trans = new Vector2((state.X - oldState.X) / 12f, (oldState.Y - state.Y) / 12f);
                 _selected.Translate(ref trans);
             }
         }
