@@ -101,7 +101,7 @@ namespace FarseerPhysics.Dynamics
             FixtureList = new List<Fixture>(32);
         }
 
-        public Body(World world, object userdata = null)
+        public Body(World world, Vector2? position = null, object userdata = null)
         {
             FixtureList = new List<Fixture>(32);
             BodyId = _bodyIdCounter++;
@@ -119,6 +119,7 @@ namespace FarseerPhysics.Dynamics
             Enabled = true;
 
             Xf.q.Set(0);
+            Xf.p = position.HasValue ? position.Value : Vector2.Zero;
 
             world.AddBody(this);
         }
