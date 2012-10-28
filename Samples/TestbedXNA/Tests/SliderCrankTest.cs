@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -54,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Define crank.
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.SetAsBox(0.5f, 2.0f);
+                    shape.Vertices = PolygonTools.CreateRectangle(0.5f, 2.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -62,8 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    Vector2 anchor = new Vector2(0.0f, -2.0f);
-                    _joint1 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
+                    _joint1 = new RevoluteJoint(prevBody, body, new Vector2(0f, 5f));
                     _joint1.MotorSpeed = 1.0f * Settings.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Define follower.
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.SetAsBox(0.5f, 4.0f);
+                    shape.Vertices = PolygonTools.CreateRectangle(0.5f, 4.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -83,8 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    Vector2 anchor = new Vector2(0.0f, -4.0f);
-                    RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
+                    RevoluteJoint rjd3 = new RevoluteJoint(prevBody, body, new Vector2(0, 9));
                     rjd3.MotorEnabled = false;
                     World.AddJoint(rjd3);
 
@@ -94,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Define piston
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.SetAsBox(1.5f, 1.5f);
+                    shape.Vertices = PolygonTools.CreateRectangle(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -102,11 +101,10 @@ namespace FarseerPhysics.TestBed.Tests
 
                     body.CreateFixture(shape);
 
-                    Vector2 anchor = Vector2.Zero;
-                    RevoluteJoint rjd2 = new RevoluteJoint(prevBody, body, body.GetWorldPoint(anchor), anchor);
-                    World.AddJoint(rjd2);
+                    RevoluteJoint rjd = new RevoluteJoint(prevBody, body, new Vector2(0, 17));
+                    World.AddJoint(rjd);
 
-                    //_joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f));
+                    //_joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f)); //TODO
                     //_joint2.MaxMotorForce = 1000.0f;
                     //_joint2.MotorEnabled = true;
 
@@ -116,7 +114,7 @@ namespace FarseerPhysics.TestBed.Tests
                 // Create a payload
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.SetAsBox(1.5f, 1.5f);
+                    shape.Vertices = PolygonTools.CreateRectangle(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;

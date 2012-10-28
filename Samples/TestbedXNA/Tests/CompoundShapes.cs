@@ -33,14 +33,13 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private CompoundShapes()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            BodyFactory.CreateEdge(World, new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
 
             {
                 CircleShape circle1 = new CircleShape(0.5f, 2);
                 circle1.Position = new Vector2(-0.5f, 0.5f);
 
-                CircleShape circle2 = new CircleShape(0.5f, 2);
+                CircleShape circle2 = new CircleShape(0.5f, 0);
                 circle2.Position = new Vector2(0.5f, 0.5f);
 
                 for (int i = 0; i < 10; ++i)

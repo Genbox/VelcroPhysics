@@ -113,7 +113,6 @@ namespace FarseerPhysics.Dynamics.Joints
             set
             {
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-
                 _maxForce = value;
             }
         }
@@ -144,14 +143,14 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            return inv_dt * _impulse;
+            return invDt * _impulse;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
-            return inv_dt * 0.0f;
+            return invDt * 0.0f;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
@@ -159,7 +158,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _indexB = BodyA.IslandIndex;
             _localCenterB = BodyA.Sweep.LocalCenter;
             _invMassB = BodyA.InvMass;
-            _invIB = 0;
+            _invIB = BodyA.InvI;
 
             Vector2 cB = data.positions[_indexB].c;
             float aB = data.positions[_indexB].a;

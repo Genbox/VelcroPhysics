@@ -117,14 +117,13 @@ namespace FarseerPhysics.Dynamics
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
+        public Category IgnoreCCDWith;
+
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
         internal Dictionary<int, bool> _collisionIgnores;
 
-#if USE_IGNORE_CCD_CATEGORIES
-        public Category IgnoreCCDWith;
-#endif
         private float _friction;
         private float _restitution;
 
@@ -132,20 +131,18 @@ namespace FarseerPhysics.Dynamics
         {
         }
 
-        public Fixture(Body body, Shape shape)
-            : this(body, shape, null)
+        internal Fixture(Body body, Shape shape, object userData = null)
         {
-        }
+#if DEBUG
+            if (shape.ShapeType == ShapeType.Polygon)
+                ((PolygonShape)shape).Vertices.AttachedToBody = true;
+#endif
 
-        public Fixture(Body body, Shape shape, object userData)
-        {
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
 
-#if USE_IGNORE_CCD_CATEGORIES
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
-#endif
 
             //Fixture defaults
             Friction = 0.2f;
@@ -156,10 +153,7 @@ namespace FarseerPhysics.Dynamics
 
             UserData = userData;
 
-            if (Settings.ConserveMemory)
-                Shape = shape;
-            else
-                Shape = shape.Clone();
+            Shape = Settings.ConserveMemory ? shape : shape.Clone();
 
             RegisterFixture();
         }
@@ -532,12 +526,20 @@ namespace FarseerPhysics.Dynamics
 
         internal void Destroy()
         {
+#if DEBUG
+            if (ShapeType == ShapeType.Polygon)
+                ((PolygonShape)Shape).Vertices.AttachedToBody = false;
+#endif
+
             // The proxies must be destroyed before calling this.
             Debug.Assert(ProxyCount == 0);
 
             // Free the proxy array.
             Proxies = null;
             Shape = null;
+
+            //FPE: We set the userdata to null here to help prevent bugs related to stale references in GC
+            UserData = null;
 
             BeforeCollision = null;
             OnCollision = null;

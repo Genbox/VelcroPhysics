@@ -27,23 +27,11 @@ namespace FarseerPhysics.Collision.Shapes
 {
     /// <summary>
     /// A line segment (edge) shape. These can be connected in chains or loops
-    /// to other edge shapes. The connectivity information is used to ensure
-    /// correct contact normals.
+    /// to other edge shapes.
+    /// The connectivity information is used to ensure correct contact normals.
     /// </summary>
     public class EdgeShape : Shape
     {
-        public bool HasVertex0, HasVertex3;
-
-        /// <summary>
-        /// Optional adjacent vertices. These are used for smooth collision.
-        /// </summary>
-        public Vector2 Vertex0;
-
-        /// <summary>
-        /// Optional adjacent vertices. These are used for smooth collision.
-        /// </summary>
-        public Vector2 Vertex3;
-
         /// <summary>
         /// Edge start vertex
         /// </summary>
@@ -73,6 +61,19 @@ namespace FarseerPhysics.Collision.Shapes
         {
             get { return 1; }
         }
+
+        public bool HasVertex0 { get; set; }
+        public bool HasVertex3 { get; set; }
+
+        /// <summary>
+        /// Optional adjacent vertices. These are used for smooth collision.
+        /// </summary>
+        public Vector2 Vertex0 { get; set; }
+
+        /// <summary>
+        /// Optional adjacent vertices. These are used for smooth collision.
+        /// </summary>
+        public Vector2 Vertex3 { get; set; }
 
         /// <summary>
         /// These are the edge vertices
@@ -112,7 +113,6 @@ namespace FarseerPhysics.Collision.Shapes
             HasVertex0 = false;
             HasVertex3 = false;
 
-            //Added here to speed things up //TODO: revise
             ComputeProperties();
         }
 
@@ -244,7 +244,7 @@ namespace FarseerPhysics.Collision.Shapes
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
 
-        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
             return 0;

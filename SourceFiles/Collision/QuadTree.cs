@@ -152,7 +152,7 @@ public class QuadTree<T>
         Vector2 rayPos = p1;
 
         Vector2 norm = new Vector2(-rayDir.Y, rayDir.X); //normal to ray
-        if (norm.Length() == 0.0)
+        if (norm.Length() == 0.0f)
             return true; //if ray is just a point, return true (iff point is within aabb, as tested earlier)
         norm.Normalize();
 

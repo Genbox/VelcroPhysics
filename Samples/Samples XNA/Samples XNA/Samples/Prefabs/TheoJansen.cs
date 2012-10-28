@@ -51,7 +51,7 @@ namespace FarseerPhysics.SamplesFramework
             // Chassis
             {
                 PolygonShape shape = new PolygonShape(1f);
-                shape.SetAsBox(2.5f, 1.0f);
+                shape.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
 
                 _body = new Sprite(_screen.ScreenManager.Assets.TextureFromShape(shape, MaterialType.Blank, Color.Beige, 1f));
 
@@ -76,7 +76,7 @@ namespace FarseerPhysics.SamplesFramework
             }
 
             {
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position, Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis.Position, _chassis, Vector2.Zero);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400f;
@@ -130,24 +130,24 @@ namespace FarseerPhysics.SamplesFramework
                 vertices.Add(p1);
                 vertices.Add(p2);
                 vertices.Add(p3);
-                poly1.Set(vertices);
+                poly1.Vertices = vertices;
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p5 - p4;
                 vertices[2] = p6 - p4;
-                poly2.Set(vertices);
+                poly2.Vertices = vertices;
             }
             else
             {
                 vertices.Add(p1);
                 vertices.Add(p3);
                 vertices.Add(p2);
-                poly1.Set(vertices);
+                poly1.Vertices = vertices;
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p6 - p4;
                 vertices[2] = p5 - p4;
-                poly2.Set(vertices);
+                poly2.Vertices = vertices;
             }
 
             Body body1 = BodyFactory.CreateBody(world);
@@ -214,7 +214,7 @@ namespace FarseerPhysics.SamplesFramework
             _walkerJoints.Add(djd4);
 
             Vector2 anchor = p4 - new Vector2(0f, -0.8f);
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, _chassis.GetWorldPoint(anchor), anchor);
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis.GetWorldPoint(anchor), _chassis, anchor);
             world.AddJoint(rjd);
         }
 

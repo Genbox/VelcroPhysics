@@ -28,7 +28,7 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// A distance joint contrains two points on two bodies
+    /// A slider joint contrains two points on two bodies
     /// to remain at a fixed distance from each other. You can view
     /// this as a massless, rigid rod.
     /// </summary>
@@ -119,13 +119,13 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            Vector2 F = (inv_dt * _impulse) * _u;
+            Vector2 F = (invDt * _impulse) * _u;
             return F;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
             return 0.0f;
         }

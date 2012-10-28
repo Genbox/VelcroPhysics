@@ -11,6 +11,13 @@ namespace FarseerPhysics.Factories
     {
         #region Revolute Joint
 
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Vector2 localAnchorA, Body bodyB, Vector2 localAnchorB)
+        {
+            RevoluteJoint joint = new RevoluteJoint(bodyA, localAnchorA, bodyB, localAnchorB);
+            world.AddJoint(joint);
+            return joint;
+        }
+
         /// <summary>
         /// Creates a revolute joint.
         /// </summary>
@@ -21,7 +28,7 @@ namespace FarseerPhysics.Factories
         public static RevoluteJoint CreateRevoluteJoint(Body bodyA, Body bodyB, Vector2 localAnchorB)
         {
             Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localAnchorB));
-            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, localAnchorB);
+            RevoluteJoint joint = new RevoluteJoint(bodyA, localanchorA, bodyB, localAnchorB);
             return joint;
         }
 
@@ -31,11 +38,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
+        /// <param name="localAnchorB"></param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorB)
         {
-            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, anchor);
+            RevoluteJoint joint = CreateRevoluteJoint(bodyA, bodyB, localAnchorB);
             world.AddJoint(joint);
             return joint;
         }
@@ -65,12 +72,12 @@ namespace FarseerPhysics.Factories
         /// </summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-		/// <param name="worldAnchor">World space coordinates of weld joint</param>
+        /// <param name="worldAnchor">World space coordinates of weld joint</param>
         /// <returns></returns>
-		public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 worldAnchor)
+        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 worldAnchor)
         {
-			WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(worldAnchor),
-											bodyB.GetLocalPoint(worldAnchor));
+            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(worldAnchor),
+                                            bodyB.GetLocalPoint(worldAnchor));
             return joint;
         }
 
@@ -80,11 +87,11 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-		/// <param name="worldAnchor">World space coordinates of weld joint</param>
+        /// <param name="worldAnchor">World space coordinates of weld joint</param>
         /// <returns></returns>
         public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 worldAnchor)
         {
-			WeldJoint joint = CreateWeldJoint(bodyA, bodyB, worldAnchor);
+            WeldJoint joint = CreateWeldJoint(bodyA, bodyB, worldAnchor);
             world.AddJoint(joint);
             return joint;
         }
@@ -268,18 +275,6 @@ namespace FarseerPhysics.Factories
                                                       ratio);
             world.AddJoint(pulleyJoint);
             return pulleyJoint;
-        }
-
-        #endregion
-
-        #region Slider Joint
-
-        public static SliderJoint CreateSliderJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-                                                    Vector2 anchorB, float minLength, float maxLength)
-        {
-            SliderJoint sliderJoint = new SliderJoint(bodyA, bodyB, anchorA, anchorB, minLength, maxLength);
-            world.AddJoint(sliderJoint);
-            return sliderJoint;
         }
 
         #endregion

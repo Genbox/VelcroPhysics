@@ -129,13 +129,8 @@ namespace FarseerPhysics.TestBed.Tests
         private PolyShapesTest()
         {
             // Ground body
-            {
-                Body ground = BodyFactory.CreateBody(World);
-
-                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
-            }
-
+            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            
             {
                 Vertices vertices = new Vertices(3);
                 vertices.Add(new Vector2(-0.5f, 0.0f));
@@ -278,7 +273,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolyShapesCallback callback = new PolyShapesCallback();
             callback.Circle.Radius = 2.0f;
-            callback.Circle.Position = new Vector2(0.0f, 2.1f);
+            callback.Circle.Position = new Vector2(0.0f, 1.1f);
             callback.Transform.SetIdentity();
             callback.DebugDraw = DebugView;
 

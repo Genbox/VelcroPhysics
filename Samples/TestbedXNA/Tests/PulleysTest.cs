@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -32,37 +33,38 @@ namespace FarseerPhysics.TestBed.Tests
     public class PulleysTest : Test
     {
         private PulleyJoint _joint1;
+        const float Y = 16.0f;
+        const float L = 12.0f;
+        const float A = 1.0f;
+        const float B = 2.0f;
 
         private PulleysTest()
         {
             //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateBody(World);
+            FixtureFactory.AttachCircle(2, 0, ground, new Vector2(-10.0f, Y + B + L));
+            FixtureFactory.AttachCircle(2, 0, ground, new Vector2(10.0f, Y + B + L));
 
             {
-                const float a = 2.0f;
-                const float b = 4.0f;
-                const float y = 16.0f;
-                const float l = 12.0f;
-
                 PolygonShape shape = new PolygonShape(5);
-                shape.SetAsBox(a, b);
+                shape.Vertices = PolygonTools.CreateRectangle(A, B);
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;
-                body1.Position = new Vector2(-10.0f, y);
+                body1.Position = new Vector2(-10.0f, Y);
                 body1.CreateFixture(shape);
 
                 Body body2 = BodyFactory.CreateBody(World);
                 body2.BodyType = BodyType.Dynamic;
-                body2.Position = new Vector2(10.0f, y);
+                body2.Position = new Vector2(10.0f, Y);
 
                 body2.CreateFixture(shape);
 
-                Vector2 anchor1 = new Vector2(-10.0f, y + b);
-                Vector2 anchor2 = new Vector2(10.0f, y + b);
-                Vector2 groundAnchor1 = new Vector2(-10.0f, y + b + l);
-                Vector2 groundAnchor2 = new Vector2(10.0f, y + b + l);
-                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 2.0f);
+                Vector2 anchor1 = new Vector2(-10.0f, Y + B);
+                Vector2 anchor2 = new Vector2(10.0f, Y + B);
+                Vector2 groundAnchor1 = new Vector2(-10.0f, Y + B + L);
+                Vector2 groundAnchor2 = new Vector2(10.0f, Y + B + L);
+                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 1.5f);
                 World.AddJoint(_joint1);
             }
         }

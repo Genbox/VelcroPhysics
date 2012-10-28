@@ -30,7 +30,6 @@ namespace FarseerPhysics.Collision.Shapes
     /// A chain shape is a free form sequence of line segments.
     /// The chain has two-sided collision, so you can use inside and outside collision.
     /// Therefore, you may use any winding order.
-    /// Since there may be many vertices, they are allocated using b2Alloc.
     /// Connectivity information is used to create smooth collisions.
     /// WARNING: The chain will not collide properly if there are self-intersections.
     /// </summary>
@@ -43,7 +42,7 @@ namespace FarseerPhysics.Collision.Shapes
         private Vector2 _prevVertex, _nextVertex;
         private bool _hasPrevVertex, _hasNextVertex;
 
-        private ChainShape()
+        public ChainShape()
             : base(0)
         {
             ShapeType = ShapeType.Chain;
@@ -56,8 +55,22 @@ namespace FarseerPhysics.Collision.Shapes
             ShapeType = ShapeType.Chain;
             _radius = Settings.PolygonRadius;
 
+            Debug.Assert(vertices != null && vertices.Count >= 2);
+            Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); // FPE. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
+
+            for (int i = 1; i < vertices.Count; ++i)
+            {
+                Vector2 v1 = vertices[i - 1];
+                Vector2 v2 = vertices[i];
+                // If the code crashes here, it means your vertices are too close together.
+                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
+            }
+
             //Only copy the items if we don't need to conserve memory.
             Vertices = Settings.ConserveMemory ? vertices : new Vertices(vertices);
+
+            _hasPrevVertex = false;
+            _hasNextVertex = false;
         }
 
         /// Create a loop. This automatically adjusts connectivity.
@@ -77,31 +90,12 @@ namespace FarseerPhysics.Collision.Shapes
             Vertices = new Vertices(vertices);
             Vertices.Add(vertices[0]);
 
-            Vertices[Vertices.Count] = Vertices[0]; //TODO: Check this line
+            Vertices[Vertices.Count - 1] = Vertices[0]; //TODO: Check this line
 
             _prevVertex = Vertices[Vertices.Count - 2];
             _nextVertex = Vertices[1];
             _hasPrevVertex = true;
             _hasNextVertex = true;
-        }
-
-        /// Create a chain with isolated end vertices.
-        public void CreateChain(Vertices vertices)
-        {
-            Debug.Assert(vertices != null && vertices.Count >= 2);
-
-            for (int i = 1; i < vertices.Count; ++i)
-            {
-                Vector2 v1 = vertices[i - 1];
-                Vector2 v2 = vertices[i];
-                // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
-            }
-
-            //TODO: Conserve mem
-            Vertices = new Vertices(vertices);
-            _hasPrevVertex = false;
-            _hasNextVertex = false;
         }
 
         public override int ChildCount
@@ -120,22 +114,32 @@ namespace FarseerPhysics.Collision.Shapes
             return loop;
         }
 
-        //TODO: Property
+        /// <summary>
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
-        public void SetPrevVertex(Vector2 prevVertex)
+        /// </summary>
+        public Vector2 PrevVertex
         {
-            _prevVertex = prevVertex;
-            _hasPrevVertex = true;
+            get { return _prevVertex; }
+            set
+            {
+                _prevVertex = value;
+                _hasPrevVertex = true;
+            }
         }
 
-        //TODO: Property
+        /// <summary>
         /// Establish connectivity to a vertex that follows the last vertex.
         /// Don't call this for loops.
-        public void SetNextVertex(Vector2 nextVertex)
+        /// </summary>
+        public Vector2 NextVertex
         {
-            _nextVertex = nextVertex;
-            _hasNextVertex = true;
+            get { return _nextVertex; }
+            set
+            {
+                _nextVertex = value;
+                _hasNextVertex = true;
+            }
         }
 
         /// <summary>
@@ -245,7 +249,7 @@ namespace FarseerPhysics.Collision.Shapes
             //Does nothing. Chain shapes don't have properties.
         }
 
-        public override float ComputeSubmergedArea(Vector2 normal, float offset, Transform xf, out Vector2 sc)
+        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
             return 0;

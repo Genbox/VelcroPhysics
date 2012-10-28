@@ -104,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _switched = !_switched;
 
             if (keyboardManager.IsNewKeyPress(Keys.Enter))
-                CuttingTools.Cut(World, _start, _end, 0.001f);
+                CuttingTools.Cut(World, _start, _end);
 
             if (_switched)
             {
@@ -147,7 +147,7 @@ namespace FarseerPhysics.TestBed.Tests
             _end.Y += state.ThumbSticks.Right.Y / 5;
 
             if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
-                CuttingTools.Cut(World, _start, _end, 0.001f);
+                CuttingTools.Cut(World, _start, _end);
 
             base.Gamepad(state, oldState);
         }

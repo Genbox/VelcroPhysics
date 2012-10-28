@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices[0] *= 2.0f;
             vertices[1] *= 2.0f;
             vertices[2] *= 2.0f;
-            polygon.Set(vertices);
+            polygon.Vertices = vertices;
 
             Body body2 = BodyFactory.CreateBody(World);
             body2.BodyType = BodyType.Dynamic;
@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Small box
             Vertices smallBox = PolygonTools.CreateRectangle(1.0f, 0.5f);
-            polygon.Set(smallBox);
+            polygon.Vertices = smallBox;
 
             Body body3 = BodyFactory.CreateBody(World);
             body3.BodyType = BodyType.Dynamic;
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Large box (recycle definitions)
             Vertices largeBox = PolygonTools.CreateRectangle(2.0f, 1.0f);
-            polygon.Set(largeBox);
+            polygon.Vertices = largeBox;
 
             Body body4 = BodyFactory.CreateBody(World);
             body4.BodyType = BodyType.Dynamic;

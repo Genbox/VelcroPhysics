@@ -21,32 +21,43 @@
 */
 
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SliderJointTest : Test
+    public class AddPair : Test
     {
-        private SliderJointTest()
+        AddPair()
         {
-            BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
+            World.Gravity = Vector2.Zero;
+            {
+                const float minX = -6.0f;
+                const float maxX = 0.0f;
+                const float minY = 4.0f;
+                const float maxY = 6.0f;
 
-            Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
-            fA.BodyType = BodyType.Dynamic;
+                for (int i = 0; i < 400; ++i)
+                {
+                    Body body = BodyFactory.CreateBody(World, new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY)));
+                    body.BodyType = BodyType.Dynamic;
 
-            Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
-            fB.BodyType = BodyType.Dynamic;
+                    FixtureFactory.AttachCircle(0.1f, 0.01f, body);
+                }
+            }
 
-            SliderJoint joint = new SliderJoint(fA, fB, Vector2.Zero, Vector2.Zero, 5, 10);
-            World.AddJoint(joint);
+            {
+                Body body = BodyFactory.CreateRectangle(World, 3, 3, 1, new Vector2(-40, 5));
+                body.BodyType = BodyType.Dynamic;
+                body.IsBullet = true;
+                body.LinearVelocity = new Vector2(150.0f, 0.0f);
+            }
         }
 
-        internal static Test Create()
+        public static Test Create()
         {
-            return new SliderJointTest();
+            return new AddPair();
         }
     }
 }

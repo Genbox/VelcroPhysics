@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 _polygons[3] = new PolygonShape(1);
-                _polygons[3].SetAsBox(0.5f, 0.5f);
+                _polygons[3].Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
             }
 
             {

@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -37,43 +38,25 @@ namespace FarseerPhysics.TestBed.Tests
 
         private PrismaticTest()
         {
-            Body ground;
-            {
-                ground = BodyFactory.CreateBody(World);
-
-                EdgeShape shape3 = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape3);
-            }
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             PolygonShape shape = new PolygonShape(5);
-            shape.SetAsBox(2.0f, 0.5f);
+            shape.Vertices = PolygonTools.CreateRectangle(2.0f, 0.5f);
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(0.0f, 10.0f);
-
+            body.Position = new Vector2(-10.0f, 10.0f);
+            body.Rotation = 0.5f * Settings.Pi;
             body.CreateFixture(shape);
 
-            //_fixedJoint = new FixedPrismaticJoint(body, body.Position, new Vector2(0.5f, 1.0f));
-            //_fixedJoint.MotorSpeed = 5.0f;
-            //_fixedJoint.MaxMotorForce = 1000.0f;
-            //_fixedJoint.MotorEnabled = true;
-            //_fixedJoint.LowerLimit = -10.0f;
-            //_fixedJoint.UpperLimit = 20.0f;
-            //_fixedJoint.LimitEnabled = true;
+            // Bouncy limit
+            Vector2 axis = new Vector2(2.0f, 1.0f);
+            axis.Normalize();
+            _joint = new PrismaticJoint(ground, body, Vector2.Zero, axis);
 
-            //World.AddJoint(_fixedJoint);
+            // Non-bouncy limit
+            //_joint = new PrismaticJoint(ground, body2, body2.Position, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
 
-            PolygonShape shape2 = new PolygonShape(5);
-            shape2.SetAsBox(2.0f, 0.5f);
-
-            Body body2 = BodyFactory.CreateBody(World);
-            body2.BodyType = BodyType.Dynamic;
-            body2.Position = new Vector2(10.0f, 10.0f);
-
-            body2.CreateFixture(shape2);
-
-            _joint = new PrismaticJoint(ground, body2, body2.Position, Vector2.Zero, new Vector2(0.5f, 1.0f));
             _joint.MotorSpeed = 5.0f;
             _joint.MaxMotorForce = 1000.0f;
             _joint.MotorEnabled = true;
@@ -86,21 +69,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {
-            //if (keyboardManager.IsNewKeyPress(Keys.L))
-            //{
-            //    _fixedJoint.LimitEnabled = !_fixedJoint.LimitEnabled;
-            //    _joint.LimitEnabled = !_joint.LimitEnabled;
-            //}
-            //if (keyboardManager.IsNewKeyPress(Keys.M))
-            //{
-            //    _fixedJoint.MotorEnabled = !_fixedJoint.MotorEnabled;
-            //    _joint.MotorEnabled = !_joint.MotorEnabled;
-            //}
-            //if (keyboardManager.IsNewKeyPress(Keys.P))
-            //{
-            //    _fixedJoint.MotorSpeed = -_fixedJoint.MotorSpeed;
-            //    _joint.MotorSpeed = -_joint.MotorSpeed;
-            //}
+            if (keyboardManager.IsNewKeyPress(Keys.L))
+                _joint.LimitEnabled = !_joint.LimitEnabled;
+
+            if (keyboardManager.IsNewKeyPress(Keys.M))
+                _joint.MotorEnabled = !_joint.MotorEnabled;
+
+            if (keyboardManager.IsNewKeyPress(Keys.P))
+                _joint.MotorSpeed = -_joint.MotorSpeed;
 
             base.Keyboard(keyboardManager);
         }

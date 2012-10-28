@@ -37,6 +37,8 @@ namespace FarseerPhysics.Common
             }
         }
 
+        internal bool AttachedToBody { get; set; }
+
         /// <summary>
         /// Nexts the index.
         /// </summary>
@@ -215,6 +217,8 @@ namespace FarseerPhysics.Common
         /// <param name="vector">The vector.</param>
         public void Translate(ref Vector2 vector)
         {
+            Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
+
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Add(this[i], vector);
         }
@@ -225,16 +229,22 @@ namespace FarseerPhysics.Common
         /// <param name="value">The Value.</param>
         public void Scale(ref Vector2 value)
         {
+            Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
+
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Multiply(this[i], value);
         }
 
         /// <summary>
         /// Rotate the vertices with the defined value in radians.
+        /// Warning: Using this method on an active set of vertices of a Body,
+        /// will cause problems with collisions. Use Body.Rotation instead.
         /// </summary>
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(float value)
         {
+            Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
+
             Matrix rotationMatrix;
             Matrix.CreateRotationZ(value, out rotationMatrix);
 
@@ -394,7 +404,7 @@ namespace FarseerPhysics.Common
         public bool CheckPolygon(out int error, out string errorMessage)
         {
             error = -1;
-			errorMessage = null;
+            errorMessage = null;
 
             if (Count < 3 || Count > Settings.MaxPolygonVertices)
             {
@@ -509,15 +519,15 @@ namespace FarseerPhysics.Common
 
         public bool CheckPolygon()
         {
-			string errorMessage;
-			int errorCode;
-			var result = CheckPolygon(out errorCode, out errorMessage);
-			if(!result && errorMessage != null)
-			{
-				Debug.WriteLine(errorMessage);
-			}
-			return result;
-		}
+            string errorMessage;
+            int errorCode;
+            var result = CheckPolygon(out errorCode, out errorMessage);
+            if (!result && errorMessage != null)
+            {
+                Debug.WriteLine(errorMessage);
+            }
+            return result;
+        }
 
         // From Eric Jordan's convex decomposition library
 

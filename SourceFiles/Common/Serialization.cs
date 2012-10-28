@@ -276,26 +276,26 @@ namespace FarseerPhysics.Common
                         WriteElement("MaxLength", rjd.MaxLength);
                     }
                     break;
-                case JointType.Angle:
-                    {
-                        AngleJoint aj = (AngleJoint)joint;
-                        WriteElement("BiasFactor", aj.BiasFactor);
-                        WriteElement("MaxImpulse", aj.MaxImpulse);
-                        WriteElement("Softness", aj.Softness);
-                        WriteElement("TargetAngle", aj.TargetAngle);
-                    }
-                    break;
-                case JointType.Slider:
-                    {
-                        SliderJoint sliderJoint = (SliderJoint)joint;
-                        WriteElement("DampingRatio", sliderJoint.DampingRatio);
-                        WriteElement("FrequencyHz", sliderJoint.Frequency);
-                        WriteElement("MaxLength", sliderJoint.MaxLength);
-                        WriteElement("MinLength", sliderJoint.MinLength);
-                        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
-                        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
-                    }
-                    break;
+                //case JointType.Angle:
+                //    {
+                //        AngleJoint aj = (AngleJoint)joint;
+                //        WriteElement("BiasFactor", aj.BiasFactor);
+                //        WriteElement("MaxImpulse", aj.MaxImpulse);
+                //        WriteElement("Softness", aj.Softness);
+                //        WriteElement("TargetAngle", aj.TargetAngle);
+                //    }
+                //    break;
+                //case JointType.Slider:
+                //    {
+                //        SliderJoint sliderJoint = (SliderJoint)joint;
+                //        WriteElement("DampingRatio", sliderJoint.DampingRatio);
+                //        WriteElement("FrequencyHz", sliderJoint.Frequency);
+                //        WriteElement("MaxLength", sliderJoint.MaxLength);
+                //        WriteElement("MinLength", sliderJoint.MinLength);
+                //        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
+                //        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
+                //    }
+                //    break;
                 default:
                     throw new Exception("Joint not supported");
             }
@@ -544,7 +544,7 @@ namespace FarseerPhysics.Common
                                                     foreach (XMLFragmentElement vert in sn.Elements)
                                                         verts.Add(ReadVector(vert));
 
-                                                    shape.Set(new Vertices(verts.ToArray()));
+                                                    shape.Vertices = new Vertices(verts);
                                                 }
                                                 break;
                                             case "centroid":
@@ -803,12 +803,12 @@ namespace FarseerPhysics.Common
                             case JointType.Rope:
                                 joint = new RopeJoint();
                                 break;
-                            case JointType.Angle:
-                                joint = new AngleJoint();
-                                break;
-                            case JointType.Slider:
-                                joint = new SliderJoint();
-                                break;
+                            //case JointType.Angle: //TODO
+                            //    joint = new AngleJoint();
+                            //    break;
+                            //case JointType.Slider:
+                            //    joint = new SliderJoint();
+                            //    break;
                             case JointType.Gear:
                                 throw new Exception("GearJoint is not supported.");
                             default:
@@ -1035,50 +1035,50 @@ namespace FarseerPhysics.Common
                                     break;
                                 case JointType.Gear:
                                     throw new Exception("Gear joint is unsupported");
-                                case JointType.Angle:
-                                    {
-                                        switch (sn.Name.ToLower())
-                                        {
-                                            case "biasfactor":
-                                                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
-                                                break;
-                                            case "maximpulse":
-                                                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
-                                                break;
-                                            case "softness":
-                                                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
-                                                break;
-                                            case "targetangle":
-                                                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
-                                                break;
-                                        }
-                                    }
-                                    break;
-                                case JointType.Slider:
-                                    {
-                                        switch (sn.Name.ToLower())
-                                        {
-                                            case "dampingratio":
-                                                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                                break;
-                                            case "frequencyhz":
-                                                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
-                                                break;
-                                            case "maxlength":
-                                                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
-                                                break;
-                                            case "minlength":
-                                                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
-                                                break;
-                                            case "localanchora":
-                                                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
-                                                break;
-                                            case "localanchorb":
-                                                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
-                                                break;
-                                        }
-                                    }
-                                    break;
+                                //case JointType.Angle: //TODO
+                                //    {
+                                //        switch (sn.Name.ToLower())
+                                //        {
+                                //            case "biasfactor":
+                                //                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
+                                //                break;
+                                //            case "maximpulse":
+                                //                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
+                                //                break;
+                                //            case "softness":
+                                //                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
+                                //                break;
+                                //            case "targetangle":
+                                //                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
+                                //                break;
+                                //        }
+                                //    }
+                                //    break;
+                                //case JointType.Slider:
+                                //    {
+                                //        switch (sn.Name.ToLower())
+                                //        {
+                                //            case "dampingratio":
+                                //                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                //                break;
+                                //            case "frequencyhz":
+                                //                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
+                                //                break;
+                                //            case "maxlength":
+                                //                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
+                                //                break;
+                                //            case "minlength":
+                                //                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
+                                //                break;
+                                //            case "localanchora":
+                                //                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
+                                //                break;
+                                //            case "localanchorb":
+                                //                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
+                                //                break;
+                                //        }
+                                //    }
+                                //    break;
                             }
                         }
                     }

@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -44,8 +45,8 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 CircleShape circle1 = new CircleShape(1.0f, 5f);
 
-                PolygonShape box = new PolygonShape(1f);
-                box.SetAsBox(0.5f, 5.0f);
+                PolygonShape box = new PolygonShape(5f);
+                box.Vertices = PolygonTools.CreateRectangle(0.5f, 5.0f);
 
                 CircleShape circle2 = new CircleShape(2.0f, 5f);
 
@@ -77,14 +78,14 @@ namespace FarseerPhysics.TestBed.Tests
 
                 CircleShape circle2 = new CircleShape(2.0f, 5.0f);
 
-                PolygonShape box = new PolygonShape(1f);
-                box.SetAsBox(0.5f, 5.0f);
+                PolygonShape box = new PolygonShape(5f);
+                box.Vertices = PolygonTools.CreateRectangle(0.5f, 5.0f);
 
                 Body body1 = BodyFactory.CreateBody(World, new Vector2(-3.0f, 12.0f));
                 body1.BodyType = BodyType.Dynamic;
                 body1.CreateFixture(circle1);
 
-                _joint1 = new RevoluteJoint(ground, body1, body1.Position, body1.Position);
+                _joint1 = new RevoluteJoint(ground, body1, body1.Position);
                 _joint1.ReferenceAngle = body1.Rotation - ground.Rotation;
                 World.AddJoint(_joint1);
 
@@ -92,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2.BodyType = BodyType.Dynamic;
                 body2.CreateFixture(circle2);
 
-                _joint2 = new RevoluteJoint(ground,body2,body2.Position);
+                _joint2 = new RevoluteJoint(ground, body2, body2.Position);
                 World.AddJoint(_joint2);
 
                 Body body3 = BodyFactory.CreateBody(World, new Vector2(2.5f, 12.0f));
@@ -106,12 +107,12 @@ namespace FarseerPhysics.TestBed.Tests
 
                 World.AddJoint(_joint3);
 
-                _joint4 = new GearJoint(_joint1,_joint2,circle2.Radius/circle1.Radius);
+                _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
                 _joint4.BodyA = body1;
                 _joint4.BodyB = body2;
                 World.AddJoint(_joint4);
 
-                _joint5 = new GearJoint(_joint2,_joint3,-1.0f / circle2.Radius);
+                _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
                 _joint5.BodyA = body2;
                 _joint5.BodyB = body3;
                 World.AddJoint(_joint5);
@@ -122,10 +123,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            float ratio, value;
-
-            ratio = _joint4.Ratio;
-            value = _joint1.JointAngle + ratio * _joint2.JointAngle;
+            float ratio = _joint4.Ratio;
+            float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
             DebugView.DrawString(50, TextLine, "theta1 + {0} * theta2 = {1}", ratio, value);
             TextLine += 15;
 

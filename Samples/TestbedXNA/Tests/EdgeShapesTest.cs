@@ -69,8 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(20);
-                _polygons[0].Set(vertices);
+                _polygons[0] = new PolygonShape(vertices,20);
             }
 
             {
@@ -78,8 +77,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.1f, 0.0f));
                 vertices.Add(new Vector2(0.1f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(20);
-                _polygons[1].Set(vertices);
+                _polygons[1] = new PolygonShape(vertices,20);
             }
 
             {
@@ -96,13 +94,12 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-0.5f * w, b + s));
                 vertices.Add(new Vector2(-0.5f * w, b));
                 vertices.Add(new Vector2(-0.5f * s, 0.0f));
-                _polygons[2] = new PolygonShape(20);
-                _polygons[2].Set(vertices);
+                _polygons[2] = new PolygonShape(vertices,20);
             }
 
             {
                 _polygons[3] = new PolygonShape(20);
-                _polygons[3].SetAsBox(0.5f, 0.5f);
+                _polygons[3].Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
             }
 
             {
@@ -159,7 +156,6 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
         }
-
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {

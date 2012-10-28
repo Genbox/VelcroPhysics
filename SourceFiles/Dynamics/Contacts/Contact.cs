@@ -157,6 +157,10 @@ namespace FarseerPhysics.Dynamics.Contacts
             Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
         }
 
+        /// <summary>
+        /// Get the contact manifold. Do not modify the manifold unless you understand the
+        /// internals of Box2D.
+        /// </summary>
         public Manifold Manifold;
 
         // Nodes for connecting bodies.
@@ -221,16 +225,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// </summary>
         /// <value>The child index B.</value>
         public int ChildIndexB { get; internal set; }
-
-        /// <summary>
-        /// Get the contact manifold. Do not modify the manifold unless you understand the
-        /// internals of Box2D.
-        /// </summary>
-        /// <param name="manifold">The manifold.</param>
-        public void GetManifold(out Manifold manifold)
-        {
-            manifold = Manifold;
-        }
 
         /// <summary>
         /// Gets the world manifold.
@@ -378,22 +372,21 @@ namespace FarseerPhysics.Dynamics.Contacts
                 if (touching)
                 {
 
+                    //TODO: Create a setting that can turn behavior on and off?
 #if true
-                    bool enabledA, enabledB;
+                    bool enabledA = true, enabledB = true;
 
                     // Report the collision to both participants. Track which ones returned true so we can
                     // later call OnSeparation if the contact is disabled for a different reason.
                     if (FixtureA.OnCollision != null)
-                        enabledA = FixtureA.OnCollision(FixtureA, FixtureB, this);
-                    else
-                        enabledA = true;
+                        foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
+                            enabledA = handler(FixtureA, FixtureB, this) && enabledA;
 
                     // Reverse the order of the reported fixtures. The first fixture is always the one that the
                     // user subscribed to.
                     if (FixtureB.OnCollision != null)
-                        enabledB = FixtureB.OnCollision(FixtureB, FixtureA, this);
-                    else
-                        enabledB = true;
+                        foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
+                            enabledB = handler(FixtureB, FixtureA, this) && enabledB;
 
                     Enabled = enabledA && enabledB;
 

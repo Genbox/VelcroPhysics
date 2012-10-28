@@ -20,50 +20,54 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
-using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class SensorTest : Test
+    public class Tumbler : Test
     {
-        private SensorTest()
+        private const int Count = 800;
+        private int _count;
+
+        Tumbler()
         {
-            Body body = BodyFactory.CreateRectangle(World, 1, 1, 1);
-            body.BodyType = BodyType.Dynamic;
+            Body ground = BodyFactory.CreateBody(World);
+
+            Body tumblerBody = BodyFactory.CreateBody(World, new Vector2(0, 10));
+            tumblerBody.SleepingAllowed = false;
+            tumblerBody.BodyType = BodyType.Dynamic;
+
+            FixtureFactory.AttachRectangle(1, 20, 5, new Vector2(10, 0), tumblerBody);
+            FixtureFactory.AttachRectangle(1, 20, 5, new Vector2(-10, 0), tumblerBody);
+            FixtureFactory.AttachRectangle(20, 1, 5, new Vector2(0, 10), tumblerBody);
+            FixtureFactory.AttachRectangle(20, 1, 5, new Vector2(0, -10), tumblerBody);
+
+            RevoluteJoint joint = JointFactory.CreateRevoluteJoint(World, ground, new Vector2(0, 10), tumblerBody, Vector2.Zero);
+            joint.ReferenceAngle = 0.0f;
+            joint.MotorSpeed = 0.05f * Settings.Pi;
+            joint.MaxMotorTorque = 1e8f;
+            joint.MotorEnabled = true;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            Vector2 min = -new Vector2(10);
-            Vector2 max = new Vector2(10);
-
-            AABB affected = new AABB(ref min, ref max);
-            Fixture fix = null;
-            World.QueryAABB(fixture =>
-                                {
-                                    fix = fixture;
-                                    return true;
-                                }, ref affected);
-
-
-            //DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            //if (fix != null)
-            //    DebugView.DrawPoint(fix.Body.Position, 1, Color.Red);
-
-            //DebugView.DrawAABB(ref affected, Color.AliceBlue);
-            //DebugView.EndCustomDraw();
-
             base.Update(settings, gameTime);
+
+            if (_count < Count)
+            {
+                Body box = BodyFactory.CreateRectangle(World, 0.125f * 2, 0.125f * 2, 1, new Vector2(0, 10));
+                box.BodyType = BodyType.Dynamic;
+                ++_count;
+            }
         }
 
-        internal static Test Create()
+        public static Test Create()
         {
-            return new SensorTest();
+            return new Tumbler();
         }
     }
 }

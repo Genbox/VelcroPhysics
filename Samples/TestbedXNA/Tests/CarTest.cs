@@ -50,11 +50,8 @@ namespace FarseerPhysics.TestBed.Tests
             _zeta = 0.7f;
             _speed = 50.0f;
 
-            Body ground = new Body(World);
+            Body ground = BodyFactory.CreateEdge(World,new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
             {
-                EdgeShape shape = new EdgeShape(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
-                ground.CreateFixture(shape);
-
                 float[] hs = new[] { 0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f };
 
                 float x = 20.0f, y1 = 0.0f;
@@ -100,7 +97,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body.Position = new Vector2(140.0f, 1.0f);
 
                 PolygonShape box = new PolygonShape(1);
-                box.SetAsBox(10.0f, 0.25f);
+                box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
                 body.CreateFixture(box);
 
                 RevoluteJoint jd = JointFactory.CreateRevoluteJoint(ground, body, Vector2.Zero);
@@ -116,7 +113,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 const int N = 20;
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(1.0f, 0.125f);
+                shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < N; ++i)
@@ -140,7 +137,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Boxes
             {
                 PolygonShape box = new PolygonShape(0.5f);
-                box.SetAsBox(0.5f, 0.5f);
+                box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;

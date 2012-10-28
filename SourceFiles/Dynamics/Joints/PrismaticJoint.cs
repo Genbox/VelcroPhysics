@@ -151,8 +151,8 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             JointType = JointType.Prismatic;
 
-            LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
-            LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
+            LocalAnchorA = localAnchorA;
+            LocalAnchorB = localAnchorB;
 
             _localXAxisA = BodyA.GetLocalVector(axis);
             _localXAxisA.Normalize();
@@ -380,14 +380,14 @@ namespace FarseerPhysics.Dynamics.Joints
             set { m_referenceAngle = value; }
         }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            return inv_dt * (_impulse.X * m_perp + (_motorImpulse + _impulse.Z) * m_axis);
+            return invDt * (_impulse.X * m_perp + (_motorImpulse + _impulse.Z) * m_axis);
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
-            return inv_dt * _impulse.Y;
+            return invDt * _impulse.Y;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)

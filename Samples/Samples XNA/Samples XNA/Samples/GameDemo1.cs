@@ -134,9 +134,8 @@ namespace FarseerPhysics.SamplesFramework
                 _board.Position = new Vector2(140.0f, -1.0f);
 
                 PolygonShape box = new PolygonShape(1f);
-                box.SetAsBox(10.0f, 0.25f);
-                _teeter =
-                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
+                box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
+                _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
 
                 _board.CreateFixture(box);
 
@@ -155,9 +154,9 @@ namespace FarseerPhysics.SamplesFramework
 
                 const int segmentCount = 20;
                 PolygonShape shape = new PolygonShape(1f);
-                shape.SetAsBox(1.0f, 0.125f);
-                _bridge =
-                    new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+                shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
+
+                _bridge = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
                 Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
@@ -179,9 +178,8 @@ namespace FarseerPhysics.SamplesFramework
             {
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
-                box.SetAsBox(0.5f, 0.5f);
-                _box =
-                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
+                box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                _box = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;

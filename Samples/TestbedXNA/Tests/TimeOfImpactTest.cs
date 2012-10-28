@@ -35,8 +35,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         private TimeOfImpactTest()
         {
-            _shapeA.SetAsBox(25.0f, 5.0f);
-            _shapeB.SetAsBox(2.5f, 2.5f);
+            _shapeA.Vertices = PolygonTools.CreateRectangle(25.0f, 5.0f);
+            _shapeB.Vertices = PolygonTools.CreateRectangle(2.5f, 2.5f);
         }
 
         internal static Test Create()

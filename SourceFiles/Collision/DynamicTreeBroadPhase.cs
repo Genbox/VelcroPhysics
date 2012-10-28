@@ -321,9 +321,19 @@ namespace FarseerPhysics.Collision
 
         #endregion
 
+        public float TreeQuality
+        {
+            get { return _tree.AreaRatio; }
+        }
+
+        public int TreeBalance
+        {
+            get { return _tree.GetMaxBalance(); }
+        }
+
         public int TreeHeight
         {
-            get { return _tree.GetHeight(); }
+            get { return _tree.Height; }
         }
     }
 }

@@ -21,6 +21,7 @@
 */
 
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -37,7 +38,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(0.5f, 2.0f);
+                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 2.0f);
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
@@ -57,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                 World.AddJoint(jd);
 
                 PolygonShape shape2 = new PolygonShape(1);
-                shape2.SetAsBox(0.5f, 2.0f);
+                shape2.Vertices = PolygonTools.CreateRectangle(0.5f, 2.0f);
                 Body body2 = BodyFactory.CreatePolygon(World, shape2.Vertices, 0.5f);
                 body2.BodyType = BodyType.Dynamic;
                 body2.Position = new Vector2(10.0f, 7.0f);

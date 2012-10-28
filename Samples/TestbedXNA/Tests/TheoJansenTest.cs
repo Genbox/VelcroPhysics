@@ -49,16 +49,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             // Ground
             {
-                Body ground = BodyFactory.CreateBody(World);
-
-                EdgeShape shape = new EdgeShape(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-                ground.CreateFixture(shape);
-
-                shape = new EdgeShape(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
-                ground.CreateFixture(shape);
-
-                shape = new EdgeShape(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateEdge(World, new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
+                FixtureFactory.AttachEdge(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f), ground);
+                FixtureFactory.AttachEdge(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f), ground);
             }
 
             // Balls
@@ -76,7 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Chassis
             {
                 PolygonShape shape = new PolygonShape(1);
-                shape.SetAsBox(2.5f, 1.0f);
+                shape.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
 
                 _chassis = BodyFactory.CreateBody(World);
                 _chassis.BodyType = BodyType.Dynamic;
@@ -98,8 +91,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             {
-                //_motorJoint = new RevoluteJoint(_wheel, _chassis, pivot + _offset);
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position, Vector2.Zero);
+                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position);
                 _motorJoint.CollideConnected = false;
                 _motorJoint.MotorSpeed = _motorSpeed;
                 _motorJoint.MaxMotorTorque = 400.0f;
@@ -131,7 +123,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 p6 = new Vector2(2.5f * s, 3.7f);
 
             PolygonShape poly1 = new PolygonShape(1);
-            PolygonShape poly2 = new PolygonShape(2);
+            PolygonShape poly2 = new PolygonShape(1);
 
             Vertices vertices = new Vertices(3);
 
@@ -140,26 +132,25 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(p1);
                 vertices.Add(p2);
                 vertices.Add(p3);
-                poly1.Set(vertices);
+                poly1.Vertices = vertices;
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p5 - p4;
                 vertices[2] = p6 - p4;
-                poly2.Set(vertices);
+                poly2.Vertices = vertices;
             }
             else
             {
                 vertices.Add(p1);
                 vertices.Add(p3);
                 vertices.Add(p2);
-                poly1.Set(vertices);
+                poly1.Vertices = vertices;
 
                 vertices[0] = Vector2.Zero;
                 vertices[1] = p6 - p4;
                 vertices[2] = p5 - p4;
-                poly2.Set(vertices);
+                poly2.Vertices = vertices;
             }
-
 
             Body body1 = BodyFactory.CreateBody(World);
             body1.BodyType = BodyType.Dynamic;
@@ -205,7 +196,7 @@ namespace FarseerPhysics.TestBed.Tests
             World.AddJoint(djd4);
 
             Vector2 anchor = p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/;
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, _chassis.GetWorldPoint(anchor), anchor);
+            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset);
             World.AddJoint(rjd);
         }
 

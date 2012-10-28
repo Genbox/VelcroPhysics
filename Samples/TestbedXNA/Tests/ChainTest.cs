@@ -57,6 +57,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
+            //TODO
             //Fix the first chainlink to the world
             //FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
             //World.AddJoint(fixedJoint);

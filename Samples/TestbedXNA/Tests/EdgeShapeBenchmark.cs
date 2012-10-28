@@ -49,8 +49,7 @@ namespace FarseerPhysics.TestBed.Tests
             vertices.Add(new Vector2(-0.5f * w, b));
             vertices.Add(new Vector2(-0.5f * s, 0.0f));
 
-            _polyShape = new PolygonShape(20);
-            _polyShape.Set(vertices);
+            _polyShape = new PolygonShape(vertices,20);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
