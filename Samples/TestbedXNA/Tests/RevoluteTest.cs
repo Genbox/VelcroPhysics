@@ -39,25 +39,25 @@ namespace FarseerPhysics.TestBed.Tests
             //Ground
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            //{
-            //    Body bodyB = BodyFactory.CreateCircle(World, 0.5f, 5f, new Vector2(-10.0f, 20.0f));
-            //    bodyB.BodyType = BodyType.Dynamic;
+            {
+                Body bodyB = BodyFactory.CreateCircle(World, 0.5f, 5f, new Vector2(-10.0f, 20.0f));
+                bodyB.BodyType = BodyType.Dynamic;
 
-            //    const float w = 100.0f;
-            //    bodyB.AngularVelocity = w;
-            //    bodyB.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
+                const float w = 100.0f;
+                bodyB.AngularVelocity = w;
+                bodyB.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
-            //    _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f));
-            //    _joint.MotorSpeed = 1.0f * Settings.Pi;
-            //    _joint.MaxMotorTorque = 10000.0f;
-            //    _joint.MotorEnabled = false;
-            //    _joint.LowerLimit = -0.25f * Settings.Pi;
-            //    _joint.UpperLimit = 0.5f * Settings.Pi;
-            //    _joint.LimitEnabled = true;
-            //    _joint.CollideConnected = true;
+                _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f));
+                _joint.MotorSpeed = 1.0f * Settings.Pi;
+                _joint.MaxMotorTorque = 10000.0f;
+                _joint.MotorEnabled = false;
+                _joint.LowerLimit = -0.25f * Settings.Pi;
+                _joint.UpperLimit = 0.5f * Settings.Pi;
+                _joint.LimitEnabled = true;
+                _joint.CollideConnected = true;
 
-            //    World.AddJoint(_joint);
-            //}
+                World.AddJoint(_joint);
+            }
 
             {
                 Body ball = BodyFactory.CreateCircle(World, 3.0f, 5.0f, new Vector2(5.0f, 30.0f));
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 polygonBody.BodyType = BodyType.Dynamic;
                 polygonBody.IsBullet = true;
 
-                RevoluteJoint joint = new RevoluteJoint(polygonBody, new Vector2(20, 10));
+                RevoluteJoint joint = new RevoluteJoint(ground, polygonBody, new Vector2(20, 10));
                 joint.LowerLimit = -0.25f * Settings.Pi;
                 joint.UpperLimit = 0.0f * Settings.Pi;
                 joint.LimitEnabled = true;
@@ -79,15 +79,15 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             // Tests mass computation of a small object far from the origin
-            //{
-            //    Vertices verts = new Vertices(3);
-            //    verts.Add(new Vector2(17.63f, 36.31f));
-            //    verts.Add(new Vector2(17.52f, 36.69f));
-            //    verts.Add(new Vector2(17.19f, 36.36f));
+            {
+                Vertices verts = new Vertices(3);
+                verts.Add(new Vector2(17.63f, 36.31f));
+                verts.Add(new Vector2(17.52f, 36.69f));
+                verts.Add(new Vector2(17.19f, 36.36f));
 
-            //    Body polyShape = BodyFactory.CreatePolygon(World, verts, 1);
-            //    polyShape.BodyType = BodyType.Dynamic;
-            //}
+                Body polyShape = BodyFactory.CreatePolygon(World, verts, 1);
+                polyShape.BodyType = BodyType.Dynamic;
+            }
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
