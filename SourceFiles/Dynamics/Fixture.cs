@@ -1,6 +1,6 @@
 /*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 

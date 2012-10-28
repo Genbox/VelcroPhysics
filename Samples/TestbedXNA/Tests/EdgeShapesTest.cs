@@ -1,6 +1,6 @@
 ﻿/*
-* Farseer Physics Engine based on Box2D.XNA port:
-* Copyright (c) 2011 Ian Qvist
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -31,7 +31,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class EdgeShapes : Test
+    public class EdgeShapesTest : Test
     {
         private const int MaxBodies = 256;
         private float _angle;
@@ -43,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Vector2 _point;
         private PolygonShape[] _polygons = new PolygonShape[4];
 
-        private EdgeShapes()
+        private EdgeShapesTest()
         {
             // Ground body
             {
@@ -235,7 +235,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new EdgeShapes();
+            return new EdgeShapesTest();
         }
     }
 }
