@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.DebugViews;
@@ -32,55 +31,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Framework
 {
-    public static class Rand
-    {
-        public static Random Random = new Random(0x2eed2eed);
-
-        /// <summary>
-        /// Random number in range [-1,1]
-        /// </summary>
-        /// <returns></returns>
-        public static float RandomFloat()
-        {
-            return (float)(Random.NextDouble() * 2.0 - 1.0);
-        }
-
-        /// <summary>
-        /// Random floating point number in range [lo, hi]
-        /// </summary>
-        /// <param name="lo">The lo.</param>
-        /// <param name="hi">The hi.</param>
-        /// <returns></returns>
-        public static float RandomFloat(float lo, float hi)
-        {
-            float r = (float)Random.NextDouble();
-            r = (hi - lo) * r + lo;
-            return r;
-        }
-    }
-
-    public class GameSettings
-    {
-		public float Hz;
-        public bool Pause;
-        public bool SingleStep;
-
-		public GameSettings()
-		{
-#if WINDOWS_PHONE
-			Hz = 30.0f;
-#else
-			Hz = 60.0f;
-#endif
-		}
-    }
-
-    public struct TestEntry
-    {
-        public Func<Test> CreateFcn;
-        public string Name;
-    }
-
     public class Test
     {
         internal DebugViewXNA DebugView;
