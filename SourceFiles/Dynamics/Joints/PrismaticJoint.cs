@@ -102,7 +102,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public Vector2 LocalAnchorB;
         private Vector2 _localXAxisA;
         private Vector2 _localYAxisA;
-        private float m_referenceAngle;
+        private float _referenceAngle;
         private Vector3 _impulse;
         private float _motorImpulse;
         private float _lowerTranslation;
@@ -114,19 +114,19 @@ namespace FarseerPhysics.Dynamics.Joints
         private LimitState _limitState;
 
         // Solver temp
-        private int m_indexA;
-        private int m_indexB;
-        private Vector2 m_localCenterA;
-        private Vector2 m_localCenterB;
-        private float m_invMassA;
-        private float m_invMassB;
-        private float m_invIA;
-        private float m_invIB;
-        private Vector2 m_axis, m_perp;
-        private float m_s1, m_s2;
-        private float m_a1, m_a2;
-        private Mat33 m_K;
-        private float m_motorMass;
+        private int _indexA;
+        private int _indexB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _invIA;
+        private float _invIB;
+        private Vector2 _axis, _perp;
+        private float _s1, _s2;
+        private float _a1, _a2;
+        private Mat33 _K;
+        private float _motorMass;
 
         internal PrismaticJoint()
         {
@@ -157,7 +157,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _localXAxisA = BodyA.GetLocalVector(axis);
             _localXAxisA.Normalize();
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
-            m_referenceAngle = BodyB.Rotation - BodyA.Rotation;
+            _referenceAngle = BodyB.Rotation - BodyA.Rotation;
 
             _limitState = LimitState.Inactive;
         }
@@ -173,7 +173,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _localXAxisA = BodyA.GetLocalVector(axis);
             _localXAxisA.Normalize();
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
-            m_referenceAngle = BodyB.Rotation - BodyA.Rotation;
+            _referenceAngle = BodyB.Rotation - BodyA.Rotation;
 
             _limitState = LimitState.Inactive;
         }
@@ -376,13 +376,13 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public float ReferenceAngle
         {
-            get { return m_referenceAngle; }
-            set { m_referenceAngle = value; }
+            get { return _referenceAngle; }
+            set { _referenceAngle = value; }
         }
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            return invDt * (_impulse.X * m_perp + (_motorImpulse + _impulse.Z) * m_axis);
+            return invDt * (_impulse.X * _perp + (_motorImpulse + _impulse.Z) * _axis);
         }
 
         public override float GetReactionTorque(float invDt)
@@ -392,76 +392,76 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            m_indexA = BodyA.IslandIndex;
-            m_indexB = BodyB.IslandIndex;
-            m_localCenterA = BodyA.Sweep.LocalCenter;
-            m_localCenterB = BodyB.Sweep.LocalCenter;
-            m_invMassA = BodyA.InvMass;
-            m_invMassB = BodyB.InvMass;
-            m_invIA = BodyA.InvI;
-            m_invIB = BodyB.InvI;
+            _indexA = BodyA.IslandIndex;
+            _indexB = BodyB.IslandIndex;
+            _localCenterA = BodyA.Sweep.LocalCenter;
+            _localCenterB = BodyB.Sweep.LocalCenter;
+            _invMassA = BodyA.InvMass;
+            _invMassB = BodyB.InvMass;
+            _invIA = BodyA.InvI;
+            _invIB = BodyB.InvI;
 
-            Vector2 cA = data.positions[m_indexA].c;
-            float aA = data.positions[m_indexA].a;
-            Vector2 vA = data.velocities[m_indexA].v;
-            float wA = data.velocities[m_indexA].w;
+            Vector2 cA = data.positions[_indexA].c;
+            float aA = data.positions[_indexA].a;
+            Vector2 vA = data.velocities[_indexA].v;
+            float wA = data.velocities[_indexA].w;
 
-            Vector2 cB = data.positions[m_indexB].c;
-            float aB = data.positions[m_indexB].a;
-            Vector2 vB = data.velocities[m_indexB].v;
-            float wB = data.velocities[m_indexB].w;
+            Vector2 cB = data.positions[_indexB].c;
+            float aB = data.positions[_indexB].a;
+            Vector2 vB = data.velocities[_indexB].v;
+            float wB = data.velocities[_indexB].w;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective masses.
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
+            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
             Vector2 d = (cB - cA) + rB - rA;
 
-            float mA = m_invMassA, mB = m_invMassB;
-            float iA = m_invIA, iB = m_invIB;
+            float mA = _invMassA, mB = _invMassB;
+            float iA = _invIA, iB = _invIB;
 
             // Compute motor Jacobian and effective mass.
             {
-                m_axis = MathUtils.Mul(qA, LocalXAxisA);
-                m_a1 = MathUtils.Cross(d + rA, m_axis);
-                m_a2 = MathUtils.Cross(rB, m_axis);
+                _axis = MathUtils.Mul(qA, LocalXAxisA);
+                _a1 = MathUtils.Cross(d + rA, _axis);
+                _a2 = MathUtils.Cross(rB, _axis);
 
-                m_motorMass = mA + mB + iA * m_a1 * m_a1 + iB * m_a2 * m_a2;
-                if (m_motorMass > 0.0f)
+                _motorMass = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
+                if (_motorMass > 0.0f)
                 {
-                    m_motorMass = 1.0f / m_motorMass;
+                    _motorMass = 1.0f / _motorMass;
                 }
             }
 
             // Prismatic constraint.
             {
-                m_perp = MathUtils.Mul(qA, _localYAxisA);
+                _perp = MathUtils.Mul(qA, _localYAxisA);
 
-                m_s1 = MathUtils.Cross(d + rA, m_perp);
-                m_s2 = MathUtils.Cross(rB, m_perp);
+                _s1 = MathUtils.Cross(d + rA, _perp);
+                _s2 = MathUtils.Cross(rB, _perp);
 
-                float k11 = mA + mB + iA * m_s1 * m_s1 + iB * m_s2 * m_s2;
-                float k12 = iA * m_s1 + iB * m_s2;
-                float k13 = iA * m_s1 * m_a1 + iB * m_s2 * m_a2;
+                float k11 = mA + mB + iA * _s1 * _s1 + iB * _s2 * _s2;
+                float k12 = iA * _s1 + iB * _s2;
+                float k13 = iA * _s1 * _a1 + iB * _s2 * _a2;
                 float k22 = iA + iB;
                 if (k22 == 0.0f)
                 {
                     // For bodies with fixed rotation.
                     k22 = 1.0f;
                 }
-                float k23 = iA * m_a1 + iB * m_a2;
-                float k33 = mA + mB + iA * m_a1 * m_a1 + iB * m_a2 * m_a2;
+                float k23 = iA * _a1 + iB * _a2;
+                float k33 = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
 
-                m_K.ex = new Vector3(k11, k12, k13);
-                m_K.ey = new Vector3(k12, k22, k23);
-                m_K.ez = new Vector3(k13, k23, k33);
+                _K.ex = new Vector3(k11, k12, k13);
+                _K.ey = new Vector3(k12, k22, k23);
+                _K.ez = new Vector3(k13, k23, k33);
             }
 
             // Compute motor and limit terms.
             if (_enableLimit)
             {
-                float jointTranslation = Vector2.Dot(m_axis, d);
+                float jointTranslation = Vector2.Dot(_axis, d);
                 if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
                 {
                     _limitState = LimitState.Equal;
@@ -505,9 +505,9 @@ namespace FarseerPhysics.Dynamics.Joints
                 _impulse *= data.step.dtRatio;
                 _motorImpulse *= data.step.dtRatio;
 
-                Vector2 P = _impulse.X * m_perp + (_motorImpulse + _impulse.Z) * m_axis;
-                float LA = _impulse.X * m_s1 + _impulse.Y + (_motorImpulse + _impulse.Z) * m_a1;
-                float LB = _impulse.X * m_s2 + _impulse.Y + (_motorImpulse + _impulse.Z) * m_a2;
+                Vector2 P = _impulse.X * _perp + (_motorImpulse + _impulse.Z) * _axis;
+                float LA = _impulse.X * _s1 + _impulse.Y + (_motorImpulse + _impulse.Z) * _a1;
+                float LB = _impulse.X * _s2 + _impulse.Y + (_motorImpulse + _impulse.Z) * _a2;
 
                 vA -= mA * P;
                 wA -= iA * LA;
@@ -521,35 +521,35 @@ namespace FarseerPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
 
-            data.velocities[m_indexA].v = vA;
-            data.velocities[m_indexA].w = wA;
-            data.velocities[m_indexB].v = vB;
-            data.velocities[m_indexB].w = wB;
+            data.velocities[_indexA].v = vA;
+            data.velocities[_indexA].w = wA;
+            data.velocities[_indexB].v = vB;
+            data.velocities[_indexB].w = wB;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[m_indexA].v;
-            float wA = data.velocities[m_indexA].w;
-            Vector2 vB = data.velocities[m_indexB].v;
-            float wB = data.velocities[m_indexB].w;
+            Vector2 vA = data.velocities[_indexA].v;
+            float wA = data.velocities[_indexA].w;
+            Vector2 vB = data.velocities[_indexB].v;
+            float wB = data.velocities[_indexB].w;
 
-            float mA = m_invMassA, mB = m_invMassB;
-            float iA = m_invIA, iB = m_invIB;
+            float mA = _invMassA, mB = _invMassB;
+            float iA = _invIA, iB = _invIB;
 
             // Solve linear motor constraint.
             if (_enableMotor && _limitState != LimitState.Equal)
             {
-                float Cdot = Vector2.Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
-                float impulse = m_motorMass * (_motorSpeed - Cdot);
+                float Cdot = Vector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
+                float impulse = _motorMass * (_motorSpeed - Cdot);
                 float oldImpulse = _motorImpulse;
                 float maxImpulse = data.step.dt * _maxMotorForce;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 
-                Vector2 P = impulse * m_axis;
-                float LA = impulse * m_a1;
-                float LB = impulse * m_a2;
+                Vector2 P = impulse * _axis;
+                float LA = impulse * _a1;
+                float LB = impulse * _a2;
 
                 vA -= mA * P;
                 wA -= iA * LA;
@@ -559,18 +559,18 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             Vector2 Cdot1 = new Vector2();
-            Cdot1.X = Vector2.Dot(m_perp, vB - vA) + m_s2 * wB - m_s1 * wA;
+            Cdot1.X = Vector2.Dot(_perp, vB - vA) + _s2 * wB - _s1 * wA;
             Cdot1.Y = wB - wA;
 
             if (_enableLimit && _limitState != LimitState.Inactive)
             {
                 // Solve prismatic and limit constraint in block form.
                 float Cdot2;
-                Cdot2 = Vector2.Dot(m_axis, vB - vA) + m_a2 * wB - m_a1 * wA;
+                Cdot2 = Vector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
                 Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
 
                 Vector3 f1 = _impulse;
-                Vector3 df = m_K.Solve33(-Cdot);
+                Vector3 df = _K.Solve33(-Cdot);
                 _impulse += df;
 
                 if (_limitState == LimitState.AtLower)
@@ -583,16 +583,16 @@ namespace FarseerPhysics.Dynamics.Joints
                 }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
-                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(m_K.ez.X, m_K.ez.Y);
-                Vector2 f2r = m_K.Solve22(b) + new Vector2(f1.X, f1.Y);
+                Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.ez.X, _K.ez.Y);
+                Vector2 f2r = _K.Solve22(b) + new Vector2(f1.X, f1.Y);
                 _impulse.X = f2r.X;
                 _impulse.Y = f2r.Y;
 
                 df = _impulse - f1;
 
-                Vector2 P = df.X * m_perp + df.Z * m_axis;
-                float LA = df.X * m_s1 + df.Y + df.Z * m_a1;
-                float LB = df.X * m_s2 + df.Y + df.Z * m_a2;
+                Vector2 P = df.X * _perp + df.Z * _axis;
+                float LA = df.X * _s1 + df.Y + df.Z * _a1;
+                float LB = df.X * _s2 + df.Y + df.Z * _a2;
 
                 vA -= mA * P;
                 wA -= iA * LA;
@@ -603,13 +603,13 @@ namespace FarseerPhysics.Dynamics.Joints
             else
             {
                 // Limit is inactive, just solve the prismatic constraint in block form.
-                Vector2 df = m_K.Solve22(-Cdot1);
+                Vector2 df = _K.Solve22(-Cdot1);
                 _impulse.X += df.X;
                 _impulse.Y += df.Y;
 
-                Vector2 P = df.X * m_perp;
-                float LA = df.X * m_s1 + df.Y;
-                float LB = df.X * m_s2 + df.Y;
+                Vector2 P = df.X * _perp;
+                float LA = df.X * _s1 + df.Y;
+                float LB = df.X * _s2 + df.Y;
 
                 vA -= mA * P;
                 wA -= iA * LA;
@@ -618,27 +618,27 @@ namespace FarseerPhysics.Dynamics.Joints
                 wB += iB * LB;
             }
 
-            data.velocities[m_indexA].v = vA;
-            data.velocities[m_indexA].w = wA;
-            data.velocities[m_indexB].v = vB;
-            data.velocities[m_indexB].w = wB;
+            data.velocities[_indexA].v = vA;
+            data.velocities[_indexA].w = wA;
+            data.velocities[_indexB].v = vB;
+            data.velocities[_indexB].w = wB;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            Vector2 cA = data.positions[m_indexA].c;
-            float aA = data.positions[m_indexA].a;
-            Vector2 cB = data.positions[m_indexB].c;
-            float aB = data.positions[m_indexB].a;
+            Vector2 cA = data.positions[_indexA].c;
+            float aA = data.positions[_indexA].a;
+            Vector2 cB = data.positions[_indexB].c;
+            float aB = data.positions[_indexB].a;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            float mA = m_invMassA, mB = m_invMassB;
-            float iA = m_invIA, iB = m_invIB;
+            float mA = _invMassA, mB = _invMassB;
+            float iA = _invIA, iB = _invIB;
 
             // Compute fresh Jacobians
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - m_localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - m_localCenterB);
+            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
             Vector2 d = cB + rB - cA - rA;
 
             Vector2 axis = MathUtils.Mul(qA, LocalXAxisA);
@@ -652,7 +652,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector3 impulse;
             Vector2 C1 = new Vector2();
             C1.X = Vector2.Dot(perp, d);
-            C1.Y = aB - aA - m_referenceAngle;
+            C1.Y = aB - aA - _referenceAngle;
 
             float linearError = Math.Abs(C1.X);
             float angularError = Math.Abs(C1.Y);
@@ -741,10 +741,10 @@ namespace FarseerPhysics.Dynamics.Joints
             cB += mB * P;
             aB += iB * LB;
 
-            data.positions[m_indexA].c = cA;
-            data.positions[m_indexA].a = aA;
-            data.positions[m_indexB].c = cB;
-            data.positions[m_indexB].a = aB;
+            data.positions[_indexA].c = cA;
+            data.positions[_indexA].a = aA;
+            data.positions[_indexB].c = cB;
+            data.positions[_indexB].a = aB;
 
             return linearError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }
