@@ -29,32 +29,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed
 {
-    public class KeyboardManager
-    {
-        internal KeyboardState _newKeyboardState;
-        internal KeyboardState _oldKeyboardState;
-
-        public bool IsNewKeyPress(Keys key)
-        {
-            if (_newKeyboardState.IsKeyDown(key) && _oldKeyboardState.IsKeyUp(key))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool IsKeyDown(Keys key)
-        {
-            return _newKeyboardState.IsKeyDown(key);
-        }
-
-        internal bool IsKeyUp(Keys key)
-        {
-            return _newKeyboardState.IsKeyUp(key);
-        }
-    }
-
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -132,7 +106,7 @@ namespace FarseerPhysics.TestBed
             CreateProjection();
 
             _testCount = 0;
-            while (TestEntries.TestList[_testCount].CreateFcn != null)
+            while (TestEntries.TestList[_testCount].CreateTest != null)
             {
                 ++_testCount;
             }
@@ -154,7 +128,7 @@ namespace FarseerPhysics.TestBed
         private void StartTest(int index)
         {
             _entry = TestEntries.TestList[index];
-            _test = _entry.CreateFcn();
+            _test = _entry.CreateTest();
             _test.GameInstance = this;
             _test.Initialize();
         }
@@ -188,114 +162,62 @@ namespace FarseerPhysics.TestBed
             GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
             MouseState newMouseState = Mouse.GetState();
 
-            // Press 'z' to zoom out.
-            if (_keyboardManager.IsKeyDown(Keys.Z))
-            {
+
+            if (_keyboardManager.IsKeyDown(Keys.Z)) // Press 'z' to zoom out.
                 ViewZoom = Math.Min(1.1f * ViewZoom, 20.0f);
-            }
-            // Press 'x' to zoom in.
-            else if (_keyboardManager.IsKeyDown(Keys.X))
-            {
+            else if (_keyboardManager.IsKeyDown(Keys.X)) // Press 'x' to zoom in.
                 ViewZoom = Math.Max(0.9f * ViewZoom, 0.02f);
-            }
-            // Press 'r' to reset.
-            else if (_keyboardManager.IsNewKeyPress(Keys.R))
-            {
+            else if (_keyboardManager.IsNewKeyPress(Keys.R)) // Press 'r' to reset.
                 Restart();
-            }
-            else if (_keyboardManager.IsNewKeyPress(Keys.P) ||
-                     newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start))
-            {
+            else if (_keyboardManager.IsNewKeyPress(Keys.P) || newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start)) // Press I to prev test.
                 _settings.Pause = !_settings.Pause;
-            }
-            // Press I to prev test.
-            else if (_keyboardManager.IsNewKeyPress(Keys.I) ||
-                     newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
+            else if (_keyboardManager.IsNewKeyPress(Keys.I) || newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
             {
                 --_testSelection;
                 if (_testSelection < 0)
-                {
                     _testSelection = _testCount - 1;
-                }
             }
-            // Press O to next test.
-            else if (_keyboardManager.IsNewKeyPress(Keys.O) ||
-                     newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder))
+            else if (_keyboardManager.IsNewKeyPress(Keys.O) || newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder)) // Press O to next test.
             {
                 ++_testSelection;
                 if (_testSelection == _testCount)
-                {
                     _testSelection = 0;
-                }
             }
-            // Press left to pan left.
-            else if (_keyboardManager.IsKeyDown(Keys.Left))
-            {
+            else if (_keyboardManager.IsKeyDown(Keys.Left)) // Press left to pan left.
                 ViewCenter = new Vector2(ViewCenter.X - 0.5f, ViewCenter.Y);
-            }
-            // Press right to pan right.
-            else if (_keyboardManager.IsKeyDown(Keys.Right))
-            {
+            else if (_keyboardManager.IsKeyDown(Keys.Right)) // Press right to pan right.
                 ViewCenter = new Vector2(ViewCenter.X + 0.5f, ViewCenter.Y);
-            }
-            // Press down to pan down.
-            else if (_keyboardManager.IsKeyDown(Keys.Down))
-            {
+            else if (_keyboardManager.IsKeyDown(Keys.Down)) // Press down to pan down.
                 ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - 0.5f);
-            }
-            // Press up to pan up.
-            else if (_keyboardManager.IsKeyDown(Keys.Up))
-            {
+            else if (_keyboardManager.IsKeyDown(Keys.Up)) // Press up to pan up.
                 ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + 0.5f);
-            }
-            // Press home to reset the view.
-            else if (_keyboardManager.IsNewKeyPress(Keys.Home))
-            {
+            else if (_keyboardManager.IsNewKeyPress(Keys.Home)) // Press home to reset the view.
                 ResetView();
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F1))
-            {
                 EnableOrDisableFlag(DebugViewFlags.Shape);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F2))
-            {
                 EnableOrDisableFlag(DebugViewFlags.DebugPanel);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F3))
-            {
                 EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F4))
-            {
                 EnableOrDisableFlag(DebugViewFlags.AABB);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F5))
-            {
                 EnableOrDisableFlag(DebugViewFlags.CenterOfMass);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F6))
-            {
                 EnableOrDisableFlag(DebugViewFlags.Joint);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F7))
             {
                 EnableOrDisableFlag(DebugViewFlags.ContactPoints);
                 EnableOrDisableFlag(DebugViewFlags.ContactNormals);
             }
             else if (_keyboardManager.IsNewKeyPress(Keys.F8))
-            {
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
-            }
             else if (_keyboardManager.IsNewKeyPress(Keys.F9))
-            {
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
-            }
             else
             {
                 if (_test != null)
-                {
                     _test.Keyboard(_keyboardManager);
-                }
             }
 
             if (_test != null)
