@@ -20,8 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
@@ -50,16 +48,16 @@ namespace FarseerPhysics.TestBed.Tests
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
             {
-                _bodies[0] = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 5, new Vector2(-5.0f, 5.0f));
+                _bodies[0] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 5.0f));
                 _bodies[0].BodyType = BodyType.Dynamic;
 
-                _bodies[1] = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 5, new Vector2(5.0f, 5.0f));
+                _bodies[1] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 5.0f));
                 _bodies[1].BodyType = BodyType.Dynamic;
 
-                _bodies[2] = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 5, new Vector2(5.0f, 15.0f));
+                _bodies[2] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 15.0f));
                 _bodies[2].BodyType = BodyType.Dynamic;
 
-                _bodies[3] = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 5, new Vector2(-5.0f, 15.0f));
+                _bodies[3] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 15.0f));
                 _bodies[3].BodyType = BodyType.Dynamic;
 
                 DistanceJoint dj = new DistanceJoint(ground, _bodies[0], new Vector2(-10.0f, 0.0f), new Vector2(-0.5f, -0.5f), false);

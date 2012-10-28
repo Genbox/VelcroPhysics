@@ -38,9 +38,6 @@ namespace FarseerPhysics.Dynamics.Joints
     public class RevoluteJoint : Joint
     {
         // Solver shared
-        public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
-
         private Vector3 _impulse;
         private float _motorImpulse;
 
@@ -89,15 +86,23 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="localAnchorA">The first body anchor.</param>
-        /// <param name="localAnchorB">The second anchor.</param>
-        public RevoluteJoint(Body bodyA, Vector2 localAnchorA, Body bodyB, Vector2 localAnchorB)
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second anchor.</param>
+        public RevoluteJoint(Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB, bool anchorsAreInWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
 
-            LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
-            LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
+            if (anchorsAreInWorldCoordinates)
+            {
+                LocalAnchorA = BodyA.GetLocalPoint(anchorA);
+                LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+            }
+            else
+            {
+                LocalAnchorA = anchorA;
+                LocalAnchorB = anchorB;
+            }
 
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
@@ -110,22 +115,15 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="worldAnchor">The world coordinate anchor.</param>
-        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 worldAnchor)
-            : base(bodyA, bodyB)
+        /// <param name="anchor">The world coordinate anchor.</param>
+        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor, bool anchorsAreInWorldCoordinates = false)
+            : this(bodyA, anchor, bodyB, anchor, anchorsAreInWorldCoordinates)
         {
-            JointType = JointType.Revolute;
-
-            // Changed to local coordinates.
-            LocalAnchorA = bodyA.GetLocalPoint(worldAnchor);
-            LocalAnchorB = bodyB.GetLocalPoint(worldAnchor);
-
-            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
-
-            _impulse = Vector3.Zero;
-
-            _limitState = LimitState.Inactive;
         }
+
+        public Vector2 LocalAnchorA { get; set; }
+
+        public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {

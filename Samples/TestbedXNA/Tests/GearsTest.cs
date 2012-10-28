@@ -61,10 +61,10 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.CreateFixture(circle2);
 
-                RevoluteJoint joint1 = new RevoluteJoint(body2, body1, body1.Position);
+                RevoluteJoint joint1 = new RevoluteJoint(body2, body1, body1.Position, true);
                 World.AddJoint(joint1);
 
-                RevoluteJoint joint2 = new RevoluteJoint(body2, body3, body3.Position);
+                RevoluteJoint joint2 = new RevoluteJoint(body2, body3, body3.Position, true);
                 World.AddJoint(joint2);
 
                 GearJoint joint4 = new GearJoint(joint1, joint2, circle2.Radius / circle1.Radius);
@@ -85,7 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body1.BodyType = BodyType.Dynamic;
                 body1.CreateFixture(circle1);
 
-                _joint1 = new RevoluteJoint(ground, body1, body1.Position);
+                _joint1 = new RevoluteJoint(ground, body1, body1.Position, true);
                 _joint1.ReferenceAngle = body1.Rotation - ground.Rotation;
                 World.AddJoint(_joint1);
 
@@ -93,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body2.BodyType = BodyType.Dynamic;
                 body2.CreateFixture(circle2);
 
-                _joint2 = new RevoluteJoint(ground, body2, body2.Position);
+                _joint2 = new RevoluteJoint(ground, body2, body2.Position, true);
                 World.AddJoint(_joint2);
 
                 Body body3 = BodyFactory.CreateBody(World, new Vector2(2.5f, 12.0f));

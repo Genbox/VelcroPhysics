@@ -55,7 +55,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _platform.Position = new Vector2(0.0f, 5.0f);
                 _platform.Friction = 0.6f;
 
-                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0, 5));
+                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0, 5), true);
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);

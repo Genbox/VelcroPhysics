@@ -47,7 +47,7 @@ namespace FarseerPhysics.TestBed.Tests
                 bodyB.AngularVelocity = w;
                 bodyB.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
-                _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f));
+                _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f), true);
                 _joint.MotorSpeed = 1.0f * Settings.Pi;
                 _joint.MaxMotorTorque = 10000.0f;
                 _joint.MotorEnabled = false;
@@ -70,7 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 polygonBody.BodyType = BodyType.Dynamic;
                 polygonBody.IsBullet = true;
 
-                RevoluteJoint joint = new RevoluteJoint(ground, polygonBody, new Vector2(20, 10));
+                RevoluteJoint joint = new RevoluteJoint(ground, polygonBody, new Vector2(20, 10), true);
                 joint.LowerLimit = -0.25f * Settings.Pi;
                 joint.UpperLimit = 0.0f * Settings.Pi;
                 joint.LimitEnabled = true;
