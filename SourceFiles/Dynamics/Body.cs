@@ -101,7 +101,7 @@ namespace FarseerPhysics.Dynamics
             FixtureList = new List<Fixture>(32);
         }
 
-        public Body(World world, Vector2? position = null, object userdata = null)
+        public Body(World world, Vector2? position = null, float rotation = 0, object userdata = null)
         {
             FixtureList = new List<Fixture>(32);
             BodyId = _bodyIdCounter++;
@@ -118,8 +118,16 @@ namespace FarseerPhysics.Dynamics
             BodyType = BodyType.Static;
             Enabled = true;
 
-            Xf.q.Set(0);
-            Xf.p = position.HasValue ? position.Value : Vector2.Zero;
+            Xf.q.Set(rotation);
+
+            if (position.HasValue)
+            {
+                Xf.p = position.Value;
+                Sweep.C0 = Xf.p;
+                Sweep.C = Xf.p;
+                Sweep.A0 = rotation;
+                Sweep.A = rotation;
+            }
 
             world.AddBody(this);
         }
