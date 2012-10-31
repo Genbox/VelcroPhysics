@@ -55,56 +55,55 @@ namespace FarseerPhysics.SamplesFramework
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            //_border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
-            /* Bridge */
-            //We make a path using 2 points.
-            Path bridgePath = new Path();
-            bridgePath.Add(new Vector2(-15, 5));
-            bridgePath.Add(new Vector2(15, 5));
-            bridgePath.Closed = false;
+            ///* Bridge */
+            ////We make a path using 2 points.
+            //Path bridgePath = new Path();
+            //bridgePath.Add(new Vector2(-15, 5));
+            //bridgePath.Add(new Vector2(15, 5));
+            //bridgePath.Closed = false;
 
-            Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
-            PolygonShape shape = new PolygonShape(box, 20);
+            //Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
+            //PolygonShape shape = new PolygonShape(box, 20);
 
-            _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
-                                                                        BodyType.Dynamic, 29);
-            _bridgeBox =
-                new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+            //_bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
+            //                                                            BodyType.Dynamic, 29);
+            //_bridgeBox =
+            //    new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
-            //Attach the first and last fixtures to the world
-            //JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
-            //                                      _bridgeBodies[0].Position);
-            //JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
-            //                                      _bridgeBodies[_bridgeBodies.Count - 1].Position);
+            ////Attach the first and last fixtures to the world
+            ////JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
+            ////                                      _bridgeBodies[0].Position);
+            ////JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
+            ////                                      _bridgeBodies[_bridgeBodies.Count - 1].Position);
 
-            PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f),
-                                                      new Vector2(0f, 0.5f),
-                                                      false, true);
+            //PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f),
+            //                                          new Vector2(0f, 0.5f),
+            //                                          false, true);
 
-            /* Soft body */
-            //We make a rectangular path.
-            Path rectanglePath = new Path();
-            rectanglePath.Add(new Vector2(-6, -11));
-            rectanglePath.Add(new Vector2(-6, 1));
-            rectanglePath.Add(new Vector2(6, 1));
-            rectanglePath.Add(new Vector2(6, -11));
-            rectanglePath.Closed = true;
+            ///* Soft body */
+            ////We make a rectangular path.
+            //Path rectanglePath = new Path();
+            //rectanglePath.Add(new Vector2(-6, -11));
+            //rectanglePath.Add(new Vector2(-6, 1));
+            //rectanglePath.Add(new Vector2(6, 1));
+            //rectanglePath.Add(new Vector2(6, -11));
+            //rectanglePath.Closed = true;
 
-            //Creating two shapes. A circle to form the circle and a rectangle to stabilize the soft body.
-            List<Shape> shapes = new List<Shape>(2);
-            shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0f), 0f), 1f));
-            shapes.Add(new CircleShape(0.5f, 1f));
+            ////Creating two shapes. A circle to form the circle and a rectangle to stabilize the soft body.
+            //List<Shape> shapes = new List<Shape>(2);
+            //shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0f), 0f), 1f));
+            //shapes.Add(new CircleShape(0.5f, 1f));
 
-            //We distribute the shapes in the rectangular path.
-            _softBodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes,
-                                                                      BodyType.Dynamic, 30);
-            _softBodyBox = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[0], MaterialType.Blank, Color.Silver * 0.8f, 1f));
-            _softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
-            _softBodyCircle = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[1], MaterialType.Waves, Color.Silver, 1f));
+            ////We distribute the shapes in the rectangular path.
+            //_softBodies = PathManager.EvenlyDistributeShapesAlongPath(World, rectanglePath, shapes, BodyType.Dynamic, 30);
+            //_softBodyBox = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[0], MaterialType.Blank, Color.Silver * 0.8f, 1f));
+            //_softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
+            //_softBodyCircle = new Sprite(ScreenManager.Assets.TextureFromShape(shapes[1], MaterialType.Waves, Color.Silver, 1f));
 
-            //Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
-            PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
+            ////Attach the bodies together with revolute joints. The rectangular form will converge to a circular form.
+            //PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
         }
 
         public override void Draw(GameTime gameTime)

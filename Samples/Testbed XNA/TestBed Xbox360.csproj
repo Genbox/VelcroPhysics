@@ -207,7 +207,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView Xbox360.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
       <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
       <Name>DebugView Xbox360</Name>
     </ProjectReference>

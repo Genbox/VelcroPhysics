@@ -62,9 +62,13 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Branches\XNA\Farseer Physics XNA Xbox360.csproj">
-      <Project>{68C00837-1D4D-4335-9AD3-26D7E17E233B}</Project>
-      <Name>Farseer Physics XNA Xbox360</Name>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView Xbox360</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
+      <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
+      <Name>Farseer Physics Xbox360</Name>
     </ProjectReference>
     <ProjectReference Include="..\Samples XNAContent\Samples XNA Content.contentproj">
       <Name>Samples XNA Content %28Content%29</Name>
@@ -95,7 +99,6 @@
     <Compile Include="Samples\Prefabs\TheoJansen.cs" />
     <Compile Include="ScreenSystem\BackgroundScreen.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
-    <Compile Include="ScreenSystem\ConvertUnits.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\IDemoScreen.cs" />

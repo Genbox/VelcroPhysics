@@ -69,13 +69,13 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Branches\XNA\Farseer Physics XNA WP7.csproj">
-      <Project>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</Project>
-      <Name>Farseer Physics XNA WP7</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\DebugViews\DebugViewXNA\DebugView XNA WP7.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
-      <Name>DebugView XNA WP7</Name>
+      <Name>DebugView WP7</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics WP7.csproj">
+      <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
+      <Name>Farseer Physics WP7</Name>
     </ProjectReference>
     <ProjectReference Include="..\Samples XNAContent\Samples XNA Content.contentproj">
       <Name>Samples XNA Content %28Content%29</Name>
@@ -106,7 +106,6 @@
     <Compile Include="Samples\Prefabs\TheoJansen.cs" />
     <Compile Include="ScreenSystem\BackgroundScreen.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
-    <Compile Include="ScreenSystem\ConvertUnits.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\IDemoScreen.cs" />
