@@ -224,7 +224,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView WP7.csproj">
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
       <Name>DebugView WP7</Name>
     </ProjectReference>

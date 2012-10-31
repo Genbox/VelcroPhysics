@@ -54,6 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -129,13 +130,13 @@
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DebugViews\DebugView Silverlight\DebugView Silverlight.csproj">
+      <Project>{98ef2e0c-fe42-4b61-8f9d-214437c05a5d}</Project>
+      <Name>DebugView Silverlight</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SourceFiles\Farseer Physics Silverlight.csproj">
       <Project>{786DC838-D746-4107-93FF-19A902A78CFC}</Project>
       <Name>Farseer Physics Silverlight</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoBaseSilverlight\DemoBase Silverlight.csproj">
-      <Project>{322609A9-0094-4B4E-B083-D8A30CF33107}</Project>
-      <Name>DemoBase Silverlight</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
