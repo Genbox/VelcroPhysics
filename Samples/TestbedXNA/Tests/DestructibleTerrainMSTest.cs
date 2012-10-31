@@ -1,4 +1,6 @@
-﻿using FarseerPhysics.Collision;
+﻿#if XNA
+
+using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -143,3 +145,4 @@ namespace FarseerPhysics.TestBed.Tests
         }
     }
 }
+#endif

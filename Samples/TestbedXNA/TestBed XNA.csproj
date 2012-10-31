@@ -91,14 +91,10 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\GameSettings.cs" />
@@ -238,13 +234,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA.csproj">
-      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
-      <Name>Farseer Physics XNA</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
-      <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
+      <Project>{fc7845fa-13fe-4ff8-822a-a577f3f59b00}</Project>
       <Name>DebugView XNA</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
+      <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
+      <Name>Farseer Physics XNA</Name>
     </ProjectReference>
     <ProjectReference Include="Content\TestBed XNA Content.contentproj">
       <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>

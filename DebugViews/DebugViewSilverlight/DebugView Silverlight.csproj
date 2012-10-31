@@ -58,16 +58,13 @@
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugViewSilverlight.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight\Farseer Physics Silverlight.csproj">
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Silverlight.csproj">
       <Project>{786DC838-D746-4107-93FF-19A902A78CFC}</Project>
       <Name>Farseer Physics Silverlight</Name>
     </ProjectReference>

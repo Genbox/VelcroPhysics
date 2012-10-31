@@ -1,4 +1,4 @@
-﻿#if (!XNA)
+﻿#if!XNA && !WINDOWS_PHONE
 
 #region License
 
@@ -38,7 +38,7 @@ namespace Microsoft.Xna.Framework
 {
     public class CurveKey : IEquatable<CurveKey>, IComparable<CurveKey>
     {
-        #region Private Fields
+#region Private Fields
 
         private CurveContinuity continuity;
         private float position;
@@ -48,7 +48,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-        #region Properties
+#region Properties
 
         public CurveContinuity Continuity
         {
@@ -81,7 +81,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion
 
-        #region Constructors
+#region Constructors
 
         public CurveKey(float position, float value)
             : this(position, value, 0, 0, CurveContinuity.Smooth)
@@ -104,9 +104,9 @@ namespace Microsoft.Xna.Framework
 
         #endregion Constructors
 
-        #region Public Methods
+#region Public Methods
 
-        #region IComparable<CurveKey> Members
+#region IComparable<CurveKey> Members
 
         public int CompareTo(CurveKey other)
         {
@@ -115,7 +115,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion
 
-        #region IEquatable<CurveKey> Members
+#region IEquatable<CurveKey> Members
 
         public bool Equals(CurveKey other)
         {
