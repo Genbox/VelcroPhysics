@@ -1,0 +1,9 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Screens.MainMenu" xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Width="1024"
+        Height="768">
+<Grid x:Name="ir">
+		<StackPanel x:Name="menuStack" VerticalAlignment="Center" Width="700"></StackPanel>
+			<TextBlock x:Name="getFarseer" Text="Learn More About the Farseer Physics Engine" FontFamily="Courier New" Foreground="White" Canvas.Left="440" Canvas.Top="730" FontSize="22" VerticalAlignment="Bottom" TextAlignment="Right"/>
+</Grid>
+</UserControl>

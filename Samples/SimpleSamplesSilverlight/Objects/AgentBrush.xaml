@@ -1,0 +1,23 @@
+<UserControl x:Class="FarseerGames.SimpleSamplesSilverlight.Objects.AgentBrush" xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                Width="640"
+        Height="480"
+>
+	<Canvas IsHitTestVisible="False"
+        >
+  <Canvas x:Name="agent" Width="120" Height="120">
+    <Canvas.RenderTransform>
+      <TransformGroup>
+        <RotateTransform x:Name="rotateTransform" Angle="0" CenterX="0" CenterY="0"/>
+        <TranslateTransform x:Name="translateTransform" X="0" Y="0"/>
+      </TransformGroup>
+    </Canvas.RenderTransform>
+    <Path Data="M-45,-35 L -35,-45 0,-5 35,-45 45,-35 5,0 45,35 35,45 0,5 -35,45 -45,35, -5,0z" Stroke="Black" Fill="Gray" StrokeThickness="2"/>
+    <Ellipse Width="34" Height="34" Canvas.Left="-57" Canvas.Top="-57" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+    <Ellipse Width="34" Height="34" Canvas.Left="22" Canvas.Top="-57" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+    <Ellipse Width="34" Height="34" Canvas.Left="-57" Canvas.Top="22" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+    <Ellipse Width="34" Height="34" Canvas.Left="22" Canvas.Top="22" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/>
+    <Ellipse Width="34" Height="34" Canvas.Left="-18" Canvas.Top="-18" Fill="#FFFFCC00" Stroke="Black" StrokeThickness="2"/> 
+  </Canvas>
+</Canvas>
+</UserControl>
