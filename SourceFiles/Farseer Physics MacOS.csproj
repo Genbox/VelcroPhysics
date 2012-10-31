@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,6 +10,10 @@
     <RootNamespace>FarseerPhysicsEngine3.MonoGame.MacOS</RootNamespace>
     <AssemblyName>Farseer Physics Engine 3.2 MonoGame.MacOS</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,318 +35,117 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="..\..\sourcefiles\collision\Collision.cs">
-      <Link>Collision\Collision.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\Distance.cs">
-      <Link>Collision\Distance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\DynamicTree.cs">
-      <Link>Collision\DynamicTree.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Collision\DynamicTreeBroadPhase.cs">
-      <Link>Collision\DynamicTreeBroadPhase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Collision\IBroadPhase.cs">
-      <Link>Collision\IBroadPhase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Collision\QuadTree.cs">
-      <Link>Collision\QuadTree.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Collision\QuadTreeBroadPhase.cs">
-      <Link>Collision\QuadTreeBroadPhase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\shapes\CircleShape.cs">
-      <Link>Collision\Shapes\CircleShape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\shapes\EdgeShape.cs">
-      <Link>Collision\Shapes\EdgeShape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\shapes\LoopShape.cs">
-      <Link>Collision\Shapes\LoopShape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\shapes\PolygonShape.cs">
-      <Link>Collision\Shapes\PolygonShape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\shapes\Shape.cs">
-      <Link>Collision\Shapes\Shape.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\collision\TimeOfImpact.cs">
-      <Link>Collision\TimeOfImpact.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\ConvexHull\ChainHull.cs">
-      <Link>Common\ConvexHull\ChainHull.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\convexhull\GiftWrap.cs">
-      <Link>Common\ConvexHull\GiftWrap.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\convexhull\Melkman.cs">
-      <Link>Common\ConvexHull\Melkman.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\decomposition\BayazitDecomposer.cs">
-      <Link>Common\Decomposition\BayazitDecomposer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDTDecomposer.cs">
-      <Link>Common\Decomposition\CDTDecomposer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs">
-      <Link>Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\ITriangulatable.cs">
-      <Link>Common\Decomposition\CDT\ITriangulatable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Orientation.cs">
-      <Link>Common\Decomposition\CDT\Orientation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\Polygon.cs">
-      <Link>Common\Decomposition\CDT\Polygon\Polygon.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\PolygonPoint.cs">
-      <Link>Common\Decomposition\CDT\Polygon\PolygonPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Polygon\PolygonSet.cs">
-      <Link>Common\Decomposition\CDT\Polygon\PolygonSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs">
-      <Link>Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Sets\PointSet.cs">
-      <Link>Common\Decomposition\CDT\Sets\PointSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationConstraint.cs">
-      <Link>Common\Decomposition\CDT\TriangulationConstraint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationContext.cs">
-      <Link>Common\Decomposition\CDT\TriangulationContext.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationMode.cs">
-      <Link>Common\Decomposition\CDT\TriangulationMode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationPoint.cs">
-      <Link>Common\Decomposition\CDT\TriangulationPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\TriangulationUtil.cs">
-      <Link>Common\Decomposition\CDT\TriangulationUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\FixedArray3.cs">
-      <Link>Common\Decomposition\CDT\Util\FixedArray3.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\FixedBitArray3.cs">
-      <Link>Common\Decomposition\CDT\Util\FixedBitArray3.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\PointGenerator.cs">
-      <Link>Common\Decomposition\CDT\Util\PointGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\CDT\Util\PolygonGenerator.cs">
-      <Link>Common\Decomposition\CDT\Util\PolygonGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\decomposition\EarclipDecomposer.cs">
-      <Link>Common\Decomposition\EarclipDecomposer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Decomposition\FlipcodeDecomposer.cs">
-      <Link>Common\Decomposition\FlipcodeDecomposer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\common\decomposition\SeidelDecomposer.cs">
-      <Link>Common\Decomposition\SeidelDecomposer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\FixedArray.cs">
-      <Link>Common\FixedArray.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\HashSet.cs">
-      <Link>Common\HashSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\LineTools.cs">
-      <Link>Common\LineTools.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\Math.cs">
-      <Link>Common\Math.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\Path.cs">
-      <Link>Common\Path.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\PathManager.cs">
-      <Link>Common\PathManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\Explosion.cs">
-      <Link>Common\PhysicsLogic\Explosion.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\PhysicsLogic\PhysicsLogic.cs">
-      <Link>Common\PhysicsLogic\PhysicsLogic.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\polygonmanipulation\CuttingTools.cs">
-      <Link>Common\PolygonManipulation\CuttingTools.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\polygonmanipulation\SimplifyTools.cs">
-      <Link>Common\PolygonManipulation\SimplifyTools.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\polygonmanipulation\YuPengClipper.cs">
-      <Link>Common\PolygonManipulation\YuPengClipper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\PolygonTools.cs">
-      <Link>Common\PolygonTools.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\Serialization.cs">
-      <Link>Common\Serialization.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\TextureTools\MarchingSquares.cs">
-      <Link>Common\TextureTools\MarchingSquares.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\TextureTools\MSTerrain.cs">
-      <Link>Common\TextureTools\MSTerrain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Common\TextureTools\TextureConverter.cs">
-      <Link>Common\TextureTools\TextureConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\common\Vertices.cs">
-      <Link>Common\Vertices.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Controllers\AbstractForceController.cs">
-      <Link>Controllers\AbstractForceController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Controllers\BuoyancyController.cs">
-      <Link>Controllers\BuoyancyController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\controllers\Controller.cs">
-      <Link>Controllers\Controller.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\controllers\GravityController.cs">
-      <Link>Controllers\GravityController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Controllers\SimpleWindForce.cs">
-      <Link>Controllers\SimpleWindForce.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Controllers\VelocityLimitController.cs">
-      <Link>Controllers\VelocityLimitController.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\DebugView.cs">
-      <Link>DebugView.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Body.cs">
-      <Link>Dynamics\Body.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\BreakableBody.cs">
-      <Link>Dynamics\BreakableBody.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\ContactManager.cs">
-      <Link>Dynamics\ContactManager.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Contacts\Contact.cs">
-      <Link>Dynamics\Contacts\Contact.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Contacts\ContactSolver.cs">
-      <Link>Dynamics\Contacts\ContactSolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Fixture.cs">
-      <Link>Dynamics\Fixture.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Island.cs">
-      <Link>Dynamics\Island.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\AngleJoint.cs">
-      <Link>Dynamics\Joints\AngleJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\DistanceJoint.cs">
-      <Link>Dynamics\Joints\DistanceJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedAngleJoint.cs">
-      <Link>Dynamics\Joints\FixedAngleJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedDistanceJoint.cs">
-      <Link>Dynamics\Joints\FixedDistanceJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedFrictionJoint.cs">
-      <Link>Dynamics\Joints\FixedFrictionJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedLineJoint.cs">
-      <Link>Dynamics\Joints\FixedLineJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedMouseJoint.cs">
-      <Link>Dynamics\Joints\FixedMouseJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedPrismaticJoint.cs">
-      <Link>Dynamics\Joints\FixedPrismaticJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FixedRevoluteJoint.cs">
-      <Link>Dynamics\Joints\FixedRevoluteJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\FrictionJoint.cs">
-      <Link>Dynamics\Joints\FrictionJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\GearJoint.cs">
-      <Link>Dynamics\Joints\GearJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\Joint.cs">
-      <Link>Dynamics\Joints\Joint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\LineJoint.cs">
-      <Link>Dynamics\Joints\LineJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\PrismaticJoint.cs">
-      <Link>Dynamics\Joints\PrismaticJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\PulleyJoint.cs">
-      <Link>Dynamics\Joints\PulleyJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\RevoluteJoint.cs">
-      <Link>Dynamics\Joints\RevoluteJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\RopeJoint.cs">
-      <Link>Dynamics\Joints\RopeJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\SliderJoint.cs">
-      <Link>Dynamics\Joints\SliderJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\Joints\WeldJoint.cs">
-      <Link>Dynamics\Joints\WeldJoint.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\TimeStep.cs">
-      <Link>Dynamics\TimeStep.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\World.cs">
-      <Link>Dynamics\World.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Dynamics\WorldCallbacks.cs">
-      <Link>Dynamics\WorldCallbacks.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\factories\BodyFactory.cs">
-      <Link>Factories\BodyFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\factories\FixtureFactory.cs">
-      <Link>Factories\FixtureFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\factories\JointFactory.cs">
-      <Link>Factories\JointFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\sourcefiles\factories\LinkFactory.cs">
-      <Link>Factories\LinkFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\..\SourceFiles\Settings.cs">
-      <Link>Settings.cs</Link>
-    </Compile>
+    <Compile Include="Collision\Collision.cs" />
+    <Compile Include="Collision\Distance.cs" />
+    <Compile Include="Collision\DynamicTree.cs" />
+    <Compile Include="Collision\DynamicTreeBroadPhase.cs" />
+    <Compile Include="Collision\IBroadPhase.cs" />
+    <Compile Include="Collision\QuadTree.cs" />
+    <Compile Include="Collision\QuadTreeBroadPhase.cs" />
+    <Compile Include="Collision\Shapes\ChainShape.cs" />
+    <Compile Include="Collision\Shapes\CircleShape.cs" />
+    <Compile Include="Collision\Shapes\EdgeShape.cs" />
+    <Compile Include="Collision\Shapes\PolygonShape.cs" />
+    <Compile Include="Collision\Shapes\Shape.cs" />
+    <Compile Include="Collision\TimeOfImpact.cs" />
+    <Compile Include="Common\ConvexHull\ChainHull.cs" />
+    <Compile Include="Common\ConvexHull\GiftWrap.cs" />
+    <Compile Include="Common\ConvexHull\Melkman.cs" />
+    <Compile Include="Common\Curve.cs" />
+    <Compile Include="Common\CurveKey.cs" />
+    <Compile Include="Common\CurveKeyCollection.cs" />
+    <Compile Include="Common\Decomposition\BayazitDecomposer.cs" />
+    <Compile Include="Common\Decomposition\CDTDecomposer.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFront.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\AdvancingFrontNode.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweep.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepConstraint.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepContext.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\DTSweepPointComparator.cs" />
+    <Compile Include="Common\Decomposition\CDT\Delaunay\Sweep\PointOnEdgeException.cs" />
+    <Compile Include="Common\Decomposition\CDT\ITriangulatable.cs" />
+    <Compile Include="Common\Decomposition\CDT\Orientation.cs" />
+    <Compile Include="Common\Decomposition\CDT\Polygon\Polygon.cs" />
+    <Compile Include="Common\Decomposition\CDT\Polygon\PolygonPoint.cs" />
+    <Compile Include="Common\Decomposition\CDT\Polygon\PolygonSet.cs" />
+    <Compile Include="Common\Decomposition\CDT\Sets\ConstrainedPointSet.cs" />
+    <Compile Include="Common\Decomposition\CDT\Sets\PointSet.cs" />
+    <Compile Include="Common\Decomposition\CDT\TriangulationConstraint.cs" />
+    <Compile Include="Common\Decomposition\CDT\TriangulationContext.cs" />
+    <Compile Include="Common\Decomposition\CDT\TriangulationMode.cs" />
+    <Compile Include="Common\Decomposition\CDT\TriangulationPoint.cs" />
+    <Compile Include="Common\Decomposition\CDT\TriangulationUtil.cs" />
+    <Compile Include="Common\Decomposition\CDT\Util\FixedArray3.cs" />
+    <Compile Include="Common\Decomposition\CDT\Util\FixedBitArray3.cs" />
+    <Compile Include="Common\Decomposition\CDT\Util\PointGenerator.cs" />
+    <Compile Include="Common\Decomposition\CDT\Util\PolygonGenerator.cs" />
+    <Compile Include="Common\Decomposition\EarclipDecomposer.cs" />
+    <Compile Include="Common\Decomposition\FlipcodeDecomposer.cs" />
+    <Compile Include="Common\Decomposition\SeidelDecomposer.cs" />
+    <Compile Include="Common\FixedArray.cs" />
+    <Compile Include="Common\HashSet.cs" />
+    <Compile Include="Common\LineTools.cs" />
+    <Compile Include="Common\Math.cs" />
+    <Compile Include="Common\MathHelper.cs" />
+    <Compile Include="Common\Matrix.cs" />
+    <Compile Include="Common\Path.cs" />
+    <Compile Include="Common\PathManager.cs" />
+    <Compile Include="Common\PhysicsLogic\Explosion.cs" />
+    <Compile Include="Common\PhysicsLogic\PhysicsLogic.cs" />
+    <Compile Include="Common\PolygonManipulation\CuttingTools.cs" />
+    <Compile Include="Common\PolygonManipulation\SimplifyTools.cs" />
+    <Compile Include="Common\PolygonManipulation\YuPengClipper.cs" />
+    <Compile Include="Common\PolygonTools.cs" />
+    <Compile Include="Common\Serialization.cs" />
+    <Compile Include="Common\TextureTools\MarchingSquares.cs" />
+    <Compile Include="Common\TextureTools\MSTerrain.cs" />
+    <Compile Include="Common\TextureTools\TextureConverter.cs" />
+    <Compile Include="Common\Vector2.cs" />
+    <Compile Include="Common\Vector3.cs" />
+    <Compile Include="Common\Vertices.cs" />
+    <Compile Include="Controllers\AbstractForceController.cs" />
+    <Compile Include="Controllers\BuoyancyController.cs" />
+    <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\GravityController.cs" />
+    <Compile Include="Controllers\SimpleWindForce.cs" />
+    <Compile Include="Controllers\VelocityLimitController.cs" />
+    <Compile Include="ConvertUnits.cs" />
+    <Compile Include="DebugView.cs" />
+    <Compile Include="Dynamics\Body.cs" />
+    <Compile Include="Dynamics\BreakableBody.cs" />
+    <Compile Include="Dynamics\ContactManager.cs" />
+    <Compile Include="Dynamics\Contacts\Contact.cs" />
+    <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
+    <Compile Include="Dynamics\Fixture.cs" />
+    <Compile Include="Dynamics\Island.cs" />
+    <Compile Include="Dynamics\Joints\AngleJoint.cs" />
+    <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
+    <Compile Include="Dynamics\Joints\FixedAngleJoint.cs" />
+    <Compile Include="Dynamics\Joints\FixedMouseJoint.cs" />
+    <Compile Include="Dynamics\Joints\FrictionJoint.cs" />
+    <Compile Include="Dynamics\Joints\GearJoint.cs" />
+    <Compile Include="Dynamics\Joints\Joint.cs" />
+    <Compile Include="Dynamics\Joints\MotorJoint.cs" />
+    <Compile Include="Dynamics\Joints\PrismaticJoint.cs" />
+    <Compile Include="Dynamics\Joints\PulleyJoint.cs" />
+    <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
+    <Compile Include="Dynamics\Joints\RopeJoint.cs" />
+    <Compile Include="Dynamics\Joints\SliderJoint.cs" />
+    <Compile Include="Dynamics\Joints\WeldJoint.cs" />
+    <Compile Include="Dynamics\Joints\WheelJoint.cs" />
+    <Compile Include="Dynamics\TimeStep.cs" />
+    <Compile Include="Dynamics\World.cs" />
+    <Compile Include="Dynamics\WorldCallbacks.cs" />
+    <Compile Include="Factories\BodyFactory.cs" />
+    <Compile Include="Factories\FixtureFactory.cs" />
+    <Compile Include="Factories\JointFactory.cs" />
+    <Compile Include="Factories\LinkFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
 </Project>
