@@ -83,18 +83,37 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Demo1Screen.cs" />
-    <Compile Include="Demo2Screen.cs" />
-    <Compile Include="Demo3Screen.cs" />
-    <Compile Include="Demo4Screen.cs" />
-    <Compile Include="Demo5Screen.cs" />
-    <Compile Include="Demo6Screen.cs" />
-    <Compile Include="Demo7Screen.cs" />
+    <Compile Include="Components\FramerateCounterComponent.cs" />
+    <Compile Include="Samples\Demo1Screen.cs" />
+    <Compile Include="Samples\Demo2Screen.cs" />
+    <Compile Include="Samples\Demo3Screen.cs" />
+    <Compile Include="Samples\Demo4Screen.cs" />
+    <Compile Include="Samples\Demo5Screen.cs" />
+    <Compile Include="Samples\Demo6Screen.cs" />
+    <Compile Include="Samples\Demo7Screen.cs" />
+    <Compile Include="DemoShare\Agent.cs" />
+    <Compile Include="DemoShare\Border.cs" />
+    <Compile Include="DemoShare\Objects.cs" />
+    <Compile Include="DemoShare\Ragdoll.cs" />
+    <Compile Include="DemoShare\Spider.cs" />
+    <Compile Include="DrawableGameComponent.cs" />
     <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameTime.cs" />
+    <Compile Include="IDemoScreen.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenSystem\GameScreen.cs" />
+    <Compile Include="ScreenSystem\InputState.cs" />
+    <Compile Include="ScreenSystem\KeyboardState.cs" />
+    <Compile Include="ScreenSystem\MainMenuScreen.cs" />
+    <Compile Include="ScreenSystem\MenuItem.cs" />
+    <Compile Include="ScreenSystem\MenuScreen.cs" />
+    <Compile Include="ScreenSystem\MouseState.cs" />
+    <Compile Include="ScreenSystem\PauseScreen.cs" />
+    <Compile Include="ScreenSystem\ScreenManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
