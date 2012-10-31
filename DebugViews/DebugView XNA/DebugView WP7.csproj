@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerPhysics.DebugViews</RootNamespace>
-    <AssemblyName>DebugViewXNA</AssemblyName>
+    <RootNamespace>FarseerPhysics.DebugView</RootNamespace>
+    <AssemblyName>DebugViewWP7</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows Phone</XnaPlatform>

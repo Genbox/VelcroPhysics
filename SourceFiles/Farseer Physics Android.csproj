@@ -8,9 +8,9 @@
     <ProjectGuid>{8428E429-4098-4EA4-B2BC-C54BA06B8516}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>FarseerPhysicsEngine3.MonoGame.Android</RootNamespace>
+    <RootNamespace>FarseerPhysics</RootNamespace>
     <MonoDroidResourcePrefix>Resources</MonoDroidResourcePrefix>
-    <AssemblyName>Farseer Physics Engine 3.2 MonoGame.Android</AssemblyName>
+    <AssemblyName>FarseerPhysicsAndroid</AssemblyName>
     <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>

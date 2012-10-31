@@ -37,9 +37,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView Xbox360", "DebugV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed Xbox360", "Samples\Testbed XNA\TestBed Xbox360.csproj", "{09E76189-4AAE-4EDD-8605-B7C1982978FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples XNA Xbox360", "Samples\Samples XNA\Samples XNA Xbox360.csproj", "{A4072A54-0737-484C-B8EB-471985F2E8AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples Xbox360", "Samples\Samples XNA\Samples Xbox360.csproj", "{A4072A54-0737-484C-B8EB-471985F2E8AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples XNA WP7", "Samples\Samples XNA\Samples XNA WP7.csproj", "{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples WP7", "Samples\Samples XNA\Samples WP7.csproj", "{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA", "Samples\Testbed XNA\TestBed XNA.csproj", "{299B2C66-6731-4FC6-8E2D-F08BBE2F999C}"
 EndProject
@@ -49,7 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView XNA", "DebugViews
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA", "Samples\HelloWorld XNA\HelloWorld XNA.csproj", "{6AC89BBA-31DB-462D-ACD0-3E828594939E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld XNA Xbox 360", "Samples\HelloWorld XNA\HelloWorld XNA Xbox 360.csproj", "{6C766835-4E89-49D9-AE7F-273DF4226CFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld Xbox360", "Samples\HelloWorld XNA\HelloWorld Xbox360.csproj", "{6C766835-4E89-49D9-AE7F-273DF4226CFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld WP7", "Samples\HelloWorld XNA\HelloWorld WP7.csproj", "{49A684AB-E568-4B9A-8D84-E18BCB3BE3D3}"
 EndProject
@@ -108,39 +108,39 @@ Global
 		SccProjectTopLevelParentUniqueName12 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName12 = Samples/Testbed\u0020XNA
 		SccLocalPath12 = Samples\\Testbed\u0020XNA
-		SccProjectUniqueName13 = Samples\\Samples\u0020XNA\\Samples\u0020XNA\u0020Xbox360.csproj
+		SccProjectUniqueName13 = Samples\\Testbed\u0020XNA\\TestBed\u0020XNA.csproj
 		SccProjectTopLevelParentUniqueName13 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName13 = Samples/Samples\u0020XNA
-		SccLocalPath13 = Samples\\Samples\u0020XNA
-		SccProjectUniqueName14 = Samples\\Samples\u0020XNA\\Samples\u0020XNA\u0020WP7.csproj
+		SccProjectName13 = Samples/Testbed\u0020XNA
+		SccLocalPath13 = Samples\\Testbed\u0020XNA
+		SccProjectUniqueName14 = Samples\\Samples\u0020XNA\\Samples\u0020XNA.csproj
 		SccProjectTopLevelParentUniqueName14 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName14 = Samples/Samples\u0020XNA
 		SccLocalPath14 = Samples\\Samples\u0020XNA
-		SccProjectUniqueName15 = Samples\\Testbed\u0020XNA\\TestBed\u0020XNA.csproj
+		SccProjectUniqueName15 = DebugViews\\DebugView\u0020XNA\\DebugView\u0020XNA.csproj
 		SccProjectTopLevelParentUniqueName15 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName15 = Samples/Testbed\u0020XNA
-		SccLocalPath15 = Samples\\Testbed\u0020XNA
-		SccProjectUniqueName16 = Samples\\Samples\u0020XNA\\Samples\u0020XNA.csproj
+		SccProjectName15 = DebugViews/DebugView\u0020XNA
+		SccLocalPath15 = DebugViews\\DebugView\u0020XNA
+		SccProjectUniqueName16 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020XNA.csproj
 		SccProjectTopLevelParentUniqueName16 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName16 = Samples/Samples\u0020XNA
-		SccLocalPath16 = Samples\\Samples\u0020XNA
-		SccProjectUniqueName17 = DebugViews\\DebugView\u0020XNA\\DebugView\u0020XNA.csproj
+		SccProjectName16 = Samples/HelloWorld\u0020XNA
+		SccLocalPath16 = Samples\\HelloWorld\u0020XNA
+		SccProjectUniqueName17 = DebugViews\\DebugView\u0020Silverlight\\DebugView\u0020Silverlight.csproj
 		SccProjectTopLevelParentUniqueName17 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName17 = DebugViews/DebugView\u0020XNA
-		SccLocalPath17 = DebugViews\\DebugView\u0020XNA
-		SccProjectUniqueName18 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020XNA.csproj
+		SccProjectName17 = DebugViews/DebugView\u0020Silverlight
+		SccLocalPath17 = DebugViews\\DebugView\u0020Silverlight
+		SccProjectUniqueName18 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020WP7.csproj
 		SccProjectTopLevelParentUniqueName18 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName18 = Samples/HelloWorld\u0020XNA
 		SccLocalPath18 = Samples\\HelloWorld\u0020XNA
-		SccProjectUniqueName19 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020XNA\u0020Xbox\u0020360.csproj
+		SccProjectUniqueName19 = Samples\\Samples\u0020XNA\\Samples\u0020Xbox360.csproj
 		SccProjectTopLevelParentUniqueName19 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName19 = Samples/HelloWorld\u0020XNA
-		SccLocalPath19 = Samples\\HelloWorld\u0020XNA
-		SccProjectUniqueName20 = DebugViews\\DebugView\u0020Silverlight\\DebugView\u0020Silverlight.csproj
+		SccProjectName19 = Samples/Samples\u0020XNA
+		SccLocalPath19 = Samples\\Samples\u0020XNA
+		SccProjectUniqueName20 = Samples\\Samples\u0020XNA\\Samples\u0020WP7.csproj
 		SccProjectTopLevelParentUniqueName20 = Farseer\u0020Physics\u0020Engine.sln
-		SccProjectName20 = DebugViews/DebugView\u0020Silverlight
-		SccLocalPath20 = DebugViews\\DebugView\u0020Silverlight
-		SccProjectUniqueName21 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020WP7.csproj
+		SccProjectName20 = Samples/Samples\u0020XNA
+		SccLocalPath20 = Samples\\Samples\u0020XNA
+		SccProjectUniqueName21 = Samples\\HelloWorld\u0020XNA\\HelloWorld\u0020Xbox360.csproj
 		SccProjectTopLevelParentUniqueName21 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName21 = Samples/HelloWorld\u0020XNA
 		SccLocalPath21 = Samples\\HelloWorld\u0020XNA

@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{27FAD6F7-5FCF-4410-A8DA-D02C4C1E1F8C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FarseerPhysicsEngine3.MonoGame.MacOS</RootNamespace>
-    <AssemblyName>Farseer Physics Engine 3.2 MonoGame.MacOS</AssemblyName>
+    <RootNamespace>FarseerPhysics</RootNamespace>
+    <AssemblyName>FarseerPhysicsMacOS</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
