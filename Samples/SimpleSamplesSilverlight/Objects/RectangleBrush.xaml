@@ -1,0 +1,16 @@
+<UserControl
+        x:Class="FarseerGames.SimpleSamplesSilverlight.Objects.RectangleBrush" xmlns="http://schemas.microsoft.com/client/2007" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+	<Canvas 
+        IsHitTestVisible="False">
+  <Rectangle x:Name="rectangle" Fill="Yellow" Stroke="Black" StrokeThickness="2" Canvas.Left="0" Canvas.Top="0">
+    <Rectangle.RenderTransform>
+      <TransformGroup>
+        <RotateTransform x:Name="rotateTransform" Angle="0"/>
+        <TranslateTransform x:Name="translateTransform" X="0" Y="0"/>
+      </TransformGroup>
+    </Rectangle.RenderTransform>
+  </Rectangle>
+</Canvas>
+</UserControl>
