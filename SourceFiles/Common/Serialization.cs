@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !SILVERLIGHT && !WINDOWS_PHONE && !XBOX
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -1451,3 +1453,4 @@ namespace FarseerPhysics.Common
 
     #endregion
 }
+#endif

@@ -1,3 +1,5 @@
+#if XNA
+
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -56,3 +58,4 @@ namespace FarseerPhysics.TestBed.Tests
         }
     }
 }
+#endif

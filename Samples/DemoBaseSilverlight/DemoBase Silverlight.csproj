@@ -12,7 +12,7 @@
     <RootNamespace>FarseerPhysics.DemoBaseSilverlight</RootNamespace>
     <AssemblyName>DemoBaseSilverlight</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
@@ -21,6 +21,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <!-- This property group is only here to support building this project using the 
        MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
@@ -38,6 +39,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,15 +50,12 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System.Windows" />
-    <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FramerateCounterComponent.cs" />
@@ -85,16 +84,15 @@
     <Compile Include="ScreenSystem\ScreenManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\Silverlight\Farseer Physics Silverlight.csproj">
-      <Project>{786DC838-D746-4107-93FF-19A902A78CFC}</Project>
-      <Name>Farseer Physics Silverlight</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugViewSilverlight\DebugView Silverlight.csproj">
-      <Project>{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}</Project>
+      <Project>{98ef2e0c-fe42-4b61-8f9d-214437c05a5d}</Project>
       <Name>DebugView Silverlight</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Silverlight.csproj">
+      <Project>{786dc838-d746-4107-93ff-19a902a78cfc}</Project>
+      <Name>Farseer Physics Silverlight</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

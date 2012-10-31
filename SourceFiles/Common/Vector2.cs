@@ -1,4 +1,4 @@
-﻿#if(!XNA)
+﻿#if !XNA && !WINDOWS_PHONE && !XBOX
 
 #region License
 

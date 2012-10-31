@@ -1,4 +1,4 @@
-﻿#if(!XNA)
+﻿#if!XNA && !WINDOWS_PHONE && !XBOX
 
 #region License
 
@@ -41,7 +41,7 @@ namespace Microsoft.Xna.Framework
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector3 : IEquatable<Vector3>
     {
-        #region Private Fields
+#region Private Fields
 
         private static Vector3 zero = new Vector3(0f, 0f, 0f);
         private static Vector3 one = new Vector3(1f, 1f, 1f);
@@ -55,17 +55,17 @@ namespace Microsoft.Xna.Framework
         private static Vector3 forward = new Vector3(0f, 0f, -1f);
         private static Vector3 backward = new Vector3(0f, 0f, 1f);
 
-        #endregion Private Fields
+#endregion Private Fields
 
-        #region Public Fields
+#region Public Fields
 
         public float X;
         public float Y;
         public float Z;
 
-        #endregion Public Fields
+#endregion Public Fields
 
-        #region Properties
+#region Properties
 
         public static Vector3 Zero
         {
@@ -122,9 +122,9 @@ namespace Microsoft.Xna.Framework
             get { return backward; }
         }
 
-        #endregion Properties
+#endregion Properties
 
-        #region Constructors
+#region Constructors
 
         public Vector3(float x, float y, float z)
         {
@@ -149,9 +149,9 @@ namespace Microsoft.Xna.Framework
             Z = z;
         }
 
-        #endregion Constructors
+#endregion Constructors
 
-        #region Public Methods
+#region Public Methods
 
         public static Vector3 Add(Vector3 value1, Vector3 value2)
         {
@@ -562,9 +562,9 @@ namespace Microsoft.Xna.Framework
                                  (normal.X*matrix.M13) + (normal.Y*matrix.M23) + (normal.Z*matrix.M33));
         }
 
-        #endregion Public methods
+#endregion Public methods
 
-        #region Operators
+#region Operators
 
         public static bool operator ==(Vector3 value1, Vector3 value2)
         {
@@ -641,7 +641,7 @@ namespace Microsoft.Xna.Framework
             return value;
         }
 
-        #endregion
+#endregion
     }
 }
 

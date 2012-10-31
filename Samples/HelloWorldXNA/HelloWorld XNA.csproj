@@ -73,40 +73,13 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Video, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Avatar, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Core">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -120,13 +93,9 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA.csproj">
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics XNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView XNA.csproj">
-      <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
-      <Name>DebugView XNA</Name>
     </ProjectReference>
     <ProjectReference Include="Content\HelloWorld XNA Content.contentproj">
       <Project>{1999498C-698A-41C7-8C90-DD4D3B353D5B}</Project>

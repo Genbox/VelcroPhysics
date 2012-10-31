@@ -75,7 +75,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Graphics.dll</HintPath>
@@ -86,14 +85,7 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
@@ -152,8 +144,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA.csproj">
-      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
+      <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
       <Name>Farseer Physics XNA</Name>
     </ProjectReference>
     <ProjectReference Include="Content\DebugView XNA Content.contentproj">

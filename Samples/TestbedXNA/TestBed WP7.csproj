@@ -1,18 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-    <ProjectGuid>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</ProjectGuid>
+    <ProjectGuid>{9C81D9B2-2691-440F-8A7C-AD2A4206D5F2}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerPhysics.DebugViews</RootNamespace>
-    <AssemblyName>DebugViewXNA</AssemblyName>
+    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
+    <AssemblyName>TestBed</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows Phone</XnaPlatform>
-    <XnaCrossPlatformGroupID>ba2c103d-6714-4d63-9e70-97eda5fcf805</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>8fde964d-fceb-4883-8a34-2221b894199d</XnaCrossPlatformGroupID>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <Thumbnail>GameThumbnail.png</Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -20,7 +22,7 @@
     <XnaUpgrade>
     </XnaUpgrade>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <XnaOutputType>Library</XnaOutputType>
+    <XnaOutputType>Game</XnaOutputType>
     <XnaProfile>Reach</XnaProfile>
     <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
@@ -47,6 +49,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <XnaRefreshLevel>1</XnaRefreshLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Debug</OutputPath>
@@ -59,6 +62,7 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE;WINDOWS_PHONE</DefineConstants>
     <XnaCompressContent>false</XnaCompressContent>
+    <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Release</OutputPath>
@@ -72,6 +76,9 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Background.png">
+      <XnaPlatformSpecific>true</XnaPlatformSpecific>
+    </None>
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
@@ -80,13 +87,97 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugViewXNA.cs" />
-    <Compile Include="PrimitiveBatch.cs" />
+    <Compile Include="Framework\GameSettings.cs" />
+    <Compile Include="Framework\KeyboardManager.cs" />
+    <Compile Include="Framework\Rand.cs" />
+    <Compile Include="Framework\Test.cs" />
+    <Compile Include="Framework\TestEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="Tests\AddPairTest.cs" />
+    <Compile Include="Tests\ApplyForceTest.cs" />
+    <Compile Include="Tests\BodyTypesTest.cs" />
+    <Compile Include="Tests\BreakableTest.cs" />
+    <Compile Include="Tests\BridgeTest.cs" />
+    <Compile Include="Tests\BuoyancyTest.cs" />
+    <Compile Include="Tests\CantileverTest.cs" />
+    <Compile Include="Tests\CarTest.cs" />
+    <Compile Include="Tests\ChainTest.cs" />
+    <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\CloneTest.cs" />
+    <Compile Include="Tests\CollisionFilteringTest.cs" />
+    <Compile Include="Tests\CollisionProcessingTest.cs" />
+    <Compile Include="Tests\CompoundShapesTest.cs" />
+    <Compile Include="Tests\ConfinedTest.cs" />
+    <Compile Include="Tests\ContinuousTest.cs" />
+    <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\AngleJointTest.cs" />
+    <Compile Include="Tests\BulletTest.cs" />
+    <Compile Include="Tests\CirclePenetrationTest.cs" />
+    <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\ConvexHullTest2.cs" />
+    <Compile Include="Tests\ConveyorBeltTest.cs" />
+    <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\DeletionTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
+    <Compile Include="Tests\EdgeShapeBenchmarkTest.cs" />
+    <Compile Include="Tests\ExplosionTest.cs" />
+    <Compile Include="Tests\LockTest.cs" />
+    <Compile Include="Tests\MobileBalancedTest.cs" />
+    <Compile Include="Tests\MobileTest.cs" />
+    <Compile Include="Tests\MotorJointTest.cs" />
+    <Compile Include="Tests\QuadTreeTest.cs" />
+    <Compile Include="Tests\RopeTest.cs" />
+    <Compile Include="Tests\SerializationTest.cs" />
+    <Compile Include="Tests\SimpleWindForceTest.cs" />
+    <Compile Include="Tests\DistanceTest.cs" />
+    <Compile Include="Tests\DominosTest.cs" />
+    <Compile Include="Tests\DynamicTreeTest.cs" />
+    <Compile Include="Tests\EdgeShapesTest.cs" />
+    <Compile Include="Tests\EdgeTest.cs" />
+    <Compile Include="Tests\GearsTest.cs" />
+    <Compile Include="Tests\LineJointTest.cs" />
+    <Compile Include="Tests\OneSidedPlatformTest.cs" />
+    <Compile Include="Tests\PathTest.cs" />
+    <Compile Include="Tests\PinballTest.cs" />
+    <Compile Include="Tests\PolyCollisionTest.cs" />
+    <Compile Include="Tests\RoundedRectangle.cs" />
+    <Compile Include="Tests\PolyShapesTest.cs" />
+    <Compile Include="Tests\PrismaticTest.cs" />
+    <Compile Include="Tests\PulleysTest.cs" />
+    <Compile Include="Tests\PyramidTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\RevoluteTest.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
+    <Compile Include="Tests\ShapeEditingTest.cs" />
+    <Compile Include="Tests\SliderCrankTest.cs" />
+    <Compile Include="Tests\CircleBenchmarkTest.cs" />
+    <Compile Include="Tests\SphereStackTest.cs" />
+    <Compile Include="Tests\TestEntries.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\TextureVerticesTest.cs" />
+    <Compile Include="Tests\TheoJansenTest.cs" />
+    <Compile Include="Tests\TilesTest.cs" />
+    <Compile Include="Tests\TimeOfImpactTest.cs" />
+    <Compile Include="Tests\TumblerTest.cs" />
+    <Compile Include="Tests\VaryingFrictionTest.cs" />
+    <Compile Include="Tests\VaryingRestitutionTest.cs" />
+    <Compile Include="Tests\VerticalStackTest.cs" />
+    <Compile Include="Tests\WebTest.cs" />
+    <Compile Include="Tests\YuPengPolygonTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Game.ico" />
+    <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
-      <Project>e64c1098-713a-489a-bb70-725dcbed9271</Project>
+      <Project>d56ce43b-5255-4e09-9bf0-d1f000dbb9d4</Project>
       <Visible>False</Visible>
     </NestedContentProject>
   </ItemGroup>
@@ -133,17 +224,22 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Branches\XNA\Farseer Physics XNA WP7.csproj">
-      <Project>{AA6CB78E-9484-4843-8613-54CD2BF1E948}</Project>
-      <Name>Farseer Physics XNA WP7</Name>
+    <ProjectReference Include="..\..\DebugViews\DebugViewXNA\DebugView WP7.csproj">
+      <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
+      <Name>DebugView WP7</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\DebugView XNA Content.contentproj">
-      <Project>{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}</Project>
-      <Name>DebugView XNA Content %28Content%29</Name>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics WP7.csproj">
+      <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
+      <Name>Farseer Physics WP7</Name>
+    </ProjectReference>
+    <ProjectReference Include="Content\TestBed XNA Content.contentproj">
+      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
+      <Name>TestBed XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
@@ -160,12 +256,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
       <Private>False</Private>
     </Reference>
   </ItemGroup>

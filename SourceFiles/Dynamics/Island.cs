@@ -56,7 +56,7 @@ namespace FarseerPhysics.Dynamics
         private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
         private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
         private Stopwatch _watch = new Stopwatch();
 #endif
 
@@ -151,7 +151,7 @@ namespace FarseerPhysics.Dynamics
                 _contactSolver.WarmStart();
             }
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Start();
@@ -165,14 +165,14 @@ namespace FarseerPhysics.Dynamics
                 _joints[i].InitVelocityConstraints(ref solverData);
             }
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _tmpTime += _watch.ElapsedTicks;
             }
 #endif
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
 #endif
@@ -196,7 +196,7 @@ namespace FarseerPhysics.Dynamics
                 _contactSolver.SolveVelocityConstraints();
             }
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
@@ -241,7 +241,7 @@ namespace FarseerPhysics.Dynamics
                 _velocities[i].w = w;
             }
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
 #endif
@@ -271,7 +271,7 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
@@ -280,7 +280,7 @@ namespace FarseerPhysics.Dynamics
             }
 #endif
 
-#if (!SILVERLIGHT)
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 JointUpdateTime = _tmpTime;
