@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics.DebugView</RootNamespace>
-    <AssemblyName>DebugViewXbox360</AssemblyName>
+    <AssemblyName>DebugView Xbox360</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>

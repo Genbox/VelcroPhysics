@@ -14,14 +14,14 @@ using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Transform = FarseerPhysics.Common.Transform;
 
-namespace FarseerPhysics.DebugViewSilverlight
+namespace FarseerPhysics
 {
     /// <summary>
     /// A debug view that works in Silverlight.
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
-    public class DebugViewSilverlight : DebugView, IDisposable
+    public class DebugViewSilverlight : DebugViewBase, IDisposable
     {
         private const int MaxContactPoints = 2048;
 

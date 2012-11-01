@@ -1,7 +1,9 @@
 using System;
+using FarseerPhysics.Samples.Samples;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples
 {
     /// <summary>
     /// This is the main type for your game

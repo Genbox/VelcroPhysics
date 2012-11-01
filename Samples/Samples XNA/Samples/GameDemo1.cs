@@ -6,11 +6,13 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
+using FarseerPhysics.Samples.DrawingSystem;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.Samples
 {
     internal class GameDemo1 : PhysicsGameScreen, IDemoScreen
     {

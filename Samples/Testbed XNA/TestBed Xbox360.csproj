@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
-    <AssemblyName>TestBedXbox360</AssemblyName>
+    <RootNamespace>FarseerPhysics.Testbed</RootNamespace>
+    <AssemblyName>TestBed Xbox360</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>

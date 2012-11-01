@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics</RootNamespace>
-    <AssemblyName>FarseerPhysicsSilverlight</AssemblyName>
+    <AssemblyName>FarseerPhysics Silverlight</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -39,7 +39,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Bin\Debug\FarseerPhysicsSilverlight.XML</DocumentationFile>
+    <DocumentationFile>Bin\Debug\FarseerPhysics Silverlight.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
@@ -52,7 +52,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Bin\Release\FarseerPhysicsSilverlight.XML</DocumentationFile>
+    <DocumentationFile>Bin\Release\FarseerPhysics Silverlight.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
     <Compile Include="Controllers\SimpleWindForce.cs" />
     <Compile Include="Controllers\VelocityLimitController.cs" />
     <Compile Include="ConvertUnits.cs" />
-    <Compile Include="DebugView.cs" />
+    <Compile Include="DebugViewBase.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\BreakableBody.cs" />
     <Compile Include="Dynamics\ContactManager.cs" />

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// This class is used to keep track of Keyboard and Mouse states throughout the game

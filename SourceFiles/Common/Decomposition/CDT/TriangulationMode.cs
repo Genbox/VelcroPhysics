@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Poly2Tri.Triangulation
+namespace FarseerPhysics.Common.Decomposition.CDT
 {
     public enum TriangulationMode
     {

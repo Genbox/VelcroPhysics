@@ -29,9 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using FarseerPhysics.Common.Decomposition.CDT;
-
-namespace Poly2Tri.Triangulation
+namespace FarseerPhysics.Common.Decomposition.CDT
 {
     /**
      * @author Thomas Åhlén, thahlen@gmail.com

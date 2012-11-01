@@ -7,7 +7,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Factories;
 
-namespace FarseerPhysics.Common
+namespace FarseerPhysics.Common.TextureTools
 {
     public enum Decomposer
     {

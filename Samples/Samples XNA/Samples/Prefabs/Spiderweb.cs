@@ -4,11 +4,12 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
+using FarseerPhysics.Samples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.Samples.Prefabs
 {
     public class Spiderweb
     {

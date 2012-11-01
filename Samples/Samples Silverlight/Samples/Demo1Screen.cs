@@ -1,12 +1,12 @@
 ﻿using System.Text;
 using System.Windows.Input;
-using FarseerPhysics.DemoBaseSilverlight;
-using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
+using FarseerPhysics.ScreenSystem;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.SimpleSamplesSilverlight
+namespace FarseerPhysics.Samples
 {
     internal class Demo1Screen : GameScreen, IDemoScreen
     {

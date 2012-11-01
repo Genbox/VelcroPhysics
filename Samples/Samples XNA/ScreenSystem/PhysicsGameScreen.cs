@@ -1,11 +1,11 @@
 ﻿using System;
-using FarseerPhysics.DebugViews;
+using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class PhysicsGameScreen : GameScreen
     {

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics</RootNamespace>
-    <AssemblyName>FarseerPhysicsXNA</AssemblyName>
+    <AssemblyName>FarseerPhysics XNA</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
@@ -55,7 +55,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>false</XnaCompressContent>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\x86\Debug\FarseerPhysicsXNA.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\Debug\FarseerPhysics XNA.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -69,7 +69,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>True</XnaCompressContent>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\x86\Release\FarseerPhysicsXNA.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\Release\FarseerPhysics XNA.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -213,7 +213,7 @@
     <Compile Include="Controllers\SimpleWindForce.cs" />
     <Compile Include="Controllers\VelocityLimitController.cs" />
     <Compile Include="ConvertUnits.cs" />
-    <Compile Include="DebugView.cs" />
+    <Compile Include="DebugViewBase.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\BreakableBody.cs" />
     <Compile Include="Dynamics\ContactManager.cs" />

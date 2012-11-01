@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FarseerPhysics.DemoBaseSilverlight
+namespace FarseerPhysics
 {
     public class GameTime
     {

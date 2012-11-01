@@ -124,7 +124,7 @@
     <Compile Include="Controllers\SimpleWindForce.cs" />
     <Compile Include="Controllers\VelocityLimitController.cs" />
     <Compile Include="ConvertUnits.cs" />
-    <Compile Include="DebugView.cs" />
+    <Compile Include="DebugViewBase.cs" />
     <Compile Include="Dynamics\Body.cs" />
     <Compile Include="Dynamics\BreakableBody.cs" />
     <Compile Include="Dynamics\ContactManager.cs" />

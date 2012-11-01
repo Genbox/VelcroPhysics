@@ -8,9 +8,9 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using Border = FarseerPhysics.DemoBaseSilverlight.DemoShare.Border;
+using Border = FarseerPhysics.DemoShare.Border;
 
-namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -53,7 +53,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
 
         public World World { get; set; }
 
-        public DebugViewSilverlight.DebugViewSilverlight DebugView { get; set; }
+        public DebugViewSilverlight DebugView { get; set; }
 
         public bool DebugViewEnabled { get; set; }
 
@@ -146,7 +146,7 @@ namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
                 Transform.TranslateY = DebugCanvas.ActualHeight / 2;
 
                 //DebugView
-                DebugView = new DebugViewSilverlight.DebugViewSilverlight(DebugCanvas, TxtDebug, World);
+                DebugView = new DebugViewSilverlight(DebugCanvas, TxtDebug, World);
                 DebugView.DefaultShapeColor = Colors.White;
                 DebugView.SleepingShapeColor = Colors.LightGray;
                 DebugView.Transform = Transform;

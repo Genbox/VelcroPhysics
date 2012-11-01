@@ -2,11 +2,12 @@
 
 using System.Collections.Generic;
 using System.Windows.Controls;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
 #endregion
 
-namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// The screen manager is a component which manages one or more <see cref="GameScreen"/>

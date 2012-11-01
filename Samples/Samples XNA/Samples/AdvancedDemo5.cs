@@ -6,11 +6,13 @@ using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Samples.Samples.Prefabs;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.Samples
 {
     internal class AdvancedDemo5 : PhysicsGameScreen, IDemoScreen
     {

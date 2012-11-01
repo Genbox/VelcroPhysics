@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
-    <AssemblyName>TestBed</AssemblyName>
+    <RootNamespace>FarseerPhysics.Testbed</RootNamespace>
+    <AssemblyName>TestBed XNA</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>

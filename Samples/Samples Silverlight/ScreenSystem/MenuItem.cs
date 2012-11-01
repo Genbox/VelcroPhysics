@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+﻿namespace FarseerPhysics.ScreenSystem
 {
     public class MenuItem
     {

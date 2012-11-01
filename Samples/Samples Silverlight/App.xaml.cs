@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Browser;
 
-namespace FarseerPhysics.SimpleSamplesSilverlight
+namespace FarseerPhysics
 {
     public partial class App : Application
     {

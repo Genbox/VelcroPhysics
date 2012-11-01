@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">Windows Phone</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
-    <AssemblyName>TestBed</AssemblyName>
+    <RootNamespace>FarseerPhysics.Testbed</RootNamespace>
+    <AssemblyName>TestBed WP7</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows Phone</XnaPlatform>
@@ -43,13 +43,14 @@
     <SilverlightManifestTemplate Condition="$(XnaOutputType)=='Game'">Properties\AppManifest.xml</SilverlightManifestTemplate>
     <XnaWindowsPhoneManifestTemplate Condition="$(XnaOutputType)=='Game'">Properties\WMAppManifest.xml</XnaWindowsPhoneManifestTemplate>
     <TileImage Condition="$(XnaOutputType)=='Game'">Background.png</TileImage>
-    <TileTitle Condition="$(XnaOutputType)=='Game'">$(AssemblyName)</TileTitle>
+    <TileTitle Condition="$(XnaOutputType)=='Game'">TestBed WP7</TileTitle>
     <SupportedCultures />
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <XnaRefreshLevel>1</XnaRefreshLevel>
+    <GameStartupType>FarseerPhysics.TestBed.Game1</GameStartupType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Debug</OutputPath>

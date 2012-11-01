@@ -30,12 +30,12 @@
  */
 
 using System.Collections.Generic;
+using FarseerPhysics.Common.Decomposition.CDT;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using FarseerPhysics.Common.TextureTools;
 using Microsoft.Xna.Framework;
-using Poly2Tri.Triangulation;
-using Poly2Tri.Triangulation.Delaunay;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
-using Poly2Tri.Triangulation.Polygon;
-
 using System.Linq;
 
 namespace FarseerPhysics.Common.Decomposition

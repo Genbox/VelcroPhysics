@@ -25,7 +25,7 @@ using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
+using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
