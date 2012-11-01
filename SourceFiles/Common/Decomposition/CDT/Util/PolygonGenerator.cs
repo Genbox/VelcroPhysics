@@ -30,9 +30,9 @@
  */
 
 using System;
-using Poly2Tri.Triangulation.Polygon;
+using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace Poly2Tri.Triangulation.Util
+namespace FarseerPhysics.Common.Decomposition.CDT.Util
 {
     public class PolygonGenerator
     {

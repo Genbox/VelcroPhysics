@@ -23,7 +23,7 @@
 using System;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.DebugViews;
+using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Poly2Tri.Triangulation.Util
+namespace FarseerPhysics.Common.Decomposition.CDT.Util
 {
     public class PointGenerator
     {

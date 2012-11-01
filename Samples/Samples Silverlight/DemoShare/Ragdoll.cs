@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.DemoBaseSilverlight.DemoShare
+namespace FarseerPhysics.DemoShare
 {
     public class Ragdoll
     {

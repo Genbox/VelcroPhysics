@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can

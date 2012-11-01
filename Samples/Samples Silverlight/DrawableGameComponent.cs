@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.DemoBaseSilverlight
+﻿namespace FarseerPhysics
 {
     /// <summary>
     /// This is the base class for all game objects

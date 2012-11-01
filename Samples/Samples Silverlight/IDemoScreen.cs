@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.DemoBaseSilverlight
+﻿namespace FarseerPhysics
 {
     public interface IDemoScreen
     {

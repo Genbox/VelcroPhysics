@@ -88,9 +88,9 @@ namespace FarseerPhysics
 
     /// Implement and register this class with a World to provide debug drawing of physics
     /// entities in your game.
-    public abstract class DebugView
+    public abstract class DebugViewBase
     {
-        protected DebugView(World world)
+        protected DebugViewBase(World world)
         {
             World = world;
         }

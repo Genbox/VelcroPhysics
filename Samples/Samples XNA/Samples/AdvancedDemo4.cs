@@ -1,7 +1,9 @@
 ﻿using System.Text;
+using FarseerPhysics.Samples.Samples.Prefabs;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.Samples
 {
     internal class AdvancedDemo4 : PhysicsGameScreen, IDemoScreen
     {

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using FarseerPhysics.Samples.DrawingSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.ScreenSystem
 {
     /// <summary>
     /// The screen manager is a component which manages one or more GameScreen

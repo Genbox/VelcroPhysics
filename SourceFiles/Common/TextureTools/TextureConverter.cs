@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.Common
+namespace FarseerPhysics.Common.TextureTools
 {
     // User contribution from Sickbattery aka David Reschke :).
 

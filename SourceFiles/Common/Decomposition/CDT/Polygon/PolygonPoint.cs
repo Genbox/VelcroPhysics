@@ -34,7 +34,7 @@
 // Future possibilities
 //   Documentation!
 
-namespace Poly2Tri.Triangulation.Polygon
+namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
     public class PolygonPoint : TriangulationPoint
     {

@@ -13,14 +13,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.DebugViews
+namespace FarseerPhysics.DebugView
 {
     /// <summary>
     /// A debug view that works in XNA.
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
-    public class DebugViewXNA : DebugView, IDisposable
+    public class DebugViewXNA : DebugViewBase, IDisposable
     {
         //Drawing
         private PrimitiveBatch _primitiveBatch;

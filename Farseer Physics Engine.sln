@@ -55,9 +55,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld WP7", "Samples\H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugView Silverlight", "DebugViews\DebugView Silverlight\DebugView Silverlight.csproj", "{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples XNA Content", "Samples\Samples XNA\Content\Samples XNA Content.contentproj", "{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
+		SccNumberOfProjects = 23
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -144,6 +146,10 @@ Global
 		SccProjectTopLevelParentUniqueName21 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName21 = Samples/HelloWorld\u0020XNA
 		SccLocalPath21 = Samples\\HelloWorld\u0020XNA
+		SccProjectUniqueName22 = Samples\\Samples\u0020XNA\\Content\\Samples\u0020XNA\u0020Content.contentproj
+		SccProjectTopLevelParentUniqueName22 = Farseer\u0020Physics\u0020Engine.sln
+		SccProjectName22 = Samples/Samples\u0020XNA/Content
+		SccLocalPath22 = Samples\\Samples\u0020XNA\\Content
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -364,6 +370,7 @@ Global
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Any CPU.ActiveCfg = Debug|Windows Phone
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Mixed Platforms.ActiveCfg = Debug|Windows Phone
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Mixed Platforms.Build.0 = Debug|Windows Phone
+		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Mixed Platforms.Deploy.0 = Debug|Windows Phone
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
 		{DF267FF7-7A01-4EAA-A5D1-CC81D8CEEFD2}.Debug|Windows Phone.Deploy.0 = Debug|Windows Phone
@@ -486,6 +493,16 @@ Global
 		{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}.Release|Windows Phone.ActiveCfg = Release|Any CPU
 		{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}.Release|x86.ActiveCfg = Release|Any CPU
 		{98EF2E0C-FE42-4B61-8F9D-214437C05A5D}.Release|Xbox 360.ActiveCfg = Release|Any CPU
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Debug|Windows Phone.ActiveCfg = Debug|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Debug|x86.ActiveCfg = Debug|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Debug|Xbox 360.ActiveCfg = Debug|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Release|Any CPU.ActiveCfg = Release|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Release|Windows Phone.ActiveCfg = Release|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Release|x86.ActiveCfg = Release|x86
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}.Release|Xbox 360.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -496,6 +513,7 @@ Global
 		{1681ADA2-B2F3-4157-A603-82C742379856} = {E662B67C-5BEC-409D-9564-A82CBC1A0120}
 		{FC7845FA-13FE-4FF8-822A-A577F3F59B00} = {E662B67C-5BEC-409D-9564-A82CBC1A0120}
 		{6AC89BBA-31DB-462D-ACD0-3E828594939E} = {E662B67C-5BEC-409D-9564-A82CBC1A0120}
+		{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67} = {E662B67C-5BEC-409D-9564-A82CBC1A0120}
 		{786DC838-D746-4107-93FF-19A902A78CFC} = {35ED807D-3AE9-49F3-896A-B349D21700C6}
 		{77CA64E6-113F-4AB1-B8CF-B213343BD0DB} = {35ED807D-3AE9-49F3-896A-B349D21700C6}
 		{98EF2E0C-FE42-4B61-8F9D-214437C05A5D} = {35ED807D-3AE9-49F3-896A-B349D21700C6}

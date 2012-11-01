@@ -38,7 +38,7 @@
 using System;
 using System.Text;
 
-namespace Poly2Tri.Triangulation.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)

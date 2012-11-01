@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace FarseerPhysics.SimpleSamplesSilverlight
+namespace FarseerPhysics
 {
     public partial class MainPage : UserControl
     {

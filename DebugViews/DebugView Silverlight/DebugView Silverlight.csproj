@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics.DebugView</RootNamespace>
-    <AssemblyName>DebugViewSilverlight</AssemblyName>
+    <AssemblyName>DebugView Silverlight</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -39,7 +39,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Bin\Debug\DebugViewSilverlight.XML</DocumentationFile>
+    <DocumentationFile>Bin\Debug\DebugView Silverlight.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <LangVersion>4</LangVersion>
   </PropertyGroup>

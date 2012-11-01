@@ -30,9 +30,9 @@
  */
 
 using System.Collections.Generic;
-using Poly2Tri.Triangulation.Delaunay.Sweep;
+using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 
-namespace Poly2Tri.Triangulation
+namespace FarseerPhysics.Common.Decomposition.CDT
 {
     public class TriangulationPoint
     {

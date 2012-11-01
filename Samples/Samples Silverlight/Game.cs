@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.DemoBaseSilverlight
+namespace FarseerPhysics
 {
     /// <summary>
     /// The main class of the Game

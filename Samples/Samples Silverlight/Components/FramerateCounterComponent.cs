@@ -1,9 +1,9 @@
 using System;
 using System.Globalization;
 using System.Windows.Controls;
-using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
+using FarseerPhysics.ScreenSystem;
 
-namespace FarseerPhysics.DemoBaseSilverlight.Components
+namespace FarseerPhysics.Components
 {
     /// <summary>
     /// Displays the FPS

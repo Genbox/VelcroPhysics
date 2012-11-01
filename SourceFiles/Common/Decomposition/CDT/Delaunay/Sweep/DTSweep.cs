@@ -48,9 +48,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common.Decomposition.CDT;
 
-namespace Poly2Tri.Triangulation.Delaunay.Sweep
+namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     public static class DTSweep
     {

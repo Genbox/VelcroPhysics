@@ -1,10 +1,10 @@
 using System;
 using System.Windows.Controls;
-using FarseerPhysics.DemoBaseSilverlight;
-using FarseerPhysics.DemoBaseSilverlight.Components;
-using FarseerPhysics.DemoBaseSilverlight.ScreenSystem;
+using FarseerPhysics.Components;
+using FarseerPhysics.Samples;
+using FarseerPhysics.ScreenSystem;
 
-namespace FarseerPhysics.SimpleSamplesSilverlight
+namespace FarseerPhysics
 {
     /// <summary>
     /// This is the main type for your game

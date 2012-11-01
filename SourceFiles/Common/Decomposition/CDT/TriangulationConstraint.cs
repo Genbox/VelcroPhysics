@@ -36,7 +36,7 @@
  * 
  * @author Thomas Åhlén, thahlen@gmail.com
  */
-namespace Poly2Tri.Triangulation
+namespace FarseerPhysics.Common.Decomposition.CDT
 {
     public class TriangulationConstraint
     {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// This class is used to keep track of keyboard state accross game components

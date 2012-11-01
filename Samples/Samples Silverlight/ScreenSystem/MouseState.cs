@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.DemoBaseSilverlight.ScreenSystem
+﻿namespace FarseerPhysics.ScreenSystem
 {
     /// <summary>
     /// This class represent a mouse state to be used by game components
