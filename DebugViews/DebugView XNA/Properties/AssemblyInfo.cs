@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Debug View XNA")]
-[assembly: AssemblyProduct("Debug View XNA")]
+[assembly: AssemblyTitle("Debug View Android")]
+[assembly: AssemblyProduct("Debug View Android")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
 [assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("eba33b62-6057-4ec2-af74-adce8a1ecd99")]
+[assembly: Guid("aba33b62-6057-4ec2-af74-adce8a1ecd99")]
 
 // Version information for an assembly consists of the following four values:
 //

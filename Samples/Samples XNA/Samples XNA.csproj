@@ -136,6 +136,11 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
+      <Project>{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
+      <Name>Samples XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView XNA.csproj">
       <Project>{FC7845FA-13FE-4FF8-822A-A577F3F59B00}</Project>
       <Name>DebugView XNA</Name>
@@ -143,11 +148,6 @@
     <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
       <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
       <Name>Farseer Physics XNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="Content\Samples XNA Content.contentproj">
-      <Project>{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-      <Name>Samples XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

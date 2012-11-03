@@ -1,4 +1,4 @@
-﻿#if!XNA && !WINDOWS_PHONE
+﻿#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID
 
 #region License
 
@@ -66,7 +66,7 @@ namespace Microsoft.Xna.Framework
         private CurveLoopType postLoop;
         private CurveLoopType preLoop;
 
-        #endregion Private Fields
+#endregion Private Fields
 
 #region Public Properties
 
@@ -92,7 +92,7 @@ namespace Microsoft.Xna.Framework
             set { preLoop = value; }
         }
 
-        #endregion Public Properties
+#endregion Public Properties
 
 #region Public Constructors
 
@@ -101,7 +101,7 @@ namespace Microsoft.Xna.Framework
             keys = new CurveKeyCollection();
         }
 
-        #endregion Public Constructors
+#endregion Public Constructors
 
 #region Public Methods
 
@@ -220,7 +220,7 @@ namespace Microsoft.Xna.Framework
             return GetCurvePosition(position);
         }
 
-        #endregion Public Methods
+#endregion Public Methods
 
 #region Private Methods
 
@@ -266,7 +266,7 @@ namespace Microsoft.Xna.Framework
             return 0f;
         }
 
-        #endregion
+#endregion
     }
 }
 

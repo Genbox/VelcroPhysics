@@ -1,4 +1,4 @@
-#if!XNA && !WINDOWS_PHONE && !XBOX
+#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID
 
 #region License
 
@@ -56,7 +56,7 @@ namespace Microsoft.Xna.Framework
         public float M43;
         public float M44;
 
-        #endregion Public Fields
+#endregion Public Fields
 
 #region Static Properties
 
@@ -67,7 +67,7 @@ namespace Microsoft.Xna.Framework
             get { return identity; }
         }
 
-        #endregion Static Properties
+#endregion Static Properties
 
 #region Public Properties
 
@@ -148,7 +148,7 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-        #endregion Public Properties
+#endregion Public Properties
 
 #region Constructors
 
@@ -224,7 +224,7 @@ namespace Microsoft.Xna.Framework
             M44 = m44;
         }
 
-        #endregion Constructors
+#endregion Constructors
 
 #region Public Static Methods
 
@@ -985,7 +985,7 @@ namespace Microsoft.Xna.Framework
             result.M44 = matrix.M44;
         }
 
-        #endregion Public Static Methods
+#endregion Public Static Methods
 
 #region Public Methods
 
@@ -1011,7 +1011,7 @@ namespace Microsoft.Xna.Framework
             return this == other;
         }
 
-        #endregion Public Methods
+#endregion Public Methods
 
 #region Operators
 
@@ -1101,7 +1101,7 @@ namespace Microsoft.Xna.Framework
             return matrix1;
         }
 
-        #endregion
+#endregion
 
 #region Object Overrides
 
@@ -1123,7 +1123,7 @@ namespace Microsoft.Xna.Framework
                    " {M41:" + M41 + " M42:" + M42 + " M43:" + M43 + " M44:" + M44 + "} }";
         }
 
-        #endregion
+#endregion
     }
 }
 

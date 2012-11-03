@@ -70,11 +70,6 @@
       <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
       <Name>Farseer Physics Xbox360</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\Samples XNA Content.contentproj">
-      <Name>Samples XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-      <Project>{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DrawingSystem\LineBatch.cs" />

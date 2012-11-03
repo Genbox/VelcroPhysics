@@ -139,11 +139,6 @@
       <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
       <Name>Farseer Physics WP7</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\DebugView XNA Content.contentproj">
-      <Project>{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}</Project>
-      <Name>DebugView XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework">

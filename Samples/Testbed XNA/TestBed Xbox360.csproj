@@ -215,11 +215,6 @@
       <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
       <Name>Farseer Physics Xbox360</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\TestBed XNA Content.contentproj">
-      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
-      <Name>TestBed XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework">

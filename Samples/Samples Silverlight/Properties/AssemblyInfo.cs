@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Simple Samples Silverlight")]
+[assembly: AssemblyTitle("Samples Silverlight")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
-[assembly: AssemblyProduct("Simple Samples Silverlight")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
+[assembly: AssemblyProduct("Samples Silverlight")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

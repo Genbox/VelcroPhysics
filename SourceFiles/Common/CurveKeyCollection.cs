@@ -1,4 +1,4 @@
-﻿#if!XNA && !WINDOWS_PHONE
+﻿#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID
 
 #region License
 
@@ -45,7 +45,7 @@ namespace Microsoft.Xna.Framework
         private List<CurveKey> innerlist;
         private bool isReadOnly = false;
 
-        #endregion Private Fields
+#endregion Private Fields
 
 #region Properties
 
@@ -80,7 +80,7 @@ namespace Microsoft.Xna.Framework
             get { return isReadOnly; }
         }
 
-        #endregion Properties
+#endregion Properties
 
 #region Constructors
 
@@ -89,7 +89,7 @@ namespace Microsoft.Xna.Framework
             innerlist = new List<CurveKey>();
         }
 
-        #endregion Constructors
+#endregion Constructors
 
 #region Public Methods
 
@@ -169,7 +169,7 @@ namespace Microsoft.Xna.Framework
                     (Exception) null);
         }
 
-        #endregion Public Methods
+#endregion Public Methods
     }
 }
 

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
 [assembly: AssemblyProduct("Farseer Physics Engine")]
-[assembly: AssemblyCopyright("Copyright Ian Qvist © 2012")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("61807528-18aa-4260-9a0f-b7b9f436bc07")]
+[assembly: Guid("62807528-18aa-4260-9a0f-b7b9f436bc07")]
 
 // Version information for an assembly consists of the following four values:
 //
