@@ -45,7 +45,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="MonoGameContentProcessors">
-      <HintPath>..\..\MonoGames Dependencies\MonoGameContentProcessors.dll</HintPath>
+      <HintPath>..\..\Dependencies\MonoGameContentProcessors.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
