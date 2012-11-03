@@ -78,11 +78,6 @@
       <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
       <Name>Farseer Physics WP7</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\Samples XNA Content.contentproj">
-      <Name>Samples XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-      <Project>{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DrawingSystem\LineBatch.cs" />

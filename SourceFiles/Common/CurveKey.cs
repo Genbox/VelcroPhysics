@@ -1,4 +1,4 @@
-﻿#if!XNA && !WINDOWS_PHONE
+﻿#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID
 
 #region License
 
@@ -46,7 +46,7 @@ namespace Microsoft.Xna.Framework
         private float tangentOut;
         private float value;
 
-        #endregion Private Fields
+#endregion Private Fields
 
 #region Properties
 
@@ -79,7 +79,7 @@ namespace Microsoft.Xna.Framework
             set { this.value = value; }
         }
 
-        #endregion
+#endregion
 
 #region Constructors
 
@@ -102,7 +102,7 @@ namespace Microsoft.Xna.Framework
             this.continuity = continuity;
         }
 
-        #endregion Constructors
+#endregion Constructors
 
 #region Public Methods
 
@@ -113,7 +113,7 @@ namespace Microsoft.Xna.Framework
             return position.CompareTo(other.position);
         }
 
-        #endregion
+#endregion
 
 #region IEquatable<CurveKey> Members
 
@@ -122,7 +122,7 @@ namespace Microsoft.Xna.Framework
             return (this == other);
         }
 
-        #endregion
+#endregion
 
         public static bool operator !=(CurveKey a, CurveKey b)
         {
@@ -160,7 +160,7 @@ namespace Microsoft.Xna.Framework
                    tangentOut.GetHashCode() ^ continuity.GetHashCode();
         }
 
-        #endregion
+#endregion
     }
 }
 

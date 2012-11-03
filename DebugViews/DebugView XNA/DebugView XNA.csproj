@@ -144,14 +144,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
-      <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
-      <Name>Farseer Physics XNA</Name>
-    </ProjectReference>
-    <ProjectReference Include="Content\DebugView XNA Content.contentproj">
+    <ProjectReference Include="..\..\Content Projects\DebugView XNA Content\DebugView XNA Content.contentproj">
       <Project>{AC26EDE1-2A42-4A57-BEEE-9603FCAC9317}</Project>
       <Name>DebugView XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
+      <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
+      <Name>Farseer Physics XNA</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

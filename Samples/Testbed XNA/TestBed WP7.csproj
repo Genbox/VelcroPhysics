@@ -233,11 +233,6 @@
       <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
       <Name>Farseer Physics WP7</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\TestBed XNA Content.contentproj">
-      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
-      <Name>TestBed XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />

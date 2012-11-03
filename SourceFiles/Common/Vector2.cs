@@ -1,4 +1,4 @@
-﻿#if !XNA && !WINDOWS_PHONE && !XBOX
+﻿#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID
 
 #region License
 
@@ -41,7 +41,7 @@ namespace Microsoft.Xna.Framework
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2 : IEquatable<Vector2>
     {
-        #region Private Fields
+#region Private Fields
 
         private static Vector2 zeroVector = new Vector2(0f, 0f);
         private static Vector2 unitVector = new Vector2(1f, 1f);
@@ -50,14 +50,14 @@ namespace Microsoft.Xna.Framework
 
         #endregion Private Fields
 
-        #region Public Fields
+#region Public Fields
 
         public float X;
         public float Y;
 
         #endregion Public Fields
 
-        #region Properties
+#region Properties
 
         public static Vector2 Zero
         {
@@ -81,7 +81,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion Properties
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Constructor foe standard 2D vector.
@@ -112,7 +112,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion Constructors
 
-        #region Public Methods
+#region Public Methods
 
         public static void Reflect(ref Vector2 vector, ref Vector2 normal, out Vector2 result)
         {
@@ -503,7 +503,7 @@ namespace Microsoft.Xna.Framework
 
         #endregion Public Methods
 
-        #region Operators
+#region Operators
 
         public static Vector2 operator -(Vector2 value)
         {

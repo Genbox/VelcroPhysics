@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1436B1E1-FEBB-49BB-9C87-DEB27B0DB803}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>FarseerPhysics.TestBed</RootNamespace>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AssemblyName>Testbed Android</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <AndroidSupportedAbis>armeabi%3bx86</AndroidSupportedAbis>
+    <AndroidStoreUncompressedFileExtensions />
+    <MandroidI18n />
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <LangVersion>4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework.Android">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\MonoGame.Framework.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="OpenTK" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activity1.cs" />
+    <Compile Include="Framework\GameSettings.cs" />
+    <Compile Include="Framework\KeyboardManager.cs" />
+    <Compile Include="Framework\Rand.cs" />
+    <Compile Include="Framework\Test.cs" />
+    <Compile Include="Framework\TestEntry.cs" />
+    <Compile Include="Game1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Tests\AddPairTest.cs" />
+    <Compile Include="Tests\AngleJointTest.cs" />
+    <Compile Include="Tests\ApplyForceTest.cs" />
+    <Compile Include="Tests\BodyTypesTest.cs" />
+    <Compile Include="Tests\BreakableTest.cs" />
+    <Compile Include="Tests\BridgeTest.cs" />
+    <Compile Include="Tests\BulletTest.cs" />
+    <Compile Include="Tests\BuoyancyTest.cs" />
+    <Compile Include="Tests\CantileverTest.cs" />
+    <Compile Include="Tests\CarTest.cs" />
+    <Compile Include="Tests\ChainTest.cs" />
+    <Compile Include="Tests\CharacterCollisionTest.cs" />
+    <Compile Include="Tests\CircleBenchmarkTest.cs" />
+    <Compile Include="Tests\CirclePenetrationTest.cs" />
+    <Compile Include="Tests\CloneTest.cs" />
+    <Compile Include="Tests\CollisionFilteringTest.cs" />
+    <Compile Include="Tests\CollisionProcessingTest.cs" />
+    <Compile Include="Tests\CompoundShapesTest.cs" />
+    <Compile Include="Tests\ConfinedTest.cs" />
+    <Compile Include="Tests\ContinuousTest.cs" />
+    <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\ConvexHullTest2.cs" />
+    <Compile Include="Tests\ConveyorBeltTest.cs" />
+    <Compile Include="Tests\CuttingTest.cs" />
+    <Compile Include="Tests\DeletionTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
+    <Compile Include="Tests\DistanceTest.cs" />
+    <Compile Include="Tests\DominosTest.cs" />
+    <Compile Include="Tests\DynamicTreeTest.cs" />
+    <Compile Include="Tests\EdgeShapeBenchmarkTest.cs" />
+    <Compile Include="Tests\EdgeShapesTest.cs" />
+    <Compile Include="Tests\EdgeTest.cs" />
+    <Compile Include="Tests\ExplosionTest.cs" />
+    <Compile Include="Tests\GearsTest.cs" />
+    <Compile Include="Tests\LineJointTest.cs" />
+    <Compile Include="Tests\LockTest.cs" />
+    <Compile Include="Tests\MobileBalancedTest.cs" />
+    <Compile Include="Tests\MobileTest.cs" />
+    <Compile Include="Tests\MotorJointTest.cs" />
+    <Compile Include="Tests\OneSidedPlatformTest.cs" />
+    <Compile Include="Tests\PathTest.cs" />
+    <Compile Include="Tests\PinballTest.cs" />
+    <Compile Include="Tests\PolyCollisionTest.cs" />
+    <Compile Include="Tests\PolyShapesTest.cs" />
+    <Compile Include="Tests\PrismaticTest.cs" />
+    <Compile Include="Tests\PulleysTest.cs" />
+    <Compile Include="Tests\PyramidTest.cs" />
+    <Compile Include="Tests\QuadTreeTest.cs" />
+    <Compile Include="Tests\RaycastTest.cs" />
+    <Compile Include="Tests\RevoluteTest.cs" />
+    <Compile Include="Tests\RopeTest.cs" />
+    <Compile Include="Tests\RoundedRectangle.cs" />
+    <Compile Include="Tests\SensorTest.cs" />
+    <Compile Include="Tests\SerializationTest.cs" />
+    <Compile Include="Tests\ShapeEditingTest.cs" />
+    <Compile Include="Tests\SimpleWindForceTest.cs" />
+    <Compile Include="Tests\SliderCrankTest.cs" />
+    <Compile Include="Tests\SphereStackTest.cs" />
+    <Compile Include="Tests\TestEntries.cs" />
+    <Compile Include="Tests\TextureVerticesTest.cs" />
+    <Compile Include="Tests\TheoJansenTest.cs" />
+    <Compile Include="Tests\TilesTest.cs" />
+    <Compile Include="Tests\TimeOfImpactTest.cs" />
+    <Compile Include="Tests\TumblerTest.cs" />
+    <Compile Include="Tests\VaryingFrictionTest.cs" />
+    <Compile Include="Tests\VaryingRestitutionTest.cs" />
+    <Compile Include="Tests\VerticalStackTest.cs" />
+    <Compile Include="Tests\WebTest.cs" />
+    <Compile Include="Tests\YuPengPolygonTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\AboutAssets.txt" />
+    <Content Include="Game.ico" />
+    <Content Include="Resources\AboutResources.txt" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\Splash.png" />
+    <AndroidResource Include="Resources\values\Styles.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Android.csproj">
+      <Project>{a26bdb32-09a7-4cf1-9c0b-e79eb2dec59a}</Project>
+      <Name>DebugView Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Android.csproj">
+      <Project>{8428e429-4098-4ea4-b2bc-c54ba06b8516}</Project>
+      <Name>Farseer Physics Android</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Content\font.xnb" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Content\Circle.xnb" />
+    <AndroidAsset Include="Content\Rock.xnb" />
+    <AndroidAsset Include="Content\Terrain.xnb" />
+    <AndroidAsset Include="Content\Texture.xnb" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+</Project>

@@ -66,11 +66,6 @@
       <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
       <Name>Farseer Physics Xbox360</Name>
     </ProjectReference>
-    <ProjectReference Include="Content\HelloWorld XNA Content.contentproj">
-      <Project>{1999498C-698A-41C7-8C90-DD4D3B353D5B}</Project>
-      <Name>HelloWorld XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
