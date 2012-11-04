@@ -47,8 +47,6 @@ namespace FarseerPhysics.Physics
             }
         }
 
-        public object UserData { get; set; }
-
         internal State state = new State();
         internal Vector2 bufferForce;
         internal float bufferTorque;
@@ -66,7 +64,10 @@ namespace FarseerPhysics.Physics
             }
         }
 
+        public object UserData { get; set; }
+
         public List<Collisions.Collision> Collisions { get; private set; }
+
         public Body Body { get; private set; }
 
         public void AddFixture(Fixture fixture)

@@ -5,14 +5,6 @@ using FarseerPhysics.Common;
 
 namespace FarseerPhysics.Physics.Collisions
 {
-    public enum CollisionEvent
-    {
-        None,
-        Inside,
-        Enter,
-        Exit
-    }
-
     public struct Feature
     {
         /// <summary>
@@ -30,11 +22,6 @@ namespace FarseerPhysics.Physics.Collisions
         /// </summary>
         public Vector2 Position;
 
-        /// <summary>
-        /// Event generated
-        /// </summary>
-        public CollisionEvent Event;
-
         public static Feature Empty
         {
             get
@@ -44,7 +31,6 @@ namespace FarseerPhysics.Physics.Collisions
                     Distance = float.PositiveInfinity,
                     Normal = Vector2.Zero,
                     Position = Vector2.Zero,
-                    Event = CollisionEvent.None
                 };
             }
         }
@@ -71,11 +57,6 @@ namespace FarseerPhysics.Physics.Collisions
         /// Force used for gettings particles to stick to the surface
         /// </summary>
         public float StickForce;
-
-        /// <summary>
-        /// User data (use this for your own instead of the fixture's one)
-        /// </summary>
-        public object UserData;
     }
 
     public abstract class Collision
@@ -84,14 +65,7 @@ namespace FarseerPhysics.Physics.Collisions
 
         public Fixture Fixture { get; protected set; }
 
-        protected CollisionDefinition definition;
-
         protected AABB aabb;
-        public AABB AABB
-        {
-            get { return aabb; }
-        }
-
         internal bool added;
 
         /// <summary>
@@ -103,10 +77,7 @@ namespace FarseerPhysics.Physics.Collisions
         /// Properties of the collision, you can edit them at runtime freely
         /// (except vertices from the PolygonCollision)
         /// </summary>
-        public CollisionDefinition Definition
-        {
-            get { return definition; }
-        }
+        public CollisionDefinition Definition { get; protected set; }
 
         protected Collision(RigidBody rb, Fixture f)
         {
@@ -116,7 +87,7 @@ namespace FarseerPhysics.Physics.Collisions
             RigidOnly = !(f.UserData is CollisionDefinition);
             if (!RigidOnly)
             {
-                definition = f.UserData as CollisionDefinition;
+                Definition = f.UserData as CollisionDefinition;
             }
 
             Fixture.UserData = this;
