@@ -25,31 +25,13 @@ namespace FarseerPhysics.Physics.Collisions
                 toCenter.Normalize();
 
                 float distanceToBorder = distanceToCenter - _circle.Radius;
-                float distancePrevToBorder = (_circle.Position - previousPoint).Length() - _circle.Radius;
 
                 result = new Feature
                 {
                     Distance = distanceToBorder,
                     Normal = toCenter,
                     Position = point + toCenter * distanceToBorder,
-                    Event = CollisionEvent.None
                 };
-
-                bool exterior = distanceToBorder > 0.0f;
-                bool previousExterior = distancePrevToBorder > 0.0f;
-
-                if (!exterior && previousExterior)
-                {
-                    result.Event = CollisionEvent.Enter;
-                }
-                else if (exterior && !previousExterior)
-                {
-                    result.Event = CollisionEvent.Exit;
-                }
-                else if (!exterior)
-                {
-                    result.Event = CollisionEvent.Inside;
-                }
 
                 return true;
             }

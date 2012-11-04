@@ -11,17 +11,9 @@ using FarseerPhysics.Collision;
 
 namespace FarseerPhysics.Physics.Collisions
 {
-    public class PolygonCollisionDefinition : CollisionDefinition
-    {
-        /// <summary>
-        /// Original vertices making up the different decomposed fixtures (optional but better)
-        /// </summary>
-        public Vertices Vertices;
-    }
-
     public class PolygonCollision : Collision
     {
-        public const float GridSize = 0.5f;
+        public const float GridSize = 2f;
 
         public class Edge
         {
@@ -73,13 +65,6 @@ namespace FarseerPhysics.Physics.Collisions
             Debug.Assert(f.ShapeType == ShapeType.Polygon);
             shape = f.Shape as PolygonShape;
 
-            // Custom vertices defined?
-            PolygonCollisionDefinition polyDef = null;
-            if (definition is PolygonCollisionDefinition)
-            {
-                polyDef = definition as PolygonCollisionDefinition;
-            }
-
             if (!RigidOnly)
             {
                 GridWidth = (int)Math.Ceiling(aabb.Extents.X * 2.0f / GridSize);
@@ -99,7 +84,7 @@ namespace FarseerPhysics.Physics.Collisions
                         };
 
                         // Having original vertices is better but we make do with the fixture's ones
-                        Vertices vertices = polyDef != null && polyDef.Vertices != null ? polyDef.Vertices : shape.Vertices;
+                        Vertices vertices = shape.Vertices;
 
                         Feature[] features = new Feature[] {
                             vertices.GetNearestFeature(ref corners[0]),
@@ -245,7 +230,6 @@ namespace FarseerPhysics.Physics.Collisions
                     Distance = (float)Math.Sqrt(closestDistanceSquared),
                     Normal = normal,
                     Position = closestPoint,
-                    Event = CollisionEvent.None
                 };
 
                 bool exterior = true;
@@ -266,8 +250,6 @@ namespace FarseerPhysics.Physics.Collisions
                     result.Normal *= -1.0f;
                 }
 
-                bool previousExterior = true;
-
                 // Previous point
                 {
                     int px = (int)Math.Floor((previousPoint.X - aabb.LowerBound.X) / GridSize);
@@ -282,24 +264,10 @@ namespace FarseerPhysics.Physics.Collisions
                         {
                             if (cellPrevious.Polygons[i].PointInPolygon(ref previousPoint) >= 0)
                             {
-                                previousExterior = false;
                                 break;
                             }
                         }
                     }
-                }
-
-                if (!exterior && previousExterior)
-                {
-                    result.Event = CollisionEvent.Enter;
-                }
-                else if (exterior && !previousExterior)
-                {
-                    result.Event = CollisionEvent.Exit;
-                }
-                else if (!exterior)
-                {
-                    result.Event = CollisionEvent.Inside;
                 }
             }
 
