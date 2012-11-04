@@ -69,8 +69,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vector2 normal;
             FixedArray2<Vector2> points;
-            ContactSolver.WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius,
-                                                 ref _transformB, _polygonB.Radius, out normal, out points);
+            ContactSolver.WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out normal, out points);
 
             DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);
             TextLine += 15;

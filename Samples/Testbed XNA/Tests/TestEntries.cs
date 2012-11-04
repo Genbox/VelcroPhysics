@@ -28,7 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
-            new TestEntry {Name = "Gears", CreateTest = GearsTest.Create},
+            new TestEntry {Name = "Fluids", CreateTest = FluidsTest.Create},
             new TestEntry {Name = "Tumbler", CreateTest = TumblerTest.Create},
 
             new TestEntry {Name = "Varying Restitution", CreateTest = VaryingRestitutionTest.Create},
