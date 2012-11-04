@@ -243,8 +243,18 @@
     <Compile Include="Factories\FixtureFactory.cs" />
     <Compile Include="Factories\JointFactory.cs" />
     <Compile Include="Factories\LinkFactory.cs" />
+    <Compile Include="Fluids\FluidParticle.cs" />
+    <Compile Include="Fluids\FluidSystem.cs" />
+    <Compile Include="Fluids\HashGrid.cs" />
+    <Compile Include="Fluids\Spring.cs" />
+    <Compile Include="Fluids\FluidManager.cs" />
+    <Compile Include="Physics\Collisions\CircleCollision.cs" />
+    <Compile Include="Physics\Collisions\Collision.cs" />
+    <Compile Include="Physics\Collisions\PolygonCollision.cs" />
+    <Compile Include="Physics\RigidBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Fluids\FluidUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
