@@ -1,6 +1,8 @@
+using FarseerPhysics.Collision;
 using FarseerPhysics.Dynamics;
 using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Physics.Collisions;
 using Microsoft.Xna.Framework;
 using FarseerPhysics.Common;
@@ -11,98 +13,25 @@ namespace FarseerPhysics.Physics
 {
     public class RigidBody
     {
-        internal struct State
-        {
-            public Vector2 Force;
-            public float Torque;
-
-            public Transform Xf;
-            public Sweep Sweep;
-
-            public Vector2 LinearVelocity;
-            public float AngularVelocity;
-
-            public bool Awake;
-
-            public void Save(Body body)
-            {
-                Force = body.Force;
-                Torque = body.Torque;
-                Xf = body.Xf;
-                Sweep = body.Sweep;
-                LinearVelocity = body.LinearVelocity;
-                AngularVelocity = body.AngularVelocity;
-                Awake = body.Awake;
-            }
-
-            public void Restore(Body body)
-            {
-                body.Force = Force;
-                body.Torque = Torque;
-                body.Xf = Xf;
-                body.Sweep = Sweep;
-                body.LinearVelocity = LinearVelocity;
-                body.AngularVelocity = AngularVelocity;
-                body.Awake = Awake;
-            }
-        }
-
-        internal State state = new State();
+        private State _state = new State();
         internal Vector2 bufferForce;
         internal float bufferTorque;
 
         public RigidBody(Body b)
         {
-            Collisions = new List<Collisions.Collision>();
             Body = b;
-            UserData = Body.UserData;
-            Body.UserData = this;
-
-            for (int i = 0; i < Body.FixtureList.Count; ++i)
-            {
-                AddFixture(Body.FixtureList[i]);
-            }
         }
-
-        public object UserData { get; set; }
-
-        public List<Collisions.Collision> Collisions { get; private set; }
 
         public Body Body { get; private set; }
 
-        public void AddFixture(Fixture fixture)
-        {
-            switch (fixture.ShapeType)
-            {
-                case ShapeType.Circle:
-                    Collisions.Add(new CircleCollision(this, fixture));
-                    break;
-                case ShapeType.Polygon:
-                    Collisions.Add(new PolygonCollision(this, fixture));
-                    break;
-            }
-        }
-
-        public void RemoveFixture(Fixture fixture)
-        {
-            for (int i = 0; i < Collisions.Count; ++i)
-            {
-                if (Collisions[i].Fixture == fixture)
-                {
-                    Collisions.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
         internal void SaveState()
         {
-            state.Save(Body);
+            _state.Save(Body);
         }
 
         internal void RestoreState()
         {
-            state.Restore(Body);
+            _state.Restore(Body);
         }
 
         internal void AddForce(ref Vector2 force, ref Vector2 point)
@@ -184,19 +113,51 @@ namespace FarseerPhysics.Physics
             b.SynchronizeTransform();
         }
 
-        public bool Intersect(Collisions.Collision collision, ref Vector2 point, ref Vector2 previousPoint, out Feature result)
+        CircleShape circle = new CircleShape(0.01f, 1);
+
+        public bool Intersect(Fixture fixture, ref Vector2 point, out Feature result)
         {
-            Debug.Assert(collision.RigidBody == this);
+            result = new Feature();
 
-            Vector2 localPoint = Body.GetLocalPoint(ref point);
-            Vector2 localPreviousPoint = Body.GetLocalPoint(ref previousPoint);
+            Manifold manifold = new Manifold();
+            Vector2 normal;
+            FixedArray2<Vector2> points;
 
-            bool intersects = collision.Intersect(ref localPoint, ref localPreviousPoint, out result);
+            Transform transformB = new Transform();
+            transformB.Set(Vector2.Zero, 0);
+            circle.Position = point;
+
+            PolygonShape polygonShape = fixture.Shape as PolygonShape;
+
+            switch (fixture.ShapeType)
+            {
+                case ShapeType.Polygon:
+                    Collision.Collision.CollidePolygonAndCircle(ref manifold, polygonShape, ref fixture.Body.Xf, circle, ref transformB);
+                    ContactSolver.WorldManifold.Initialize(ref manifold, ref fixture.Body.Xf, polygonShape.Radius, ref transformB, circle.Radius, out normal, out points);
+
+                    result.Distance = (point-(fixture.Body.Position + new Vector2(1.5f, 1.5f))).Length();
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            //result.Position = points[0];
+            //result.Normal = normal;
+            //result.Distance = 1f;
+
+
+            bool intersects = manifold.PointCount >= 1;//collision.Intersect(ref localPoint,  out result);
 
             if (intersects)
             {
-                result.Position = Body.GetWorldPoint(ref result.Position);
-                result.Normal = Body.GetWorldVector(ref result.Normal);
+                result.Position = points[0];
+                result.Normal = normal;
+                result.Distance *= -1;
+
+                //Vector2 collisionPoint = points[0];
+                //result.Position = Body.GetWorldPoint(ref collisionPoint);
+                //result.Normal = Body.GetWorldVector(ref normal);
             }
 
             return intersects;
@@ -204,14 +165,8 @@ namespace FarseerPhysics.Physics
 
         internal void Reset()
         {
-            bufferForce.X = 0.0f;
-            bufferForce.Y = 0.0f;
+            bufferForce = Vector2.Zero;
             bufferTorque = 0.0f;
-
-            for (int i = 0; i < Collisions.Count; ++i)
-            {
-                Collisions[i].Reset();
-            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FarseerPhysics.Fluids
     {
         private World _world;
         private List<RigidBody> _bodies = new List<RigidBody>();
-        private List<Physics.Collisions.Collision> _fluidCollisions = new List<Physics.Collisions.Collision>();
+        private List<Fixture> _fluidCollisions = new List<Fixture>();
 
         public FluidManager(World w)
         {
@@ -20,8 +20,6 @@ namespace FarseerPhysics.Fluids
 
             _world.BodyAdded += OnBodyAdded;
             _world.BodyRemoved += OnBodyRemoved;
-            _world.FixtureAdded += OnFixtureAdded;
-            _world.FixtureRemoved += OnFixtureRemoved;
 
             for (int i = 0; i < _world.BodyList.Count; ++i)
             {
@@ -48,38 +46,9 @@ namespace FarseerPhysics.Fluids
             }
         }
 
-        private void OnFixtureAdded(Fixture fixture)
-        {
-            for (int i = 0; i < _bodies.Count; ++i)
-            {
-                RigidBody rigidBody = _bodies[i];
-                if (rigidBody.Body == fixture.Body)
-                {
-                    rigidBody.AddFixture(fixture);
-                }
-            }
-        }
-
-        private void OnFixtureRemoved(Fixture fixture)
-        {
-            for (int i = 0; i < _bodies.Count; ++i)
-            {
-                RigidBody rigidBody = _bodies[i];
-                if (rigidBody.Body == fixture.Body)
-                {
-                    rigidBody.RemoveFixture(fixture);
-                }
-            }
-        }
-
         private bool FluidQueryCallback(Fixture fixture)
         {
-            Physics.Collisions.Collision collision = fixture.UserData as Physics.Collisions.Collision;
-
-            if (collision != null && !collision.added)
-            {
-                _fluidCollisions.Add(collision);
-            }
+            _fluidCollisions.Add(fixture);
 
             return true;
         }
@@ -98,112 +67,98 @@ namespace FarseerPhysics.Fluids
             Collision.AABB fluidAABB = new Collision.AABB();
 
             // Compute fluid AABB
+            for (int i = 0; i < Fluid.Particles.Count; ++i)
             {
-                for (int i = 0; i < Fluid.Particles.Count; ++i)
+                FluidParticle p = Fluid.Particles[i];
+                if (p.IsActive)
                 {
-                    FluidParticle p = Fluid.Particles[i];
-                    if (p.IsActive)
-                    {
-                        fluidAABB.LowerBound = Vector2.Min(p.Position, fluidAABB.LowerBound);
-                        fluidAABB.UpperBound = Vector2.Max(p.Position, fluidAABB.UpperBound);
-                    }
+                    fluidAABB.LowerBound = Vector2.Min(p.Position, fluidAABB.LowerBound);
+                    fluidAABB.UpperBound = Vector2.Max(p.Position, fluidAABB.UpperBound);
                 }
-                fluidAABB.LowerBound -= new Vector2(Fluid.Definition.InfluenceRadius, Fluid.Definition.InfluenceRadius);
-                fluidAABB.UpperBound += new Vector2(Fluid.Definition.InfluenceRadius, Fluid.Definition.InfluenceRadius);
             }
 
-            // Query fixtures in collision with fluid
-            {
-                _fluidCollisions.Clear();
-                _world.QueryAABB(FluidQueryCallback, ref fluidAABB);
-            }
+            fluidAABB.LowerBound -= new Vector2(Fluid.Definition.InfluenceRadius, Fluid.Definition.InfluenceRadius);
+            fluidAABB.UpperBound += new Vector2(Fluid.Definition.InfluenceRadius, Fluid.Definition.InfluenceRadius);
+
+            // Query the world for fixtures near fluid
+            _fluidCollisions.Clear();
+            _world.QueryAABB(FluidQueryCallback, ref fluidAABB);
 
             // Save states
+            for (int i = 0; i < _bodies.Count; ++i)
             {
-                for (int i = 0; i < _bodies.Count; ++i)
+                RigidBody rb = _bodies[i];
+                if (rb.Body.BodyType == BodyType.Dynamic)
                 {
-                    RigidBody rb = _bodies[i];
-                    if (rb.Body.BodyType == BodyType.Dynamic)
-                    {
-                        rb.Reset();
-                        rb.SaveState();
-                        rb.Advance(dt, ref _world.Gravity);
-                    }
+                    rb.Reset();
+                    rb.SaveState();
+                    rb.Advance(dt, ref _world.Gravity);
                 }
             }
 
             // Fluid > Bodies
+            for (int ic = 0; ic < _fluidCollisions.Count; ++ic)
             {
-                for (int ic = 0; ic < _fluidCollisions.Count; ++ic)
+                Fixture fixture = _fluidCollisions[ic];
+
+                if (fixture.RigidBody.Body.BodyType != BodyType.Dynamic)
+                    continue;
+
+                if (fixture.IsSensor)
+                    continue;
+
+                for (int ip = 0; ip < Fluid.Particles.Count; ++ip)
                 {
-                    Physics.Collisions.Collision collision = _fluidCollisions[ic];
+                    FluidParticle particle = Fluid.Particles[ip];
 
-                    if (collision.RigidBody.Body.BodyType != BodyType.Dynamic)
-                    {
+                    if (!particle.IsActive)
                         continue;
-                    }
-                    if (collision.Fixture.IsSensor)
-                    {
+
+                    Feature result;
+
+                    if (!fixture.RigidBody.Intersect(fixture, ref particle.Position, out result))
                         continue;
-                    }
 
-                    for (int ip = 0; ip < Fluid.Particles.Count; ++ip)
+                    Vector2 impulse = new Vector2();
+
+                    if (result.Distance < 0.0f) // Inside
                     {
-                        FluidParticle particle = Fluid.Particles[ip];
+                        Vector2 bodyVelocity = fixture.RigidBody.Body.GetLinearVelocityFromWorldPoint(ref particle.Position);
 
-                        if (!particle.IsActive)
-                        {
-                            continue;
-                        }
-                        Feature result;
-                        if (!collision.RigidBody.Intersect(collision, ref particle.Position, ref particle.PreviousPosition, out result))
-                        {
-                            continue;
-                        }
+                        Vector2 velocity = (particle.Position - particle.PreviousPosition) - bodyVelocity * dt;
 
-                        Vector2 impulse = new Vector2();
+                        Vector2 velocityNormal = Vector2.Dot(velocity, result.Normal) * result.Normal;
+                        Vector2 velocityTangent = velocity - velocityNormal;
 
-                        if (result.Distance < 0.0f) // Inside
-                        {
-                            Vector2 bodyVelocity = collision.RigidBody.Body.GetLinearVelocityFromWorldPoint(ref particle.Position);
-
-                            Vector2 velocity = (particle.Position - particle.PreviousPosition) - bodyVelocity * dt;
-
-                            Vector2 velocityNormal = Vector2.Dot(velocity, result.Normal) * result.Normal;
-                            Vector2 velocityTangent = velocity - velocityNormal;
-
-                            impulse = velocityNormal + collision.Definition.Slip * velocityTangent;
-                        }
-                        else if (collision.Definition.IsSticky && result.Distance < collision.Definition.StickDistance) // Outside
-                        {
-                            impulse = -dt * collision.Definition.StickForce * result.Distance * (1.0f - result.Distance / collision.Definition.StickDistance) * result.Normal;
-                        }
-
-                        collision.RigidBody.AddForce(ref impulse, ref particle.Position);
+                        impulse = velocityNormal + fixture.FluidProperties.Slip * velocityTangent;
                     }
+                    else if (fixture.FluidProperties.IsSticky && result.Distance < fixture.FluidProperties.StickDistance) // Outside
+                    {
+                        impulse = -dt * fixture.FluidProperties.StickForce * result.Distance * (1.0f - result.Distance / fixture.FluidProperties.StickDistance) * result.Normal;
+                    }
+
+                    fixture.RigidBody.AddForce(ref impulse, ref particle.Position);
                 }
             }
 
             // Apply buffers to bodies
+            for (int i = 0; i < _bodies.Count; ++i)
             {
-                for (int i = 0; i < _bodies.Count; ++i)
+                RigidBody rb = _bodies[i];
+                if (rb.Body.BodyType == BodyType.Dynamic)
                 {
-                    RigidBody rb = _bodies[i];
-                    if (rb.Body.BodyType == BodyType.Dynamic)
+                    rb.RestoreState();
+
+                    rb.bufferForce /= dt;
+                    rb.bufferTorque /= dt;
+
+                    if (Math.Abs(rb.bufferForce.X) > 0.0f && Math.Abs(rb.bufferForce.Y) > 0.0f)
                     {
-                        rb.RestoreState();
-
-                        rb.bufferForce /= dt;
-                        rb.bufferTorque /= dt;
-
-                        if (Math.Abs(rb.bufferForce.X) > 0.0f && Math.Abs(rb.bufferForce.Y) > 0.0f)
-                        {
-                            rb.Body.ApplyLinearImpulse(ref rb.bufferForce);
-                        }
-                        if (Math.Abs(rb.bufferTorque) > 0.0f)
-                        {
-                            rb.Body.ApplyAngularImpulse(rb.bufferTorque);
-                        }
+                        rb.Body.ApplyLinearImpulse(ref rb.bufferForce);
+                    }
+                    if (Math.Abs(rb.bufferTorque) > 0.0f)
+                    {
+                        rb.Body.ApplyAngularImpulse(rb.bufferTorque);
                     }
                 }
             }
@@ -212,58 +167,52 @@ namespace FarseerPhysics.Fluids
             _world.Step(dt);
 
             // Bodies > Fluids
+            for (int ip = 0; ip < Fluid.Particles.Count; ++ip)
             {
-                for (int ip = 0; ip < Fluid.Particles.Count; ++ip)
-                {
-                    FluidParticle particle = Fluid.Particles[ip];
+                FluidParticle particle = Fluid.Particles[ip];
 
-                    if (!particle.IsActive)
-                    {
+                if (!particle.IsActive)
+                {
+                    continue;
+                }
+
+                for (int ic = 0; ic < _fluidCollisions.Count; ++ic)
+                {
+                    Fixture fixture = _fluidCollisions[ic];
+
+                    if (fixture.IsSensor)
                         continue;
+
+                    Feature result;
+                    if (!fixture.RigidBody.Intersect(fixture, ref particle.Position, out result))
+                        continue;
+
+                    Vector2 impulse = new Vector2();
+
+                    if (result.Distance < 0.0f) // Inside
+                    {
+                        Vector2 bodyVelocity = fixture.RigidBody.Body.GetLinearVelocityFromWorldPoint(ref particle.Position);
+
+                        Vector2 velocity = (particle.Position - particle.PreviousPosition) - bodyVelocity * dt;
+
+                        Vector2 velocityNormal = Vector2.Dot(velocity, result.Normal) * result.Normal;
+                        Vector2 velocityTangent = velocity - velocityNormal;
+
+                        impulse = velocityNormal + fixture.FluidProperties.Slip * velocityTangent;
+                    }
+                    else if (fixture.FluidProperties.IsSticky && result.Distance < fixture.FluidProperties.StickDistance) // Outside
+                    {
+                        impulse = -dt * fixture.FluidProperties.StickForce * result.Distance * (1.0f - result.Distance / fixture.FluidProperties.StickDistance) * result.Normal;
                     }
 
-                    for (int ic = 0; ic < _fluidCollisions.Count; ++ic)
+                    particle.Position -= impulse;
+
+                    if (fixture.RigidBody.Intersect(fixture, ref particle.Position, out result))
                     {
-                        Physics.Collisions.Collision collision = _fluidCollisions[ic];
-
-                        if (collision.Fixture.IsSensor)
+                        if (result.Distance < 0.0f) // Still inside
                         {
-                            continue;
-                        }
-
-                        Feature result;
-                        if (!collision.RigidBody.Intersect(collision, ref particle.Position, ref particle.PreviousPosition, out result))
-                        {
-                            continue;
-                        }
-
-                        Vector2 impulse = new Vector2();
-
-                        if (result.Distance < 0.0f) // Inside
-                        {
-                            Vector2 bodyVelocity = collision.RigidBody.Body.GetLinearVelocityFromWorldPoint(ref particle.Position);
-
-                            Vector2 velocity = (particle.Position - particle.PreviousPosition) - bodyVelocity * dt;
-
-                            Vector2 velocityNormal = Vector2.Dot(velocity, result.Normal) * result.Normal;
-                            Vector2 velocityTangent = velocity - velocityNormal;
-
-                            impulse = velocityNormal + collision.Definition.Slip * velocityTangent;
-                        }
-                        else if (collision.Definition.IsSticky && result.Distance < collision.Definition.StickDistance) // Outside
-                        {
-                            impulse = -dt * collision.Definition.StickForce * result.Distance * (1.0f - result.Distance / collision.Definition.StickDistance) * result.Normal;
-                        }
-
-                        particle.Position -= impulse;
-
-                        if (collision.RigidBody.Intersect(collision, ref particle.Position, ref particle.PreviousPosition, out result))
-                        {
-                            if (result.Distance < 0.0f) // Still inside
-                            {
-                                particle.ApplyImpulse((result.Position - particle.Position) / dt);
-                                particle.Position = result.Position;
-                            }
+                            particle.ApplyImpulse((result.Position - particle.Position) / dt);
+                            particle.Position = result.Position;
                         }
                     }
                 }
