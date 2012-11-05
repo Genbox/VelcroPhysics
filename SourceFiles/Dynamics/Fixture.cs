@@ -88,7 +88,7 @@ namespace FarseerPhysics.Dynamics
     /// Fixtures are created via Body.CreateFixture.
     /// Warning: You cannot reuse fixtures.
     /// </summary>
-    public class Fixture : IDisposable
+    public partial class Fixture : IDisposable
     {
         private static int _fixtureIdCounter;
 

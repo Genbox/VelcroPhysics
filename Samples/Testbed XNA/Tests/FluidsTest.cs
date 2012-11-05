@@ -7,6 +7,7 @@ using System;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Fluids;
+using FarseerPhysics.Physics;
 using FarseerPhysics.Physics.Collisions;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -28,34 +29,40 @@ namespace FarseerPhysics.TestBed.Tests
 
             foreach (Fixture fixture in ground.FixtureList)
             {
-                fixture.UserData = new CollisionDefinition() { };
+                fixture.FluidProperties = new FluidCollisionProperties();
+                fixture.RigidBody = new RigidBody(ground);
             }
 
             // Circle
-            {
-                Body body = BodyFactory.CreateBody(World, new Vector2(4.0f, 30.0f));
-                body.BodyType = BodyType.Dynamic;
+            //{
+            //    Body body = BodyFactory.CreateBody(World, new Vector2(4.0f, 30.0f));
+            //    body.BodyType = BodyType.Dynamic;
 
-                Fixture fix = FixtureFactory.AttachCircle(3.0f, 1.0f, body);
-                fix.UserData = new CollisionDefinition { };
-            }
+            //    Fixture fix = FixtureFactory.AttachCircle(3.0f, 1.0f, body);
+            //    fix.FluidProperties = new FluidCollisionProperties();
+            //    fix.RigidBody = new RigidBody(body);
+            //}
 
             // Rectangle
             {
                 Body body = BodyFactory.CreateBody(World, new Vector2(-4.0f, 30.0f));
                 body.BodyType = BodyType.Dynamic;
 
-                Fixture fix = FixtureFactory.AttachRectangle(4.0f, 3.0f, 1.0f, Vector2.Zero, body);
-                fix.UserData = new CollisionDefinition { };
+                Fixture fix = FixtureFactory.AttachRectangle(3.0f, 3.0f, 1.0f, Vector2.Zero, body);
+                fix.FluidProperties = new FluidCollisionProperties();
+                fix.RigidBody = new RigidBody(body);
             }
 
             _fluidsManager = new FluidManager(World);
-            Random random = new Random();
+            //Random random = new Random();
 
-            for (int i = 0; i < 500; ++i)
-            {
-                _fluidsManager.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
-            }
+            //for (int i = 0; i < 500; ++i)
+            //{
+            //    _fluidsManager.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
+            //}
+
+
+            _fluidsManager.Fluid.AddParticle(new Vector2(-4.0f, 30.0f));
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
