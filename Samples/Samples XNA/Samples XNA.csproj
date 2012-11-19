@@ -85,16 +85,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawingSystem\LineBatch.cs" />
-    <Compile Include="DrawingSystem\QuadRender.cs" />
+    <Compile Include="MediaSystem\LineBatch.cs" />
+    <Compile Include="MediaSystem\MediaManager.cs" />
+    <Compile Include="MediaSystem\QuadRender.cs" />
     <Compile Include="Demos\Demo10.cs" />
     <Compile Include="Demos\Demo11.cs" />
     <Compile Include="Demos\Demo12.cs" />
     <Compile Include="Demos\Demo13.cs" />
     <Compile Include="Demos\Demo14.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
-    <Compile Include="DrawingSystem\AssetCreator.cs" />
-    <Compile Include="DrawingSystem\Sprite.cs" />
+    <Compile Include="MediaSystem\AssetCreator.cs" />
+    <Compile Include="MediaSystem\Sprite.cs" />
     <Compile Include="Demos\Demo15.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
     <Compile Include="Demos\Prefabs\Border.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="FarseerPhysicsSamples.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
-    <Compile Include="ScreenSystem\IDemoScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
     <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
     <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
@@ -128,8 +128,6 @@
     <Compile Include="Demos\Demo7.cs" />
     <Compile Include="Demos\Demo8.cs" />
     <Compile Include="Demos\Demo9.cs" />
-    <Compile Include="ScreenSystem\VirtualButton.cs" />
-    <Compile Include="ScreenSystem\VirtualStick.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
