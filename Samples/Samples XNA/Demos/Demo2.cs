@@ -4,14 +4,14 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.DrawingSystem;
-using FarseerPhysics.Samples.Samples.Prefabs;
+using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.Samples
+namespace FarseerPhysics.Demos.Samples
 {
-    internal class SimpleDemo2 : PhysicsGameScreen, IDemoScreen
+    internal class Demo2 : PhysicsGameScreen
     {
         private Border _border;
         private Sprite _rectangleSprite;
@@ -20,12 +20,12 @@ namespace FarseerPhysics.Samples.Samples
 
         #region IDemoScreen Members
 
-        public string GetTitle()
+        public override string GetTitle()
         {
             return "Body with two fixtures";
         }
 
-        public string GetDetails()
+        public override string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a single body with two attached fixtures and shapes.");
@@ -88,12 +88,12 @@ namespace FarseerPhysics.Samples.Samples
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Image,
                                            ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
             // draw second rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Image,
                                            ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);

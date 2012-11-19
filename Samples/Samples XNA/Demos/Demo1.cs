@@ -2,14 +2,14 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.DrawingSystem;
-using FarseerPhysics.Samples.Samples.Prefabs;
+using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.Samples
+namespace FarseerPhysics.Demos.Samples
 {
-    internal class SimpleDemo1 : PhysicsGameScreen, IDemoScreen
+    internal class Demo1 : PhysicsGameScreen
     {
         private Border _border;
         private Body _rectangle;
@@ -17,12 +17,12 @@ namespace FarseerPhysics.Samples.Samples
 
         #region IDemoScreen Members
 
-        public string GetTitle()
+        public override string GetTitle()
         {
             return "Body with a single fixture";
         }
 
-        public string GetDetails()
+        public override string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a single body with one attached fixture and shape.");
@@ -72,9 +72,8 @@ namespace FarseerPhysics.Samples.Samples
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle.Position),
-                                           null,
-                                           Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f,
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position),
+                                           null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f,
                                            SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
             _border.Draw();

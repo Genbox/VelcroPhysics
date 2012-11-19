@@ -6,15 +6,13 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.DrawingSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.Samples.Samples
+namespace FarseerPhysics.SamplesFramework
 {
-    internal class GameDemo1 : PhysicsGameScreen, IDemoScreen
+    internal class GameDemo3 : PhysicsGameScreen, IDemoScreen
     {
         private float _acceleration;
         private Body _board;
@@ -31,8 +29,8 @@ namespace FarseerPhysics.Samples.Samples
         private float _maxSpeed;
 
         private float _scale;
-        private WheelJoint _springBack;
-        private WheelJoint _springFront;
+        private LineJoint _springBack;
+        private LineJoint _springFront;
         private Sprite _teeter;
         private Sprite _wheel;
         private Body _wheelBack;
@@ -43,7 +41,7 @@ namespace FarseerPhysics.Samples.Samples
 
         public string GetTitle()
         {
-            return "Racing Car";
+            return "Platformer";
         }
 
         public string GetDetails()
@@ -68,8 +66,7 @@ namespace FarseerPhysics.Samples.Samples
             World.Gravity = new Vector2(0f, 10f);
 
             HasCursor = false;
-            EnableCameraControl = true;
-            HasVirtualStick = true;
+            EnableCameraControl = false;
 
             _hzFront = 8.5f;
             _hzBack = 5.0f;
@@ -77,7 +74,7 @@ namespace FarseerPhysics.Samples.Samples
             _maxSpeed = 50.0f;
 
 #if WINDOWS_PHONE
-            _scale = 2f / 3f;
+            _scale = 0.6f;
 #else
             _scale = 1f;
 #endif
@@ -136,8 +133,9 @@ namespace FarseerPhysics.Samples.Samples
                 _board.Position = new Vector2(140.0f, -1.0f);
 
                 PolygonShape box = new PolygonShape(1f);
-                box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
-                _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
+                box.SetAsBox(10.0f, 0.25f);
+                _teeter =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
 
                 _board.CreateFixture(box);
 
@@ -156,9 +154,9 @@ namespace FarseerPhysics.Samples.Samples
 
                 const int segmentCount = 20;
                 PolygonShape shape = new PolygonShape(1f);
-                shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
-
-                _bridge = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+                shape.SetAsBox(1.0f, 0.125f);
+                _bridge =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
                 Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
@@ -180,8 +178,9 @@ namespace FarseerPhysics.Samples.Samples
             {
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
-                box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                _box = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
+                box.SetAsBox(0.5f, 0.5f);
+                _box =
+                    new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
@@ -233,24 +232,24 @@ namespace FarseerPhysics.Samples.Samples
                 _wheelFront.CreateFixture(new CircleShape(0.5f, 1f));
 
                 Vector2 axis = new Vector2(0.0f, -1.2f);
-                _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis);
+                _springBack = new LineJoint(_car, _wheelBack, _wheelBack.Position, axis);
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
                 _springBack.MotorEnabled = true;
-                //_springBack.Frequency = _hzBack;
-                //_springBack.DampingRatio = _zeta;
+                _springBack.Frequency = _hzBack;
+                _springBack.DampingRatio = _zeta;
                 World.AddJoint(_springBack);
 
-                _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis);
+                _springFront = new LineJoint(_car, _wheelFront, _wheelFront.Position, axis);
                 _springFront.MotorSpeed = 0.0f;
                 _springFront.MaxMotorTorque = 10.0f;
                 _springFront.MotorEnabled = false;
-                //_springFront.Frequency = _hzFront;
-                //_springFront.DampingRatio = _zeta;
+                _springFront.Frequency = _hzFront;
+                _springFront.DampingRatio = _zeta;
                 World.AddJoint(_springFront);
 
                 _carBody = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/car"),
-                                      AssetCreator.CalculateOrigin(_car) / _scale);
+                                      AssetCreator.CalculateOrigin(_car));
                 _wheel = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/wheel"));
             }
 
@@ -278,17 +277,17 @@ namespace FarseerPhysics.Samples.Samples
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.VirtualState.ThumbSticks.Left.X > 0.5f)
+            if (input.KeyboardState.IsKeyDown(Keys.S))
+            {
+                _acceleration = 0f;
+            }
+            else if (input.KeyboardState.IsKeyDown(Keys.D))
             {
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
             }
-            else if (input.VirtualState.ThumbSticks.Left.X < -0.5f)
+            else if (input.KeyboardState.IsKeyDown(Keys.A))
             {
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
-            }
-            else if (input.VirtualState.Buttons.A == ButtonState.Pressed)
-            {
-                _acceleration = 0f;
             }
             else
             {
