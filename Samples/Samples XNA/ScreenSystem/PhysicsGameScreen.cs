@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
-  public class PhysicsGameScreen : GameScreen, IDemoScreen
+  public class PhysicsGameScreen : GameScreen
   {
     public Camera2D Camera;
     protected DebugViewXNA DebugView;
@@ -300,18 +300,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
       base.Draw(gameTime);
     }
 
-    #region IDemoScreen Members
-
     public virtual string GetTitle()
     {
-      return "GetTitle() not implemented";
+      return "GetTitle() not implemented, override it for a proper title.";
     }
 
     public virtual string GetDetails()
     {
-      return "GetDetails() not implemented";
+      return "GetDetails() not implemented, override it for a proper demo description.";
     }
-
-    #endregion
   }
 }

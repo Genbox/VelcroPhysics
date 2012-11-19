@@ -116,14 +116,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Samples\alphabet.png">
+    <Compile Include="DemoGFX\alphabet.png">
       <Name>alphabet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Samples\object.png">
+    <Compile Include="DemoGFX\object.png">
       <Name>object</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -158,39 +158,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Samples\link.png">
+    <Compile Include="DemoGFX\link.png">
       <Name>link</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Samples\goo.png">
+    <Compile Include="DemoGFX\goo.png">
       <Name>goo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Samples\car.png">
+    <Compile Include="DemoGFX\car.png">
       <Name>car</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Samples\wheel.png">
+    <Compile Include="DemoGFX\wheel.png">
       <Name>wheel</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\socket.png">
-      <Name>socket</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Common\stick.png">
-      <Name>stick</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -201,6 +189,9 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DemoSFX\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

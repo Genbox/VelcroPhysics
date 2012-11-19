@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.DrawingSystem
+namespace FarseerPhysics.Samples.MediaSystem
 {
 /*
   public class QuadRenderComponent : IDisposable

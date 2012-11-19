@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Samples.DrawingSystem;
+using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
