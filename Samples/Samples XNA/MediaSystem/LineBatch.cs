@@ -1,8 +1,14 @@
-﻿using System;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Common;
+using FarseerPhysics.Collision.Shapes;
+#endregion
 
 namespace FarseerPhysics.Samples.MediaSystem
 {
@@ -43,6 +49,8 @@ namespace FarseerPhysics.Samples.MediaSystem
       // set up a new basic effect, and enable vertex colors.
       _basicEffect = new BasicEffect(graphicsDevice);
       _basicEffect.VertexColorEnabled = true;
+
+      _isDisposed = false;
     }
 
     #region IDisposable Members
@@ -60,7 +68,9 @@ namespace FarseerPhysics.Samples.MediaSystem
       if (disposing && !_isDisposed)
       {
         if (_basicEffect != null)
+        {
           _basicEffect.Dispose();
+        }
 
         _isDisposed = true;
       }

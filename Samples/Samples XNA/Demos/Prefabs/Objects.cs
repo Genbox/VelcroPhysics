@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿#region Using System
+using System;
+using System.Collections.Generic;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
@@ -25,14 +32,14 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     private Sprite _object;
     private PhysicsGameScreen _screen;
 
-    public Objects(World world, PhysicsGameScreen screen, Vector2 startPosition, Vector2 endPosition, int count,
-                   float radius, ObjectType type)
+    public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
     {
       _bodies = new List<Body>(count);
       CollidesWith = Category.All;
       CollisionCategories = Category.All;
 
-      for (int i = 0; i < count; ++i)
+      // Physics
+      for (int i = 0; i < count; i++)
       {
         switch (type)
         {
@@ -51,38 +58,29 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         }
       }
 
-      for (int i = 0; i < _bodies.Count; ++i)
+      for (int i = 0; i < _bodies.Count; i++)
       {
         Body body = _bodies[i];
         body.BodyType = BodyType.Dynamic;
         body.Position = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
-        body.Restitution = .7f;
-        body.Friction = .2f;
-        body.CollisionCategories = CollisionCategories;
-        body.CollidesWith = CollidesWith;
+        body.Restitution = 0.7f;
+        body.Friction = 0.2f;
       }
 
-      _screen = screen;
-
       //GFX
-      AssetCreator creator = _screen.ScreenManager.Assets;
       switch (type)
       {
         case ObjectType.Circle:
-          _object = new Sprite(creator.CircleTexture(radius, MaterialType.Dots, Color.DarkRed, 0.8f));
+          _object = new Sprite(AssetCreator.CircleTexture(radius, "dots", Color.DarkRed, 0.8f));
           break;
         case ObjectType.Rectangle:
-          _object =
-              new Sprite(creator.TextureFromVertices(PolygonTools.CreateRectangle(radius / 2f, radius / 2f),
-                                                      MaterialType.Dots, Color.Blue, 0.8f));
+          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(radius / 2f, radius / 2f), "dots", Color.Blue, 0.8f));
           break;
         case ObjectType.Star:
-          _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 0f, 1f),
-                                                            MaterialType.Dots, Color.Yellow, 0.8f));
+          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateGear(radius, 10, 0f, 1f), "dots", Color.Yellow, 0.8f));
           break;
         case ObjectType.Gear:
-          _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 100f, 1f),
-                                                            MaterialType.Dots, Color.DarkGreen, 0.8f));
+          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateGear(radius, 10, 100f, 1f), "dots", Color.DarkGreen, 0.8f));
           break;
       }
     }
@@ -115,14 +113,11 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       }
     }
 
-    public void Draw()
+    public void Draw(SpriteBatch batch)
     {
-      SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
-
-      for (int i = 0; i < _bodies.Count; ++i)
+      foreach (Body body in _bodies)
       {
-        batch.Draw(_object.Image, ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
-                    Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
+        batch.Draw(_object.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
       }
     }
   }

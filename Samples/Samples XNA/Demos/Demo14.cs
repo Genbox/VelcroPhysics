@@ -1,5 +1,14 @@
-﻿using System.Collections.Generic;
+﻿#region Using System
+using System;
 using System.Text;
+using System.Collections.Generic;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
@@ -8,18 +17,17 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using FarseerPhysics.Samples.MediaSystem;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo14 : PhysicsGameScreen
   {
     private Border _border;
     private List<List<Vertices>> _breakableObject;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -56,10 +64,10 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = Vector2.Zero;
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
       _breakableObject = new List<List<Vertices>>();
 
-      Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
+      Texture2D alphabet = MediaManager.GetTexture("alphabet");
 
       uint[] data = new uint[alphabet.Width * alphabet.Height];
       alphabet.GetData(data);
@@ -87,12 +95,7 @@ namespace FarseerPhysics.Demos.Samples
         polygon = SimplifyTools.ReduceByDistance(polygon, 4);
         List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
 
-#if WINDOWS_PHONE
-                const float scale = 0.6f;
-#else
-        const float scale = 1f;
-#endif
-        Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * scale;
+        Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
         foreach (Vertices vertices in triangulated)
         {
           vertices.Scale(ref vertScale);
@@ -124,13 +127,13 @@ namespace FarseerPhysics.Demos.Samples
         AABB aabb = new AABB(ref min, ref max);
 
         World.QueryAABB(fixture =>
-                            {
-                              Vector2 fv = fixture.Body.Position - cursorPos;
-                              fv.Normalize();
-                              fv *= 40;
-                              fixture.Body.ApplyLinearImpulse(ref fv);
-                              return true;
-                            }, ref aabb);
+                        {
+                          Vector2 fv = fixture.Body.Position - cursorPos;
+                          fv.Normalize();
+                          fv *= 40;
+                          fixture.Body.ApplyLinearImpulse(ref fv);
+                          return true;
+                        }, ref aabb);
       }
 
       base.HandleInput(input, gameTime);
@@ -138,9 +141,8 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void Draw(GameTime gameTime)
     {
-      _border.Draw();
-      ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
-      for (int i = 0; i < World.BodyList.Count; ++i)
+      Lines.Begin(Camera.SimProjection, Camera.SimView);
+      for (int i = 0; i < World.BodyList.Count; i++)
       {
         Body b = World.BodyList[i];
         if (b.FixtureList.Count == 1 &&
@@ -154,7 +156,7 @@ namespace FarseerPhysics.Demos.Samples
           {
             temp.Add(MathUtils.Mul(ref t, s.Vertices[j]));
           }
-          ScreenManager.LineBatch.DrawVertices(temp);
+          Lines.DrawVertices(temp);
         }
       }
       for (int i = 0; i < World.BreakableBodyList.Count; ++i)
@@ -169,10 +171,13 @@ namespace FarseerPhysics.Demos.Samples
           {
             temp.Add(MathUtils.Mul(ref t, _breakableObject[index][j][k]));
           }
-          ScreenManager.LineBatch.DrawVertices(temp);
+          Lines.DrawVertices(temp);
         }
       }
-      ScreenManager.LineBatch.End();
+      Lines.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

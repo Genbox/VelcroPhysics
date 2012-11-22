@@ -1,17 +1,24 @@
-﻿using System.Text;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.ScreenSystem;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Samples.Demos.Prefabs;
+using FarseerPhysics.Samples.ScreenSystem;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo12 : PhysicsGameScreen
   {
     private Border _border;
     private TheoJansenWalker _walker;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -46,9 +53,9 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0, 9.82f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _walker = new TheoJansenWalker(World, this, Vector2.Zero);
+      _walker = new TheoJansenWalker(World, Vector2.Zero);
     }
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
@@ -65,8 +72,10 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void Draw(GameTime gameTime)
     {
-      _walker.Draw();
-      _border.Draw();
+      _walker.Draw(Sprites, Lines, Camera);
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

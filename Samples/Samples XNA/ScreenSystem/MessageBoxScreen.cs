@@ -1,7 +1,13 @@
-﻿using System;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Samples.MediaSystem;
+#endregion
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
@@ -15,6 +21,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Texture2D _gradientTexture;
     private string _message;
     private Vector2 _textPosition;
+    private SpriteFont _font;
 
     public MessageBoxScreen(string message)
     {
@@ -35,14 +42,13 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void LoadContent()
     {
-      SpriteFont font = ScreenManager.Fonts.DetailsFont;
-      ContentManager content = ScreenManager.Game.Content;
-      _gradientTexture = content.Load<Texture2D>("Common/popup");
+      MediaManager.GetFont("detailsFont", out _font);
+      MediaManager.GetTexture("popup", out _gradientTexture);
 
       // Center the message text in the viewport.
-      Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+      Viewport viewport = Framework.GraphicsDevice.Viewport;
       Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-      Vector2 textSize = font.MeasureString(_message);
+      Vector2 textSize = _font.MeasureString(_message);
       _textPosition = (viewportSize - textSize) / 2;
 
       // The background includes a border somewhat larger than the text itself.
@@ -53,6 +59,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
                                            (int)_textPosition.Y - vPad,
                                            (int)textSize.X + hPad * 2,
                                            (int)textSize.Y + vPad * 2);
+
+      base.LoadContent();
     }
 
     /// <summary>
@@ -60,8 +68,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      if (input.IsMenuSelect() || input.IsMenuCancel() ||
-          input.IsNewMouseButtonPress(MouseButtons.LeftButton))
+      if (input.IsMenuSelect() || input.IsMenuCancel())
       {
         ExitScreen();
       }
@@ -72,22 +79,19 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void Draw(GameTime gameTime)
     {
-      SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-      SpriteFont font = ScreenManager.Fonts.DetailsFont;
-
       // Fade the popup alpha during transitions.
       Color color = Color.White * TransitionAlpha * (2f / 3f);
 
-      spriteBatch.Begin();
+      Sprites.Begin();
 
       // Draw the background rectangle.
-      spriteBatch.Draw(_gradientTexture, _backgroundRectangle, color);
+      Sprites.Draw(_gradientTexture, _backgroundRectangle, color);
 
       // Draw the message box text.
-      spriteBatch.DrawString(font, _message, _textPosition + Vector2.One, Color.Black);
-      spriteBatch.DrawString(font, _message, _textPosition, Color.White);
+      Sprites.DrawString(_font, _message, _textPosition + Vector2.One, Color.Black);
+      Sprites.DrawString(_font, _message, _textPosition, Color.White);
 
-      spriteBatch.End();
+      Sprites.End();
     }
   }
 }

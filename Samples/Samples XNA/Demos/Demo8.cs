@@ -1,13 +1,20 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo8 : PhysicsGameScreen
   {
@@ -15,7 +22,7 @@ namespace FarseerPhysics.Demos.Samples
     private Body[] _circle = new Body[6];
     private Sprite _circleSprite;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -50,7 +57,7 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
       Vector2 _position = new Vector2(-15f, -8f);
       float _restitution = 0f;
@@ -65,22 +72,21 @@ namespace FarseerPhysics.Demos.Samples
       }
 
       // create sprite based on body
-      _circleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_circle[0].FixtureList[0].Shape,
-                                                                       MaterialType.Waves,
-                                                                       Color.Brown, 1f));
+      _circleSprite = new Sprite(AssetCreator.TextureFromShape(_circle[0].FixtureList[0].Shape, "waves", Color.Brown, 1f));
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
       for (int i = 0; i < 6; ++i)
       {
-        ScreenManager.SpriteBatch.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position),
-                                       null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f,
-                                       SpriteEffects.None, 0f);
+        Sprites.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position),
+                     null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f, SpriteEffects.None, 0f);
       }
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

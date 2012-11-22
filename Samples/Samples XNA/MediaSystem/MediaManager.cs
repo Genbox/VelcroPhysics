@@ -1,11 +1,14 @@
-﻿using System;
+﻿#region Using System
+using System;
 using System.IO;
 using System.Collections.Generic;
-
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+#endregion
 
 namespace FarseerPhysics.Samples.MediaSystem
 {
@@ -32,45 +35,40 @@ namespace FarseerPhysics.Samples.MediaSystem
     private MediaManager(Game game)
       : base(game)
     {
-      // Add all common graphics
-      DirectoryInfo assetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/Common");
-      FileInfo[] fileList = assetFolder.GetFiles("*.xnb");
+      DirectoryInfo currentAssetFolder;
+      FileInfo[] currentFileList;
 
-      for (int i = 0; i < fileList.Length; i++)
+      // Load all graphics
+      string[] gfxFolders = { @"Common", @"DemoGFX", @"Materials" };
+      foreach (string folder in gfxFolders)
       {
-        string textureName = Path.GetFileNameWithoutExtension(fileList[i].Name);
-        _textureList[textureName] = game.Content.Load<Texture2D>(@"Common/" + textureName);
-        _textureList[textureName].Name = textureName;
-      }
-
-      // Add all demo specific graphics      
-      assetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/DemoGFX");
-      fileList = assetFolder.GetFiles("*.xnb");
-
-      for (int i = 0; i < fileList.Length; i++)
-      {
-        string textureName = Path.GetFileNameWithoutExtension(fileList[i].Name);
-        _textureList[textureName] = game.Content.Load<Texture2D>(@"DemoGFX/" + textureName);
-        _textureList[textureName].Name = textureName;
+        currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/" + folder);
+        currentFileList = currentAssetFolder.GetFiles("*.xnb");
+        for (int i = 0; i < currentFileList.Length; i++)
+        {
+          string textureName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+          _textureList[textureName] = game.Content.Load<Texture2D>(folder + "/" + textureName);
+          _textureList[textureName].Name = textureName;
+        }
       }
 
       // Add samples fonts
-      assetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/Fonts");
-      fileList = assetFolder.GetFiles("*.xnb");
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/Fonts");
+      currentFileList = currentAssetFolder.GetFiles("*.xnb");
 
-      for (int i = 0; i < fileList.Length; i++)
+      for (int i = 0; i < currentFileList.Length; i++)
       {
-        string fontName = Path.GetFileNameWithoutExtension(fileList[i].Name);
+        string fontName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
         _fontList[fontName] = game.Content.Load<SpriteFont>(@"Fonts/" + fontName);
       }
 
       // Initialize audio playback
-      assetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/DemoSFX");
-      fileList = assetFolder.GetFiles("*.xnb");
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/DemoSFX");
+      currentFileList = currentAssetFolder.GetFiles("*.xnb");
 
-      for (int i = 0; i < fileList.Length; i++)
+      for (int i = 0; i < currentFileList.Length; i++)
       {
-        string soundName = Path.GetFileNameWithoutExtension(fileList[i].Name);
+        string soundName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
         _soundList[soundName] = game.Content.Load<SoundEffect>(@"DemoSFX/" + soundName);
         _soundList[soundName].Name = soundName;
       }
@@ -92,6 +90,13 @@ namespace FarseerPhysics.Samples.MediaSystem
         _mediaManager = new MediaManager(game);
         game.Components.Add(_mediaManager);
       }
+    }
+
+    public static Texture2D GetTexture(string textureName)
+    {
+      Texture2D texture;
+      GetTexture(textureName, out texture);
+      return texture;
     }
 
     public static void GetTexture(string textureName, out Texture2D texture)

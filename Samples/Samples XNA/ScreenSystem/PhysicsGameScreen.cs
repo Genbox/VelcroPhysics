@@ -1,9 +1,15 @@
-﻿using System;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+#endregion
+#region Using Farseer
 using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+#endregion
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
@@ -41,8 +47,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public override void LoadContent()
     {
-      base.LoadContent();
-
       //We enable diagnostics to show get values for our performance counters.
       Settings.EnableDiagnostics = true;
 
@@ -62,12 +66,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
         DebugView.RemoveFlags(DebugViewFlags.Joint);
         DebugView.DefaultShapeColor = Color.White;
         DebugView.SleepingShapeColor = Color.LightGray;
-        DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
+        DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
       }
 
       if (Camera == null)
       {
-        Camera = new Camera2D(ScreenManager.GraphicsDevice);
+        Camera = new Camera2D(Framework.GraphicsDevice);
       }
       else
       {
@@ -75,7 +79,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       }
 
       // Loading may take a while... so prevent the game from "catching up" once we finished loading
-      ScreenManager.Game.ResetElapsedTime();
+      base.LoadContent();
     }
 
     public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)

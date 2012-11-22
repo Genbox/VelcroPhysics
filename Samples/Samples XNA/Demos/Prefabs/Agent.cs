@@ -1,10 +1,17 @@
-﻿using FarseerPhysics.Common;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
@@ -12,13 +19,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
   {
     private Body _agentBody;
     private Sprite _box;
+    private Sprite _knob;
     private Category _collidesWith;
     private Category _collisionCategories;
-    private Sprite _knob;
     private float _offset;
-    private PhysicsGameScreen _screen;
 
-    public Agent(World world, PhysicsGameScreen screen, Vector2 position)
+    public Agent(World world, Vector2 position)
     {
       _collidesWith = Category.All;
       _collisionCategories = Category.All;
@@ -45,13 +51,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       FixtureFactory.AttachRectangle(0.4f, 1.5f, 1f, new Vector2(0f, -1f), _agentBody);
       FixtureFactory.AttachCircle(0.5f, 0.5f, _agentBody, new Vector2(0f, -2f));
 
-      _screen = screen;
-
       //GFX
-      AssetCreator creator = _screen.ScreenManager.Assets;
-      _box = new Sprite(creator.TextureFromVertices(PolygonTools.CreateRectangle(1.75f, 0.2f),
-                                                     MaterialType.Blank, Color.White, 1f));
-      _knob = new Sprite(creator.CircleTexture(0.5f, MaterialType.Blank, Color.Orange, 1f));
+      _box = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), "blank", Color.White, 1f));
+      _knob = new Sprite(AssetCreator.CircleTexture(0.5f, "blank", Color.Orange, 1f));
+
       _offset = ConvertUnits.ToDisplayUnits(2f);
     }
 
@@ -80,9 +83,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       get { return _agentBody; }
     }
 
-    public void Draw()
+    public void Draw(SpriteBatch batch)
     {
-      SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
       //cross
       batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
                   Color.White, _agentBody.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);

@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿#region Using System
+using System;
 using System.Text;
+using System.Collections.Generic;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo9 : PhysicsGameScreen
   {
@@ -17,7 +24,7 @@ namespace FarseerPhysics.Demos.Samples
     private Body[] _rectangle = new Body[5];
     private Sprite _rectangleSprite;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -52,7 +59,7 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
       _ramps = new List<Body>();
       _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
@@ -63,8 +70,8 @@ namespace FarseerPhysics.Demos.Samples
 
       _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
 
-      float[] friction = new[] { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
-      for (int i = 0; i < 5; ++i)
+      float[] friction = { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
+      for (int i = 0; i < 5; i++)
       {
         _rectangle[i] = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 1f);
         _rectangle[i].BodyType = BodyType.Dynamic;
@@ -73,28 +80,27 @@ namespace FarseerPhysics.Demos.Samples
       }
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle[0].FixtureList[0].Shape,
-                                                                          MaterialType.Squares,
-                                                                          Color.ForestGreen, 0.8f));
+      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "squares", Color.ForestGreen, 0.8f));
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
       for (int i = 0; i < 5; ++i)
       {
-        ScreenManager.SpriteBatch.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
-                                       Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f,
-                                       SpriteEffects.None, 0f);
+        Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                     Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
       }
-      ScreenManager.SpriteBatch.End();
-      ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
-      for (int i = 0; i < _ramps.Count; ++i)
+      Sprites.End();
+      Lines.Begin(Camera.SimProjection, Camera.SimView);
+      for (int i = 0; i < _ramps.Count; i++)
       {
-        ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.DarkGreen);
+        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.DarkGreen);
       }
-      ScreenManager.LineBatch.End();
-      _border.Draw();
+      Lines.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

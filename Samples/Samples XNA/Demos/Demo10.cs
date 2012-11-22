@@ -1,5 +1,13 @@
-﻿using System.Collections.Generic;
+﻿#region Using System
+using System;
 using System.Text;
+using System.Collections.Generic;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
@@ -7,20 +15,18 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using FarseerPhysics.Samples.MediaSystem;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo10 : PhysicsGameScreen
   {
     private Border _border;
     private Body _compound;
-    private Vector2 _origin;
-    private Texture2D _polygonTexture;
-    private float _scale;
+    private Sprite _objectSprite;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -55,63 +61,60 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = Vector2.Zero;
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      //load texture that will represent the physics body
-      _polygonTexture = ScreenManager.Content.Load<Texture2D>("Samples/object");
+      // Load texture that will represent the physics body
+      Texture2D polygonTexture = MediaManager.GetTexture("object");
 
-      //Create an array to hold the data from the texture
-      uint[] data = new uint[_polygonTexture.Width * _polygonTexture.Height];
+      // Create an array to hold the data from the texture
+      uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
 
-      //Transfer the texture data to the array
-      _polygonTexture.GetData(data);
+      // Transfer the texture data to the array
+      polygonTexture.GetData(data);
 
-      //Find the vertices that makes up the outline of the shape in the texture
-      Vertices textureVertices = PolygonTools.CreatePolygon(data, _polygonTexture.Width, false);
+      // Find the vertices that makes up the outline of the shape in the texture
+      Vertices textureVertices = PolygonTools.CreatePolygon(data, polygonTexture.Width, false);
 
-      //The tool return vertices as they were found in the texture.
-      //We need to find the real center (centroid) of the vertices for 2 reasons:
+      // The tool returns vertices as they were found in the texture.
+      // We need to find the real center (centroid) of the vertices for 2 reasons:
 
-      //1. To translate the vertices so the polygon is centered around the centroid.
+      // 1. To translate the vertices so the polygon is centered around the centroid.
       Vector2 centroid = -textureVertices.GetCentroid();
       textureVertices.Translate(ref centroid);
 
-      //2. To draw the texture the correct place.
-      _origin = -centroid;
+      // 2. To draw the texture the correct place.
+      Vector2 origin = -centroid;
 
-      //We simplify the vertices found in the texture.
-      textureVertices = SimplifyTools.ReduceByDistance(textureVertices, 4f);
+      // We simplify the vertices found in the texture.
+      textureVertices = SimplifyTools.DouglasPeuckerSimplify(textureVertices, 0.1f);
 
-      //Since it is a concave polygon, we need to partition it into several smaller convex polygons
+      // Since it is a concave polygon, we need to partition it into several smaller convex polygons
       List<Vertices> list = BayazitDecomposer.ConvexPartition(textureVertices);
 
-      //Adjust the scale of the object for WP7's lower resolution
-#if WINDOWS_PHONE
-            _scale = 0.6f;
-#else
-      _scale = 1f;
-#endif
-
-      //scale the vertices from graphics space to sim space
-      Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * _scale;
+      // Scale the vertices from graphics space to sim space
+      Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
       foreach (Vertices vertices in list)
       {
         vertices.Scale(ref vertScale);
       }
 
-      //Create a single body with multiple fixtures
+      // Create a single body with multiple fixtures
       _compound = BodyFactory.CreateCompoundPolygon(World, list, 1f, BodyType.Dynamic);
       _compound.BodyType = BodyType.Dynamic;
+
+      // GFX
+      _objectSprite = new Sprite(polygonTexture, origin);
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      ScreenManager.SpriteBatch.Draw(_polygonTexture, ConvertUnits.ToDisplayUnits(_compound.Position),
-                                     null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None,
-                                     0f);
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      Sprites.Draw(_objectSprite.Image, ConvertUnits.ToDisplayUnits(_compound.Position),
+                   null, Color.Tomato, _compound.Rotation, _objectSprite.Origin, 1f, SpriteEffects.None, 0f);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

@@ -1,5 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
 
 namespace FarseerPhysics.Samples.MediaSystem
 {

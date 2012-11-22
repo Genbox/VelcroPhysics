@@ -1,6 +1,13 @@
-﻿using System;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Samples.MediaSystem;
+#endregion
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
@@ -23,7 +30,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Vector2 _baseOrigin;
 
     private float _height;
-    private MenuScreen _menu;
 
     /// <summary>
     /// The position at which the entry is drawn. This is set by the MenuScreen
@@ -50,15 +56,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private EntryType _type;
     private float _width;
 
+    private SpriteFont _font;
+
     /// <summary>
     /// Constructs a new menu entry with the specified text.
     /// </summary>
-    public MenuEntry(MenuScreen menu, string text, EntryType type, GameScreen screen)
+    public MenuEntry(string text, EntryType type, GameScreen screen)
     {
       _text = text;
       _screen = screen;
       _type = type;
-      _menu = menu;
       _scale = 0.9f;
       _alpha = 1.0f;
     }
@@ -95,12 +102,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public void Initialize()
     {
-      SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
+      MediaManager.GetFont("menuFont", out _font);
 
-      _baseOrigin = new Vector2(font.MeasureString(Text).X, font.MeasureString("M").Y) * 0.5f;
+      _baseOrigin = new Vector2(_font.MeasureString(Text).X, _font.MeasureString("M").Y) * 0.5f;
 
-      _width = font.MeasureString(Text).X * 0.8f;
-      _height = font.MeasureString("M").Y * 0.8f;
+      _width = _font.MeasureString(Text).X * 0.8f;
+      _height = _font.MeasureString("M").Y * 0.8f;
     }
 
     public bool IsExitItem()
@@ -118,11 +125,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public void Update(bool isSelected, GameTime gameTime)
     {
-      // there is no such thing as a selected item on Windows Phone, so we always
-      // force isSelected to be false
-#if WINDOWS_PHONE
-            isSelected = false;
-#endif
       // When the menu selection changes, entries gradually fade between
       // their selected and deselected appearance, rather than instantly
       // popping to the new state.
@@ -144,11 +146,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <summary>
     /// Draws the menu entry. This can be overridden to customize the appearance.
     /// </summary>
-    public void Draw()
+    public void Draw(SpriteBatch batch)
     {
-      SpriteFont font = _menu.ScreenManager.Fonts.MenuSpriteFont;
-      SpriteBatch batch = _menu.ScreenManager.SpriteBatch;
-
       Color color;
       if (_type == EntryType.Separator)
       {
@@ -162,10 +161,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
       color *= _alpha;
 
       // Draw text, centered on the middle of each line.
-      batch.DrawString(font, _text, _position - _baseOrigin * _scale + Vector2.One,
-                        Color.DarkSlateGray * _alpha * _alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-      batch.DrawString(font, _text, _position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale,
-                        SpriteEffects.None, 0);
+      batch.DrawString(_font, _text, _position - _baseOrigin * _scale + Vector2.One, Color.DarkSlateGray * _alpha * _alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+      batch.DrawString(_font, _text, _position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
     }
 
     /// <summary>
