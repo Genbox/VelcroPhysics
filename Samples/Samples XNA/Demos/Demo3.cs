@@ -1,13 +1,20 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo3 : PhysicsGameScreen
   {
@@ -16,7 +23,7 @@ namespace FarseerPhysics.Demos.Samples
     private Sprite _obstacle;
     private Body[] _obstacles = new Body[5];
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -57,18 +64,12 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, this, new Vector2(-6.9f, -11f));
+      _agent = new Agent(World, new Vector2(-6.9f, -11f));
 
-      LoadObstacles();
-
-      SetUserAgent(_agent.Body, 1000f, 400f);
-    }
-
-    private void LoadObstacles()
-    {
-      for (int i = 0; i < 5; ++i)
+      // Obstacles
+      for (int i = 0; i < 5; i++)
       {
         _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1f, 1f);
         _obstacles[i].IsStatic = true;
@@ -83,23 +84,24 @@ namespace FarseerPhysics.Demos.Samples
       _obstacles[4].Position = new Vector2(-17f, 0f);
 
       // create sprite based on body
-      _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
-                                                                   MaterialType.Dots,
-                                                                   Color.SandyBrown, 0.8f));
+      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "dots", Color.SandyBrown, 0.8f));
+
+      SetUserAgent(_agent.Body, 1000f, 400f);
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
       for (int i = 0; i < 5; ++i)
       {
-        ScreenManager.SpriteBatch.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
-                                       null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
-                                       SpriteEffects.None, 0f);
+        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
       }
-      _agent.Draw();
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      _agent.Draw(Sprites);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

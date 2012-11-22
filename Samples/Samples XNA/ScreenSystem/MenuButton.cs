@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
@@ -23,7 +27,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Vector2 _position;
 
     private float _scale;
-    private GameScreen _screen;
 
     /// <summary>
     /// Tracks a fading selection effect on the entry.
@@ -33,17 +36,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </remarks>
     private float _selectionFade;
 
-    private Texture2D _sprite;
+    private Texture2D _image;
 
     /// <summary>
     /// Constructs a new menu entry with the specified text.
     /// </summary>
-    public MenuButton(Texture2D sprite, bool flip, Vector2 position, GameScreen screen)
+    public MenuButton(Texture2D image, bool flip, Vector2 position)
     {
-      _screen = screen;
       _scale = 1f;
-      _sprite = sprite;
-      _baseOrigin = new Vector2(_sprite.Width / 2f, _sprite.Height / 2f);
+      _image = image;
+      _baseOrigin = new Vector2(_image.Width / 2f, _image.Height / 2f);
       _hover = false;
       _flip = flip;
       Position = position;
@@ -62,11 +64,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       get { return _hover; }
       set { _hover = value; }
-    }
-
-    public GameScreen Screen
-    {
-      get { return _screen; }
     }
 
     /// <summary>
@@ -88,10 +85,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public void Collide(Vector2 position)
     {
-      Rectangle collisonBox = new Rectangle((int)(Position.X - _sprite.Width / 2f),
-                                            (int)(Position.Y - _sprite.Height / 2f),
-                                            (_sprite.Width),
-                                            (_sprite.Height));
+      Rectangle collisonBox = new Rectangle((int)(Position.X - _image.Width / 2f),
+                                            (int)(Position.Y - _image.Height / 2f),
+                                            (_image.Width),
+                                            (_image.Height));
 
       if (collisonBox.Contains((int)position.X, (int)position.Y))
       {
@@ -106,13 +103,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <summary>
     /// Draws the menu entry. This can be overridden to customize the appearance.
     /// </summary>
-    public void Draw()
+    public void Draw(SpriteBatch batch)
     {
-      SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
       Color color = Color.Lerp(Color.White, new Color(255, 210, 0), _selectionFade);
 
-      batch.Draw(_sprite, _position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero,
-                  _scale, _flip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+      batch.Draw(_image, _position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero,
+                 _scale, _flip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
     }
   }
 }

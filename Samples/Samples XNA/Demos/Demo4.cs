@@ -1,13 +1,30 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo4 : PhysicsGameScreen
   {
-    #region IDemoScreen Members
+#if XBOX
+    private const int PyramidBaseBodyCount = 10;
+#else
+    private const int PyramidBaseBodyCount = 14;
+#endif
+
+    private Agent _agent;
+    private Pyramid _pyramid;
+    private Border _border;
+
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -41,39 +58,30 @@ namespace FarseerPhysics.Demos.Samples
 
     #endregion
 
-#if XBOX || WINDOWS_PHONE
-    //Xbox360 / WP7 can't handle as many geometries
-    private const int PyramidBaseBodyCount = 10;
-#else
-    private const int PyramidBaseBodyCount = 14;
-#endif
-
-    private Agent _agent;
-    private Pyramid _pyramid;
-    private Border _border;
-
     public override void LoadContent()
     {
       base.LoadContent();
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, this, new Vector2(5f, -10f));
+      _agent = new Agent(World, new Vector2(5f, -10f));
 
-      _pyramid = new Pyramid(World, this, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
+      _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
 
       SetUserAgent(_agent.Body, 1000f, 400f);
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      _agent.Draw();
-      _pyramid.Draw();
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      _agent.Draw(Sprites);
+      _pyramid.Draw(Sprites);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

@@ -1,6 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region Using System
+using System;
 using System.Text;
+using System.Collections.Generic;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -8,11 +16,9 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo15 : PhysicsGameScreen
   {
@@ -39,7 +45,7 @@ namespace FarseerPhysics.Demos.Samples
     private Body _wheelFront;
     private float _zeta;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -69,18 +75,11 @@ namespace FarseerPhysics.Demos.Samples
 
       HasCursor = false;
       EnableCameraControl = true;
-      HasVirtualStick = true;
 
       _hzFront = 8.5f;
       _hzBack = 5.0f;
       _zeta = 0.85f;
       _maxSpeed = 50.0f;
-
-#if WINDOWS_PHONE
-            _scale = 2f / 3f;
-#else
-      _scale = 1f;
-#endif
 
       // terrain
       _ground = new Body(World);
@@ -137,7 +136,7 @@ namespace FarseerPhysics.Demos.Samples
 
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
-        _teeter = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Pavement, Color.LightGray, 1.2f));
+        _teeter = new Sprite(AssetCreator.TextureFromShape(box, "pavement", Color.LightGray, 1.2f));
 
         _board.CreateFixture(box);
 
@@ -158,7 +157,7 @@ namespace FarseerPhysics.Demos.Samples
         PolygonShape shape = new PolygonShape(1f);
         shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
 
-        _bridge = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+        _bridge = new Sprite(AssetCreator.TextureFromShape(shape, "dots", Color.SandyBrown, 1f));
 
         Body prevBody = _ground;
         for (int i = 0; i < segmentCount; ++i)
@@ -181,7 +180,7 @@ namespace FarseerPhysics.Demos.Samples
         _boxes = new List<Body>();
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
-        _box = new Sprite(ScreenManager.Assets.TextureFromShape(box, MaterialType.Squares, Color.SaddleBrown, 2f));
+        _box = new Sprite(AssetCreator.TextureFromShape(box, "squares", Color.SaddleBrown, 2f));
 
         Body body = new Body(World);
         body.BodyType = BodyType.Dynamic;
@@ -249,9 +248,10 @@ namespace FarseerPhysics.Demos.Samples
         //_springFront.DampingRatio = _zeta;
         World.AddJoint(_springFront);
 
-        _carBody = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/car"),
-                              AssetCreator.CalculateOrigin(_car) / _scale);
-        _wheel = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/wheel"));
+        // GFX
+
+        _carBody = new Sprite(MediaManager.GetTexture("car"), AssetCreator.CalculateOrigin(_car));
+        _wheel = new Sprite(MediaManager.GetTexture("wheel"));
       }
 
       Camera.MinRotation = -0.05f;
@@ -278,15 +278,15 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      if (input.VirtualState.ThumbSticks.Left.X > 0.5f)
+      if (input.GamePadState.ThumbSticks.Left.X > 0.5f)
       {
         _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
       }
-      else if (input.VirtualState.ThumbSticks.Left.X < -0.5f)
+      else if (input.GamePadState.ThumbSticks.Left.X < -0.5f)
       {
         _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
       }
-      else if (input.VirtualState.Buttons.A == ButtonState.Pressed)
+      else if (input.GamePadState.Buttons.A == ButtonState.Pressed)
       {
         _acceleration = 0f;
       }
@@ -300,42 +300,32 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
       // draw car
-      ScreenManager.SpriteBatch.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
-                                     Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
-                                     0f);
-      ScreenManager.SpriteBatch.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
-                                     Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
-                                     0f);
-      ScreenManager.SpriteBatch.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null,
-                                     Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
+      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
+      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
+      Sprites.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
       // draw teeter
-      ScreenManager.SpriteBatch.Draw(_teeter.Image, ConvertUnits.ToDisplayUnits(_board.Position), null,
-                                     Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
+      Sprites.Draw(_teeter.Image, ConvertUnits.ToDisplayUnits(_board.Position), null, Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
       // draw bridge
       for (int i = 0; i < _bridgeSegments.Count; ++i)
       {
-        ScreenManager.SpriteBatch.Draw(_bridge.Image, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
-                                       null,
-                                       Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f,
-                                       SpriteEffects.None, 0f);
+        Sprites.Draw(_bridge.Image, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position), null, Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f, SpriteEffects.None, 0f);
       }
       // draw boxes
       for (int i = 0; i < _boxes.Count; ++i)
       {
-        ScreenManager.SpriteBatch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
-                                       Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+        Sprites.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null, Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
       }
-      ScreenManager.SpriteBatch.End();
+      Sprites.End();
 
-      ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
+      Lines.Begin(Camera.SimProjection, Camera.SimView);
       // draw ground
       for (int i = 0; i < _ground.FixtureList.Count; ++i)
       {
-        ScreenManager.LineBatch.DrawLineShape(_ground.FixtureList[i].Shape, Color.Black);
+        Lines.DrawLineShape(_ground.FixtureList[i].Shape, Color.Black);
       }
-      ScreenManager.LineBatch.End();
+      Lines.End();
       base.Draw(gameTime);
     }
   }

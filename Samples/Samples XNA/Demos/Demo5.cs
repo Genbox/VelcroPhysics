@@ -1,10 +1,18 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo5 : PhysicsGameScreen
   {
@@ -15,7 +23,7 @@ namespace FarseerPhysics.Demos.Samples
     private Objects _rectangles;
     private Objects _stars;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -59,44 +67,44 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = Vector2.Zero;
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
-      _agent = new Agent(World, this, Vector2.Zero);
+      // Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
+      _agent = new Agent(World, Vector2.Zero);
 
-      //Collide with all but stars
+      // Collide with all but stars
       _agent.CollisionCategories = Category.All & ~Category.Cat4;
       _agent.CollidesWith = Category.All & ~Category.Cat4;
 
       Vector2 startPosition = new Vector2(-20f, -11f);
       Vector2 endPosition = new Vector2(20, -11f);
-      _circles = new Objects(World, this, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
+      _circles = new Objects(World, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
 
-      //Collide with itself only
+      // Collide with itself only
       _circles.CollisionCategories = Category.Cat1;
       _circles.CollidesWith = Category.Cat1;
 
       startPosition = new Vector2(-20, 11f);
       endPosition = new Vector2(20, 11f);
-      _rectangles = new Objects(World, this, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
+      _rectangles = new Objects(World, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
 
-      //Collides with itself only
+      // Collides with itself only
       _rectangles.CollisionCategories = Category.Cat2;
       _rectangles.CollidesWith = Category.Cat2;
 
       startPosition = new Vector2(-20, 7);
       endPosition = new Vector2(-20, -7);
-      _gears = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
+      _gears = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
 
-      //Collides with stars
+      // Collides with stars
       _gears.CollisionCategories = Category.Cat3;
       _gears.CollidesWith = Category.Cat3 | Category.Cat4;
 
       startPosition = new Vector2(20, 7);
       endPosition = new Vector2(20, -7);
-      _stars = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
+      _stars = new Objects(World, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
 
-      //Collides with gears
+      // Collides with gears
       _stars.CollisionCategories = Category.Cat4;
       _stars.CollidesWith = Category.Cat3 | Category.Cat4;
 
@@ -105,14 +113,16 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      _agent.Draw();
-      _circles.Draw();
-      _rectangles.Draw();
-      _stars.Draw();
-      _gears.Draw();
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      _agent.Draw(Sprites);
+      _circles.Draw(Sprites);
+      _rectangles.Draw(Sprites);
+      _stars.Draw(Sprites);
+      _gears.Draw(Sprites);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

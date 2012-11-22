@@ -1,17 +1,24 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   public class Demo6 : PhysicsGameScreen
   {
     private Agent _agent;
     private Border _border;
-    private Spider[] _spiders;
+    private JumpySpider[] _spiders;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -51,14 +58,14 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, this, new Vector2(0f, 10f));
-      _spiders = new Spider[8];
+      _agent = new Agent(World, new Vector2(0f, 10f));
+      _spiders = new JumpySpider[8];
 
       for (int i = 0; i < _spiders.Length; i++)
       {
-        _spiders[i] = new Spider(World, this, new Vector2(0f, 8f - (i + 1) * 2f));
+        _spiders[i] = new JumpySpider(World, new Vector2(0f, 8f - (i + 1) * 2f));
       }
 
       SetUserAgent(_agent.Body, 1000f, 400f);
@@ -79,14 +86,16 @@ namespace FarseerPhysics.Demos.Samples
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      _agent.Draw();
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      _agent.Draw(Sprites);
       for (int i = 0; i < _spiders.Length; i++)
       {
-        _spiders[i].Draw();
+        _spiders[i].Draw(Sprites);
       }
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

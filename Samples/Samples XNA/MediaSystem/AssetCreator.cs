@@ -1,16 +1,20 @@
-﻿using System;
+﻿#region Using System
+using System;
 using System.IO;
 using System.Collections.Generic;
-
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
+#endregion
+#region Using Farseer
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+#endregion
 
 namespace FarseerPhysics.Samples.MediaSystem
 {
@@ -40,6 +44,15 @@ namespace FarseerPhysics.Samples.MediaSystem
       _effect = new BasicEffect(game.GraphicsDevice);
     }
 
+    public static void Initialize(Game game)
+    {
+      if (_assetCreator == null && game != null)
+      {
+        _assetCreator = new AssetCreator(game);
+        game.Components.Add(_assetCreator);
+      }
+    }
+
     public static Vector2 CalculateOrigin(Body body)
     {
       Vector2 lowerBound = new Vector2(float.MaxValue);
@@ -60,6 +73,13 @@ namespace FarseerPhysics.Samples.MediaSystem
       return ConvertUnits.ToDisplayUnits(body.Position - lowerBound) + new Vector2(1f);
     }
 
+    public static Texture2D TextureFromShape(Shape shape, string type, Color color, float materialScale)
+    {
+      Texture2D texture;
+      TextureFromShape(shape, type, color, materialScale, out texture);
+      return texture;
+    }
+
     public static void TextureFromShape(Shape shape, string type, Color color, float materialScale, out Texture2D texture)
     {
       texture = null;
@@ -77,6 +97,13 @@ namespace FarseerPhysics.Samples.MediaSystem
             throw new NotSupportedException("The specified shape type is not supported.");
         }
       }
+    }
+
+    public static Texture2D CircleTexture(float radius, string type, Color color, float materialScale)
+    {
+      Texture2D texture;
+      CircleTexture(radius, type, color, materialScale, out texture);
+      return texture;
     }
 
     public static void CircleTexture(float radius, string type, Color color, float materialScale, out Texture2D texture)
@@ -135,6 +162,26 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[type], verticesFill, verticesOutline);
       }
+    }
+
+    public static Texture2D PolygonTexture(Vector2[] vertices, string type, Color color, float materialScale)
+    {
+      Texture2D texture;
+      PolygonTexture(vertices, type, color, materialScale, out texture);
+      return texture;
+    }
+    
+    public static void PolygonTexture(Vector2[] vertices, string type, Color color, float materialScale, out Texture2D texture)
+    {
+      Vertices temp = new Vertices(vertices);
+      PolygonTexture(temp, type, color, materialScale, out texture);
+    }
+
+    public static Texture2D PolygonTexture(Vertices vertices, string type, Color color, float materialScale)
+    {
+      Texture2D texture;
+      PolygonTexture(vertices, type, color, materialScale, out texture);
+      return texture;
     }
 
     public static void PolygonTexture(Vertices vertices, string type, Color color, float materialScale, out Texture2D texture)

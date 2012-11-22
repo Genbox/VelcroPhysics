@@ -1,13 +1,20 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo7 : PhysicsGameScreen
   {
@@ -16,7 +23,7 @@ namespace FarseerPhysics.Demos.Samples
     private Body[] _obstacles = new Body[4];
     private Ragdoll _ragdoll;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -45,7 +52,7 @@ namespace FarseerPhysics.Demos.Samples
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
       sb.AppendLine("  - Drag grabbed object: move mouse / finger");
       return sb.ToString();
-    }
+    } 
 
     #endregion
 
@@ -55,16 +62,10 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0f, 20f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _ragdoll = new Ragdoll(World, this, Vector2.Zero);
-      LoadObstacles();
+      _ragdoll = new Ragdoll(World, Vector2.Zero);
 
-      SetUserAgent(_ragdoll.Body, 1000f, 400f);
-    }
-
-    private void LoadObstacles()
-    {
       for (int i = 0; i < 4; i++)
       {
         _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f);
@@ -77,23 +78,24 @@ namespace FarseerPhysics.Demos.Samples
       _obstacles[3].Position = new Vector2(7f, -5f);
 
       // create sprite based on body
-      _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
-                                                                   MaterialType.Dots,
-                                                                   Color.SandyBrown, 0.8f));
+      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "dots", Color.SandyBrown, 0.8f));
+
+      SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < 4; ++i)
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      for (int i = 0; i < 4; i++)
       {
-        ScreenManager.SpriteBatch.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
-                                       null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
-                                       SpriteEffects.None, 0f);
+        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
       }
-      _ragdoll.Draw();
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      _ragdoll.Draw(Sprites);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }

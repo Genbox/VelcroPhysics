@@ -1,7 +1,13 @@
-﻿using System;
-using FarseerPhysics.Dynamics;
+﻿#region Using System
+using System;
+#endregion
+#region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+#endregion
+#region Using Farseer
+using FarseerPhysics.Dynamics;
+#endregion
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {

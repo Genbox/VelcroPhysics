@@ -1,16 +1,23 @@
-﻿using System.Text;
+﻿#region Using System
+using System;
+using System.Text;
+#endregion
+#region Using XNA
+using Microsoft.Xna.Framework;
+#endregion
+#region Using Farseer
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
+#endregion
 
-namespace FarseerPhysics.Demos.Samples
+namespace FarseerPhysics.Samples.Demos
 {
   internal class Demo13 : PhysicsGameScreen
   {
     private Border _border;
-    private Spiderweb _spiderweb;
+    private WebOfGoo _webOfGoo;
 
-    #region IDemoScreen Members
+    #region Demo description
 
     public override string GetTitle()
     {
@@ -45,22 +52,19 @@ namespace FarseerPhysics.Demos.Samples
 
       World.Gravity = new Vector2(0, 9.82f);
 
-      _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+      _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-#if WINDOWS || XBOX
-      _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
-#elif WINDOWS_PHONE
-      _spiderweb = new Spiderweb(World, Vector2.Zero, ConvertUnits.ToSimUnits(8), 5, 12);
-#endif
-      _spiderweb.LoadContent(ScreenManager.Content);
+      _webOfGoo = new WebOfGoo(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
     }
 
     public override void Draw(GameTime gameTime)
     {
-      ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-      _spiderweb.Draw(ScreenManager.SpriteBatch);
-      ScreenManager.SpriteBatch.End();
-      _border.Draw();
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      _webOfGoo.Draw(Sprites);
+      Sprites.End();
+
+      _border.Draw(Camera.SimProjection, Camera.SimView);
+
       base.Draw(gameTime);
     }
   }
