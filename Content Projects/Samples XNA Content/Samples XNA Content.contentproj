@@ -53,13 +53,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\gradient.png">
-      <Name>gradient</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Common\logo.png">
       <Name>logo</Name>
       <Importer>TextureImporter</Importer>
