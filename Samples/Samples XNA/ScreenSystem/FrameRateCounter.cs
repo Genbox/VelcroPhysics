@@ -28,11 +28,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       _format = new NumberFormatInfo();
       _format.NumberDecimalSeparator = ".";
-#if WINDOWS
-      _position = new Vector2(30, 25);
-#elif XBOX
-      _position = new Vector2(55, 35);
-#endif
+      _position = new Vector2(30, 30);
     }
 
     public void LoadContent()

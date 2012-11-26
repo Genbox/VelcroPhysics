@@ -50,6 +50,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 6;
+    }
+
     #endregion
 
     public override void LoadContent()

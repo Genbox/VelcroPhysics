@@ -10,7 +10,9 @@ namespace FarseerPhysics.Samples.MediaSystem
 {
   public class QuadRenderer : IDisposable
   {
-    private VertexPositionTexture[] _vertices = null;
+    private BasicEffect _basicEffect;
+
+    private VertexPositionColorTexture[] _verticesTexture;
     private short[] _indexBuffer = new short[] { 0, 1, 2, 2, 3, 0 };
 
     private GraphicsDevice _device;
@@ -24,6 +26,18 @@ namespace FarseerPhysics.Samples.MediaSystem
       }
       _device = graphicsDevice;
       _isDisposed = false;
+
+      _verticesTexture = new VertexPositionColorTexture[] { 
+        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 1f)),
+        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 1f)),
+        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 0f)),
+        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 0f)) 
+      };
+
+      _basicEffect = new BasicEffect(graphicsDevice);
+      _basicEffect.VertexColorEnabled = true;
+      _basicEffect.View = Matrix.Identity;
+      _basicEffect.Projection = Matrix.CreateTranslation(-0.5f, -0.5f, 0.0f) * Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0f, 0f, 1f);
     }
 
     #region IDisposable Members
@@ -40,38 +54,56 @@ namespace FarseerPhysics.Samples.MediaSystem
     {
       if (disposing && !_isDisposed)
       {
-        // Clean up effects here
+        if (_basicEffect != null)
+        {
+          _basicEffect.Dispose();
+        }
 
         _isDisposed = true;
       }
     }
 
-    public void LoadContent()
+    public void Render(Vector2 v1, Vector2 v2, Texture2D texture, params Color[] color)
     {
-      _vertices = new VertexPositionTexture[] { 
-        new VertexPositionTexture(new Vector3(0,0,1), new Vector2(1,1)),
-        new VertexPositionTexture(new Vector3(0,0,1),new Vector2(0,1)),
-        new VertexPositionTexture(new Vector3(0,0,1),new Vector2(0,0)),
-        new VertexPositionTexture(new Vector3(0,0,1),new Vector2(1,0)) 
-      };
+      _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
+      _device.RasterizerState = RasterizerState.CullNone;
+      if (texture == null)
+      {
+        _basicEffect.TextureEnabled = false;
+      }
+      else
+      {
+        _basicEffect.Texture = texture;
+        _basicEffect.TextureEnabled = true;
+      }
 
-    }
+      _verticesTexture[0].Position.X = v2.X;
+      _verticesTexture[0].Position.Y = v1.Y;
 
-    public void Render(Vector2 v1, Vector2 v2)
-    {
-      _vertices[0].Position.X = v2.X;
-      _vertices[0].Position.Y = v1.Y;
+      _verticesTexture[1].Position.X = v1.X;
+      _verticesTexture[1].Position.Y = v1.Y;
 
-      _vertices[1].Position.X = v1.X;
-      _vertices[1].Position.Y = v1.Y;
+      _verticesTexture[2].Position.X = v1.X;
+      _verticesTexture[2].Position.Y = v2.Y;
 
-      _vertices[2].Position.X = v1.X;
-      _vertices[2].Position.Y = v2.Y;
+      _verticesTexture[3].Position.X = v2.X;
+      _verticesTexture[3].Position.Y = v2.Y;
 
-      _vertices[3].Position.X = v2.X;
-      _vertices[3].Position.Y = v2.Y;
+      for (int i = 0; i < 4; i++)
+      {
+        if (color.Length > 0)
+        {
+          _verticesTexture[i].Color = color[i % color.Length];
+        }
+        else
+        {
+          _verticesTexture[i].Color = Color.White;
+        }
+      }
 
-      _device.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, _vertices, 0, 4, _indexBuffer, 0, 2);
+      _basicEffect.CurrentTechnique.Passes[0].Apply();
+      _basicEffect.CurrentTechnique.Passes[0].Apply();
+      _device.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _verticesTexture, 0, 4, _indexBuffer, 0, 2);
     }
   }
 }

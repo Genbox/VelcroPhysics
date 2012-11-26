@@ -43,6 +43,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 12;
+    }
+
     #endregion
 
     public override void LoadContent()

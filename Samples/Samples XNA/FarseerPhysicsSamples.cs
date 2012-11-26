@@ -48,6 +48,7 @@ namespace FarseerPhysics.Samples
     private List<GameScreen> _screensToUpdate = new List<GameScreen>();
 
     private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
+    private List<RenderTarget2D> _previews = new List<RenderTarget2D>();
 
     private bool _isExiting;
     private bool _showFPS;
@@ -90,26 +91,22 @@ namespace FarseerPhysics.Samples
 
       _spriteBatch = new SpriteBatch(GraphicsDevice);
       _lineBatch = new LineBatch(GraphicsDevice);
+      _quadRenderer = new QuadRenderer(GraphicsDevice);
 
       _input.LoadContent(GraphicsDevice.Viewport);
       _counter.LoadContent();
 
       MenuScreen menuScreen = new MenuScreen("Farseer Physics Samples");
-      menuScreen.AddMenuItem("Demos", EntryType.Separator, null);
 
       Assembly SamplesFramework = Assembly.GetExecutingAssembly();
-
       foreach (Type SampleType in SamplesFramework.GetTypes())
       {
         if (SampleType.IsSubclassOf(typeof(PhysicsGameScreen)))
         {
           PhysicsGameScreen DemoScreen = SamplesFramework.CreateInstance(SampleType.ToString()) as PhysicsGameScreen;
-          menuScreen.AddMenuItem(DemoScreen.GetTitle(), EntryType.Screen, DemoScreen);
+          menuScreen.AddMenuItem(DemoScreen);
         }
       }
-
-      menuScreen.AddMenuItem("", EntryType.Separator, null);
-      menuScreen.AddMenuItem("Exit", EntryType.ExitItem, null);
 
       AddScreen(new BackgroundScreen());
       AddScreen(menuScreen);

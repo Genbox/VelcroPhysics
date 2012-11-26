@@ -21,7 +21,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public LogoScreen(TimeSpan duration)
     {
       _duration = duration;
-      TransitionOffTime = TimeSpan.FromSeconds(2.0);
+      TransitionOffTime = TimeSpan.FromSeconds(0.6);
     }
 
     /// <summary>

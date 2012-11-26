@@ -55,6 +55,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 1;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -71,7 +76,7 @@ namespace FarseerPhysics.Samples.Demos
       SetUserAgent(_rectangle, 100f, 100f);
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle.FixtureList[0].Shape, "squares", Color.Orange, 1f));
+      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle.FixtureList[0].Shape, "square", AssetCreator.Blue, AssetCreator.Gold, AssetCreator.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)

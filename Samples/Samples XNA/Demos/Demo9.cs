@@ -51,6 +51,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 9;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -80,7 +85,7 @@ namespace FarseerPhysics.Samples.Demos
       }
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "squares", Color.ForestGreen, 0.8f));
+      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", AssetCreator.Green, AssetCreator.Lime, AssetCreator.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)
@@ -95,7 +100,7 @@ namespace FarseerPhysics.Samples.Demos
       Lines.Begin(Camera.SimProjection, Camera.SimView);
       for (int i = 0; i < _ramps.Count; i++)
       {
-        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.DarkGreen);
+        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, AssetCreator.Teal);
       }
       Lines.End();
 

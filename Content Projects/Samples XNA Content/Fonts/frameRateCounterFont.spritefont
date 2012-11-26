@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
 	<Asset Type="Graphics:FontDescription">
-		<FontName>Arial</FontName>
-		<Size>10</Size>
+		<FontName>Segoe UI</FontName>
+		<Size>12</Size>
 		<Spacing>2</Spacing>
 		<Style>Bold</Style>
 		<CharacterRegions>
@@ -15,20 +15,8 @@
 				<End>p</End>
 			</CharacterRegion>
 			<CharacterRegion>
-				<Start>t</Start>
-				<End>t</End>
-			</CharacterRegion>
-			<CharacterRegion>
-				<Start>n</Start>
-				<End>n</End>
-			</CharacterRegion>
-			<CharacterRegion>
 				<Start>s</Start>
 				<End>s</End>
-			</CharacterRegion>
-			<CharacterRegion>
-				<Start>:</Start>
-				<End>:</End>
 			</CharacterRegion>
 			<CharacterRegion>
 				<Start> </Start>

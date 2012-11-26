@@ -56,6 +56,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 11;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -107,10 +112,10 @@ namespace FarseerPhysics.Samples.Demos
       PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
 
       // GFX
-      _bridgeBox = new Sprite(AssetCreator.TextureFromShape(shape, "dots", Color.SandyBrown, 1f));
-      _softBodyBox = new Sprite(AssetCreator.TextureFromShape(shapes[0], "blank", Color.Silver * 0.8f, 1f));
+      _bridgeBox = new Sprite(AssetCreator.TextureFromShape(shape, AssetCreator.Orange, AssetCreator.Brown));
+      _softBodyBox = new Sprite(AssetCreator.TextureFromShape(shapes[0], AssetCreator.Green, AssetCreator.Black));
       _softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
-      _softBodyCircle = new Sprite(AssetCreator.TextureFromShape(shapes[1], "waves", Color.Silver, 1f));
+      _softBodyCircle = new Sprite(AssetCreator.TextureFromShape(shapes[1], AssetCreator.Lime, AssetCreator.Grey));
     }
 
     public override void Draw(GameTime gameTime)

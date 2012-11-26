@@ -60,7 +60,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       PolygonShape box = new PolygonShape(1f);
       box.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
 
-      _body = new Sprite(AssetCreator.TextureFromShape(box, "blank", Color.Beige, 1f));
+      _body = new Sprite(AssetCreator.TextureFromShape(box, AssetCreator.Sky, AssetCreator.Black));
 
       _chassis = BodyFactory.CreateBody(world);
       _chassis.BodyType = BodyType.Dynamic;
@@ -71,7 +71,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
       // Wheel
       CircleShape circle = new CircleShape(1.6f, 1f);
-      _engine = new Sprite(AssetCreator.TextureFromShape(circle, "waves", Color.Beige * 0.8f, 1f));
+      _engine = new Sprite(AssetCreator.TextureFromShape(circle, "stripe", AssetCreator.Sky, AssetCreator.Sunset, AssetCreator.Black, 3f));
 
       _wheel = BodyFactory.CreateBody(world);
       _wheel.BodyType = BodyType.Dynamic;
@@ -110,10 +110,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         new Vector2(0.6f, -2.9f)
       };
 
-      _leftShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[3], points[4] }, "blank", Color.Beige * 0.8f, 1f));
+      _leftShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[3], points[4] }, AssetCreator.Sky, AssetCreator.Black));
       _leftShoulder.Origin = AssetCreator.CalculateOrigin(_leftShoulders[0]);
 
-      _leftLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[1], points[2] }, "blank", Color.IndianRed * 0.8f, 1f));
+      _leftLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[1], points[2] }, AssetCreator.Sky, AssetCreator.Black));
       _leftLeg.Origin = AssetCreator.CalculateOrigin(_leftLegs[0]);
 
       for (int i = 0; i < points.Length; i++)
@@ -121,10 +121,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         points[i] *= -1f;
       }
 
-      _rightShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[4], points[3] }, "blank", Color.Beige * 0.8f, 1f));
+      _rightShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[4], points[3] }, AssetCreator.Sky, AssetCreator.Black));
       _rightShoulder.Origin = AssetCreator.CalculateOrigin(_rightShoulders[0]);
 
-      _rightLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[2], points[1] }, "blank", Color.IndianRed * 0.8f, 1f));
+      _rightLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[2], points[1] }, AssetCreator.Sky, AssetCreator.Black));
       _rightLeg.Origin = AssetCreator.CalculateOrigin(_rightLegs[0]);
     }
 
@@ -232,16 +232,6 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
       batch.Begin(0, null, null, null, null, null, camera.View);
       batch.Draw(_body.Image, ConvertUnits.ToDisplayUnits(_chassis.Position), null, Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
-      batch.End();
-
-      lines.Begin(camera.SimProjection, camera.SimView);
-      for (int i = 0; i < _walkerJoints.Count; ++i)
-      {
-        lines.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, Color.DarkRed);
-      }
-      lines.End();
-
-      batch.Begin(0, null, null, null, null, null, camera.View);
       for (int i = 0; i < 3; ++i)
       {
         batch.Draw(_leftLeg.Image, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null, Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
@@ -251,6 +241,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       }
       batch.Draw(_engine.Image, ConvertUnits.ToDisplayUnits(_wheel.Position), null, Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
       batch.End();
+
+      lines.Begin(camera.SimProjection, camera.SimView);
+      for (int i = 0; i < _walkerJoints.Count; ++i)
+      {
+        lines.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, AssetCreator.Grey);
+      }
+      lines.End();
     }
   }
 }
