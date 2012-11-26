@@ -54,7 +54,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       }
 
       //GFX
-      _box = new Sprite(AssetCreator.PolygonTexture(rect, "dots", Color.SaddleBrown, 2f));
+      _box = new Sprite(AssetCreator.PolygonTexture(rect, "square", AssetCreator.Blue, AssetCreator.Gold, AssetCreator.Black, 1f));
     }
 
     public void Draw(SpriteBatch batch)

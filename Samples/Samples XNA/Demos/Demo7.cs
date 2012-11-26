@@ -52,7 +52,12 @@ namespace FarseerPhysics.Samples.Demos
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
       sb.AppendLine("  - Drag grabbed object: move mouse / finger");
       return sb.ToString();
-    } 
+    }
+
+    public override int GetIndex()
+    {
+      return 7;
+    }
 
     #endregion
 
@@ -78,7 +83,7 @@ namespace FarseerPhysics.Samples.Demos
       _obstacles[3].Position = new Vector2(7f, -5f);
 
       // create sprite based on body
-      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "dots", Color.SandyBrown, 0.8f));
+      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", AssetCreator.Green, AssetCreator.Teal, AssetCreator.Black, 1.5f));
 
       SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }

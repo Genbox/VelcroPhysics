@@ -52,8 +52,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       FixtureFactory.AttachCircle(0.5f, 0.5f, _agentBody, new Vector2(0f, -2f));
 
       //GFX
-      _box = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), "blank", Color.White, 1f));
-      _knob = new Sprite(AssetCreator.CircleTexture(0.5f, "blank", Color.Orange, 1f));
+      _box = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), Color.White, AssetCreator.Black));
+      _knob = new Sprite(AssetCreator.CircleTexture(0.5f, "square", AssetCreator.Grey, AssetCreator.Gold, AssetCreator.Black, 1f));
 
       _offset = ConvertUnits.ToDisplayUnits(2f);
     }

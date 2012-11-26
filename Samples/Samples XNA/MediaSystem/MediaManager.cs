@@ -26,7 +26,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       get { return _soundVolume; }
       set
       {
-        _soundVolume = (int)MathHelper.Clamp(_soundVolume, 0f, 100f);
+        _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
         SoundEffect.MasterVolume = _soundVolume / 100f;
       }
     }
@@ -39,7 +39,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       FileInfo[] currentFileList;
 
       // Load all graphics
-      string[] gfxFolders = { @"Common", @"DemoGFX", @"Materials" };
+      string[] gfxFolders = { @"Common", @"DemoGFX" };
       foreach (string folder in gfxFolders)
       {
         currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/" + folder);

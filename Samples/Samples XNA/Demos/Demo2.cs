@@ -58,6 +58,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 2;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -86,7 +91,7 @@ namespace FarseerPhysics.Samples.Demos
       SetUserAgent(_rectangles, 200f, 200f);
 
       // create sprite based on rectangle fixture
-      _rectangleSprite = new Sprite(AssetCreator.PolygonTexture(rectangle1, "squares", Color.Orange, 1f));
+      _rectangleSprite = new Sprite(AssetCreator.PolygonTexture(rectangle1, "square", AssetCreator.Blue, AssetCreator.Gold, AssetCreator.Black, 1f));
       _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
     }
 

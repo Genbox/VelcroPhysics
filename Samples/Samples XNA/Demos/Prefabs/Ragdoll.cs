@@ -187,12 +187,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       world.AddJoint(jointRightLegBody);
 
       // GFX
-      _face = new Sprite(AssetCreator.CircleTexture(0.9f, "squares", Color.Gray, 1f));
-      _torso = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2), "squares", Color.LightSlateGray, 0.8f));
-      _upperArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "squares", Color.DimGray, 0.8f));
-      _lowerArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "squares", Color.DarkSlateGray, 0.8f));
-      _upperLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "squares", Color.DimGray, 0.8f));
-      _lowerLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "squares", Color.DarkSlateGray, 0.8f));
+      _face = new Sprite(AssetCreator.CircleTexture(0.9f, "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Grey, 1f));
+      _torso = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2), "stripe", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 2.0f));
+      _upperArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
+      _lowerArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
+      _upperLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
+      _lowerLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
     }
 
     public Body Body

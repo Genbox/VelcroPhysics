@@ -56,6 +56,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 3;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -84,7 +89,7 @@ namespace FarseerPhysics.Samples.Demos
       _obstacles[4].Position = new Vector2(-17f, 0f);
 
       // create sprite based on body
-      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "dots", Color.SandyBrown, 0.8f));
+      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", AssetCreator.Gold, AssetCreator.Black, AssetCreator.Black, 1.5f));
 
       SetUserAgent(_agent.Body, 1000f, 400f);
     }

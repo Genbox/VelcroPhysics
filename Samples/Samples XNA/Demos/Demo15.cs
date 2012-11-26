@@ -65,6 +65,11 @@ namespace FarseerPhysics.Samples.Demos
       return sb.ToString();
     }
 
+    public override int GetIndex()
+    {
+      return 15;
+    }
+
     #endregion
 
     public override void LoadContent()
@@ -136,7 +141,7 @@ namespace FarseerPhysics.Samples.Demos
 
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
-        _teeter = new Sprite(AssetCreator.TextureFromShape(box, "pavement", Color.LightGray, 1.2f));
+        _teeter = new Sprite(AssetCreator.TextureFromShape(box, "stripe", AssetCreator.Gold, AssetCreator.Black, AssetCreator.Black, 1f));
 
         _board.CreateFixture(box);
 
@@ -157,7 +162,7 @@ namespace FarseerPhysics.Samples.Demos
         PolygonShape shape = new PolygonShape(1f);
         shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
 
-        _bridge = new Sprite(AssetCreator.TextureFromShape(shape, "dots", Color.SandyBrown, 1f));
+        _bridge = new Sprite(AssetCreator.TextureFromShape(shape, AssetCreator.Gold, AssetCreator.Black));
 
         Body prevBody = _ground;
         for (int i = 0; i < segmentCount; ++i)
@@ -180,7 +185,7 @@ namespace FarseerPhysics.Samples.Demos
         _boxes = new List<Body>();
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
-        _box = new Sprite(AssetCreator.TextureFromShape(box, "squares", Color.SaddleBrown, 2f));
+        _box = new Sprite(AssetCreator.TextureFromShape(box, "square", AssetCreator.Sky, AssetCreator.Sunset, AssetCreator.Black, 1f));
 
         Body body = new Body(World);
         body.BodyType = BodyType.Dynamic;

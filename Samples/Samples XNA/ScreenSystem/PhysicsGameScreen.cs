@@ -304,6 +304,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
       base.Draw(gameTime);
     }
 
+    #region Demo description
+
     public virtual string GetTitle()
     {
       return "GetTitle() not implemented, override it for a proper title.";
@@ -313,5 +315,13 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       return "GetDetails() not implemented, override it for a proper demo description.";
     }
+
+    public virtual int GetIndex()
+    {
+      // Defines the demo order on the menu screen
+      return -1;
+    }
+
+    #endregion
   }
 }

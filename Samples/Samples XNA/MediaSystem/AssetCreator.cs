@@ -20,6 +20,26 @@ namespace FarseerPhysics.Samples.MediaSystem
 {
   public class AssetCreator : GameComponent
   {
+    public static Color Gold = new Color(246, 187, 53);
+    public static Color Red = new Color(215, 1, 51);
+    public static Color Green = new Color(102, 158, 68);
+    public static Color Orange = new Color(218, 114, 44);
+    public static Color Brown = new Color(123, 40, 11);
+
+    public static Color Beige = new Color(233, 229, 217);
+    public static Color Cream = new Color(246, 87, 84);
+    public static Color Lime = new Color(146, 201, 43);
+    public static Color Teal = new Color(66, 126, 120);
+    public static Color Grey = new Color(73, 69, 69);
+
+    public static Color Black = new Color(28, 19, 11);
+    public static Color Sunset = new Color(194, 73, 24);
+    public static Color Sky = new Color(185, 216, 221);
+
+    public static Color Cyan = new Color(50, 201, 251);
+    public static Color Blue = new Color(44, 138, 153);
+    public static Color Ocean = new Color(57, 143, 171);
+
     private const int CircleSegments = 32;
 
     private static AssetCreator _assetCreator = null;
@@ -73,14 +93,24 @@ namespace FarseerPhysics.Samples.MediaSystem
       return ConvertUnits.ToDisplayUnits(body.Position - lowerBound) + new Vector2(1f);
     }
 
-    public static Texture2D TextureFromShape(Shape shape, string type, Color color, float materialScale)
+    public static Texture2D TextureFromShape(Shape shape, Color color, Color outlineColor)
+    {
+      return TextureFromShape(shape, "blank", color, color, outlineColor, 1f);
+    }
+
+    public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
       Texture2D texture;
-      TextureFromShape(shape, type, color, materialScale, out texture);
+      TextureFromShape(shape, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
       return texture;
     }
 
-    public static void TextureFromShape(Shape shape, string type, Color color, float materialScale, out Texture2D texture)
+    public static void TextureFromShape(Shape shape, Color color, Color outlineColor, out Texture2D texture)
+    {
+      TextureFromShape(shape, "blank", color, color, outlineColor, 1f, out texture);
+    }
+
+    public static void TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
     {
       texture = null;
       if (_assetCreator != null)
@@ -88,10 +118,10 @@ namespace FarseerPhysics.Samples.MediaSystem
         switch (shape.ShapeType)
         {
           case ShapeType.Circle:
-            CircleTexture(((CircleShape)shape).Radius, type, color, materialScale, out texture);
+            CircleTexture(((CircleShape)shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
             break;
           case ShapeType.Polygon:
-            PolygonTexture(((PolygonShape)shape).Vertices, type, color, materialScale, out texture);
+            PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
             break;
           default:
             throw new NotSupportedException("The specified shape type is not supported.");
@@ -99,21 +129,31 @@ namespace FarseerPhysics.Samples.MediaSystem
       }
     }
 
-    public static Texture2D CircleTexture(float radius, string type, Color color, float materialScale)
+    public static Texture2D CircleTexture(float radius, Color color, Color outlineColor)
+    {
+      return CircleTexture(radius, "blank", color, color, outlineColor, 1f);
+    }
+
+    public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
       Texture2D texture;
-      CircleTexture(radius, type, color, materialScale, out texture);
+      CircleTexture(radius, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
       return texture;
     }
 
-    public static void CircleTexture(float radius, string type, Color color, float materialScale, out Texture2D texture)
+    public static void CircleTexture(float radius, Color color, Color outlineColor, out Texture2D texture)
+    {
+      CircleTexture(radius, "blank", color, color, outlineColor, 1f, out  texture);
+    }
+
+    public static void CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
     {
       texture = null;
       if (_assetCreator != null)
       {
-        if (!_materials.ContainsKey(type))
+        if (!_materials.ContainsKey(pattern))
         {
-          type = "blank";
+          pattern = "blank";
         }
 
         VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
@@ -123,7 +163,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         float theta = segmentSize;
 
         radius = ConvertUnits.ToDisplayUnits(radius);
-        materialScale /= _materials[type].Width;
+        materialScale /= _materials[pattern].Width;
 
         Vector2 start = new Vector2(radius, 0f);
 
@@ -138,60 +178,86 @@ namespace FarseerPhysics.Samples.MediaSystem
           verticesFill[3 * i].TextureCoordinate = start * materialScale;
           verticesFill[3 * i + 1].TextureCoordinate = p1 * materialScale;
           verticesFill[3 * i + 2].TextureCoordinate = p2 * materialScale;
-          verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = color;
+          verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = mainColor;
           // outline vertices
           if (i == 0)
           {
             verticesOutline[0].Position = new Vector3(start, 0f);
             verticesOutline[1].Position = new Vector3(p1, 0f);
-            verticesOutline[0].Color = verticesOutline[1].Color = Color.Black;
+            verticesOutline[0].Color = verticesOutline[1].Color = outlineColor;
           }
           if (i == CircleSegments - 3)
           {
             verticesOutline[2 * CircleSegments - 2].Position = new Vector3(p2, 0f);
             verticesOutline[2 * CircleSegments - 1].Position = new Vector3(start, 0f);
-            verticesOutline[2 * CircleSegments - 2].Color =
-                verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
+            verticesOutline[2 * CircleSegments - 2].Color = verticesOutline[2 * CircleSegments - 1].Color = outlineColor;
           }
           verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
           verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
-          verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = Color.Black;
+          verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = outlineColor;
 
           theta += segmentSize;
         }
 
-        texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[type], verticesFill, verticesOutline);
+        if (pattern == "blank")
+        {
+          texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), null, Color.Transparent, verticesFill, verticesOutline);
+        }
+        else
+        {
+          texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[pattern], patternColor, verticesFill, verticesOutline);
+        }
       }
     }
 
-    public static Texture2D PolygonTexture(Vector2[] vertices, string type, Color color, float materialScale)
+    public static Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
+    {
+      return PolygonTexture(vertices, "blank", color, color, outlineColor, 1f);
+    }
+
+    public static Texture2D PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
       Texture2D texture;
-      PolygonTexture(vertices, type, color, materialScale, out texture);
+      PolygonTexture(vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
       return texture;
     }
-    
-    public static void PolygonTexture(Vector2[] vertices, string type, Color color, float materialScale, out Texture2D texture)
+
+    public static void PolygonTexture(Vector2[] vertices, Color color, Color outlineColor, out Texture2D texture)
+    {
+      PolygonTexture(vertices, "blank", color, color, outlineColor, 1f, out texture);
+    }
+
+    public static void PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
     {
       Vertices temp = new Vertices(vertices);
-      PolygonTexture(temp, type, color, materialScale, out texture);
+      PolygonTexture(temp, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
     }
 
-    public static Texture2D PolygonTexture(Vertices vertices, string type, Color color, float materialScale)
+    public static Texture2D PolygonTexture(Vertices vertices, Color color, Color outlineColor)
+    {
+      return PolygonTexture(vertices, "blank", color, color, outlineColor, 1f);
+    }
+
+    public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
       Texture2D texture;
-      PolygonTexture(vertices, type, color, materialScale, out texture);
+      PolygonTexture(vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
       return texture;
     }
 
-    public static void PolygonTexture(Vertices vertices, string type, Color color, float materialScale, out Texture2D texture)
+    public static void PolygonTexture(Vertices vertices, Color color, Color outlineColor, out Texture2D texture)
+    {
+      PolygonTexture(vertices, "blank", color, color, outlineColor, 1f, out  texture);
+    }
+
+    public static void PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
     {
       texture = null;
       if (_assetCreator != null)
       {
-        if (!_materials.ContainsKey(type))
+        if (!_materials.ContainsKey(pattern))
         {
-          type = "blank";
+          pattern = "blank";
         }
 
         // copy vertices
@@ -219,7 +285,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
 
-        materialScale /= _materials[type].Width;
+        materialScale /= _materials[pattern].Width;
 
         for (int i = 0; i < decomposedVertices.Count; i++)
         {
@@ -233,7 +299,7 @@ namespace FarseerPhysics.Samples.MediaSystem
             verticesFill[i][3 * j].TextureCoordinate = decomposedVertices[i][0] * materialScale;
             verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVertices[i].NextVertex(j) * materialScale;
             verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVertices[i].NextVertex(j + 1) * materialScale;
-            verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
+            verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = mainColor;
           }
         }
 
@@ -243,28 +309,36 @@ namespace FarseerPhysics.Samples.MediaSystem
         {
           verticesOutline[2 * i].Position = new Vector3(scaledVertices[i], 0f);
           verticesOutline[2 * i + 1].Position = new Vector3(scaledVertices.NextVertex(i), 0f);
-          verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = Color.Black;
+          verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = outlineColor;
         }
 
         Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
-        texture = _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[type], verticesFill, verticesOutline);
+
+        if (pattern == "blank")
+        {
+          texture = _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, null, Color.Transparent, verticesFill, verticesOutline);
+        }
+        else
+        {
+          texture = _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[pattern], patternColor, verticesFill, verticesOutline);
+        }
       }
     }
 
-    private Texture2D RenderTexture(int width, int height, Texture2D material, VertexPositionColorTexture[] verticesFill, VertexPositionColor[] verticesOutline)
+    private Texture2D RenderTexture(int width, int height, Texture2D pattern, Color patternColor, VertexPositionColorTexture[] verticesFill, VertexPositionColor[] verticesOutline)
     {
       List<VertexPositionColorTexture[]> fill = new List<VertexPositionColorTexture[]>(1);
       fill.Add(verticesFill);
-      return RenderTexture(width, height, material, fill, verticesOutline);
+      return RenderTexture(width, height, pattern, patternColor, fill, verticesOutline);
     }
 
-    private Texture2D RenderTexture(int width, int height, Texture2D material, List<VertexPositionColorTexture[]> verticesFill, VertexPositionColor[] verticesOutline)
+    private Texture2D RenderTexture(int width, int height, Texture2D pattern, Color patternColor, List<VertexPositionColorTexture[]> verticesFill, VertexPositionColor[] verticesOutline)
     {
       Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
       PresentationParameters pp = Game.GraphicsDevice.PresentationParameters;
       RenderTarget2D texture = new RenderTarget2D(Game.GraphicsDevice, width + 2, height + 2, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
       Game.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-      Game.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+      Game.GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
 
       Game.GraphicsDevice.SetRenderTarget(texture);
       Game.GraphicsDevice.Clear(Color.Transparent);
@@ -272,12 +346,25 @@ namespace FarseerPhysics.Samples.MediaSystem
       _effect.View = halfPixelOffset;
       // render shape;
       _effect.TextureEnabled = true;
-      _effect.Texture = material;
+      _effect.Texture = _materials["blank"];
       _effect.VertexColorEnabled = true;
       _effect.Techniques[0].Passes[0].Apply();
       for (int i = 0; i < verticesFill.Count; i++)
       {
         Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
+      }
+      if (pattern != null)
+      {
+        _effect.Texture = pattern;
+        _effect.Techniques[0].Passes[0].Apply();
+        for (int i = 0; i < verticesFill.Count; i++)
+        {
+          for (int j = 0; j < verticesFill[i].Length; j++)
+          {
+            verticesFill[i][j].Color = patternColor;
+          }
+          Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
+        }
       }
       // render outline;
       _effect.TextureEnabled = false;

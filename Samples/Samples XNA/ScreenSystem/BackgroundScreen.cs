@@ -18,8 +18,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// </summary>
   public class BackgroundScreen : GameScreen
   {
-    private Texture2D _backgroundTexture;
-    private Rectangle _viewport;
+    private Vector2 _viewportSize;
 
     /// <summary>
     /// Constructor.
@@ -32,8 +31,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public override void LoadContent()
     {
-      MediaManager.GetTexture("gradient", out _backgroundTexture);
-      _viewport = Framework.GraphicsDevice.Viewport.Bounds;
+      _viewportSize = new Vector2(Framework.GraphicsDevice.Viewport.Width, Framework.GraphicsDevice.Viewport.Height);
     }
 
     /// <summary>
@@ -53,9 +51,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void Draw(GameTime gameTime)
     {
-      Sprites.Begin();
-      Sprites.Draw(_backgroundTexture, _viewport, Color.White);
-      Sprites.End();
+      Quads.Render(Vector2.Zero, _viewportSize, null, AssetCreator.Cyan, AssetCreator.Ocean, AssetCreator.Cyan, AssetCreator.Sky);
     }
   }
 }

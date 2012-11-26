@@ -52,14 +52,14 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       _basicEffect.Texture = MediaManager.GetTexture("pavement");
 
       _borderVertices = new VertexPositionColorTexture[] {
-        new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f),Color.LightGray, new Vector2(-halfWidth, -halfHeight) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f),Color.LightGray, new Vector2(halfWidth, -halfHeight) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f),Color.LightGray, new Vector2(halfWidth, halfHeight) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f),Color.LightGray, new Vector2(-halfWidth, halfHeight) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f),Color.LightGray, new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f),Color.LightGray, new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f),Color.LightGray, new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f),
-        new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f), Color.LightGray, new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f)
+        new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f),Color.White, new Vector2(-halfWidth, -halfHeight) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f),Color.White, new Vector2(halfWidth, -halfHeight) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f), Color.White,new Vector2(halfWidth, halfHeight) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f),Color.White, new Vector2(-halfWidth, halfHeight) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f),Color.White, new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f),Color.White, new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f), Color.White,new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f),
+        new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f), Color.White,new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f)
       };
 
       _indexBuffer = new short[] { 0, 5, 4, 0, 1, 5, 1, 6, 5, 1, 2, 6, 2, 7, 6, 2, 3, 7, 3, 4, 7, 3, 0, 4 };
