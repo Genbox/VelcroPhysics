@@ -12,11 +12,12 @@ namespace FarseerPhysics.Samples.MediaSystem
   {
     private BasicEffect _basicEffect;
 
-    private VertexPositionColorTexture[] _verticesTexture;
-    private short[] _indexBuffer = new short[] { 0, 1, 2, 2, 3, 0 };
+    private VertexPositionColorTexture[] _verticesQuad;
+    private short[] _lineBuffer = new short[] { 0, 1, 3, 2, 0 };
 
     private GraphicsDevice _device;
     private bool _isDisposed;
+    private bool _hasBegun;
 
     public QuadRenderer(GraphicsDevice graphicsDevice)
     {
@@ -27,15 +28,14 @@ namespace FarseerPhysics.Samples.MediaSystem
       _device = graphicsDevice;
       _isDisposed = false;
 
-      _verticesTexture = new VertexPositionColorTexture[] { 
-        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 1f)),
+      _verticesQuad = new VertexPositionColorTexture[] { 
         new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 1f)),
+        new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 1f)),
         new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 0f)),
         new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 0f)) 
       };
 
       _basicEffect = new BasicEffect(graphicsDevice);
-      _basicEffect.VertexColorEnabled = true;
       _basicEffect.View = Matrix.Identity;
       _basicEffect.Projection = Matrix.CreateTranslation(-0.5f, -0.5f, 0.0f) * Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0f, 0f, 1f);
     }
@@ -63,47 +63,89 @@ namespace FarseerPhysics.Samples.MediaSystem
       }
     }
 
-    public void Render(Vector2 v1, Vector2 v2, Texture2D texture, params Color[] color)
+    public void Begin()
     {
+      if (_hasBegun)
+      {
+        throw new InvalidOperationException("End must be called before Begin can be called again.");
+      }
+
       _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
       _device.RasterizerState = RasterizerState.CullNone;
-      if (texture == null)
+
+      _hasBegun = true;
+    }
+
+    public void End()
+    {
+      if (!_hasBegun)
       {
-        _basicEffect.TextureEnabled = false;
+        throw new InvalidOperationException("Begin must be called before End can be called.");
+      }
+
+      _hasBegun = false;
+    }
+
+    public void Render(Vector2 v1, Vector2 v2, Texture2D texture, params Color[] color)
+    {
+      Render(v1, v2, texture, false, Color.White, color);
+    }
+
+    public void Render(Vector2 v1, Vector2 v2, Texture2D texture, bool outline, Color outlineColor, params Color[] color)
+    {
+      if (!_hasBegun)
+      {
+        throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
       }
       else
       {
-        _basicEffect.Texture = texture;
-        _basicEffect.TextureEnabled = true;
-      }
-
-      _verticesTexture[0].Position.X = v2.X;
-      _verticesTexture[0].Position.Y = v1.Y;
-
-      _verticesTexture[1].Position.X = v1.X;
-      _verticesTexture[1].Position.Y = v1.Y;
-
-      _verticesTexture[2].Position.X = v1.X;
-      _verticesTexture[2].Position.Y = v2.Y;
-
-      _verticesTexture[3].Position.X = v2.X;
-      _verticesTexture[3].Position.Y = v2.Y;
-
-      for (int i = 0; i < 4; i++)
-      {
-        if (color.Length > 0)
+        _basicEffect.VertexColorEnabled = true;
+        _basicEffect.DiffuseColor = Color.White.ToVector3();
+        if (texture == null)
         {
-          _verticesTexture[i].Color = color[i % color.Length];
+          _basicEffect.TextureEnabled = false;
         }
         else
         {
-          _verticesTexture[i].Color = Color.White;
+          _basicEffect.Texture = texture;
+          _basicEffect.TextureEnabled = true;
+        }
+
+        _verticesQuad[0].Position.X = v1.X;
+        _verticesQuad[0].Position.Y = v1.Y;
+
+        _verticesQuad[1].Position.X = v2.X;
+        _verticesQuad[1].Position.Y = v1.Y;
+
+        _verticesQuad[2].Position.X = v1.X;
+        _verticesQuad[2].Position.Y = v2.Y;
+
+        _verticesQuad[3].Position.X = v2.X;
+        _verticesQuad[3].Position.Y = v2.Y;
+
+        for (int i = 0; i < 4; i++)
+        {
+          if (color.Length > 0)
+          {
+            _verticesQuad[i].Color = color[i % color.Length];
+          }
+          else
+          {
+            _verticesQuad[i].Color = Color.White;
+          }
+        }
+
+        _basicEffect.CurrentTechnique.Passes[0].Apply();
+        _device.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, _verticesQuad, 0, 2);
+
+        if (outline)
+        {
+          _basicEffect.VertexColorEnabled = false;
+          _basicEffect.DiffuseColor = outlineColor.ToVector3();
+          _basicEffect.CurrentTechnique.Passes[0].Apply();
+          _device.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.LineStrip, _verticesQuad, 0, 4, _lineBuffer, 0, 4);
         }
       }
-
-      _basicEffect.CurrentTechnique.Passes[0].Apply();
-      _basicEffect.CurrentTechnique.Passes[0].Apply();
-      _device.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _verticesTexture, 0, 4, _indexBuffer, 0, 2);
     }
   }
 }

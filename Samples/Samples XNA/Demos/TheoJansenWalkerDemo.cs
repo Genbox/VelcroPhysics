@@ -13,7 +13,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo12 : PhysicsGameScreen
+  internal class TheoJansenWalkerDemo : PhysicsGameScreen
   {
     private Border _border;
     private TheoJansenWalker _walker;

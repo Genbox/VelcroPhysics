@@ -88,15 +88,15 @@
     <Compile Include="MediaSystem\LineBatch.cs" />
     <Compile Include="MediaSystem\MediaManager.cs" />
     <Compile Include="MediaSystem\QuadRender.cs" />
-    <Compile Include="Demos\Demo10.cs" />
-    <Compile Include="Demos\Demo11.cs" />
-    <Compile Include="Demos\Demo12.cs" />
-    <Compile Include="Demos\Demo13.cs" />
-    <Compile Include="Demos\Demo14.cs" />
+    <Compile Include="Demos\TextureToVerticesDemo.cs" />
+    <Compile Include="Demos\SoftBodyDemo.cs" />
+    <Compile Include="Demos\TheoJansenWalkerDemo.cs" />
+    <Compile Include="Demos\WebOfGooDemo.cs" />
+    <Compile Include="Demos\BreakableBodiesDemo.cs" />
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
     <Compile Include="MediaSystem\AssetCreator.cs" />
     <Compile Include="MediaSystem\Sprite.cs" />
-    <Compile Include="Demos\Demo15.cs" />
+    <Compile Include="Demos\RacingCarDemo.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
     <Compile Include="Demos\Prefabs\Border.cs" />
     <Compile Include="Demos\Prefabs\Objects.cs" />
@@ -117,15 +117,15 @@
     <Compile Include="ScreenSystem\MenuEntry.cs" />
     <Compile Include="ScreenSystem\MenuScreen.cs" />
     <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
-    <Compile Include="Demos\Demo1.cs" />
-    <Compile Include="Demos\Demo2.cs" />
-    <Compile Include="Demos\Demo3.cs" />
-    <Compile Include="Demos\Demo4.cs" />
-    <Compile Include="Demos\Demo5.cs" />
-    <Compile Include="Demos\Demo6.cs" />
-    <Compile Include="Demos\Demo7.cs" />
-    <Compile Include="Demos\Demo8.cs" />
-    <Compile Include="Demos\Demo9.cs" />
+    <Compile Include="Demos\SingleFixtureDemo.cs" />
+    <Compile Include="Demos\MultipleFixturesDemo.cs" />
+    <Compile Include="Demos\StaticBodiesDemo.cs" />
+    <Compile Include="Demos\StackedBodiesDemo.cs" />
+    <Compile Include="Demos\CollisionCategoriesDemo.cs" />
+    <Compile Include="Demos\DynamicJointsDemo.cs" />
+    <Compile Include="Demos\RagdollDemo.cs" />
+    <Compile Include="Demos\RestitutionDemo.cs" />
+    <Compile Include="Demos\FrictionDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

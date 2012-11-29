@@ -96,7 +96,13 @@ namespace FarseerPhysics.Samples
       _input.LoadContent(GraphicsDevice.Viewport);
       _counter.LoadContent();
 
-      MenuScreen menuScreen = new MenuScreen("Farseer Physics Samples");
+      // Create rendertarget for transitions
+      PresentationParameters _pp = GraphicsDevice.PresentationParameters;
+      _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
+                                          SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                                          RenderTargetUsage.DiscardContents));
+
+      MenuScreen menuScreen = new MenuScreen();
 
       Assembly SamplesFramework = Assembly.GetExecutingAssembly();
       foreach (Type SampleType in SamplesFramework.GetTypes())
@@ -104,13 +110,47 @@ namespace FarseerPhysics.Samples
         if (SampleType.IsSubclassOf(typeof(PhysicsGameScreen)))
         {
           PhysicsGameScreen DemoScreen = SamplesFramework.CreateInstance(SampleType.ToString()) as PhysicsGameScreen;
-          menuScreen.AddMenuItem(DemoScreen);
+          DemoScreen.Framework = this;
+          DemoScreen.IsExiting = false;
+
+          DemoScreen.Sprites = _spriteBatch;
+          DemoScreen.Lines = _lineBatch;
+          DemoScreen.Quads = _quadRenderer;
+
+          DemoScreen.LoadContent();
+
+          RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth / 2, _pp.BackBufferHeight / 2, false,
+                                                      SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                                                      RenderTargetUsage.DiscardContents);
+
+          // Abuse transition rendertarget to render screen preview
+          GraphicsDevice.SetRenderTarget(_transitions[0]);
+          GraphicsDevice.Clear(Color.Transparent);
+
+          _quadRenderer.Begin();
+          _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, AssetCreator.Grey, Color.White * 0.3f);
+          _quadRenderer.End();
+          // Update ensures that the screen is fully visible, we "cover" it so that no physics are run
+          DemoScreen.Update(new GameTime(DemoScreen.TransitionOnTime, DemoScreen.TransitionOnTime), true, false);
+          DemoScreen.Draw(new GameTime());
+
+          GraphicsDevice.SetRenderTarget(preview);
+          GraphicsDevice.Clear(Color.Transparent);
+
+          _spriteBatch.Begin();
+          _spriteBatch.Draw(_transitions[0], preview.Bounds, Color.White);
+          _spriteBatch.End();
+
+          GraphicsDevice.SetRenderTarget(null);
+
+          DemoScreen.ExitScreen();
+          menuScreen.AddMenuItem(DemoScreen, preview);
         }
       }
 
       AddScreen(new BackgroundScreen());
       AddScreen(menuScreen);
-      AddScreen(new LogoScreen(TimeSpan.FromSeconds(3.0)));
+      AddScreen(new LogoScreen(TimeSpan.FromSeconds(5.0)));
 
       ResetElapsedTime();
     }
@@ -269,6 +309,8 @@ namespace FarseerPhysics.Samples
 
       // Tell the screen to load content.
       screen.LoadContent();
+      // Loading my take a while so elapsed time is reset to prevent hick-ups
+      ResetElapsedTime();
       _screens.Add(screen);
     }
 

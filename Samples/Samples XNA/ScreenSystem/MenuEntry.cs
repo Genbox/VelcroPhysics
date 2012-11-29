@@ -17,21 +17,25 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// entries in different ways. This also provides an event that will be raised
   /// when the menu entry is selected.
   /// </summary>
-  public sealed class MenuEntry
+  public sealed class MenuEntry : IComparable
   {
-    private float _alpha;
-    private Vector2 _baseOrigin;
-
-    private float _height;
+    private const double TranslationTime = 0.5;
+    private const double FadeTime = 0.3;
 
     /// <summary>
-    /// The position at which the entry is drawn. This is set by the MenuScreen
-    /// each frame in Update.
+    /// The target position at which the entry is drawn. This is set by the MenuScreen.
+    /// Each frame in Update the current position is interpolated.
     /// </summary>
-    private Vector2 _position;
+    private Vector2 _targetPosition;
+    private Vector2 _currentPosition;
+    private Vector2 _startPosition;
+    private double _translationPosition;
+    private Vector2 _size;
+    private Color _color;
+    private Color _textColor;
 
-    private float _scale;
     private PhysicsGameScreen _screen;
+    private Texture2D _preview;
 
     /// <summary>
     /// Tracks a fading selection effect on the entry.
@@ -39,51 +43,67 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <remarks>
     /// The entries transition out of the selection effect when they are deselected.
     /// </remarks>
-    private float _selectionFade;
+    private double _hoverFade;
+    private double _selectionFade;
+    private float _alpha;
 
     /// <summary>
     /// The text rendered for this entry.
     /// </summary>
     private string _text;
 
-    private float _width;
-
-    private SpriteFont _font;
-
     /// <summary>
     /// Constructs a new menu entry with the specified text.
     /// </summary>
-    public MenuEntry(string text, PhysicsGameScreen screen)
+    public MenuEntry(string text, PhysicsGameScreen screen, Texture2D preview)
     {
       _text = text;
       _screen = screen;
-      _scale = 0.9f;
-      _alpha = 1.0f;
+      _preview = preview;
+
+      _alpha = 1f;
+      _hoverFade = 0.0;
+      _selectionFade = 0.0;
+      _translationPosition = 0.0;
+
+      SpriteFont font = MediaManager.GetFont("menuFont");
+      _size = font.MeasureString(text);
     }
 
+    public void InitializePosition(Vector2 position)
+    {
+      _startPosition = _targetPosition = _currentPosition = position;
+    }
 
-    /// <summary>
-    /// Gets or sets the text of this menu entry.
-    /// </summary>
     public string Text
     {
       get { return _text; }
-      set { _text = value; }
     }
 
-    /// <summary>
-    /// Gets or sets the position at which to draw this menu entry.
-    /// </summary>
     public Vector2 Position
     {
-      get { return _position; }
-      set { _position = value; }
+      get { return _currentPosition; }
+      set
+      {
+        _targetPosition = value;
+        _startPosition = _currentPosition;
+        _translationPosition = 0.0;
+      }
+    }
+
+    public Vector2 Origin
+    {
+      get { return _size / 2f; }
+    }
+
+    public Vector2 Size
+    {
+      get { return _size; }
     }
 
     public float Alpha
     {
       get { return _alpha; }
-      set { _alpha = value; }
     }
 
     public GameScreen Screen
@@ -91,63 +111,73 @@ namespace FarseerPhysics.Samples.ScreenSystem
       get { return _screen; }
     }
 
-    public void Initialize()
+    public Texture2D Preview
     {
-      MediaManager.GetFont("menuFont", out _font);
+      get { return _preview; }
+    }
 
-      _baseOrigin = new Vector2(_font.MeasureString(Text).X, _font.MeasureString("M").Y) * 0.5f;
+    public Color TextColor
+    {
+      get { return _textColor; }
+    }
 
-      _width = _font.MeasureString(Text).X * 0.8f;
-      _height = _font.MeasureString("M").Y * 0.8f;
+    public Color TileColor
+    {
+      get { return _color; }
+    }
+
+    public float Scale
+    {
+      get { return 0.9f + 0.1f * (float)_hoverFade; }
     }
 
     /// <summary>
     /// Updates the menu entry.
     /// </summary>
-    public void Update(bool isSelected, GameTime gameTime)
+    public void Update(bool isSelected, bool isHovered, GameTime gameTime)
     {
-      // When the menu selection changes, entries gradually fade between
-      // their selected and deselected appearance, rather than instantly
-      // popping to the new state.
-      float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
-      if (isSelected)
+      if (isHovered)
       {
-        _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1f);
+        _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
       }
       else
       {
-        _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
+        _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
       }
-      _scale = 0.7f + 0.1f * _selectionFade;
+      if (isSelected)
+      {
+        _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
+      }
+      else
+      {
+        _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
+      }
+
+      _textColor = Color.Lerp(AssetCreator.Beige, AssetCreator.Gold, (float)_selectionFade);
+      _color = Color.Lerp(AssetCreator.Sky * 0.6f, AssetCreator.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
+
+      if (_translationPosition < 1.0)
+      {
+        _translationPosition = Math.Min(_translationPosition + (gameTime.ElapsedGameTime.TotalSeconds / TranslationTime), 1.0);
+        _currentPosition = Vector2.Lerp(_startPosition, _targetPosition, (float)_translationPosition);
+      }
     }
 
-    /// <summary>
-    /// Draws the menu entry. This can be overridden to customize the appearance.
-    /// </summary>
-    public void Draw(SpriteBatch batch)
+    #region IComparable Members
+
+    public int CompareTo(object obj)
     {
-      // Draw the selected entry in yellow, otherwise white
-      Color color = Color.Lerp(Color.White, new Color(255, 210, 0), _selectionFade) * _alpha;
-
-      // Draw text, centered on the middle of each line.
-      batch.DrawString(_font, _text, _position - _baseOrigin * _scale + Vector2.One, Color.DarkSlateGray * _alpha * _alpha, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
-      batch.DrawString(_font, _text, _position - _baseOrigin * _scale, color, 0, Vector2.Zero, _scale, SpriteEffects.None, 0);
+      MenuEntry entry = obj as MenuEntry;
+      if (entry == null)
+      {
+        return 0;
+      }
+      else
+      {
+        return _screen.GetIndex().CompareTo(entry._screen.GetIndex());
+      }
     }
 
-    /// <summary>
-    /// Queries how much space this menu entry requires.
-    /// </summary>
-    public int GetHeight()
-    {
-      return (int)_height;
-    }
-
-    /// <summary>
-    /// Queries how wide the entry is, used for centering on the screen.
-    /// </summary>
-    public int GetWidth()
-    {
-      return (int)_width;
-    }
+    #endregion
   }
 }
