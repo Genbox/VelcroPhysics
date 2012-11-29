@@ -156,13 +156,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\titleFont.spritefont">
-      <Name>titleFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="DemoSFX\click.wav">
       <Name>click</Name>
       <Importer>WavImporter</Importer>
@@ -182,13 +175,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ground.png">
-      <Name>ground</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Common\pavement.png">
-      <Name>pavement</Name>
+    <Compile Include="Common\samplesLogo.png">
+      <Name>samplesLogo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

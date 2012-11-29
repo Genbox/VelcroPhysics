@@ -36,8 +36,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       MediaManager.GetTexture("logo", out _farseerLogoTexture);
       Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-      _farseerLogoPosition = new Vector2((viewport.Width - _farseerLogoTexture.Width) / 2,
-                                         (viewport.Height - _farseerLogoTexture.Height) / 2);
+      _farseerLogoPosition = new Vector2(viewport.Width / 2f - 465.5f, viewport.Height / 2f - 328.5f);
     }
 
     public override void HandleInput(InputHelper input, GameTime gameTime)

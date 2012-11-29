@@ -20,7 +20,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo15 : PhysicsGameScreen
+  internal class RacingCarDemo : PhysicsGameScreen
   {
     private float _acceleration;
     private Body _board;

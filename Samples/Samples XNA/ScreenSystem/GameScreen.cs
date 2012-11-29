@@ -123,7 +123,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public virtual void LoadContent()
     {
-      Framework.ResetElapsedTime();
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿#region Using System
 using System;
 using System.Text;
+using System.Collections.Generic;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
@@ -16,37 +17,32 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo1 : PhysicsGameScreen
+  internal class FrictionDemo : PhysicsGameScreen
   {
     private Border _border;
-    private Body _rectangle;
+    private List<Body> _ramps;
+    private Body[] _rectangle = new Body[5];
     private Sprite _rectangleSprite;
 
     #region Demo description
 
     public override string GetTitle()
     {
-      return "Body with a single fixture";
+      return "Friction";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows a single body with one attached fixture and shape.");
-      sb.AppendLine("A fixture binds a shape to a body and adds material");
-      sb.AppendLine("properties such as density, friction, and restitution.");
+      sb.AppendLine("This demo shows several bodys with varying friction.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Rotate object: left and right triggers");
-      sb.AppendLine("  - Move object: right thumbstick");
       sb.AppendLine("  - Move cursor: left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: left thumbstick");
       sb.AppendLine("  - Exit to menu: Back button");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Rotate Object: left and right arrows");
-      sb.AppendLine("  - Move Object: A,S,D,W");
       sb.AppendLine("  - Exit to menu: Escape");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Mouse / Touchscreen");
@@ -57,7 +53,7 @@ namespace FarseerPhysics.Samples.Demos
 
     public override int GetIndex()
     {
-      return 1;
+      return 7;
     }
 
     #endregion
@@ -66,24 +62,47 @@ namespace FarseerPhysics.Samples.Demos
     {
       base.LoadContent();
 
-      World.Gravity = Vector2.Zero;
+      World.Gravity = new Vector2(0f, 20f);
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
-      _rectangle.BodyType = BodyType.Dynamic;
+      _ramps = new List<Body>();
+      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
+      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f)));
 
-      SetUserAgent(_rectangle, 100f, 100f);
+      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f)));
+      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f)));
+
+      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
+
+      float[] friction = { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
+      for (int i = 0; i < 5; i++)
+      {
+        _rectangle[i] = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 1f);
+        _rectangle[i].BodyType = BodyType.Dynamic;
+        _rectangle[i].Position = new Vector2(-18f + 5.2f * i, -13.0f + 1.282f * i);
+        _rectangle[i].Friction = friction[i];
+      }
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle.FixtureList[0].Shape, "square", AssetCreator.Blue, AssetCreator.Gold, AssetCreator.Black, 1f));
+      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", AssetCreator.Green, AssetCreator.Lime, AssetCreator.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+      for (int i = 0; i < 5; ++i)
+      {
+        Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                     Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+      }
       Sprites.End();
+      Lines.Begin(Camera.SimProjection, Camera.SimView);
+      for (int i = 0; i < _ramps.Count; i++)
+      {
+        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, AssetCreator.Teal);
+      }
+      Lines.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);
 

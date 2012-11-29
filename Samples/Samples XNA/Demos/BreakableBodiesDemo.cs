@@ -22,7 +22,7 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo14 : PhysicsGameScreen
+  internal class BreakableBodiesDemo : PhysicsGameScreen
   {
     private Border _border;
     private List<List<Vertices>> _breakableObject;

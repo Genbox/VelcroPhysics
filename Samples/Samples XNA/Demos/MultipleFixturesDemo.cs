@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo2 : PhysicsGameScreen
+  internal class MultipleFixturesDemo : PhysicsGameScreen
   {
     private Border _border;
     private Sprite _rectangleSprite;

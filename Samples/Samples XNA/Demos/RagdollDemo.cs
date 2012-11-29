@@ -1,7 +1,6 @@
 ﻿#region Using System
 using System;
 using System.Text;
-using System.Collections.Generic;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
@@ -17,32 +16,36 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo9 : PhysicsGameScreen
+  internal class RagdollDemo : PhysicsGameScreen
   {
     private Border _border;
-    private List<Body> _ramps;
-    private Body[] _rectangle = new Body[5];
-    private Sprite _rectangleSprite;
+    private Sprite _obstacle;
+    private Body[] _obstacles = new Body[4];
+    private Ragdoll _ragdoll;
 
     #region Demo description
 
     public override string GetTitle()
     {
-      return "Friction";
+      return "Ragdoll";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows several bodys with varying friction.");
+      sb.AppendLine("This demo shows how to combine physics objects to create a ragdoll.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
+      sb.AppendLine("  - Rotate ragdoll: left and right triggers");
+      sb.AppendLine("  - Move ragdoll: right thumbstick");
       sb.AppendLine("  - Move cursor: left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: left thumbstick");
       sb.AppendLine("  - Exit to menu: Back button");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
+      sb.AppendLine("  - Rotate ragdoll: left and right arrows");
+      sb.AppendLine("  - Move ragdoll: A,S,D,W");
       sb.AppendLine("  - Exit to menu: Escape");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Mouse / Touchscreen");
@@ -66,43 +69,35 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _ramps = new List<Body>();
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f)));
+      _ragdoll = new Ragdoll(World, Vector2.Zero);
 
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f)));
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f)));
-
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
-
-      float[] friction = { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
-      for (int i = 0; i < 5; i++)
+      for (int i = 0; i < 4; i++)
       {
-        _rectangle[i] = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 1f);
-        _rectangle[i].BodyType = BodyType.Dynamic;
-        _rectangle[i].Position = new Vector2(-18f + 5.2f * i, -13.0f + 1.282f * i);
-        _rectangle[i].Friction = friction[i];
+        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f);
+        _obstacles[i].IsStatic = true;
       }
 
+      _obstacles[0].Position = new Vector2(-9f, 5f);
+      _obstacles[1].Position = new Vector2(-8f, -7f);
+      _obstacles[2].Position = new Vector2(9f, 7f);
+      _obstacles[3].Position = new Vector2(7f, -5f);
+
       // create sprite based on body
-      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", AssetCreator.Green, AssetCreator.Lime, AssetCreator.Black, 1f));
+      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", AssetCreator.Green, AssetCreator.Teal, AssetCreator.Black, 1.5f));
+
+      SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < 5; ++i)
+      for (int i = 0; i < 4; i++)
       {
-        Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
-                     Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
       }
+      _ragdoll.Draw(Sprites);
       Sprites.End();
-      Lines.Begin(Camera.SimProjection, Camera.SimView);
-      for (int i = 0; i < _ramps.Count; i++)
-      {
-        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, AssetCreator.Teal);
-      }
-      Lines.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);
 

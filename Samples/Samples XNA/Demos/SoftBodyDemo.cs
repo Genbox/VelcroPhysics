@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo11 : PhysicsGameScreen
+  internal class SoftBodyDemo : PhysicsGameScreen
   {
     private Border _border;
 
@@ -33,7 +33,7 @@ namespace FarseerPhysics.Samples.Demos
 
     public override string GetTitle()
     {
-      return "Path generator";
+      return "Soft body & Path generator";
     }
 
     public override string GetDetails()

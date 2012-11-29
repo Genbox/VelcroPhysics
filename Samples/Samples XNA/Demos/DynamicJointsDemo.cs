@@ -12,30 +12,24 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo4 : PhysicsGameScreen
+  public class DynamicJointsDemo : PhysicsGameScreen
   {
-#if XBOX
-    private const int PyramidBaseBodyCount = 10;
-#else
-    private const int PyramidBaseBodyCount = 14;
-#endif
-
     private Agent _agent;
-    private Pyramid _pyramid;
     private Border _border;
+    private JumpySpider[] _spiders;
 
     #region Demo description
 
     public override string GetTitle()
     {
-      return "Stacked Objects";
+      return "Dynamic Angle Joints";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows the stacking stability of the engine.");
-      sb.AppendLine("It shows a stack of rectangular bodies stacked in the shape of a pyramid.");
+      sb.AppendLine("This demo demonstrates the use of revolute joints combined");
+      sb.AppendLine("with angle joints that have a dynamic target angle.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Rotate agent: left and right triggers");
@@ -58,7 +52,7 @@ namespace FarseerPhysics.Samples.Demos
 
     public override int GetIndex()
     {
-      return 4;
+      return 8;
     }
 
     #endregion
@@ -71,18 +65,38 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, new Vector2(5f, -10f));
+      _agent = new Agent(World, new Vector2(0f, 10f));
+      _spiders = new JumpySpider[8];
 
-      _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
+      for (int i = 0; i < _spiders.Length; i++)
+      {
+        _spiders[i] = new JumpySpider(World, new Vector2(0f, 8f - (i + 1) * 2f));
+      }
 
       SetUserAgent(_agent.Body, 1000f, 400f);
+    }
+
+    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+    {
+      if (IsActive)
+      {
+        for (int i = 0; i < _spiders.Length; i++)
+        {
+          _spiders[i].Update(gameTime);
+        }
+      }
+
+      base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
       _agent.Draw(Sprites);
-      _pyramid.Draw(Sprites);
+      for (int i = 0; i < _spiders.Length; i++)
+      {
+        _spiders[i].Draw(Sprites);
+      }
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

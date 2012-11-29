@@ -51,13 +51,13 @@ namespace FarseerPhysics.Samples.MediaSystem
       : base(game)
     {
       // Add all materials
-      DirectoryInfo assetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/Materials");
+      DirectoryInfo assetFolder = new DirectoryInfo(game.Content.RootDirectory + "/Materials");
       FileInfo[] fileList = assetFolder.GetFiles("*.xnb");
 
       for (int i = 0; i < fileList.Length; i++)
       {
         string materialName = System.IO.Path.GetFileNameWithoutExtension(fileList[i].Name);
-        _materials[materialName] = game.Content.Load<Texture2D>(@"Materials/" + materialName);
+        _materials[materialName] = game.Content.Load<Texture2D>("Materials/" + materialName);
         _materials[materialName].Name = materialName;
       }
 

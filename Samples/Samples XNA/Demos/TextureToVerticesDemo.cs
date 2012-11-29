@@ -20,7 +20,7 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class Demo10 : PhysicsGameScreen
+  internal class TextureToVerticesDemo : PhysicsGameScreen
   {
     private Border _border;
     private Body _compound;

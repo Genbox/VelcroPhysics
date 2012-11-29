@@ -39,7 +39,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       FileInfo[] currentFileList;
 
       // Load all graphics
-      string[] gfxFolders = { @"Common", @"DemoGFX" };
+      string[] gfxFolders = { "Common", "DemoGFX", "Materials" };
       foreach (string folder in gfxFolders)
       {
         currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/" + folder);
@@ -53,23 +53,23 @@ namespace FarseerPhysics.Samples.MediaSystem
       }
 
       // Add samples fonts
-      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/Fonts");
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/Fonts");
       currentFileList = currentAssetFolder.GetFiles("*.xnb");
 
       for (int i = 0; i < currentFileList.Length; i++)
       {
         string fontName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
-        _fontList[fontName] = game.Content.Load<SpriteFont>(@"Fonts/" + fontName);
+        _fontList[fontName] = game.Content.Load<SpriteFont>("Fonts/" + fontName);
       }
 
       // Initialize audio playback
-      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + @"/DemoSFX");
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/DemoSFX");
       currentFileList = currentAssetFolder.GetFiles("*.xnb");
 
       for (int i = 0; i < currentFileList.Length; i++)
       {
         string soundName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
-        _soundList[soundName] = game.Content.Load<SoundEffect>(@"DemoSFX/" + soundName);
+        _soundList[soundName] = game.Content.Load<SoundEffect>("DemoSFX/" + soundName);
         _soundList[soundName].Name = soundName;
       }
 
@@ -110,6 +110,13 @@ namespace FarseerPhysics.Samples.MediaSystem
         texture = null;
         throw new FileNotFoundException();
       }
+    }
+
+    public static SpriteFont GetFont(string fontName)
+    {
+      SpriteFont font;
+      GetFont(fontName, out font);
+      return font;
     }
 
     public static void GetFont(string fontName, out SpriteFont font)
