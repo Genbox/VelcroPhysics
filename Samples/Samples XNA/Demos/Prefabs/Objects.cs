@@ -30,7 +30,6 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     private Category _collidesWith;
     private Category _collisionCategories;
     private Sprite _object;
-    private PhysicsGameScreen _screen;
 
     public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
     {

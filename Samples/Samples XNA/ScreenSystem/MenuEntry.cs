@@ -19,37 +19,27 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// </summary>
   public sealed class MenuEntry : IComparable
   {
-    private const double TranslationTime = 0.5;
-    private const double FadeTime = 0.3;
+    private const float MaxTranslation = 4.5f;
+    private const double HighlightTime = 0.3;
+    private const double FadeTime = 0.5;
 
-    /// <summary>
-    /// The target position at which the entry is drawn. This is set by the MenuScreen.
-    /// Each frame in Update the current position is interpolated.
-    /// </summary>
-    private Vector2 _targetPosition;
+    private static float _targetHiddenX;
+    private static float _targetVisibleX;
+
+    private float _targetY;
     private Vector2 _currentPosition;
-    private Vector2 _startPosition;
-    private double _translationPosition;
     private Vector2 _size;
     private Color _color;
     private Color _textColor;
 
     private PhysicsGameScreen _screen;
     private Texture2D _preview;
+    private bool _visible;
 
-    /// <summary>
-    /// Tracks a fading selection effect on the entry.
-    /// </summary>
-    /// <remarks>
-    /// The entries transition out of the selection effect when they are deselected.
-    /// </remarks>
     private double _hoverFade;
     private double _selectionFade;
-    private float _alpha;
+    private double _visibleFade;
 
-    /// <summary>
-    /// The text rendered for this entry.
-    /// </summary>
     private string _text;
 
     /// <summary>
@@ -61,18 +51,25 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _screen = screen;
       _preview = preview;
 
-      _alpha = 1f;
       _hoverFade = 0.0;
       _selectionFade = 0.0;
-      _translationPosition = 0.0;
 
       SpriteFont font = MediaManager.GetFont("menuFont");
       _size = font.MeasureString(text);
     }
 
-    public void InitializePosition(Vector2 position)
+    public static void InitializeEntries(float hiddenX, float visibleX)
     {
-      _startPosition = _targetPosition = _currentPosition = position;
+      _targetHiddenX = hiddenX;
+      _targetVisibleX = visibleX;
+    }
+
+    public void InitializePosition(float target, bool visible)
+    {
+      _visible = visible;
+      _visibleFade = visible ? 1.0 : 0.0;
+      _currentPosition.X = visible ? _targetVisibleX : _targetHiddenX;
+      _currentPosition.Y = _targetY = target;
     }
 
     public string Text
@@ -83,12 +80,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public Vector2 Position
     {
       get { return _currentPosition; }
-      set
-      {
-        _targetPosition = value;
-        _startPosition = _currentPosition;
-        _translationPosition = 0.0;
-      }
+    }
+
+    public float Target
+    {
+      set { _targetY = value; }
     }
 
     public Vector2 Origin
@@ -101,9 +97,9 @@ namespace FarseerPhysics.Samples.ScreenSystem
       get { return _size; }
     }
 
-    public float Alpha
+    public float Fade
     {
-      get { return _alpha; }
+      get { return (float)_selectionFade; }
     }
 
     public GameScreen Screen
@@ -131,6 +127,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
       get { return 0.9f + 0.1f * (float)_hoverFade; }
     }
 
+    public bool Visible
+    {
+      get { return _visible; }
+      set { _visible = value; }
+    }
+
+    public float Alpha
+    {
+      get { return (float)_visibleFade; }
+    }
+
     /// <summary>
     /// Updates the menu entry.
     /// </summary>
@@ -138,28 +145,42 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       if (isHovered)
       {
-        _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
+        _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
       }
       else
       {
-        _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
+        _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
       if (isSelected)
       {
-        _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
+        _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
       }
       else
       {
-        _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
+        _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
 
       _textColor = Color.Lerp(AssetCreator.Beige, AssetCreator.Gold, (float)_selectionFade);
       _color = Color.Lerp(AssetCreator.Sky * 0.6f, AssetCreator.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
-      if (_translationPosition < 1.0)
+      if (_visible)
       {
-        _translationPosition = Math.Min(_translationPosition + (gameTime.ElapsedGameTime.TotalSeconds / TranslationTime), 1.0);
-        _currentPosition = Vector2.Lerp(_startPosition, _targetPosition, (float)_translationPosition);
+        _visibleFade = Math.Min(_visibleFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
+      }
+      else
+      {
+        _visibleFade = Math.Max(_visibleFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
+      }
+      _currentPosition.X = MathHelper.SmoothStep(_targetHiddenX, _targetVisibleX, (float)_visibleFade);
+
+      float deltaY = _targetY - _currentPosition.Y;
+      if (Math.Abs(deltaY) > MaxTranslation)
+      {
+        _currentPosition.Y += MaxTranslation * Math.Sign(deltaY);
+      }
+      else
+      {
+        _currentPosition.Y += deltaY;
       }
     }
 

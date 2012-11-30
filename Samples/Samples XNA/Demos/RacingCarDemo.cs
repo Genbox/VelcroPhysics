@@ -36,7 +36,6 @@ namespace FarseerPhysics.Samples.Demos
     private float _hzFront;
     private float _maxSpeed;
 
-    private float _scale;
     private WheelJoint _springBack;
     private WheelJoint _springFront;
     private Sprite _teeter;
@@ -307,9 +306,9 @@ namespace FarseerPhysics.Samples.Demos
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
       // draw car
-      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
-      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
-      Sprites.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
+      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
+      Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
+      Sprites.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, 1f, SpriteEffects.None, 0f);
       // draw teeter
       Sprites.Draw(_teeter.Image, ConvertUnits.ToDisplayUnits(_board.Position), null, Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
       // draw bridge

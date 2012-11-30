@@ -33,7 +33,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public void LoadContent()
     {
-      MediaManager.GetFont("frameRateCounterFont", out _font);
+      _font = MediaManager.GetFont("detailsFont");
     }
 
     public void Update(GameTime gameTime)

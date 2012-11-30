@@ -50,6 +50,8 @@ namespace FarseerPhysics.Samples
     private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
     private List<RenderTarget2D> _previews = new List<RenderTarget2D>();
 
+    private MenuScreen _menuScreen;
+
     private bool _isExiting;
     private bool _showFPS;
 
@@ -102,7 +104,7 @@ namespace FarseerPhysics.Samples
                                           SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
                                           RenderTargetUsage.DiscardContents));
 
-      MenuScreen menuScreen = new MenuScreen();
+      _menuScreen = new MenuScreen();
 
       Assembly SamplesFramework = Assembly.GetExecutingAssembly();
       foreach (Type SampleType in SamplesFramework.GetTypes())
@@ -144,12 +146,13 @@ namespace FarseerPhysics.Samples
           GraphicsDevice.SetRenderTarget(null);
 
           DemoScreen.ExitScreen();
-          menuScreen.AddMenuItem(DemoScreen, preview);
+          DemoScreen.Update(new GameTime(DemoScreen.TransitionOffTime, DemoScreen.TransitionOffTime), true, false);
+          _menuScreen.AddMenuItem(DemoScreen, preview);
         }
       }
 
       AddScreen(new BackgroundScreen());
-      AddScreen(menuScreen);
+      AddScreen(_menuScreen);
       AddScreen(new LogoScreen(TimeSpan.FromSeconds(5.0)));
 
       ResetElapsedTime();
@@ -266,7 +269,16 @@ namespace FarseerPhysics.Samples
         if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
         {
           _spriteBatch.Begin(0, BlendState.AlphaBlend);
-          _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
+          if (screen is PhysicsGameScreen)
+          {
+            Vector2 position = Vector2.Lerp(_menuScreen.PreviewPosition, new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f, 1f - screen.TransitionPosition);
+            _spriteBatch.Draw(_transitions[transitionCount], position, null, Color.White * Math.Min(screen.TransitionAlpha / 0.2f, 1f), 0f,
+                              new Vector2(_transitions[transitionCount].Width, _transitions[transitionCount].Height) / 2f, 0.5f + 0.5f * (1f - screen.TransitionPosition), SpriteEffects.None, 0f);
+          }
+          else
+          {
+            _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
+          }
           _spriteBatch.End();
 
           transitionCount++;

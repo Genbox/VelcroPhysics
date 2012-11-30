@@ -21,6 +21,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public LogoScreen(TimeSpan duration)
     {
       _duration = duration;
+      HasCursor = false;
       TransitionOffTime = TimeSpan.FromSeconds(0.6);
     }
 
@@ -33,10 +34,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void LoadContent()
     {
-      MediaManager.GetTexture("logo", out _farseerLogoTexture);
+      _farseerLogoTexture = MediaManager.GetTexture("logo");
       Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-      _farseerLogoPosition = new Vector2(viewport.Width / 2f - 465.5f, viewport.Height / 2f - 328.5f);
+      _farseerLogoPosition = new Vector2(viewport.Width / 2f - 465.5f, (viewport.Height - _farseerLogoTexture.Height) / 2f);
     }
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
