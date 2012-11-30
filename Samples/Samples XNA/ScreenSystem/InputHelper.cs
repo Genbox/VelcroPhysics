@@ -111,7 +111,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public void LoadContent(Viewport viewport)
     {
       Texture2D cursorTexture;
-      MediaManager.GetTexture("cursor", out cursorTexture);
+      cursorTexture = MediaManager.GetTexture("cursor");
       _cursorSprite = new Sprite(cursorTexture);
       _viewport = viewport;
     }
@@ -236,6 +236,22 @@ namespace FarseerPhysics.Samples.ScreenSystem
     }
 
     /// <summary>
+    /// Checks if the mouse wheel has been scrolled up
+    /// </summary>
+    public bool IsNewScrollWheelUp()
+    {
+      return _currentMouseState.ScrollWheelValue - _lastMouseState.ScrollWheelValue > 0;
+    }
+
+    /// <summary>
+    /// Checks if the mouse wheel has been scrolled down
+    /// </summary>
+    public bool IsNewScrollWheelDown()
+    {
+      return _lastMouseState.ScrollWheelValue - _currentMouseState.ScrollWheelValue > 0;
+    }
+
+    /// <summary>
     ///   Checks for a "menu select" input action.
     /// </summary>
     public bool IsMenuSelect()
@@ -247,24 +263,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
              IsNewMouseButtonPress(MouseButtons.LeftButton);
     }
 
-    public bool IsMenuPressed()
-    {
-      return _currentKeyboardState.IsKeyDown(Keys.Space) ||
-             _currentKeyboardState.IsKeyDown(Keys.Enter) ||
-             _currentGamePadState.IsButtonDown(Buttons.A) ||
-             _currentGamePadState.IsButtonDown(Buttons.Start) ||
-             _currentMouseState.LeftButton == ButtonState.Pressed;
-    }
-
-    public bool IsMenuReleased()
-    {
-      return IsNewKeyRelease(Keys.Space) ||
-             IsNewKeyRelease(Keys.Enter) ||
-             IsNewButtonRelease(Buttons.A) ||
-             IsNewButtonRelease(Buttons.Start) ||
-             IsNewMouseButtonRelease(MouseButtons.LeftButton);
-    }
-
     /// <summary>
     ///   Checks for a "menu cancel" input action.
     /// </summary>
@@ -274,7 +272,27 @@ namespace FarseerPhysics.Samples.ScreenSystem
              IsNewKeyPress(Keys.Back) ||
              IsNewButtonPress(Buttons.B) ||
              IsNewButtonPress(Buttons.Back) ||
-             IsNewMouseButtonPress(MouseButtons.MiddleButton);
+             IsNewMouseButtonPress(MouseButtons.RightButton);
+    }
+
+    public bool IsMenuUp()
+    {
+      return IsNewKeyPress(Keys.Up) ||
+             IsNewKeyPress(Keys.PageUp) ||
+             IsNewButtonPress(Buttons.DPadUp) ||
+             IsNewButtonPress(Buttons.LeftThumbstickUp) ||
+             IsNewButtonPress(Buttons.RightThumbstickUp) ||
+             IsNewScrollWheelUp();
+    }
+
+    public bool IsMenuDown()
+    {
+      return IsNewKeyPress(Keys.Down) ||
+             IsNewKeyPress(Keys.PageDown) ||
+             IsNewButtonPress(Buttons.DPadDown) ||
+             IsNewButtonPress(Buttons.LeftThumbstickDown) ||
+             IsNewButtonPress(Buttons.RightThumbstickDown) ||
+             IsNewScrollWheelDown();
     }
   }
 }

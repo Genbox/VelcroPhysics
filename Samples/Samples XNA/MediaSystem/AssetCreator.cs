@@ -100,33 +100,19 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      Texture2D texture;
-      TextureFromShape(shape, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-      return texture;
-    }
-
-    public static void TextureFromShape(Shape shape, Color color, Color outlineColor, out Texture2D texture)
-    {
-      TextureFromShape(shape, "blank", color, color, outlineColor, 1f, out texture);
-    }
-
-    public static void TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
-    {
-      texture = null;
       if (_assetCreator != null)
       {
         switch (shape.ShapeType)
         {
           case ShapeType.Circle:
-            CircleTexture(((CircleShape)shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-            break;
+            return CircleTexture(((CircleShape)shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
           case ShapeType.Polygon:
-            PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-            break;
+            return PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale);
           default:
             throw new NotSupportedException("The specified shape type is not supported.");
         }
       }
+      return null;
     }
 
     public static Texture2D CircleTexture(float radius, Color color, Color outlineColor)
@@ -136,19 +122,6 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      Texture2D texture;
-      CircleTexture(radius, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-      return texture;
-    }
-
-    public static void CircleTexture(float radius, Color color, Color outlineColor, out Texture2D texture)
-    {
-      CircleTexture(radius, "blank", color, color, outlineColor, 1f, out  texture);
-    }
-
-    public static void CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
-    {
-      texture = null;
       if (_assetCreator != null)
       {
         if (!_materials.ContainsKey(pattern))
@@ -201,13 +174,14 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         if (pattern == "blank")
         {
-          texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), null, Color.Transparent, verticesFill, verticesOutline);
+          return _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), null, Color.Transparent, verticesFill, verticesOutline);
         }
         else
         {
-          texture = _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[pattern], patternColor, verticesFill, verticesOutline);
+          return  _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[pattern], patternColor, verticesFill, verticesOutline);
         }
       }
+      return null;
     }
 
     public static Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
@@ -217,20 +191,8 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      Texture2D texture;
-      PolygonTexture(vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-      return texture;
-    }
-
-    public static void PolygonTexture(Vector2[] vertices, Color color, Color outlineColor, out Texture2D texture)
-    {
-      PolygonTexture(vertices, "blank", color, color, outlineColor, 1f, out texture);
-    }
-
-    public static void PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
-    {
       Vertices temp = new Vertices(vertices);
-      PolygonTexture(temp, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
+      return PolygonTexture(temp, pattern, mainColor, patternColor, outlineColor, materialScale);
     }
 
     public static Texture2D PolygonTexture(Vertices vertices, Color color, Color outlineColor)
@@ -240,19 +202,6 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      Texture2D texture;
-      PolygonTexture(vertices, pattern, mainColor, patternColor, outlineColor, materialScale, out texture);
-      return texture;
-    }
-
-    public static void PolygonTexture(Vertices vertices, Color color, Color outlineColor, out Texture2D texture)
-    {
-      PolygonTexture(vertices, "blank", color, color, outlineColor, 1f, out  texture);
-    }
-
-    public static void PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale, out Texture2D texture)
-    {
-      texture = null;
       if (_assetCreator != null)
       {
         if (!_materials.ContainsKey(pattern))
@@ -316,13 +265,14 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         if (pattern == "blank")
         {
-          texture = _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, null, Color.Transparent, verticesFill, verticesOutline);
+          return _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, null, Color.Transparent, verticesFill, verticesOutline);
         }
         else
         {
-          texture = _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[pattern], patternColor, verticesFill, verticesOutline);
+          return _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[pattern], patternColor, verticesFill, verticesOutline);
         }
       }
+      return null;
     }
 
     private Texture2D RenderTexture(int width, int height, Texture2D pattern, Color patternColor, VertexPositionColorTexture[] verticesFill, VertexPositionColor[] verticesOutline)

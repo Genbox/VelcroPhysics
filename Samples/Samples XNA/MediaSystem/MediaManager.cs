@@ -94,40 +94,24 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D GetTexture(string textureName)
     {
-      Texture2D texture;
-      GetTexture(textureName, out texture);
-      return texture;
-    }
-
-    public static void GetTexture(string textureName, out Texture2D texture)
-    {
       if (_mediaManager != null && _textureList.ContainsKey(textureName))
       {
-        texture = _textureList[textureName];
+        return _textureList[textureName];
       }
       else
       {
-        texture = null;
         throw new FileNotFoundException();
       }
     }
 
     public static SpriteFont GetFont(string fontName)
     {
-      SpriteFont font;
-      GetFont(fontName, out font);
-      return font;
-    }
-
-    public static void GetFont(string fontName, out SpriteFont font)
-    {
       if (_mediaManager != null && _fontList.ContainsKey(fontName))
       {
-        font = _fontList[fontName];
+        return _fontList[fontName];
       }
       else
       {
-        font = null;
         throw new FileNotFoundException();
       }
     }
@@ -154,9 +138,9 @@ namespace FarseerPhysics.Samples.MediaSystem
     /// <param name="soundName">The name of the sound to play.</param>
     /// <param name="looped">True if sound effect should loop.</param>
     /// <param name="instance">The SoundEffectInstance created for this sound effect.</param>
-    public static void PlaySoundEffect(string soundName, bool looped, out SoundEffectInstance instance)
+    public static SoundEffectInstance PlaySoundEffect(string soundName, bool looped)
     {
-      instance = null;
+      SoundEffectInstance instance = null;
       if (_mediaManager != null && _soundList != null && _soundList.ContainsKey(soundName))
       {
         try
@@ -177,6 +161,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       {
         throw new FileNotFoundException();
       }
+      return instance;
     }
   }
 }

@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Farseer Physics Engine Samples XNA")]
-[assembly: AssemblyProduct("Farseer Physics Engine Samples XNA")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Farseer Physics Samples")]
+[assembly: AssemblyProduct("Farseer Physics Samples XNA")]
+[assembly: AssemblyDescription("Farseer Physics 3.5 XNA Samples")]
 [assembly: AssemblyCompany("Farseer Physics")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,4 +35,5 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 
-[assembly: AssemblyVersion("3.3.1.*")]
+[assembly: AssemblyVersion("3.5.0.*")]
+[assembly: NeutralResourcesLanguageAttribute("en")]

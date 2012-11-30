@@ -15,15 +15,18 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// A popup message box screen, used to display "are you sure?"
   /// confirmation messages.
   /// </summary>
-  public class MessageBoxScreen : GameScreen
+  public class DescriptionBoxScreen : GameScreen
   {
-    private Rectangle _backgroundRectangle;
-    private Texture2D _gradientTexture;
+    private const float HorizontalPadding = 32f;
+    private const float VerticalPadding = 16f;
+
     private string _message;
+    private Vector2 _topLeft;
+    private Vector2 _bottomRight;
     private Vector2 _textPosition;
     private SpriteFont _font;
 
-    public MessageBoxScreen(string message)
+    public DescriptionBoxScreen(string message)
     {
       _message = message;
 
@@ -42,8 +45,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void LoadContent()
     {
-      MediaManager.GetFont("detailsFont", out _font);
-      MediaManager.GetTexture("popup", out _gradientTexture);
+      _font = MediaManager.GetFont("detailsFont");
 
       // Center the message text in the viewport.
       Viewport viewport = Framework.GraphicsDevice.Viewport;
@@ -52,13 +54,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _textPosition = (viewportSize - textSize) / 2;
 
       // The background includes a border somewhat larger than the text itself.
-      const int hPad = 32;
-      const int vPad = 16;
-
-      _backgroundRectangle = new Rectangle((int)_textPosition.X - hPad,
-                                           (int)_textPosition.Y - vPad,
-                                           (int)textSize.X + hPad * 2,
-                                           (int)textSize.Y + vPad * 2);
+      _topLeft.X = _textPosition.X - HorizontalPadding;
+      _topLeft.Y = _textPosition.Y - VerticalPadding;
+      _bottomRight.X = _topLeft.X + textSize.X + 2f * HorizontalPadding;
+      _bottomRight.Y = _topLeft.Y + textSize.Y + 2f * VerticalPadding;
 
       base.LoadContent();
     }
@@ -79,18 +78,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void Draw(GameTime gameTime)
     {
-      // Fade the popup alpha during transitions.
-      Color color = Color.White * TransitionAlpha * (2f / 3f);
+      Quads.Begin();
+      Quads.Render(_topLeft, _bottomRight, null, true, AssetCreator.Black, AssetCreator.Grey * 0.65f);
+      Quads.End();
 
       Sprites.Begin();
-
-      // Draw the background rectangle.
-      Sprites.Draw(_gradientTexture, _backgroundRectangle, color);
-
       // Draw the message box text.
-      Sprites.DrawString(_font, _message, _textPosition + Vector2.One, Color.Black);
-      Sprites.DrawString(_font, _message, _textPosition, Color.White);
-
+      Sprites.DrawString(_font, _message, _textPosition + Vector2.One, AssetCreator.Black);
+      Sprites.DrawString(_font, _message, _textPosition, AssetCreator.Beige);
       Sprites.End();
     }
   }

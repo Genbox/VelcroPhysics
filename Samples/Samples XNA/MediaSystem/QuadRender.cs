@@ -38,6 +38,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       _basicEffect = new BasicEffect(graphicsDevice);
       _basicEffect.View = Matrix.Identity;
       _basicEffect.Projection = Matrix.CreateTranslation(-0.5f, -0.5f, 0.0f) * Matrix.CreateOrthographicOffCenter(0f, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0f, 0f, 1f);
+      _basicEffect.VertexColorEnabled = true;
     }
 
     #region IDisposable Members
@@ -99,8 +100,6 @@ namespace FarseerPhysics.Samples.MediaSystem
       }
       else
       {
-        _basicEffect.VertexColorEnabled = true;
-        _basicEffect.DiffuseColor = Color.White.ToVector3();
         if (texture == null)
         {
           _basicEffect.TextureEnabled = false;
@@ -140,8 +139,10 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         if (outline)
         {
-          _basicEffect.VertexColorEnabled = false;
-          _basicEffect.DiffuseColor = outlineColor.ToVector3();
+          for (int i = 0; i < 4; i++)
+          {
+            _verticesQuad[i].Color = outlineColor;
+          }
           _basicEffect.CurrentTechnique.Passes[0].Apply();
           _device.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.LineStrip, _verticesQuad, 0, 4, _lineBuffer, 0, 4);
         }
