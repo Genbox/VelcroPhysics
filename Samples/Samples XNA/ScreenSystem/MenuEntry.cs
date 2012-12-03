@@ -12,16 +12,13 @@ using FarseerPhysics.Samples.MediaSystem;
 namespace FarseerPhysics.Samples.ScreenSystem
 {
   /// <summary>
-  /// Helper class represents a single entry in a MenuScreen. By default this
-  /// just draws the entry text string, but it can be customized to display menu
-  /// entries in different ways. This also provides an event that will be raised
-  /// when the menu entry is selected.
+  /// Helper class represents a single entry in a MenuScreen.
   /// </summary>
   public sealed class MenuEntry : IComparable
   {
-    private const float MaxTranslation = 4.5f;
+    private const float MaxTranslation = 10f;
     private const double HighlightTime = 0.3;
-    private const double FadeTime = 0.5;
+    private const double FadeTime = 0.4;
 
     private static float _targetHiddenX;
     private static float _targetVisibleX;
@@ -32,7 +29,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Color _color;
     private Color _textColor;
 
-    private PhysicsGameScreen _screen;
+    private PhysicsDemoScreen _screen;
     private Texture2D _preview;
     private bool _visible;
 
@@ -45,7 +42,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <summary>
     /// Constructs a new menu entry with the specified text.
     /// </summary>
-    public MenuEntry(string text, PhysicsGameScreen screen, Texture2D preview)
+    public MenuEntry(string text, PhysicsDemoScreen screen, Texture2D preview)
     {
       _text = text;
       _screen = screen;
@@ -54,7 +51,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _hoverFade = 0.0;
       _selectionFade = 0.0;
 
-      SpriteFont font = MediaManager.GetFont("menuFont");
+      SpriteFont font = ContentWrapper.GetFont("menuFont");
       _size = font.MeasureString(text);
     }
 
@@ -160,8 +157,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
 
-      _textColor = Color.Lerp(AssetCreator.Beige, AssetCreator.Gold, (float)_selectionFade);
-      _color = Color.Lerp(AssetCreator.Sky * 0.6f, AssetCreator.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
+      _textColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
+      _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
       if (_visible)
       {

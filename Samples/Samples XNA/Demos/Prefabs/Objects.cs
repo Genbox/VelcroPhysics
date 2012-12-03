@@ -70,16 +70,16 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       switch (type)
       {
         case ObjectType.Circle:
-          _object = new Sprite(AssetCreator.CircleTexture(radius, AssetCreator.Gold, AssetCreator.Grey));
+          _object = new Sprite(ContentWrapper.CircleTexture(radius, ContentWrapper.Gold, ContentWrapper.Grey));
           break;
         case ObjectType.Rectangle:
-          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(radius / 2f, radius / 2f), AssetCreator.Red, AssetCreator.Grey));
+          _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRectangle(radius / 2f, radius / 2f), ContentWrapper.Red, ContentWrapper.Grey));
           break;
         case ObjectType.Star:
-          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateGear(radius, 10, 0f, 1f), AssetCreator.Brown, AssetCreator.Black));
+          _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateGear(radius, 10, 0f, 1f), ContentWrapper.Brown, ContentWrapper.Black));
           break;
         case ObjectType.Gear:
-          _object = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateGear(radius, 10, 100f, 1f), AssetCreator.Orange, AssetCreator.Grey));
+          _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateGear(radius, 10, 100f, 1f), ContentWrapper.Orange, ContentWrapper.Grey));
           break;
       }
     }

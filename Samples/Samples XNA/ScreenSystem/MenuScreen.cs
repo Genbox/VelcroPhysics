@@ -26,8 +26,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Vector2 _menuEntrySize;
     private float _menuStart;
     private float _menuSpacing;
+    private float _scrollSpacing;
 
     private List<MenuEntry> _menuEntries = new List<MenuEntry>();
+    private MenuSlider _menuSlider;
+    private bool _scrollLock;
 
     private int _selectedEntry;
     private int _hoverEntry;
@@ -39,8 +42,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     private Vector2 _previewPosition;
     private Vector2 _previewOrigin;
-
-    //private MenuButton _scrollSlider;
 
     private SpriteFont _font;
 
@@ -63,7 +64,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _menuOffset = 0;
     }
 
-    public void AddMenuItem(PhysicsGameScreen screen, Texture2D preview)
+    public void AddMenuItem(PhysicsDemoScreen screen, Texture2D preview)
     {
       MenuEntry entry = new MenuEntry(screen.GetTitle(), screen, preview);
       _menuEntrySize.X = Math.Max(_menuEntrySize.X, entry.Size.X + 20f);
@@ -77,13 +78,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
       Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-      _font = MediaManager.GetFont("menuFont");
-      _samplesLogo = MediaManager.GetTexture("samplesLogo");
+      _font = ContentWrapper.GetFont("menuFont");
+      _samplesLogo = ContentWrapper.GetTexture("samplesLogo");
 
       _titleOrigin = new Vector2(_samplesLogo.Width, _samplesLogo.Height) / 2f;
       _titlePosition = new Vector2(viewport.Width / 2f, TitleBarHeight / 2f);
-
-      //_scrollSlider = new MenuButton(_texSlider, false, new Vector2(scrollBarPos, _menuBorderTop));
 
       float horizontalSpacing = ((viewport.Width / 2f) - _menuEntrySize.X - EntrySpacer - _menuEntrySize.Y) / 3f;
       float verticalSpacing = ((viewport.Height - TitleBarHeight - NumEntries * (_menuEntrySize.Y + EntrySpacer)) - EntrySpacer) / 2f;
@@ -100,6 +99,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
       {
         _menuEntries[i].InitializePosition(_menuStart + _menuSpacing * i, i < NumEntries);
       }
+
+      _menuSlider = new MenuSlider(new Vector2(_menuEntrySize.X + horizontalSpacing + EntrySpacer + _menuEntrySize.Y / 2f, _menuStart));
+      if (_menuEntries.Count > NumEntries)
+      {
+        _scrollSpacing = _menuSpacing * (NumEntries - 1) / (_menuEntries.Count - NumEntries);
+      }
+      else
+      {
+        _scrollSpacing = 0f;
+      }
+      _scrollLock = false;
     }
 
     /// <summary>
@@ -132,6 +142,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
       return false;
     }
 
+    private bool GetSliderCollision(Vector2 position)
+    {
+      Rectangle boundingBox = new Rectangle((int)(_menuSlider.Position.X - _menuEntrySize.Y / 2f), (int)(_menuSlider.Position.Y - _menuEntrySize.Y / 2f), (int)_menuEntrySize.Y, (int)_menuEntrySize.Y);
+      if (boundingBox.Contains((int)position.X, (int)position.Y))
+      {
+        return true;
+      }
+      return false;
+    }
+
     /// <summary>
     /// Responds to user input, changing the selected entry and accepting
     /// or cancelling the menu.
@@ -149,8 +169,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
           if (_menuEntries[_selectedEntry].Screen != null)
           {
             Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
-            Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsGameScreen).GetDetails()));
-            MediaManager.PlaySoundEffect("click");
+            Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
+            ContentWrapper.PlaySoundEffect("click");
           }
         }
         if (_hoverEntry != -1)
@@ -160,8 +180,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
             if (_menuEntries[_selectedEntry].Screen != null)
             {
               Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
-              Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsGameScreen).GetDetails()));
-              MediaManager.PlaySoundEffect("click");
+              Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
+              ContentWrapper.PlaySoundEffect("click");
             }
           }
           else
@@ -171,7 +191,23 @@ namespace FarseerPhysics.Samples.ScreenSystem
         }
       }
 
-      if (input.IsMenuCancel())
+      if (input.IsMenuSelect() && GetSliderCollision(input.Cursor))
+      {
+        _scrollLock = true;
+      }
+
+      if (input.IsMenuRelease() || !input.IsCursorValid)
+      {
+        _scrollLock = false;
+      }
+
+      if (_scrollLock)
+      {
+        _menuOffset = (int)Math.Round((MathHelper.Clamp(input.Cursor.Y, _menuStart, _menuStart + _menuSpacing * (NumEntries - 1)) - _menuStart) / _scrollSpacing);
+        UpdateMenuPositions();
+      }
+
+      if (input.IsScreenExit())
       {
         Framework.ExitGame();
       }
@@ -216,6 +252,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         _menuEntries[i].Target = _menuStart + _menuSpacing * targetIndex;
         targetIndex++;
       }
+      _menuSlider.Target = _menuStart + _scrollSpacing * _menuOffset;
     }
 
     /// <summary>
@@ -233,6 +270,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         _menuEntries[i].Update(isSelected, isHovered, gameTime);
       }
+
+      _menuSlider.Update(_scrollLock, gameTime);
     }
 
     /// <summary>
@@ -247,14 +286,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
       foreach (MenuEntry entry in _menuEntries)
       {
         Quads.Render(entry.Position - _menuEntrySize / 2f, entry.Position + _menuEntrySize / 2f, null, true,
-                     AssetCreator.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
+                     ContentWrapper.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
       }
+      Quads.Render(_menuSlider.Position - new Vector2(_menuEntrySize.Y / 2f), _menuSlider.Position + new Vector2(_menuEntrySize.Y / 2f), null, true,
+                   ContentWrapper.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
       Quads.End();
 
       Sprites.Begin();
       foreach (MenuEntry entry in _menuEntries)
       {
-        Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, AssetCreator.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
+        Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, ContentWrapper.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
                            0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
         Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha,
                            0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
@@ -266,7 +307,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       Sprites.End();
 
       Quads.Begin();
-      Quads.Render(Vector2.Zero, new Vector2(Framework.GraphicsDevice.Viewport.Width, TitleBarHeight), null, AssetCreator.Grey * 0.7f * TransitionAlpha);
+      Quads.Render(Vector2.Zero, new Vector2(Framework.GraphicsDevice.Viewport.Width, TitleBarHeight), null, ContentWrapper.Grey * 0.7f * TransitionAlpha);
       Quads.End();
 
       // Make the menu slide into place during transitions, using a
@@ -274,7 +315,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
       // the movement slow down as it nears the end).
       Sprites.Begin();
       Sprites.Draw(_samplesLogo, _titlePosition - transitionOffset, null, Color.White, 0f, _titleOrigin, 1f, SpriteEffects.None, 0f);
-      //_scrollSlider.Draw(Sprites);
       Sprites.End();
     }
   }

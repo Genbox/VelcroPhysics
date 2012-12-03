@@ -107,8 +107,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         }
       }
 
-      _link = new Sprite(MediaManager.GetTexture("link"));
-      _goo = new Sprite(MediaManager.GetTexture("goo"));
+      _link = new Sprite(ContentWrapper.GetTexture("link"));
+      _goo = new Sprite(ContentWrapper.GetTexture("goo"));
     }
 
     public void Draw(SpriteBatch batch)

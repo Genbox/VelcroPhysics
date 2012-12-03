@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 #endregion
 #region Using Farseer
 using FarseerPhysics.Common;
@@ -18,8 +19,10 @@ using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.Samples.MediaSystem
 {
-  public class AssetCreator : GameComponent
+  public class ContentWrapper : GameComponent
   {
+    private const int CircleSegments = 32;
+
     public static Color Gold = new Color(246, 187, 53);
     public static Color Red = new Color(215, 1, 51);
     public static Color Green = new Color(102, 158, 68);
@@ -40,36 +43,117 @@ namespace FarseerPhysics.Samples.MediaSystem
     public static Color Blue = new Color(44, 138, 153);
     public static Color Ocean = new Color(57, 143, 171);
 
-    private const int CircleSegments = 32;
-
-    private static AssetCreator _assetCreator = null;
-
+    private static ContentWrapper _contentWrapper = null;
     private static BasicEffect _effect;
-    private static Dictionary<string, Texture2D> _materials = new Dictionary<string, Texture2D>();
 
-    private AssetCreator(Game game)
+    private static Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
+    private static Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
+
+    private static Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
+
+    public static int SoundVolume
+    {
+      get { return _soundVolume; }
+      set
+      {
+        _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
+        SoundEffect.MasterVolume = _soundVolume / 100f;
+      }
+    }
+    private static int _soundVolume;
+
+    private ContentWrapper(Game game)
       : base(game)
     {
-      // Add all materials
-      DirectoryInfo assetFolder = new DirectoryInfo(game.Content.RootDirectory + "/Materials");
-      FileInfo[] fileList = assetFolder.GetFiles("*.xnb");
+      DirectoryInfo currentAssetFolder;
+      FileInfo[] currentFileList;
 
-      for (int i = 0; i < fileList.Length; i++)
+      // First create a blank texture
+      _textureList["blank"] = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+      _textureList["blank"].SetData(new Color[] { Color.White });
+      _textureList["blank"].Name = "blank";
+
+      // Load all graphics
+      string[] gfxFolders = { "Common", "DemoGFX", "Materials" };
+      foreach (string folder in gfxFolders)
       {
-        string materialName = System.IO.Path.GetFileNameWithoutExtension(fileList[i].Name);
-        _materials[materialName] = game.Content.Load<Texture2D>("Materials/" + materialName);
-        _materials[materialName].Name = materialName;
+        currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/" + folder);
+        currentFileList = currentAssetFolder.GetFiles("*.xnb");
+        for (int i = 0; i < currentFileList.Length; i++)
+        {
+          string textureName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+          _textureList[textureName] = game.Content.Load<Texture2D>(folder + "/" + textureName);
+          _textureList[textureName].Name = textureName;
+        }
       }
 
+      // Add samples fonts
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/Fonts");
+      currentFileList = currentAssetFolder.GetFiles("*.xnb");
+
+      for (int i = 0; i < currentFileList.Length; i++)
+      {
+        string fontName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+        _fontList[fontName] = game.Content.Load<SpriteFont>("Fonts/" + fontName);
+      }
+
+      // Add basic effect for texture generation
       _effect = new BasicEffect(game.GraphicsDevice);
+
+      // Initialize audio playback
+      currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/DemoSFX");
+      currentFileList = currentAssetFolder.GetFiles("*.xnb");
+
+      for (int i = 0; i < currentFileList.Length; i++)
+      {
+        string soundName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+        _soundList[soundName] = game.Content.Load<SoundEffect>("DemoSFX/" + soundName);
+        _soundList[soundName].Name = soundName;
+      }
+
+      try
+      {
+        SoundVolume = 100;
+      }
+      catch (NoAudioHardwareException)
+      {
+        // silently fall back to silence
+      }
     }
 
     public static void Initialize(Game game)
     {
-      if (_assetCreator == null && game != null)
+      if (_contentWrapper == null && game != null)
       {
-        _assetCreator = new AssetCreator(game);
-        game.Components.Add(_assetCreator);
+        _contentWrapper = new ContentWrapper(game);
+        game.Components.Add(_contentWrapper);
+      }
+    }
+
+    public static Texture2D GetTexture(string textureName)
+    {
+      if (_contentWrapper != null && _textureList.ContainsKey(textureName))
+      {
+        return _textureList[textureName];
+      }
+      else
+      {
+#if WINDOWS
+        Console.WriteLine("Texture \"" + textureName + "\" not found!");
+#endif
+        return null;
+      }
+    }
+
+    public static SpriteFont GetFont(string fontName)
+    {
+      if (_contentWrapper != null && _fontList.ContainsKey(fontName))
+      {
+        return _fontList[fontName];
+      }
+      else
+      {
+        throw new FileNotFoundException();
       }
     }
 
@@ -100,7 +184,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      if (_assetCreator != null)
+      if (_contentWrapper != null)
       {
         switch (shape.ShapeType)
         {
@@ -122,13 +206,8 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      if (_assetCreator != null)
+      if (_contentWrapper != null)
       {
-        if (!_materials.ContainsKey(pattern))
-        {
-          pattern = "blank";
-        }
-
         VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
         VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
 
@@ -136,7 +215,14 @@ namespace FarseerPhysics.Samples.MediaSystem
         float theta = segmentSize;
 
         radius = ConvertUnits.ToDisplayUnits(radius);
-        materialScale /= _materials[pattern].Width;
+        if (_textureList.ContainsKey(pattern))
+        {
+          materialScale /= _textureList[pattern].Width;
+        }
+        else
+        {
+          materialScale = 1f;
+        }
 
         Vector2 start = new Vector2(radius, 0f);
 
@@ -172,14 +258,7 @@ namespace FarseerPhysics.Samples.MediaSystem
           theta += segmentSize;
         }
 
-        if (pattern == "blank")
-        {
-          return _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), null, Color.Transparent, verticesFill, verticesOutline);
-        }
-        else
-        {
-          return  _assetCreator.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _materials[pattern], patternColor, verticesFill, verticesOutline);
-        }
+        return _contentWrapper.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
       }
       return null;
     }
@@ -202,13 +281,8 @@ namespace FarseerPhysics.Samples.MediaSystem
 
     public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
     {
-      if (_assetCreator != null)
+      if (_contentWrapper != null)
       {
-        if (!_materials.ContainsKey(pattern))
-        {
-          pattern = "blank";
-        }
-
         // copy vertices
         Vertices scaledVertices = new Vertices(vertices);
 
@@ -234,7 +308,14 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
 
-        materialScale /= _materials[pattern].Width;
+        if (_textureList.ContainsKey(pattern))
+        {
+          materialScale /= _textureList[pattern].Width;
+        }
+        else
+        {
+          materialScale = 1f;
+        }
 
         for (int i = 0; i < decomposedVertices.Count; i++)
         {
@@ -263,14 +344,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
 
-        if (pattern == "blank")
-        {
-          return _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, null, Color.Transparent, verticesFill, verticesOutline);
-        }
-        else
-        {
-          return _assetCreator.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[pattern], patternColor, verticesFill, verticesOutline);
-        }
+        return _contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
       }
       return null;
     }
@@ -296,7 +370,7 @@ namespace FarseerPhysics.Samples.MediaSystem
       _effect.View = halfPixelOffset;
       // render shape;
       _effect.TextureEnabled = true;
-      _effect.Texture = _materials["blank"];
+      _effect.Texture = _textureList["blank"];
       _effect.VertexColorEnabled = true;
       _effect.Techniques[0].Passes[0].Apply();
       for (int i = 0; i < verticesFill.Count; i++)
@@ -322,6 +396,54 @@ namespace FarseerPhysics.Samples.MediaSystem
       Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
       Game.GraphicsDevice.SetRenderTarget(null);
       return texture;
+    }
+
+    /// <summary>
+    /// Plays a fire-and-forget sound effect by name.
+    /// </summary>
+    /// <param name="soundName">The name of the sound to play.</param>
+    public static void PlaySoundEffect(string soundName)
+    {
+      if (_contentWrapper != null && _soundList.ContainsKey(soundName))
+      {
+        _soundList[soundName].Play();
+      }
+      else
+      {
+        throw new FileNotFoundException();
+      }
+    }
+
+    /// <summary>
+    /// Plays a sound effect by name and returns an instance of that sound.
+    /// </summary>
+    /// <param name="soundName">The name of the sound to play.</param>
+    /// <param name="looped">True if sound effect should loop.</param>
+    /// <param name="instance">The SoundEffectInstance created for this sound effect.</param>
+    public static SoundEffectInstance PlaySoundEffect(string soundName, bool looped)
+    {
+      SoundEffectInstance instance = null;
+      if (_contentWrapper != null && _soundList != null && _soundList.ContainsKey(soundName))
+      {
+        try
+        {
+          instance = _soundList[soundName].CreateInstance();
+          if (instance != null)
+          {
+            instance.IsLooped = looped;
+            instance.Play();
+          }
+        }
+        catch (InstancePlayLimitException)
+        {
+          // silently fail (returns null instance) if instance limit reached
+        }
+      }
+      else
+      {
+        throw new FileNotFoundException();
+      }
+      return instance;
     }
   }
 }

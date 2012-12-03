@@ -22,7 +22,7 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class BreakableBodiesDemo : PhysicsGameScreen
+  internal class BreakableBodiesDemo : PhysicsDemoScreen
   {
     private Border _border;
     private List<List<Vertices>> _breakableObject;
@@ -72,7 +72,7 @@ namespace FarseerPhysics.Samples.Demos
       _border = new Border(World, Lines, Framework.GraphicsDevice);
       _breakableObject = new List<List<Vertices>>();
 
-      Texture2D alphabet = MediaManager.GetTexture("alphabet");
+      Texture2D alphabet = ContentWrapper.GetTexture("alphabet");
 
       uint[] data = new uint[alphabet.Width * alphabet.Height];
       alphabet.GetData(data);

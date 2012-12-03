@@ -98,9 +98,9 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       _rightKneeAngleJoint.MaxImpulse = 3;
 
       //GFX
-      _torso = new Sprite(AssetCreator.CircleTexture(_spiderBodyRadius, "square", AssetCreator.Grey, AssetCreator.Gold, AssetCreator.Black, 1f));
-      _upperLeg = new Sprite(AssetCreator.TextureFromShape(_leftUpper.FixtureList[0].Shape, AssetCreator.Grey, AssetCreator.Black));
-      _lowerLeg = new Sprite(AssetCreator.TextureFromShape(_leftLower.FixtureList[0].Shape, AssetCreator.Gold, AssetCreator.Black));
+      _torso = new Sprite(ContentWrapper.CircleTexture(_spiderBodyRadius, "square", ContentWrapper.Grey, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+      _upperLeg = new Sprite(ContentWrapper.TextureFromShape(_leftUpper.FixtureList[0].Shape, ContentWrapper.Grey, ContentWrapper.Black));
+      _lowerLeg = new Sprite(ContentWrapper.TextureFromShape(_leftLower.FixtureList[0].Shape, ContentWrapper.Gold, ContentWrapper.Black));
 
       _flexed = false;
       _timer = 0f;

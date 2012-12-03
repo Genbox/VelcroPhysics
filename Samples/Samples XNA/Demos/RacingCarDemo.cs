@@ -20,7 +20,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class RacingCarDemo : PhysicsGameScreen
+  internal class RacingCarDemo : PhysicsDemoScreen
   {
     private float _acceleration;
     private Body _board;
@@ -140,7 +140,7 @@ namespace FarseerPhysics.Samples.Demos
 
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
-        _teeter = new Sprite(AssetCreator.TextureFromShape(box, "stripe", AssetCreator.Gold, AssetCreator.Black, AssetCreator.Black, 1f));
+        _teeter = new Sprite(ContentWrapper.TextureFromShape(box, "stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1f));
 
         _board.CreateFixture(box);
 
@@ -161,7 +161,7 @@ namespace FarseerPhysics.Samples.Demos
         PolygonShape shape = new PolygonShape(1f);
         shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
 
-        _bridge = new Sprite(AssetCreator.TextureFromShape(shape, AssetCreator.Gold, AssetCreator.Black));
+        _bridge = new Sprite(ContentWrapper.TextureFromShape(shape, ContentWrapper.Gold, ContentWrapper.Black));
 
         Body prevBody = _ground;
         for (int i = 0; i < segmentCount; ++i)
@@ -184,7 +184,7 @@ namespace FarseerPhysics.Samples.Demos
         _boxes = new List<Body>();
         PolygonShape box = new PolygonShape(1f);
         box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
-        _box = new Sprite(AssetCreator.TextureFromShape(box, "square", AssetCreator.Sky, AssetCreator.Sunset, AssetCreator.Black, 1f));
+        _box = new Sprite(ContentWrapper.TextureFromShape(box, "square", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 1f));
 
         Body body = new Body(World);
         body.BodyType = BodyType.Dynamic;
@@ -254,8 +254,8 @@ namespace FarseerPhysics.Samples.Demos
 
         // GFX
 
-        _carBody = new Sprite(MediaManager.GetTexture("car"), AssetCreator.CalculateOrigin(_car));
-        _wheel = new Sprite(MediaManager.GetTexture("wheel"));
+        _carBody = new Sprite(ContentWrapper.GetTexture("car"), ContentWrapper.CalculateOrigin(_car));
+        _wheel = new Sprite(ContentWrapper.GetTexture("wheel"));
       }
 
       Camera.MinRotation = -0.05f;

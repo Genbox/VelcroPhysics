@@ -17,7 +17,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class FrictionDemo : PhysicsGameScreen
+  internal class FrictionDemo : PhysicsDemoScreen
   {
     private Border _border;
     private List<Body> _ramps;
@@ -85,7 +85,7 @@ namespace FarseerPhysics.Samples.Demos
       }
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(AssetCreator.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", AssetCreator.Green, AssetCreator.Lime, AssetCreator.Black, 1f));
+      _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)
@@ -100,7 +100,7 @@ namespace FarseerPhysics.Samples.Demos
       Lines.Begin(Camera.SimProjection, Camera.SimView);
       for (int i = 0; i < _ramps.Count; i++)
       {
-        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, AssetCreator.Teal);
+        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, ContentWrapper.Teal);
       }
       Lines.End();
 

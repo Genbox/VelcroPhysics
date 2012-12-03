@@ -16,7 +16,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class RagdollDemo : PhysicsGameScreen
+  internal class RagdollDemo : PhysicsDemoScreen
   {
     private Border _border;
     private Sprite _obstacle;
@@ -83,7 +83,7 @@ namespace FarseerPhysics.Samples.Demos
       _obstacles[3].Position = new Vector2(7f, -5f);
 
       // create sprite based on body
-      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", AssetCreator.Green, AssetCreator.Teal, AssetCreator.Black, 1.5f));
+      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Green, ContentWrapper.Teal, ContentWrapper.Black, 1.5f));
 
       SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }

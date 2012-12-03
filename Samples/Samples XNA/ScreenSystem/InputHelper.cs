@@ -111,7 +111,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public void LoadContent(Viewport viewport)
     {
       Texture2D cursorTexture;
-      cursorTexture = MediaManager.GetTexture("cursor");
+      cursorTexture = ContentWrapper.GetTexture("cursor");
       _cursorSprite = new Sprite(cursorTexture);
       _viewport = viewport;
     }
@@ -263,6 +263,18 @@ namespace FarseerPhysics.Samples.ScreenSystem
              IsNewMouseButtonPress(MouseButtons.LeftButton);
     }
 
+    public bool IsMenuHold()
+    {
+      return IsNewButtonPress(Buttons.A) ||
+             IsNewMouseButtonPress(MouseButtons.LeftButton);
+    }
+
+    public bool IsMenuRelease()
+    {
+      return _currentGamePadState.IsButtonUp(Buttons.A) &&
+             _currentMouseState.LeftButton == ButtonState.Released;
+    }
+
     /// <summary>
     ///   Checks for a "menu cancel" input action.
     /// </summary>
@@ -280,7 +292,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
       return IsNewKeyPress(Keys.Up) ||
              IsNewKeyPress(Keys.PageUp) ||
              IsNewButtonPress(Buttons.DPadUp) ||
-             IsNewButtonPress(Buttons.LeftThumbstickUp) ||
              IsNewButtonPress(Buttons.RightThumbstickUp) ||
              IsNewScrollWheelUp();
     }
@@ -290,9 +301,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
       return IsNewKeyPress(Keys.Down) ||
              IsNewKeyPress(Keys.PageDown) ||
              IsNewButtonPress(Buttons.DPadDown) ||
-             IsNewButtonPress(Buttons.LeftThumbstickDown) ||
              IsNewButtonPress(Buttons.RightThumbstickDown) ||
              IsNewScrollWheelDown();
+    }
+
+    public bool IsScreenExit()
+    {
+      return IsNewKeyPress(Keys.Escape) ||
+             IsNewKeyPress(Keys.Back) ||
+             IsNewButtonPress(Buttons.Back);
     }
   }
 }
