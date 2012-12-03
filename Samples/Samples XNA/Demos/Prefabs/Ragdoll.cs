@@ -187,12 +187,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       world.AddJoint(jointRightLegBody);
 
       // GFX
-      _face = new Sprite(AssetCreator.CircleTexture(0.9f, "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Grey, 1f));
-      _torso = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2), "stripe", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 2.0f));
-      _upperArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
-      _lowerArm = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
-      _upperLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
-      _lowerLeg = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", AssetCreator.Lime, AssetCreator.Teal, AssetCreator.Black, 1f));
+      _face = new Sprite(ContentWrapper.CircleTexture(0.9f, "square", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Grey, 1f));
+      _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2), "stripe", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Black, 2.0f));
+      _upperArm = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Black, 1f));
+      _lowerArm = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Black, 1f));
+      _upperLeg = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Black, 1f));
+      _lowerLeg = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", ContentWrapper.Lime, ContentWrapper.Teal, ContentWrapper.Black, 1f));
     }
 
     public Body Body

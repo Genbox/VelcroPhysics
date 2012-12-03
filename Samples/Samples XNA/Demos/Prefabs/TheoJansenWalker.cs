@@ -60,7 +60,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       PolygonShape box = new PolygonShape(1f);
       box.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
 
-      _body = new Sprite(AssetCreator.TextureFromShape(box, AssetCreator.Sky, AssetCreator.Black));
+      _body = new Sprite(ContentWrapper.TextureFromShape(box, ContentWrapper.Sky, ContentWrapper.Black));
 
       _chassis = BodyFactory.CreateBody(world);
       _chassis.BodyType = BodyType.Dynamic;
@@ -71,7 +71,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
       // Wheel
       CircleShape circle = new CircleShape(1.6f, 1f);
-      _engine = new Sprite(AssetCreator.TextureFromShape(circle, "stripe", AssetCreator.Sky, AssetCreator.Sunset, AssetCreator.Black, 3f));
+      _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "stripe", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 3f));
 
       _wheel = BodyFactory.CreateBody(world);
       _wheel.BodyType = BodyType.Dynamic;
@@ -110,22 +110,22 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         new Vector2(0.6f, -2.9f)
       };
 
-      _leftShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[3], points[4] }, AssetCreator.Sky, AssetCreator.Black));
-      _leftShoulder.Origin = AssetCreator.CalculateOrigin(_leftShoulders[0]);
+      _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new Vector2[] { Vector2.Zero, points[3], points[4] }, ContentWrapper.Sky, ContentWrapper.Black));
+      _leftShoulder.Origin = ContentWrapper.CalculateOrigin(_leftShoulders[0]);
 
-      _leftLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[1], points[2] }, AssetCreator.Sky, AssetCreator.Black));
-      _leftLeg.Origin = AssetCreator.CalculateOrigin(_leftLegs[0]);
+      _leftLeg = new Sprite(ContentWrapper.PolygonTexture(new Vector2[] { points[0], points[1], points[2] }, ContentWrapper.Sky, ContentWrapper.Black));
+      _leftLeg.Origin = ContentWrapper.CalculateOrigin(_leftLegs[0]);
 
       for (int i = 0; i < points.Length; i++)
       {
         points[i] *= -1f;
       }
 
-      _rightShoulder = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { Vector2.Zero, points[4], points[3] }, AssetCreator.Sky, AssetCreator.Black));
-      _rightShoulder.Origin = AssetCreator.CalculateOrigin(_rightShoulders[0]);
+      _rightShoulder = new Sprite(ContentWrapper.PolygonTexture(new Vector2[] { Vector2.Zero, points[4], points[3] }, ContentWrapper.Sky, ContentWrapper.Black));
+      _rightShoulder.Origin = ContentWrapper.CalculateOrigin(_rightShoulders[0]);
 
-      _rightLeg = new Sprite(AssetCreator.PolygonTexture(new Vector2[] { points[0], points[2], points[1] }, AssetCreator.Sky, AssetCreator.Black));
-      _rightLeg.Origin = AssetCreator.CalculateOrigin(_rightLegs[0]);
+      _rightLeg = new Sprite(ContentWrapper.PolygonTexture(new Vector2[] { points[0], points[2], points[1] }, ContentWrapper.Sky, ContentWrapper.Black));
+      _rightLeg.Origin = ContentWrapper.CalculateOrigin(_rightLegs[0]);
     }
 
     private void CreateLeg(World world, float direction, Vector2 wheelAnchor, int index)
@@ -245,7 +245,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       lines.Begin(camera.SimProjection, camera.SimView);
       for (int i = 0; i < _walkerJoints.Count; ++i)
       {
-        lines.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, AssetCreator.Grey);
+        lines.DrawLine(_walkerJoints[i].WorldAnchorA, _walkerJoints[i].WorldAnchorB, ContentWrapper.Grey);
       }
       lines.End();
     }

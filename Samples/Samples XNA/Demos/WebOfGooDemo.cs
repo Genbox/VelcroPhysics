@@ -12,7 +12,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class WebOfGooDemo : PhysicsGameScreen
+  internal class WebOfGooDemo : PhysicsDemoScreen
   {
     private Border _border;
     private WebOfGoo _webOfGoo;

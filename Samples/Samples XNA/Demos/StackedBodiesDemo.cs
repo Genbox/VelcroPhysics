@@ -12,7 +12,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class StackedBodiesDemo : PhysicsGameScreen
+  internal class StackedBodiesDemo : PhysicsDemoScreen
   {
 #if XBOX
     private const int PyramidBaseBodyCount = 10;

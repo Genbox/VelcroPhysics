@@ -34,10 +34,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void LoadContent()
     {
-      _farseerLogoTexture = MediaManager.GetTexture("logo");
+      _farseerLogoTexture = ContentWrapper.GetTexture("logo");
       Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-      _farseerLogoPosition = new Vector2(viewport.Width / 2f - 465.5f, (viewport.Height - _farseerLogoTexture.Height) / 2f);
+      _farseerLogoPosition = new Vector2((viewport.Width - _farseerLogoTexture.Width) / 2f - 100f, (viewport.Height - _farseerLogoTexture.Height) / 2f);
     }
 
     public override void HandleInput(InputHelper input, GameTime gameTime)

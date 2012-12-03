@@ -45,7 +45,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void LoadContent()
     {
-      _font = MediaManager.GetFont("detailsFont");
+      _font = ContentWrapper.GetFont("detailsFont");
 
       // Center the message text in the viewport.
       Viewport viewport = Framework.GraphicsDevice.Viewport;
@@ -79,13 +79,13 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public override void Draw(GameTime gameTime)
     {
       Quads.Begin();
-      Quads.Render(_topLeft, _bottomRight, null, true, AssetCreator.Black, AssetCreator.Grey * 0.65f);
+      Quads.Render(_topLeft, _bottomRight, null, true, ContentWrapper.Black, ContentWrapper.Grey * 0.65f);
       Quads.End();
 
       Sprites.Begin();
       // Draw the message box text.
-      Sprites.DrawString(_font, _message, _textPosition + Vector2.One, AssetCreator.Black);
-      Sprites.DrawString(_font, _message, _textPosition, AssetCreator.Beige);
+      Sprites.DrawString(_font, _message, _textPosition + Vector2.One, ContentWrapper.Black);
+      Sprites.DrawString(_font, _message, _textPosition, ContentWrapper.Beige);
       Sprites.End();
     }
   }

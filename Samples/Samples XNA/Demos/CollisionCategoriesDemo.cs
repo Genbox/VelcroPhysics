@@ -14,7 +14,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class CollisionCategoriesDemo : PhysicsGameScreen
+  internal class CollisionCategoriesDemo : PhysicsDemoScreen
   {
     private Agent _agent;
     private Border _border;

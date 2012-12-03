@@ -20,7 +20,7 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class TextureToVerticesDemo : PhysicsGameScreen
+  internal class TextureToVerticesDemo : PhysicsDemoScreen
   {
     private Border _border;
     private Body _compound;
@@ -69,7 +69,7 @@ namespace FarseerPhysics.Samples.Demos
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
       // Load texture that will represent the physics body
-      Texture2D polygonTexture = MediaManager.GetTexture("object");
+      Texture2D polygonTexture = ContentWrapper.GetTexture("object");
 
       // Create an array to hold the data from the texture
       uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
@@ -115,7 +115,7 @@ namespace FarseerPhysics.Samples.Demos
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
       Sprites.Draw(_objectSprite.Image, ConvertUnits.ToDisplayUnits(_compound.Position),
-                   null, AssetCreator.Gold, _compound.Rotation, _objectSprite.Origin, 1f, SpriteEffects.None, 0f);
+                   null, ContentWrapper.Gold, _compound.Rotation, _objectSprite.Origin, 1f, SpriteEffects.None, 0f);
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

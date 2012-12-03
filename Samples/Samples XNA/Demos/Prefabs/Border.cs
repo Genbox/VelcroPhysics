@@ -71,13 +71,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
       _basicEffect.Projection = projection;
       _basicEffect.View = view;
-      _basicEffect.Texture = MediaManager.GetTexture("blank");
-      _basicEffect.DiffuseColor = AssetCreator.Black.ToVector3();
+      _basicEffect.Texture = ContentWrapper.GetTexture("blank");
+      _basicEffect.DiffuseColor = ContentWrapper.Black.ToVector3();
       _basicEffect.CurrentTechnique.Passes[0].Apply();
       _graphics.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);
 
-      _basicEffect.Texture = MediaManager.GetTexture("stripe");
-      _basicEffect.DiffuseColor = AssetCreator.Grey.ToVector3();
+      _basicEffect.Texture = ContentWrapper.GetTexture("stripe");
+      _basicEffect.DiffuseColor = ContentWrapper.Grey.ToVector3();
       _basicEffect.CurrentTechnique.Passes[0].Apply();
       _graphics.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);
 

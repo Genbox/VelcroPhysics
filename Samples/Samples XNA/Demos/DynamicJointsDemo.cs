@@ -12,7 +12,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  public class DynamicJointsDemo : PhysicsGameScreen
+  public class DynamicJointsDemo : PhysicsDemoScreen
   {
     private Agent _agent;
     private Border _border;

@@ -52,8 +52,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       FixtureFactory.AttachCircle(0.5f, 0.5f, _agentBody, new Vector2(0f, -2f));
 
       //GFX
-      _box = new Sprite(AssetCreator.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), Color.White, AssetCreator.Black));
-      _knob = new Sprite(AssetCreator.CircleTexture(0.5f, "square", AssetCreator.Grey, AssetCreator.Gold, AssetCreator.Black, 1f));
+      _box = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), Color.White, ContentWrapper.Black));
+      _knob = new Sprite(ContentWrapper.CircleTexture(0.5f, "square", ContentWrapper.Black, ContentWrapper.Gold, ContentWrapper.Black, 1f));
 
       _offset = ConvertUnits.ToDisplayUnits(2f);
     }
@@ -87,7 +87,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
       //cross
       batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                  Color.White, _agentBody.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+                 Color.White, _agentBody.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
       batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
                   Color.White, _agentBody.Rotation + MathHelper.Pi / 2f, _box.Origin, 1f, SpriteEffects.None, 0f);
       //knobs

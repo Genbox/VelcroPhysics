@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class MultipleFixturesDemo : PhysicsGameScreen
+  internal class MultipleFixturesDemo : PhysicsDemoScreen
   {
     private Border _border;
     private Sprite _rectangleSprite;
@@ -91,7 +91,7 @@ namespace FarseerPhysics.Samples.Demos
       SetUserAgent(_rectangles, 200f, 200f);
 
       // create sprite based on rectangle fixture
-      _rectangleSprite = new Sprite(AssetCreator.PolygonTexture(rectangle1, "square", AssetCreator.Blue, AssetCreator.Gold, AssetCreator.Black, 1f));
+      _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
       _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
     }
 

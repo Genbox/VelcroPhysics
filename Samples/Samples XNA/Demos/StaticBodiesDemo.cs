@@ -16,7 +16,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class StaticBodiesDemo : PhysicsGameScreen
+  internal class StaticBodiesDemo : PhysicsDemoScreen
   {
     private Agent _agent;
     private Border _border;
@@ -89,7 +89,7 @@ namespace FarseerPhysics.Samples.Demos
       _obstacles[4].Position = new Vector2(-17f, 0f);
 
       // create sprite based on body
-      _obstacle = new Sprite(AssetCreator.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", AssetCreator.Gold, AssetCreator.Black, AssetCreator.Black, 1.5f));
+      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1.5f));
 
       SetUserAgent(_agent.Body, 1000f, 400f);
     }

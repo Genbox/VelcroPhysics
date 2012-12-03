@@ -13,7 +13,7 @@ using FarseerPhysics.Dynamics.Joints;
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
-  public class PhysicsGameScreen : GameScreen
+  public class PhysicsDemoScreen : GameScreen
   {
     public Camera2D Camera;
     protected DebugViewXNA DebugView;
@@ -24,7 +24,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private FixedMouseJoint _fixedMouseJoint;
     private Body _userAgent;
 
-    protected PhysicsGameScreen()
+    protected PhysicsDemoScreen()
     {
       TransitionOnTime = TimeSpan.FromSeconds(0.75);
       TransitionOffTime = TimeSpan.FromSeconds(0.75);
@@ -146,7 +146,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         EnableOrDisableFlag(DebugViewFlags.AABB);
       }
 
-      if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
+      if (input.IsScreenExit())
       {
         ExitScreen();
       }

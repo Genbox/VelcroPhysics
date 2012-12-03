@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class SoftBodyDemo : PhysicsGameScreen
+  internal class SoftBodyDemo : PhysicsDemoScreen
   {
     private Border _border;
 
@@ -112,10 +112,10 @@ namespace FarseerPhysics.Samples.Demos
       PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
 
       // GFX
-      _bridgeBox = new Sprite(AssetCreator.TextureFromShape(shape, AssetCreator.Orange, AssetCreator.Brown));
-      _softBodyBox = new Sprite(AssetCreator.TextureFromShape(shapes[0], AssetCreator.Green, AssetCreator.Black));
+      _bridgeBox = new Sprite(ContentWrapper.TextureFromShape(shape, ContentWrapper.Orange, ContentWrapper.Brown));
+      _softBodyBox = new Sprite(ContentWrapper.TextureFromShape(shapes[0], ContentWrapper.Green, ContentWrapper.Black));
       _softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
-      _softBodyCircle = new Sprite(AssetCreator.TextureFromShape(shapes[1], AssetCreator.Lime, AssetCreator.Grey));
+      _softBodyCircle = new Sprite(ContentWrapper.TextureFromShape(shapes[1], ContentWrapper.Lime, ContentWrapper.Grey));
     }
 
     public override void Draw(GameTime gameTime)

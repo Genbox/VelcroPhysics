@@ -87,15 +87,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MediaSystem\LineBatch.cs" />
-    <Compile Include="MediaSystem\MediaManager.cs" />
-    <Compile Include="MediaSystem\QuadRender.cs" />
+    <Compile Include="MediaSystem\ContentWrapper.cs" />
+    <Compile Include="MediaSystem\QuadRenderer.cs" />
     <Compile Include="Demos\TextureToVerticesDemo.cs" />
     <Compile Include="Demos\SoftBodyDemo.cs" />
     <Compile Include="Demos\TheoJansenWalkerDemo.cs" />
     <Compile Include="Demos\WebOfGooDemo.cs" />
     <Compile Include="Demos\BreakableBodiesDemo.cs" />
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
-    <Compile Include="MediaSystem\AssetCreator.cs" />
     <Compile Include="MediaSystem\Sprite.cs" />
     <Compile Include="Demos\RacingCarDemo.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
@@ -111,9 +110,9 @@
     <Compile Include="ScreenSystem\Camera2D.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
-    <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
+    <Compile Include="ScreenSystem\PhysicsDemoScreen.cs" />
     <Compile Include="ScreenSystem\BackgroundScreen.cs" />
-    <Compile Include="ScreenSystem\MenuButton.cs" />
+    <Compile Include="ScreenSystem\MenuSlider.cs" />
     <Compile Include="ScreenSystem\LogoScreen.cs" />
     <Compile Include="ScreenSystem\MenuEntry.cs" />
     <Compile Include="ScreenSystem\MenuScreen.cs" />

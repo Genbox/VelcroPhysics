@@ -75,9 +75,6 @@ namespace FarseerPhysics.Samples
 
     protected override void Initialize()
     {
-      AssetCreator.Initialize(this);
-      MediaManager.Initialize(this);
-
       _input = new InputHelper();
       _counter = new FrameRateCounter();
 
@@ -90,6 +87,8 @@ namespace FarseerPhysics.Samples
     protected override void LoadContent()
     {
       base.LoadContent();
+
+      ContentWrapper.Initialize(this);
 
       _spriteBatch = new SpriteBatch(GraphicsDevice);
       _lineBatch = new LineBatch(GraphicsDevice);
@@ -109,9 +108,12 @@ namespace FarseerPhysics.Samples
       Assembly SamplesFramework = Assembly.GetExecutingAssembly();
       foreach (Type SampleType in SamplesFramework.GetTypes())
       {
-        if (SampleType.IsSubclassOf(typeof(PhysicsGameScreen)))
+        if (SampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
         {
-          PhysicsGameScreen DemoScreen = SamplesFramework.CreateInstance(SampleType.ToString()) as PhysicsGameScreen;
+          PhysicsDemoScreen DemoScreen = SamplesFramework.CreateInstance(SampleType.ToString()) as PhysicsDemoScreen;
+#if WINDOWS
+          Console.WriteLine("Loading demo: " + DemoScreen.GetTitle());
+#endif
           DemoScreen.Framework = this;
           DemoScreen.IsExiting = false;
 
@@ -125,15 +127,16 @@ namespace FarseerPhysics.Samples
                                                       SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
                                                       RenderTargetUsage.DiscardContents);
 
-          // Abuse transition rendertarget to render screen preview
+          // "Abuse" transition rendertarget to render screen preview
           GraphicsDevice.SetRenderTarget(_transitions[0]);
           GraphicsDevice.Clear(Color.Transparent);
 
           _quadRenderer.Begin();
-          _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, AssetCreator.Grey, Color.White * 0.3f);
+          _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, ContentWrapper.Grey, Color.White * 0.3f);
           _quadRenderer.End();
           // Update ensures that the screen is fully visible, we "cover" it so that no physics are run
           DemoScreen.Update(new GameTime(DemoScreen.TransitionOnTime, DemoScreen.TransitionOnTime), true, false);
+          DemoScreen.Draw(new GameTime());
           DemoScreen.Draw(new GameTime());
 
           GraphicsDevice.SetRenderTarget(preview);
@@ -269,7 +272,7 @@ namespace FarseerPhysics.Samples
         if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
         {
           _spriteBatch.Begin(0, BlendState.AlphaBlend);
-          if (screen is PhysicsGameScreen)
+          if (screen is PhysicsDemoScreen)
           {
             Vector2 position = Vector2.Lerp(_menuScreen.PreviewPosition, new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f, 1f - screen.TransitionPosition);
             _spriteBatch.Draw(_transitions[transitionCount], position, null, Color.White * Math.Min(screen.TransitionAlpha / 0.2f, 1f), 0f,

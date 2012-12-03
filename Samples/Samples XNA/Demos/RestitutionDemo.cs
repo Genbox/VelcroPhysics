@@ -16,7 +16,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class RestitutionDemo : PhysicsGameScreen
+  internal class RestitutionDemo : PhysicsDemoScreen
   {
     private Border _border;
     private Body[] _circle = new Body[6];
@@ -77,7 +77,7 @@ namespace FarseerPhysics.Samples.Demos
       }
 
       // create sprite based on body
-      _circleSprite = new Sprite(AssetCreator.TextureFromShape(_circle[0].FixtureList[0].Shape, "square", AssetCreator.Green, AssetCreator.Lime, AssetCreator.Black, 1f));
+      _circleSprite = new Sprite(ContentWrapper.TextureFromShape(_circle[0].FixtureList[0].Shape, "square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)
