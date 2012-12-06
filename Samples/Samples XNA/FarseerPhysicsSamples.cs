@@ -114,6 +114,10 @@ namespace FarseerPhysics.Samples
 #if WINDOWS
           Console.WriteLine("Loading demo: " + DemoScreen.GetTitle());
 #endif
+          RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth / 2, _pp.BackBufferHeight / 2, false,
+                                                      SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                                                      RenderTargetUsage.DiscardContents);
+
           DemoScreen.Framework = this;
           DemoScreen.IsExiting = false;
 
@@ -122,10 +126,6 @@ namespace FarseerPhysics.Samples
           DemoScreen.Quads = _quadRenderer;
 
           DemoScreen.LoadContent();
-
-          RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth / 2, _pp.BackBufferHeight / 2, false,
-                                                      SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
-                                                      RenderTargetUsage.DiscardContents);
 
           // "Abuse" transition rendertarget to render screen preview
           GraphicsDevice.SetRenderTarget(_transitions[0]);

@@ -22,21 +22,22 @@ namespace FarseerPhysics.Samples.Demos
 
     public override string GetTitle()
     {
-      return "Theo Jansen's walker";
+      return "Theo Jansen's Strandbeast";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("TODO: Add sample description!");
+      sb.AppendLine("This demo shows how complex mechanical structures can be realized.");
+      sb.AppendLine("http://www.strandbeest.com/");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Switch walker direction: B button");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Switch walker direction: A button");
+      sb.AppendLine("  - Exit to demo selection: Back button");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
       sb.AppendLine("  - Switch walker direction: Space");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Mouse / Touchscreen");
       sb.AppendLine("  - Switch walker direction: Right click");
@@ -45,7 +46,7 @@ namespace FarseerPhysics.Samples.Demos
 
     public override int GetIndex()
     {
-      return 12;
+      return 11;
     }
 
     #endregion
@@ -65,7 +66,7 @@ namespace FarseerPhysics.Samples.Demos
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      if (input.IsNewButtonPress(Buttons.B) ||
+      if (input.IsNewButtonPress(Buttons.A) ||
           input.IsNewMouseButtonPress(MouseButtons.RightButton) ||
           input.IsNewKeyPress(Keys.Space))
       {

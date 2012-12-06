@@ -86,10 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Demos\DistanceAngleJointDemo.cs" />
     <Compile Include="MediaSystem\LineBatch.cs" />
     <Compile Include="MediaSystem\ContentWrapper.cs" />
     <Compile Include="MediaSystem\QuadRenderer.cs" />
-    <Compile Include="Demos\TextureToVerticesDemo.cs" />
+    <Compile Include="Demos\TextureToShapesDemo.cs" />
     <Compile Include="Demos\SoftBodyDemo.cs" />
     <Compile Include="Demos\TheoJansenWalkerDemo.cs" />
     <Compile Include="Demos\WebOfGooDemo.cs" />

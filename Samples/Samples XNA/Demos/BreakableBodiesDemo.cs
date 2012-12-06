@@ -37,28 +37,30 @@ namespace FarseerPhysics.Samples.Demos
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("TODO: Add sample description!");
+      sb.AppendLine("This demo shows breakable bodies, created from a texture.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Explode (at cursor): B button");
-      sb.AppendLine("  - Move cursor: left thumbstick");
+      sb.AppendLine("  - Explosion (at cursor): B button");
+      sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
-      sb.AppendLine("  - Drag grabbed object: left thumbstick");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+      sb.AppendLine("  - Exit to demo selection: Back button");
+#if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
-      sb.AppendLine("Mouse / Touchscreen");
-      sb.AppendLine("  - Explode (at cursor): Right click");
+      sb.AppendLine("Mouse");
+      sb.AppendLine("  - Explosion (at cursor): Right click");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: move mouse / finger");
+      sb.AppendLine("  - Drag grabbed object: Move mouse");
+#endif
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 14;
+      return 13;
     }
 
     #endregion

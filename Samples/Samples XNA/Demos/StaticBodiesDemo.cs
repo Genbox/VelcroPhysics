@@ -33,32 +33,34 @@ namespace FarseerPhysics.Samples.Demos
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows a single body with multiple shapes attached.");
-      sb.AppendLine(string.Empty);
-      sb.AppendLine("This demo also shows the use of static bodies.");
+      sb.AppendLine("This demo shows a single body with multiple attached fixtures");
+      sb.AppendLine("and different shapes attached.");
+      sb.AppendLine("Several static bodies are placed as obstacles in the environment.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Rotate agent: left and right triggers");
-      sb.AppendLine("  - Move agent: right thumbstick");
-      sb.AppendLine("  - Move cursor: left thumbstick");
+      sb.AppendLine("  - Rotate object: Left and right trigger");
+      sb.AppendLine("  - Move object: Right thumbstick");
+      sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
-      sb.AppendLine("  - Drag grabbed object: left thumbstick");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+      sb.AppendLine("  - Exit to demo selection: Back button");
+#if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Rotate agent: left and right arrows");
-      sb.AppendLine("  - Move agent: A,S,D,W");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Rotate Object: Q, E");
+      sb.AppendLine("  - Move Object: W, S, A, D");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
-      sb.AppendLine("Mouse / Touchscreen");
+      sb.AppendLine("Mouse");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: move mouse / finger");
+      sb.AppendLine("  - Drag grabbed object: Move mouse");
+#endif
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 3;
+      return 2;
     }
 
     #endregion

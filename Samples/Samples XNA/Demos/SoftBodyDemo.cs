@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 #region Using Farseer
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
@@ -33,32 +34,35 @@ namespace FarseerPhysics.Samples.Demos
 
     public override string GetTitle()
     {
-      return "Soft body & Path generator";
+      return "Soft body & path generator";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("TODO: Add sample description!");
+      sb.AppendLine("This demo shows how a soft body and a bridge can be created, using");
+      sb.AppendLine("the path generator and bodies connected with revolute joints.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Move cursor: left thumbstick");
+      sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
-      sb.AppendLine("  - Drag grabbed object: left thumbstick");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+      sb.AppendLine("  - Exit to demo selection: Back button");
+#if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
-      sb.AppendLine("Mouse / Touchscreen");
+      sb.AppendLine("Mouse");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: move mouse / finger");
+      sb.AppendLine("  - Drag grabbed object: Move mouse");
+#endif
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 11;
+      return 10;
     }
 
     #endregion
@@ -84,10 +88,10 @@ namespace FarseerPhysics.Samples.Demos
       _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29);
 
       // Attach the first and last fixtures to the world
-      ////JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[0], new Vector2(0f, -0.5f),
-      ////                                      _bridgeBodies[0].Position);
-      ////JointFactory.CreateFixedRevoluteJoint(World, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f),
-      ////                                      _bridgeBodies[_bridgeBodies.Count - 1].Position);
+      Body anchor = new Body(World, Vector2.Zero);
+      anchor.BodyType = BodyType.Static;
+      World.AddJoint(new RevoluteJoint(_bridgeBodies[0], anchor, _bridgeBodies[0].Position - new Vector2(0.5f, 0f), true));
+      World.AddJoint(new RevoluteJoint(_bridgeBodies[_bridgeBodies.Count - 1], anchor, _bridgeBodies[_bridgeBodies.Count - 1].Position + new Vector2(0.5f, 0f), true));
 
       PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), false, true);
 
