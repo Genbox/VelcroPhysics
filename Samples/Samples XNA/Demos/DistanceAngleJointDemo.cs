@@ -32,13 +32,18 @@ namespace FarseerPhysics.Samples.Demos
 
     public override string GetTitle()
     {
-      return "Distance & Angle Joints";
+      return "Distance & angle joints";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows several bodys with varying friction.");
+      sb.AppendLine("This demo shows several bodies connected by distance and angle joints.");
+      sb.AppendLine("Orange bodies are forced to have the same angle at all times.");
+      sb.AppendLine(string.Empty);
+      sb.AppendLine("Striped bodies are forced to have the same distance at all times.");
+      sb.AppendLine("Two of them have a rigid distance joint.");
+      sb.AppendLine("The other two have a soft (spring-like) distance joint.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Move cursor: Left thumbstick");
@@ -119,7 +124,7 @@ namespace FarseerPhysics.Samples.Demos
       World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero, false));
 
       // create sprites based on bodies
-      _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "square", ContentWrapper.Blue, ContentWrapper.Red, ContentWrapper.Grey, 1f));
+      _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
       _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "stripe", ContentWrapper.Red, ContentWrapper.Blue, ContentWrapper.Grey, 4f));
     }
 

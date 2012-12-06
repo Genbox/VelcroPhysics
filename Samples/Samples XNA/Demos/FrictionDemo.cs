@@ -34,7 +34,7 @@ namespace FarseerPhysics.Samples.Demos
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows several bodys with varying friction.");
+      sb.AppendLine("This demo shows several bodies with varying friction.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Move cursor: Left thumbstick");
