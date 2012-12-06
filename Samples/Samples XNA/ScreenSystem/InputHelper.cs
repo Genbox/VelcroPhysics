@@ -112,7 +112,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       Texture2D cursorTexture;
       cursorTexture = ContentWrapper.GetTexture("cursor");
-      _cursorSprite = new Sprite(cursorTexture);
+      _cursorSprite = new Sprite(cursorTexture, Vector2.One);
       _viewport = viewport;
     }
 

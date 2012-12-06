@@ -48,25 +48,25 @@ namespace FarseerPhysics.Samples.Demos
 
     public override string GetTitle()
     {
-      return "Racing Car";
+      return "Racing car";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("TODO: Add sample description!");
+      sb.AppendLine("This demo shows a side scrolling car on a race track.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Exit to demo selection: Back button");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 15;
+      return 14;
     }
 
     #endregion

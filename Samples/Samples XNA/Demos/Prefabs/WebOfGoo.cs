@@ -20,7 +20,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 {
   public class WebOfGoo
   {
-    private const float Breakpoint = 100f;
+    private const float Breakpoint = 10f;
 
     private List<List<Body>> _ringBodys;
     private List<DistanceJoint> _ringJoints;
@@ -41,7 +41,6 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         //Create the first goo
         Body previous = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[0]);
-        previous.FixedRotation = true;
         previous.BodyType = BodyType.Dynamic;
 
         bodies.Add(previous);
@@ -50,7 +49,6 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         for (int j = 1; j < vertices.Count; j++)
         {
           Body current = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[j]);
-          current.FixedRotation = true;
           current.BodyType = BodyType.Dynamic;
 
           DistanceJoint joint = new DistanceJoint(previous, current, Vector2.Zero, Vector2.Zero, false);
@@ -76,7 +74,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       }
 
       //Create an outer ring
-      Vertices frame = PolygonTools.CreateCircle(rings * 2.9f, sides);
+      Vertices frame = PolygonTools.CreateCircle(rings * 2.9f - 0.9f, sides);
       frame.Translate(ref position);
 
       Body anchor = new Body(world, position);
@@ -86,7 +84,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       for (int i = 0; i < _ringBodys[rings - 2].Count; i++)
       {
         DistanceJoint joint = new DistanceJoint(anchor, _ringBodys[rings - 2][i], frame[i], _ringBodys[rings - 2][i].Position);
-        joint.Frequency = 4.0f;
+        joint.Frequency = 8.0f;
         joint.DampingRatio = 0.5f;
         joint.Breakpoint = Breakpoint;
         world.AddJoint(joint);
@@ -115,12 +113,15 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
       foreach (Joint joint in _ringJoints)
       {
-        Vector2 pos = ConvertUnits.ToDisplayUnits((joint.WorldAnchorA + joint.WorldAnchorB) / 2f);
-        Vector2 AtoB = joint.WorldAnchorB - joint.WorldAnchorA;
-        float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f;
-        Vector2 scale = new Vector2(distance / _link.Image.Width, 1f);
-        float angle = (float)MathUtils.VectorAngle(Vector2.UnitX, AtoB);
-        batch.Draw(_link.Image, pos, null, Color.White, angle, _link.Origin, scale, SpriteEffects.None, 0f);
+        if (joint.Enabled)
+        {
+          Vector2 pos = ConvertUnits.ToDisplayUnits((joint.WorldAnchorA + joint.WorldAnchorB) / 2f);
+          Vector2 AtoB = joint.WorldAnchorB - joint.WorldAnchorA;
+          float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f;
+          Vector2 scale = new Vector2(distance / _link.Image.Width, 1f);
+          float angle = (float)MathUtils.VectorAngle(Vector2.UnitX, AtoB);
+          batch.Draw(_link.Image, pos, null, Color.White, angle, _link.Origin, scale, SpriteEffects.None, 0f);
+        }
       }
 
       foreach (List<Body> bodyList in _ringBodys)

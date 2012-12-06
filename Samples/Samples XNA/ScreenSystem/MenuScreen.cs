@@ -19,7 +19,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// </summary>
   public class MenuScreen : GameScreen
   {
-    private const int NumEntries = 12;
+    private const int NumEntries = 11;
     private const int TitleBarHeight = 100;
     private const int EntrySpacer = 5;
 
@@ -30,6 +30,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     private List<MenuEntry> _menuEntries = new List<MenuEntry>();
     private MenuSlider _menuSlider;
+    private bool _scrollHover;
     private bool _scrollLock;
 
     private int _selectedEntry;
@@ -109,6 +110,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       {
         _scrollSpacing = 0f;
       }
+      _scrollHover = false;
       _scrollLock = false;
     }
 
@@ -191,12 +193,20 @@ namespace FarseerPhysics.Samples.ScreenSystem
         }
       }
 
-      if (input.IsMenuSelect() && GetSliderCollision(input.Cursor))
+      if (GetSliderCollision(input.Cursor))
       {
-        _scrollLock = true;
+        _scrollHover = true;
+        if (input.IsMenuHold())
+        {
+          _scrollLock = true;
+        }
+      }
+      else
+      {
+        _scrollHover = false;
       }
 
-      if (input.IsMenuRelease() || !input.IsCursorValid)
+      if (input.IsMenuRelease())
       {
         _scrollLock = false;
       }
@@ -215,28 +225,27 @@ namespace FarseerPhysics.Samples.ScreenSystem
       if (input.IsMenuDown())
       {
         _menuOffset++;
-        _menuOffset = (_menuOffset < 0) ? 0 : (_menuOffset > _menuEntries.Count - NumEntries) ? _menuEntries.Count - NumEntries : _menuOffset;
-        if (_selectedEntry < _menuOffset)
-        {
-          _selectedEntry = _menuOffset;
-        }
         UpdateMenuPositions();
       }
 
       if (input.IsMenuUp())
       {
         _menuOffset--;
-        _menuOffset = (_menuOffset < 0) ? 0 : (_menuOffset > _menuEntries.Count - NumEntries) ? _menuEntries.Count - NumEntries : _menuOffset;
-        if (_selectedEntry >= NumEntries + _menuOffset)
-        {
-          _selectedEntry = NumEntries + _menuOffset - 1;
-        }
         UpdateMenuPositions();
       }
     }
 
     private void UpdateMenuPositions()
     {
+      _menuOffset = (_menuOffset < 0) ? 0 : (_menuOffset > _menuEntries.Count - NumEntries) ? _menuEntries.Count - NumEntries : _menuOffset;
+      if (_selectedEntry < _menuOffset)
+      {
+        _selectedEntry = _menuOffset;
+      }
+      else if (_selectedEntry >= NumEntries + _menuOffset)
+      {
+        _selectedEntry = NumEntries + _menuOffset - 1;
+      }
       int targetIndex = -_menuOffset;
       // Update each nested MenuEntry position
       for (int i = 0; i < _menuEntries.Count; i++)
@@ -271,7 +280,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         _menuEntries[i].Update(isSelected, isHovered, gameTime);
       }
 
-      _menuSlider.Update(_scrollLock, gameTime);
+      _menuSlider.Update(_scrollHover, _scrollLock, gameTime);
     }
 
     /// <summary>

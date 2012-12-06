@@ -23,6 +23,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private Color _color;
 
     private double _hoverFade;
+    private double _selectionFade;
 
 
     /// <summary>
@@ -53,7 +54,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <summary>
     /// Updates the menu slider.
     /// </summary>
-    public void Update(bool isHovered, GameTime gameTime)
+    public void Update(bool isHovered, bool isSelected, GameTime gameTime)
     {
       if (isHovered)
       {
@@ -63,7 +64,18 @@ namespace FarseerPhysics.Samples.ScreenSystem
       {
         _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
+
+      if (isSelected)
+      {
+        _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+      }
+      else
+      {
+        _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+      }
+
       _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)_hoverFade);
+      _color = Color.Lerp(_color, ContentWrapper.Gold, (float)_selectionFade);
 
       float deltaY = _targetY - _currentPosition.Y;
       if (Math.Abs(deltaY) > MaxTranslation)

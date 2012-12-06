@@ -20,7 +20,7 @@ namespace FarseerPhysics.Samples.Demos
   internal class FrictionDemo : PhysicsDemoScreen
   {
     private Border _border;
-    private List<Body> _ramps;
+    private Body _ramps;
     private Body[] _rectangle = new Body[5];
     private Sprite _rectangleSprite;
 
@@ -37,23 +37,25 @@ namespace FarseerPhysics.Samples.Demos
       sb.AppendLine("This demo shows several bodys with varying friction.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Move cursor: left thumbstick");
+      sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
-      sb.AppendLine("  - Drag grabbed object: left thumbstick");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+      sb.AppendLine("  - Exit to demo selection: Back button");
+#if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
-      sb.AppendLine("Mouse / Touchscreen");
+      sb.AppendLine("Mouse");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: move mouse / finger");
+      sb.AppendLine("  - Drag grabbed object: Move mouse");
+#endif
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 7;
+      return 6;
     }
 
     #endregion
@@ -66,14 +68,14 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _ramps = new List<Body>();
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f)));
+      _ramps = new Body(World);
+      FixtureFactory.AttachEdge(new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f), _ramps);
+      FixtureFactory.AttachEdge(new Vector2(12f, -5.6f), new Vector2(12f, -3.2f), _ramps);
 
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f)));
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f)));
+      FixtureFactory.AttachEdge(new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f), _ramps);
+      FixtureFactory.AttachEdge(new Vector2(-12f, 2.6f), new Vector2(-12f, 5f), _ramps);
 
-      _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
+      FixtureFactory.AttachEdge(new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f), _ramps);
 
       float[] friction = { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
       for (int i = 0; i < 5; i++)
@@ -98,9 +100,9 @@ namespace FarseerPhysics.Samples.Demos
       }
       Sprites.End();
       Lines.Begin(Camera.SimProjection, Camera.SimView);
-      for (int i = 0; i < _ramps.Count; i++)
+      foreach (Fixture f in _ramps.FixtureList)
       {
-        Lines.DrawLineShape(_ramps[i].FixtureList[0].Shape, ContentWrapper.Teal);
+        Lines.DrawLineShape(f.Shape, ContentWrapper.Teal);
       }
       Lines.End();
 

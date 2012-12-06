@@ -32,26 +32,28 @@ namespace FarseerPhysics.Samples.Demos
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows several bodys with varying restitution.");
+      sb.AppendLine("This demo shows several bodies with varying restitution.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Move cursor: left thumbstick");
+      sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
-      sb.AppendLine("  - Drag grabbed object: left thumbstick");
-      sb.AppendLine("  - Exit to menu: Back button");
+      sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+      sb.AppendLine("  - Exit to demo selection: Back button");
+#if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to menu: Escape");
+      sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
-      sb.AppendLine("Mouse / Touchscreen");
+      sb.AppendLine("Mouse");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: move mouse / finger");
+      sb.AppendLine("  - Drag grabbed object: Move mouse");
+#endif
       return sb.ToString();
     }
 
     public override int GetIndex()
     {
-      return 6;
+      return 5;
     }
 
     #endregion
