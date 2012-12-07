@@ -20,7 +20,7 @@ namespace FarseerPhysics.Samples.Demos
   {
     private Border _border;
     private Sprite _obstacle;
-    private Body[] _obstacles = new Body[4];
+    private Body[] _obstacles;
     private Ragdoll _ragdoll;
 
     #region Demo description
@@ -71,21 +71,20 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _ragdoll = new Ragdoll(World, Vector2.Zero);
+      _ragdoll = new Ragdoll(World, new Vector2(-20f, -10f));
 
-      for (int i = 0; i < 4; i++)
+      _obstacles = new Body[9];
+      Vector2 stairStart = new Vector2(-23f, 0f);
+      Vector2 stairDelta = new Vector2(2.5f, 1.65f);
+
+      for (int i = 0; i < 9; i++)
       {
-        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f);
+        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f, stairStart + stairDelta * i);
         _obstacles[i].IsStatic = true;
       }
 
-      _obstacles[0].Position = new Vector2(-9f, 5f);
-      _obstacles[1].Position = new Vector2(-8f, -7f);
-      _obstacles[2].Position = new Vector2(9f, 7f);
-      _obstacles[3].Position = new Vector2(7f, -5f);
-
       // create sprite based on body
-      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Green, ContentWrapper.Teal, ContentWrapper.Black, 1.5f));
+      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Red, ContentWrapper.Orange, ContentWrapper.Black, 1.5f));
 
       SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }
@@ -93,7 +92,7 @@ namespace FarseerPhysics.Samples.Demos
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < 9; i++)
       {
         Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
                      null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
