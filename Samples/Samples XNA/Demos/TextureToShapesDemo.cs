@@ -117,7 +117,9 @@ namespace FarseerPhysics.Samples.Demos
       SetUserAgent(_compound, 200f, 200f);
 
       // GFX
-      _objectSprite = new Sprite(polygonTexture, origin);
+      origin.X -= 1f;
+      origin.Y -= 1f;
+      _objectSprite = new Sprite(ContentWrapper.GetTexture("objectImage"), origin);
     }
 
     public override void Draw(GameTime gameTime)

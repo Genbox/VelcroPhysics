@@ -25,7 +25,8 @@ namespace FarseerPhysics.Samples.Demos
   internal class BreakableBodiesDemo : PhysicsDemoScreen
   {
     private Border _border;
-    private List<List<Vertices>> _breakableObject;
+    private List<List<Sprite>> _breakableSprite;
+    private List<BreakableBody> _breakableBody;
 
     #region Demo description
 
@@ -72,52 +73,59 @@ namespace FarseerPhysics.Samples.Demos
       World.Gravity = Vector2.Zero;
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
-      _breakableObject = new List<List<Vertices>>();
 
-      Texture2D alphabet = ContentWrapper.GetTexture("alphabet");
+      _breakableSprite = new List<List<Sprite>>();
+      _breakableBody = new List<BreakableBody>();
 
-      uint[] data = new uint[alphabet.Width * alphabet.Height];
-      alphabet.GetData(data);
+      Texture2D letters = ContentWrapper.GetTexture("breakableObjects");
 
-      List<Vertices> list = PolygonTools.CreatePolygon(data, alphabet.Width, 3.5f, 20, true, true);
+      uint[] data = new uint[letters.Width * letters.Height];
+      letters.GetData(data);
 
-      float yOffset = -5f;
-      float xOffset = -14f;
+      List<Vertices> list = PolygonTools.CreatePolygon(data, letters.Width, 3.5f, 20, true, true);
       for (int i = 0; i < list.Count; i++)
       {
-        if (i == 9)
-        {
-          yOffset = 0f;
-          xOffset = -14f;
-        }
-        if (i == 18)
-        {
-          yOffset = 5f;
-          xOffset = -12.25f;
-        }
-        Vertices polygon = list[i];
-        Vector2 centroid = -polygon.GetCentroid();
-        polygon.Translate(ref centroid);
-        //polygon = SimplifyTools.CollinearSimplify(polygon); // this breaks the split hole function
-        polygon = SimplifyTools.ReduceByDistance(polygon, 4);
-        List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(polygon);
-
+        Vector2 centroid = -list[i].GetCentroid();
+        list[i].Translate(ref centroid);
+        list[i] = SimplifyTools.ReduceByDistance(list[i], 2);
         Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
-        foreach (Vertices vertices in triangulated)
+        list[i].Scale(ref vertScale);
+      }
+
+      //                           Cube, f, a, r, s, e, e, r, p, h, y, s,  i,  c, s 
+      short[] Indexes = new short[] { 0, 1, 2, 3, 4, 5, 5, 3, 6, 7, 8, 9, 10, 11, 9 };
+
+      float xOffset = 2.8f;
+      float xStart = -xOffset * (float)(Indexes.Length - 1) / 2f;
+      for (int i = 0; i < Indexes.Length; i++)
+      {
+        Vector2 postion = new Vector2(xStart + xOffset * i, 0f);
+        if (i == 0)
         {
-          vertices.Scale(ref vertScale);
+          postion.X -= 2.5f;
+          postion.Y -= 3f;
         }
+        List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(list[Indexes[i]]);
 
         BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);
-        breakableBody.MainBody.Position = new Vector2(xOffset, yOffset);
-        breakableBody.Strength = 100;
+        breakableBody.MainBody.Position = postion;
+        breakableBody.Strength = 90;
         breakableBody.MainBody.UserData = i;
         World.AddBreakableBody(breakableBody);
+        _breakableBody.Add(breakableBody);
 
-        polygon.Scale(ref vertScale);
-        _breakableObject.Add(polygon.SplitAtHoles());
+        List<Sprite> _parts = new List<Sprite>();
+        for (int j = 0; j < breakableBody.Parts.Count; j++)
+        {
+          AABB bounds;
+          Transform transform;
+          breakableBody.Parts[j].Body.GetTransform(out transform);
+          breakableBody.Parts[j].Shape.ComputeAABB(out bounds, ref transform, 0);
+          Vector2 origin = ConvertUnits.ToDisplayUnits(breakableBody.Parts[j].Body.Position - bounds.LowerBound);
 
-        xOffset += 3.5f;
+          _parts.Add(new Sprite(ContentWrapper.TextureFromShape(breakableBody.Parts[j].Shape, ContentWrapper.Black, ContentWrapper.Black), origin));
+        }
+        _breakableSprite.Add(_parts);
       }
     }
 
@@ -148,40 +156,16 @@ namespace FarseerPhysics.Samples.Demos
 
     public override void Draw(GameTime gameTime)
     {
-      Lines.Begin(Camera.SimProjection, Camera.SimView);
-      for (int i = 0; i < World.BodyList.Count; i++)
+      Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      for (int i = 0; i < _breakableBody.Count; i++)
       {
-        Body b = World.BodyList[i];
-        if (b.FixtureList.Count == 1 &&
-            b.FixtureList[0].ShapeType == ShapeType.Polygon)
+        for (int j = 0; j < _breakableBody[i].Parts.Count; j++)
         {
-          PolygonShape s = (PolygonShape)b.FixtureList[0].Shape;
-          Vertices temp = new Vertices();
-          Transform t;
-          b.GetTransform(out t);
-          for (int j = 0; j < s.Vertices.Count; ++j)
-          {
-            temp.Add(MathUtils.Mul(ref t, s.Vertices[j]));
-          }
-          Lines.DrawVertices(temp);
+          Body b = _breakableBody[i].Parts[j].Body;
+          Sprites.Draw(_breakableSprite[i][j].Image, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, b.Rotation, _breakableSprite[i][j].Origin, 1f, SpriteEffects.None, 0f);
         }
       }
-      for (int i = 0; i < World.BreakableBodyList.Count; ++i)
-      {
-        Transform t;
-        World.BreakableBodyList[i].MainBody.GetTransform(out t);
-        int index = (int)World.BreakableBodyList[i].MainBody.UserData;
-        for (int j = 0; j < _breakableObject[index].Count; ++j)
-        {
-          Vertices temp = new Vertices();
-          for (int k = 0; k < _breakableObject[index][j].Count; ++k)
-          {
-            temp.Add(MathUtils.Mul(ref t, _breakableObject[index][j][k]));
-          }
-          Lines.DrawVertices(temp);
-        }
-      }
-      Lines.End();
+      Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);
 
