@@ -116,6 +116,7 @@ namespace FarseerPhysics.Dynamics
 
                 Fixture newFixture = body.CreateFixture(shape);
                 newFixture.UserData = userData;
+                Parts[i] = newFixture;
 
                 body.AngularVelocity = _angularVelocitiesCache[i];
                 body.LinearVelocity = _velocitiesCache[i];

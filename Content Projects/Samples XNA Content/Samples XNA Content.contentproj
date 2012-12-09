@@ -67,13 +67,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\alphabet.png">
-      <Name>alphabet</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="DemoGFX\object.png">
       <Name>object</Name>
       <Importer>TextureImporter</Importer>
@@ -142,6 +135,20 @@
   <ItemGroup>
     <Compile Include="Common\samplesLogo.png">
       <Name>samplesLogo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoGFX\objectImage.png">
+      <Name>objectImage</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoGFX\breakableObjects.png">
+      <Name>breakableObjects</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
