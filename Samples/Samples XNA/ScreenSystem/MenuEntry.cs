@@ -182,7 +182,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     }
 
     #region IComparable Members
-
     public int CompareTo(object obj)
     {
       MenuEntry entry = obj as MenuEntry;
@@ -192,10 +191,9 @@ namespace FarseerPhysics.Samples.ScreenSystem
       }
       else
       {
-        return _screen.GetIndex().CompareTo(entry._screen.GetIndex());
+        return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
       }
     }
-
     #endregion
   }
 }

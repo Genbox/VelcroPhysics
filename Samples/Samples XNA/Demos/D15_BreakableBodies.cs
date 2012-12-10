@@ -22,14 +22,13 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class BreakableBodiesDemo : PhysicsDemoScreen
+  internal class D15_BreakableBodies : PhysicsDemoScreen
   {
     private Border _border;
     private List<List<Sprite>> _breakableSprite;
     private List<BreakableBody> _breakableBody;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Breakable bodies and explosions";
@@ -58,12 +57,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 13;
-    }
-
     #endregion
 
     public override void LoadContent()

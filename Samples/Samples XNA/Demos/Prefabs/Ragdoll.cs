@@ -205,10 +205,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
       world.AddJoint(jointLowerTorso);
 
       // GFX
-      _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "square", ContentWrapper.Gold, ContentWrapper.Brown, ContentWrapper.Grey, 1f));
-      _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "stripe", ContentWrapper.Gold, ContentWrapper.Brown, ContentWrapper.Black, 2.0f));
-      _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", ContentWrapper.Gold, ContentWrapper.Brown, ContentWrapper.Black, 1f));
-      _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", ContentWrapper.Gold, ContentWrapper.Brown, ContentWrapper.Black, 1f));
+      _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
+      _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
+      _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
+      _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
     }
 
     public Body Body

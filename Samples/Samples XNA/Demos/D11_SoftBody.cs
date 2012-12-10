@@ -19,7 +19,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class SoftBodyDemo : PhysicsDemoScreen
+  internal class D11_SoftBody : PhysicsDemoScreen
   {
     private Border _border;
 
@@ -31,7 +31,6 @@ namespace FarseerPhysics.Samples.Demos
     private Sprite _softBodyCircle;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Soft body & path generator";
@@ -59,12 +58,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 10;
-    }
-
     #endregion
 
     public override void LoadContent()

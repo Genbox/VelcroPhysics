@@ -16,29 +16,24 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class SingleFixtureDemo : PhysicsDemoScreen
+  internal class D06_Restitution : PhysicsDemoScreen
   {
     private Border _border;
-    private Body _rectangle;
-    private Sprite _rectangleSprite;
+    private Body[] _circle = new Body[6];
+    private Sprite _circleSprite;
 
     #region Demo description
-
     public override string GetTitle()
     {
-      return "Single body with a single fixture";
+      return "Restitution";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows a single body with one attached fixture and shape.");
-      sb.AppendLine("A fixture binds a shape to a body and adds material properties such");
-      sb.AppendLine("as density, friction, and restitution.");
+      sb.AppendLine("This demo shows several bodies with varying restitution.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Rotate object: Left and right trigger");
-      sb.AppendLine("  - Move object: Right thumbstick");
       sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: Left thumbstick");
@@ -46,8 +41,6 @@ namespace FarseerPhysics.Samples.Demos
 #if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Rotate Object: Q, E");
-      sb.AppendLine("  - Move Object: W, S, A, D");
       sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Mouse");
@@ -56,35 +49,40 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 0;
-    }
-
     #endregion
 
     public override void LoadContent()
     {
       base.LoadContent();
 
-      World.Gravity = Vector2.Zero;
+      World.Gravity = new Vector2(0f, 20f);
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
-      _rectangle.BodyType = BodyType.Dynamic;
+      Vector2 _position = new Vector2(-15f, -8f);
+      float _restitution = 0f;
 
-      SetUserAgent(_rectangle, 100f, 100f);
+      for (int i = 0; i < 6; ++i)
+      {
+        _circle[i] = BodyFactory.CreateCircle(World, 1.5f, 1f, _position);
+        _circle[i].BodyType = BodyType.Dynamic;
+        _circle[i].Restitution = _restitution;
+        _position.X += 6f;
+        _restitution += 0.2f;
+      }
 
       // create sprite based on body
-      _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle.FixtureList[0].Shape, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+      _circleSprite = new Sprite(ContentWrapper.TextureFromShape(_circle[0].FixtureList[0].Shape, "square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+      for (int i = 0; i < 6; ++i)
+      {
+        Sprites.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position),
+                     null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f, SpriteEffects.None, 0f);
+      }
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

@@ -12,25 +12,27 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class WebOfGooDemo : PhysicsDemoScreen
+  public class D09_DynamicJoints : PhysicsDemoScreen
   {
+    private Agent _agent;
     private Border _border;
-    private WebOfGoo _webOfGoo;
+    private JumpySpider[] _spiders;
 
     #region Demo description
-
     public override string GetTitle()
     {
-      return "Advanced dynamics";
+      return "Revolute & dynamic angle joints";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows a web made of distance joints. The joints are configured");
-      sb.AppendLine("to break under stress, so that the web can be torn apart.");
+      sb.AppendLine("This demo demonstrates the use of revolute joints combined");
+      sb.AppendLine("with angle joints that have a dynamic target angle.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
+      sb.AppendLine("  - Rotate object: Left and right trigger");
+      sb.AppendLine("  - Move object: Right thumbstick");
       sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: Left thumbstick");
@@ -38,6 +40,8 @@ namespace FarseerPhysics.Samples.Demos
 #if WINDOWS
       sb.AppendLine(string.Empty);
       sb.AppendLine("Keyboard:");
+      sb.AppendLine("  - Rotate Object: Q, E");
+      sb.AppendLine("  - Move Object: W, S, A, D");
       sb.AppendLine("  - Exit to demo selection: Escape");
       sb.AppendLine(string.Empty);
       sb.AppendLine("Mouse");
@@ -46,29 +50,48 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 9;
-    }
-
     #endregion
 
     public override void LoadContent()
     {
       base.LoadContent();
 
-      World.Gravity = new Vector2(0, 9.82f);
+      World.Gravity = new Vector2(0f, 20f);
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _webOfGoo = new WebOfGoo(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
+      _agent = new Agent(World, new Vector2(0f, 10f));
+      _spiders = new JumpySpider[8];
+
+      for (int i = 0; i < _spiders.Length; i++)
+      {
+        _spiders[i] = new JumpySpider(World, new Vector2(0f, 8f - (i + 1) * 2f));
+      }
+
+      SetUserAgent(_agent.Body, 1000f, 400f);
+    }
+
+    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+    {
+      if (IsActive)
+      {
+        for (int i = 0; i < _spiders.Length; i++)
+        {
+          _spiders[i].Update(gameTime);
+        }
+      }
+
+      base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      _webOfGoo.Draw(Sprites);
+      _agent.Draw(Sprites);
+      for (int i = 0; i < _spiders.Length; i++)
+      {
+        _spiders[i].Draw(Sprites);
+      }
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

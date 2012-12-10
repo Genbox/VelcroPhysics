@@ -15,6 +15,9 @@ namespace FarseerPhysics.Samples.ScreenSystem
 {
   public class PhysicsDemoScreen : GameScreen
   {
+    private static bool _renderDebug = false;
+    private static DebugViewFlags _flags = DebugViewFlags.PerformanceGraph | DebugViewFlags.DebugPanel;
+
     public Camera2D Camera;
     protected DebugViewXNA DebugView;
     protected World World;
@@ -62,12 +65,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
       if (DebugView == null)
       {
         DebugView = new DebugViewXNA(World);
-        DebugView.RemoveFlags(DebugViewFlags.Shape);
-        DebugView.RemoveFlags(DebugViewFlags.Joint);
         DebugView.DefaultShapeColor = Color.White;
         DebugView.SleepingShapeColor = Color.LightGray;
         DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
       }
+      DebugView.Flags = _flags;
 
       if (Camera == null)
       {
@@ -78,7 +80,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
         Camera.ResetCamera();
       }
 
-      // Loading may take a while... so prevent the game from "catching up" once we finished loading
       base.LoadContent();
     }
 
@@ -100,50 +101,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
       // Control debug view
-      if (input.IsNewButtonPress(Buttons.Start))
+      if (input.IsNewButtonPress(Buttons.Start) || input.IsNewKeyPress(Keys.F1))
       {
-        EnableOrDisableFlag(DebugViewFlags.Shape);
-        EnableOrDisableFlag(DebugViewFlags.DebugPanel);
-        EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
-        EnableOrDisableFlag(DebugViewFlags.Joint);
-        EnableOrDisableFlag(DebugViewFlags.ContactPoints);
-        EnableOrDisableFlag(DebugViewFlags.ContactNormals);
-        EnableOrDisableFlag(DebugViewFlags.Controllers);
+        Framework.AddScreen(new DescriptionBoxScreen(GetDetails()));
       }
 
-      if (input.IsNewKeyPress(Keys.F1))
+      if (input.IsNewButtonPress(Buttons.RightShoulder) || input.IsNewKeyPress(Keys.F5))
       {
-        EnableOrDisableFlag(DebugViewFlags.Shape);
-      }
-      if (input.IsNewKeyPress(Keys.F2))
-      {
-        EnableOrDisableFlag(DebugViewFlags.DebugPanel);
-        EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
-      }
-      if (input.IsNewKeyPress(Keys.F3))
-      {
-        EnableOrDisableFlag(DebugViewFlags.Joint);
-      }
-      if (input.IsNewKeyPress(Keys.F4))
-      {
-        EnableOrDisableFlag(DebugViewFlags.ContactPoints);
-        EnableOrDisableFlag(DebugViewFlags.ContactNormals);
-      }
-      if (input.IsNewKeyPress(Keys.F5))
-      {
-        EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
-      }
-      if (input.IsNewKeyPress(Keys.F6))
-      {
-        EnableOrDisableFlag(DebugViewFlags.Controllers);
-      }
-      if (input.IsNewKeyPress(Keys.F7))
-      {
-        EnableOrDisableFlag(DebugViewFlags.CenterOfMass);
-      }
-      if (input.IsNewKeyPress(Keys.F8))
-      {
-        EnableOrDisableFlag(DebugViewFlags.AABB);
+        _renderDebug = !_renderDebug;
       }
 
       if (input.IsScreenExit())
@@ -283,29 +248,19 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _userAgent.ApplyTorque(torque);
     }
 
-    private void EnableOrDisableFlag(DebugViewFlags flag)
-    {
-      if ((DebugView.Flags & flag) == flag)
-      {
-        DebugView.RemoveFlags(flag);
-      }
-      else
-      {
-        DebugView.AppendFlags(flag);
-      }
-    }
-
     public override void Draw(GameTime gameTime)
     {
       Matrix projection = Camera.SimProjection;
       Matrix view = Camera.SimView;
 
-      DebugView.RenderDebugData(ref projection, ref view);
+      if (_renderDebug)
+      {
+        DebugView.RenderDebugData(ref projection, ref view);
+      }
       base.Draw(gameTime);
     }
 
     #region Demo description
-
     public virtual string GetTitle()
     {
       return "GetTitle() not implemented, override it for a proper title.";
@@ -315,13 +270,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
       return "GetDetails() not implemented, override it for a proper demo description.";
     }
-
-    public virtual int GetIndex()
-    {
-      // Defines the demo order on the menu screen
-      return -1;
-    }
-
     #endregion
   }
 }
