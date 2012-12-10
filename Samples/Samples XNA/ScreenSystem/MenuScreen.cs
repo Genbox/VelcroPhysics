@@ -85,8 +85,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _titleOrigin = new Vector2(_samplesLogo.Width, _samplesLogo.Height) / 2f;
       _titlePosition = new Vector2(viewport.Width / 2f, TitleBarHeight / 2f);
 
-      float horizontalSpacing = ((viewport.Width / 2f) - _menuEntrySize.X - EntrySpacer - _menuEntrySize.Y) / 3f;
-      float verticalSpacing = ((viewport.Height - TitleBarHeight - NumEntries * (_menuEntrySize.Y + EntrySpacer)) - EntrySpacer) / 2f;
+      float horizontalSpacing = (viewport.Width / 2f - _menuEntrySize.X - EntrySpacer - _menuEntrySize.Y) / 3f;
+      float verticalSpacing = (viewport.Height - TitleBarHeight - NumEntries * (_menuEntrySize.Y + EntrySpacer) + EntrySpacer) / 2f;
 
       _previewOrigin = new Vector2(viewport.Width / 4f, viewport.Height / 4f);
       _previewPosition = new Vector2(viewport.Width - _previewOrigin.X - horizontalSpacing, (viewport.Height - TitleBarHeight) / 2f + TitleBarHeight);

@@ -95,6 +95,8 @@
     <Compile Include="Demos\D13_TheoJansenWalker.cs" />
     <Compile Include="Demos\D12_WebOfGoo.cs" />
     <Compile Include="Demos\D15_BreakableBodies.cs" />
+    <Compile Include="ScreenSystem\OptionEntry.cs" />
+    <Compile Include="ScreenSystem\OptionsScreen.cs" />
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
     <Compile Include="MediaSystem\Sprite.cs" />
     <Compile Include="Demos\D16_RacingCar.cs" />

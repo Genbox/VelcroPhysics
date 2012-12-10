@@ -180,6 +180,11 @@ namespace FarseerPhysics.Samples
       // Update the framerate counter
       _counter.Update(gameTime);
 
+      if (_input.IsNewButtonPress(Buttons.RightShoulder) || _input.IsNewKeyPress(Keys.F5))
+      {
+        AddScreen(new OptionsScreen());
+      }
+
       if (_input.IsNewKeyPress(Keys.F12))
       {
         _graphics.ToggleFullScreen();
