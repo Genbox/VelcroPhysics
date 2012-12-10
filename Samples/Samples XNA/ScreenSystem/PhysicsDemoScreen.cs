@@ -17,6 +17,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
   {
     private static bool _renderDebug = false;
     private static DebugViewFlags _flags = DebugViewFlags.PerformanceGraph | DebugViewFlags.DebugPanel;
+    private static bool _flagsChanged = false;
 
     public Camera2D Camera;
     protected DebugViewXNA DebugView;
@@ -26,6 +27,22 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private float _agentTorque;
     private FixedMouseJoint _fixedMouseJoint;
     private Body _userAgent;
+
+    public static DebugViewFlags Flags
+    {
+      get { return _flags; }
+      set
+      {
+        _flags = value;
+        _flagsChanged = true;
+      }
+    }
+
+    public static bool RenderDebug
+    {
+      get { return _renderDebug; }
+      set { _renderDebug = value; }
+    }
 
     protected PhysicsDemoScreen()
     {
@@ -70,6 +87,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
       }
       DebugView.Flags = _flags;
+      _flagsChanged = false;
 
       if (Camera == null)
       {
@@ -104,11 +122,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
       if (input.IsNewButtonPress(Buttons.Start) || input.IsNewKeyPress(Keys.F1))
       {
         Framework.AddScreen(new DescriptionBoxScreen(GetDetails()));
-      }
-
-      if (input.IsNewButtonPress(Buttons.RightShoulder) || input.IsNewKeyPress(Keys.F5))
-      {
-        _renderDebug = !_renderDebug;
       }
 
       if (input.IsScreenExit())
@@ -255,6 +268,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
       if (_renderDebug)
       {
+        if (_flagsChanged)
+        {
+          DebugView.Flags = _flags;
+          _flagsChanged = false;
+        }
         DebugView.RenderDebugData(ref projection, ref view);
       }
       base.Draw(gameTime);
