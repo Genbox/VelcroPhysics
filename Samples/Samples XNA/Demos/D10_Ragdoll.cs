@@ -4,32 +4,35 @@ using System.Text;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #endregion
 #region Using Farseer
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 #endregion
 
 namespace FarseerPhysics.Samples.Demos
 {
-  public class DynamicJointsDemo : PhysicsDemoScreen
+  internal class D10_Ragdoll : PhysicsDemoScreen
   {
-    private Agent _agent;
     private Border _border;
-    private JumpySpider[] _spiders;
+    private Sprite _obstacle;
+    private Body[] _obstacles;
+    private Ragdoll _ragdoll;
 
     #region Demo description
-
     public override string GetTitle()
     {
-      return "Revolute & dynamic angle joints";
+      return "Ragdoll";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo demonstrates the use of revolute joints combined");
-      sb.AppendLine("with angle joints that have a dynamic target angle.");
+      sb.AppendLine("This demo shows how to combine bodies to create a ragdoll.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Rotate object: Left and right trigger");
@@ -51,12 +54,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 7;
-    }
-
     #endregion
 
     public override void LoadContent()
@@ -67,38 +64,33 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, new Vector2(0f, 10f));
-      _spiders = new JumpySpider[8];
+      _ragdoll = new Ragdoll(World, new Vector2(-20f, -10f));
 
-      for (int i = 0; i < _spiders.Length; i++)
+      _obstacles = new Body[9];
+      Vector2 stairStart = new Vector2(-23f, 0f);
+      Vector2 stairDelta = new Vector2(2.5f, 1.65f);
+
+      for (int i = 0; i < 9; i++)
       {
-        _spiders[i] = new JumpySpider(World, new Vector2(0f, 8f - (i + 1) * 2f));
+        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f, stairStart + stairDelta * i);
+        _obstacles[i].IsStatic = true;
       }
 
-      SetUserAgent(_agent.Body, 1000f, 400f);
-    }
+      // create sprite based on body
+      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Red, ContentWrapper.Black, ContentWrapper.Black, 1.5f));
 
-    public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-    {
-      if (IsActive)
-      {
-        for (int i = 0; i < _spiders.Length; i++)
-        {
-          _spiders[i].Update(gameTime);
-        }
-      }
-
-      base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+      SetUserAgent(_ragdoll.Body, 1000f, 400f);
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      _agent.Draw(Sprites);
-      for (int i = 0; i < _spiders.Length; i++)
+      for (int i = 0; i < 9; i++)
       {
-        _spiders[i].Draw(Sprites);
+        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
       }
+      _ragdoll.Draw(Sprites);
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

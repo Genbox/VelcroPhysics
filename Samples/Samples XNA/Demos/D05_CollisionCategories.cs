@@ -14,7 +14,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class CollisionCategoriesDemo : PhysicsDemoScreen
+  internal class D05_CollisionCategories : PhysicsDemoScreen
   {
     private Agent _agent;
     private Border _border;
@@ -24,7 +24,6 @@ namespace FarseerPhysics.Samples.Demos
     private Objects _stars;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Collision categories";
@@ -60,12 +59,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 4;
-    }
-
     #endregion
 
     public override void LoadContent()

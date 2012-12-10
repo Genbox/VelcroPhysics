@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class TheoJansenWalkerDemo : PhysicsDemoScreen
+  internal class D13_TheoJansenWalker : PhysicsDemoScreen
   {
     private Border _border;
     private TheoJansenWalker _walker;
@@ -27,7 +27,6 @@ namespace FarseerPhysics.Samples.Demos
     private Sprite _grain;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Theo Jansen's Strandbeast";
@@ -51,12 +50,6 @@ namespace FarseerPhysics.Samples.Demos
       sb.AppendLine("  - Switch walker direction: Right click");
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 11;
-    }
-
     #endregion
 
     public override void LoadContent()

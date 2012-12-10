@@ -1,12 +1,14 @@
 ﻿#region Using System
 using System;
 using System.Text;
+using System.Collections.Generic;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 #region Using Farseer
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
@@ -16,24 +18,25 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class RagdollDemo : PhysicsDemoScreen
+  internal class D02_MultipleFixtures : PhysicsDemoScreen
   {
     private Border _border;
-    private Sprite _obstacle;
-    private Body[] _obstacles;
-    private Ragdoll _ragdoll;
+    private Sprite _rectangleSprite;
+    private Body _rectangles;
+    private Vector2 _offset;
 
     #region Demo description
-
     public override string GetTitle()
     {
-      return "Ragdoll";
+      return "Single body with two fixtures";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows how to combine bodies to create a ragdoll.");
+      sb.AppendLine("This demo shows a single body with two attached fixtures and shapes.");
+      sb.AppendLine("A fixture binds a shape to a body and adds material properties such");
+      sb.AppendLine("as density, friction, and restitution.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Rotate object: Left and right trigger");
@@ -55,49 +58,47 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 12;
-    }
-
     #endregion
 
     public override void LoadContent()
     {
       base.LoadContent();
 
-      World.Gravity = new Vector2(0f, 20f);
+      World.Gravity = Vector2.Zero;
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _ragdoll = new Ragdoll(World, new Vector2(-20f, -10f));
+      Vertices rectangle1 = PolygonTools.CreateRectangle(2f, 2f);
+      Vertices rectangle2 = PolygonTools.CreateRectangle(2f, 2f);
 
-      _obstacles = new Body[9];
-      Vector2 stairStart = new Vector2(-23f, 0f);
-      Vector2 stairDelta = new Vector2(2.5f, 1.65f);
+      Vector2 translation = new Vector2(-2f, 0f);
+      rectangle1.Translate(ref translation);
+      translation = new Vector2(2f, 0f);
+      rectangle2.Translate(ref translation);
 
-      for (int i = 0; i < 9; i++)
-      {
-        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f, stairStart + stairDelta * i);
-        _obstacles[i].IsStatic = true;
-      }
+      List<Vertices> vertices = new List<Vertices>(2);
+      vertices.Add(rectangle1);
+      vertices.Add(rectangle2);
 
-      // create sprite based on body
-      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Red, ContentWrapper.Orange, ContentWrapper.Black, 1.5f));
+      _rectangles = BodyFactory.CreateCompoundPolygon(World, vertices, 1f);
+      _rectangles.BodyType = BodyType.Dynamic;
 
-      SetUserAgent(_ragdoll.Body, 1000f, 400f);
+      SetUserAgent(_rectangles, 200f, 200f);
+
+      // create sprite based on rectangle fixture
+      _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+      _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
     }
 
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < 9; i++)
-      {
-        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
-                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
-      }
-      _ragdoll.Draw(Sprites);
+      // draw first rectangle
+      Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                   Color.White, _rectangles.Rotation, _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
+      // draw second rectangle
+      Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                   Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);

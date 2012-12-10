@@ -20,7 +20,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class RacingCarDemo : PhysicsDemoScreen
+  internal class D16_RacingCar : PhysicsDemoScreen
   {
     private float _acceleration;
     private Body _board;
@@ -45,7 +45,6 @@ namespace FarseerPhysics.Samples.Demos
     private float _zeta;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Racing car";
@@ -63,12 +62,6 @@ namespace FarseerPhysics.Samples.Demos
       sb.AppendLine("  - Exit to demo selection: Escape");
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 14;
-    }
-
     #endregion
 
     public override void LoadContent()

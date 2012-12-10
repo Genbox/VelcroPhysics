@@ -18,7 +18,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class DistanceAngleJointDemo : PhysicsDemoScreen
+  internal class D08_DistanceAngleJoint : PhysicsDemoScreen
   {
     private Border _border;
     private Body _obstacles;
@@ -29,7 +29,6 @@ namespace FarseerPhysics.Samples.Demos
     private Sprite _distanceCube;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Distance & angle joints";
@@ -61,12 +60,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 6;
-    }
-
     #endregion
 
     public override void LoadContent()

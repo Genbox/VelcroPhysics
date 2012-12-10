@@ -20,14 +20,13 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class TextureToShapesDemo : PhysicsDemoScreen
+  internal class D14_TextureToShapes : PhysicsDemoScreen
   {
     private Border _border;
     private Body _compound;
     private Sprite _objectSprite;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Texture to collision shapes";
@@ -59,12 +58,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 8;
-    }
-
     #endregion
 
     public override void LoadContent()

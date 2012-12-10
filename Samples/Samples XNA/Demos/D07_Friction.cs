@@ -17,7 +17,7 @@ using FarseerPhysics.Samples.ScreenSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class FrictionDemo : PhysicsDemoScreen
+  internal class D07_Friction : PhysicsDemoScreen
   {
     private Border _border;
     private Body _ramps;
@@ -25,7 +25,6 @@ namespace FarseerPhysics.Samples.Demos
     private Sprite _rectangleSprite;
 
     #region Demo description
-
     public override string GetTitle()
     {
       return "Friction";
@@ -52,12 +51,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 6;
-    }
-
     #endregion
 
     public override void LoadContent()

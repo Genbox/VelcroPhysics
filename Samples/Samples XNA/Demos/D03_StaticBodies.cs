@@ -4,38 +4,37 @@ using System.Text;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #endregion
 #region Using Farseer
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 #endregion
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class StackedBodiesDemo : PhysicsDemoScreen
+  internal class D03_StaticBodies : PhysicsDemoScreen
   {
-#if XBOX
-    private const int PyramidBaseBodyCount = 10;
-#else
-    private const int PyramidBaseBodyCount = 14;
-#endif
-
     private Agent _agent;
-    private Pyramid _pyramid;
     private Border _border;
+    private Sprite _obstacle;
+    private Body[] _obstacles = new Body[5];
 
     #region Demo description
-
     public override string GetTitle()
     {
-      return "Stacked bodies";
+      return "Multiple fixtures and static bodies";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows the stacking stability of farseer physics.");
-      sb.AppendLine("It shows a bunch of rectangular bodies stacked in the shape of a pyramid.");
+      sb.AppendLine("This demo shows a single body with multiple attached fixtures");
+      sb.AppendLine("and different shapes attached.");
+      sb.AppendLine("Several static bodies are placed as obstacles in the environment.");
       sb.AppendLine(string.Empty);
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Rotate object: Left and right trigger");
@@ -57,12 +56,6 @@ namespace FarseerPhysics.Samples.Demos
 #endif
       return sb.ToString();
     }
-
-    public override int GetIndex()
-    {
-      return 3;
-    }
-
     #endregion
 
     public override void LoadContent()
@@ -73,9 +66,25 @@ namespace FarseerPhysics.Samples.Demos
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-      _agent = new Agent(World, new Vector2(5f, -10f));
+      _agent = new Agent(World, new Vector2(-6.9f, -11f));
 
-      _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
+      // Obstacles
+      for (int i = 0; i < 5; i++)
+      {
+        _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1f, 1f);
+        _obstacles[i].IsStatic = true;
+        _obstacles[i].Restitution = 0.2f;
+        _obstacles[i].Friction = 0.2f;
+      }
+
+      _obstacles[0].Position = new Vector2(-5f, 9f);
+      _obstacles[1].Position = new Vector2(15f, 6f);
+      _obstacles[2].Position = new Vector2(10f, -3f);
+      _obstacles[3].Position = new Vector2(-10f, -9f);
+      _obstacles[4].Position = new Vector2(-17f, 0f);
+
+      // create sprite based on body
+      _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1.5f));
 
       SetUserAgent(_agent.Body, 1000f, 400f);
     }
@@ -83,8 +92,12 @@ namespace FarseerPhysics.Samples.Demos
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
+      for (int i = 0; i < 5; ++i)
+      {
+        Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                     null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
+      }
       _agent.Draw(Sprites);
-      _pyramid.Draw(Sprites);
       Sprites.End();
 
       _border.Draw(Camera.SimProjection, Camera.SimView);
