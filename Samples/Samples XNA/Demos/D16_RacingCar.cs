@@ -54,12 +54,17 @@ namespace FarseerPhysics.Samples.Demos
     {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine("This demo shows a side scrolling car on a race track.");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("GamePad:");
-      sb.AppendLine("  - Exit to demo selection: Back button");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
+      sb.AppendLine("  - Break: A button");
+      sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+      sb.AppendLine();
+      sb.AppendLine();
       sb.AppendLine("Keyboard:");
-      sb.AppendLine("  - Exit to demo selection: Escape");
+      sb.Append("  - Exit to demo selection: Escape");
+#endif
       return sb.ToString();
     }
     #endregion

@@ -17,7 +17,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
   public sealed class OptionEntry
   {
     private const double HighlightTime = 0.3;
-    private const double FadeTime = 0.4;
+    private const double FadeTime = 0.1;
 
     private Vector2 _position;
     private Vector2 _size;
@@ -27,7 +27,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private bool _isChecked;
 
     private double _hoverFade;
-    private double _selectionFade;
+    private double _checkedFade;
 
     private string _text;
 
@@ -40,7 +40,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _isChecked = isChecked;
 
       _hoverFade = 0.0;
-      _selectionFade = 0.0;
+      _checkedFade = 0.0;
 
       SpriteFont font = ContentWrapper.GetFont("menuFont");
       _size = font.MeasureString(text);
@@ -91,6 +91,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
       get { return _color; }
     }
 
+    public float CheckedFade
+    {
+      get { return (float)_checkedFade; }
+    }
+
     public float Scale
     {
       get { return 0.9f + 0.1f * (float)_hoverFade; }
@@ -99,7 +104,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// <summary>
     /// Updates the menu entry.
     /// </summary>
-    public void Update(bool isSelected, bool isHovered, GameTime gameTime)
+    public void Update(bool isHovered, GameTime gameTime)
     {
       if (isHovered)
       {
@@ -109,17 +114,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
       {
         _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
-      if (isSelected)
+      if (_isChecked)
       {
-        _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+        _checkedFade = Math.Min(_checkedFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
       }
       else
       {
-        _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+        _checkedFade = Math.Max(_checkedFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
       }
 
-      _textColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
-      _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
+      _textColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_hoverFade);
+      _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Cyan * 0.6f, (float)_hoverFade);
     }
   }
 }

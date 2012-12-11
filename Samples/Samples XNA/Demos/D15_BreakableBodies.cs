@@ -38,22 +38,23 @@ namespace FarseerPhysics.Samples.Demos
     {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine("This demo shows breakable bodies, created from a texture.");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Explosion (at cursor): B button");
       sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-      sb.AppendLine("  - Exit to demo selection: Back button");
+      sb.Append("  - Exit to demo selection: Back button");
 #if WINDOWS
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
+      sb.AppendLine();
       sb.AppendLine("Keyboard:");
       sb.AppendLine("  - Exit to demo selection: Escape");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("Mouse");
       sb.AppendLine("  - Explosion (at cursor): Right click");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: Move mouse");
+      sb.Append("  - Drag grabbed object: Move mouse");
 #endif
       return sb.ToString();
     }

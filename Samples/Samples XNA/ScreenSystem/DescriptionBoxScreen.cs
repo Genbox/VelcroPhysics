@@ -56,8 +56,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
       // The background includes a border somewhat larger than the text itself.
       _topLeft.X = _textPosition.X - HorizontalPadding;
       _topLeft.Y = _textPosition.Y - VerticalPadding;
-      _bottomRight.X = _topLeft.X + textSize.X + 2f * HorizontalPadding;
-      _bottomRight.Y = _topLeft.Y + textSize.Y + 2f * VerticalPadding;
+      _bottomRight.X = _textPosition.X + textSize.X + HorizontalPadding;
+      _bottomRight.Y = _textPosition.Y + textSize.Y + VerticalPadding;
 
       base.LoadContent();
     }

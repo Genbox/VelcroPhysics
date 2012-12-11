@@ -37,17 +37,20 @@ namespace FarseerPhysics.Samples.Demos
       StringBuilder sb = new StringBuilder();
       sb.AppendLine("This demo shows how complex mechanical structures can be realized.");
       sb.AppendLine("http://www.strandbeest.com/");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Switch walker direction: A button");
-      sb.AppendLine("  - Exit to demo selection: Back button");
-      sb.AppendLine(string.Empty);
+      sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+      sb.AppendLine();
+      sb.AppendLine();
       sb.AppendLine("Keyboard:");
       sb.AppendLine("  - Switch walker direction: Space");
       sb.AppendLine("  - Exit to demo selection: Escape");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("Mouse / Touchscreen");
-      sb.AppendLine("  - Switch walker direction: Right click");
+      sb.Append("  - Switch walker direction: Right click");
+#endif
       return sb.ToString();
     }
     #endregion

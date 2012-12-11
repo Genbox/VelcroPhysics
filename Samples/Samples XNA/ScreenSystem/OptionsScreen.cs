@@ -19,12 +19,13 @@ namespace FarseerPhysics.Samples.ScreenSystem
   /// </summary>
   public class OptionsScreen : GameScreen
   {
-    private const float HorizontalPadding = 32f;
-    private const float VerticalPadding = 16f;
+    private const float HorizontalPadding = 24f;
+    private const float VerticalPadding = 24f;
     private const int EntrySpacer = 5;
 
     private Vector2 _optionEntrySize;
-    private Vector2 _textOffset;
+    private Vector2 _optionTextOffset;
+    private Vector2 _optionCheckOffset;
     private float _optionStart;
     private float _optionSpacing;
 
@@ -33,10 +34,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     private List<OptionEntry> _optionEntries = new List<OptionEntry>();
 
-    private int _selectedEntry;
     private int _hoverEntry;
 
     private SpriteFont _font;
+    private Texture2D _checkmark;
 
     /// <summary>
     /// Constructor.
@@ -51,7 +52,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
       _optionEntrySize = Vector2.Zero;
       _hoverEntry = -1;
-      _selectedEntry = 0;
     }
 
     private void LoadOptions()
@@ -75,7 +75,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         _optionEntrySize.Y = Math.Max(_optionEntrySize.Y, _optionEntries[i].Size.Y);
       }
       _optionEntrySize.X += 20f + _optionEntrySize.Y;
-      _textOffset = new Vector2(-_optionEntrySize.Y, 0f);
+      _optionTextOffset = new Vector2(-_optionEntrySize.Y / 2f, 0f);
+      _optionCheckOffset = new Vector2(_optionEntrySize.X - _optionEntrySize.Y, 0f);
     }
 
     public override void LoadContent()
@@ -87,6 +88,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       Viewport viewport = Framework.GraphicsDevice.Viewport;
 
       _font = ContentWrapper.GetFont("menuFont");
+      _checkmark = ContentWrapper.GetTexture("checkmark");
 
       _optionStart = (viewport.Height - (_optionEntries.Count - 1) * (_optionEntrySize.Y + EntrySpacer)) / 2f;
       _optionSpacing = _optionEntrySize.Y + EntrySpacer;
@@ -100,7 +102,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       _topLeft.X = viewport.Width / 2f - _optionEntrySize.X / 2f - HorizontalPadding;
       _topLeft.Y = _optionStart - _optionEntrySize.Y / 2f - VerticalPadding;
       _bottomRight.X = viewport.Width / 2f + _optionEntrySize.X / 2f + HorizontalPadding;
-      _bottomRight.Y = _optionStart + _optionEntries.Count * _optionSpacing - EntrySpacer + _optionEntrySize.Y / 2f + VerticalPadding;
+      _bottomRight.Y = _optionStart + (_optionEntries.Count - 1) * _optionSpacing + _optionEntrySize.Y / 2f + VerticalPadding;
     }
 
     /// <summary>
@@ -134,55 +136,48 @@ namespace FarseerPhysics.Samples.ScreenSystem
       {
         if (_hoverEntry != -1)
         {
-          if (_selectedEntry == _hoverEntry)
-          {
-            _optionEntries[_selectedEntry].Switch();
+          _optionEntries[_hoverEntry].Switch();
 
-            switch (_selectedEntry)
-            {
-              case 0:
-                PhysicsDemoScreen.RenderDebug = _optionEntries[_selectedEntry].IsChecked;
-                break;
-              case 1:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.DebugPanel : PhysicsDemoScreen.Flags & ~DebugViewFlags.DebugPanel;
-                break;
-              case 2:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PerformanceGraph : PhysicsDemoScreen.Flags & ~DebugViewFlags.PerformanceGraph;
-                break;
-              case 3:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Shape : PhysicsDemoScreen.Flags & ~DebugViewFlags.Shape;
-                break;
-              case 4:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PolygonPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.PolygonPoints;
-                break;
-              case 5:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Joint : PhysicsDemoScreen.Flags & ~DebugViewFlags.Joint;
-                break;
-              case 6:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.AABB : PhysicsDemoScreen.Flags & ~DebugViewFlags.AABB;
-                break;
-              case 7:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.CenterOfMass : PhysicsDemoScreen.Flags & ~DebugViewFlags.CenterOfMass;
-                break;
-              case 8:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactPoints;
-                break;
-              case 9:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactNormals : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactNormals;
-                break;
-              case 10:
-                PhysicsDemoScreen.Flags = _optionEntries[_selectedEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Controllers : PhysicsDemoScreen.Flags & ~DebugViewFlags.Controllers;
-                break;
-              case 11:
-                ContentWrapper.SoundVolume = _optionEntries[_selectedEntry].IsChecked ? 100 : 0;
-                break;
-            }
-            ContentWrapper.PlaySoundEffect("click");
-          }
-          else
+          switch (_hoverEntry)
           {
-            _selectedEntry = _hoverEntry;
+            case 0:
+              PhysicsDemoScreen.RenderDebug = _optionEntries[_hoverEntry].IsChecked;
+              break;
+            case 1:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.DebugPanel : PhysicsDemoScreen.Flags & ~DebugViewFlags.DebugPanel;
+              break;
+            case 2:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PerformanceGraph : PhysicsDemoScreen.Flags & ~DebugViewFlags.PerformanceGraph;
+              break;
+            case 3:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Shape : PhysicsDemoScreen.Flags & ~DebugViewFlags.Shape;
+              break;
+            case 4:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PolygonPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.PolygonPoints;
+              break;
+            case 5:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Joint : PhysicsDemoScreen.Flags & ~DebugViewFlags.Joint;
+              break;
+            case 6:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.AABB : PhysicsDemoScreen.Flags & ~DebugViewFlags.AABB;
+              break;
+            case 7:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.CenterOfMass : PhysicsDemoScreen.Flags & ~DebugViewFlags.CenterOfMass;
+              break;
+            case 8:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactPoints;
+              break;
+            case 9:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactNormals : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactNormals;
+              break;
+            case 10:
+              PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Controllers : PhysicsDemoScreen.Flags & ~DebugViewFlags.Controllers;
+              break;
+            case 11:
+              ContentWrapper.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
+              break;
           }
+          ContentWrapper.PlaySoundEffect("click");
         }
       }
 
@@ -203,9 +198,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       for (int i = 0; i < _optionEntries.Count; i++)
       {
         bool isHovered = IsActive && (i == _hoverEntry);
-        bool isSelected = (i == _selectedEntry);
-
-        _optionEntries[i].Update(isSelected, isHovered, gameTime);
+        _optionEntries[i].Update(isHovered, gameTime);
       }
     }
 
@@ -215,7 +208,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public override void Draw(GameTime gameTime)
     {
       Quads.Begin();
-      Quads.Render(_topLeft, _bottomRight, null, true, ContentWrapper.Black, ContentWrapper.Grey * 0.65f);
+      Quads.Render(_topLeft, _bottomRight, null, true, ContentWrapper.Black, ContentWrapper.Grey * 0.95f);
       Quads.End();
 
       // Draw each menu entry in turn.
@@ -223,17 +216,20 @@ namespace FarseerPhysics.Samples.ScreenSystem
       foreach (OptionEntry entry in _optionEntries)
       {
         Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true,
-                     ContentWrapper.Grey * TransitionAlpha, entry.TileColor * TransitionAlpha);
+                     ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
+        Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true,
+                     ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
       }
       Quads.End();
 
       Sprites.Begin();
       foreach (OptionEntry entry in _optionEntries)
       {
-        Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _textOffset, ContentWrapper.Black * TransitionAlpha,
+        Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _optionTextOffset, ContentWrapper.Black * TransitionAlpha,
                            0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
-        Sprites.DrawString(_font, entry.Text, entry.Position + _textOffset, entry.TextColor * TransitionAlpha,
+        Sprites.DrawString(_font, entry.Text, entry.Position + _optionTextOffset, entry.TextColor * TransitionAlpha,
                            0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+        Sprites.Draw(_checkmark, entry.Position - _optionEntrySize / 2f + _optionCheckOffset, Color.White * entry.CheckedFade);
       }
       Sprites.End();
     }
