@@ -180,7 +180,8 @@ namespace FarseerPhysics.Samples
       // Update the framerate counter
       _counter.Update(gameTime);
 
-      if (_input.IsNewButtonPress(Buttons.RightShoulder) || _input.IsNewKeyPress(Keys.F5))
+      if (_input.IsNewButtonPress(Buttons.RightShoulder) || _input.IsNewKeyPress(Keys.F5) &&
+          !(_screens[_screens.Count - 1] is OptionsScreen || _screens[_screens.Count - 1] is LogoScreen))
       {
         AddScreen(new OptionsScreen());
       }

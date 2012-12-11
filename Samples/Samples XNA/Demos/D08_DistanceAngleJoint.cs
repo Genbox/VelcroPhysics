@@ -39,24 +39,25 @@ namespace FarseerPhysics.Samples.Demos
       StringBuilder sb = new StringBuilder();
       sb.AppendLine("This demo shows several bodies connected by distance and angle joints.");
       sb.AppendLine("Orange bodies are forced to have the same angle at all times.");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("Striped bodies are forced to have the same distance at all times.");
       sb.AppendLine("Two of them have a rigid distance joint.");
       sb.AppendLine("The other two have a soft (spring-like) distance joint.");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Move cursor: Left thumbstick");
       sb.AppendLine("  - Grab object (beneath cursor): A button");
       sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-      sb.AppendLine("  - Exit to demo selection: Back button");
+      sb.Append("  - Exit to demo selection: Back button");
 #if WINDOWS
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
+      sb.AppendLine();
       sb.AppendLine("Keyboard:");
       sb.AppendLine("  - Exit to demo selection: Escape");
-      sb.AppendLine(string.Empty);
+      sb.AppendLine();
       sb.AppendLine("Mouse");
       sb.AppendLine("  - Grab object (beneath cursor): Left click");
-      sb.AppendLine("  - Drag grabbed object: Move mouse");
+      sb.Append("  - Drag grabbed object: Move mouse");
 #endif
       return sb.ToString();
     }
