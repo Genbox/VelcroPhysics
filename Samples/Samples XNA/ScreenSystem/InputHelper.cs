@@ -259,7 +259,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
       return IsNewKeyPress(Keys.Space) ||
              IsNewKeyPress(Keys.Enter) ||
              IsNewButtonPress(Buttons.A) ||
-             IsNewButtonPress(Buttons.Start) ||
              IsNewMouseButtonPress(MouseButtons.LeftButton);
     }
 
@@ -283,8 +282,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
       return IsNewKeyPress(Keys.Escape) ||
              IsNewKeyPress(Keys.Back) ||
              IsNewButtonPress(Buttons.B) ||
-             IsNewButtonPress(Buttons.Back) ||
-             IsNewMouseButtonPress(MouseButtons.RightButton);
+             IsNewButtonPress(Buttons.Back);
     }
 
     public bool IsMenuUp()

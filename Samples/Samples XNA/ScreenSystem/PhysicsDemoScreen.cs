@@ -118,7 +118,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      // Control debug view
       if (input.IsNewButtonPress(Buttons.Start) || input.IsNewKeyPress(Keys.F1))
       {
         Framework.AddScreen(new DescriptionBoxScreen(GetDetails()));
@@ -183,78 +182,98 @@ namespace FarseerPhysics.Samples.ScreenSystem
     private void HandleCamera(InputHelper input, GameTime gameTime)
     {
       Vector2 camMove = Vector2.Zero;
-
-      if (input.KeyboardState.IsKeyDown(Keys.Up))
+      if (input.GamePadState.IsButtonDown(Buttons.RightShoulder))
       {
-        camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        camMove = input.GamePadState.ThumbSticks.Right * new Vector2(10f, -10f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        if (input.GamePadState.IsButtonDown(Buttons.RightTrigger))
+        {
+          Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+        }
+        if (input.GamePadState.IsButtonDown(Buttons.LeftTrigger))
+        {
+          Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+        }
+        if (input.IsNewButtonPress(Buttons.X))
+        {
+          Camera.ResetCamera();
+        }
       }
-      if (input.KeyboardState.IsKeyDown(Keys.Down))
+      else
       {
-        camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.Left))
-      {
-        camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.Right))
-      {
-        camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.PageUp))
-      {
-        Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.PageDown))
-      {
-        Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+        if (input.KeyboardState.IsKeyDown(Keys.Up))
+        {
+          camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.Down))
+        {
+          camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.Left))
+        {
+          camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.Right))
+        {
+          camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.PageUp))
+        {
+          Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.PageDown))
+        {
+          Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+        }
+        if (input.IsNewKeyPress(Keys.Home))
+        {
+          Camera.ResetCamera();
+        }
       }
       if (camMove != Vector2.Zero)
       {
         Camera.MoveCamera(camMove);
       }
-      if (input.IsNewKeyPress(Keys.Home))
-      {
-        Camera.ResetCamera();
-      }
     }
 
     private void HandleUserAgent(InputHelper input)
     {
-      Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X,
-                                                -input.GamePadState.ThumbSticks.Right.Y);
-      float torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
+      Vector2 force = Vector2.Zero;
+      float torque = 0f;
 
-      _userAgent.ApplyForce(force);
-      _userAgent.ApplyTorque(torque);
+      if (!input.GamePadState.IsButtonDown(Buttons.RightShoulder))
+      {
+        force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X, -input.GamePadState.ThumbSticks.Right.Y);
+        torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
+      }
 
-      float forceAmount = _agentForce * 0.6f;
+      if (force == Vector2.Zero && torque == 0f)
+      {
+        float forceAmount = _agentForce * 0.6f;
 
-      force = Vector2.Zero;
-      torque = 0;
-
-      if (input.KeyboardState.IsKeyDown(Keys.A))
-      {
-        force += new Vector2(-forceAmount, 0);
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.S))
-      {
-        force += new Vector2(0, forceAmount);
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.D))
-      {
-        force += new Vector2(forceAmount, 0);
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.W))
-      {
-        force += new Vector2(0, -forceAmount);
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.Q))
-      {
-        torque -= _agentTorque;
-      }
-      if (input.KeyboardState.IsKeyDown(Keys.E))
-      {
-        torque += _agentTorque;
+        if (input.KeyboardState.IsKeyDown(Keys.A))
+        {
+          force += new Vector2(-forceAmount, 0);
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.S))
+        {
+          force += new Vector2(0, forceAmount);
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.D))
+        {
+          force += new Vector2(forceAmount, 0);
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.W))
+        {
+          force += new Vector2(0, -forceAmount);
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.Q))
+        {
+          torque -= _agentTorque;
+        }
+        if (input.KeyboardState.IsKeyDown(Keys.E))
+        {
+          torque += _agentTorque;
+        }
       }
 
       _userAgent.ApplyForce(force);

@@ -3,6 +3,7 @@ using System;
 #endregion
 #region Using XNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 #region Using Farseer
@@ -67,7 +68,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      if (input.IsMenuSelect() || input.IsMenuCancel())
+      if (input.IsMenuSelect() || input.IsMenuCancel() || input.IsNewKeyPress(Keys.F1) || input.IsNewButtonPress(Buttons.Start))
       {
         ExitScreen();
       }
