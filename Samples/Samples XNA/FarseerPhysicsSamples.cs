@@ -42,7 +42,6 @@ namespace FarseerPhysics.Samples
     private QuadRenderer _quadRenderer;
 
     private InputHelper _input;
-    private FrameRateCounter _counter;
 
     private List<GameScreen> _screens = new List<GameScreen>();
     private List<GameScreen> _screensToUpdate = new List<GameScreen>();
@@ -53,7 +52,11 @@ namespace FarseerPhysics.Samples
     private MenuScreen _menuScreen;
 
     private bool _isExiting;
+
+#if WINDOWS
+    private FrameRateCounter _counter;
     private bool _showFPS;
+#endif
 
     public FarseerPhysicsSamples()
     {
@@ -76,10 +79,11 @@ namespace FarseerPhysics.Samples
     protected override void Initialize()
     {
       _input = new InputHelper();
+#if WINDOWS
       _counter = new FrameRateCounter();
-
-      _isExiting = false;
       _showFPS = false;
+#endif
+      _isExiting = false;
 
       base.Initialize();
     }
@@ -95,7 +99,9 @@ namespace FarseerPhysics.Samples
       _quadRenderer = new QuadRenderer(GraphicsDevice);
 
       _input.LoadContent(GraphicsDevice.Viewport);
+#if WINDOWS
       _counter.LoadContent();
+#endif
 
       // Create rendertarget for transitions
       PresentationParameters _pp = GraphicsDevice.PresentationParameters;
@@ -178,24 +184,24 @@ namespace FarseerPhysics.Samples
       // Read the keyboard and gamepad.
       _input.Update(gameTime);
       // Update the framerate counter
+#if WINDOWS
       _counter.Update(gameTime);
-
-      if (_input.IsNewButtonPress(Buttons.RightShoulder) || _input.IsNewKeyPress(Keys.F5) &&
+#endif
+      if (_input.IsNewButtonPress(Buttons.Y) || _input.IsNewKeyPress(Keys.F5) &&
           !(_screens[_screens.Count - 1] is OptionsScreen || _screens[_screens.Count - 1] is LogoScreen))
       {
         AddScreen(new OptionsScreen());
       }
-
-      if (_input.IsNewKeyPress(Keys.F12))
-      {
-        _graphics.ToggleFullScreen();
-      }
-
+#if WINDOWS
       if (_input.IsNewKeyPress(Keys.F11))
       {
         _showFPS = !_showFPS;
       }
-
+      if (_input.IsNewKeyPress(Keys.F12))
+      {
+        _graphics.ToggleFullScreen();
+      }
+#endif
       // Make a copy of the master screen list, to avoid confusion if
       // the process of updating one screen adds or removes others.
       _screensToUpdate.Clear();
@@ -299,11 +305,12 @@ namespace FarseerPhysics.Samples
       }
 
       _input.Draw(_spriteBatch);
+#if WINDOWS
       if (_showFPS)
       {
         _counter.Draw(_spriteBatch);
       }
-
+#endif
       base.Draw(gameTime);
     }
 

@@ -54,6 +54,10 @@ namespace FarseerPhysics.Samples.Demos
     {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine("This demo shows a side scrolling car on a race track.");
+      sb.AppendLine("The car uses two wheel joints, which combine a revolute and");
+      sb.AppendLine("a (soft) distance joint for the tire suspension.");
+      sb.AppendLine("The track is composed of several edge shapes and different");
+      sb.AppendLine("obstacles are attached to the track.");
       sb.AppendLine();
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
@@ -63,6 +67,8 @@ namespace FarseerPhysics.Samples.Demos
       sb.AppendLine();
       sb.AppendLine();
       sb.AppendLine("Keyboard:");
+      sb.AppendLine("  - Accelerate / reverse: D / A");
+      sb.AppendLine("  - Break: S");
       sb.Append("  - Exit to demo selection: Escape");
 #endif
       return sb.ToString();
@@ -238,16 +244,16 @@ namespace FarseerPhysics.Samples.Demos
         _springBack.MotorSpeed = 0.0f;
         _springBack.MaxMotorTorque = 20.0f;
         _springBack.MotorEnabled = true;
-        //_springBack.Frequency = _hzBack;
-        //_springBack.DampingRatio = _zeta;
+        _springBack.SpringFrequencyHz = _hzBack;
+        _springBack.SpringDampingRatio = _zeta;
         World.AddJoint(_springBack);
 
         _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis);
         _springFront.MotorSpeed = 0.0f;
         _springFront.MaxMotorTorque = 10.0f;
         _springFront.MotorEnabled = false;
-        //_springFront.Frequency = _hzFront;
-        //_springFront.DampingRatio = _zeta;
+        _springFront.SpringFrequencyHz = _hzFront;
+        _springFront.SpringDampingRatio = _zeta;
         World.AddJoint(_springFront);
 
         // GFX
@@ -280,15 +286,15 @@ namespace FarseerPhysics.Samples.Demos
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
     {
-      if (input.GamePadState.ThumbSticks.Left.X > 0.5f)
+      if (input.GamePadState.ThumbSticks.Left.X > 0.5f || input.KeyboardState.IsKeyDown(Keys.D))
       {
         _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
       }
-      else if (input.GamePadState.ThumbSticks.Left.X < -0.5f)
+      else if (input.GamePadState.ThumbSticks.Left.X < -0.5f || input.KeyboardState.IsKeyDown(Keys.A))
       {
         _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
       }
-      else if (input.GamePadState.Buttons.A == ButtonState.Pressed)
+      else if (input.IsNewButtonPress(Buttons.A) || input.IsNewKeyRelease(Keys.S))
       {
         _acceleration = 0f;
       }
