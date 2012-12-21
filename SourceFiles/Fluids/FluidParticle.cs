@@ -45,19 +45,9 @@ namespace FarseerPhysics.Fluids
             Acceleration = Vector2.Zero;
         }
 
-        public void ApplyForce(Vector2 force)
-        {
-            ApplyForce(ref force);
-        }
-
         public void ApplyForce(ref Vector2 force)
         {
             Acceleration += force * Mass;
-        }
-
-        public void ApplyImpulse(Vector2 impulse)
-        {
-            ApplyImpulse(ref impulse);
         }
 
         public void ApplyImpulse(ref Vector2 impulse)
