@@ -5,16 +5,19 @@
 
 using System;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using FarseerPhysics.Fluids;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
     public class FluidsTest : Test
     {
+        private SpriteBatch _spriteBatch;
+        private Texture2D _pixel;
+
         private FluidsTest()
         {
             World = new World(new Vector2(0f, -10f));
@@ -27,20 +30,26 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            //DebugView.AppendFlags(DebugViewFlags.DebugPanel);
+            //DebugView.AppendFlags(DebugViewFlags.PerformanceGraph);
+
+            _spriteBatch = new SpriteBatch(GameInstance.GraphicsDevice);
+            _pixel = GameInstance.Content.Load<Texture2D>("Pixel");
+        }
+
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
+            _spriteBatch.Begin();
 
             foreach (FluidParticle fluidParticle in World.Fluid.Particles)
             {
-                DebugView.DrawCircle(fluidParticle.Position, World.Fluid.Definition.InfluenceRadius, Color.White * 0.1f);
-                DebugView.DrawCircle(fluidParticle.Position, World.Fluid.Definition.InfluenceRadius / 10.0f, Color.Red);
-
+                _spriteBatch.Draw(_pixel, GameInstance.ConvertWorldToScreen(fluidParticle.Position), Color.White);
             }
-
-            //DebugView.DrawString(100, 100, World.Fluid.Particles[0].Position.X + " " + World.Fluid.Particles[0].Position.Y);
-
-            DebugView.EndCustomDraw();
+            _spriteBatch.End();
 
             base.Update(settings, gameTime);
 
@@ -52,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private const float WorldWidth = 60;
         private const float WorldHeight = 60;
-        private const float CollisionForce = 0.1f;
+        private const float CollisionForce = 1f;
 
         private void WallCollision(FluidParticle pi)
         {
@@ -75,10 +84,14 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Mouse(MouseState state, MouseState oldState)
         {
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            if (state.LeftButton == ButtonState.Pressed)
             {
                 Vector2 mousePosition = GameInstance.ConvertScreenToWorld(state.X, state.Y);
-                World.Fluid.AddParticle(mousePosition);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    World.Fluid.AddParticle(mousePosition + new Vector2(i,0));
+                }
             }
 
             base.Mouse(state, oldState);

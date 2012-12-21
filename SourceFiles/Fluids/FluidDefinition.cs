@@ -80,7 +80,7 @@ namespace FarseerPhysics.Fluids
                                               Stiffness = 10.0f,
                                               StiffnessNear = 0.0f, // Set by Check()
 
-                                              UseViscosity = true,
+                                              UseViscosity = false,
                                               ViscositySigma = 10.0f,
                                               ViscosityBeta = 0.0f,
 

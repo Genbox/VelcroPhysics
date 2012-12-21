@@ -308,19 +308,11 @@ namespace FarseerPhysics.DebugView
                 // continue until no values are left
                 for (int i = _graphValues.Count - 1; i > 0; i--)
                 {
-                    float y1 = PerformancePanelBounds.Bottom -
-                               ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
-                    float y2 = PerformancePanelBounds.Bottom -
-                               ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
+                    float y1 = PerformancePanelBounds.Bottom - ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
+                    float y2 = PerformancePanelBounds.Bottom - ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
 
-                    Vector2 x1 =
-                        new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
-                                    MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
-
-                    Vector2 x2 =
-                        new Vector2(
-                            MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right),
-                            MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+                    Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
+                    Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
 
                     DrawSegment(x1, x2, Color.LightGreen);
 
@@ -334,12 +326,9 @@ namespace FarseerPhysics.DebugView
 
             //Draw background.
             _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
-            _background[1] = new Vector2(PerformancePanelBounds.X,
-                                         PerformancePanelBounds.Y + PerformancePanelBounds.Height);
-            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width,
-                                         PerformancePanelBounds.Y + PerformancePanelBounds.Height);
-            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width,
-                                         PerformancePanelBounds.Y);
+            _background[1] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
+            _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y);
 
             DrawSolidPolygon(_background, 4, Color.DarkGray, true);
         }
@@ -369,6 +358,7 @@ namespace FarseerPhysics.DebugView
                                    "\n- CCD: " + World.ContinuousPhysicsTime +
                                    "\n- Joint: " + World.Island.JointUpdateTime +
                                    "\n- Controller: " + World.ControllersUpdateTime +
+                                   "\n- Fluids: " + World.FluidsUpdateTime +
                                    "\n- Total: " + World.UpdateTime);
         }
 
@@ -583,6 +573,7 @@ namespace FarseerPhysics.DebugView
             {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
             }
+
             const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 

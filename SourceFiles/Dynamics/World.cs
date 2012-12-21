@@ -292,6 +292,8 @@ namespace FarseerPhysics.Dynamics
 
         public float SolveUpdateTime { get; private set; }
 
+        public float FluidsUpdateTime { get; private set; }
+
         /// <summary>
         /// Get the number of broad-phase proxies.
         /// </summary>
@@ -806,10 +808,15 @@ namespace FarseerPhysics.Dynamics
 
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
-                ContinuousPhysicsTime = _watch.ElapsedTicks -
-                                        (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
+                ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 #endif
-            _invDt0 = step.inv_dt;
+
+            Fluid.Update(dt);
+
+#if (!SILVERLIGHT && !WINDOWS_PHONE)
+            if (Settings.EnableDiagnostics)
+                FluidsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
+#endif
 
             if ((Flags & WorldFlags.ClearForces) != 0)
             {
@@ -821,18 +828,17 @@ namespace FarseerPhysics.Dynamics
                 BreakableBodyList[i].Update();
             }
 
+
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
-                //AddRemoveTime = 1000 * AddRemoveTime / Stopwatch.Frequency;
 
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
 #endif
-
-            Fluid.Update(dt);
+            _invDt0 = step.inv_dt;
         }
 
         /// <summary>
