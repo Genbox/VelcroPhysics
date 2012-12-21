@@ -12,17 +12,15 @@ namespace FarseerPhysics.Fluids
         private List<SpringHash> _springsToRemove = new List<SpringHash>();
         private Vector2 _totalForce;
 
-        public FluidSystem()
+        public FluidSystem(Vector2 gravity)
         {
-            Gravity = new Vector2(0.0f, 10.0f);
+            Gravity = gravity;
             Particles = new List<FluidParticle>();
             DefaultDefinition();
         }
 
         public FluidDefinition Definition { get; private set; }
-
         public List<FluidParticle> Particles { get; private set; }
-
         public Vector2 Gravity { get; set; }
 
         public void DefaultDefinition()
@@ -46,7 +44,7 @@ namespace FarseerPhysics.Fluids
 
         public void Clear()
         {
-
+            //TODO
         }
 
         public void ApplyForce(Vector2 f)
@@ -60,7 +58,7 @@ namespace FarseerPhysics.Fluids
 
             for (int i = 0; i < Particles.Count; ++i)
             {
-                Particles[i].ApplyForce(f);
+                Particles[i].ApplyForce(ref f);
             }
 
             _totalForce = Vector2.Zero;

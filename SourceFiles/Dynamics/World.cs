@@ -34,6 +34,7 @@ using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
+using FarseerPhysics.Fluids;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
@@ -206,6 +207,7 @@ namespace FarseerPhysics.Dynamics
         public ControllerDelegate ControllerAdded;
 
         public ControllerDelegate ControllerRemoved;
+        public FluidSystem Fluid { get; private set; }
 
         private float _invDt0;
         public Island Island = new Island();
@@ -252,6 +254,8 @@ namespace FarseerPhysics.Dynamics
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
+
+            Fluid = new FluidSystem(new Vector2(0, -10));
         }
 
         public World(Vector2 gravity, AABB span)
@@ -827,6 +831,8 @@ namespace FarseerPhysics.Dynamics
                 _watch.Reset();
             }
 #endif
+
+            Fluid.Update(dt);
         }
 
         /// <summary>

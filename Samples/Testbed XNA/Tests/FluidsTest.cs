@@ -7,8 +7,6 @@ using System;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Fluids;
-using FarseerPhysics.Physics;
-using FarseerPhysics.Physics.Collisions;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -17,70 +15,62 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class FluidsTest : Test
     {
-        private FluidManager _fluidsManager;
-
         private FluidsTest()
         {
-            World = new World(new Vector2(0f, -5f));
+            World = new World(new Vector2(0f, -10f));
 
-            Body ground = BodyFactory.CreateRectangle(World, 40, 1, 0);
-            FixtureFactory.AttachRectangle(1, 30, 0, new Vector2(-20 + 0.5f, 15 - 0.5f), ground);
-            FixtureFactory.AttachRectangle(1, 30, 0, new Vector2(20 - 0.5f, 15 - 0.5f), ground);
+            Random random = new Random();
 
-            foreach (Fixture fixture in ground.FixtureList)
+            for (int i = 0; i < 500; i++)
             {
-                fixture.FluidProperties = new FluidCollisionProperties();
-                fixture.RigidBody = new RigidBody(ground);
+                World.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
             }
-
-            // Circle
-            //{
-            //    Body body = BodyFactory.CreateBody(World, new Vector2(4.0f, 30.0f));
-            //    body.BodyType = BodyType.Dynamic;
-
-            //    Fixture fix = FixtureFactory.AttachCircle(3.0f, 1.0f, body);
-            //    fix.FluidProperties = new FluidCollisionProperties();
-            //    fix.RigidBody = new RigidBody(body);
-            //}
-
-            // Rectangle
-            {
-                Body body = BodyFactory.CreateBody(World, new Vector2(-4.0f, 30.0f));
-                body.BodyType = BodyType.Dynamic;
-
-                Fixture fix = FixtureFactory.AttachRectangle(3.0f, 3.0f, 1.0f, Vector2.Zero, body);
-                fix.FluidProperties = new FluidCollisionProperties();
-                fix.RigidBody = new RigidBody(body);
-            }
-
-            _fluidsManager = new FluidManager(World);
-            //Random random = new Random();
-
-            //for (int i = 0; i < 500; ++i)
-            //{
-            //    _fluidsManager.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
-            //}
-
-
-            _fluidsManager.Fluid.AddParticle(new Vector2(-4.0f, 30.0f));
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
-            foreach (FluidParticle fluidParticle in _fluidsManager.Fluid.Particles)
+            foreach (FluidParticle fluidParticle in World.Fluid.Particles)
             {
-                DebugView.DrawCircle(fluidParticle.Position, _fluidsManager.Fluid.Definition.InfluenceRadius, Color.White * 0.1f);
-                DebugView.DrawCircle(fluidParticle.Position, _fluidsManager.Fluid.Definition.InfluenceRadius / 10.0f, Color.Red);
+                DebugView.DrawCircle(fluidParticle.Position, World.Fluid.Definition.InfluenceRadius, Color.White * 0.1f);
+                DebugView.DrawCircle(fluidParticle.Position, World.Fluid.Definition.InfluenceRadius / 10.0f, Color.Red);
+
             }
+
+            //DebugView.DrawString(100, 100, World.Fluid.Particles[0].Position.X + " " + World.Fluid.Particles[0].Position.Y);
 
             DebugView.EndCustomDraw();
 
-            //base.Update(settings, gameTime);
+            base.Update(settings, gameTime);
 
-            if ((float)gameTime.ElapsedGameTime.TotalSeconds > 0)
-                _fluidsManager.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+            foreach (FluidParticle fluidParticle in World.Fluid.Particles)
+            {
+                WallCollision(fluidParticle);
+            }
+        }
+
+        private const float WorldWidth = 60;
+        private const float WorldHeight = 60;
+        private const float CollisionForce = 0.1f;
+
+        private void WallCollision(FluidParticle pi)
+        {
+            Vector2 correction = Vector2.Zero;
+
+            if (pi.Position.X > WorldWidth / 2f)
+                correction -= new Vector2((pi.Position.X - WorldWidth / 2f) / CollisionForce, 0);
+
+            else if (pi.Position.X < -WorldWidth / 2f)
+                correction += new Vector2((-WorldWidth / 2f - pi.Position.X) / CollisionForce, 0);
+
+            if (pi.Position.Y > WorldHeight / 2f)
+                correction -= new Vector2(0, (pi.Position.Y - WorldHeight / 2f) / CollisionForce);
+
+            else if (pi.Position.Y < 0)
+                correction += new Vector2(0, (0 - pi.Position.Y) / CollisionForce);
+
+            pi.Velocity = new Vector2(pi.Velocity.X + correction.X, pi.Velocity.Y + correction.Y);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -88,7 +78,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
             {
                 Vector2 mousePosition = GameInstance.ConvertScreenToWorld(state.X, state.Y);
-                _fluidsManager.Fluid.AddParticle(mousePosition);
+                World.Fluid.AddParticle(mousePosition);
             }
 
             base.Mouse(state, oldState);
