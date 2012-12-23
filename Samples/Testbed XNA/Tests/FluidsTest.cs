@@ -24,10 +24,11 @@ namespace FarseerPhysics.TestBed.Tests
 
             Random random = new Random();
 
-            for (int i = 0; i < 500; i++)
-            {
-                World.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
-            }
+            //for (int i = 0; i < 500; i++)
+            //{
+            //    //World.Fluid.AddParticle(new Vector2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
+            //    World.Fluid.AddParticle(new Vec2(-14.0f + 28.0f * (float)random.NextDouble(), 10.0f + 20.0f * (float)random.NextDouble()));
+            //}
         }
 
         public override void Initialize()
@@ -45,41 +46,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             _spriteBatch.Begin();
 
-            foreach (FluidParticle fluidParticle in World.Fluid.Particles)
+            foreach (var fluidParticle in World.Fluid.Particles)
             {
-                _spriteBatch.Draw(_pixel, GameInstance.ConvertWorldToScreen(fluidParticle.Position), Color.White);
+                _spriteBatch.Draw(_pixel, GameInstance.ConvertWorldToScreen(new Vector2(fluidParticle.Position.X, fluidParticle.Position.Y)), Color.White);
             }
             _spriteBatch.End();
 
             base.Update(settings, gameTime);
-
-            foreach (FluidParticle fluidParticle in World.Fluid.Particles)
-            {
-                WallCollision(fluidParticle);
-            }
-        }
-
-        private const float WorldWidth = 60;
-        private const float WorldHeight = 60;
-        private const float CollisionForce = 1f;
-
-        private void WallCollision(FluidParticle pi)
-        {
-            Vector2 correction = Vector2.Zero;
-
-            if (pi.Position.X > WorldWidth / 2f)
-                correction -= new Vector2((pi.Position.X - WorldWidth / 2f) / CollisionForce, 0);
-
-            else if (pi.Position.X < -WorldWidth / 2f)
-                correction += new Vector2((-WorldWidth / 2f - pi.Position.X) / CollisionForce, 0);
-
-            if (pi.Position.Y > WorldHeight / 2f)
-                correction -= new Vector2(0, (pi.Position.Y - WorldHeight / 2f) / CollisionForce);
-
-            else if (pi.Position.Y < 0)
-                correction += new Vector2(0, (0 - pi.Position.Y) / CollisionForce);
-
-            pi.Velocity = new Vector2(pi.Velocity.X + correction.X, pi.Velocity.Y + correction.Y);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -90,7 +63,7 @@ namespace FarseerPhysics.TestBed.Tests
 
                 for (int i = 0; i < 5; i++)
                 {
-                    World.Fluid.AddParticle(mousePosition + new Vector2(i,0));
+                    World.Fluid.AddParticle(new Vec2(mousePosition.X + i, mousePosition.Y));
                 }
             }
 

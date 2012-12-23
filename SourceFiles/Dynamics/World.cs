@@ -207,7 +207,7 @@ namespace FarseerPhysics.Dynamics
         public ControllerDelegate ControllerAdded;
 
         public ControllerDelegate ControllerRemoved;
-        public FluidSystem Fluid { get; private set; }
+        public FluidSystem2 Fluid { get; private set; }
 
         private float _invDt0;
         public Island Island = new Island();
@@ -255,7 +255,7 @@ namespace FarseerPhysics.Dynamics
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
-            Fluid = new FluidSystem(new Vector2(0, -10));
+            Fluid = new FluidSystem2(new Vec2(0, -1), 5000, 150, 150);
         }
 
         public World(Vector2 gravity, AABB span)
