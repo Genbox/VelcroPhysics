@@ -60,7 +60,7 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE;WINDOWS_PHONE</DefineConstants>
     <XnaCompressContent>false</XnaCompressContent>
-    <LangVersion>4</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Release</OutputPath>
@@ -72,6 +72,7 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;WINDOWS_PHONE</DefineConstants>
     <XnaCompressContent>false</XnaCompressContent>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml">

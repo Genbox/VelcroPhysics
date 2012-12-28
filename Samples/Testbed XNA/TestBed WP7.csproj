@@ -63,7 +63,7 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE;WINDOWS_PHONE</DefineConstants>
     <XnaCompressContent>false</XnaCompressContent>
-    <LangVersion>4</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Release</OutputPath>
@@ -75,6 +75,7 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;WINDOWS_PHONE</DefineConstants>
     <XnaCompressContent>false</XnaCompressContent>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Background.png">
@@ -226,6 +227,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Testbed XNA Content\TestBed XNA Content.contentproj">
+      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
+      <Name>TestBed XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
       <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
       <Name>DebugView WP7</Name>
