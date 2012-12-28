@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -51,23 +52,31 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         public float Mass { get; internal set; }
 
-        #region IEquatable<MassData> Members
-
-        public bool Equals(MassData other)
-        {
-            return this == other;
-        }
-
-        #endregion
-
+        /// <summary>
+        /// The equal operator
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator ==(MassData left, MassData right)
         {
             return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia);
         }
 
+        /// <summary>
+        /// The not equal operator
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static bool operator !=(MassData left, MassData right)
         {
             return !(left == right);
+        }
+
+        public bool Equals(MassData other)
+        {
+            return this == other;
         }
 
         public override bool Equals(object obj)
@@ -143,6 +152,7 @@ namespace FarseerPhysics.Collision.Shapes
 
         /// <summary>
         /// Gets or sets the density.
+        /// Changing the density causes a recalculation of shape properties.
         /// </summary>
         /// <value>The density.</value>
         public float Density
@@ -150,6 +160,8 @@ namespace FarseerPhysics.Collision.Shapes
             get { return _density; }
             set
             {
+                Debug.Assert(value >= 0);
+
                 _density = value;
                 ComputeProperties();
             }
@@ -157,12 +169,15 @@ namespace FarseerPhysics.Collision.Shapes
 
         /// <summary>
         /// Radius of the Shape
+        /// Changing the radius causes a recalculation of shape properties.
         /// </summary>
         public float Radius
         {
             get { return _radius; }
             set
             {
+                Debug.Assert(value >= 0);
+
                 _radius = value;
                 ComputeProperties();
             }
@@ -175,10 +190,11 @@ namespace FarseerPhysics.Collision.Shapes
         public abstract Shape Clone();
 
         /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
+        /// Test a point for containment in this shape.
+        /// Note: This only works for convex shapes.
         /// </summary>
         /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
+        /// <param name="point">A point in world coordinates.</param>
         /// <returns>True if the point is inside the shape</returns>
         public abstract bool TestPoint(ref Transform transform, ref Vector2 point);
 
@@ -206,6 +222,11 @@ namespace FarseerPhysics.Collision.Shapes
         /// </summary>
         protected abstract void ComputeProperties();
 
+        /// <summary>
+        /// Compare this shape to another shape based on type and properties.
+        /// </summary>
+        /// <param name="shape">The other shape</param>
+        /// <returns>True if the two shapes are the same.</returns>
         public bool CompareTo(Shape shape)
         {
             if (shape is PolygonShape && this is PolygonShape)

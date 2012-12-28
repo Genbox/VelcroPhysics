@@ -49,6 +49,11 @@ namespace FarseerPhysics.Collision.Shapes
             _radius = Settings.PolygonRadius;
         }
 
+        /// <summary>
+        /// Create a new EdgeShape with the specified start and end.
+        /// </summary>
+        /// <param name="start">The start of the edge.</param>
+        /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end)
             : base(0)
         {
@@ -62,7 +67,14 @@ namespace FarseerPhysics.Collision.Shapes
             get { return 1; }
         }
 
+        /// <summary>
+        /// Is true if the edge is connected to an adjacent vertex before vertex 1.
+        /// </summary>
         public bool HasVertex0 { get; set; }
+
+        /// <summary>
+        /// Is true if the edge is connected to an adjacent vertex after vertex2.
+        /// </summary>
         public bool HasVertex3 { get; set; }
 
         /// <summary>
@@ -131,25 +143,11 @@ namespace FarseerPhysics.Collision.Shapes
             return edge;
         }
 
-        /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
-        /// </summary>
-        /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             return false;
         }
 
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">The ray-cast results.</param>
-        /// <param name="input">The ray-cast input parameters.</param>
-        /// <param name="transform">The transform to be applied to the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        /// <returns>True if the ray-cast hits the shape</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             // p = p1 + t * d
@@ -167,7 +165,7 @@ namespace FarseerPhysics.Collision.Shapes
             Vector2 v1 = _vertex1;
             Vector2 v2 = _vertex2;
             Vector2 e = v2 - v1;
-            Vector2 normal = new Vector2(e.Y, -e.X);
+            Vector2 normal = new Vector2(e.Y, -e.X); //TODO: Could possibly cache the normal.
             normal.Normalize();
 
             // q = p1 + t * d
@@ -193,7 +191,7 @@ namespace FarseerPhysics.Collision.Shapes
             // s = dot(q - v1, r) / dot(r, r)
             Vector2 r = v2 - v1;
             float rr = Vector2.Dot(r, r);
-            if (rr == 0.0f) //TODO: float range?
+            if (rr == 0.0f)
             {
                 return false;
             }
@@ -216,12 +214,6 @@ namespace FarseerPhysics.Collision.Shapes
             return true;
         }
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
-        /// <param name="aabb">The aabb results.</param>
-        /// <param name="transform">The world transform of the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Vector2 v1 = MathUtils.Mul(ref transform, _vertex1);
@@ -235,10 +227,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-        /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
         protected override void ComputeProperties()
         {
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);

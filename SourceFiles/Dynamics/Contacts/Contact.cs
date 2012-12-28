@@ -474,12 +474,12 @@ namespace FarseerPhysics.Dynamics.Contacts
                     break;
                 case ContactType.ChainAndCircle:
                     ChainShape chain = (ChainShape)FixtureA.Shape;
-                    chain.GetChildEdge(ref _edge, ChildIndexA);
+                    chain.GetChildEdge(_edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.ChainAndPolygon:
                     ChainShape loop2 = (ChainShape)FixtureA.Shape;
-                    loop2.GetChildEdge(ref _edge, ChildIndexA);
+                    loop2.GetChildEdge(_edge, ChildIndexA);
                     Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.Circle:
