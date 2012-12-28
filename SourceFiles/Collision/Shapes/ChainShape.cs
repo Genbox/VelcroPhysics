@@ -41,7 +41,11 @@ namespace FarseerPhysics.Collision.Shapes
         public Vertices Vertices;
         private Vector2 _prevVertex, _nextVertex;
         private bool _hasPrevVertex, _hasNextVertex;
+        private static EdgeShape _edgeShape = new EdgeShape();
 
+        /// <summary>
+        /// Constructor for ChainShape. By default have 0 in density.
+        /// </summary>
         public ChainShape()
             : base(0)
         {
@@ -49,6 +53,10 @@ namespace FarseerPhysics.Collision.Shapes
             _radius = Settings.PolygonRadius;
         }
 
+        /// <summary>
+        /// Create a new chainshape from the vertices.
+        /// </summary>
+        /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
         public ChainShape(Vertices vertices)
             : base(0)
         {
@@ -62,6 +70,7 @@ namespace FarseerPhysics.Collision.Shapes
             {
                 Vector2 v1 = vertices[i - 1];
                 Vector2 v2 = vertices[i];
+
                 // If the code crashes here, it means your vertices are too close together.
                 Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
             }
@@ -73,29 +82,28 @@ namespace FarseerPhysics.Collision.Shapes
             _hasNextVertex = false;
         }
 
+        /// <summary>
         /// Create a loop. This automatically adjusts connectivity.
+        /// </summary>
+        /// <param name="vertices"></param>
         public void CreateLoop(Vertices vertices)
         {
             Debug.Assert(vertices != null && vertices.Count >= 3);
+            Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); // FPE. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
 
             for (int i = 1; i < vertices.Count; ++i)
             {
                 Vector2 v1 = vertices[i - 1];
                 Vector2 v2 = vertices[i];
+
                 // If the code crashes here, it means your vertices are too close together.
                 Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
-            //TODO: Conserve mem
-            Vertices = new Vertices(vertices);
+            Vertices = Settings.ConserveMemory ? vertices : new Vertices(vertices);
             Vertices.Add(vertices[0]);
-
-            Vertices[Vertices.Count - 1] = Vertices[0]; //TODO: Check this line
-
-            _prevVertex = Vertices[Vertices.Count - 2];
-            _nextVertex = Vertices[1];
-            _hasPrevVertex = true;
-            _hasNextVertex = true;
+            PrevVertex = Vertices[Vertices.Count - 2]; //FPE: We use the properties instead of the private fields here.
+            NextVertex = Vertices[1]; //FPE: We use the properties instead of the private fields here.
         }
 
         public override int ChildCount
@@ -123,6 +131,8 @@ namespace FarseerPhysics.Collision.Shapes
             get { return _prevVertex; }
             set
             {
+                Debug.Assert(value != null);
+
                 _prevVertex = value;
                 _hasPrevVertex = true;
             }
@@ -137,19 +147,23 @@ namespace FarseerPhysics.Collision.Shapes
             get { return _nextVertex; }
             set
             {
+                Debug.Assert(value != null);
+
                 _nextVertex = value;
                 _hasNextVertex = true;
             }
         }
 
         /// <summary>
-        /// Get a child edge.
+        /// This method has been optimized to reduce garbage.
         /// </summary>
-        /// <param name="edge">The edge.</param>
+        /// <param name="edge">The cached edge to set properties on.</param>
         /// <param name="index">The index.</param>
-        public void GetChildEdge(ref EdgeShape edge, int index)
+        internal void GetChildEdge(EdgeShape edge, int index)
         {
             Debug.Assert(0 <= index && index < Vertices.Count - 1);
+            Debug.Assert(edge != null);
+
             edge.ShapeType = ShapeType.Edge;
             edge._radius = _radius;
 
@@ -180,29 +194,24 @@ namespace FarseerPhysics.Collision.Shapes
         }
 
         /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
+        /// Get a child edge.
         /// </summary>
-        /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns>True if the point is inside the shape</returns>
+        /// <param name="index">The index.</param>
+        public EdgeShape GetChildEdge(int index)
+        {
+            EdgeShape edgeShape = new EdgeShape();
+            GetChildEdge(edgeShape, index);
+            return edgeShape;
+        }
+
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             return false;
         }
 
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">The ray-cast results.</param>
-        /// <param name="input">The ray-cast input parameters.</param>
-        /// <param name="transform">The transform to be applied to the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        /// <returns>True if the ray-cast hits the shape</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             Debug.Assert(childIndex < Vertices.Count);
-
-            EdgeShape edgeShape = new EdgeShape();
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
@@ -211,18 +220,12 @@ namespace FarseerPhysics.Collision.Shapes
                 i2 = 0;
             }
 
-            edgeShape.Vertex1 = Vertices[i1];
-            edgeShape.Vertex2 = Vertices[i2];
+            _edgeShape.Vertex1 = Vertices[i1];
+            _edgeShape.Vertex2 = Vertices[i2];
 
-            return edgeShape.RayCast(out output, ref input, ref transform, 0);
+            return _edgeShape.RayCast(out output, ref input, ref transform, 0);
         }
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
-        /// <param name="aabb">The aabb results.</param>
-        /// <param name="transform">The world transform of the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Debug.Assert(childIndex < Vertices.Count);
@@ -241,9 +244,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = Vector2.Max(v1, v2);
         }
 
-        /// <summary>
-        /// Chains have zero mass.
-        /// </summary>
         protected override void ComputeProperties()
         {
             //Does nothing. Chain shapes don't have properties.

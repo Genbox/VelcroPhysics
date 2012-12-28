@@ -50,9 +50,15 @@ namespace FarseerPhysics.Collision.Shapes
             Vertices = vertices;
         }
 
+        /// <summary>
+        /// Create a new PolygonShape with the specified density.
+        /// </summary>
+        /// <param name="density">The density.</param>
         public PolygonShape(float density)
             : base(density)
         {
+            Debug.Assert(density >= 0f);
+
             ShapeType = ShapeType.Polygon;
             _radius = Settings.PolygonRadius;
             _vertices = new Vertices(Settings.MaxPolygonVertices);
@@ -70,9 +76,9 @@ namespace FarseerPhysics.Collision.Shapes
 
         /// <summary>
         /// Create a convex hull from the given array of local points.
-        /// The count must be in the range [3, Settings.MaxPolygonVertices].
-        /// Warning the points may be re-ordered, even if they form a convex polygon
-        /// Warning collinear points are handled but not removed. Collinear points may lead to poor stacking behavior.
+        /// The number of vertices must be in the range [3, Settings.MaxPolygonVertices].
+        /// Warning: the points may be re-ordered, even if they form a convex polygon
+        /// Warning: collinear points are handled but not removed. Collinear points may lead to poor stacking behavior.
         /// </summary>
         public Vertices Vertices
         {
@@ -82,16 +88,10 @@ namespace FarseerPhysics.Collision.Shapes
                 _vertices = value;
                 Debug.Assert(_vertices.Count >= 3 && _vertices.Count <= Settings.MaxPolygonVertices);
 
-                if (_vertices.Count < 3)
-                {
-                    Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f);
-                    return;
-                }
-
                 // Create the convex hull using the Gift wrapping algorithm
                 // http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 
-                _vertices = Settings.UseConvexHullPolygons ? GiftWrap.GetConvexHull(_vertices) : new Vertices(_vertices);
+                _vertices = Settings.UseConvexHullPolygons ? GiftWrap.GetConvexHull(_vertices) : Settings.ConserveMemory ? _vertices : new Vertices(_vertices);
                 _normals = new Vertices(_vertices.Count);
 
                 // Compute normals. Ensure the edges have non-zero length.
@@ -113,20 +113,10 @@ namespace FarseerPhysics.Collision.Shapes
             }
         }
 
-        public Vertices Normals
-        {
-            get { return _normals; }
-        }
+        public Vertices Normals { get { return _normals; } }
 
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
+        public override int ChildCount { get { return 1; } }
 
-        /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
         protected override void ComputeProperties()
         {
             // Polygon mass, centroid, and inertia.
@@ -160,7 +150,6 @@ namespace FarseerPhysics.Collision.Shapes
                 return;
 
             //FPE optimization: Consolidated the calculate centroid and mass code to a single method.
-
             Vector2 center = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;
@@ -221,14 +210,9 @@ namespace FarseerPhysics.Collision.Shapes
             MassData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(center, center));
         }
 
-        /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
-        /// </summary>
-        /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
+            //TODO: Could possibly speed this up with an AABB or Radius check? Only needed with large number of vertices.
             Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
 
             for (int i = 0; i < Vertices.Count; ++i)
@@ -243,14 +227,6 @@ namespace FarseerPhysics.Collision.Shapes
             return true;
         }
 
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">The ray-cast results.</param>
-        /// <param name="input">The ray-cast input parameters.</param>
-        /// <param name="transform">The transform to be applied to the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        /// <returns>True if the ray-cast hits the shape</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             output = new RayCastOutput();
@@ -345,9 +321,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-       /// <summary>
-       /// Determines how much of this polygon is submerged beneath the vector given.
-       /// </summary>
         public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
@@ -456,7 +429,7 @@ namespace FarseerPhysics.Collision.Shapes
                     // Area weighted centroid
                     center += triangleArea * k_inv3 * (intoVec + p2 + p3);
                 }
-                //
+                
                 p2 = p3;
             }
 

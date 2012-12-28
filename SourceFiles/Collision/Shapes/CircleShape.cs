@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 
@@ -33,9 +34,17 @@ namespace FarseerPhysics.Collision.Shapes
     {
         internal Vector2 _position;
 
+        /// <summary>
+        /// Create a new circle with the desired radius and density.
+        /// </summary>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="density">The density of the circle.</param>
         public CircleShape(float radius, float density)
             : base(density)
         {
+            Debug.Assert(radius >= 0);
+            Debug.Assert(density >= 0);
+
             ShapeType = ShapeType.Circle;
             _radius = radius;
             _position = Vector2.Zero;
@@ -79,27 +88,13 @@ namespace FarseerPhysics.Collision.Shapes
             return shape;
         }
 
-        /// <summary>
-        /// Test a point for containment in this shape. This only works for convex shapes.
-        /// </summary>
-        /// <param name="transform">The shape world transform.</param>
-        /// <param name="point">a point in world coordinates.</param>
-        /// <returns>True if the point is inside the shape</returns>
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             Vector2 center = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius * Radius;
+            return Vector2.Dot(d, d) <= Radius * Radius; //TODO: Cache Radius*Radius
         }
 
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
-        /// <param name="output">The ray-cast results.</param>
-        /// <param name="input">The ray-cast input parameters.</param>
-        /// <param name="transform">The transform to be applied to the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
-        /// <returns>True if the ray-cast hits the shape</returns>
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
         {
             // Collision Detection in Interactive 3D Environments by Gino van den Bergen
@@ -143,12 +138,6 @@ namespace FarseerPhysics.Collision.Shapes
             return false;
         }
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
-        /// <param name="aabb">The aabb results.</param>
-        /// <param name="transform">The world transform of the shape.</param>
-        /// <param name="childIndex">The child shape index.</param>
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
         {
             Vector2 p = transform.p + MathUtils.Mul(transform.q, Position);
@@ -156,10 +145,6 @@ namespace FarseerPhysics.Collision.Shapes
             aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
         }
 
-        /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
-        /// </summary>
         protected override sealed void ComputeProperties()
         {
             float area = Settings.Pi * Radius * Radius;
@@ -181,9 +166,6 @@ namespace FarseerPhysics.Collision.Shapes
             return (Radius == shape.Radius && Position == shape.Position);
         }
 
-        /// <summary>
-        /// Method used by the BuoyancyController
-        /// </summary>
         public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
