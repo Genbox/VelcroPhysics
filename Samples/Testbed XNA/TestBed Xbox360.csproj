@@ -55,7 +55,7 @@
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;TRACE;XBOX;XBOX360</DefineConstants>
     <XnaCompressContent>true</XnaCompressContent>
-    <LangVersion>4</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
     <OutputPath>bin\Xbox 360\Release</OutputPath>
@@ -67,8 +67,8 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
     <XnaCompressContent>true</XnaCompressContent>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Framework\GameSettings.cs" />
     <Compile Include="Framework\KeyboardManager.cs" />
@@ -208,6 +208,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Testbed XNA Content\TestBed XNA Content.contentproj">
+      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
+      <Name>TestBed XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
       <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
       <Name>DebugView Xbox360</Name>
