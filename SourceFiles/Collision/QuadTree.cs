@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Collision
 {
@@ -16,6 +15,15 @@ namespace FarseerPhysics.Collision
             Value = value;
             Parent = null;
         }
+    }
+
+    public enum Quadrant
+    {
+        Parent,
+        TopRight,
+        TopLeft,
+        BottomLeft,
+        BottomRight
     }
 
     public class QuadTree<T>
@@ -41,21 +49,25 @@ namespace FarseerPhysics.Collision
         }
 
         /// <summary>
-        /// returns the quadrant of span that entirely contains test. if none, return 0.
+        /// Gets the quadrant of span that entirely contains test. if none, return 0.
         /// </summary>
-        /// <param name="span"></param>
-        /// <param name="test"></param>
-        /// <returns></returns>
-        private int Partition(AABB span, AABB test)
+        /// <param name="span">The AABB to test against.</param>
+        /// <param name="test">The AABB to test with.</param>
+        /// <returns>The </returns>
+        private Quadrant GetPartition(ref AABB span, ref AABB test)
         {
-            if (span.Q1.Contains(ref test)) return 1;
-            if (span.Q2.Contains(ref test)) return 2;
-            if (span.Q3.Contains(ref test)) return 3;
-            if (span.Q4.Contains(ref test)) return 4;
+            if (span.Q1.Contains(ref test)) return Quadrant.TopRight;
+            if (span.Q2.Contains(ref test)) return Quadrant.TopLeft;
+            if (span.Q3.Contains(ref test)) return Quadrant.BottomLeft;
+            if (span.Q4.Contains(ref test)) return Quadrant.BottomRight;
 
-            return 0;
+            return Quadrant.Parent;
         }
 
+        /// <summary>
+        /// Adds the specified node to the tree.
+        /// </summary>
+        /// <param name="node">The node to add</param>
         public void AddNode(Element<T> node)
         {
             if (!IsPartitioned)
@@ -76,18 +88,20 @@ namespace FarseerPhysics.Collision
 
                     foreach (Element<T> n in Nodes)
                     {
-                        switch (Partition(Span, n.Span))
+                        Quadrant quadrant = GetPartition(ref Span, ref n.Span);
+
+                        switch (quadrant)
                         {
-                            case 1: //quadrant 1
+                            case Quadrant.TopRight: //Quadrant 1
                                 SubTrees[0].AddNode(n);
                                 break;
-                            case 2:
+                            case Quadrant.TopLeft:
                                 SubTrees[1].AddNode(n);
                                 break;
-                            case 3:
+                            case Quadrant.BottomLeft:
                                 SubTrees[2].AddNode(n);
                                 break;
-                            case 4:
+                            case Quadrant.BottomRight:
                                 SubTrees[3].AddNode(n);
                                 break;
                             default:
@@ -109,18 +123,18 @@ namespace FarseerPhysics.Collision
             else //we already have children nodes
             {
                 //add node to specific sub-tree
-                switch (Partition(Span, node.Span))
+                switch (GetPartition(ref Span, ref node.Span))
                 {
-                    case 1: //quadrant 1
+                    case Quadrant.TopRight: //quadrant 1
                         SubTrees[0].AddNode(node);
                         break;
-                    case 2:
+                    case Quadrant.TopLeft:
                         SubTrees[1].AddNode(node);
                         break;
-                    case 3:
+                    case Quadrant.BottomLeft:
                         SubTrees[2].AddNode(node);
                         break;
-                    case 4:
+                    case Quadrant.BottomRight:
                         SubTrees[3].AddNode(node);
                         break;
                     default:
@@ -131,7 +145,10 @@ namespace FarseerPhysics.Collision
             }
         }
 
-        public void QueryAABB(Func<Element<T>, bool> callback, ref AABB searchR)
+        /// <summary>
+        /// Get all the elements from the QuadTree that are within the searchAABB
+        /// </summary>
+        public void QueryAABB(Func<Element<T>, bool> callback, ref AABB searchAABB)
         {
             Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
             stack.Push(this);
@@ -139,14 +156,13 @@ namespace FarseerPhysics.Collision
             while (stack.Count > 0)
             {
                 QuadTree<T> qt = stack.Pop();
-                if (!AABB.TestOverlap(ref searchR, ref qt.Span))
+                if (!AABB.TestOverlap(ref searchAABB, ref qt.Span))
                     continue;
 
                 foreach (Element<T> n in qt.Nodes)
-                    if (AABB.TestOverlap(ref searchR, ref n.Span))
-                    {
-                        if (!callback(n)) return;
-                    }
+                    if (AABB.TestOverlap(ref searchAABB, ref n.Span))
+                        if (!callback(n))
+                            return;
 
                 if (qt.IsPartitioned)
                     foreach (QuadTree<T> st in qt.SubTrees)
@@ -154,6 +170,11 @@ namespace FarseerPhysics.Collision
             }
         }
 
+        /// <summary>
+        /// Raycast the QuadTree.
+        /// </summary>
+        /// <param name="callback">The userdefined callback method.</param>
+        /// <param name="input">The properties of the raycast.</param>
         public void RayCast(Func<RayCastInput, Element<T>, float> callback, ref RayCastInput input)
         {
             Stack<QuadTree<T>> stack = new Stack<QuadTree<T>>();
@@ -196,29 +217,42 @@ namespace FarseerPhysics.Collision
             }
         }
 
-        public void GetAllNodesR(ref List<Element<T>> nodes)
+        /// <summary>
+        /// Gets a list of all the nodes in the tree.
+        /// </summary>
+        public List<Element<T>> GetAllNodes()
         {
-            nodes.AddRange(Nodes);
+            List<Element<T>> nodes = new List<Element<T>>(Nodes);
 
             if (IsPartitioned)
-                foreach (QuadTree<T> st in SubTrees) st.GetAllNodesR(ref nodes);
+                foreach (QuadTree<T> st in SubTrees)
+                    nodes.AddRange(st.GetAllNodes());
+
+            return nodes;
         }
 
+        /// <summary>
+        /// Remove the specified node from the QuadTree.
+        /// </summary>
+        /// <param name="node"></param>
         public void RemoveNode(Element<T> node)
         {
             node.Parent.Nodes.Remove(node);
         }
 
+        /// <summary>
+        /// Recreate the QuadTree.
+        /// </summary>
         public void Reconstruct()
         {
-            List<Element<T>> allNodes = new List<Element<T>>();
-            GetAllNodesR(ref allNodes);
-
+            List<Element<T>> allNodes = GetAllNodes();
             Clear();
-
             allNodes.ForEach(AddNode);
         }
 
+        /// <summary>
+        /// Remove all the nodes from the QuadTree.
+        /// </summary>
         public void Clear()
         {
             Nodes.Clear();
