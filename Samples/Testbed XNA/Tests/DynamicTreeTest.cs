@@ -39,7 +39,6 @@ namespace FarseerPhysics.TestBed.Tests
         private Actor _rayActor = new Actor();
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
-        private int _stepCount;
         private DynamicTree<Actor> _tree = new DynamicTree<Actor>();
         private float _worldExtent;
 
@@ -59,8 +58,6 @@ namespace FarseerPhysics.TestBed.Tests
                 actor.ProxyId = _tree.AddProxy(ref actor.AABB, actor);
             }
 
-            _stepCount = 0;
-
             float h = _worldExtent;
             _queryAABB.LowerBound = new Vector2(-3.0f, -4.0f + h);
             _queryAABB.UpperBound = new Vector2(5.0f, 6.0f + h);
@@ -72,11 +69,6 @@ namespace FarseerPhysics.TestBed.Tests
             _rayCastInput.MaxFraction = 1.0f;
 
             _automated = false;
-        }
-
-        internal static Test Create()
-        {
-            return new DynamicTreeTest();
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -147,8 +139,6 @@ namespace FarseerPhysics.TestBed.Tests
                 //DebugView.DrawString(50, TextLine, "Dynamic tree height = {0}", height);
                 TextLine += 15;
             }
-
-            ++_stepCount;
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
@@ -358,5 +348,10 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
         #endregion
+
+        internal static Test Create()
+        {
+            return new DynamicTreeTest();
+        }
     }
 }

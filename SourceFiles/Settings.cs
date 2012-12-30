@@ -40,7 +40,7 @@ namespace FarseerPhysics
         /// NOTE: If you are using a debug view that shows performance counters,
         /// you might want to enable this.
         /// </summary>
-        public static bool EnableDiagnostics = true;
+        public const bool EnableDiagnostics = true;
 
         /// <summary>
         /// The number of velocity iterations used in the solver.
@@ -202,10 +202,8 @@ namespace FarseerPhysics
         /// to overshoot.
         /// </summary>
         public const float Baumgarte = 0.2f;
-        public const float TOIBaumgarte = 0.75f;
 
         // Sleep
-
         /// <summary>
         /// The time that a body must be still before it will go to sleep.
         /// </summary>
@@ -236,6 +234,11 @@ namespace FarseerPhysics
         public const float MaxRotation = (0.5f * Pi);
 
         public const float MaxRotationSquared = (MaxRotation * MaxRotation);
+
+        /// <summary>
+        /// Defines the maximum number of iterations made by the GJK algorithm.
+        /// </summary>
+        public const int MaxGJKIterations = 20;
 
         /// <summary>
         /// Friction mixing law. Feel free to customize this.

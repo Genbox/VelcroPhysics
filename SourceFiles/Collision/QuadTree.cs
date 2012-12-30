@@ -139,6 +139,8 @@ namespace FarseerPhysics.Collision
         /// tests if ray intersects AABB
         /// </summary>
         /// <param name="aabb"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
         /// <returns></returns>
         public static bool RayCastAABB(AABB aabb, Vector2 p1, Vector2 p2)
         {
@@ -147,7 +149,7 @@ namespace FarseerPhysics.Collision
                 Vector2.Min(ref p1, ref p2, out segmentAABB.LowerBound);
                 Vector2.Max(ref p1, ref p2, out segmentAABB.UpperBound);
             }
-            if (!AABB.TestOverlap(aabb, segmentAABB)) return false;
+            if (!AABB.TestOverlap(ref aabb, ref segmentAABB)) return false;
 
             Vector2 rayDir = p2 - p1;
             Vector2 rayPos = p1;
@@ -159,11 +161,10 @@ namespace FarseerPhysics.Collision
 
             float dPos = Vector2.Dot(rayPos, norm);
 
-            Vector2[] verts = aabb.GetVertices();
-            float d0 = Vector2.Dot(verts[0], norm) - dPos;
+            float d0 = Vector2.Dot(aabb.Vertices[0], norm) - dPos;
             for (int i = 1; i < 4; i++)
             {
-                float d = Vector2.Dot(verts[i], norm) - dPos;
+                float d = Vector2.Dot(aabb.Vertices[i], norm) - dPos;
                 if (Math.Sign(d) != Math.Sign(d0))
                     //return true if the ray splits the vertices (ie: sign of dot products with normal are not all same)
                     return true;

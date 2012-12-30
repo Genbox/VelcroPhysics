@@ -168,9 +168,8 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Input for ComputeDistance.
-    /// You have to option to use the shape radii
-    /// in the computation. 
+    /// Input for Distance.ComputeDistance().
+    /// You have to option to use the shape radii in the computation. 
     /// </summary>
     public class DistanceInput
     {
@@ -182,7 +181,7 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Output for ComputeDistance.
+    /// Output for Distance.ComputeDistance().
     /// </summary>
     public struct DistanceOutput
     {
@@ -242,9 +241,7 @@ namespace FarseerPhysics.Collision
         internal int Count;
         internal FixedArray3<SimplexVertex> V;
 
-        internal void ReadCache(ref SimplexCache cache,
-                                DistanceProxy proxyA, ref Transform transformA,
-                                DistanceProxy proxyB, ref Transform transformB)
+        internal void ReadCache(ref SimplexCache cache, DistanceProxy proxyA, ref Transform transformA, DistanceProxy proxyB, ref Transform transformB)
         {
             Debug.Assert(cache.Count <= 3);
 
@@ -614,35 +611,50 @@ namespace FarseerPhysics.Collision
         }
     }
 
+    /// <summary>
+    /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes.
+    /// </summary>
     public static class Distance
     {
-        public static int GJKCalls, GJKIters, GJKMaxIters;
+        /// <summary>
+        /// The number of calls made to the ComputeDistance() function.
+        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// </summary>
+        public static int GJKCalls;
 
-        public static void ComputeDistance(out DistanceOutput output,
-                                           out SimplexCache cache,
-                                           DistanceInput input)
+        /// <summary>
+        /// The number of iterations that was made on the last call to ComputeDistance().
+        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// </summary>
+        public static int GJKIters;
+
+        /// <summary>
+        /// The maximum numer of iterations ever mae with calls to the CompteDistance() funtion.
+        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// </summary>
+        public static int GJKMaxIters;
+
+        public static void ComputeDistance(out DistanceOutput output, out SimplexCache cache, DistanceInput input)
         {
             cache = new SimplexCache();
-            ++GJKCalls;
+
+            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                ++GJKCalls;
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
             simplex.ReadCache(ref cache, input.ProxyA, ref input.TransformA, input.ProxyB, ref input.TransformB);
-
-            // Get simplex vertices as an array.
-            const int k_maxIters = 20;
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
 
-            float distanceSqr1 = Settings.MaxFloat;
-            float distanceSqr2 = distanceSqr1;
+            //float distanceSqr1 = Settings.MaxFloat;
 
             // Main iteration loop.
             int iter = 0;
-            while (iter < k_maxIters)
+            while (iter < Settings.MaxGJKIterations)
             {
                 // Copy simplex so we can identify duplicates.
                 int saveCount = simplex.Count;
@@ -656,15 +668,12 @@ namespace FarseerPhysics.Collision
                 {
                     case 1:
                         break;
-
                     case 2:
                         simplex.Solve2();
                         break;
-
                     case 3:
                         simplex.Solve3();
                         break;
-
                     default:
                         Debug.Assert(false);
                         break;
@@ -676,16 +685,17 @@ namespace FarseerPhysics.Collision
                     break;
                 }
 
+                //FPE: This code was not used anyway.
                 // Compute closest point.
-                Vector2 p = simplex.GetClosestPoint();
-                distanceSqr2 = p.LengthSquared();
+                //Vector2 p = simplex.GetClosestPoint();
+                //float distanceSqr2 = p.LengthSquared();
 
                 // Ensure progress
-                if (distanceSqr2 >= distanceSqr1)
-                {
-                    //break;
-                }
-                distanceSqr1 = distanceSqr2;
+                //if (distanceSqr2 >= distanceSqr1)
+                //{
+                //break;
+                //}
+                //distanceSqr1 = distanceSqr2;
 
                 // Get search direction.
                 Vector2 d = simplex.GetSearchDirection();
@@ -714,7 +724,9 @@ namespace FarseerPhysics.Collision
 
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
-                ++GJKIters;
+
+                if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                    ++GJKIters;
 
                 // Check for duplicate support points. This is the main termination criteria.
                 bool duplicate = false;
@@ -737,7 +749,8 @@ namespace FarseerPhysics.Collision
                 ++simplex.Count;
             }
 
-            GJKMaxIters = Math.Max(GJKMaxIters, iter);
+            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                GJKMaxIters = Math.Max(GJKMaxIters, iter);
 
             // Prepare output.
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);

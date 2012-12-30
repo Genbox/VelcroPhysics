@@ -28,6 +28,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
+            new TestEntry {Name = "Dynamic Tree", CreateTest = DynamicTreeTest.Create},
+
             new TestEntry {Name = "Fluids", CreateTest = FluidsTest.Create},
             new TestEntry {Name = "Tumbler", CreateTest = TumblerTest.Create},
 

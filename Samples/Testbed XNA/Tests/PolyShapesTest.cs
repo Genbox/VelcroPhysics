@@ -106,7 +106,7 @@ namespace FarseerPhysics.TestBed.Tests
             Transform xf;
             body.GetTransform(out xf);
 
-            bool overlap = AABB.TestOverlap(shape, 0, Circle, 0, ref xf, ref Transform);
+            bool overlap = Collision.Collision.TestOverlap(shape, 0, Circle, 0, ref xf, ref Transform);
 
             if (overlap)
             {
