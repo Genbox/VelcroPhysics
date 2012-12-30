@@ -127,16 +127,16 @@ namespace FarseerPhysics.Collision
     /// <summary>
     /// A manifold for two touching convex Shapes.
     /// Box2D supports multiple types of contact:
-    /// - clip point versus plane with radius
-    /// - point versus point with radius (circles)
+    /// - Clip point versus plane with radius
+    /// - Point versus point with radius (circles)
     /// The local point usage depends on the manifold type:
-    /// -ShapeType.Circles: the local center of circleA
-    /// -SeparationFunction.FaceA: the center of faceA
-    /// -SeparationFunction.FaceB: the center of faceB
+    /// - ShapeType.Circles: the local center of circleA
+    /// - SeparationFunction.FaceA: the center of faceA
+    /// - SeparationFunction.FaceB: the center of faceB
     /// Similarly the local normal usage:
-    /// -ShapeType.Circles: not used
-    /// -SeparationFunction.FaceA: the normal on polygonA
-    /// -SeparationFunction.FaceB: the normal on polygonB
+    /// - ShapeType.Circles: not used
+    /// - SeparationFunction.FaceA: the normal on polygonA
+    /// - SeparationFunction.FaceB: the normal on polygonB
     /// We store contacts in this way so that position correction can
     /// account for movement, which is critical for continuous physics.
     /// All contact scenarios must be expressed in one of these types.
@@ -203,21 +203,42 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// Ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).
+    /// Ray-cast input data.
     /// </summary>
     public struct RayCastInput
     {
+        /// <summary>
+        /// The ray extends from p1 to p1 + maxFraction * (p2 - p1).
+        /// If you supply a max fraction of 1, the ray extends from p1 to p2.
+        /// A max fraction of 0.5 makes the ray go from p1 and half way to p2.
+        /// </summary>
         public float MaxFraction;
-        public Vector2 Point1, Point2;
+
+        /// <summary>
+        /// The starting point of the ray.
+        /// </summary>
+        public Vector2 Point1;
+
+        /// <summary>
+        /// The ending point of the ray.
+        /// </summary>
+        public Vector2 Point2;
     }
 
     /// <summary>
-    /// Ray-cast output data.  The ray hits at p1 + fraction * (p2 - p1), where p1 and p2
-    /// come from RayCastInput. 
+    /// Ray-cast output data. 
     /// </summary>
     public struct RayCastOutput
     {
+        /// <summary>
+        /// The ray hits at p1 + fraction * (p2 - p1), where p1 and p2 come from RayCastInput.
+        /// Contains the actual fraction of the ray where it has the intersection point.
+        /// </summary>
         public float Fraction;
+
+        /// <summary>
+        /// The normal of the face of the shape the ray has hit.
+        /// </summary>
         public Vector2 Normal;
     }
 
@@ -226,8 +247,6 @@ namespace FarseerPhysics.Collision
     /// </summary>
     public struct AABB
     {
-        private static DistanceInput _input = new DistanceInput();
-
         /// <summary>
         /// The lower vertex
         /// </summary>
@@ -258,7 +277,6 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        /// <value></value>
         public Vector2 Center
         {
             get { return 0.5f * (LowerBound + UpperBound); }
@@ -267,7 +285,6 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        /// <value></value>
         public Vector2 Extents
         {
             get { return 0.5f * (UpperBound - LowerBound); }
@@ -276,7 +293,6 @@ namespace FarseerPhysics.Collision
         /// <summary>
         /// Get the perimeter length
         /// </summary>
-        /// <value></value>
         public float Perimeter
         {
             get
@@ -295,11 +311,11 @@ namespace FarseerPhysics.Collision
         {
             get
             {
-                Vertices vertices = new Vertices();
-                vertices.Add(LowerBound);
-                vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
+                Vertices vertices = new Vertices(4);
                 vertices.Add(UpperBound);
                 vertices.Add(new Vector2(UpperBound.X, LowerBound.Y));
+                vertices.Add(LowerBound);
+                vertices.Add(new Vector2(LowerBound.X, UpperBound.Y));
                 return vertices;
             }
         }
@@ -336,17 +352,8 @@ namespace FarseerPhysics.Collision
             get { return new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y)); }
         }
 
-        public Vector2[] GetVertices()
-        {
-            Vector2 p1 = UpperBound;
-            Vector2 p2 = new Vector2(UpperBound.X, LowerBound.Y);
-            Vector2 p3 = LowerBound;
-            Vector2 p4 = new Vector2(LowerBound.X, UpperBound.Y);
-            return new[] { p1, p2, p3, p4 };
-        }
-
         /// <summary>
-        /// Verify that the bounds are sorted.
+        /// Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).
         /// </summary>
         /// <returns>
         /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
@@ -407,19 +414,16 @@ namespace FarseerPhysics.Collision
         public bool Contains(ref Vector2 point)
         {
             //using epsilon to try and gaurd against float rounding errors.
-            if ((point.X > (LowerBound.X + Settings.Epsilon) && point.X < (UpperBound.X - Settings.Epsilon) &&
-                 (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon))))
-            {
-                return true;
-            }
-            return false;
+            return (point.X > (LowerBound.X + Settings.Epsilon) && point.X < (UpperBound.X - Settings.Epsilon) &&
+                   (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon)));
         }
 
-        public static bool TestOverlap(AABB a, AABB b)
-        {
-            return TestOverlap(ref a, ref b);
-        }
-
+        /// <summary>
+        /// Test if the two AABBs overlap.
+        /// </summary>
+        /// <param name="a">The first AABB.</param>
+        /// <param name="b">The second AABB.</param>
+        /// <returns>True if they are overlapping.</returns>
         public static bool TestOverlap(ref AABB a, ref AABB b)
         {
             Vector2 d1 = b.LowerBound - a.UpperBound;
@@ -434,24 +438,16 @@ namespace FarseerPhysics.Collision
             return true;
         }
 
-        public static bool TestOverlap(Shape shapeA, int indexA, Shape shapeB, int indexB, ref Transform xfA, ref Transform xfB)
-        {
-            _input.ProxyA.Set(shapeA, indexA);
-            _input.ProxyB.Set(shapeB, indexB);
-            _input.TransformA = xfA;
-            _input.TransformB = xfB;
-            _input.UseRadii = true;
-
-            SimplexCache cache;
-            DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, _input);
-
-            return output.Distance < 10.0f * Settings.Epsilon;
-        }
-
-        // From Real-time Collision Detection, p179.
+        /// <summary>
+        /// Raycast against this AABB using the specificed points and maxfraction (found in input)
+        /// </summary>
+        /// <param name="output">The results of the raycast.</param>
+        /// <param name="input">The parameters for the raycast.</param>
+        /// <returns>True if the ray intersects the AABB</returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input)
         {
+            // From Real-time Collision Detection, p179.
+
             output = new RayCastOutput();
 
             float tmin = -Settings.MaxFloat;
@@ -535,16 +531,18 @@ namespace FarseerPhysics.Collision
     }
 
     /// <summary>
-    /// This lets us treate and edge shape and a polygon in the same
-    /// way in the SAT collider.
+    /// This holds polygon B expressed in frame A.
     /// </summary>
     public class TempPolygon
     {
-        public int Count;
-        public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
         public Vector2[] Vertices = new Vector2[Settings.MaxPolygonVertices];
+        public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
+        public int Count;
     }
 
+    /// <summary>
+    /// This structure is used to keep track of the best separating axis.
+    /// </summary>
     public struct EPAxis
     {
         public int Index;
@@ -552,7 +550,9 @@ namespace FarseerPhysics.Collision
         public EPAxisType Type;
     }
 
-    // Reference face used for clipping
+    /// <summary>
+    /// Reference face used for clipping
+    /// </summary>
     public struct ReferenceFace
     {
         public int i1, i2;
@@ -575,8 +575,38 @@ namespace FarseerPhysics.Collision
         EdgeB,
     }
 
+    /// <summary>
+    /// Collision methods
+    /// </summary>
     public static class Collision
     {
+        private static DistanceInput _input = new DistanceInput();
+
+        /// <summary>
+        /// Test overlap between the two shapes.
+        /// </summary>
+        /// <param name="shapeA">The first shape.</param>
+        /// <param name="indexA">The index for the first shape.</param>
+        /// <param name="shapeB">The second shape.</param>
+        /// <param name="indexB">The index for the second shape.</param>
+        /// <param name="xfA">The transform for the first shape.</param>
+        /// <param name="xfB">The transform for the seconds shape.</param>
+        /// <returns></returns>
+        public static bool TestOverlap(Shape shapeA, int indexA, Shape shapeB, int indexB, ref Transform xfA, ref Transform xfB)
+        {
+            _input.ProxyA.Set(shapeA, indexA);
+            _input.ProxyB.Set(shapeB, indexB);
+            _input.TransformA = xfA;
+            _input.TransformB = xfB;
+            _input.UseRadii = true;
+
+            SimplexCache cache;
+            DistanceOutput output;
+            Distance.ComputeDistance(out output, out cache, _input);
+
+            return output.Distance < 10.0f * Settings.Epsilon;
+        }
+
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2, ref Manifold manifold1, ref Manifold manifold2)
         {
             state1 = new FixedArray2<PointState>();
@@ -1091,7 +1121,7 @@ namespace FarseerPhysics.Collision
             collider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
         }
 
-        public class EPCollider
+        private class EPCollider
         {
             private TempPolygon _polygonB = new TempPolygon();
 
@@ -1100,29 +1130,22 @@ namespace FarseerPhysics.Collision
             Vector2 _v0, _v1, _v2, _v3;
             Vector2 _normal0, _normal1, _normal2;
             Vector2 _normal;
-            VertexType _type1, _type2;
             Vector2 _lowerLimit, _upperLimit;
             float _radius;
             bool _front;
 
-            enum VertexType
-            {
-                e_isolated,
-                e_concave,
-                e_convex
-            }
-
-            // Algorithm:
-            // 1. Classify v1 and v2
-            // 2. Classify polygon centroid as front or back
-            // 3. Flip normal if necessary
-            // 4. Initialize normal range to [-pi, pi] about face normal
-            // 5. Adjust normal range according to adjacent edges
-            // 6. Visit each separating axes, only accept axes within the range
-            // 7. Return if _any_ axis indicates separation
-            // 8. Clip
             public void Collide(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
             {
+                // Algorithm:
+                // 1. Classify v1 and v2
+                // 2. Classify polygon centroid as front or back
+                // 3. Flip normal if necessary
+                // 4. Initialize normal range to [-pi, pi] about face normal
+                // 5. Adjust normal range according to adjacent edges
+                // 6. Visit each separating axes, only accept axes within the range
+                // 7. Return if _any_ axis indicates separation
+                // 8. Clip
+
                 _xf = MathUtils.MulT(xfA, xfB);
 
                 _centroidB = MathUtils.Mul(ref _xf, polygonB.MassData.Centroid);
@@ -1488,9 +1511,7 @@ namespace FarseerPhysics.Collision
                 int pointCount = 0;
                 for (int i = 0; i < Settings.MaxManifoldPoints; ++i)
                 {
-                    float separation;
-
-                    separation = Vector2.Dot(rf.normal, clipPoints2[i].V - rf.v1);
+                    float separation = Vector2.Dot(rf.normal, clipPoints2[i].V - rf.v1);
 
                     if (separation <= _radius)
                     {
