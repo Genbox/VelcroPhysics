@@ -62,9 +62,7 @@ namespace FarseerPhysics.Collision
             {
                 if (Nodes.Count >= MaxBucket && MaxDepth > 0) //bin is full and can still subdivide
                 {
-                    //
                     //partition into quadrants and sort existing nodes amonst quads.
-                    //
                     Nodes.Add(node); //treat new node just like other nodes for partitioning
 
                     SubTrees = new QuadTree<T>[4];
@@ -103,16 +101,14 @@ namespace FarseerPhysics.Collision
                 }
                 else
                 {
+                    //if bin is not yet full or max depth has been reached, just add the node without subdividing
                     node.Parent = this;
                     Nodes.Add(node);
-                    //if bin is not yet full or max depth has been reached, just add the node without subdividing
                 }
             }
             else //we already have children nodes
             {
-                //
                 //add node to specific sub-tree
-                //
                 switch (Partition(Span, node.Span))
                 {
                     case 1: //quadrant 1
@@ -142,21 +138,23 @@ namespace FarseerPhysics.Collision
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        public static bool RayCastAABB(AABB aabb, Vector2 p1, Vector2 p2)
+        public static bool RayCastAABB(ref AABB aabb, ref Vector2 p1, ref Vector2 p2)
         {
             AABB segmentAABB = new AABB();
             {
                 Vector2.Min(ref p1, ref p2, out segmentAABB.LowerBound);
                 Vector2.Max(ref p1, ref p2, out segmentAABB.UpperBound);
             }
-            if (!AABB.TestOverlap(ref aabb, ref segmentAABB)) return false;
+
+            if (!AABB.TestOverlap(ref aabb, ref segmentAABB))
+                return false;
 
             Vector2 rayDir = p2 - p1;
             Vector2 rayPos = p1;
 
             Vector2 norm = new Vector2(-rayDir.Y, rayDir.X); //normal to ray
             if (norm.Length() == 0.0f)
-                return true; //if ray is just a point, return true (iff point is within aabb, as tested earlier)
+                return true; //if ray is just a point, return true (if point is within aabb, as tested earlier)
             norm.Normalize();
 
             float dPos = Vector2.Dot(rayPos, norm);
@@ -209,12 +207,12 @@ namespace FarseerPhysics.Collision
             {
                 QuadTree<T> qt = stack.Pop();
 
-                if (!RayCastAABB(qt.Span, p1, p2))
+                if (!RayCastAABB(ref qt.Span, ref p1, ref p2))
                     continue;
 
                 foreach (Element<T> n in qt.Nodes)
                 {
-                    if (!RayCastAABB(n.Span, p1, p2))
+                    if (!RayCastAABB(ref n.Span, ref p1, ref p2))
                         continue;
 
                     RayCastInput subInput;
@@ -232,7 +230,8 @@ namespace FarseerPhysics.Collision
                     maxFraction = value;
                     p2 = p1 + (input.Point2 - input.Point1) * maxFraction; //update segment endpoint
                 }
-                if (IsPartitioned)
+
+                if (qt.IsPartitioned)
                     foreach (QuadTree<T> st in qt.SubTrees)
                         stack.Push(st);
             }

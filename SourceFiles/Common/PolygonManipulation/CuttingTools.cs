@@ -177,7 +177,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             for (int i = 0; i < fixtures.Count; i++)
             {
-                // can't cut circles yet !
+                // can't cut circles or edges yet !
                 if (fixtures[i].Shape.ShapeType != ShapeType.Polygon)
                     continue;
 
@@ -189,21 +189,23 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    Debug.Assert(SanityCheck(first));
+                    if (SanityCheck(first))
+                    {
+                        Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density, fixtures[i].Body.Position);
+                        firstFixture.Rotation = fixtures[i].Body.Rotation;
+                        firstFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
+                        firstFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
+                        firstFixture.BodyType = BodyType.Dynamic;
+                    }
 
-                    Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density, fixtures[i].Body.Position);
-                    firstFixture.Rotation = fixtures[i].Body.Rotation;
-                    firstFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
-                    firstFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
-                    firstFixture.BodyType = BodyType.Dynamic;
-
-                    Debug.Assert(SanityCheck(second));
-
-                    Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density, fixtures[i].Body.Position);
-                    secondFixture.Rotation = fixtures[i].Body.Rotation;
-                    secondFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
-                    secondFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
-                    secondFixture.BodyType = BodyType.Dynamic;
+                    if (SanityCheck(second))
+                    {
+                        Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density, fixtures[i].Body.Position);
+                        secondFixture.Rotation = fixtures[i].Body.Rotation;
+                        secondFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
+                        secondFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
+                        secondFixture.BodyType = BodyType.Dynamic;
+                    }
 
                     world.RemoveBody(fixtures[i].Body);
                 }
@@ -224,7 +226,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
             for (int i = 0; i < vertices.Count; ++i)
             {
                 Vector2 current = vertices[i];
-                Vector2 next = vertices.NextVertex(i + 1);
+                Vector2 next = vertices.NextVertex(i);
                 Vector2 edge = next - current;
 
                 if (edge.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
