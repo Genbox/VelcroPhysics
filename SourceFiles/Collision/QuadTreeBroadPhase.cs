@@ -202,8 +202,7 @@ namespace FarseerPhysics.Collision
 
         private Func<RayCastInput, Element<FixtureProxy>, float> TransformRayCallback(Func<RayCastInput, int, float> callback)
         {
-            Func<RayCastInput, Element<FixtureProxy>, float> newCallback =
-                (input, qtnode) => callback(input, qtnode.Value.ProxyId);
+            Func<RayCastInput, Element<FixtureProxy>, float> newCallback = (input, qtnode) => callback(input, qtnode.Value.ProxyId);
             return newCallback;
         }
 
