@@ -12,7 +12,6 @@ namespace FarseerPhysics.Collision
         private Dictionary<int, Element<FixtureProxy>> _idRegister;
         private List<Element<FixtureProxy>> _moveBuffer;
         private List<Pair> _pairBuffer;
-        private QuadTree<FixtureProxy> _quadTree;
         private int _treeMoveNum;
 
         /// <summary>
@@ -21,13 +20,13 @@ namespace FarseerPhysics.Collision
         /// <param name="span">the maximum span of the tree (world size)</param>
         public QuadTreeBroadPhase(AABB span)
         {
-            _quadTree = new QuadTree<FixtureProxy>(span, 5, 10);
+            QuadTree = new QuadTree<FixtureProxy>(span, 5, 10);
             _idRegister = new Dictionary<int, Element<FixtureProxy>>();
             _moveBuffer = new List<Element<FixtureProxy>>();
             _pairBuffer = new List<Pair>();
         }
 
-        #region IBroadPhase Members
+        public QuadTree<FixtureProxy> QuadTree { get; private set; }
 
         ///<summary>
         /// The number of proxies
@@ -99,7 +98,7 @@ namespace FarseerPhysics.Collision
             Element<FixtureProxy> qtnode = new Element<FixtureProxy>(proxy, aabb);
 
             _idRegister.Add(proxyId, qtnode);
-            _quadTree.AddNode(qtnode);
+            QuadTree.AddNode(qtnode);
 
             return proxyId;
         }
@@ -111,7 +110,7 @@ namespace FarseerPhysics.Collision
                 Element<FixtureProxy> qtnode = _idRegister[proxyId];
                 UnbufferMove(qtnode);
                 _idRegister.Remove(proxyId);
-                _quadTree.RemoveNode(qtnode);
+                QuadTree.RemoveNode(qtnode);
             }
             else
                 throw new KeyNotFoundException("proxyID not found in register");
@@ -173,20 +172,18 @@ namespace FarseerPhysics.Collision
 
         public void Query(Func<int, bool> callback, ref AABB query)
         {
-            _quadTree.QueryAABB(TransformPredicate(callback), ref query);
+            QuadTree.QueryAABB(TransformPredicate(callback), ref query);
         }
 
         public void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input)
         {
-            _quadTree.RayCast(TransformRayCallback(callback), ref input);
+            QuadTree.RayCast(TransformRayCallback(callback), ref input);
         }
 
         public void ShiftOrigin(Vector2 newOrigin)
         {
             //TODO
         }
-
-        #endregion
 
         private AABB Fatten(ref AABB aabb)
         {
@@ -223,15 +220,15 @@ namespace FarseerPhysics.Collision
         private void ReconstructTree()
         {
             //this is faster than _quadTree.Reconstruct(), since the quadtree method runs a recusive query to find all nodes.
-            _quadTree.Clear();
+            QuadTree.Clear();
             foreach (Element<FixtureProxy> elem in _idRegister.Values)
-                _quadTree.AddNode(elem);
+                QuadTree.AddNode(elem);
         }
 
         private void ReinsertNode(Element<FixtureProxy> qtnode)
         {
-            _quadTree.RemoveNode(qtnode);
-            _quadTree.AddNode(qtnode);
+            QuadTree.RemoveNode(qtnode);
+            QuadTree.AddNode(qtnode);
 
             if (++_treeMoveNum > TreeUpdateThresh)
             {

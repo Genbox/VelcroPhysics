@@ -28,10 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Create a World using DynamicTree constructor
             //World = new World(new Vector2(0.0f, -10.0f));
 
-            //
-            //set up border
-            //
-
+            //Set up border
             float halfWidth = _worldSize.X / 2 - 2f;
             float halfHeight = _worldSize.Y / 2 - 2f;
 
@@ -45,10 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             anchor.CollisionCategories = Category.All;
             anchor.CollidesWith = Category.All;
 
-            //
             //box
-            //
-
             Vertices bigbox = PolygonTools.CreateRectangle(3f, 3f);
             PolygonShape bigshape = new PolygonShape(bigbox, 5);
 
@@ -59,35 +53,56 @@ namespace FarseerPhysics.TestBed.Tests
 
             World.RemoveBody(bigbody);
 
-            //
-            //populate
-            //
-            //const int rad = 12;
-            //const float a = 0.6f;
-            //const float sep = 0.000f;
+            //Populate
+            const int rad = 12;
+            const float a = 0.6f;
+            const float sep = 0.000f;
 
-            //Vector2 cent = Vector2.Zero;
+            Vector2 cent = Vector2.Zero;
 
-            //for (int y = -rad; y <= +rad; y++)
-            //{
-            //    int xrad = (int)Math.Round(Math.Sqrt(rad * rad - y * y));
-            //    for (int x = -xrad; x <= +xrad; x++)
-            //    {
-            //        Vector2 pos = cent + new Vector2(x * (2 * a + sep), y * (2 * a + sep));
-            //        Body cBody = BodyFactory.CreateCircle(World, a, 55, pos);
-            //        cBody.BodyType = BodyType.Dynamic;
-            //    }
-            //}
+            for (int y = -rad; y <= +rad; y++)
+            {
+                int xrad = (int)Math.Round(Math.Sqrt(rad * rad - y * y));
+                for (int x = -xrad; x <= +xrad; x++)
+                {
+                    Vector2 pos = cent + new Vector2(x * (2 * a + sep), y * (2 * a + sep));
+                    Body cBody = BodyFactory.CreateCircle(World, a, 55, pos);
+                    cBody.BodyType = BodyType.Dynamic;
+                }
+            }
 
             base.Initialize();
-
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            GameInstance.ViewCenter = Vector2.Zero;
+            //Draw the details of the QuadTree
+            QuadTreeBroadPhase quadTreeBroadPhase = World.ContactManager.BroadPhase as QuadTreeBroadPhase;
+
+            if (quadTreeBroadPhase != null)
+            {
+                DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
+                DrawTree(quadTreeBroadPhase.QuadTree);
+                DebugView.EndCustomDraw();
+            }
 
             base.Update(settings, gameTime);
+        }
+
+        private void DrawTree(QuadTree<FixtureProxy> tree)
+        {
+            if (tree == null)
+                return;
+
+            DebugView.DrawAABB(ref tree.Span, Color.Yellow);
+
+            if (tree.IsPartitioned)
+            {
+                foreach (QuadTree<FixtureProxy> quadTree in tree.SubTrees)
+                {
+                    DrawTree(quadTree);
+                }
+            }
         }
 
         internal static Test Create()
