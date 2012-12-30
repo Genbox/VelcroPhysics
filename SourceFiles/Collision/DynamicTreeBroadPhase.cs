@@ -94,8 +94,6 @@ namespace FarseerPhysics.Collision
             _moveBuffer = new int[_moveCapacity];
         }
 
-        #region IBroadPhase Members
-
         /// <summary>
         /// Get the number of proxies.
         /// </summary>
@@ -169,7 +167,11 @@ namespace FarseerPhysics.Collision
             }
         }
 
-        // This is called from b2DynamicTree::Query when we are gathering pairs.
+        /// <summary>
+        /// This is called from DynamicTree.Query when we are gathering pairs.
+        /// </summary>
+        /// <param name="proxyId"></param>
+        /// <returns></returns>
         private bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.
@@ -193,7 +195,6 @@ namespace FarseerPhysics.Collision
 
             return true;
         }
-
 
         /// <summary>
         /// Get the AABB for a proxy.
@@ -319,18 +320,25 @@ namespace FarseerPhysics.Collision
             _tree.ShiftOrigin(newOrigin);
         }
 
-        #endregion
-
+        /// <summary>
+        /// Get the tree quality based on the area of the tree.
+        /// </summary>
         public float TreeQuality
         {
             get { return _tree.AreaRatio; }
         }
 
+        /// <summary>
+        /// Gets the balance of the tree.
+        /// </summary>
         public int TreeBalance
         {
-            get { return _tree.GetMaxBalance(); }
+            get { return _tree.MaxBalance; }
         }
 
+        /// <summary>
+        /// Gets the height of the tree.
+        /// </summary>
         public int TreeHeight
         {
             get { return _tree.Height; }
