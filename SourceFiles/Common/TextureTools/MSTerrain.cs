@@ -1,11 +1,13 @@
 ﻿#if XNA
 
 using System.Collections.Generic;
+using FarseerPhysics.Collision;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Factories;
 
 namespace FarseerPhysics.Common.TextureTools
 {
@@ -334,25 +336,25 @@ namespace FarseerPhysics.Common.TextureTools
                 item.Scale(ref scale);
                 item.Translate(ref _topLeft);
                 item.ForceCounterClockWise();
-                Vertices p = FarseerPhysics.Common.PolygonManipulation.SimplifyTools.CollinearSimplify(item);
+                Vertices p = SimplifyTools.CollinearSimplify(item);
                 List<Vertices> decompPolys = new List<Vertices>();
 
                 switch (Decomposer)
                 {
                     case Decomposer.Bayazit:
-                        decompPolys = Decomposition.BayazitDecomposer.ConvexPartition(p);
+                        decompPolys = BayazitDecomposer.ConvexPartition(p);
                         break;
                     case Decomposer.CDT:
-                        decompPolys = Decomposition.CDTDecomposer.ConvexPartition(p);
+                        decompPolys = CDTDecomposer.ConvexPartition(p);
                         break;
                     case Decomposer.Earclip:
-                        decompPolys = Decomposition.EarclipDecomposer.ConvexPartition(p);
+                        decompPolys = EarclipDecomposer.ConvexPartition(p);
                         break;
                     case Decomposer.Flipcode:
-                        decompPolys = Decomposition.FlipcodeDecomposer.ConvexPartition(p);
+                        decompPolys = FlipcodeDecomposer.ConvexPartition(p);
                         break;
                     case Decomposer.Seidel:
-                        decompPolys = Decomposition.SeidelDecomposer.ConvexPartition(p, 0.001f);
+                        decompPolys = SeidelDecomposer.ConvexPartition(p, 0.001f);
                         break;
                     default:
                         break;
