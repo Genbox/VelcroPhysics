@@ -444,7 +444,7 @@ namespace FarseerPhysics.Collision
         /// <param name="output">The results of the raycast.</param>
         /// <param name="input">The parameters for the raycast.</param>
         /// <returns>True if the ray intersects the AABB</returns>
-        public bool RayCast(out RayCastOutput output, ref RayCastInput input)
+        public bool RayCast(out RayCastOutput output, ref RayCastInput input, bool doInteriorCheck = true)
         {
             // From Real-time Collision Detection, p179.
 
@@ -518,7 +518,7 @@ namespace FarseerPhysics.Collision
 
             // Does the ray start inside the box?
             // Does the ray intersect beyond the max fraction?
-            if (tmin < 0.0f || input.MaxFraction < tmin)
+            if (doInteriorCheck && (tmin < 0.0f || input.MaxFraction < tmin))
             {
                 return false;
             }
