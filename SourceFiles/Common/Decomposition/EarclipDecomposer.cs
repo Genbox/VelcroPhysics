@@ -20,20 +20,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
 {
     /// <summary>
-    /// Ported from jBox2D. Original author: ewjordan 
     /// Triangulates a polygon using simple ear-clipping algorithm.
-    /// 
-    /// Only works on simple polygons.
-    /// 
     /// Triangles may be degenerate, especially if you have identical points
     /// in the input to the algorithm.  Check this before you use them.
     /// </summary>
+    /// <remarks>
+    /// Only works on simple polygons.
+    /// </remarks>
     public static class EarclipDecomposer
     {
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 and http://www.ewjordan.com/earClip/
@@ -43,50 +43,20 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Decomposes a non-convex polygon into a number of convex polygons, up
         /// to maxPolys (remaining pieces are thrown out).
-        ///
-        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
-        /// vertices.
         /// 
-        /// Warning: Only works on simple polygons
+        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices vertices.
         /// </summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <returns></returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices)
-        {
-            return ConvexPartition(vertices, int.MaxValue, 0);
-        }
-
-        /// <summary>
-        /// Decomposes a non-convex polygon into a number of convex polygons, up
-        /// to maxPolys (remaining pieces are thrown out).
-        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices
-        /// vertices.
-        /// Warning: Only works on simple polygons
-        /// </summary>
+        /// <remarks>
+        /// Only works on simple polygons.
+        /// </remarks>
         /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons.</param>
         /// <param name="tolerance">The tolerance.</param>
-        /// <returns></returns>
-        public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys, float tolerance)
+        public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys = int.MaxValue, float tolerance = 0)
         {
             if (vertices.Count < 3)
                 return new List<Vertices> { vertices };
-            /*
-            if (vertices.IsConvex() && vertices.Count <= Settings.MaxPolygonVertices)
-            {
-                if (vertices.IsCounterClockWise())
-                {
-                    Vertices tempP = new Vertices(vertices);
-                    tempP.Reverse();
-                    tempP = SimplifyTools.CollinearSimplify(tempP);
-                    tempP.ForceCounterClockWise();
-                    return new List<Vertices> { tempP };
-                }
-                vertices = SimplifyTools.CollinearSimplify(vertices);
-                vertices.ForceCounterClockWise();
-                return new List<Vertices> { vertices };
-            }
-            */
+
             List<Triangle> triangulated;
 
             if (vertices.IsCounterClockWise())
@@ -99,16 +69,16 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 triangulated = TriangulatePolygon(vertices);
             }
+
             if (triangulated.Count < 1)
             {
-                //Still no luck?  Oh well...
-                throw new Exception("Can't triangulate your polygon.");
+                //Unable to triangulate the polygon
+                return new List<Vertices>();
             }
 
             List<Vertices> polygonizedTriangles = PolygonizeTriangles(triangulated, maxPolys, tolerance);
 
-            //The polygonized triangles are not guaranteed to be without collinear points. We remove
-            //them to be sure.
+            //The polygonized triangles are not guaranteed to be without collinear points. We remove them to be sure.
             for (int i = 0; i < polygonizedTriangles.Count; i++)
             {
                 polygonizedTriangles[i] = SimplifyTools.CollinearSimplify(polygonizedTriangles[i], 0);
@@ -222,16 +192,17 @@ namespace FarseerPhysics.Common.Decomposition
                     //We have a maximum of polygons that we need to keep under.
                     if (polyIndex < maxPolys)
                     {
-                        //SimplifyTools.MergeParallelEdges(poly, tolerance);
+                        SimplifyTools.MergeParallelEdges(poly, tolerance);
 
                         //If identical points are present, a triangle gets
                         //borked by the MergeParallelEdges function, hence
                         //the vertex number check
                         if (poly.Count >= 3)
                             polys.Add(new Vertices(poly));
-                        //else
-                        //    printf("Skipping corrupt poly\n");
+                        else
+                            Debug.WriteLine("Skipping corrupt poly.");
                     }
+
                     if (poly.Count >= 3)
                         polyIndex++; //Must be outside (polyIndex < polysLength) test
                 }
@@ -254,15 +225,16 @@ namespace FarseerPhysics.Common.Decomposition
         ///
         /// This is totally unoptimized, so for large polygons it should not be part
         /// of the simulation loop.
-        ///
-        /// Warning: Only works on simple polygons.
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        /// Only works on simple polygons.
+        /// </remarks>
         public static List<Triangle> TriangulatePolygon(Vertices vertices)
         {
-            List<Triangle> results = new List<Triangle>();
             if (vertices.Count < 3)
                 return new List<Triangle>();
+
+            List<Triangle> results = new List<Triangle>();
 
             //Recurse and split on pinch points
             Vertices pA, pB;
@@ -407,7 +379,6 @@ namespace FarseerPhysics.Common.Decomposition
         /// <param name="pin">The pin.</param>
         /// <param name="poutA">The pout A.</param>
         /// <param name="poutB">The pout B.</param>
-        /// <returns></returns>
         private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB)
         {
             poutA = new Vertices();
@@ -553,15 +524,15 @@ namespace FarseerPhysics.Common.Decomposition
         }
 
         /// <summary>
-        /// Checks if vertex i is the tip of an ear in polygon defined by xv[] and
-        /// yv[].
-        ///
-        /// Assumes clockwise orientation of polygon...ick
+        /// Checks if vertex i is the tip of an ear in polygon defined by xv[] and  yv[].
         /// </summary>
         /// <param name="i">The i.</param>
         /// <param name="xv">The xv.</param>
         /// <param name="yv">The yv.</param>
         /// <param name="xvLength">Length of the xv.</param>
+        /// <remarks>
+        /// Assumes clockwise orientation of polygon.
+        /// </remarks>
         /// <returns>
         /// 	<c>true</c> if the specified i is ear; otherwise, <c>false</c>.
         /// </returns>
@@ -597,11 +568,14 @@ namespace FarseerPhysics.Common.Decomposition
                 dx1 = xv[i + 1] - xv[i];
                 dy1 = yv[i + 1] - yv[i];
             }
+
             float cross = dx0 * dy1 - dx1 * dy0;
+
             if (cross > 0)
                 return false;
-            Triangle myTri = new Triangle(xv[i], yv[i], xv[upper], yv[upper],
-                                          xv[lower], yv[lower]);
+
+            Triangle myTri = new Triangle(xv[i], yv[i], xv[upper], yv[upper], xv[lower], yv[lower]);
+
             for (int j = 0; j < xvLength; ++j)
             {
                 if (j == i || j == lower || j == upper)

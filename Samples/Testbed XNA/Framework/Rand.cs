@@ -4,7 +4,7 @@ namespace FarseerPhysics.TestBed.Framework
 {
     public static class Rand
     {
-        public static Random Random = new Random(0x2eed2eed);
+        public static Random Random = new Random();
 
         /// <summary>
         /// Random number in range [-1,1]

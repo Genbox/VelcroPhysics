@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -38,6 +43,7 @@ namespace FarseerPhysics.Common
         }
 
         internal bool AttachedToBody { get; set; }
+        public List<Vertices> Holes { get; set; }
 
         /// <summary>
         /// Nexts the index.
@@ -1023,6 +1029,25 @@ namespace FarseerPhysics.Common
             }
 
             return true;
+        }
+
+        public void Transform(Matrix transform)
+        {
+            // Transform main polygon
+            for (int i = 0; i < Count; i++)
+                this[i] = Vector2.Transform(this[i], transform);
+
+            // Transform holes
+            if (Holes != null && Holes.Count > 0)
+            {
+                for (int i = 0; i < Holes.Count; i++)
+                {
+                    Vector2[] temp = Holes[i].ToArray();
+                    Vector2.Transform(temp, ref transform, temp);
+
+                    Holes[i] = new Vertices(temp);
+                }
+            }
         }
     }
 }
