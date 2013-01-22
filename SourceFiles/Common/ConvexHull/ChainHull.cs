@@ -21,6 +21,9 @@ namespace FarseerPhysics.Common.ConvexHull
         /// </summary>
         public static Vertices GetConvexHull(Vertices vertices)
         {
+            if (vertices.Count < 3)
+                return vertices;
+
             //Sort by X-axis
             vertices.Sort(_pointComparer);
 
