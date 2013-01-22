@@ -29,9 +29,14 @@ namespace FarseerPhysics.Common
 {
     public static class MathUtils
     {
-        public static float Cross(Vector2 a, Vector2 b)
+        public static float Cross(ref Vector2 a, ref Vector2 b)
         {
             return a.X * b.Y - a.Y * b.X;
+        }
+
+        public static float Cross(Vector2 a, Vector2 b)
+        {
+            return Cross(ref a, ref b);
         }
 
         /// Perform the cross product on two vectors.
