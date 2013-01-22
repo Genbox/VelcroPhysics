@@ -2,24 +2,26 @@
 
 namespace FarseerPhysics.Common.ConvexHull
 {
+    /// <summary>
+    /// Creates a convex hull.
+    /// Note:
+    /// 1. Vertices must be of a simple polygon, i.e. edges do not overlap.
+    /// 2. Melkman does not work on point clouds
+    /// </summary>
+    /// <remarks>
+    /// Implemented using Melkman's Convex Hull Algorithm - O(n) time complexity.
+    /// Reference: http://www.ams.sunysb.edu/~jsbm/courses/345/melkman.pdf
+    /// </remarks>
     public static class Melkman
     {
         //Melkman based convex hull algorithm contributed by Cowdozer
 
         /// <summary>
-        /// Creates a convex hull.
-        /// Note:
-        /// 1. Vertices must be of a simple polygon, i.e. edges do not overlap.
-        /// 2. Melkman does not work on point clouds
+        /// Returns a convex hull from the given vertices.
         /// </summary>
-        /// <remarks>
-        /// Implemented using Melkman's Convex Hull Algorithm - O(n) time complexity.
-        /// Reference: http://www.ams.sunysb.edu/~jsbm/courses/345/melkman.pdf
-        /// </remarks>
-        /// <returns>A convex hull in counterclockwise winding order.</returns>
+        /// <returns>A convex hull in counter clockwise winding order.</returns>
         public static Vertices GetConvexHull(Vertices vertices)
         {
-            //With less than 3 vertices, this is about the best we can do for a convex hull
             if (vertices.Count < 3)
                 return vertices;
 
@@ -27,7 +29,6 @@ namespace FarseerPhysics.Common.ConvexHull
             //Create double-ended queue
             Vector2[] deque = new Vector2[vertices.Count + 1];
             int qf = 3, qb = 0; //Queue front index, queue back index
-            int qfm1, qbm1; //qfm1 = second element, qbm1 = second last element
 
             //Start by placing first 3 vertices in convex CCW order
             int startIndex = 3;
@@ -66,8 +67,8 @@ namespace FarseerPhysics.Common.ConvexHull
                 }
             }
 
-            qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
-            qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;
+            int qfm1 = qf == 0 ? deque.Length - 1 : qf - 1;
+            int qbm1 = qb == deque.Length - 1 ? 0 : qb + 1;
 
             //Add vertices one at a time and adjust convex hull as needed
             for (int i = startIndex; i < vertices.Count; i++)
@@ -75,8 +76,7 @@ namespace FarseerPhysics.Common.ConvexHull
                 Vector2 nextPt = vertices[i];
 
                 //Ignore if it is already within the convex hull we have constructed
-                if (MathUtils.Area(ref deque[qfm1], ref deque[qf], ref nextPt) > 0 &&
-                    MathUtils.Area(ref deque[qb], ref deque[qbm1], ref nextPt) > 0)
+                if (MathUtils.Area(ref deque[qfm1], ref deque[qf], ref nextPt) > 0 && MathUtils.Area(ref deque[qb], ref deque[qbm1], ref nextPt) > 0)
                     continue;
 
                 //Pop front until convex
@@ -86,6 +86,7 @@ namespace FarseerPhysics.Common.ConvexHull
                     qf = qfm1; //qf--;
                     qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
                 }
+
                 //Add vertex to the front of the queue
                 qf = qf == deque.Length - 1 ? 0 : qf + 1; //qf++;
                 qfm1 = qf == 0 ? deque.Length - 1 : qf - 1; //qfm1 = qf - 1;
@@ -105,18 +106,27 @@ namespace FarseerPhysics.Common.ConvexHull
             }
 
             //Create the convex hull from what is left in the deque
-            Vertices convexHull = new Vertices(vertices.Count + 1);
             if (qb < qf)
+            {
+                Vertices convexHull = new Vertices(qf);
+
                 for (int i = qb; i < qf; i++)
                     convexHull.Add(deque[i]);
+
+                return convexHull;
+            }
             else
             {
+                Vertices convexHull = new Vertices(qf + deque.Length);
+
                 for (int i = 0; i < qf; i++)
                     convexHull.Add(deque[i]);
+
                 for (int i = qb; i < deque.Length; i++)
                     convexHull.Add(deque[i]);
+
+                return convexHull;
             }
-            return convexHull;
         }
     }
 }
