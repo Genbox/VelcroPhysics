@@ -42,7 +42,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Chain hull also works on point clouds
             _pointCloud3.Translate(new Vector2(20, 10));
-
             _chainHull = ChainHull.GetConvexHull(_pointCloud3);
         }
 
