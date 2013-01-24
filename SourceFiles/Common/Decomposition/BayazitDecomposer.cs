@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
@@ -8,6 +9,12 @@ namespace FarseerPhysics.Common.Decomposition
 
     /// <summary>
     /// Convex decomposition algorithm created by Mark Bayazit (http://mnbayazit.com/)
+    /// 
+    /// Properties:
+    /// - Tries to decompose using polygons instead of triangles.
+    /// - Tends to produce optimal results with low processing time.
+    /// - Running time is O(nr), n = number of vertices, r = reflex vertices.
+    ///
     /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
     /// </summary>
     public static class BayazitDecomposer
@@ -35,12 +42,11 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
-        /// Precondition: Counter Clockwise polygon
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            //We force it to CCW as it is a precondition in this algorithm.
-            vertices.ForceCounterClockWise();
+            //We check for counter clockwise vertices, as it is a precondition in this algorithm.
+            Debug.Assert(vertices.IsCounterClockWise(), "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
 
             List<Vertices> list = new List<Vertices>();
             Vector2 lowerInt = new Vector2();
@@ -59,8 +65,7 @@ namespace FarseerPhysics.Common.Decomposition
                         // if line intersects with an edge
                         float d;
                         Vector2 p;
-                        if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) &&
-                            RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
+                        if (Left(At(i - 1, vertices), At(i, vertices), At(j, vertices)) && RightOn(At(i - 1, vertices), At(i, vertices), At(j - 1, vertices)))
                         {
                             // find the point of intersection
                             p = LineTools.LineIntersect(At(i - 1, vertices), At(i, vertices), At(j, vertices), At(j - 1, vertices));
@@ -196,16 +201,15 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
                     continue; // ignore incident edges
-                
+
                 Vector2 intersectionPoint;
-                
+
                 if (LineTools.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices), out intersectionPoint))
                     return false;
             }
             return true;
         }
 
-        // precondition: ccw
         private static bool Reflex(int i, Vertices vertices)
         {
             return Right(i, vertices);
