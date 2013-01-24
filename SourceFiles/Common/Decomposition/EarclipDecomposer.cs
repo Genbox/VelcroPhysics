@@ -49,12 +49,12 @@ namespace FarseerPhysics.Common.Decomposition
         /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons. The rest are thrown out.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys = int.MaxValue, float tolerance = 0)
+        public static List<Vertices> ConvexPartition(Vertices vertices)
         {
             if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
-            List<Triangle> triangulated;
+            List<Vertices> triangulated;
 
             if (vertices.IsCounterClockWise())
             {
@@ -67,145 +67,7 @@ namespace FarseerPhysics.Common.Decomposition
                 triangulated = TriangulatePolygon(vertices);
             }
 
-            if (triangulated.Count < 1)
-            {
-                //Unable to triangulate the polygon
-                return new List<Vertices>();
-            }
-
-            List<Vertices> polygonizedTriangles = PolygonizeTriangles(triangulated, maxPolys, tolerance);
-
-            //The polygonized triangles are not guaranteed to be without collinear points. We remove them to be sure.
-            for (int i = 0; i < polygonizedTriangles.Count; i++)
-            {
-                polygonizedTriangles[i] = SimplifyTools.CollinearSimplify(polygonizedTriangles[i], 0);
-            }
-
-            //Remove empty vertice collections
-            for (int i = polygonizedTriangles.Count - 1; i >= 0; i--)
-            {
-                if (polygonizedTriangles[i].Count == 0)
-                    polygonizedTriangles.RemoveAt(i);
-            }
-
-            return polygonizedTriangles;
-        }
-
-        /// <summary>
-        /// Turns a list of triangles into a list of convex polygons. Very simple
-        /// method - start with a seed triangle, keep adding triangles to it until
-        /// you can't add any more without making the polygon non-convex.
-        ///
-        /// Returns an integer telling how many polygons were created.  Will fill
-        /// polys array up to polysLength entries, which may be smaller or larger
-        /// than the return value.
-        /// 
-        /// Takes O(N///P) where P is the number of resultant polygons, N is triangle
-        /// count.
-        /// 
-        /// The final polygon list will not necessarily be minimal, though in
-        /// practice it works fairly well.
-        /// </summary>
-        /// <param name="triangulated">The triangulated.</param>
-        ///<param name="maxPolys">The maximun number of polygons</param>
-        ///<param name="tolerance">The tolerance</param>
-        ///<returns></returns>
-        public static List<Vertices> PolygonizeTriangles(List<Triangle> triangulated, int maxPolys, float tolerance)
-        {
-            List<Vertices> polys = new List<Vertices>(50);
-
-            int polyIndex = 0;
-
-            if (triangulated.Count <= 0)
-            {
-                //return empty polygon list
-                return polys;
-            }
-
-            bool[] covered = new bool[triangulated.Count];
-            for (int i = 0; i < triangulated.Count; ++i)
-            {
-                covered[i] = false;
-
-                //Check here for degenerate triangles
-                if (((triangulated[i].X[0] == triangulated[i].X[1]) && (triangulated[i].Y[0] == triangulated[i].Y[1]))
-                    ||
-                    ((triangulated[i].X[1] == triangulated[i].X[2]) && (triangulated[i].Y[1] == triangulated[i].Y[2]))
-                    ||
-                    ((triangulated[i].X[0] == triangulated[i].X[2]) && (triangulated[i].Y[0] == triangulated[i].Y[2])))
-                {
-                    covered[i] = true;
-                }
-            }
-
-            bool notDone = true;
-            while (notDone)
-            {
-                int currTri = -1;
-                for (int i = 0; i < triangulated.Count; ++i)
-                {
-                    if (covered[i])
-                        continue;
-                    currTri = i;
-                    break;
-                }
-                if (currTri == -1)
-                {
-                    notDone = false;
-                }
-                else
-                {
-                    Vertices poly = new Vertices(3);
-
-                    for (int i = 0; i < 3; i++)
-                    {
-                        poly.Add(new Vector2(triangulated[currTri].X[i], triangulated[currTri].Y[i]));
-                    }
-
-                    covered[currTri] = true;
-                    int index = 0;
-                    for (int i = 0; i < 2 * triangulated.Count; ++i, ++index)
-                    {
-                        while (index >= triangulated.Count) index -= triangulated.Count;
-                        if (covered[index])
-                        {
-                            continue;
-                        }
-                        Vertices newP = AddTriangle(triangulated[index], poly);
-                        if (newP == null)
-                            continue; // is this right
-
-                        if (newP.Count > Settings.MaxPolygonVertices)
-                            continue;
-
-                        if (newP.IsConvex())
-                        {
-                            //Or should it be IsUsable?  Maybe re-write IsConvex to apply the angle threshold from Box2d
-                            poly = new Vertices(newP);
-                            covered[index] = true;
-                        }
-                    }
-
-                    //We have a maximum of polygons that we need to keep under.
-                    if (polyIndex < maxPolys)
-                    {
-                        SimplifyTools.MergeParallelEdges(poly, tolerance);
-
-                        //If identical points are present, a triangle gets
-                        //borked by the MergeParallelEdges function, hence
-                        //the vertex number check
-                        if (poly.Count >= 3)
-                            polys.Add(new Vertices(poly));
-                        else
-                            Debug.WriteLine("Skipping corrupt poly.");
-                    }
-
-                    if (poly.Count >= 3)
-                        polyIndex++; //Must be outside (polyIndex < polysLength) test
-                }
-            }
-
-            return polys;
+            return triangulated;
         }
 
         /// <summary>
@@ -226,37 +88,37 @@ namespace FarseerPhysics.Common.Decomposition
         /// <remarks>
         /// Only works on simple polygons.
         /// </remarks>
-        public static List<Triangle> TriangulatePolygon(Vertices vertices)
+        private static List<Vertices> TriangulatePolygon(Vertices vertices)
         {
-            if (vertices.Count < 3)
-                return new List<Triangle>();
+            if (vertices.Count <= 3)
+                return new List<Vertices>();
 
-            List<Triangle> results = new List<Triangle>();
+            List<Vertices> results = new List<Vertices>();
 
             //Recurse and split on pinch points
             Vertices pA, pB;
             Vertices pin = new Vertices(vertices);
             if (ResolvePinchPoint(pin, out pA, out pB))
             {
-                List<Triangle> mergeA = TriangulatePolygon(pA);
-                List<Triangle> mergeB = TriangulatePolygon(pB);
+                List<Vertices> mergeA = TriangulatePolygon(pA);
+                List<Vertices> mergeB = TriangulatePolygon(pB);
 
                 if (mergeA.Count == -1 || mergeB.Count == -1)
                     throw new Exception("Can't triangulate your polygon.");
 
                 for (int i = 0; i < mergeA.Count; ++i)
                 {
-                    results.Add(new Triangle(mergeA[i]));
+                    results.Add(new Vertices(mergeA[i]));
                 }
                 for (int i = 0; i < mergeB.Count; ++i)
                 {
-                    results.Add(new Triangle(mergeB[i]));
+                    results.Add(new Vertices(mergeB[i]));
                 }
 
                 return results;
             }
 
-            Triangle[] buffer = new Triangle[vertices.Count - 2];
+            Vertices[] buffer = new Vertices[vertices.Count - 2];
             int bufferSize = 0;
             float[] xrem = new float[vertices.Count];
             float[] yrem = new float[vertices.Count];
@@ -316,7 +178,7 @@ namespace FarseerPhysics.Common.Decomposition
                 {
                     for (int i = 0; i < bufferSize; i++)
                     {
-                        results.Add(new Triangle(buffer[i]));
+                        results.Add(buffer[i]);
                     }
 
                     return results;
@@ -356,7 +218,7 @@ namespace FarseerPhysics.Common.Decomposition
 
             for (int i = 0; i < bufferSize; i++)
             {
-                results.Add(new Triangle(buffer[i]));
+                results.Add(new Vertices(buffer[i]));
             }
 
             return results;
@@ -439,87 +301,6 @@ namespace FarseerPhysics.Common.Decomposition
             return rem;
         }
 
-        private static Vertices AddTriangle(Triangle t, Vertices vertices)
-        {
-            // First, find vertices that connect
-            int firstP = -1;
-            int firstT = -1;
-            int secondP = -1;
-            int secondT = -1;
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (t.X[0] == vertices[i].X && t.Y[0] == vertices[i].Y)
-                {
-                    if (firstP == -1)
-                    {
-                        firstP = i;
-                        firstT = 0;
-                    }
-                    else
-                    {
-                        secondP = i;
-                        secondT = 0;
-                    }
-                }
-                else if (t.X[1] == vertices[i].X && t.Y[1] == vertices[i].Y)
-                {
-                    if (firstP == -1)
-                    {
-                        firstP = i;
-                        firstT = 1;
-                    }
-                    else
-                    {
-                        secondP = i;
-                        secondT = 1;
-                    }
-                }
-                else if (t.X[2] == vertices[i].X && t.Y[2] == vertices[i].Y)
-                {
-                    if (firstP == -1)
-                    {
-                        firstP = i;
-                        firstT = 2;
-                    }
-                    else
-                    {
-                        secondP = i;
-                        secondT = 2;
-                    }
-                }
-            }
-            // Fix ordering if first should be last vertex of poly
-            if (firstP == 0 && secondP == vertices.Count - 1)
-            {
-                firstP = vertices.Count - 1;
-                secondP = 0;
-            }
-
-            // Didn't find it
-            if (secondP == -1)
-            {
-                return null;
-            }
-
-            // Find tip index on triangle
-            int tipT = 0;
-            if (tipT == firstT || tipT == secondT)
-                tipT = 1;
-            if (tipT == firstT || tipT == secondT)
-                tipT = 2;
-
-            Vertices result = new Vertices(vertices.Count + 1);
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                result.Add(vertices[i]);
-
-                if (i == firstP)
-                    result.Add(new Vector2(t.X[tipT], t.Y[tipT]));
-            }
-
-            return result;
-        }
-
         /// <summary>
         /// Checks if vertex i is the tip of an ear in polygon defined by xv[] and  yv[].
         /// </summary>
@@ -582,81 +363,56 @@ namespace FarseerPhysics.Common.Decomposition
             }
             return true;
         }
-    }
 
-    public class Triangle
-    {
-        public float[] X;
-        public float[] Y;
-
-        //Constructor automatically fixes orientation to ccw
-        public Triangle(float x1, float y1, float x2, float y2, float x3, float y3)
+        private class Triangle : Vertices
         {
-            X = new float[3];
-            Y = new float[3];
-            float dx1 = x2 - x1;
-            float dx2 = x3 - x1;
-            float dy1 = y2 - y1;
-            float dy2 = y3 - y1;
-            float cross = dx1 * dy2 - dx2 * dy1;
-            bool ccw = (cross > 0);
-            if (ccw)
+            //Constructor automatically fixes orientation to ccw
+            public Triangle(float x1, float y1, float x2, float y2, float x3, float y3)
             {
-                X[0] = x1;
-                X[1] = x2;
-                X[2] = x3;
-                Y[0] = y1;
-                Y[1] = y2;
-                Y[2] = y3;
+                float cross = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1);
+                if (cross > 0)
+                {
+                    Add(new Vector2(x1, y1));
+                    Add(new Vector2(x2, y2));
+                    Add(new Vector2(x3, y3));
+                }
+                else
+                {
+                    Add(new Vector2(x1, y1));
+                    Add(new Vector2(x3, y3));
+                    Add(new Vector2(x2, y2));
+                }
             }
-            else
+
+            public bool IsInside(float x, float y)
             {
-                X[0] = x1;
-                X[1] = x3;
-                X[2] = x2;
-                Y[0] = y1;
-                Y[1] = y3;
-                Y[2] = y2;
+                Vector2 a = this[0];
+                Vector2 b = this[1];
+                Vector2 c = this[2];
+
+                if (x < a.X && x < b.X && x < c.X) return false;
+                if (x > a.X && x > b.X && x > c.X) return false;
+                if (y < a.Y && y < b.Y && y < c.Y) return false;
+                if (y > a.Y && y > b.Y && y > c.Y) return false;
+
+                float vx2 = x - a.X;
+                float vy2 = y - a.Y;
+                float vx1 = b.X - a.X;
+                float vy1 = b.Y - a.Y;
+                float vx0 = c.X - a.X;
+                float vy0 = c.Y - a.Y;
+
+                float dot00 = vx0 * vx0 + vy0 * vy0;
+                float dot01 = vx0 * vx1 + vy0 * vy1;
+                float dot02 = vx0 * vx2 + vy0 * vy2;
+                float dot11 = vx1 * vx1 + vy1 * vy1;
+                float dot12 = vx1 * vx2 + vy1 * vy2;
+                float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+                float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+                float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+                return ((u > 0) && (v > 0) && (u + v < 1));
             }
-        }
-
-        public Triangle(Triangle t)
-        {
-            X = new float[3];
-            Y = new float[3];
-
-            X[0] = t.X[0];
-            X[1] = t.X[1];
-            X[2] = t.X[2];
-            Y[0] = t.Y[0];
-            Y[1] = t.Y[1];
-            Y[2] = t.Y[2];
-        }
-
-        public bool IsInside(float x, float y)
-        {
-            if (x < X[0] && x < X[1] && x < X[2]) return false;
-            if (x > X[0] && x > X[1] && x > X[2]) return false;
-            if (y < Y[0] && y < Y[1] && y < Y[2]) return false;
-            if (y > Y[0] && y > Y[1] && y > Y[2]) return false;
-
-            float vx2 = x - X[0];
-            float vy2 = y - Y[0];
-            float vx1 = X[1] - X[0];
-            float vy1 = Y[1] - Y[0];
-            float vx0 = X[2] - X[0];
-            float vy0 = Y[2] - Y[0];
-
-            float dot00 = vx0 * vx0 + vy0 * vy0;
-            float dot01 = vx0 * vx1 + vy0 * vy1;
-            float dot02 = vx0 * vx2 + vy0 * vy2;
-            float dot11 = vx1 * vx1 + vy1 * vy1;
-            float dot12 = vx1 * vx2 + vy1 * vy2;
-            float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
-            float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-            float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-            return ((u > 0) && (v > 0) && (u + v < 1));
         }
     }
 }
