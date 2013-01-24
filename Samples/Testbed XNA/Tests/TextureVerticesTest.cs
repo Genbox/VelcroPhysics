@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.ConvexHull;
@@ -14,7 +16,21 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class TextureVerticesTest : Test
     {
+        private enum TriangulationAlgorithm
+        {
+            Delauny,
+            Earclip,
+            Flipcode,
+            Seidel,
+            Bayazit
+        }
+
         private const int PointCount = 64;
+        private int _fileCounter;
+        private int _algorithmCounter;
+        private string _nextFileName;
+        private TriangulationAlgorithm _algorithm = TriangulationAlgorithm.Delauny;
+        private Stopwatch _sw = new Stopwatch();
 
         public override void Initialize()
         {
@@ -31,8 +47,17 @@ namespace FarseerPhysics.TestBed.Tests
                 CreateBody(CreateRandomConvexPolygon());
 #if WINDOWS
             else if (keyboardManager.IsNewKeyPress(Keys.D3))
-                CreateBody(LoadRandomFromDataFile());
+                CreateBody(LoadNextDataFile());
 #endif
+            else if (keyboardManager.IsNewKeyPress(Keys.T))
+            {
+                if (_algorithmCounter++ >= 4)
+                    _algorithmCounter = 0;
+
+                _algorithm = (TriangulationAlgorithm)_algorithmCounter;
+
+
+            }
 
             base.Keyboard(keyboardManager);
         }
@@ -44,10 +69,32 @@ namespace FarseerPhysics.TestBed.Tests
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
+            _sw.Reset();
+            _sw.Start();
             //Create a single body with multiple fixtures
-            Body compund = BodyFactory.CreateCompoundPolygon(World, EarclipDecomposer.ConvexPartition(vertices), 1);
+            Body compund = BodyFactory.CreateCompoundPolygon(World, Triangulate(vertices), 1);
             compund.BodyType = BodyType.Dynamic;
             compund.Position = new Vector2(0, 20);
+            _sw.Stop();
+        }
+
+        private List<Vertices> Triangulate(Vertices vertices)
+        {
+            switch (_algorithm)
+            {
+                case TriangulationAlgorithm.Delauny:
+                    return CDTDecomposer.ConvexPartition(vertices);
+                case TriangulationAlgorithm.Earclip:
+                    return EarclipDecomposer.ConvexPartition(vertices);
+                case TriangulationAlgorithm.Flipcode:
+                    return FlipcodeDecomposer.ConvexPartition(vertices);
+                case TriangulationAlgorithm.Seidel:
+                    return SeidelDecomposer.ConvexPartition(vertices);
+                case TriangulationAlgorithm.Bayazit:
+                    return BayazitDecomposer.ConvexPartition(vertices);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private Vertices LoadFromTexture()
@@ -91,12 +138,15 @@ namespace FarseerPhysics.TestBed.Tests
         }
 
 #if WINDOWS
-        private Vertices LoadRandomFromDataFile()
+        private Vertices LoadNextDataFile()
         {
             string[] files = Directory.GetFiles("Data/", "*.dat");
-            string randomFile = files[Rand.Random.Next(0, files.Length)];
-            Debug.WriteLine(randomFile);
-            string[] lines = File.ReadAllLines(randomFile);
+            _nextFileName = files[_fileCounter];
+
+            if (_fileCounter++ >= files.Length - 1)
+                _fileCounter = 0;
+
+            string[] lines = File.ReadAllLines(_nextFileName);
 
             Vertices vertices = new Vertices(lines.Length);
 
@@ -105,9 +155,6 @@ namespace FarseerPhysics.TestBed.Tests
                 string[] split = line.Split(' ');
                 vertices.Add(new Vector2(float.Parse(split[0]), float.Parse(split[1])));
             }
-
-            Vector2 scale = new Vector2(0.1f, -0.1f);
-            vertices.Scale(ref scale);
 
             return vertices;
         }
@@ -121,9 +168,20 @@ namespace FarseerPhysics.TestBed.Tests
             TextLine += 15;
 
 #if WINDOWS
-            DebugView.DrawString(50, TextLine, "Press 3: Convex partition random preset polygon. (Can be really slow)");
+            DebugView.DrawString(50, TextLine, "Press 3: Convex partition next polygon from datafile. (Can be slow)");
             TextLine += 15;
 #endif
+            DebugView.DrawString(50, TextLine, "Press T: Change triangulation algorithm. Current: " + _algorithm);
+            TextLine += 15;
+
+            if (!string.IsNullOrEmpty(_nextFileName))
+            {
+                DebugView.DrawString(50, TextLine, "Loaded: " + _nextFileName);
+                TextLine += 15;
+            }
+
+            DebugView.DrawString(50, TextLine, "Triangulation took " + _sw.ElapsedMilliseconds + " ms");
+            TextLine += 15;
 
             base.Update(settings, gameTime);
         }

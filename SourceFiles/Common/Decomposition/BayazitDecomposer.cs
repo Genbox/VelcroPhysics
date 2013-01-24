@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
