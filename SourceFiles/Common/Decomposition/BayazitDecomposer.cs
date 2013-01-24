@@ -19,26 +19,6 @@ namespace FarseerPhysics.Common.Decomposition
     /// </summary>
     public static class BayazitDecomposer
     {
-        private static Vector2 At(int i, Vertices vertices)
-        {
-            int s = vertices.Count;
-            return vertices[i < 0 ? s - (-i % s) : i % s];
-        }
-
-        private static Vertices Copy(int i, int j, Vertices vertices)
-        {
-            while (j < i)
-                j += vertices.Count;
-
-            Vertices p = new Vertices(j);
-
-            for (; i <= j; ++i)
-            {
-                p.Add(At(i, vertices));
-            }
-            return p;
-        }
-
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
@@ -48,9 +28,26 @@ namespace FarseerPhysics.Common.Decomposition
             if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
-            //We check for counter clockwise vertices, as it is a precondition in this algorithm.
-            Debug.Assert(vertices.IsCounterClockWise(), "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
+            if (Settings.SkipSanityChecks)
+            {
+                //We check for counter clockwise vertices, as it is a precondition in this algorithm.
+                Debug.Assert(vertices.IsCounterClockWise(), "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
+            }
+            else
+            {
+                if (vertices.IsCounterClockWise())
+                {
+                    return Triangulate(vertices);
+                }
 
+                Vertices temp = new Vertices(vertices);
+                temp.Reverse();
+                return Triangulate(vertices);
+            }
+        }
+
+        private static List<Vertices> Triangulate(Vertices vertices)
+        {
             List<Vertices> list = new List<Vertices>();
             Vector2 lowerInt = new Vector2();
             Vector2 upperInt = new Vector2(); // intersection points
@@ -163,6 +160,7 @@ namespace FarseerPhysics.Common.Decomposition
             else
                 list.Add(vertices);
 
+            //TODO: Add sanity check
             //Remove empty vertice collections
             for (int i = list.Count - 1; i >= 0; i--)
             {
@@ -171,6 +169,26 @@ namespace FarseerPhysics.Common.Decomposition
             }
 
             return list;
+        }
+
+        private static Vector2 At(int i, Vertices vertices)
+        {
+            int s = vertices.Count;
+            return vertices[i < 0 ? s - (-i % s) : i % s];
+        }
+
+        private static Vertices Copy(int i, int j, Vertices vertices)
+        {
+            while (j < i)
+                j += vertices.Count;
+
+            Vertices p = new Vertices(j);
+
+            for (; i <= j; ++i)
+            {
+                p.Add(At(i, vertices));
+            }
+            return p;
         }
 
         private static bool CanSee(int i, int j, Vertices vertices)

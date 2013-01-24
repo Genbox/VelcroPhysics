@@ -1,22 +1,22 @@
 ﻿/*
- * C# Version Ported by Matt Bettcher and Ian Qvist 2009-2010
- * 
- * Original C++ Version Copyright (c) 2007 Eric Jordan
- *
- * This software is provided 'as-is', without any express or implied
- * warranty.  In no event will the authors be held liable for any damages
- * arising from the use of this software.
- * Permission is granted to anyone to use this software for any purpose,
- * including commercial applications, and to alter it and redistribute it
- * freely, subject to the following restrictions:
- * 1. The origin of this software must not be misrepresented; you must not
- * claim that you wrote the original software. If you use this software
- * in a product, an acknowledgment in the product documentation would be
- * appreciated but is not required.
- * 2. Altered source versions must be plainly marked as such, and must not be
- * misrepresented as being the original software.
- * 3. This notice may not be removed or altered from any source distribution.
- */
+* C# Version Ported by Matt Bettcher and Ian Qvist 2009-2010
+* 
+* Original C++ Version Copyright (c) 2007 Eric Jordan
+*
+* This software is provided 'as-is', without any express or implied
+* warranty.  In no event will the authors be held liable for any damages
+* arising from the use of this software.
+* Permission is granted to anyone to use this software for any purpose,
+* including commercial applications, and to alter it and redistribute it
+* freely, subject to the following restrictions:
+* 1. The origin of this software must not be misrepresented; you must not
+* claim that you wrote the original software. If you use this software
+* in a product, an acknowledgment in the product documentation would be
+* appreciated but is not required.
+* 2. Altered source versions must be plainly marked as such, and must not be
+* misrepresented as being the original software.
+* 3. This notice may not be removed or altered from any source distribution.
+*/
 
 using System;
 using System.Collections.Generic;
@@ -40,8 +40,6 @@ namespace FarseerPhysics.Common.Decomposition
     {
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 
 
-        private const float Tol = .001f;
-
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// Each resulting polygon will have no more than Settings.MaxPolygonVertices vertices.
@@ -49,25 +47,24 @@ namespace FarseerPhysics.Common.Decomposition
         /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons. The rest are thrown out.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static List<Vertices> ConvexPartition(Vertices vertices)
+        public static List<Vertices> ConvexPartition(Vertices vertices, float tolerance = 0.001f)
         {
             if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
-            List<Vertices> triangulated;
-
-            if (vertices.IsCounterClockWise())
-            {
-                Vertices tempP = new Vertices(vertices);
-                tempP.Reverse();
-                triangulated = TriangulatePolygon(tempP);
-            }
+            if (Settings.SkipSanityChecks)
+                Debug.Assert(!vertices.IsCounterClockWise(), "The Earclip algorithm expects the polygon to be clockwise.");
             else
             {
-                triangulated = TriangulatePolygon(vertices);
-            }
+                if (vertices.IsCounterClockWise())
+                {
+                    Vertices temp = new Vertices(vertices);
+                    temp.Reverse();
+                    return TriangulatePolygon(vertices, tolerance);
+                }
 
-            return triangulated;
+                return TriangulatePolygon(vertices, tolerance);
+            }
         }
 
         /// <summary>
@@ -88,20 +85,17 @@ namespace FarseerPhysics.Common.Decomposition
         /// <remarks>
         /// Only works on simple polygons.
         /// </remarks>
-        private static List<Vertices> TriangulatePolygon(Vertices vertices)
+        private static List<Vertices> TriangulatePolygon(Vertices vertices, float tolerance)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices>();
-
             List<Vertices> results = new List<Vertices>();
 
             //Recurse and split on pinch points
             Vertices pA, pB;
             Vertices pin = new Vertices(vertices);
-            if (ResolvePinchPoint(pin, out pA, out pB))
+            if (ResolvePinchPoint(pin, out pA, out pB, tolerance))
             {
-                List<Vertices> mergeA = TriangulatePolygon(pA);
-                List<Vertices> mergeB = TriangulatePolygon(pB);
+                List<Vertices> mergeA = TriangulatePolygon(pA, tolerance);
+                List<Vertices> mergeB = TriangulatePolygon(pB, tolerance);
 
                 if (mergeA.Count == -1 || mergeB.Count == -1)
                     throw new Exception("Can't triangulate your polygon.");
@@ -238,7 +232,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <param name="pin">The pin.</param>
         /// <param name="poutA">The pout A.</param>
         /// <param name="poutB">The pout B.</param>
-        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB)
+        private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB, float tolerance)
         {
             poutA = new Vertices();
             poutB = new Vertices();
@@ -255,7 +249,7 @@ namespace FarseerPhysics.Common.Decomposition
                 {
                     //Don't worry about pinch points where the points
                     //are actually just dupe neighbors
-                    if (Math.Abs(pin[i].X - pin[j].X) < Tol && Math.Abs(pin[i].Y - pin[j].Y) < Tol && j != i + 1)
+                    if (Math.Abs(pin[i].X - pin[j].X) < tolerance && Math.Abs(pin[i].Y - pin[j].Y) < tolerance && j != i + 1)
                     {
                         pinchIndexA = i;
                         pinchIndexB = j;
