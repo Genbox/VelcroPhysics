@@ -43,6 +43,13 @@ namespace FarseerPhysics
         public const bool EnableDiagnostics = true;
 
         /// <summary>
+        /// Set this to true to skip sanity checks in the engine. This will speed up the
+        /// tools by removing the overhead of the checks, but you will need to handle checks
+        /// yourself where it is needed.
+        /// </summary>
+        public const bool SkipSanityChecks = false;
+
+        /// <summary>
         /// The number of velocity iterations used in the solver.
         /// </summary>
         public static int VelocityIterations = 8;
