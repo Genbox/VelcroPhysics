@@ -41,7 +41,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns>A list of triangles</returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, float sheer = 0.001f)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
             List<Point> compatList = new List<Point>(vertices.Count);

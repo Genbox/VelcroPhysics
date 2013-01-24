@@ -26,7 +26,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
             int[] V = new int[vertices.Count];
