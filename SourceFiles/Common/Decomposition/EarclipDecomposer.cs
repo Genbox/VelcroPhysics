@@ -27,13 +27,15 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Common.Decomposition
 {
     /// <summary>
-    /// Triangulates a polygon using simple ear-clipping algorithm.
-    /// Triangles may be degenerate, especially if you have identical points
-    /// in the input to the algorithm.  Check this before you use them.
+    /// Convex decomposition algorithm using ear clipping
+    /// 
+    /// Properties:
+    /// - Only works on simple polygons.
+    /// - Does not support holes.
+    /// - Running time is O(n^2), n = number of vertices.
+    /// 
+    /// Source: http://www.ewjordan.com/earClip/
     /// </summary>
-    /// <remarks>
-    /// Only works on simple polygons.
-    /// </remarks>
     public static class EarclipDecomposer
     {
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 
@@ -43,20 +45,13 @@ namespace FarseerPhysics.Common.Decomposition
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// Each resulting polygon will have no more than Settings.MaxPolygonVertices vertices.
-        /// 
-        /// Properties:
-        /// - Only works on simple polygons.
-        /// - Does not support holes.
-        /// - Running time is O(n^2), n = number of vertices.
-        /// 
-        /// Source: http://www.ewjordan.com/earClip/
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="maxPolys">The maximum number of polygons. The rest are thrown out.</param>
         /// <param name="tolerance">The tolerance.</param>
         public static List<Vertices> ConvexPartition(Vertices vertices, int maxPolys = int.MaxValue, float tolerance = 0)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
             List<Triangle> triangulated;

@@ -31,7 +31,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
             Polygon poly = new Polygon();

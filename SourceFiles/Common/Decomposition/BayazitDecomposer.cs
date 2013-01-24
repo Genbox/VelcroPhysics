@@ -45,7 +45,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
             //We check for counter clockwise vertices, as it is a precondition in this algorithm.
