@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿/*
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
+*/
+
+using System.Collections.Generic;
 using FarseerPhysics.Common.Decomposition.Seidel;
 using Microsoft.Xna.Framework;
 using Point = FarseerPhysics.Common.Decomposition.Seidel.Point;
@@ -36,6 +41,9 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns>A list of triangles</returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, float sheer = 0.001f)
         {
+            if (vertices.Count < 3)
+                return new List<Vertices> { vertices };
+
             List<Point> compatList = new List<Point>(vertices.Count);
 
             foreach (Vector2 vertex in vertices)
@@ -85,7 +93,7 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 Vertices verts = new Vertices();
 
-                List<Point> points = trapezoid.Vertices();
+                List<Point> points = trapezoid.GetVertices();
                 foreach (Point point in points)
                 {
                     verts.Add(new Vector2(point.X, point.Y));

@@ -13,7 +13,8 @@ namespace FarseerPhysics.Common.Decomposition
     /// - Tries to decompose using polygons instead of triangles.
     /// - Tends to produce optimal results with low processing time.
     /// - Running time is O(nr), n = number of vertices, r = reflex vertices.
-    ///
+    /// - Does not support holes.
+    /// 
     /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
     /// </summary>
     public static class BayazitDecomposer
@@ -37,12 +38,16 @@ namespace FarseerPhysics.Common.Decomposition
             }
             return p;
         }
+
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
+            if (vertices.Count < 3)
+                return new List<Vertices> { vertices };
+
             //We check for counter clockwise vertices, as it is a precondition in this algorithm.
             Debug.Assert(vertices.IsCounterClockWise(), "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
 
