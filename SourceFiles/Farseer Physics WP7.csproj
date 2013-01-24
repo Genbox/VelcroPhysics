@@ -195,6 +195,7 @@
     <Compile Include="Common\PhysicsLogic\Explosion.cs" />
     <Compile Include="Common\PhysicsLogic\PhysicsLogic.cs" />
     <Compile Include="Common\PolygonManipulation\CuttingTools.cs" />
+    <Compile Include="Common\PolygonManipulation\SimpleCombiner.cs" />
     <Compile Include="Common\PolygonManipulation\SimplifyTools.cs" />
     <Compile Include="Common\PolygonManipulation\YuPengClipper.cs" />
     <Compile Include="Common\PolygonTools.cs" />
