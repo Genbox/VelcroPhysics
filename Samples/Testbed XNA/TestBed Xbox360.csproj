@@ -245,9 +245,7 @@
   <ItemGroup>
     <None Include="Data\2.dat" />
     <None Include="Data\bird.dat" />
-    <None Include="Data\custom.dat" />
     <None Include="Data\debug.dat" />
-    <None Include="Data\debug2.dat" />
     <None Include="Data\diamond.dat" />
     <None Include="Data\dude.dat" />
     <None Include="Data\funny.dat" />

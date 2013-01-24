@@ -173,6 +173,17 @@
     <Compile Include="Common\Decomposition\EarclipDecomposer.cs" />
     <Compile Include="Common\Decomposition\FlipcodeDecomposer.cs" />
     <Compile Include="Common\Decomposition\SeidelDecomposer.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Edge.cs" />
+    <Compile Include="Common\Decomposition\Seidel\MonotoneMountain.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Node.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Point.cs" />
+    <Compile Include="Common\Decomposition\Seidel\QueryGraph.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Sink.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Trapezoid.cs" />
+    <Compile Include="Common\Decomposition\Seidel\TrapezoidalMap.cs" />
+    <Compile Include="Common\Decomposition\Seidel\Triangulator.cs" />
+    <Compile Include="Common\Decomposition\Seidel\XNode.cs" />
+    <Compile Include="Common\Decomposition\Seidel\YNode.cs" />
     <Compile Include="Common\FixedArray.cs" />
     <Compile Include="Common\HashSet.cs" />
     <Compile Include="Common\LineTools.cs" />
