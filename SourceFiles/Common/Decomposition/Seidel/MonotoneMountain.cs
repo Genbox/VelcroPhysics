@@ -6,7 +6,10 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
 {
     internal class MonotoneMountain
     {
+        // Almost Pi!
         private const float PiSlop = 3.1f;
+
+        // Triangles that constitute the mountain
         public List<List<Point>> Triangles;
         private HashSet<Point> _convexPoints;
         private Point _head;
@@ -14,14 +17,10 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
         // Monotone mountain points
         private List<Point> _monoPoly;
 
-        // Triangles that constitute the mountain
-
         // Used to track which side of the line we are on
         private bool _positive;
         private int _size;
         private Point _tail;
-
-        // Almost Pi!
 
         public MonotoneMountain()
         {
@@ -86,7 +85,7 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
             {
                 float a = Angle(p);
                 // If the point is almost colinear with it's neighbor, remove it!
-                if (a >= PiSlop || a <= -PiSlop || a == 0.0)
+                if (a >= PiSlop || a <= -PiSlop || a == 0.0f)
                     Remove(p);
                 else if (IsConvex(p))
                     _convexPoints.Add(p);
