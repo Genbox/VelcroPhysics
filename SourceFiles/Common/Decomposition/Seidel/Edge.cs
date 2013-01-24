@@ -9,16 +9,14 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
         public float B;
         public Trapezoid Below;
 
-        // Equation of a line: y = m*x + b
-        // Slope of the line (m)
-
         // Montone mountain points
         public HashSet<Point> MPoints;
         public Point P;
         public Point Q;
+
+        // Slope of the line (m)
         public float Slope;
 
-        // Y intercept
 
         public Edge(Point p, Point q)
         {
@@ -51,8 +49,10 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
         public void AddMpoint(Point point)
         {
             foreach (Point mp in MPoints)
+            {
                 if (!mp.Neq(point))
                     return;
+            }
 
             MPoints.Add(point);
         }

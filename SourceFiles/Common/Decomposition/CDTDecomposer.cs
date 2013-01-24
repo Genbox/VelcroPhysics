@@ -14,21 +14,26 @@ namespace FarseerPhysics.Common.Decomposition
 {
     /// <summary>
     /// 2D constrained Delaunay triangulation algorithm.
-    /// </summary>
-    /// <remarks>
     /// Based on the paper "Sweep-line algorithm for constrained Delaunay triangulation" by V. Domiter and and B. Zalik
+    /// 
+    /// Properties:
+    /// - Creates triangles with a large interior angle.
+    /// - Supports holes
+    /// - Generate a lot of garbage due to incapsulation of the Poly2Tri library.
+    /// - Running time is O(n^2), n = number of vertices.
+    /// 
     /// Source: http://code.google.com/p/poly2tri/
-    /// </remarks>
+    /// </summary>
     public static class CDTDecomposer
     {
         /// <summary>
-        /// Creates a list of triangles based on the given polygon.
-        /// You can use output from TextureConverter to 
+        /// Decompose the polygon into several smaller non-concave polygon.
         /// </summary>
-        /// <param name="vertices"></param>
-        /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
+            if (vertices.Count < 3)
+                return new List<Vertices> { vertices };
+
             Polygon poly = new Polygon();
 
             foreach (Vector2 vertex in vertices)
@@ -64,16 +69,6 @@ namespace FarseerPhysics.Common.Decomposition
             }
 
             return results;
-        }
-
-        public static List<Vertices> ConvexPartition(List<Vertices> vertices)
-        {
-            List<Vertices> result = new List<Vertices>();
-
-            foreach (Vertices e in vertices)
-                result.AddRange(ConvexPartition(e));
-
-            return result;
         }
     }
 }

@@ -83,7 +83,7 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
             return (point.X > LeftPoint.X && point.X < RightPoint.X && Top.IsAbove(point) && Bottom.IsBelow(point));
         }
 
-        public List<Point> Vertices()
+        public List<Point> GetVertices()
         {
             List<Point> verts = new List<Point>(4);
             verts.Add(LineIntersect(Top, LeftPoint.X));

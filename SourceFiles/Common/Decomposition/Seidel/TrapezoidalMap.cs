@@ -7,13 +7,13 @@ namespace FarseerPhysics.Common.Decomposition.Seidel
         // Trapezoid container
         public HashSet<Trapezoid> Map;
 
-        // AABB margin
-
         // Bottom segment that spans multiple trapezoids
         private Edge _bCross;
 
         // Top segment that spans multiple trapezoids
         private Edge _cross;
+
+        // AABB margin
         private float _margin;
 
         public TrapezoidalMap()

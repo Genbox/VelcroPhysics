@@ -13,17 +13,14 @@
         public override Sink Locate(Edge edge)
         {
             if (_edge.IsAbove(edge.P))
-                // Move down the graph
-                return RightChild.Locate(edge);
+                return RightChild.Locate(edge); // Move down the graph
 
             if (_edge.IsBelow(edge.P))
-                // Move up the graph
-                return LeftChild.Locate(edge);
+                return LeftChild.Locate(edge); // Move up the graph
 
             // s and segment share the same endpoint, p
             if (edge.Slope < _edge.Slope)
-                // Move down the graph
-                return RightChild.Locate(edge);
+                return RightChild.Locate(edge); // Move down the graph
 
             // Move up the graph
             return LeftChild.Locate(edge);

@@ -15,6 +15,7 @@
         {
             if (trapezoid.Sink == null)
                 return new Sink(trapezoid);
+
             return trapezoid.Sink;
         }
 
