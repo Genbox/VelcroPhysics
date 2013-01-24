@@ -5,10 +5,8 @@ using Point = FarseerPhysics.Common.Decomposition.Seidel.Point;
 
 namespace FarseerPhysics.Common.Decomposition
 {
-    //From the Poly2Tri project by Mason Green: http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
-
     /// <summary>
-    /// Convex decomposition algorithm 
+    /// Convex decomposition algorithm created by Raimund Seidel
     /// 
     /// Properties:
     /// - Decompose the polygon into trapezoids, then triangulate.
@@ -22,6 +20,11 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// See also: "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
     ///           "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
+    /// 
+    /// Original code from the Poly2Tri project by Mason Green.
+    /// http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
+    /// 
+    /// This implementation is from Dec 14, 2010
     /// </summary>
     public static class SeidelDecomposer
     {
@@ -29,7 +32,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// Decompose the polygon into several smaller non-concave polygons.
         /// </summary>
         /// <param name="vertices">The polygon to decompose.</param>
-        /// <param name="sheer">The sheer to use. If you get bad results, try using a higher value. The default value is 0.001</param>
+        /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of triangles</returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, float sheer = 0.001f)
         {
@@ -63,9 +66,9 @@ namespace FarseerPhysics.Common.Decomposition
         /// Decompose the polygon into several smaller non-concave polygons.
         /// </summary>
         /// <param name="vertices">The polygon to decompose.</param>
-        /// <param name="sheer">The sheer to use. If you get bad results, try using a higher value. The default value is 0.001</param>
+        /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of trapezoids</returns>
-        public static List<Vertices> ConvexPartitionTrapezoid(Vertices vertices, float sheer)
+        public static List<Vertices> ConvexPartitionTrapezoid(Vertices vertices, float sheer = 0.001f)
         {
             List<Point> compatList = new List<Point>(vertices.Count);
 
