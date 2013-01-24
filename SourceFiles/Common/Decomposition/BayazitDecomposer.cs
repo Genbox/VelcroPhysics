@@ -38,7 +38,6 @@ namespace FarseerPhysics.Common.Decomposition
             }
             return p;
         }
-
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.
         /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
@@ -104,17 +103,19 @@ namespace FarseerPhysics.Common.Decomposition
                     // if there are no vertices to connect to, choose a point in the middle
                     if (lowerIndex == (upperIndex + 1) % vertices.Count)
                     {
-                        Vector2 sp = ((lowerInt + upperInt) / 2);
+                        Vector2 p = ((lowerInt + upperInt) / 2);
 
                         lowerPoly = Copy(i, upperIndex, vertices);
-                        lowerPoly.Add(sp);
+                        lowerPoly.Add(p);
                         upperPoly = Copy(lowerIndex, i, vertices);
-                        upperPoly.Add(sp);
+                        upperPoly.Add(p);
                     }
                     else
                     {
                         double highestScore = 0, bestIndex = lowerIndex;
-                        while (upperIndex < lowerIndex) upperIndex += vertices.Count;
+                        while (upperIndex < lowerIndex)
+                            upperIndex += vertices.Count;
+
                         for (int j = lowerIndex; j <= upperIndex; ++j)
                         {
                             if (CanSee(i, j, vertices))
@@ -157,13 +158,6 @@ namespace FarseerPhysics.Common.Decomposition
             }
             else
                 list.Add(vertices);
-
-            //The polygons are not guaranteed to be without collinear points. We remove
-            //them to be sure.
-            for (int i = 0; i < list.Count; i++)
-            {
-                list[i] = SimplifyTools.CollinearSimplify(list[i], 0);
-            }
 
             //Remove empty vertice collections
             for (int i = list.Count - 1; i >= 0; i--)
