@@ -218,6 +218,8 @@
     <Compile Include="Common\Vector2.cs" />
     <Compile Include="Common\Vector3.cs" />
     <Compile Include="Common\Vertices.cs" />
+    <Compile Include="Content\FarseerPolygonContainerReader.cs" />
+    <Compile Include="Content\PolygonContainer.cs" />
     <Compile Include="Controllers\AbstractForceController.cs" />
     <Compile Include="Controllers\BuoyancyController.cs" />
     <Compile Include="Controllers\Controller.cs" />

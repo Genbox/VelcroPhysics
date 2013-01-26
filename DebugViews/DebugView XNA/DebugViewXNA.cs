@@ -510,12 +510,12 @@ namespace FarseerPhysics.DebugView
             }
         }
 
-        public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
+        public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue, bool closed = true)
         {
-            DrawPolygon(vertices, count, new Color(red, green, blue));
+            DrawPolygon(vertices, count, new Color(red, green, blue), closed);
         }
 
-        public void DrawPolygon(Vector2[] vertices, int count, Color color)
+        public void DrawPolygon(Vector2[] vertices, int count, Color color, bool closed = true)
         {
             if (!_primitiveBatch.IsReady())
             {
@@ -526,9 +526,11 @@ namespace FarseerPhysics.DebugView
                 _primitiveBatch.AddVertex(vertices[i], color, PrimitiveType.LineList);
                 _primitiveBatch.AddVertex(vertices[i + 1], color, PrimitiveType.LineList);
             }
-
-            _primitiveBatch.AddVertex(vertices[count - 1], color, PrimitiveType.LineList);
-            _primitiveBatch.AddVertex(vertices[0], color, PrimitiveType.LineList);
+            if (closed)
+            {
+              _primitiveBatch.AddVertex(vertices[count - 1], color, PrimitiveType.LineList);
+              _primitiveBatch.AddVertex(vertices[0], color, PrimitiveType.LineList);
+            }
         }
 
         public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
