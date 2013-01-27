@@ -428,7 +428,7 @@ namespace FarseerPhysics.Common.TextureTools
         private void ApplyTransform(ref List<Vertices> detectedPolygons)
         {
             for (int i = 0; i < detectedPolygons.Count; i++)
-                detectedPolygons[i].Transform(_transform);
+                detectedPolygons[i].Transform(ref _transform);
         }
 
         #region Data[] functions

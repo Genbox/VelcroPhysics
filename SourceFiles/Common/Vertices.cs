@@ -45,6 +45,7 @@ namespace FarseerPhysics.Common
         internal bool AttachedToBody { get; set; }
         public List<Vertices> Holes { get; set; }
 
+        //TODO: Remove
         /// <summary>
         /// Nexts the index.
         /// </summary>
@@ -53,17 +54,18 @@ namespace FarseerPhysics.Common
         public int NextIndex(int index)
         {
             if (index == Count - 1)
-            {
                 return 0;
-            }
+
             return index + 1;
         }
 
+        //TODO: Remove
         public Vector2 NextVertex(int index)
         {
             return this[NextIndex(index)];
         }
 
+        //TODO: Remove
         /// <summary>
         /// Gets the previous index.
         /// </summary>
@@ -78,6 +80,7 @@ namespace FarseerPhysics.Common
             return index - 1;
         }
 
+        //TODO: Remove
         public Vector2 PreviousVertex(int index)
         {
             return this[PreviousIndex(index)];
@@ -168,9 +171,7 @@ namespace FarseerPhysics.Common
 
             double radiusSqrd = (double)area / MathHelper.Pi;
             if (radiusSqrd < 0)
-            {
                 radiusSqrd *= -1;
-            }
 
             return (float)Math.Sqrt(radiusSqrd);
         }
@@ -212,21 +213,29 @@ namespace FarseerPhysics.Common
             return aabb;
         }
 
-        public void Translate(Vector2 vector)
+        public void Translate(Vector2 value)
         {
-            Translate(ref vector);
+            Translate(ref value);
         }
 
         /// <summary>
         /// Translates the vertices with the specified vector.
         /// </summary>
-        /// <param name="vector">The vector.</param>
-        public void Translate(ref Vector2 vector)
+        /// <param name="value">The vector.</param>
+        public void Translate(ref Vector2 value)
         {
             Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
 
             for (int i = 0; i < Count; i++)
-                this[i] = Vector2.Add(this[i], vector);
+                this[i] = Vector2.Add(this[i], value);
+
+            if (Holes != null && Holes.Count > 0)
+            {
+                foreach (Vertices hole in Holes)
+                {
+                    hole.Translate(ref value);
+                }
+            }
         }
 
         public void Scale(Vector2 value)
@@ -244,6 +253,14 @@ namespace FarseerPhysics.Common
 
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Multiply(this[i], value);
+
+            if (Holes != null && Holes.Count > 0)
+            {
+                foreach (Vertices hole in Holes)
+                {
+                    hole.Scale(ref value);
+                }
+            }
         }
 
         /// <summary>
@@ -261,11 +278,23 @@ namespace FarseerPhysics.Common
 
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Transform(this[i], rotationMatrix);
+
+            if (Holes != null && Holes.Count > 0)
+            {
+                foreach (Vertices hole in Holes)
+                {
+                    hole.Rotate(value);
+                }
+            }
         }
 
         /// <summary>
-        /// Assuming the polygon is simple; determines whether the polygon is convex.
-        /// NOTE: It will also return false if the input contains colinear edges.
+        /// Determines whether the polygon is convex.
+        /// O(n^2) running time.
+        /// 
+        /// Assumptions:
+        /// - The polygon is in counter clockwise order
+        /// - The polygon has no overlapping edges
         /// </summary>
         /// <returns>
         /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
@@ -275,19 +304,16 @@ namespace FarseerPhysics.Common
             // Checks the polygon is convex and the interior is to the left of each edge.
             for (int i = 0; i < Count; ++i)
             {
-                int i1 = i;
-                int i2 = i + 1 < Count ? i + 1 : 0;
-                Vector2 edge = this[i2] - this[i1];
+                int next = i + 1 < Count ? i + 1 : 0;
+                Vector2 edge = this[next] - this[i];
 
                 for (int j = 0; j < Count; ++j)
                 {
                     // Don't check vertices on the current edge.
-                    if (j == i1 || j == i2)
-                    {
+                    if (j == i || j == next)
                         continue;
-                    }
 
-                    Vector2 r = this[j] - this[i1];
+                    Vector2 r = this[j] - this[i];
 
                     float s = edge.X * r.Y - edge.Y * r.X;
 
@@ -319,6 +345,8 @@ namespace FarseerPhysics.Common
                 Reverse();
         }
 
+        //TODO: Check for something like Bentley–Ottmann for simple polygon test, around O(n + log n), but with fewer assumptions.
+
         /// <summary>
         /// Checks if the vertices forms an simple polygon by checking for edge crossings.
         /// </summary>
@@ -344,8 +372,6 @@ namespace FarseerPhysics.Common
             return true;
         }
 
-        // From Eric Jordan's convex decomposition library
-
         /// <summary>
         /// Checks if polygon is valid for use in Box2d engine.
         /// Last ditch effort to ensure no invalid polygons are
@@ -355,6 +381,8 @@ namespace FarseerPhysics.Common
         /// orientation, minimum angle, and volume.  This won't
         /// be very efficient, and a lot of it is redundant when
         /// other tools in this section are used.
+        /// 
+        /// From Eric Jordan's convex decomposition library
         /// </summary>
         /// <returns></returns>
         public bool CheckPolygon(out int error, out string errorMessage)
@@ -485,385 +513,6 @@ namespace FarseerPhysics.Common
             return result;
         }
 
-        // From Eric Jordan's convex decomposition library
-
-        /// <summary>
-        /// Trace the edge of a non-simple polygon and return a simple polygon.
-        /// 
-        /// Method:
-        /// Start at vertex with minimum y (pick maximum x one if there are two).
-        /// We aim our "lastDir" vector at (1.0, 0)
-        /// We look at the two rays going off from our start vertex, and follow whichever
-        /// has the smallest angle (in -Pi . Pi) wrt lastDir ("rightest" turn)
-        /// Loop until we hit starting vertex:
-        /// We add our current vertex to the list.
-        /// We check the seg from current vertex to next vertex for intersections
-        /// - if no intersections, follow to next vertex and continue
-        /// - if intersections, pick one with minimum distance
-        /// - if more than one, pick one with "rightest" next point (two possibilities for each)
-        /// </summary>
-        /// <param name="verts">The vertices.</param>
-        /// <returns></returns>
-        public Vertices TraceEdge(Vertices verts)
-        {
-            PolyNode[] nodes = new PolyNode[verts.Count * verts.Count];
-            //overkill, but sufficient (order of mag. is right)
-            int nNodes = 0;
-
-            //Add base nodes (raw outline)
-            for (int i = 0; i < verts.Count; ++i)
-            {
-                Vector2 pos = new Vector2(verts[i].X, verts[i].Y);
-                nodes[i].Position = pos;
-                ++nNodes;
-                int iplus = (i == verts.Count - 1) ? 0 : i + 1;
-                int iminus = (i == 0) ? verts.Count - 1 : i - 1;
-                nodes[i].AddConnection(nodes[iplus]);
-                nodes[i].AddConnection(nodes[iminus]);
-            }
-
-            //Process intersection nodes - horribly inefficient
-            bool dirty = true;
-            int counter = 0;
-            while (dirty)
-            {
-                dirty = false;
-                for (int i = 0; i < nNodes; ++i)
-                {
-                    for (int j = 0; j < nodes[i].NConnected; ++j)
-                    {
-                        for (int k = 0; k < nNodes; ++k)
-                        {
-                            if (k == i || nodes[k] == nodes[i].Connected[j]) continue;
-                            for (int l = 0; l < nodes[k].NConnected; ++l)
-                            {
-                                if (nodes[k].Connected[l] == nodes[i].Connected[j] ||
-                                    nodes[k].Connected[l] == nodes[i]) continue;
-
-                                //Check intersection
-                                Vector2 intersectPt;
-
-                                bool crosses = LineTools.LineIntersect(nodes[i].Position, nodes[i].Connected[j].Position,
-                                                                       nodes[k].Position, nodes[k].Connected[l].Position,
-                                                                       out intersectPt);
-                                if (crosses)
-                                {
-                                    dirty = true;
-                                    //Destroy and re-hook connections at crossing point
-                                    PolyNode connj = nodes[i].Connected[j];
-                                    PolyNode connl = nodes[k].Connected[l];
-                                    nodes[i].Connected[j].RemoveConnection(nodes[i]);
-                                    nodes[i].RemoveConnection(connj);
-                                    nodes[k].Connected[l].RemoveConnection(nodes[k]);
-                                    nodes[k].RemoveConnection(connl);
-                                    nodes[nNodes] = new PolyNode(intersectPt);
-                                    nodes[nNodes].AddConnection(nodes[i]);
-                                    nodes[i].AddConnection(nodes[nNodes]);
-                                    nodes[nNodes].AddConnection(nodes[k]);
-                                    nodes[k].AddConnection(nodes[nNodes]);
-                                    nodes[nNodes].AddConnection(connj);
-                                    connj.AddConnection(nodes[nNodes]);
-                                    nodes[nNodes].AddConnection(connl);
-                                    connl.AddConnection(nodes[nNodes]);
-                                    ++nNodes;
-                                    goto SkipOut;
-                                }
-                            }
-                        }
-                    }
-                }
-            SkipOut:
-                ++counter;
-            }
-
-            //Collapse duplicate points
-            bool foundDupe = true;
-            int nActive = nNodes;
-            while (foundDupe)
-            {
-                foundDupe = false;
-                for (int i = 0; i < nNodes; ++i)
-                {
-                    if (nodes[i].NConnected == 0) continue;
-                    for (int j = i + 1; j < nNodes; ++j)
-                    {
-                        if (nodes[j].NConnected == 0) continue;
-                        Vector2 diff = nodes[i].Position - nodes[j].Position;
-                        if (diff.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
-                        {
-                            if (nActive <= 3)
-                                return new Vertices();
-
-                            //printf("Found dupe, %d left\n",nActive);
-                            --nActive;
-                            foundDupe = true;
-                            PolyNode inode = nodes[i];
-                            PolyNode jnode = nodes[j];
-                            //Move all of j's connections to i, and orphan j
-                            int njConn = jnode.NConnected;
-                            for (int k = 0; k < njConn; ++k)
-                            {
-                                PolyNode knode = jnode.Connected[k];
-                                Debug.Assert(knode != jnode);
-                                if (knode != inode)
-                                {
-                                    inode.AddConnection(knode);
-                                    knode.AddConnection(inode);
-                                }
-                                knode.RemoveConnection(jnode);
-                            }
-                            jnode.NConnected = 0;
-                        }
-                    }
-                }
-            }
-
-            //Now walk the edge of the list
-
-            //Find node with minimum y value (max x if equal)
-            float minY = float.MaxValue;
-            float maxX = -float.MaxValue;
-            int minYIndex = -1;
-            for (int i = 0; i < nNodes; ++i)
-            {
-                if (nodes[i].Position.Y < minY && nodes[i].NConnected > 1)
-                {
-                    minY = nodes[i].Position.Y;
-                    minYIndex = i;
-                    maxX = nodes[i].Position.X;
-                }
-                else if (nodes[i].Position.Y == minY && nodes[i].Position.X > maxX && nodes[i].NConnected > 1)
-                {
-                    minYIndex = i;
-                    maxX = nodes[i].Position.X;
-                }
-            }
-
-            Vector2 origDir = new Vector2(1.0f, 0.0f);
-            Vector2[] resultVecs = new Vector2[4 * nNodes];
-            // nodes may be visited more than once, unfortunately - change to growable array!
-            int nResultVecs = 0;
-            PolyNode currentNode = nodes[minYIndex];
-            PolyNode startNode = currentNode;
-            Debug.Assert(currentNode.NConnected > 0);
-            PolyNode nextNode = currentNode.GetRightestConnection(origDir);
-            if (nextNode == null)
-            {
-                Vertices vertices = new Vertices(nResultVecs);
-
-                for (int i = 0; i < nResultVecs; ++i)
-                {
-                    vertices.Add(resultVecs[i]);
-                }
-
-                return vertices;
-            }
-
-            // Borked, clean up our mess and return
-            resultVecs[0] = startNode.Position;
-            ++nResultVecs;
-            while (nextNode != startNode)
-            {
-                if (nResultVecs > 4 * nNodes)
-                {
-                    Debug.Assert(false);
-                }
-                resultVecs[nResultVecs++] = nextNode.Position;
-                PolyNode oldNode = currentNode;
-                currentNode = nextNode;
-                nextNode = currentNode.GetRightestConnection(oldNode);
-                if (nextNode == null)
-                {
-                    Vertices vertices = new Vertices(nResultVecs);
-                    for (int i = 0; i < nResultVecs; ++i)
-                    {
-                        vertices.Add(resultVecs[i]);
-                    }
-                    return vertices;
-                }
-                // There was a problem, so jump out of the loop and use whatever garbage we've generated so far
-            }
-
-            return new Vertices();
-        }
-
-        // Split up a vertices object with holes returned from the texture trace into
-        // several vertices objects (one for the outline and one for each hole
-        // outline and holes should have opposing winding orders (not fully tested, not efficient)
-        public List<Vertices> SplitAtHoles()
-        {
-            List<Vertices> result = new List<Vertices>();
-            List<Vector2> duplicate = new List<Vector2>();
-            int holeCount = 0;
-            int index = 0;
-            bool ignoreNext = false;
-
-            result.Add(new Vertices());
-
-            // search for duplicate points and trace the polygon
-            // point by point
-            for (int i = 0; i < Count; ++i)
-            {
-                for (int j = i + 1; j < Count; ++j)
-                {
-                    if (this[i] == this[j])
-                    {
-                        duplicate.Add(this[i]);
-                    }
-                }
-                if (ignoreNext)
-                {
-                    ignoreNext = false;
-                }
-                else
-                {
-                    result[index].Add(this[i]);
-                    if (duplicate.Contains(this[i]))
-                    {
-                        if (index == 0) // jump to new shape
-                        {
-                            holeCount++;
-                            index = holeCount;
-                            result.Add(new Vertices());
-                        }
-                        else // jump back to starting shape
-                        {
-                            index = 0;
-                        }
-                        ignoreNext = true;
-                    }
-                }
-            }
-            return result;
-        }
-
-        private class PolyNode
-        {
-            private const int MaxConnected = 32;
-
-            /*
-             * Given sines and cosines, tells if A's angle is less than B's on -Pi, Pi
-             * (in other words, is A "righter" than B)
-             */
-            public PolyNode[] Connected = new PolyNode[MaxConnected];
-            public int NConnected;
-            public Vector2 Position;
-
-            public PolyNode(Vector2 pos)
-            {
-                Position = pos;
-                NConnected = 0;
-            }
-
-            private bool IsRighter(float sinA, float cosA, float sinB, float cosB)
-            {
-                if (sinA < 0)
-                {
-                    if (sinB > 0 || cosA <= cosB) return true;
-                    else return false;
-                }
-                else
-                {
-                    if (sinB < 0 || cosA <= cosB) return false;
-                    else return true;
-                }
-            }
-
-            public void AddConnection(PolyNode toMe)
-            {
-                Debug.Assert(NConnected < MaxConnected);
-
-                // Ignore duplicate additions
-                for (int i = 0; i < NConnected; ++i)
-                {
-                    if (Connected[i] == toMe) return;
-                }
-                Connected[NConnected] = toMe;
-                ++NConnected;
-            }
-
-            public void RemoveConnection(PolyNode fromMe)
-            {
-                bool isFound = false;
-                int foundIndex = -1;
-                for (int i = 0; i < NConnected; ++i)
-                {
-                    if (fromMe == Connected[i])
-                    {
-                        //.position == connected[i].position){
-                        isFound = true;
-                        foundIndex = i;
-                        break;
-                    }
-                }
-                Debug.Assert(isFound);
-                --NConnected;
-                for (int i = foundIndex; i < NConnected; ++i)
-                {
-                    Connected[i] = Connected[i + 1];
-                }
-            }
-
-            public PolyNode GetRightestConnection(PolyNode incoming)
-            {
-                if (NConnected == 0) Debug.Assert(false); // This means the connection graph is inconsistent
-                if (NConnected == 1)
-                {
-                    //b2Assert(false);
-                    // Because of the possibility of collapsing nearby points,
-                    // we may end up with "spider legs" dangling off of a region.
-                    // The correct behavior here is to turn around.
-                    return incoming;
-                }
-                Vector2 inDir = Position - incoming.Position;
-
-                float inLength = inDir.Length();
-                inDir.Normalize();
-
-                Debug.Assert(inLength > Settings.Epsilon);
-
-                PolyNode result = null;
-                for (int i = 0; i < NConnected; ++i)
-                {
-                    if (Connected[i] == incoming) continue;
-                    Vector2 testDir = Connected[i].Position - Position;
-                    float testLengthSqr = testDir.LengthSquared();
-                    testDir.Normalize();
-                    Debug.Assert(testLengthSqr >= Settings.Epsilon * Settings.Epsilon);
-                    float myCos = Vector2.Dot(inDir, testDir);
-                    float mySin = MathUtils.Cross(inDir, testDir);
-                    if (result != null)
-                    {
-                        Vector2 resultDir = result.Position - Position;
-                        resultDir.Normalize();
-                        float resCos = Vector2.Dot(inDir, resultDir);
-                        float resSin = MathUtils.Cross(inDir, resultDir);
-                        if (IsRighter(mySin, myCos, resSin, resCos))
-                        {
-                            result = Connected[i];
-                        }
-                    }
-                    else
-                    {
-                        result = Connected[i];
-                    }
-                }
-
-                Debug.Assert(result != null);
-
-                return result;
-            }
-
-            public PolyNode GetRightestConnection(Vector2 incomingDir)
-            {
-                Vector2 diff = Position - incomingDir;
-                PolyNode temp = new PolyNode(diff);
-                PolyNode res = GetRightestConnection(temp);
-                Debug.Assert(res != null);
-                return res;
-            }
-        }
-
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -981,7 +630,7 @@ namespace FarseerPhysics.Common
             return true;
         }
 
-        public void Transform(Matrix transform)
+        public void Transform(ref Matrix transform)
         {
             // Transform main polygon
             for (int i = 0; i < Count; i++)
