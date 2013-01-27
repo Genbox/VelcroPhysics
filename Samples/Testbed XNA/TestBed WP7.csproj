@@ -88,12 +88,9 @@
     <None Include="Data\dude.dat" />
     <None Include="Data\funny.dat" />
     <None Include="Data\kzer-za.dat" />
-    <None Include="Data\nazca_heron.dat" />
     <None Include="Data\nazca_monkey.dat" />
-    <None Include="Data\sketchup.dat" />
     <None Include="Data\star.dat" />
     <None Include="Data\strange.dat" />
-    <None Include="Data\tank.dat" />
     <None Include="Properties\AppManifest.xml">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </None>
@@ -180,6 +177,7 @@
     <Compile Include="Tests\TheoJansenTest.cs" />
     <Compile Include="Tests\TilesTest.cs" />
     <Compile Include="Tests\TimeOfImpactTest.cs" />
+    <Compile Include="Tests\TriangulationTest.cs" />
     <Compile Include="Tests\TumblerTest.cs" />
     <Compile Include="Tests\VaryingFrictionTest.cs" />
     <Compile Include="Tests\VaryingRestitutionTest.cs" />
