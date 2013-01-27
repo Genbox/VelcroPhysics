@@ -56,11 +56,14 @@ namespace FarseerPhysics.TestBed
         {
             //Default view
             _viewCenter = new Vector2(0.0f, 20.0f);
-            _viewZoom = 1.0f;
+            _viewZoom = 0.8f;
             Resize();
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
+            _graphics.PreferredBackBufferWidth = 1024;
+            _graphics.PreferredBackBufferHeight = 768;
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 

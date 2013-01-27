@@ -35,13 +35,13 @@ namespace FarseerPhysics.Common.Decomposition
             }
             else
             {
-                if (vertices.IsCounterClockWise())
+                if (!vertices.IsCounterClockWise())
                 {
-                    return Triangulate(vertices);
+                    Vertices temp = new Vertices(vertices);
+                    temp.Reverse();
+                    return Triangulate(temp);
                 }
 
-                Vertices temp = new Vertices(vertices);
-                temp.Reverse();
                 return Triangulate(vertices);
             }
         }

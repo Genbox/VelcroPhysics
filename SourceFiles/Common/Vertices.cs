@@ -229,6 +229,11 @@ namespace FarseerPhysics.Common
                 this[i] = Vector2.Add(this[i], vector);
         }
 
+        public void Scale(Vector2 value)
+        {
+            Scale(ref value);
+        }
+
         /// <summary>
         /// Scales the vertices with the specified vector.
         /// </summary>

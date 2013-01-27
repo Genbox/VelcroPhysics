@@ -128,6 +128,7 @@
     <Compile Include="Tests\ConvexHullTest2.cs" />
     <Compile Include="Tests\ConveyorBeltTest.cs" />
     <Compile Include="Tests\ConvexHullTest.cs" />
+    <Compile Include="Tests\TriangulationTest.cs" />
     <Compile Include="Tests\FluidsTest.cs" />
     <Compile Include="Tests\TumblerTest.cs" />
     <Compile Include="Tests\MobileBalancedTest.cs" />
@@ -272,22 +273,13 @@
     <None Include="Data\kzer-za.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\nazca_heron.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Data\nazca_monkey.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\sketchup.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\star.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Data\strange.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Data\tank.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

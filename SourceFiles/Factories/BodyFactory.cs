@@ -88,8 +88,7 @@ namespace FarseerPhysics.Factories
             return body;
         }
 
-        public static Body CreateEllipse(World world, float xRadius, float yRadius, int edges, float density,
-                                         object userData = null)
+        public static Body CreateEllipse(World world, float xRadius, float yRadius, int edges, float density, object userData = null)
         {
             return CreateEllipse(world, xRadius, yRadius, edges, density, Vector2.Zero, userData);
         }
@@ -107,21 +106,14 @@ namespace FarseerPhysics.Factories
             return CreatePolygon(world, vertices, density, Vector2.Zero, userData);
         }
 
-        public static Body CreatePolygon(World world, Vertices vertices, float density, Vector2 position,
-                                         object userData = null)
+        public static Body CreatePolygon(World world, Vertices vertices, float density, Vector2 position, object userData = null)
         {
             Body body = CreateBody(world, position);
             FixtureFactory.AttachPolygon(vertices, density, body, userData);
             return body;
         }
 
-        public static Body CreateCompoundPolygon(World world, List<Vertices> list, float density)
-        {
-            return CreateCompoundPolygon(world, list, density, BodyType.Static);
-        }
-
-        public static Body CreateCompoundPolygon(World world, List<Vertices> list, float density,
-                                                 object userData)
+        public static Body CreateCompoundPolygon(World world, List<Vertices> list, float density, object userData = null)
         {
             return CreateCompoundPolygon(world, list, density, Vector2.Zero, userData);
         }
