@@ -272,8 +272,7 @@ namespace FarseerPhysics.Common
         /// </returns>
         public bool IsConvex()
         {
-            // Ensure the polygon is convex and the interior
-            // is to the left of each edge.
+            // Checks the polygon is convex and the interior is to the left of each edge.
             for (int i = 0; i < Count; ++i)
             {
                 int i1 = i;
@@ -299,6 +298,9 @@ namespace FarseerPhysics.Common
             return true;
         }
 
+        /// <summary>
+        /// Indicates if the vertices are in counter clockwise order.
+        /// </summary>
         public bool IsCounterClockWise()
         {
             //We just return true for lines
@@ -314,89 +316,32 @@ namespace FarseerPhysics.Common
         public void ForceCounterClockWise()
         {
             if (!IsCounterClockWise())
-            {
                 Reverse();
-            }
         }
 
         /// <summary>
-        /// Check for edge crossings
+        /// Checks if the vertices forms an simple polygon by checking for edge crossings.
         /// </summary>
-        /// <returns></returns>
         public bool IsSimple()
         {
             for (int i = 0; i < Count; ++i)
             {
                 int iplus = (i + 1 > Count - 1) ? 0 : i + 1;
-                Vector2 a1 = new Vector2(this[i].X, this[i].Y);
-                Vector2 a2 = new Vector2(this[iplus].X, this[iplus].Y);
+                Vector2 a1 = this[i];
+                Vector2 a2 = this[iplus];
                 for (int j = i + 1; j < Count; ++j)
                 {
                     int jplus = (j + 1 > Count - 1) ? 0 : j + 1;
-                    Vector2 b1 = new Vector2(this[j].X, this[j].Y);
-                    Vector2 b2 = new Vector2(this[jplus].X, this[jplus].Y);
+                    Vector2 b1 = this[j];
+                    Vector2 b2 = this[jplus];
 
                     Vector2 temp;
 
                     if (LineTools.LineIntersect2(a1, a2, b1, b2, out temp))
-                    {
                         return false;
-                    }
                 }
             }
             return true;
-        }
-
-        //TODO: Test
-        //Implementation found here: http://www.gamedev.net/community/forums/topic.asp?topic_id=548477
-        public bool IsSimple2()
-        {
-            for (int i = 0; i < Count; ++i)
-            {
-                if (i < Count - 1)
-                {
-                    for (int h = i + 1; h < Count; ++h)
-                    {
-                        // Do two vertices lie on top of one another?
-                        if (this[i] == this[h])
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                int j = (i + 1) % Count;
-                Vector2 iToj = this[j] - this[i];
-                Vector2 iTojNormal = new Vector2(iToj.Y, -iToj.X);
-
-                // i is the first vertex and j is the second
-                int startK = (j + 1) % Count;
-                int endK = (i - 1 + Count) % Count;
-                endK += startK < endK ? 0 : startK + 1;
-                int k = startK;
-                Vector2 iTok = this[k] - this[i];
-                bool onLeftSide = Vector2.Dot(iTok, iTojNormal) >= 0;
-                Vector2 prevK = this[k];
-                ++k;
-                for (; k <= endK; ++k)
-                {
-                    int modK = k % Count;
-                    iTok = this[modK] - this[i];
-                    if (onLeftSide != Vector2.Dot(iTok, iTojNormal) >= 0)
-                    {
-                        Vector2 prevKtoK = this[modK] - prevK;
-                        Vector2 prevKtoKNormal = new Vector2(prevKtoK.Y, -prevKtoK.X);
-                        if ((Vector2.Dot(this[i] - prevK, prevKtoKNormal) >= 0) !=
-                            (Vector2.Dot(this[j] - prevK, prevKtoKNormal) >= 0))
-                        {
-                            return true;
-                        }
-                    }
-                    onLeftSide = Vector2.Dot(iTok, iTojNormal) > 0;
-                    prevK = this[modK];
-                }
-            }
-            return false;
         }
 
         // From Eric Jordan's convex decomposition library
