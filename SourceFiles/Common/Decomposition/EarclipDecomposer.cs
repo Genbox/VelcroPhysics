@@ -60,7 +60,7 @@ namespace FarseerPhysics.Common.Decomposition
                 {
                     Vertices temp = new Vertices(vertices);
                     temp.Reverse();
-                    return TriangulatePolygon(vertices, tolerance);
+                    return TriangulatePolygon(temp, tolerance);
                 }
 
                 return TriangulatePolygon(vertices, tolerance);
@@ -232,6 +232,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <param name="pin">The pin.</param>
         /// <param name="poutA">The pout A.</param>
         /// <param name="poutB">The pout B.</param>
+        /// <param name="tolerance"></param>
         private static bool ResolvePinchPoint(Vertices pin, out Vertices poutA, out Vertices poutB, float tolerance)
         {
             poutA = new Vertices();
