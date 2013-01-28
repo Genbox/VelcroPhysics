@@ -292,7 +292,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         // translate the boundingbox center to the texture center
         // because we use an orthographic projection for rendering later
-        AABB verticesBounds = scaledVertices.GetCollisionBox();
+        AABB verticesBounds = scaledVertices.GetAABB();
         scaledVertices.Translate(-verticesBounds.Center);
 
         List<Vertices> decomposedVertices;

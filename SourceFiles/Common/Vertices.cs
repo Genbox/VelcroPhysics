@@ -88,18 +88,27 @@ namespace FarseerPhysics.Common
 
         /// <summary>
         /// Gets the signed area.
+        /// If the area is less than 0, it indicates that the polygon is clockwise winded.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The signed area</returns>
         public float GetSignedArea()
         {
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            if (Count < 3)
+                return 0;
+
             int i;
             float area = 0;
 
             for (i = 0; i < Count; i++)
             {
                 int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
+
+                Vector2 vi = this[i];
+                Vector2 vj = this[j];
+
+                area += vi.X * vj.Y;
+                area -= vi.Y * vj.X;
             }
             area /= 2.0f;
             return area;
@@ -111,16 +120,7 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public float GetArea()
         {
-            int i;
-            float area = 0;
-
-            for (i = 0; i < Count; i++)
-            {
-                int j = (i + 1) % Count;
-                area += this[i].X * this[j].Y;
-                area -= this[i].Y * this[j].X;
-            }
-            area /= 2.0f;
+            float area = GetSignedArea();
             return (area < 0 ? -area : area);
         }
 
@@ -130,30 +130,26 @@ namespace FarseerPhysics.Common
         /// <returns></returns>
         public Vector2 GetCentroid()
         {
-            // Same algorithm is used by Box2D
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            if (Count < 3)
+                return new Vector2(float.NaN, float.NaN);
 
+            // Same algorithm is used by Box2D
             Vector2 c = Vector2.Zero;
             float area = 0.0f;
-
             const float inv3 = 1.0f / 3.0f;
-            Vector2 pRef = Vector2.Zero;
+
             for (int i = 0; i < Count; ++i)
             {
                 // Triangle vertices.
-                Vector2 p1 = pRef;
-                Vector2 p2 = this[i];
-                Vector2 p3 = i + 1 < Count ? this[i + 1] : this[0];
+                Vector2 current = this[i];
+                Vector2 next = (i + 1 < Count ? this[i + 1] : this[0]);
 
-                Vector2 e1 = p2 - p1;
-                Vector2 e2 = p3 - p1;
-
-                float D = MathUtils.Cross(e1, e2);
-
-                float triangleArea = 0.5f * D;
+                float triangleArea = 0.5f * (current.X * next.Y - current.Y * next.X);
                 area += triangleArea;
 
                 // Area weighted centroid
-                c += triangleArea * inv3 * (p1 + p2 + p3);
+                c += triangleArea * inv3 * (current + next);
             }
 
             // Centroid
@@ -162,25 +158,9 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
-        /// Gets the radius based on area.
+        /// Returns an AABB that fully contains this polygon.
         /// </summary>
-        /// <returns></returns>
-        public float GetRadius()
-        {
-            float area = GetSignedArea();
-
-            double radiusSqrd = (double)area / MathHelper.Pi;
-            if (radiusSqrd < 0)
-                radiusSqrd *= -1;
-
-            return (float)Math.Sqrt(radiusSqrd);
-        }
-
-        /// <summary>
-        /// Returns an AABB for vertex.
-        /// </summary>
-        /// <returns></returns>
-        public AABB GetCollisionBox()
+        public AABB GetAABB()
         {
             AABB aabb;
             Vector2 lowerBound = new Vector2(float.MaxValue, float.MaxValue);
@@ -213,6 +193,10 @@ namespace FarseerPhysics.Common
             return aabb;
         }
 
+        /// <summary>
+        /// Translates the vertices with the specified vector.
+        /// </summary>
+        /// <param name="value">The value.</param>
         public void Translate(Vector2 value)
         {
             Translate(ref value);
@@ -238,6 +222,10 @@ namespace FarseerPhysics.Common
             }
         }
 
+        /// <summary>
+        /// Scales the vertices with the specified vector.
+        /// </summary>
+        /// <param name="value">The Value.</param>
         public void Scale(Vector2 value)
         {
             Scale(ref value);
@@ -265,6 +253,7 @@ namespace FarseerPhysics.Common
 
         /// <summary>
         /// Rotate the vertices with the defined value in radians.
+        /// 
         /// Warning: Using this method on an active set of vertices of a Body,
         /// will cause problems with collisions. Use Body.Rotation instead.
         /// </summary>
@@ -273,11 +262,14 @@ namespace FarseerPhysics.Common
         {
             Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
 
-            Matrix rotationMatrix;
-            Matrix.CreateRotationZ(value, out rotationMatrix);
+            float num1 = (float)Math.Cos(value);
+            float num2 = (float)Math.Sin(value);
 
             for (int i = 0; i < Count; i++)
-                this[i] = Vector2.Transform(this[i], rotationMatrix);
+            {
+                Vector2 position = this[i];
+                this[i] = new Vector2((position.X * num1 + position.Y * -num2), (position.X * num2 + position.Y * num1));
+            }
 
             if (Holes != null && Holes.Count > 0)
             {
@@ -301,6 +293,14 @@ namespace FarseerPhysics.Common
         /// </returns>
         public bool IsConvex()
         {
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            if (Count < 3)
+                return false;
+
+            //Triangles are always convex
+            if (Count == 3)
+                return true;
+
             // Checks the polygon is convex and the interior is to the left of each edge.
             for (int i = 0; i < Count; ++i)
             {
@@ -329,29 +329,37 @@ namespace FarseerPhysics.Common
         /// </summary>
         public bool IsCounterClockWise()
         {
-            //We just return true for lines
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
             if (Count < 3)
-                return true;
+                return false;
 
             return (GetSignedArea() > 0.0f);
         }
 
         /// <summary>
-        /// Forces counter clock wise order.
+        /// Forces the vertices to be counter clock wise order.
         /// </summary>
         public void ForceCounterClockWise()
         {
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            if (Count < 3)
+                return;
+
             if (!IsCounterClockWise())
                 Reverse();
         }
-
-        //TODO: Check for something like Bentley–Ottmann for simple polygon test, around O(n + log n), but with fewer assumptions.
 
         /// <summary>
         /// Checks if the vertices forms an simple polygon by checking for edge crossings.
         /// </summary>
         public bool IsSimple()
         {
+            //TODO: Check for something like Bentley–Ottmann for simple polygon test, around O(n + log n), but with fewer assumptions.
+
+            //The simplest polygon which can exist in the Euclidean plane has 3 sides.
+            if (Count < 3)
+                return false;
+
             for (int i = 0; i < Count; ++i)
             {
                 int iplus = (i + 1 > Count - 1) ? 0 : i + 1;
@@ -373,144 +381,74 @@ namespace FarseerPhysics.Common
         }
 
         /// <summary>
-        /// Checks if polygon is valid for use in Box2d engine.
-        /// Last ditch effort to ensure no invalid polygons are
-        /// added to world geometry.
+        /// Checks if the polygon is valid for use in the engine.
         ///
         /// Performs a full check, for simplicity, convexity,
-        /// orientation, minimum angle, and volume.  This won't
-        /// be very efficient, and a lot of it is redundant when
-        /// other tools in this section are used.
+        /// orientation, minimum angle, and volume.
         /// 
         /// From Eric Jordan's convex decomposition library
         /// </summary>
-        /// <returns></returns>
-        public bool CheckPolygon(out int error, out string errorMessage)
+        /// <returns>0 if there were no error.</returns>
+        public int CheckPolygon(out string errorMessage)
         {
-            error = -1;
             errorMessage = null;
 
             if (Count < 3 || Count > Settings.MaxPolygonVertices)
             {
-                error = 0;
+                errorMessage = string.Format("Polygon must have between 3 and {0} vertices.", Settings.MaxPolygonVertices);
+                return 1;
             }
-            if (!IsConvex())
-            {
-                error = 1;
-            }
+
             if (!IsSimple())
             {
-                error = 2;
+                errorMessage = "Polygon must be simple (cannot intersect itself).";
+                return 2;
             }
+
+            if (!IsCounterClockWise())
+            {
+                errorMessage = "Polygon must have a counter clockwise winding.";
+                return 3;
+            }
+
+            if (!IsConvex())
+            {
+                errorMessage = "Polygon must be convex.";
+                return 4;
+            }
+
             if (GetArea() < Settings.Epsilon)
             {
-                error = 3;
+                errorMessage = "Polygon area is too small.";
+                return 5;
             }
 
-            //Compute normals
-            Vector2[] normals = new Vector2[Count];
-            Vertices vertices = new Vertices(Count);
+            //Check if the sides are of adequate length.
             for (int i = 0; i < Count; ++i)
             {
-                vertices.Add(new Vector2(this[i].X, this[i].Y));
-                int i1 = i;
-                int i2 = i + 1 < Count ? i + 1 : 0;
-                Vector2 edge = new Vector2(this[i2].X - this[i1].X, this[i2].Y - this[i1].Y);
-                normals[i] = MathUtils.Cross(edge, 1.0f);
-                normals[i].Normalize();
-            }
-
-            //Required side checks
-            for (int i = 0; i < Count; ++i)
-            {
-                int iminus = (i == 0) ? Count - 1 : i - 1;
-
-                //Parallel sides check
-                float cross = MathUtils.Cross(normals[iminus], normals[i]);
-                cross = MathUtils.Clamp(cross, -1.0f, 1.0f);
-                float angle = (float)Math.Asin(cross);
-                if (angle <= Settings.AngularSlop)
+                int next = i + 1 < Count ? i + 1 : 0;
+                Vector2 edge = this[next] - this[i];
+                if (edge.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
                 {
-                    error = 4;
-                    break;
-                }
-
-                //Too skinny check
-                for (int j = 0; j < Count; ++j)
-                {
-                    if (j == i || j == (i + 1) % Count)
-                    {
-                        continue;
-                    }
-                    float s = Vector2.Dot(normals[i], vertices[j] - vertices[i]);
-                    if (s >= -Settings.LinearSlop)
-                    {
-                        error = 5;
-                    }
-                }
-
-
-                Vector2 centroid = vertices.GetCentroid();
-                Vector2 n1 = normals[iminus];
-                Vector2 n2 = normals[i];
-                Vector2 v = vertices[i] - centroid;
-
-                Vector2 d = new Vector2();
-                d.X = Vector2.Dot(n1, v); // - toiSlop;
-                d.Y = Vector2.Dot(n2, v); // - toiSlop;
-
-                // Shifting the edge inward by toiSlop should
-                // not cause the plane to pass the centroid.
-                if ((d.X < 0.0f) || (d.Y < 0.0f))
-                {
-                    error = 6;
+                    errorMessage = "The polygon has a side that is too short.";
+                    return 6;
                 }
             }
 
-            if (error != -1)
-            {
-                switch (error)
-                {
-                    case 0:
-                        errorMessage = string.Format("Polygon error: must have between 3 and {0} vertices.",
-                                                      Settings.MaxPolygonVertices);
-                        break;
-                    case 1:
-                        errorMessage = "Polygon error: must be convex.";
-                        break;
-                    case 2:
-                        errorMessage = "Polygon error: must be simple (cannot intersect itself).";
-                        break;
-                    case 3:
-                        errorMessage = "Polygon error: area is too small.";
-                        break;
-                    case 4:
-                        errorMessage = "Polygon error: sides are too close to parallel.";
-                        break;
-                    case 5:
-                        errorMessage = "Polygon error: polygon is too thin.";
-                        break;
-                    case 6:
-                        errorMessage = "Polygon error: core shape generation would move edge past centroid (too thin).";
-                        break;
-                    default:
-                        errorMessage = "Polygon error: error " + error.ToString();
-                        break;
-                }
-            }
-            return error != -1;
+            return 0;
         }
 
+        /// <summary>
+        /// Checks if the polygon is valid for use in the engine.
+        ///
+        /// Performs a full check, for simplicity, convexity,
+        /// orientation, minimum angle, and volume.
+        /// </summary>
+        /// <returns>True if the polygon is valid.</returns>
         public bool CheckPolygon()
         {
             string errorMessage;
-            int errorCode;
-            var result = CheckPolygon(out errorCode, out errorMessage);
-            if (!result && errorMessage != null)
-            {
-                Debug.WriteLine(errorMessage);
-            }
-            return result;
+            return CheckPolygon(out errorMessage) == 0;
         }
 
         public override string ToString()
@@ -629,7 +567,11 @@ namespace FarseerPhysics.Common
 
             return true;
         }
-
+        
+        /// <summary>
+        /// Transforms the polygon using the defined matrix.
+        /// </summary>
+        /// <param name="transform">The matrix to use as transformation.</param>
         public void Transform(ref Matrix transform)
         {
             // Transform main polygon
