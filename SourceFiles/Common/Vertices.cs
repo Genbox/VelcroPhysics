@@ -43,44 +43,44 @@ namespace FarseerPhysics.Common
         }
 
         internal bool AttachedToBody { get; set; }
+        
+        /// <summary>
+        /// You can add holes to this collection.
+        /// It will get respected by some of the triangulation algoithms, but otherwise not used.
+        /// </summary>
         public List<Vertices> Holes { get; set; }
 
-        //TODO: Remove
         /// <summary>
-        /// Nexts the index.
+        /// Gets the next index. Used for iterating all the edges with wrap-around.
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
+        /// <param name="index">The current index</param>
         public int NextIndex(int index)
         {
-            if (index == Count - 1)
-                return 0;
-
-            return index + 1;
+            return (index + 1 > Count - 1) ? 0 : index + 1;
         }
 
-        //TODO: Remove
+        /// <summary>
+        /// Gets the next vertex. Used for iterating all the edges with wrap-around.
+        /// </summary>
+        /// <param name="index">The current index</param>
         public Vector2 NextVertex(int index)
         {
             return this[NextIndex(index)];
         }
 
-        //TODO: Remove
         /// <summary>
-        /// Gets the previous index.
+        /// Gets the previous index. Used for iterating all the edges with wrap-around.
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns></returns>
+        /// <param name="index">The current index</param>
         public int PreviousIndex(int index)
         {
-            if (index == 0)
-            {
-                return Count - 1;
-            }
-            return index - 1;
+            return index - 1 < 0 ? Count - 1 : index - 1;
         }
 
-        //TODO: Remove
+        /// <summary>
+        /// Gets the previous vertex. Used for iterating all the edges with wrap-around.
+        /// </summary>
+        /// <param name="index">The current index</param>
         public Vector2 PreviousVertex(int index)
         {
             return this[PreviousIndex(index)];
@@ -362,18 +362,16 @@ namespace FarseerPhysics.Common
 
             for (int i = 0; i < Count; ++i)
             {
-                int iplus = (i + 1 > Count - 1) ? 0 : i + 1;
                 Vector2 a1 = this[i];
-                Vector2 a2 = this[iplus];
+                Vector2 a2 = NextVertex(i);
                 for (int j = i + 1; j < Count; ++j)
                 {
-                    int jplus = (j + 1 > Count - 1) ? 0 : j + 1;
                     Vector2 b1 = this[j];
-                    Vector2 b2 = this[jplus];
+                    Vector2 b2 = NextVertex(j);
 
                     Vector2 temp;
 
-                    if (LineTools.LineIntersect2(a1, a2, b1, b2, out temp))
+                    if (LineTools.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out temp))
                         return false;
                 }
             }
@@ -401,7 +399,7 @@ namespace FarseerPhysics.Common
 
             if (!IsSimple())
             {
-                errorMessage = "Polygon must be simple (cannot intersect itself).";
+                errorMessage = "Polygon must be simple: no overlapping edges.";
                 return 2;
             }
 
@@ -426,8 +424,7 @@ namespace FarseerPhysics.Common
             //Check if the sides are of adequate length.
             for (int i = 0; i < Count; ++i)
             {
-                int next = i + 1 < Count ? i + 1 : 0;
-                Vector2 edge = this[next] - this[i];
+                Vector2 edge = NextVertex(i) - this[i];
                 if (edge.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
                 {
                     errorMessage = "The polygon has a side that is too short.";

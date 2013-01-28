@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.TestBed.Framework;
@@ -51,10 +50,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             for (int i = 0; i < _vertices.Count; i++)
             {
-                int iplus = (i + 1 > _vertices.Count - 1) ? 0 : i + 1;
-
                 Vector2 currentVertex = _vertices[i];
-                Vector2 nextVertex = _vertices[iplus];
+                Vector2 nextVertex = _vertices.NextVertex(i);
 
                 DebugView.DrawPoint(currentVertex, 0.1f, Color.Yellow);
                 DebugView.DrawSegment(currentVertex, nextVertex, Color.Red);

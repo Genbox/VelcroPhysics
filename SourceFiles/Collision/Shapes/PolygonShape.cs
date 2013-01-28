@@ -97,8 +97,7 @@ namespace FarseerPhysics.Collision.Shapes
                 // Compute normals. Ensure the edges have non-zero length.
                 for (int i = 0; i < _vertices.Count; ++i)
                 {
-                    int next = i + 1 < _vertices.Count ? i + 1 : 0;
-                    Vector2 edge = _vertices[next] - _vertices[i];
+                    Vector2 edge = _vertices.NextVertex(i) - _vertices[i];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
                     //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
@@ -170,7 +169,7 @@ namespace FarseerPhysics.Collision.Shapes
             {
                 // Triangle vertices.
                 Vector2 e1 = Vertices[i] - s;
-                Vector2 e2 = i + 1 < Vertices.Count ? Vertices[i + 1] - s : Vertices[0] - s;
+                Vector2 e2 = Vertices.NextVertex(i);
 
                 float D = MathUtils.Cross(e1, e2);
 
@@ -217,10 +216,9 @@ namespace FarseerPhysics.Collision.Shapes
             for (int i = 0; i < Vertices.Count; ++i)
             {
                 float dot = Vector2.Dot(Normals[i], pLocal - Vertices[i]);
+
                 if (dot > 0.0f)
-                {
                     return false;
-                }
             }
 
             return true;
@@ -390,12 +388,8 @@ namespace FarseerPhysics.Collision.Shapes
             float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
             float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
 
-            Vector2 intoVec = new Vector2(
-                Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda,
-                Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
-            Vector2 outoVec = new Vector2(
-                Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda,
-                Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
+            Vector2 intoVec = new Vector2(Vertices[intoIndex].X * (1 - intoLambda) + Vertices[intoIndex2].X * intoLambda, Vertices[intoIndex].Y * (1 - intoLambda) + Vertices[intoIndex2].Y * intoLambda);
+            Vector2 outoVec = new Vector2(Vertices[outoIndex].X * (1 - outoLambda) + Vertices[outoIndex2].X * outoLambda, Vertices[outoIndex].Y * (1 - outoLambda) + Vertices[outoIndex2].Y * outoLambda);
 
             //Initialize accumulator
             float area = 0;
@@ -428,7 +422,7 @@ namespace FarseerPhysics.Collision.Shapes
                     // Area weighted centroid
                     center += triangleArea * k_inv3 * (intoVec + p2 + p3);
                 }
-                
+
                 p2 = p3;
             }
 
@@ -473,8 +467,7 @@ namespace FarseerPhysics.Collision.Shapes
                     return false;
             }
 
-            return (Radius == shape.Radius &&
-                    MassData == shape.MassData);
+            return (Radius == shape.Radius && MassData == shape.MassData);
         }
     }
 }

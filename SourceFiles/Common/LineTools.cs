@@ -50,7 +50,7 @@ namespace FarseerPhysics.Common
         /// <param name="b1"></param>
         /// <param name="intersectionPoint"></param>
         /// <returns></returns>
-        public static bool LineIntersect2(Vector2 a0, Vector2 a1, Vector2 b0, Vector2 b1, out Vector2 intersectionPoint)
+        public static bool LineIntersect2(ref Vector2 a0, ref Vector2 a1, ref Vector2 b0, ref  Vector2 b1, out Vector2 intersectionPoint)
         {
             intersectionPoint = Vector2.Zero;
 
