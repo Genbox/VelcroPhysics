@@ -17,33 +17,17 @@ namespace FarseerPhysics.Common
 #endif
     public class Vertices : List<Vector2>
     {
-        public Vertices()
-        {
-        }
+        public Vertices() { }
 
-        public Vertices(int capacity)
-        {
-            Capacity = capacity;
-        }
+        public Vertices(int capacity) : base(capacity) { }
 
-        public Vertices(Vector2[] vector2)
+        public Vertices(IEnumerable<Vector2> vertices)
         {
-            for (int i = 0; i < vector2.Length; i++)
-            {
-                Add(vector2[i]);
-            }
-        }
-
-        public Vertices(IList<Vector2> vertices)
-        {
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                Add(vertices[i]);
-            }
+            AddRange(vertices);
         }
 
         internal bool AttachedToBody { get; set; }
-        
+
         /// <summary>
         /// You can add holes to this collection.
         /// It will get respected by some of the triangulation algoithms, but otherwise not used.
@@ -448,20 +432,6 @@ namespace FarseerPhysics.Common
             return CheckPolygon(out errorMessage) == 0;
         }
 
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < Count; i++)
-            {
-                builder.Append(this[i].ToString());
-                if (i < Count - 1)
-                {
-                    builder.Append(" ");
-                }
-            }
-            return builder.ToString();
-        }
-
         /// <summary>
         /// Projects to axis.
         /// </summary>
@@ -564,7 +534,7 @@ namespace FarseerPhysics.Common
 
             return true;
         }
-        
+
         /// <summary>
         /// Transforms the polygon using the defined matrix.
         /// </summary>
@@ -586,6 +556,20 @@ namespace FarseerPhysics.Common
                     Holes[i] = new Vertices(temp);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < Count; i++)
+            {
+                builder.Append(this[i].ToString());
+                if (i < Count - 1)
+                {
+                    builder.Append(" ");
+                }
+            }
+            return builder.ToString();
         }
     }
 }
