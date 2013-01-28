@@ -12,7 +12,6 @@ namespace FarseerPhysics.TestBed.Tests
 
         private CheckPolygonTest()
         {
-
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -42,9 +41,9 @@ namespace FarseerPhysics.TestBed.Tests
             int returnCode = _vertices.CheckPolygon(out errorMessage);
 
             if (returnCode == 0)
-                DebugView.DrawString(50, TextLine, "Polygon is supported in FPE");
+                DebugView.DrawString(50, TextLine, "Polygon is supported in Farseer Physics Engine");
             else
-                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in FPE. Reason: " + errorMessage);
+                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in Farseer Physics Engine. Reason: " + errorMessage);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
