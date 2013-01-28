@@ -65,6 +65,7 @@
     <Compile Include="FarseerPolygonProcessor.cs" />
     <Compile Include="FarseerPolygonContainerWriter.cs" />
     <Compile Include="BodyTemplate.cs" />
+    <Compile Include="SVGPathParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SourceFiles\Farseer Physics XNA.csproj">
