@@ -13,20 +13,10 @@ using FarseerPhysics.Common;
 
 namespace FarseerPhysics.ContentPipeline
 {
-  [ContentProcessor(DisplayName = "Farseer Polygon Processor")]
-  public class FarseerPolygonProcessor : ContentProcessor<PolygonContainer, PolygonContainer>
+  [ContentProcessor(DisplayName = "Farseer Body Processor")]
+  class FarseerBodyProcessor : ContentProcessor<List<BodyTemplate>, List<BodyTemplate>>
   {
-    [DisplayName("Cubic bézier iterations")]
-    [Description("Amount of subdivisions for decomposing cubic bézier curves into line segments.")]
-    [DefaultValue(3)]
-    public int BezierIterations
-    {
-      get { return _bezierIterations; }
-      set { _bezierIterations = value; }
-    }
-    private int _bezierIterations = 3;
-
-    public override PolygonContainer Process(PolygonContainer input, ContentProcessorContext context)
+    public override List<BodyTemplate> Process(List<BodyTemplate> input, ContentProcessorContext context)
     {
       return input;
     }

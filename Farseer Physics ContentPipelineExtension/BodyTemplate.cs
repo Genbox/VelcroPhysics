@@ -19,6 +19,7 @@ namespace FarseerPhysics.ContentPipeline
   struct BodyTemplate
   {
     public List<FixtureTemplate> fixtures;
+    public string name;
     public float mass;
   }
 }
