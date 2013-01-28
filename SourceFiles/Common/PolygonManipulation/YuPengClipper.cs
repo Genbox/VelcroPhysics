@@ -71,8 +71,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             // Translate polygons into upper right quadrant
             // as the algorithm depends on it
-            Vector2 lbSubject = subject.GetCollisionBox().LowerBound;
-            Vector2 lbClip = clip.GetCollisionBox().LowerBound;
+            Vector2 lbSubject = subject.GetAABB().LowerBound;
+            Vector2 lbClip = clip.GetAABB().LowerBound;
             Vector2 translate;
             Vector2.Min(ref lbSubject, ref lbClip, out translate);
             translate = Vector2.One - translate;

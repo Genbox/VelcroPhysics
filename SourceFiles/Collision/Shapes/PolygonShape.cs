@@ -97,9 +97,8 @@ namespace FarseerPhysics.Collision.Shapes
                 // Compute normals. Ensure the edges have non-zero length.
                 for (int i = 0; i < _vertices.Count; ++i)
                 {
-                    int i1 = i;
-                    int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
-                    Vector2 edge = _vertices[i2] - _vertices[i1];
+                    int next = i + 1 < _vertices.Count ? i + 1 : 0;
+                    Vector2 edge = _vertices[next] - _vertices[i];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
                     //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));

@@ -1,7 +1,6 @@
-using System.Collections.Generic;
+using System.Diagnostics;
+using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -15,14 +14,6 @@ namespace FarseerPhysics.TestBed.Tests
         private CheckPolygonTest()
         {
 
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            //if (keyboardManager.IsNewKeyPress(Keys.T))
-            //    _vertices = _vertices.TraceEdge(_vertices);
-            
-            base.Keyboard(keyboardManager);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -44,6 +35,17 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Convex: " + _vertices.IsConvex());
             TextLine += 15;
             DebugView.DrawString(50, TextLine, "CCW: " + _vertices.IsCounterClockWise());
+            TextLine += 15;
+            DebugView.DrawString(50, TextLine, "Area: " + _vertices.GetArea());
+            TextLine += 30;
+
+            string errorMessage;
+            int returnCode = _vertices.CheckPolygon(out errorMessage);
+
+            if (returnCode == 0)
+                DebugView.DrawString(50, TextLine, "Polygon is supported in FPE");
+            else
+                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in FPE. Reason: " + errorMessage);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
@@ -54,10 +56,14 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 currentVertex = _vertices[i];
                 Vector2 nextVertex = _vertices[iplus];
 
-
                 DebugView.DrawPoint(currentVertex, 0.1f, Color.Yellow);
                 DebugView.DrawSegment(currentVertex, nextVertex, Color.Red);
             }
+
+            DebugView.DrawPoint(_vertices.GetCentroid(), 0.1f, Color.Green);
+            
+            AABB aabb = _vertices.GetAABB();
+            DebugView.DrawAABB(ref aabb, Color.HotPink);
 
             DebugView.EndCustomDraw();
             base.Update(settings, gameTime);
