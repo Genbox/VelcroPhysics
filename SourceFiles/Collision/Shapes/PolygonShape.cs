@@ -91,7 +91,20 @@ namespace FarseerPhysics.Collision.Shapes
                 // Create the convex hull using the Gift wrapping algorithm
                 // http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 
-                _vertices = Settings.UseConvexHullPolygons ? GiftWrap.GetConvexHull(_vertices) : Settings.ConserveMemory ? _vertices : new Vertices(_vertices);
+                if (Settings.UseConvexHullPolygons)
+                {
+                    //FPE note: This check is required as the GiftWrap algorithm early exits on triangles
+                    //So instead of giftwrapping a triangle, we just force it to be clock wise.
+                    if (_vertices.Count <= 3)
+                        _vertices.ForceCounterClockWise();
+                    else
+                        _vertices = GiftWrap.GetConvexHull(_vertices);
+                }
+                else
+                {
+                    _vertices = Settings.ConserveMemory ? _vertices : new Vertices(_vertices);
+                }
+
                 _normals = new Vertices(_vertices.Count);
 
                 // Compute normals. Ensure the edges have non-zero length.
