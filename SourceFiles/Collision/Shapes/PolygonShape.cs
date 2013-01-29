@@ -97,7 +97,8 @@ namespace FarseerPhysics.Collision.Shapes
                 // Compute normals. Ensure the edges have non-zero length.
                 for (int i = 0; i < _vertices.Count; ++i)
                 {
-                    Vector2 edge = _vertices.NextVertex(i) - _vertices[i];
+                    int next = i + 1 < _vertices.Count ? i + 1 : 0;
+                    Vector2 edge = _vertices[next] - _vertices[i];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
                     //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
@@ -169,7 +170,7 @@ namespace FarseerPhysics.Collision.Shapes
             {
                 // Triangle vertices.
                 Vector2 e1 = Vertices[i] - s;
-                Vector2 e2 = Vertices.NextVertex(i);
+                Vector2 e2 = i + 1 < Vertices.Count ? Vertices[i + 1] - s : Vertices[0] - s;
 
                 float D = MathUtils.Cross(e1, e2);
 
@@ -216,9 +217,10 @@ namespace FarseerPhysics.Collision.Shapes
             for (int i = 0; i < Vertices.Count; ++i)
             {
                 float dot = Vector2.Dot(Normals[i], pLocal - Vertices[i]);
-
                 if (dot > 0.0f)
+                {
                     return false;
+                }
             }
 
             return true;
