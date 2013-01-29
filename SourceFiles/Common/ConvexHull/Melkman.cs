@@ -22,7 +22,7 @@ namespace FarseerPhysics.Common.ConvexHull
         /// <returns>A convex hull in counter clockwise winding order.</returns>
         public static Vertices GetConvexHull(Vertices vertices)
         {
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return vertices;
 
             //We'll never need a queue larger than the current number of Vertices +1
