@@ -187,7 +187,7 @@ namespace FarseerPhysics.Samples
 #if WINDOWS
       _counter.Update(gameTime);
 #endif
-      if (_input.IsNewButtonPress(Buttons.Y) || _input.IsNewKeyPress(Keys.F5) &&
+      if ((_input.IsNewButtonPress(Buttons.Y) || _input.IsNewKeyPress(Keys.F5)) &&
           !(_screens[_screens.Count - 1] is OptionsScreen || _screens[_screens.Count - 1] is LogoScreen))
       {
         AddScreen(new OptionsScreen());
