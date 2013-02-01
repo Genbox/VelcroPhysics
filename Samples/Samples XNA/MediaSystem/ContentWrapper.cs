@@ -349,65 +349,64 @@ namespace FarseerPhysics.Samples.MediaSystem
       return null;
     }
 
-    public static Texture2D CustomPolygonTexture(Vertices vertices, string textureName)
+    public static List<Texture2D> BreakableTextureFragments(BreakableBody body, string textureName)
     {
+      List<Texture2D> result = new List<Texture2D>();
       if (_contentWrapper != null)
       {
-        // copy vertices
-        Vertices scaledVertices = new Vertices(vertices);
-
-        // scale to display units (i.e. pixels) for rendering to texture
         Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
-        scaledVertices.Scale(ref scale);
-
-        // translate the boundingbox center to the texture center
-        // because we use an orthographic projection for rendering later
-        AABB verticesBounds = scaledVertices.GetAABB();
-        scaledVertices.Translate(-verticesBounds.Center);
-
-        List<Vertices> decomposedVertices;
-        if (!scaledVertices.IsConvex())
+        foreach (Fixture f in body.Parts)
         {
-          decomposedVertices = EarclipDecomposer.ConvexPartition(scaledVertices);
-        }
-        else
-        {
-          decomposedVertices = new List<Vertices>();
-          decomposedVertices.Add(scaledVertices);
-        }
-
-        List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
-        for (int i = 0; i < decomposedVertices.Count; i++)
-        {
-          verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
-          for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
+          Vertices v = null;
+          if (f.Shape is PolygonShape)
           {
-            // fill vertices
-            verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0], 0f);
-            verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j), 0f);
-            verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1), 0f);
+            v = new Vertices(((PolygonShape)f.Shape).Vertices);
+            v.Scale(ref scale);
+          }
+          if (v != null)
+          {
+            AABB polygonBounds = v.GetAABB();
+            List<Vertices> decomposedVertices;
+            if (!v.IsConvex())
+            {
+              decomposedVertices = BayazitDecomposer.ConvexPartition(v);
+            }
+            else
+            {
+              decomposedVertices = new List<Vertices>();
+              decomposedVertices.Add(v);
+            }
+            List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
+            for (int i = 0; i < decomposedVertices.Count; i++)
+            {
+              verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
+              for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
+              {
+                // fill vertices
+                verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0] - polygonBounds.Center, 0f);
+                verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j) - polygonBounds.Center, 0f);
+                verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1) - polygonBounds.Center, 0f);
 
-            verticesFill[i][3 * j].TextureCoordinate = decomposedVertices[i][0];
-            verticesFill[i][3 * j].TextureCoordinate.X = verticesFill[i][3 * j].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
-            verticesFill[i][3 * j].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j].TextureCoordinate.Y / _textureList[textureName].Height;
+                verticesFill[i][3 * j].TextureCoordinate = new Vector2(decomposedVertices[i][0].X / _textureList[textureName].Width,
+                                                                       decomposedVertices[i][0].Y / _textureList[textureName].Height - 1f);
+                verticesFill[i][3 * j + 1].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j).X / _textureList[textureName].Width,
+                                                                           decomposedVertices[i].NextVertex(j).Y / _textureList[textureName].Height - 1f);
+                verticesFill[i][3 * j + 2].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j + 1).X / _textureList[textureName].Width,
+                                                                           decomposedVertices[i].NextVertex(j + 1).Y / _textureList[textureName].Height - 1f);
+                verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.Transparent;
+              }
+            }
 
-            verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVertices[i].NextVertex(j);
-            verticesFill[i][3 * j + 1].TextureCoordinate.X = verticesFill[i][3 * j + 1].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
-            verticesFill[i][3 * j + 1].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j + 1].TextureCoordinate.Y / _textureList[textureName].Height;
-
-            verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVertices[i].NextVertex(j + 1);
-            verticesFill[i][3 * j + 2].TextureCoordinate.X = verticesFill[i][3 * j + 2].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
-            verticesFill[i][3 * j + 2].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j + 2].TextureCoordinate.Y / _textureList[textureName].Height;
-
-            verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.White;
+            Vector2 vertsSize = new Vector2(polygonBounds.UpperBound.X - polygonBounds.LowerBound.X, polygonBounds.UpperBound.Y - polygonBounds.LowerBound.Y);
+            result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, new VertexPositionColor[0]));
+          }
+          else
+          {
+            result.Add(_textureList["blank"]);
           }
         }
-
-        Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
-
-        return _contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, new VertexPositionColor[0]);
       }
-      return null;
+      return result;
     }
 
     private Texture2D RenderTexture(int width, int height, Texture2D pattern, Color patternColor, VertexPositionColorTexture[] verticesFill, VertexPositionColor[] verticesOutline)

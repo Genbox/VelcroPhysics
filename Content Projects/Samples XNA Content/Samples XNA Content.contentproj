@@ -207,19 +207,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\cookie.png">
-      <Name>cookie</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Pipeline\farseerBreakableBody.svg">
       <SubType>Designer</SubType>
       <Name>farseerBreakableBody</Name>
       <Importer>FarseerSVGImporter</Importer>
       <Processor>FarseerBodyProcessor</Processor>
       <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoGFX\cookie.png">
+      <Name>cookie</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
