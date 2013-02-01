@@ -15,6 +15,7 @@ using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Content;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
 using FarseerPhysics.Samples.MediaSystem;
@@ -22,22 +23,22 @@ using FarseerPhysics.Samples.MediaSystem;
 
 namespace FarseerPhysics.Samples.Demos
 {
-  internal class D15_BreakableBodies : PhysicsDemoScreen
+  internal class D18_BreakableBody : PhysicsDemoScreen
   {
     private Border _border;
-    private List<List<Sprite>> _breakableSprite;
-    private List<BreakableBody> _breakableBody;
+    private List<Sprite> _breakableSprite;
+    private BreakableBody _breakableBody;
 
     #region Demo description
     public override string GetTitle()
     {
-      return "Breakable bodies and explosions";
+      return "Breakable body and explosions";
     }
 
     public override string GetDetails()
     {
       StringBuilder sb = new StringBuilder();
-      sb.AppendLine("This demo shows breakable bodies, created from a texture.");
+      sb.AppendLine("This demo shows a breakable cookie, imported from a SVG.");
       sb.AppendLine();
       sb.AppendLine("GamePad:");
       sb.AppendLine("  - Explosion (at cursor): B button");
@@ -67,59 +68,19 @@ namespace FarseerPhysics.Samples.Demos
       World.Gravity = Vector2.Zero;
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
+      _breakableBody = Framework.Content.Load<BodyContainer>("pipeline/farseerBreakableBody")["cookie"].CreateBreakable(World);
+      _breakableBody.Strength = 80f;
 
-      _breakableSprite = new List<List<Sprite>>();
-      _breakableBody = new List<BreakableBody>();
-
-      Texture2D letters = ContentWrapper.GetTexture("breakableObjects");
-
-      uint[] data = new uint[letters.Width * letters.Height];
-      letters.GetData(data);
-
-      List<Vertices> list = PolygonTools.CreatePolygon(data, letters.Width, 3.5f, 20, true, true);
-      for (int i = 0; i < list.Count; i++)
+      _breakableSprite = new List<Sprite>();
+      for (int i = 0; i < _breakableBody.Parts.Count; i++)
       {
-        Vector2 centroid = -list[i].GetCentroid();
-        list[i].Translate(ref centroid);
-        list[i] = SimplifyTools.ReduceByDistance(list[i], 2);
-        Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1));
-        list[i].Scale(ref vertScale);
-      }
+        AABB bounds;
+        Transform transform;
+        _breakableBody.Parts[i].Body.GetTransform(out transform);
+        _breakableBody.Parts[i].Shape.ComputeAABB(out bounds, ref transform, 0);
+        Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableBody.Parts[i].Body.Position - bounds.LowerBound);
 
-      //                           Cube, f, a, r, s, e, e, r, p, h, y, s,  i,  c, s 
-      short[] Indexes = new short[] { 0, 1, 2, 3, 4, 5, 5, 3, 6, 7, 8, 9, 10, 11, 9 };
-
-      float xOffset = 2.8f;
-      float xStart = -xOffset * (float)(Indexes.Length - 1) / 2f;
-      for (int i = 0; i < Indexes.Length; i++)
-      {
-        Vector2 postion = new Vector2(xStart + xOffset * i, 0f);
-        if (i == 0)
-        {
-          postion.X -= 2.5f;
-          postion.Y -= 3f;
-        }
-        List<Vertices> triangulated = BayazitDecomposer.ConvexPartition(list[Indexes[i]]);
-
-        BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);
-        breakableBody.MainBody.Position = postion;
-        breakableBody.Strength = 90;
-        breakableBody.MainBody.UserData = i;
-        World.AddBreakableBody(breakableBody);
-        _breakableBody.Add(breakableBody);
-
-        List<Sprite> _parts = new List<Sprite>();
-        for (int j = 0; j < breakableBody.Parts.Count; j++)
-        {
-          AABB bounds;
-          Transform transform;
-          breakableBody.Parts[j].Body.GetTransform(out transform);
-          breakableBody.Parts[j].Shape.ComputeAABB(out bounds, ref transform, 0);
-          Vector2 origin = ConvertUnits.ToDisplayUnits(breakableBody.Parts[j].Body.Position - bounds.LowerBound);
-
-          _parts.Add(new Sprite(ContentWrapper.TextureFromShape(breakableBody.Parts[j].Shape, ContentWrapper.Black, ContentWrapper.Black), origin));
-        }
-        _breakableSprite.Add(_parts);
+        _breakableSprite.Add(new Sprite(ContentWrapper.CustomPolygonTexture(((PolygonShape)_breakableBody.Parts[i].Shape).Vertices, "cookie"), origin));
       }
     }
 
@@ -139,7 +100,7 @@ namespace FarseerPhysics.Samples.Demos
                         {
                           Vector2 fv = fixture.Body.Position - cursorPos;
                           fv.Normalize();
-                          fv *= 40;
+                          fv *= 80;
                           fixture.Body.ApplyLinearImpulse(ref fv);
                           return true;
                         }, ref aabb);
@@ -151,13 +112,10 @@ namespace FarseerPhysics.Samples.Demos
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < _breakableBody.Count; i++)
+      for (int i = 0; i < _breakableBody.Parts.Count; i++)
       {
-        for (int j = 0; j < _breakableBody[i].Parts.Count; j++)
-        {
-          Body b = _breakableBody[i].Parts[j].Body;
-          Sprites.Draw(_breakableSprite[i][j].Image, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, b.Rotation, _breakableSprite[i][j].Origin, 1f, SpriteEffects.None, 0f);
-        }
+        Body b = _breakableBody.Parts[i].Body;
+        Sprites.Draw(_breakableSprite[i].Image, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, b.Rotation, _breakableSprite[i].Origin, 1f, SpriteEffects.None, 0f);
       }
       Sprites.End();
 

@@ -86,20 +86,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Demos\Old_D18_BreakableBodies.cs" />
+    <Compile Include="Demos\D17_SVGtoBody.cs" />
+    <Compile Include="Demos\D16_SVGtoPolygon.cs" />
     <Compile Include="Demos\D08_DistanceAngleJoint.cs" />
     <Compile Include="MediaSystem\LineBatch.cs" />
     <Compile Include="MediaSystem\ContentWrapper.cs" />
     <Compile Include="MediaSystem\QuadRenderer.cs" />
-    <Compile Include="Demos\D14_TextureToShapes.cs" />
+    <Compile Include="Demos\D15_TextureToShapes.cs" />
     <Compile Include="Demos\D11_SoftBody.cs" />
     <Compile Include="Demos\D13_TheoJansenWalker.cs" />
     <Compile Include="Demos\D12_WebOfGoo.cs" />
-    <Compile Include="Demos\D15_BreakableBodies.cs" />
+    <Compile Include="Demos\D18_BreakableBody.cs" />
     <Compile Include="ScreenSystem\OptionEntry.cs" />
     <Compile Include="ScreenSystem\OptionsScreen.cs" />
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
     <Compile Include="MediaSystem\Sprite.cs" />
-    <Compile Include="Demos\D16_RacingCar.cs" />
+    <Compile Include="Demos\D14_RacingCar.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
     <Compile Include="Demos\Prefabs\Border.cs" />
     <Compile Include="Demos\Prefabs\Objects.cs" />

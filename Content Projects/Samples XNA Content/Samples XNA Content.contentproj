@@ -67,10 +67,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\object.png">
+    <Compile Include="Pipeline\object.png">
       <Name>object</Name>
       <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+      <Processor>FarseerTextureProcessor</Processor>
+      <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,67 @@
       <Name>checkmark</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Pipeline\farseerPolygon.svg">
+      <Name>farseerPolygon</Name>
+      <Importer>FarseerSVGImporter</Importer>
+      <Processor>FarseerPolygonProcessor</Processor>
+      <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Farseer Physics ContentPipelineExtension\Farseer Physics ContentPipelineExtension.csproj">
+      <Project>{7DBD4899-FE50-4EA8-A5E4-24BCBB71E89B}</Project>
+      <Name>Farseer Physics ContentPipelineExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Pipeline\farseerBody.svg">
+      <Name>farseerBody</Name>
+      <Importer>FarseerSVGImporter</Importer>
+      <Processor>FarseerBodyProcessor</Processor>
+      <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
+      <SubType>Designer</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoGFX\club.png">
+      <Name>club</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="DemoGFX\diamond.png">
+      <Name>diamond</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="DemoGFX\heart.png">
+      <Name>heart</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="DemoGFX\spade.png">
+      <Name>spade</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoGFX\cookie.png">
+      <Name>cookie</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Pipeline\farseerBreakableBody.svg">
+      <SubType>Designer</SubType>
+      <Name>farseerBreakableBody</Name>
+      <Importer>FarseerSVGImporter</Importer>
+      <Processor>FarseerBodyProcessor</Processor>
+      <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

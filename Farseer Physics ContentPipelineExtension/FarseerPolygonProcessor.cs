@@ -14,7 +14,7 @@ using FarseerPhysics.Common;
 namespace FarseerPhysics.ContentPipeline
 {
   [ContentProcessor(DisplayName = "Farseer Polygon Processor")]
-  class FarseerPolygonProcessor : ContentProcessor<List<BodyTemplate>, PolygonContainer>
+  class FarseerPolygonProcessor : ContentProcessor<List<RawBodyTemplate>, PolygonContainer>
   {
     [DisplayName("Pixel to meter ratio")]
     [Description("The length of one physics simulation unit in pixels.")]
@@ -46,7 +46,7 @@ namespace FarseerPhysics.ContentPipeline
     }
     private bool _decompose = false;
 
-    public override PolygonContainer Process(List<BodyTemplate> input, ContentProcessorContext context)
+    public override PolygonContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
     {
       if (ScaleFactor < 1)
       {
@@ -61,11 +61,11 @@ namespace FarseerPhysics.ContentPipeline
       SVGPathParser parser = new SVGPathParser(_bezierIterations);
       PolygonContainer polygons = new PolygonContainer();
 
-      foreach (BodyTemplate body in input)
+      foreach (RawBodyTemplate body in input)
       {
-        foreach (FixtureTemplate fixture in body.fixtures)
+        foreach (RawFixtureTemplate fixture in body.fixtures)
         {
-          List<Polygon> paths = parser.ParseSVGPath(fixture.path, matScale * fixture.transformation);
+          List<Polygon> paths = parser.ParseSVGPath(fixture.path, fixture.transformation * matScale);
           if (paths.Count == 1)
           {
             polygons.Add(fixture.name, paths[0]);
@@ -74,10 +74,14 @@ namespace FarseerPhysics.ContentPipeline
           {
             for (int i = 0; i < paths.Count; i++)
             {
-              polygons.Add(fixture.name+i.ToString(), paths[i]);
+              polygons.Add(fixture.name + i.ToString(), paths[i]);
             }
           }
         }
+      }
+      if (_decompose)
+      {
+        polygons.Decompose();
       }
       return polygons;
     }

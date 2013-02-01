@@ -43,6 +43,20 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        public BreakableBody(IEnumerable<Shape> shapes, World world)
+        {
+            _world = world;
+            _world.ContactManager.PostSolve += PostSolve;
+            MainBody = new Body(_world);
+            MainBody.BodyType = BodyType.Dynamic;
+
+            foreach (Shape part in shapes)
+            {
+                Fixture fixture = MainBody.CreateFixture(part);
+                Parts.Add(fixture);
+            }
+        }
+
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             if (!Broken)

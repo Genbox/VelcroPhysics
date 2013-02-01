@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.ContentPipeline
 {
-  struct FixtureTemplate
+  struct RawFixtureTemplate
   {
     public string path;
     public string name;
@@ -16,10 +17,11 @@ namespace FarseerPhysics.ContentPipeline
     public float restitution;
   }
 
-  struct BodyTemplate
+  struct RawBodyTemplate
   {
-    public List<FixtureTemplate> fixtures;
+    public List<RawFixtureTemplate> fixtures;
     public string name;
     public float mass;
+    public BodyType bodyType;
   }
 }

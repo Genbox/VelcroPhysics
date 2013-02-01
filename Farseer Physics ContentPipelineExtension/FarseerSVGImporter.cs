@@ -10,34 +10,37 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using FarseerPhysics.Common;
+using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.ContentPipeline
 {
   [ContentImporter(".svg", DisplayName = "Farseer SVG Importer", DefaultProcessor = "FarseerBodyProcessor")]
-  class FarseerSVGImporter : ContentImporter<List<BodyTemplate>>
+  class FarseerSVGImporter : ContentImporter<List<RawBodyTemplate>>
   {
     private const string isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
     private const string isCommaWhitespace = @"\A[\s,]*";
 
     private Stack<Matrix> _transformations;
-    private List<BodyTemplate> _parsedSVG;
+    private List<RawBodyTemplate> _parsedSVG;
+    private RawBodyTemplate? _currentBody;
 
-    public override List<BodyTemplate> Import(string filename, ContentImporterContext context)
+    public override List<RawBodyTemplate> Import(string filename, ContentImporterContext context)
     {
       _transformations = new Stack<Matrix>();
       _transformations.Push(Matrix.Identity);
 
-      _parsedSVG = new List<BodyTemplate>();
-      _parsedSVG.Add(new BodyTemplate()
+      _parsedSVG = new List<RawBodyTemplate>();
+      _parsedSVG.Add(new RawBodyTemplate()
       {
-        name = "dummy",
-        fixtures = new List<FixtureTemplate>(),
+        name = "importer_default_path_container",
+        fixtures = new List<RawFixtureTemplate>(),
         mass = 0f
       });
 
       XmlDocument input = new XmlDocument();
       input.Load(filename);
 
+      _currentBody = null;
       ParseSVGNode(input["svg"]);
 
       return _parsedSVG;
@@ -46,7 +49,7 @@ namespace FarseerPhysics.ContentPipeline
     private void ParseSVGNode(XmlNode currentNode)
     {
       bool popTransform = false;
-      BodyTemplate? currentBody = null;
+      bool killBody = false;
       if (currentNode is XmlElement)
       {
         XmlElement currentElement = currentNode as XmlElement;
@@ -55,28 +58,35 @@ namespace FarseerPhysics.ContentPipeline
           _transformations.Push(ParseSVGTransformation(currentNode.Attributes["transform"].Value));
           popTransform = true;
         }
-        if (currentElement.HasAttribute("fp_body") && currentBody == null)
+        if (currentElement.HasAttribute("fp_body") && _currentBody == null)
         {
+          BodyType type;
+          if(!Enum.TryParse<BodyType>(currentElement.Attributes["fp_body"].Value,true,out type))
+          {
+            type = BodyType.Static;
+          }
           string ID = "empty_id";
-          float bodyMass = 0f;
           if (currentElement.HasAttribute("id"))
           {
             ID = currentElement.Attributes["id"].Value;
           }
+          float bodyMass = 0f;
           if (currentElement.HasAttribute("fp_mass"))
           {
             float.TryParse(currentElement.Attributes["fp_mass"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out bodyMass);
           }
-          currentBody = new BodyTemplate()
+          _currentBody = new RawBodyTemplate()
           {
-            fixtures = new List<FixtureTemplate>(),
+            fixtures = new List<RawFixtureTemplate>(),
             mass = bodyMass,
-            name = ID
+            name = ID,
+            bodyType = type
           };
+          killBody = true;
         }
         if (currentElement.Name == "path")
         {
-          FixtureTemplate fixture = new FixtureTemplate();
+          RawFixtureTemplate fixture = new RawFixtureTemplate();
           fixture.path = currentElement.Attributes["d"].Value;
           fixture.transformation = Matrix.Identity;
           foreach (Matrix m in _transformations)
@@ -103,9 +113,9 @@ namespace FarseerPhysics.ContentPipeline
           {
             fixture.restitution = 0f;
           }
-          if (currentBody.HasValue)
+          if (_currentBody.HasValue)
           {
-            currentBody.Value.fixtures.Add(fixture);
+            _currentBody.Value.fixtures.Add(fixture);
           }
           else
           {
@@ -124,13 +134,13 @@ namespace FarseerPhysics.ContentPipeline
       {
         _transformations.Pop();
       }
-      if (currentBody.HasValue)
+      if (killBody)
       {
-        if (currentBody.Value.fixtures.Count > 0)
+        if (_currentBody.Value.fixtures.Count > 0)
         {
-          _parsedSVG.Add(currentBody.Value);
+          _parsedSVG.Add(_currentBody.Value);
         }
-        currentBody = null;
+        _currentBody = null;
       }
     }
 
