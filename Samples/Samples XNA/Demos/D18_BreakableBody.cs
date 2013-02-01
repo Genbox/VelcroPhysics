@@ -27,7 +27,8 @@ namespace FarseerPhysics.Samples.Demos
   {
     private Border _border;
     private List<Sprite> _breakableSprite;
-    private BreakableBody _breakableBody;
+    private Sprite _completeSprite;
+    private BreakableBody[] _breakableCookie = new BreakableBody[3];
 
     #region Demo description
     public override string GetTitle()
@@ -68,20 +69,26 @@ namespace FarseerPhysics.Samples.Demos
       World.Gravity = Vector2.Zero;
 
       _border = new Border(World, Lines, Framework.GraphicsDevice);
-      _breakableBody = Framework.Content.Load<BodyContainer>("pipeline/farseerBreakableBody")["cookie"].CreateBreakable(World);
-      _breakableBody.Strength = 80f;
+      for (int i = 0; i < 3; i++)
+      {
+        _breakableCookie[i] = Framework.Content.Load<BodyContainer>("pipeline/farseerBreakableBody")["cookie"].CreateBreakable(World);
+        _breakableCookie[i].Strength = 120f;
+        _breakableCookie[i].MainBody.Position = new Vector2(-20.33f + 15f * i, -5.33f);
+      }
 
       _breakableSprite = new List<Sprite>();
-      for (int i = 0; i < _breakableBody.Parts.Count; i++)
+      List<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "cookie");
+      for (int i = 0; i < _breakableCookie[0].Parts.Count; i++)
       {
         AABB bounds;
         Transform transform;
-        _breakableBody.Parts[i].Body.GetTransform(out transform);
-        _breakableBody.Parts[i].Shape.ComputeAABB(out bounds, ref transform, 0);
-        Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableBody.Parts[i].Body.Position - bounds.LowerBound);
-
-        _breakableSprite.Add(new Sprite(ContentWrapper.CustomPolygonTexture(((PolygonShape)_breakableBody.Parts[i].Shape).Vertices, "cookie"), origin));
+        _breakableCookie[0].Parts[i].Body.GetTransform(out transform);
+        _breakableCookie[0].Parts[i].Shape.ComputeAABB(out bounds, ref transform, 0);
+        Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableCookie[0].Parts[i].Body.Position - bounds.LowerBound);
+        _breakableSprite.Add(new Sprite(textures[i], origin));
       }
+      _completeSprite = new Sprite(ContentWrapper.GetTexture("cookie"), Vector2.Zero);
+
     }
 
     public override void HandleInput(InputHelper input, GameTime gameTime)
@@ -112,10 +119,20 @@ namespace FarseerPhysics.Samples.Demos
     public override void Draw(GameTime gameTime)
     {
       Sprites.Begin(0, null, null, null, null, null, Camera.View);
-      for (int i = 0; i < _breakableBody.Parts.Count; i++)
+      for (int i = 0; i < 3; i++)
       {
-        Body b = _breakableBody.Parts[i].Body;
-        Sprites.Draw(_breakableSprite[i].Image, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, b.Rotation, _breakableSprite[i].Origin, 1f, SpriteEffects.None, 0f);
+        if (_breakableCookie[i].Broken)
+        {
+          for (int j = 0; j < _breakableCookie[i].Parts.Count; j++)
+          {
+            Body b = _breakableCookie[i].Parts[j].Body;
+            Sprites.Draw(_breakableSprite[j].Image, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, b.Rotation, _breakableSprite[j].Origin, 1f, SpriteEffects.None, 0f);
+          }
+        }
+        else
+        {
+          Sprites.Draw(_completeSprite.Image, ConvertUnits.ToDisplayUnits(_breakableCookie[i].MainBody.Position), null, Color.White, _breakableCookie[i].MainBody.Rotation, _completeSprite.Origin, 1f, SpriteEffects.None, 0f);
+        }
       }
       Sprites.End();
 
