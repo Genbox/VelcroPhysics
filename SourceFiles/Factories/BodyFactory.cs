@@ -231,6 +231,11 @@ namespace FarseerPhysics.Factories
             return CreateBreakableBody(world, vertices, density, Vector2.Zero);
         }
 
+        public static BreakableBody CreateBreakableBody(World world, IEnumerable<Shape> shapes)
+        {
+            return CreateBreakableBody(world, shapes, Vector2.Zero);
+        }
+
         /// <summary>
         /// Creates a breakable body. You would want to remove collinear points before using this.
         /// </summary>
@@ -244,6 +249,15 @@ namespace FarseerPhysics.Factories
             List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
 
             BreakableBody breakableBody = new BreakableBody(triangles, world, density);
+            breakableBody.MainBody.Position = position;
+            world.AddBreakableBody(breakableBody);
+
+            return breakableBody;
+        }
+
+        public static BreakableBody CreateBreakableBody(World world, IEnumerable<Shape> shapes, Vector2 position)
+        {
+            BreakableBody breakableBody = new BreakableBody(shapes, world);
             breakableBody.MainBody.Position = position;
             world.AddBreakableBody(breakableBody);
 

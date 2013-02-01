@@ -27,11 +27,12 @@ namespace FarseerPhysics.Content
 
     public void Decompose()
     {
-      foreach (string key in this.Keys)
+      Dictionary<string, Polygon> containerCopy = new Dictionary<string, Polygon>(this);
+      foreach (string key in containerCopy.Keys)
       {
-        if (this[key].closed)
+        if (containerCopy[key].closed)
         {
-          List<Vertices> partition = BayazitDecomposer.ConvexPartition(this[key].vertices);
+          List<Vertices> partition = BayazitDecomposer.ConvexPartition(containerCopy[key].vertices);
           if (partition.Count > 1)
           {
             this.Remove(key);
