@@ -362,7 +362,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         // translate the boundingbox center to the texture center
         // because we use an orthographic projection for rendering later
-        AABB verticesBounds = scaledVertices.GetCollisionBox();
+        AABB verticesBounds = scaledVertices.GetAABB();
         scaledVertices.Translate(-verticesBounds.Center);
 
         List<Vertices> decomposedVertices;
@@ -388,16 +388,16 @@ namespace FarseerPhysics.Samples.MediaSystem
             verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1), 0f);
 
             verticesFill[i][3 * j].TextureCoordinate = decomposedVertices[i][0];
-            verticesFill[i][3 * j].TextureCoordinate.X /= _textureList[textureName].Width;
-            verticesFill[i][3 * j].TextureCoordinate.Y = 1f - verticesFill[i][3 * j].TextureCoordinate.Y / _textureList[textureName].Height;
+            verticesFill[i][3 * j].TextureCoordinate.X = verticesFill[i][3 * j].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
+            verticesFill[i][3 * j].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j].TextureCoordinate.Y / _textureList[textureName].Height;
 
             verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVertices[i].NextVertex(j);
-            verticesFill[i][3 * j + 1].TextureCoordinate.X /= _textureList[textureName].Width;
-            verticesFill[i][3 * j + 1].TextureCoordinate.Y = 1f - verticesFill[i][3 * j + 1].TextureCoordinate.Y / _textureList[textureName].Height;
+            verticesFill[i][3 * j + 1].TextureCoordinate.X = verticesFill[i][3 * j + 1].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
+            verticesFill[i][3 * j + 1].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j + 1].TextureCoordinate.Y / _textureList[textureName].Height;
 
             verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVertices[i].NextVertex(j + 1);
-            verticesFill[i][3 * j + 2].TextureCoordinate.X /= _textureList[textureName].Width;
-            verticesFill[i][3 * j + 2].TextureCoordinate.Y = 1f - verticesFill[i][3 * j + 2].TextureCoordinate.Y / _textureList[textureName].Height;
+            verticesFill[i][3 * j + 2].TextureCoordinate.X = verticesFill[i][3 * j + 2].TextureCoordinate.X / _textureList[textureName].Width + 0.5f;
+            verticesFill[i][3 * j + 2].TextureCoordinate.Y = 1.5f - verticesFill[i][3 * j + 2].TextureCoordinate.Y / _textureList[textureName].Height;
 
             verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.White;
           }
