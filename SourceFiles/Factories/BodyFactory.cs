@@ -134,7 +134,7 @@ namespace FarseerPhysics.Factories
             if (!gearPolygon.IsConvex())
             {
                 //Decompose the gear:
-                List<Vertices> list = EarclipDecomposer.ConvexPartition(gearPolygon);
+                List<Vertices> list = Triangulate.ConvexPartition(gearPolygon, TriangulationAlgorithm.Earclip);
 
                 return CreateCompoundPolygon(world, list, density, userData);
             }
