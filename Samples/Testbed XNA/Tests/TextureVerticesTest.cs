@@ -42,7 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             _sw.Start();
             //Create a single body with multiple fixtures
-            Body compund = BodyFactory.CreateCompoundPolygon(World, EarclipDecomposer.ConvexPartition(verts), 1);
+            Body compund = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Earclip), 1);
             compund.BodyType = BodyType.Dynamic;
             compund.Position = new Vector2(0, 20);
             _sw.Stop();
