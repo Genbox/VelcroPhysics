@@ -37,13 +37,12 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Area: " + _vertices.GetArea());
             TextLine += 30;
 
-            string errorMessage;
-            int returnCode = _vertices.CheckPolygon(out errorMessage);
+            PolygonError returnCode = _vertices.CheckPolygon();
 
-            if (returnCode == 0)
+            if (returnCode == PolygonError.NoError)
                 DebugView.DrawString(50, TextLine, "Polygon is supported in Farseer Physics Engine");
             else
-                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in Farseer Physics Engine. Reason: " + errorMessage);
+                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in Farseer Physics Engine. Reason: " + returnCode);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
@@ -57,7 +56,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             DebugView.DrawPoint(_vertices.GetCentroid(), 0.1f, Color.Green);
-            
+
             AABB aabb = _vertices.GetAABB();
             DebugView.DrawAABB(ref aabb, Color.HotPink);
 

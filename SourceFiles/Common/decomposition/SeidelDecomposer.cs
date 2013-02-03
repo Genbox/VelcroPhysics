@@ -4,6 +4,7 @@
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Common.Decomposition.Seidel;
 using Microsoft.Xna.Framework;
 using Point = FarseerPhysics.Common.Decomposition.Seidel.Point;
@@ -19,6 +20,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// - Generate a lot of garbage due to incapsulation of the Poly2Tri library.
     /// - Running time is O(n log n), n = number of vertices.
     /// - Running time is almost linear for most simple polygons.
+    /// - Does not care about winding order. 
     /// 
     /// For more information, see Raimund Seidel's paper "A simple and fast incremental randomized
     /// algorithm for computing trapezoidal decompositions and for triangulating polygons"
@@ -41,8 +43,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// <returns>A list of triangles</returns>
         public static List<Vertices> ConvexPartition(Vertices vertices, float sheer = 0.001f)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices> { vertices };
+            Debug.Assert(vertices.Count > 3);
 
             List<Point> compatList = new List<Point>(vertices.Count);
 

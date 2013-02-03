@@ -12,6 +12,44 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
+    public enum PolygonError
+    {
+        /// <summary>
+        /// There were no errors in the polygon
+        /// </summary>
+        NoError,
+
+        /// <summary>
+        /// Polygon must have between 3 and Settings.MaxPolygonVertices vertices.
+        /// </summary>
+        InvalidAmountOfVertices,
+
+        /// <summary>
+        /// Polygon must be simple. This means no overlapping edges.
+        /// </summary>
+        NotSimple,
+
+        /// <summary>
+        /// Polygon must have a counter clockwise winding.
+        /// </summary>
+        NotCounterClockWise,
+
+        /// <summary>
+        /// The polygon is concave, it needs to be convex.
+        /// </summary>
+        NotConvex,
+
+        /// <summary>
+        /// Polygon area is too small.
+        /// </summary>
+        AreaTooSmall,
+
+        /// <summary>
+        /// The polygon has a side that is too short.
+        /// </summary>
+        SideTooSmall
+    }
+
 #if !(XBOX360)
     [DebuggerDisplay("Count = {Count} Vertices = {ToString()}")]
 #endif
@@ -370,66 +408,46 @@ namespace FarseerPhysics.Common
         /// 
         /// From Eric Jordan's convex decomposition library
         /// </summary>
-        /// <returns>0 if there were no error.</returns>
-        public int CheckPolygon(out string errorMessage)
+        /// <returns>PolygonError.NoError if there were no error.</returns>
+        public PolygonError CheckPolygon()
         {
-            errorMessage = null;
-
             if (Count < 3 || Count > Settings.MaxPolygonVertices)
             {
-                errorMessage = string.Format("Polygon must have between 3 and {0} vertices.", Settings.MaxPolygonVertices);
-                return 1;
+                return PolygonError.InvalidAmountOfVertices;
             }
 
             if (!IsSimple())
             {
-                errorMessage = "Polygon must be simple: no overlapping edges.";
-                return 2;
+                return PolygonError.NotSimple;
             }
 
             if (!IsCounterClockWise())
             {
-                errorMessage = "Polygon must have a counter clockwise winding.";
-                return 3;
+                return PolygonError.NotCounterClockWise;
             }
 
             if (!IsConvex())
             {
-                errorMessage = "Polygon must be convex.";
-                return 4;
+                return PolygonError.NotConvex;
             }
 
             if (GetArea() < Settings.Epsilon)
             {
-                errorMessage = "Polygon area is too small.";
-                return 5;
+                return PolygonError.AreaTooSmall;
             }
 
             //Check if the sides are of adequate length.
             for (int i = 0; i < Count; ++i)
             {
-                Vector2 edge = NextVertex(i) - this[i];
-                if (edge.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
+                int next = i + 1 < Count ? i + 1 : 0;
+                Vector2 edge = this[next] - this[i];
+                if (edge.LengthSquared() <= Settings.Epsilon*Settings.Epsilon)
                 {
-                    errorMessage = "The polygon has a side that is too short.";
-                    return 6;
+                    return PolygonError.SideTooSmall;
                 }
             }
 
-            return 0;
-        }
-
-        /// <summary>
-        /// Checks if the polygon is valid for use in the engine.
-        ///
-        /// Performs a full check, for simplicity, convexity,
-        /// orientation, minimum angle, and volume.
-        /// </summary>
-        /// <returns>True if the polygon is valid.</returns>
-        public bool CheckPolygon()
-        {
-            string errorMessage;
-            return CheckPolygon(out errorMessage) == 0;
+            return PolygonError.NoError;
         }
 
         /// <summary>

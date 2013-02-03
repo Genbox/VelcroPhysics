@@ -4,6 +4,7 @@
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Common.Decomposition.CDT;
 using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
 using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
@@ -21,6 +22,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// - Supports holes
     /// - Generate a lot of garbage due to incapsulation of the Poly2Tri library.
     /// - Running time is O(n^2), n = number of vertices.
+    /// - Does not care about winding order.
     /// 
     /// Source: http://code.google.com/p/poly2tri/
     /// </summary>
@@ -31,8 +33,7 @@ namespace FarseerPhysics.Common.Decomposition
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices> { vertices };
+            Debug.Assert(vertices.Count > 3);
 
             Polygon poly = new Polygon();
 

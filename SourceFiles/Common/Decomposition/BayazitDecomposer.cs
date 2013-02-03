@@ -25,28 +25,13 @@ namespace FarseerPhysics.Common.Decomposition
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices> { vertices };
+            Debug.Assert(vertices.Count > 3);
+            Debug.Assert(vertices.IsCounterClockWise());
 
-            if (Settings.SkipSanityChecks)
-            {
-                //We check for counter clockwise vertices, as it is a precondition in this algorithm.
-                Debug.Assert(vertices.IsCounterClockWise(), "The polygon is not counter clockwise. This is needed for Bayazit to work correctly.");
-            }
-            else
-            {
-                if (!vertices.IsCounterClockWise())
-                {
-                    Vertices temp = new Vertices(vertices);
-                    temp.Reverse();
-                    return Triangulate(temp);
-                }
-
-                return Triangulate(vertices);
-            }
+            return TriangulatePolygon(vertices);
         }
 
-        private static List<Vertices> Triangulate(Vertices vertices)
+        private static List<Vertices> TriangulatePolygon(Vertices vertices)
         {
             List<Vertices> list = new List<Vertices>();
             Vector2 lowerInt = new Vector2();
@@ -143,8 +128,8 @@ namespace FarseerPhysics.Common.Decomposition
                         lowerPoly = Copy(i, (int)bestIndex, vertices);
                         upperPoly = Copy((int)bestIndex, i, vertices);
                     }
-                    list.AddRange(ConvexPartition(lowerPoly));
-                    list.AddRange(ConvexPartition(upperPoly));
+                    list.AddRange(TriangulatePolygon(lowerPoly));
+                    list.AddRange(TriangulatePolygon(upperPoly));
                     return list;
                 }
             }
@@ -154,19 +139,11 @@ namespace FarseerPhysics.Common.Decomposition
             {
                 lowerPoly = Copy(0, vertices.Count / 2, vertices);
                 upperPoly = Copy(vertices.Count / 2, 0, vertices);
-                list.AddRange(ConvexPartition(lowerPoly));
-                list.AddRange(ConvexPartition(upperPoly));
+                list.AddRange(TriangulatePolygon(lowerPoly));
+                list.AddRange(TriangulatePolygon(upperPoly));
             }
             else
                 list.Add(vertices);
-
-            //TODO: Add sanity check
-            //Remove empty vertice collections
-            for (int i = list.Count - 1; i >= 0; i--)
-            {
-                if (list[i].Count == 0)
-                    list.RemoveAt(i);
-            }
 
             return list;
         }
