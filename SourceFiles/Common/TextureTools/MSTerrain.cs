@@ -11,15 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.Common.TextureTools
 {
-    public enum Decomposer
-    {
-        Bayazit,
-        CDT,
-        Earclip,
-        Flipcode,
-        Seidel,
-    }
-
     /// <summary>
     /// Return true if the specified color is inside the terrain.
     /// </summary>
@@ -75,7 +66,7 @@ namespace FarseerPhysics.Common.TextureTools
         /// Decomposer to use when regenerating terrain. Can be changed on the fly without consequence.
         /// Note: Some decomposerers are unstable.
         /// </summary>
-        public Decomposer Decomposer;
+        public TriangulationAlgorithm Decomposer;
 
         /// <summary>
         /// Point cloud defining the terrain.
@@ -337,28 +328,8 @@ namespace FarseerPhysics.Common.TextureTools
                 item.Translate(ref _topLeft);
                 item.ForceCounterClockWise();
                 Vertices p = SimplifyTools.CollinearSimplify(item);
-                List<Vertices> decompPolys = new List<Vertices>();
 
-                switch (Decomposer)
-                {
-                    case Decomposer.Bayazit:
-                        decompPolys = BayazitDecomposer.ConvexPartition(p);
-                        break;
-                    case Decomposer.CDT:
-                        decompPolys = CDTDecomposer.ConvexPartition(p);
-                        break;
-                    case Decomposer.Earclip:
-                        decompPolys = EarclipDecomposer.ConvexPartition(p);
-                        break;
-                    case Decomposer.Flipcode:
-                        decompPolys = FlipcodeDecomposer.ConvexPartition(p);
-                        break;
-                    case Decomposer.Seidel:
-                        decompPolys = SeidelDecomposer.ConvexPartition(p, 0.001f);
-                        break;
-                    default:
-                        break;
-                }
+                List<Vertices> decompPolys = Triangulate.ConvexPartition(p, Decomposer);
 
                 foreach (Vertices poly in decompPolys)
                 {
