@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PhysicsLogic
 {
+    // Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
+    // Ported to Farseer 3.0 by Nicolás Hormazábal
+
     internal struct ShapeData
     {
         public Body Body;
@@ -42,21 +45,17 @@ namespace FarseerPhysics.Common.PhysicsLogic
      * For each RIGID BODY (not shape -- this is an optimization) that is matched, loop through its vertices to determine
      *		the extreme points -- if there is structure that contains outlining polygon, use that as an additional optimization
      * Evenly cast a number of rays against the shape - number roughly proportional to the arc coverage
-     *		-Something like every 3 degrees should do the trick although this can be altered depending on the distance (if really close don't need such a high density of rays)
-     *		-There should be a minimum number of rays (3-5?) applied to each body so that small bodies far away are still accurately modeled
-     *		-Be sure to have the forces of each ray be proportional to the average arc length covered by each.
+     *		- Something like every 3 degrees should do the trick although this can be altered depending on the distance (if really close don't need such a high density of rays)
+     *		- There should be a minimum number of rays (3-5?) applied to each body so that small bodies far away are still accurately modeled
+     *		- Be sure to have the forces of each ray be proportional to the average arc length covered by each.
      * For each ray that actually intersects with the shape (non intersections indicate something blocking the path of explosion):
-     *		> apply the appropriate force dotted with the negative of the collision normal at the collision point
-     *		> optionally apply linear interpolation between aforementioned Normal force and the original explosion force in the direction of ray to simulate "surface friction" of sorts
+     *		- Apply the appropriate force dotted with the negative of the collision normal at the collision point
+     *		- Optionally apply linear interpolation between aforementioned Normal force and the original explosion force in the direction of ray to simulate "surface friction" of sorts
      */
 
     /// <summary>
     /// This is an explosive... it explodes.
     /// </summary>
-    /// <remarks>
-    /// Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
-    /// Ported to Farseer 3.0 by Nicolás Hormazábal
-    /// </remarks>
     public sealed class Explosion : PhysicsLogic
     {
         /// <summary>
@@ -314,7 +313,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                     int lastPos = _data.Count - 1;
                     ShapeData last = _data[lastPos];
-                    while ((_data.Count() > 0)
+                    while ((_data.Count > 0)
                            && (_data.Last().Min >= _data.Last().Max)) // just making sure min<max
                     {
                         last.Min = _data.Last().Min - 2 * MathHelper.Pi;

@@ -161,7 +161,7 @@ namespace FarseerPhysics.TestBed.Tests
             //Partition shape into convex pieces
             List<Vertices> verts;
             if (!Vertices.IsConvex())
-                verts = BayazitDecomposer.ConvexPartition(Vertices);
+                verts = Triangulate.ConvexPartition(Vertices, TriangulationAlgorithm.Bayazit);
             else
             {
                 verts = new List<Vertices>();

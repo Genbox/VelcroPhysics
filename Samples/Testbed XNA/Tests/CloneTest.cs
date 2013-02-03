@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             Vector2 centroid = -verts.GetCentroid();
             verts.Translate(ref centroid);
 
-            Body compund = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(verts), 1);
+            Body compund = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Bayazit), 1);
             compund.Position = new Vector2(-25, 30);
 
             Body b = compund.DeepClone();
