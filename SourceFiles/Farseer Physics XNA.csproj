@@ -196,6 +196,7 @@
     <Compile Include="Common\Decomposition\Seidel\Triangulator.cs" />
     <Compile Include="Common\Decomposition\Seidel\XNode.cs" />
     <Compile Include="Common\Decomposition\Seidel\YNode.cs" />
+    <Compile Include="Common\Decomposition\Triangulate.cs" />
     <Compile Include="Common\FixedArray.cs" />
     <Compile Include="Common\HashSet.cs" />
     <Compile Include="Common\LineTools.cs" />

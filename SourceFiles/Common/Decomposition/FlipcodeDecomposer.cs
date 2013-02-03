@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
@@ -10,6 +11,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// - No support for holes
     /// - Very fast
     /// - Only works on simple polygons
+    /// - Only works on counter clockwise polygons
     /// 
     /// More information: http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
     /// </summary>
@@ -20,28 +22,22 @@ namespace FarseerPhysics.Common.Decomposition
         private static Vector2 _tmpC;
 
         /// <summary>
-        /// Decompose the polygon into triangles
+        /// Decompose the polygon into triangles.
+        /// 
+        /// Properties:
+        /// - Only works on counter clockwise polygons
+        /// 
         /// </summary>
         /// <param name="vertices">The list of points describing the polygon</param>
-        /// <returns></returns>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices> { vertices };
+            Debug.Assert(vertices.Count > 3);
+            Debug.Assert(vertices.IsCounterClockWise());
 
-            int[] V = new int[vertices.Count];
+            int[] polygon = new int[vertices.Count];
 
-            // We want a counter-clockwise polygon in V
-            if (vertices.IsCounterClockWise())
-            {
-                for (int v = 0; v < vertices.Count; v++)
-                    V[v] = v;
-            }
-            else
-            {
-                for (int v = 0; v < vertices.Count; v++)
-                    V[v] = (vertices.Count - 1) - v;
-            }
+            for (int v = 0; v < vertices.Count; v++)
+                polygon[v] = v;
 
             int nv = vertices.Count;
 
@@ -70,11 +66,11 @@ namespace FarseerPhysics.Common.Decomposition
                 if (nv <= w)
                     w = 0; // Next 
 
-                _tmpA = vertices[V[u]];
-                _tmpB = vertices[V[v]];
-                _tmpC = vertices[V[w]];
+                _tmpA = vertices[polygon[u]];
+                _tmpB = vertices[polygon[v]];
+                _tmpC = vertices[polygon[w]];
 
-                if (Snip(vertices, u, v, w, nv, V))
+                if (Snip(vertices, u, v, w, nv, polygon))
                 {
                     int s, t;
 
@@ -88,7 +84,7 @@ namespace FarseerPhysics.Common.Decomposition
                     // Remove v from remaining polygon 
                     for (s = v, t = v + 1; t < nv; s++, t++)
                     {
-                        V[s] = V[t];
+                        polygon[s] = polygon[t];
                     }
                     nv--;
 

@@ -28,13 +28,11 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
-            new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
-
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
 #endif
+            new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
             new TestEntry {Name = "Texture to Vertices", CreateTest = TextureVerticesTest.Create},
-            new TestEntry {Name = "Convex hull test", CreateTest = ConvexHullTest2.Create},
 
             new TestEntry {Name = "Dynamic Tree", CreateTest = DynamicTreeTest.Create},
             new TestEntry {Name = "Fluids", CreateTest = FluidsTest.Create},

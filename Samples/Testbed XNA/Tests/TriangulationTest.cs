@@ -1,6 +1,5 @@
 ﻿#if WINDOWS
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using FarseerPhysics.Common;
@@ -20,7 +19,7 @@ namespace FarseerPhysics.TestBed.Tests
         private Stopwatch _sw = new Stopwatch();
         private float[] _timings = new float[6];
         private Body[] _bodies = new Body[6];
-        private string[] _names = new string[] { "Seidel", "Seidel (trapezoids)", "Delauny", "Earclip", "Flipcode", "Bayazit" };
+        private string[] _names = new[] { "Seidel", "Seidel (trapezoids)", "Delauny", "Earclip", "Flipcode", "Bayazit" };
 
         public override void Initialize()
         {
@@ -42,32 +41,32 @@ namespace FarseerPhysics.TestBed.Tests
             World.Clear();
 
             _sw.Start();
-            _bodies[0] = BodyFactory.CreateCompoundPolygon(World, SeidelDecomposer.ConvexPartition(vertices), 1);
+            _bodies[0] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Seidel), 1);
             _bodies[0].Position = new Vector2(-30, 28);
             _timings[0] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[1] = BodyFactory.CreateCompoundPolygon(World, SeidelDecomposer.ConvexPartitionTrapezoid(vertices), 1);
+            _bodies[1] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.SeidelTrapezoids), 1);
             _bodies[1].Position = new Vector2(0, 28);
             _timings[1] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[2] = BodyFactory.CreateCompoundPolygon(World, CDTDecomposer.ConvexPartition(vertices), 1);
+            _bodies[2] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Delauny), 1);
             _bodies[2].Position = new Vector2(30, 28);
             _timings[2] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[3] = BodyFactory.CreateCompoundPolygon(World, EarclipDecomposer.ConvexPartition(vertices), 1);
+            _bodies[3] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Earclip), 1);
             _bodies[3].Position = new Vector2(-30, 5);
             _timings[3] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[4] = BodyFactory.CreateCompoundPolygon(World, FlipcodeDecomposer.ConvexPartition(vertices), 1);
+            _bodies[4] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Flipcode), 1);
             _bodies[4].Position = new Vector2(0, 5);
             _timings[4] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[5] = BodyFactory.CreateCompoundPolygon(World, BayazitDecomposer.ConvexPartition(vertices), 1);
+            _bodies[5] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Bayazit), 1);
             _bodies[5].Position = new Vector2(30, 5);
             _timings[5] = _sw.ElapsedMilliseconds;
 
@@ -92,17 +91,6 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(float.Parse(split[0]), float.Parse(split[1])));
             }
 
-            //vertices.Scale(new Vector2(0.4f, 0.4f));
-
-            //List<string> output = new List<string>();
-
-            //foreach (Vector2 vertex in vertices)
-            //{
-            //    output.Add(vertex.X + " " + vertex.Y);
-            //}
-
-            //File.WriteAllLines(_nextFileName, output);
-
             return vertices;
         }
 
@@ -110,11 +98,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             DebugView.DrawString(50, TextLine, "Loaded: " + _nextFileName + " - Press T for next");
 
-            Vector2 offset = new Vector2(-4, 12);
+            Vector2 offset = new Vector2(-6, 12);
 
             for (int i = 0; i < _names.Length; i++)
             {
-                string title = string.Format("{0}: {1} ms", _names[i], _timings[i]);
+                string title = string.Format("{0}: {1} ms - {2} triangles", _names[i], _timings[i], _bodies[i].FixtureList.Count);
 
                 Vector2 screenPosition = GameInstance.ConvertWorldToScreen(_bodies[i].Position + offset);
                 DebugView.DrawString((int)screenPosition.X, (int)screenPosition.Y, title);

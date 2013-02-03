@@ -21,7 +21,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.Decomposition
@@ -45,26 +44,13 @@ namespace FarseerPhysics.Common.Decomposition
         /// Each resulting polygon will have no more than Settings.MaxPolygonVertices vertices.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="maxPolys">The maximum number of polygons. The rest are thrown out.</param>
         /// <param name="tolerance">The tolerance.</param>
         public static List<Vertices> ConvexPartition(Vertices vertices, float tolerance = 0.001f)
         {
-            if (vertices.Count <= 3)
-                return new List<Vertices> { vertices };
+            Debug.Assert(vertices.Count > 3);
+            Debug.Assert(!vertices.IsCounterClockWise());
 
-            if (Settings.SkipSanityChecks)
-                Debug.Assert(!vertices.IsCounterClockWise(), "The Earclip algorithm expects the polygon to be clockwise.");
-            else
-            {
-                if (vertices.IsCounterClockWise())
-                {
-                    Vertices temp = new Vertices(vertices);
-                    temp.Reverse();
-                    return TriangulatePolygon(temp, tolerance);
-                }
-
-                return TriangulatePolygon(vertices, tolerance);
-            }
+            return TriangulatePolygon(vertices, tolerance);
         }
 
         /// <summary>

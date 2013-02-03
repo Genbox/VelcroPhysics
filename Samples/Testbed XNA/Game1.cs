@@ -55,9 +55,7 @@ namespace FarseerPhysics.TestBed
         public Game1()
         {
             //Default view
-            _viewCenter = new Vector2(0.0f, 20.0f);
-            _viewZoom = 0.8f;
-            Resize();
+            ResetView();
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
@@ -272,7 +270,7 @@ namespace FarseerPhysics.TestBed
 
         private void ResetView()
         {
-            _viewZoom = 1.0f;
+            _viewZoom = 0.8f;
             _viewCenter = new Vector2(0.0f, 20.0f);
             Resize();
         }
