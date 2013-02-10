@@ -31,7 +31,7 @@
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
-    public class DTSweepConstraint : TriangulationConstraint
+    internal class DTSweepConstraint : TriangulationConstraint
     {
         /// <summary>
         /// Give two points in any order. Will always be ordered so

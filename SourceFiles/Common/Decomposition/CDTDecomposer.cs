@@ -26,7 +26,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// Source: http://code.google.com/p/poly2tri/
     /// </summary>
-    public static class CDTDecomposer
+    internal static class CDTDecomposer
     {
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.

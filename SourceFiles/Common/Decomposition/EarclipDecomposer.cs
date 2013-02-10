@@ -35,7 +35,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// Source: http://www.ewjordan.com/earClip/
     /// </summary>
-    public static class EarclipDecomposer
+    internal static class EarclipDecomposer
     {
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 
 

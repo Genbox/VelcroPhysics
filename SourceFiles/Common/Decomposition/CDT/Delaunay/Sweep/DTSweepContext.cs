@@ -37,7 +37,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
      *
      */
 
-    public class DTSweepContext : TriangulationContext
+    internal class DTSweepContext : TriangulationContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
         // PointSet width to both left and right.

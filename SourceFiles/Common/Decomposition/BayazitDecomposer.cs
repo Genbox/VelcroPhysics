@@ -17,7 +17,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// For more information about this algorithm, see http://mnbayazit.com/406/bayazit
     /// </summary>
-    public static class BayazitDecomposer
+    internal static class BayazitDecomposer
     {
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygon.

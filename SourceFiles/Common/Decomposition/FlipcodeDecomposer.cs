@@ -15,7 +15,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// More information: http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
     /// </summary>
-    public static class FlipcodeDecomposer
+    internal static class FlipcodeDecomposer
     {
         private static Vector2 _tmpA;
         private static Vector2 _tmpB;

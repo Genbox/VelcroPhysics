@@ -45,7 +45,7 @@ using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
 {
-    public class Polygon : Triangulatable
+    internal class Polygon : Triangulatable
     {
         protected List<Polygon> _holes;
         protected PolygonPoint _last;
