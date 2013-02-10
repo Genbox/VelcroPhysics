@@ -33,7 +33,7 @@ namespace FarseerPhysics.Common.Decomposition
     /// 
     /// This implementation is from Dec 14, 2010
     /// </summary>
-    public static class SeidelDecomposer
+    internal static class SeidelDecomposer
     {
         /// <summary>
         /// Decompose the polygon into several smaller non-concave polygons.

@@ -34,7 +34,7 @@ using FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 
 namespace FarseerPhysics.Common.Decomposition.CDT
 {
-    public class TriangulationPoint
+    internal class TriangulationPoint
     {
         // List of edges this point constitutes an upper ending point (CDT)
 

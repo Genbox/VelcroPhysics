@@ -43,7 +43,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Sets
      * @author Thomas Åhlén, thahlen@gmail.com
      */
 
-    public class ConstrainedPointSet : PointSet
+    internal class ConstrainedPointSet : PointSet
     {
         private List<TriangulationPoint> _constrainedPointList = null;
 

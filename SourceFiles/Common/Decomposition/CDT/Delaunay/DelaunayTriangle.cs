@@ -46,7 +46,7 @@ using FarseerPhysics.Common.Decomposition.CDT.Util;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay
 {
-    public class DelaunayTriangle
+    internal class DelaunayTriangle
     {
         /** Neighbor pointers */
 

@@ -31,7 +31,7 @@
 
 namespace FarseerPhysics.Common.Decomposition.CDT
 {
-    public enum TriangulationMode
+    internal enum TriangulationMode
     {
         Unconstrained,
         Constrained,

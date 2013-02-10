@@ -31,7 +31,7 @@ namespace FarseerPhysics.ContentPipeline
             {
                 if (containerCopy[key].closed)
                 {
-                    List<Vertices> partition = BayazitDecomposer.ConvexPartition(containerCopy[key].vertices);
+                    List<Vertices> partition = Triangulate.ConvexPartition(containerCopy[key].vertices, TriangulationAlgorithm.Bayazit);
                     if (partition.Count > 1)
                     {
                         this.Remove(key);

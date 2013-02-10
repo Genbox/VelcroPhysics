@@ -59,7 +59,7 @@ namespace FarseerPhysics.ContentPipeline
             Vector2 centroid = -outline.GetCentroid();
             outline.Translate(ref centroid);
             outline = SimplifyTools.DouglasPeuckerSimplify(outline, 0.1f);
-            List<Vertices> result = BayazitDecomposer.ConvexPartition(outline);
+            List<Vertices> result = Triangulate.ConvexPartition(outline, TriangulationAlgorithm.Bayazit);
             Vector2 scale = new Vector2(_scaleFactor);
             foreach (Vertices vertices in result)
             {

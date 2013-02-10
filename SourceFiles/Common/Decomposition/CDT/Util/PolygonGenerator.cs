@@ -34,7 +34,7 @@ using FarseerPhysics.Common.Decomposition.CDT.Polygon;
 
 namespace FarseerPhysics.Common.Decomposition.CDT.Util
 {
-    public class PolygonGenerator
+    internal class PolygonGenerator
     {
         private static readonly Random RNG = new Random();
 
