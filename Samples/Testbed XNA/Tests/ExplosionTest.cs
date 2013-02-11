@@ -15,10 +15,10 @@ namespace FarseerPhysics.TestBed.Tests
         private const int ColumnCount = 5;
         private const int RowCount = 16;
         private Body[] _bodies = new Body[RowCount * ColumnCount];
-        private Explosion _explosion;
+        private RealExplosion _realExplosion;
         private int[] _indices = new int[RowCount * ColumnCount];
         private Vector2 _mousePos;
-        private float _power;
+        private float _force;
         private float _radius;
 
         private ExplosionTest()
@@ -58,8 +58,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             _radius = 5;
-            _power = 3;
-            _explosion = new Explosion(World);
+            _force = 3;
+            _realExplosion = new RealExplosion(World);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -72,7 +72,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.OemComma))
             {
-                _explosion.Activate(_mousePos, _radius, _power);
+                _realExplosion.Activate(_mousePos, _radius, _force);
             }
             if (keyboardManager.IsKeyDown(Keys.A))
             {
@@ -84,11 +84,11 @@ namespace FarseerPhysics.TestBed.Tests
             }
             if (keyboardManager.IsKeyDown(Keys.D))
             {
-                _power = MathHelper.Clamp(_power - 0.1f, 0, 20);
+                _force = MathHelper.Clamp(_force - 0.1f, 0, 20);
             }
             if (keyboardManager.IsKeyDown(Keys.F))
             {
-                _power = MathHelper.Clamp(_power + 0.1f, 0, 20);
+                _force = MathHelper.Clamp(_force + 0.1f, 0, 20);
             }
 
             base.Keyboard(keyboardManager);
@@ -105,12 +105,13 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawString(50, TextLine, "Press: (D) to decrease the explosion power, (F) to increase it.");
             TextLine += 15;
             // Fighting against float decimals
-            float powernumber = (float)((int)(_power * 10)) / 10;
+            float powernumber = (float)((int)(_force * 10)) / 10;
             DebugView.DrawString(50, TextLine, "Power: " + powernumber);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawCircle(_mousePos, _radius, color);
+
             DebugView.EndCustomDraw();
         }
 

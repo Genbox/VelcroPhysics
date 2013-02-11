@@ -56,7 +56,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
     /// <summary>
     /// This is an explosive... it explodes.
     /// </summary>
-    public sealed class Explosion : PhysicsLogic
+    public sealed class RealExplosion : PhysicsLogic
     {
         /// <summary>
         /// Two degrees: maximum angle from edges to first ray tested
@@ -94,13 +94,13 @@ namespace FarseerPhysics.Common.PhysicsLogic
         public int MinRays = 5;
 
         private List<ShapeData> _data = new List<ShapeData>();
-        private Dictionary<Fixture, List<Vector2>> _exploded;
+        private Dictionary<Fixture, Vector2> _exploded;
         private RayDataComparer _rdc;
 
-        public Explosion(World world)
+        public RealExplosion(World world)
             : base(world, PhysicsLogicType.Explosion)
         {
-            _exploded = new Dictionary<Fixture, List<Vector2>>();
+            _exploded = new Dictionary<Fixture, Vector2>();
             _rdc = new RayDataComparer();
             _data = new List<ShapeData>();
         }
@@ -122,7 +122,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
         /// A dictionnary containing all the "exploded" fixtures
         /// with a list of the applied impulses
         /// </returns>
-        public Dictionary<Fixture, List<Vector2>> Activate(Vector2 pos, float radius, float maxForce)
+        public Dictionary<Fixture, Vector2> Activate(Vector2 pos, float radius, float maxForce)
         {
             _exploded.Clear();
 
@@ -196,7 +196,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     float minAbsolute = 0.0f;
                     float maxAbsolute = 0.0f;
 
-                    for (int j = 0; j < (ps.Vertices.Count()); ++j)
+                    for (int j = 0; j < ps.Vertices.Count; ++j)
                     {
                         Vector2 toVertex = (shapes[i].Body.GetWorldPoint(ps.Vertices[j]) - pos);
                         float newAngle = (float)Math.Atan2(toVertex.Y, toVertex.X);
@@ -295,14 +295,14 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         _data.Add(d);
                     }
 
-                    if ((_data.Count() > 1)
+                    if ((_data.Count > 1)
                         && (i == valIndex - 1)
                         && (_data.Last().Body == _data.First().Body)
                         && (_data.Last().Max == _data.First().Min))
                     {
                         ShapeData fi = _data[0];
                         fi.Min = _data.Last().Min;
-                        _data.RemoveAt(_data.Count() - 1);
+                        _data.RemoveAt(_data.Count - 1);
                         _data[0] = fi;
                         while (_data.First().Min >= _data.First().Max)
                         {
@@ -327,7 +327,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 }
             }
 
-            for (int i = 0; i < _data.Count(); ++i)
+            for (int i = 0; i < _data.Count; ++i)
             {
                 if (!IsActiveOn(_data[i].Body))
                     continue;
@@ -374,41 +374,20 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                         // the force that is to be applied for this particular ray.
                         // offset is angular coverage. lambda*length of segment is distance.
-                        float impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / MathHelper.Pi *
-                                        (1.0f - Math.Min(1.0f, minlambda));
+                        float impulse = (arclen / (MinRays + insertedRays)) * maxForce * 180.0f / MathHelper.Pi * (1.0f - Math.Min(1.0f, minlambda));
 
                         // We Apply the impulse!!!
-                        Vector2 vectImp = Vector2.Dot(impulse * new Vector2((float)Math.Cos(j),
-                                                                          (float)Math.Sin(j)), -ro.Normal) *
-                                          new Vector2((float)Math.Cos(j),
-                                                      (float)Math.Sin(j));
-
+                        Vector2 vectImp = Vector2.Dot(impulse * new Vector2((float)Math.Cos(j), (float)Math.Sin(j)), -ro.Normal) * new Vector2((float)Math.Cos(j), (float)Math.Sin(j));
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
                         // We gather the fixtures for returning them
-                        Vector2 val = Vector2.Zero;
-                        List<Vector2> vectorList;
-                        if (_exploded.TryGetValue(f, out vectorList))
-                        {
-                            val.X += Math.Abs(vectImp.X);
-                            val.Y += Math.Abs(vectImp.Y);
-
-                            vectorList.Add(val);
-                        }
+                        if (_exploded.ContainsKey(f))
+                            _exploded[f] += vectImp;
                         else
-                        {
-                            vectorList = new List<Vector2>();
-                            val.X = Math.Abs(vectImp.X);
-                            val.Y = Math.Abs(vectImp.Y);
-
-                            vectorList.Add(val);
-                            _exploded.Add(f, vectorList);
-                        }
+                            _exploded.Add(f, vectImp);
 
                         if (minlambda > 1.0f)
-                        {
                             hitpoint = p2;
-                        }
                     }
                 }
             }
@@ -437,13 +416,10 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 Vector2 vectImp = impulse * (hitPoint - pos);
 
-                List<Vector2> vectorList = new List<Vector2>();
-                vectorList.Add(vectImp);
-
                 fix.Body.ApplyLinearImpulse(ref vectImp, ref hitPoint);
 
                 if (!_exploded.ContainsKey(fix))
-                    _exploded.Add(fix, vectorList);
+                    _exploded.Add(fix, vectImp);
             }
 
             return _exploded;
