@@ -28,8 +28,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
-            new TestEntry {Name = "Explosion", CreateTest = ExplosionTest.Create},
-
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
 #endif
