@@ -20,69 +20,59 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
 {
+    /// <summary>
+    /// Combines a list of triangles into a list of convex polygons.
+    /// Starts with a seed triangle, keep adding triangles to it until you can't add any more without making the polygon non-convex.
+    /// </summary>
     public static class SimpleCombiner
     {
         /// <summary>
-        /// Turns a list of triangles into a list of convex polygons. Very simple
-        /// method - start with a seed triangle, keep adding triangles to it until
-        /// you can't add any more without making the polygon non-convex.
-        ///
-        /// Returns an integer telling how many polygons were created.  Will fill
-        /// polys array up to polysLength entries, which may be smaller or larger
-        /// than the return value.
-        /// 
-        /// Takes O(N///P) where P is the number of resultant polygons, N is triangle
-        /// count.
-        /// 
-        /// The final polygon list will not necessarily be minimal, though in
-        /// practice it works fairly well.
+        /// Combine a list of triangles into a list of convex polygons.
         /// </summary>
-        /// <param name="triangulated">The triangulated.</param>
-        ///<param name="maxPolys">The maximun number of polygons</param>
+        ///<param name="triangles">The triangles.</param>
+        ///<param name="maxPolys">The maximun number of polygons to return.</param>
         ///<param name="tolerance">The tolerance</param>
-        ///<returns></returns>
-        public static List<Vertices> PolygonizeTriangles(List<Vertices> triangulated, int maxPolys = int.MaxValue, float tolerance = 0)
+        public static List<Vertices> PolygonizeTriangles(List<Vertices> triangles, int maxPolys = int.MaxValue, float tolerance = 0.001f)
         {
+            if (triangles.Count <= 0)
+                return triangles;
+
             List<Vertices> polys = new List<Vertices>();
 
-            int polyIndex = 0;
-
-            if (triangulated.Count <= 0)
-            {
-                //return empty polygon list
-                return polys;
-            }
-
-            bool[] covered = new bool[triangulated.Count];
-            for (int i = 0; i < triangulated.Count; ++i)
+            bool[] covered = new bool[triangles.Count];
+            for (int i = 0; i < triangles.Count; ++i)
             {
                 covered[i] = false;
 
                 //Check here for degenerate triangles
-                if (((triangulated[i][0].X == triangulated[i][1].X) && (triangulated[i][0].Y == triangulated[i][1].Y))
-                    ||
-                    ((triangulated[i][1].X == triangulated[i][2].X) && (triangulated[i][1].Y == triangulated[i][2].Y))
-                    ||
-                    ((triangulated[i][0].X == triangulated[i][2].X) && (triangulated[i][0].Y == triangulated[i][2].Y)))
-                {
+                Vertices triangle = triangles[i];
+                Vector2 a = triangle[0];
+                Vector2 b = triangle[1];
+                Vector2 c = triangle[2];
+
+                if ((a.X == b.X && a.Y == b.Y) || (b.X == c.X && b.Y == c.Y) || (a.X == c.X && a.Y == c.Y))
                     covered[i] = true;
-                }
             }
+
+            int polyIndex = 0;
 
             bool notDone = true;
             while (notDone)
             {
                 int currTri = -1;
-                for (int i = 0; i < triangulated.Count; ++i)
+                for (int i = 0; i < triangles.Count; ++i)
                 {
                     if (covered[i])
                         continue;
+
                     currTri = i;
                     break;
                 }
+
                 if (currTri == -1)
                 {
                     notDone = false;
@@ -93,19 +83,19 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
                     for (int i = 0; i < 3; i++)
                     {
-                        poly.Add(triangulated[currTri][i]);
+                        poly.Add(triangles[currTri][i]);
                     }
 
                     covered[currTri] = true;
                     int index = 0;
-                    for (int i = 0; i < 2 * triangulated.Count; ++i, ++index)
+                    for (int i = 0; i < 2 * triangles.Count; ++i, ++index)
                     {
-                        while (index >= triangulated.Count) index -= triangulated.Count;
+                        while (index >= triangles.Count) index -= triangles.Count;
                         if (covered[index])
                         {
                             continue;
                         }
-                        Vertices newP = AddTriangle(triangulated[index], poly);
+                        Vertices newP = AddTriangle(triangles[index], poly);
                         if (newP == null)
                             continue; // is this right
 

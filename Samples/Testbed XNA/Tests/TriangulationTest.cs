@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -41,32 +42,32 @@ namespace FarseerPhysics.TestBed.Tests
             World.Clear();
 
             _sw.Start();
-            _bodies[0] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Seidel), 1);
+            _bodies[0] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.SeidelTrapezoids), 1);
             _bodies[0].Position = new Vector2(-30, 28);
             _timings[0] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[1] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.SeidelTrapezoids), 1);
+            _bodies[1] = BodyFactory.CreateCompoundPolygon(World, SimpleCombiner.PolygonizeTriangles(Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.SeidelTrapezoids)), 1);
             _bodies[1].Position = new Vector2(0, 28);
             _timings[1] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[2] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Delauny), 1);
+            _bodies[2] = BodyFactory.CreateCompoundPolygon(World, SimpleCombiner.PolygonizeTriangles(Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Delauny)), 1);
             _bodies[2].Position = new Vector2(30, 28);
             _timings[2] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[3] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Earclip), 1);
+            _bodies[3] = BodyFactory.CreateCompoundPolygon(World, SimpleCombiner.PolygonizeTriangles(Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Earclip)), 1);
             _bodies[3].Position = new Vector2(-30, 5);
             _timings[3] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[4] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Flipcode), 1);
+            _bodies[4] = BodyFactory.CreateCompoundPolygon(World, SimpleCombiner.PolygonizeTriangles(Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Flipcode)), 1);
             _bodies[4].Position = new Vector2(0, 5);
             _timings[4] = _sw.ElapsedMilliseconds;
 
             _sw.Restart();
-            _bodies[5] = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Bayazit), 1);
+            _bodies[5] = BodyFactory.CreateCompoundPolygon(World,SimpleCombiner.PolygonizeTriangles( Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Bayazit)), 1);
             _bodies[5].Position = new Vector2(30, 5);
             _timings[5] = _sw.ElapsedMilliseconds;
 
