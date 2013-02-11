@@ -54,7 +54,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
      */
 
     /// <summary>
-    /// This is an explosive... it explodes.
+    /// Creates a realistic explosion based on raycasting. Objects in the open will be affected, but objects behind
+    /// static bodies will not. A body that is half in cover, half in the open will get half the force applied to the end in
+    /// the open.
     /// </summary>
     public sealed class RealExplosion : PhysicsLogic
     {
@@ -94,38 +96,24 @@ namespace FarseerPhysics.Common.PhysicsLogic
         public int MinRays = 5;
 
         private List<ShapeData> _data = new List<ShapeData>();
-        private Dictionary<Fixture, Vector2> _exploded;
         private RayDataComparer _rdc;
 
         public RealExplosion(World world)
             : base(world, PhysicsLogicType.Explosion)
         {
-            _exploded = new Dictionary<Fixture, Vector2>();
             _rdc = new RayDataComparer();
             _data = new List<ShapeData>();
         }
 
         /// <summary>
-        /// This makes the explosive explode
+        /// Activate the explosion at the specified position.
         /// </summary>
-        /// <param name="pos">
-        /// The position where the explosion happens
-        /// </param>
-        /// <param name="radius">
-        /// The explosion radius
-        /// </param>
-        /// <param name="maxForce">
-        /// The explosion force at the explosion point
-        /// (then is inversely proportional to the square of the distance)
-        /// </param>
-        /// <returns>
-        /// A dictionnary containing all the "exploded" fixtures
-        /// with a list of the applied impulses
-        /// </returns>
+        /// <param name="pos">The position where the explosion happens </param>
+        /// <param name="radius">The explosion radius </param>
+        /// <param name="maxForce">The explosion force at the explosion point (then is inversely proportional to the square of the distance)</param>
+        /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
         public Dictionary<Fixture, Vector2> Activate(Vector2 pos, float radius, float maxForce)
         {
-            _exploded.Clear();
-
             AABB aabb;
             aabb.LowerBound = pos + new Vector2(-radius, -radius);
             aabb.UpperBound = pos + new Vector2(radius, radius);
@@ -145,9 +133,12 @@ namespace FarseerPhysics.Common.PhysicsLogic
                     if (fixture.TestPoint(ref pos))
                     {
                         if (IgnoreWhenInsideShape)
+                        {
                             exit = true;
-                        else
-                            containedShapes[containedShapeCount++] = fixture;
+                            return false;
+                        }
+
+                        containedShapes[containedShapeCount++] = fixture;
                     }
                     else
                     {
@@ -159,9 +150,9 @@ namespace FarseerPhysics.Common.PhysicsLogic
                 }, ref aabb);
 
             if (exit)
-            {
-                return _exploded;
-            }
+                return new Dictionary<Fixture, Vector2>();
+
+            Dictionary<Fixture, Vector2> exploded = new Dictionary<Fixture, Vector2>(shapeCount + containedShapeCount);
 
             // Per shape max/min angles for now.
             float[] vals = new float[shapeCount * 2];
@@ -211,8 +202,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         diff -= MathHelper.Pi;
 
                         if (Math.Abs(diff) > MathHelper.Pi)
-                            throw new ArgumentException("OMG!");
-                        // Something's wrong, point not in shape but exists angle diff > 180
+                            continue; // Something's wrong, point not in shape but exists angle diff > 180
 
                         if (diff > max)
                         {
@@ -381,10 +371,10 @@ namespace FarseerPhysics.Common.PhysicsLogic
                         _data[i].Body.ApplyLinearImpulse(ref vectImp, ref hitpoint);
 
                         // We gather the fixtures for returning them
-                        if (_exploded.ContainsKey(f))
-                            _exploded[f] += vectImp;
+                        if (exploded.ContainsKey(f))
+                            exploded[f] += vectImp;
                         else
-                            _exploded.Add(f, vectImp);
+                            exploded.Add(f, vectImp);
 
                         if (minlambda > 1.0f)
                             hitpoint = p2;
@@ -418,11 +408,11 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
                 fix.Body.ApplyLinearImpulse(ref vectImp, ref hitPoint);
 
-                if (!_exploded.ContainsKey(fix))
-                    _exploded.Add(fix, vectImp);
+                if (!exploded.ContainsKey(fix))
+                    exploded.Add(fix, vectImp);
             }
 
-            return _exploded;
+            return exploded;
         }
     }
 }

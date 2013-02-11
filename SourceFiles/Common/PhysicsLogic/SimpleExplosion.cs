@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PhysicsLogic
 {
+    /// <summary>
+    /// Creates a simple explosion that ignores other bodies hiding behind static bodies.
+    /// </summary>
     public sealed class SimpleExplosion : PhysicsLogic
     {
         public SimpleExplosion(World world)
@@ -14,8 +17,20 @@ namespace FarseerPhysics.Common.PhysicsLogic
             Power = 1; //linear
         }
 
+        /// <summary>
+        /// This is the power used in the power function. A value of 1 means the force
+        /// applied to bodies in the explosion is linear. A value of 2 means it is exponential.
+        /// </summary>
         public float Power { get; set; }
 
+        /// <summary>
+        /// Activate the explosion at the specified position.
+        /// </summary>
+        /// <param name="pos">The position (center) of the explosion.</param>
+        /// <param name="radius">The radius of the explosion.</param>
+        /// <param name="force">The force applied</param>
+        /// <param name="maxForce">A maximum amount of force. When force gets over this value, it will be equal to maxForce</param>
+        /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
         public Dictionary<Body, Vector2> Activate(Vector2 pos, float radius, float force, float maxForce = float.MaxValue)
         {
             HashSet<Body> affectedBodies = new HashSet<Body>();
@@ -65,7 +80,7 @@ namespace FarseerPhysics.Common.PhysicsLogic
 
         private float GetPercent(float distance, float radius)
         {
-            //(1-(x/r))^y-1
+            //(1-(distance/radius))^power-1
             float percent = (float)Math.Pow(1 - ((distance - radius) / radius), Power) - 1;
 
             if (float.IsNaN(percent))
