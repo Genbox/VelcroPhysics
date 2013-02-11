@@ -205,8 +205,9 @@
     <Compile Include="Common\Matrix.cs" />
     <Compile Include="Common\Path.cs" />
     <Compile Include="Common\PathManager.cs" />
-    <Compile Include="Common\PhysicsLogic\Explosion.cs" />
+    <Compile Include="Common\PhysicsLogic\RealExplosion.cs" />
     <Compile Include="Common\PhysicsLogic\PhysicsLogic.cs" />
+    <Compile Include="Common\PhysicsLogic\SimpleExplosion.cs" />
     <Compile Include="Common\PolygonManipulation\CuttingTools.cs" />
     <Compile Include="Common\PolygonManipulation\SimpleCombiner.cs" />
     <Compile Include="Common\PolygonManipulation\SimplifyTools.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Dynamics\ContactManager.cs" />
     <Compile Include="Dynamics\Contacts\Contact.cs" />
     <Compile Include="Dynamics\Contacts\ContactSolver.cs" />
+    <Compile Include="Common\PhysicsLogic\FilterData.cs" />
     <Compile Include="Dynamics\Fixture.cs" />
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\AngleJoint.cs" />
