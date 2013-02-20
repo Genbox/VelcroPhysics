@@ -151,7 +151,7 @@ namespace FarseerPhysics.Common.Decomposition
         private static Vector2 At(int i, Vertices vertices)
         {
             int s = vertices.Count;
-            return vertices[i < 0 ? s - (-i % s) : i % s];
+            return vertices[i < 0 ? s - 1 - ((-i - 1) % s) : i % s];
         }
 
         private static Vertices Copy(int i, int j, Vertices vertices)
