@@ -129,6 +129,7 @@
     <Compile Include="Tests\ConveyorBeltTest.cs" />
     <Compile Include="Tests\ConvexHullTest.cs" />
     <Compile Include="Tests\CheckPolygonTest.cs" />
+    <Compile Include="Tests\SimplificationTest.cs" />
     <Compile Include="Tests\TriangulationTest.cs" />
     <Compile Include="Tests\FluidsTest.cs" />
     <Compile Include="Tests\TumblerTest.cs" />
