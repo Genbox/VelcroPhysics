@@ -594,7 +594,7 @@ namespace FarseerPhysics.Common.TextureTools
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
 
             // Check the distance to main polygon.
-            if (DistanceToHullAcceptable((Vertices)polygon, point, higherDetail))
+            if (DistanceToHullAcceptable(polygon, point, higherDetail))
             {
                 if (polygon.Holes != null)
                 {
@@ -734,7 +734,7 @@ namespace FarseerPhysics.Common.TextureTools
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
 
-            List<float> result = SearchCrossingEdges((Vertices)polygon, y);
+            List<float> result = SearchCrossingEdges(polygon, y);
 
             if (polygon.Holes != null)
             {

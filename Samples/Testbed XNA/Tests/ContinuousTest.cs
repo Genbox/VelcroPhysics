@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -92,7 +93,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        protected override void PostSolve(Dynamics.Contacts.Contact contact, Dynamics.Contacts.ContactVelocityConstraint impulse)
+        protected override void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
             int i = 0;
 

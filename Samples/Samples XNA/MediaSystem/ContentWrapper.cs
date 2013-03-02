@@ -1,21 +1,15 @@
-﻿#region Using System
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
-#endregion
-#region Using XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
-#endregion
-#region Using Farseer
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
+using System.IO;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Dynamics;
-#endregion
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Path = System.IO.Path;
 
 namespace FarseerPhysics.Samples.MediaSystem
 {
@@ -43,7 +37,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         public static Color Blue = new Color(44, 138, 153);
         public static Color Ocean = new Color(57, 143, 171);
 
-        private static ContentWrapper _contentWrapper = null;
+        private static ContentWrapper _contentWrapper;
         private static BasicEffect _effect;
 
         private static Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
@@ -70,7 +64,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
             // First create a blank texture
             _textureList["blank"] = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _textureList["blank"].SetData(new Color[] { Color.White });
+            _textureList["blank"].SetData(new[] { Color.White });
             _textureList["blank"].Name = "blank";
 
             // Load all graphics
@@ -81,7 +75,7 @@ namespace FarseerPhysics.Samples.MediaSystem
                 currentFileList = currentAssetFolder.GetFiles("*.xnb");
                 for (int i = 0; i < currentFileList.Length; i++)
                 {
-                    string textureName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+                    string textureName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
                     _textureList[textureName] = game.Content.Load<Texture2D>(folder + "/" + textureName);
                     _textureList[textureName].Name = textureName;
                 }
@@ -93,7 +87,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
             for (int i = 0; i < currentFileList.Length; i++)
             {
-                string fontName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+                string fontName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
                 _fontList[fontName] = game.Content.Load<SpriteFont>("Fonts/" + fontName);
             }
 
@@ -106,7 +100,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
             for (int i = 0; i < currentFileList.Length; i++)
             {
-                string soundName = System.IO.Path.GetFileNameWithoutExtension(currentFileList[i].Name);
+                string soundName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
                 _soundList[soundName] = game.Content.Load<SoundEffect>("DemoSFX/" + soundName);
                 _soundList[soundName].Name = soundName;
             }
@@ -189,7 +183,7 @@ namespace FarseerPhysics.Samples.MediaSystem
                 switch (shape.ShapeType)
                 {
                     case ShapeType.Circle:
-                        return CircleTexture(((CircleShape)shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
+                        return CircleTexture((shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
                     case ShapeType.Polygon:
                         return PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale);
                     default:
