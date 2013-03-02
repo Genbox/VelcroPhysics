@@ -32,6 +32,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
     {
         /// <summary>
         /// Combine a list of triangles into a list of convex polygons.
+        /// 
+        /// Note: This only works on triangles.
         /// </summary>
         ///<param name="triangles">The triangles.</param>
         ///<param name="maxPolys">The maximun number of polygons to return.</param>

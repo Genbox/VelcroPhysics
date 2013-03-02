@@ -145,7 +145,8 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <param name="world">The world.</param>
         /// <param name="start">The startpoint.</param>
         /// <param name="end">The endpoint.</param>
-        public static void Cut(World world, Vector2 start, Vector2 end)
+        /// <returns>True if the cut was performed.</returns>
+        public static bool Cut(World world, Vector2 start, Vector2 end)
         {
             List<Fixture> fixtures = new List<Fixture>();
             List<Vector2> entryPoints = new List<Vector2>();
@@ -153,7 +154,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             //We don't support cutting when the start or end is inside a shape.
             if (world.TestPoint(start) != null || world.TestPoint(end) != null)
-                return;
+                return false;
 
             //Get the entry points
             world.RayCast((f, p, n, fr) =>
@@ -172,7 +173,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
             //We only have a single point. We need at least 2
             if (entryPoints.Count + exitPoints.Count < 2)
-                return;
+                return false;
 
             for (int i = 0; i < fixtures.Count; i++)
             {
@@ -188,7 +189,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     SplitShape(fixtures[i], entryPoints[i], exitPoints[i], out first, out second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
-                    if (SanityCheck(first))
+                    if (first.CheckPolygon() == PolygonError.NoError)
                     {
                         Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density, fixtures[i].Body.Position);
                         firstFixture.Rotation = fixtures[i].Body.Rotation;
@@ -197,7 +198,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                         firstFixture.BodyType = BodyType.Dynamic;
                     }
 
-                    if (SanityCheck(second))
+                    if (second.CheckPolygon() == PolygonError.NoError)
                     {
                         Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density, fixtures[i].Body.Position);
                         secondFixture.Rotation = fixtures[i].Body.Rotation;
@@ -208,28 +209,6 @@ namespace FarseerPhysics.Common.PolygonManipulation
 
                     world.RemoveBody(fixtures[i].Body);
                 }
-            }
-        }
-
-        private static bool SanityCheck(Vertices vertices)
-        {
-            //Make sure it is is a polygon
-            if (vertices.Count < 3)
-                return false;
-
-            //Make sure it has a large enugh area
-            if (vertices.GetArea() < 0.00001f)
-                return false;
-
-            //Make sure no vertices are too close to each other
-            for (int i = 0; i < vertices.Count; ++i)
-            {
-                Vector2 current = vertices[i];
-                Vector2 next = vertices.NextVertex(i);
-                Vector2 edge = next - current;
-
-                if (edge.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
-                    return false;
             }
 
             return true;

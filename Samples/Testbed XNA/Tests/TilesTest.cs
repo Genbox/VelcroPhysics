@@ -109,10 +109,10 @@ namespace FarseerPhysics.TestBed.Tests
             int leafCount = dt.ProxyCount;
             float minimumNodeCount = 2 * leafCount - 1;
             float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-            DebugView.DrawString(5, TextLine, "dynamic tree height = {0}, min = {1}", height, (int)minimumHeight);
+            DebugView.DrawString(5, TextLine, string.Format("dynamic tree height = {0}, min = {1}", height, (int)minimumHeight));
             TextLine += 15;
 
-            DebugView.DrawString(5, TextLine, "create time = {0} ms, fixture count = {1}", _createTime, _fixtureCount);
+            DebugView.DrawString(5, TextLine, string.Format("create time = {0} ms, fixture count = {1}", _createTime, _fixtureCount));
             TextLine += 15;
 
             base.Update(settings, gameTime);
