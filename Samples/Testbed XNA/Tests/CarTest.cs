@@ -50,7 +50,7 @@ namespace FarseerPhysics.TestBed.Tests
             _zeta = 0.7f;
             _speed = 50.0f;
 
-            Body ground = BodyFactory.CreateEdge(World,new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
             {
                 float[] hs = new[] { 0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f };
 
@@ -249,9 +249,9 @@ namespace FarseerPhysics.TestBed.Tests
         {
             DebugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "frequency = {0} hz, damping ratio = {1}", _hz, _zeta);
+            DebugView.DrawString(50, TextLine, string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
             TextLine += 15;
-            DebugView.DrawString(50, TextLine, "actual speed = {0} rad/sec", _spring1.JointSpeed);
+            DebugView.DrawString(50, TextLine, string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
             TextLine += 15;
 
             GameInstance.ViewCenter = _car.Position;

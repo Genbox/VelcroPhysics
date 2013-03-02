@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
             FixedArray2<Vector2> points;
             ContactSolver.WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out normal, out points);
 
-            DebugView.DrawString(50, TextLine, "Point count = {0:n0}", manifold.PointCount);
+            DebugView.DrawString(50, TextLine, "Point count = " + manifold.PointCount);
             TextLine += 15;
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             {
@@ -94,7 +94,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 TextLine += 15;
                 DebugView.DrawPoint(points[i], 0.1f, new Color(0.9f, 0.3f, 0.3f));
-                DebugView.DrawString(50, TextLine, "{0}", points[i].ToString());
+                DebugView.DrawString(50, TextLine, points[i].ToString());
                 TextLine += 15;
             }
             DebugView.EndCustomDraw();

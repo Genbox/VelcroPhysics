@@ -25,23 +25,11 @@ namespace FarseerPhysics.DebugView
         private VertexPositionColor[] _triangleVertices;
         private int _triangleVertsCount;
 
-
-        /// <summary>
-        /// the constructor creates a new PrimitiveBatch and sets up all of the internals
-        /// that PrimitiveBatch will need.
-        /// </summary>
-        /// <param name="graphicsDevice">The graphics device.</param>
-        public PrimitiveBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize)
-        {
-        }
-
-        public PrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize)
+        public PrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)
         {
             if (graphicsDevice == null)
-            {
                 throw new ArgumentNullException("graphicsDevice");
-            }
+
             _device = graphicsDevice;
 
             _triangleVertices = new VertexPositionColor[bufferSize - bufferSize % 3];
@@ -88,9 +76,7 @@ namespace FarseerPhysics.DebugView
         public void Begin(ref Matrix projection, ref Matrix view)
         {
             if (_hasBegun)
-            {
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
-            }
 
             //tell our basic effect to begin.
             _basicEffect.Projection = projection;
@@ -110,37 +96,31 @@ namespace FarseerPhysics.DebugView
         public void AddVertex(Vector2 vertex, Color color, PrimitiveType primitiveType)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before AddVertex can be called.");
-            }
-            if (primitiveType == PrimitiveType.LineStrip ||
-                primitiveType == PrimitiveType.TriangleStrip)
-            {
+
+            if (primitiveType == PrimitiveType.LineStrip || primitiveType == PrimitiveType.TriangleStrip)
                 throw new NotSupportedException("The specified primitiveType is not supported by PrimitiveBatch.");
-            }
 
             if (primitiveType == PrimitiveType.TriangleList)
             {
                 if (_triangleVertsCount >= _triangleVertices.Length)
-                {
                     FlushTriangles();
-                }
+
                 _triangleVertices[_triangleVertsCount].Position = new Vector3(vertex, -0.1f);
                 _triangleVertices[_triangleVertsCount].Color = color;
                 _triangleVertsCount++;
             }
+
             if (primitiveType == PrimitiveType.LineList)
             {
                 if (_lineVertsCount >= _lineVertices.Length)
-                {
                     FlushLines();
-                }
+
                 _lineVertices[_lineVertsCount].Position = new Vector3(vertex, 0f);
                 _lineVertices[_lineVertsCount].Color = color;
                 _lineVertsCount++;
             }
         }
-
 
         /// <summary>
         /// End is called once all the primitives have been drawn using AddVertex.

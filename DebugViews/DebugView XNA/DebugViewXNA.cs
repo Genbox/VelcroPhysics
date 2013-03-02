@@ -528,8 +528,8 @@ namespace FarseerPhysics.DebugView
             }
             if (closed)
             {
-              _primitiveBatch.AddVertex(vertices[count - 1], color, PrimitiveType.LineList);
-              _primitiveBatch.AddVertex(vertices[0], color, PrimitiveType.LineList);
+                _primitiveBatch.AddVertex(vertices[count - 1], color, PrimitiveType.LineList);
+                _primitiveBatch.AddVertex(vertices[0], color, PrimitiveType.LineList);
             }
         }
 
@@ -670,13 +670,17 @@ namespace FarseerPhysics.DebugView
             DrawSolidPolygon(verts, 4, color, true);
         }
 
-        public void DrawString(int x, int y, string s, params object[] args)
+        public void DrawString(int x, int y, string text)
         {
-            _stringData.Add(new StringData(x, y, s, args, TextColor));
+            DrawString(new Vector2(x, y), text);
         }
 
-        public void DrawArrow(Vector2 start, Vector2 end, float length, float width, bool drawStartIndicator,
-                              Color color)
+        public void DrawString(Vector2 position, string text)
+        {
+            _stringData.Add(new StringData(position, text, TextColor));
+        }
+
+        public void DrawArrow(Vector2 start, Vector2 end, float length, float width, bool drawStartIndicator, Color color)
         {
             // Draw connection segment between start- and end-point
             DrawSegment(start, end, color);
@@ -742,9 +746,7 @@ namespace FarseerPhysics.DebugView
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
             if (!Enabled)
-            {
                 return;
-            }
 
             //Nothing is enabled - don't draw the debug view.
             if (Flags == 0)
@@ -770,9 +772,9 @@ namespace FarseerPhysics.DebugView
             // draw any strings we have
             for (int i = 0; i < _stringData.Count; i++)
             {
-                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X + 1f, _stringData[i].Y + 1f), Color.Black);
-                _batch.DrawString(_font, string.Format(_stringData[i].S, _stringData[i].Args), new Vector2(_stringData[i].X, _stringData[i].Y), _stringData[i].Color);
+                _batch.DrawString(_font, _stringData[i].Text, _stringData[i].Position, _stringData[i].Color);
             }
+
             // end the sprite batch effect
             _batch.End();
 
@@ -782,9 +784,8 @@ namespace FarseerPhysics.DebugView
         public void RenderDebugData(ref Matrix projection)
         {
             if (!Enabled)
-            {
                 return;
-            }
+
             Matrix view = Matrix.Identity;
             RenderDebugData(ref projection, ref view);
         }
@@ -798,8 +799,7 @@ namespace FarseerPhysics.DebugView
             _font = content.Load<SpriteFont>("font");
             _stringData = new List<StringData>();
 
-            _localProjection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height,
-                                                                  0f, 0f, 1f);
+            _localProjection = Matrix.CreateOrthographicOffCenter(0f, _device.Viewport.Width, _device.Viewport.Height, 0f, 0f, 1f);
             _localView = Matrix.Identity;
         }
 
@@ -818,17 +818,14 @@ namespace FarseerPhysics.DebugView
 
         private struct StringData
         {
-            public object[] Args;
             public Color Color;
-            public string S;
-            public int X, Y;
+            public string Text;
+            public Vector2 Position;
 
-            public StringData(int x, int y, string s, object[] args, Color color)
+            public StringData(Vector2 position, string text, Color color)
             {
-                X = x;
-                Y = y;
-                S = s;
-                Args = args;
+                Position = position;
+                Text = text;
                 Color = color;
             }
         }
