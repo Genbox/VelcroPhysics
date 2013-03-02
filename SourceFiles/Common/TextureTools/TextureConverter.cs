@@ -632,11 +632,8 @@ namespace FarseerPhysics.Common.TextureTools
                 {
                     edgeVertex1 = polygon[i];
 
-                    if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= _hullTolerance ||
-                        LineTools.DistanceBetweenPointAndPoint(ref point, ref edgeVertex1) <= _hullTolerance)
-                    {
+                    if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= _hullTolerance || Vector2.Distance(point, edgeVertex1) <= _hullTolerance)
                         return false;
-                    }
 
                     edgeVertex2 = polygon[i];
                 }
@@ -650,9 +647,7 @@ namespace FarseerPhysics.Common.TextureTools
                     edgeVertex1 = polygon[i];
 
                     if (LineTools.DistanceBetweenPointAndLineSegment(ref point, ref edgeVertex1, ref edgeVertex2) <= _hullTolerance)
-                    {
                         return false;
-                    }
 
                     edgeVertex2 = polygon[i];
                 }
@@ -900,7 +895,7 @@ namespace FarseerPhysics.Common.TextureTools
                         slope.Normalize();
 
                         Vector2 tempVector = polygon[nearestEdgeVertex1Index];
-                        distance = LineTools.DistanceBetweenPointAndPoint(ref tempVector, ref foundEdgeCoord);
+                        distance = Vector2.Distance(tempVector, foundEdgeCoord);
 
                         vertex1Index = nearestEdgeVertex1Index;
                         vertex2Index = nearestEdgeVertex1Index + 1;

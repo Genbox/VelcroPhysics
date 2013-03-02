@@ -335,13 +335,9 @@ namespace FarseerPhysics.Common
         /// <param name="a">First vertex</param>
         /// <param name="b">Second vertex</param>
         /// <param name="c">Third vertex</param>
+        /// <param name="tolerance">The tolerance</param>
         /// <returns></returns>
-        public static bool Collinear(ref Vector2 a, ref Vector2 b, ref Vector2 c)
-        {
-            return Collinear(ref a, ref b, ref c, 0);
-        }
-
-        public static bool Collinear(ref Vector2 a, ref Vector2 b, ref Vector2 c, float tolerance)
+        public static bool IsCollinear(ref Vector2 a, ref Vector2 b, ref Vector2 c, float tolerance = 0)
         {
             return FloatInRange(Area(ref a, ref b, ref c), -tolerance, tolerance);
         }

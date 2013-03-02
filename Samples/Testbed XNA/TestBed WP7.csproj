@@ -168,6 +168,7 @@
     <Compile Include="Tests\RevoluteTest.cs" />
     <Compile Include="Tests\SensorTest.cs" />
     <Compile Include="Tests\ShapeEditingTest.cs" />
+    <Compile Include="Tests\SimplificationTest.cs" />
     <Compile Include="Tests\SliderCrankTest.cs" />
     <Compile Include="Tests\CircleBenchmarkTest.cs" />
     <Compile Include="Tests\SphereStackTest.cs" />

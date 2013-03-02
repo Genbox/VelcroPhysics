@@ -5,36 +5,32 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common.PolygonManipulation
 {
+    /// <summary>
+    /// Provides a set of tools to simplify polygons in various ways.
+    /// </summary>
     public static class SimplifyTools
     {
-        private static bool[] _usePt;
-        private static double _distanceTolerance;
-
         /// <summary>
         /// Removes all collinear points on the polygon.
         /// </summary>
         /// <param name="vertices">The polygon that needs simplification.</param>
         /// <param name="collinearityTolerance">The collinearity tolerance.</param>
         /// <returns>A simplified polygon.</returns>
-        public static Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance)
+        public static Vertices CollinearSimplify(Vertices vertices, float collinearityTolerance = 0)
         {
-            //We can't simplify polygons under 3 vertices
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return vertices;
 
-            Vertices simplified = new Vertices();
+            Vertices simplified = new Vertices(vertices.Count);
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                int prevId = vertices.PreviousIndex(i);
-                int nextId = vertices.NextIndex(i);
-
-                Vector2 prev = vertices[prevId];
+                Vector2 prev = vertices.PreviousVertex(i);
                 Vector2 current = vertices[i];
-                Vector2 next = vertices[nextId];
+                Vector2 next = vertices.NextVertex(i);
 
                 //If they collinear, continue
-                if (MathUtils.Collinear(ref prev, ref current, ref next, collinearityTolerance))
+                if (MathUtils.IsCollinear(ref prev, ref current, ref next, collinearityTolerance))
                     continue;
 
                 simplified.Add(current);
@@ -44,53 +40,50 @@ namespace FarseerPhysics.Common.PolygonManipulation
         }
 
         /// <summary>
-        /// Removes all collinear points on the polygon.
-        /// Has a default bias of 0
-        /// </summary>
-        /// <param name="vertices">The polygon that needs simplification.</param>
-        /// <returns>A simplified polygon.</returns>
-        public static Vertices CollinearSimplify(Vertices vertices)
-        {
-            return CollinearSimplify(vertices, 0);
-        }
-
-        /// <summary>
         /// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
         /// speed-up technique by using the Melkman convex hull.
         /// 
-        /// If you pass in 0, it will remove all collinear points
+        /// If you pass in 0, it will remove all collinear points.
         /// </summary>
         /// <returns>The simplified polygon</returns>
         public static Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
         {
-            _distanceTolerance = distanceTolerance;
+            if (vertices.Count <= 3)
+                return vertices;
 
-            _usePt = new bool[vertices.Count];
-            for (int i = 0; i < vertices.Count; i++)
-                _usePt[i] = true;
-
-            SimplifySection(vertices, 0, vertices.Count - 1);
-            Vertices result = new Vertices();
+            bool[] usePoint = new bool[vertices.Count];
 
             for (int i = 0; i < vertices.Count; i++)
-                if (_usePt[i])
-                    result.Add(vertices[i]);
+                usePoint[i] = true;
 
-            return result;
+            SimplifySection(vertices, 0, vertices.Count - 1, usePoint, distanceTolerance);
+
+            Vertices simplified = new Vertices(vertices.Count);
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (usePoint[i])
+                    simplified.Add(vertices[i]);
+            }
+
+            return simplified;
         }
 
-        private static void SimplifySection(Vertices vertices, int i, int j)
+        private static void SimplifySection(Vertices vertices, int i, int j, bool[] usePoint, float distanceTolerance)
         {
             if ((i + 1) == j)
                 return;
 
-            Vector2 A = vertices[i];
-            Vector2 B = vertices[j];
+            Vector2 a = vertices[i];
+            Vector2 b = vertices[j];
+
             double maxDistance = -1.0;
             int maxIndex = i;
             for (int k = i + 1; k < j; k++)
             {
-                double distance = DistancePointLine(vertices[k], A, B);
+                Vector2 point = vertices[k];
+
+                double distance = LineTools.DistanceBetweenPointAndLineSegment(ref point, ref a, ref b);
 
                 if (distance > maxDistance)
                 {
@@ -98,119 +91,32 @@ namespace FarseerPhysics.Common.PolygonManipulation
                     maxIndex = k;
                 }
             }
-            if (maxDistance <= _distanceTolerance)
+
+            if (maxDistance <= distanceTolerance)
+            {
                 for (int k = i + 1; k < j; k++)
-                    _usePt[k] = false;
+                {
+                    usePoint[k] = false;
+                }
+            }
             else
             {
-                SimplifySection(vertices, i, maxIndex);
-                SimplifySection(vertices, maxIndex, j);
+                SimplifySection(vertices, i, maxIndex, usePoint, distanceTolerance);
+                SimplifySection(vertices, maxIndex, j, usePoint, distanceTolerance);
             }
         }
-
-        private static double DistancePointPoint(Vector2 p, Vector2 p2)
-        {
-            double dx = p.X - p2.X;
-            double dy = p.Y - p2.Y;
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        private static double DistancePointLine(Vector2 p, Vector2 A, Vector2 B)
-        {
-            // if start == end, then use point-to-point distance
-            if (A.X == B.X && A.Y == B.Y)
-                return DistancePointPoint(p, A);
-
-            // otherwise use comp.graphics.algorithms Frequently Asked Questions method
-            /*(1)     	      AC dot AB
-                        r =   ---------
-                              ||AB||^2
-             
-		                r has the following meaning:
-		                r=0 Point = A
-		                r=1 Point = B
-		                r<0 Point is on the backward extension of AB
-		                r>1 Point is on the forward extension of AB
-		                0<r<1 Point is interior to AB
-	        */
-
-            double r = ((p.X - A.X) * (B.X - A.X) + (p.Y - A.Y) * (B.Y - A.Y))
-                       /
-                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
-
-            if (r <= 0.0) return DistancePointPoint(p, A);
-            if (r >= 1.0) return DistancePointPoint(p, B);
-
-
-            /*(2)
-		                    (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay)
-		                s = -----------------------------
-		             	                Curve^2
-
-		                Then the distance from C to Point = |s|*Curve.
-	        */
-
-            double s = ((A.Y - p.Y) * (B.X - A.X) - (A.X - p.X) * (B.Y - A.Y))
-                       /
-                       ((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y));
-
-            return Math.Abs(s) * Math.Sqrt(((B.X - A.X) * (B.X - A.X) + (B.Y - A.Y) * (B.Y - A.Y)));
-        }
-
-        //From physics2d.net
-        public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
-        {
-            if (vertices.Count <= 3)
-                return vertices;
-
-            if (areaTolerance < 0)
-            {
-                throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater then zero.");
-            }
-
-            Vertices result = new Vertices();
-            Vector2 v1, v2, v3;
-            float old1, old2, new1;
-            v1 = vertices[vertices.Count - 2];
-            v2 = vertices[vertices.Count - 1];
-            areaTolerance *= 2;
-            for (int index = 0; index < vertices.Count; ++index, v2 = v3)
-            {
-                if (index == vertices.Count - 1)
-                {
-                    if (result.Count == 0)
-                    {
-                        throw new ArgumentOutOfRangeException("areaTolerance", "The tolerance is too high!");
-                    }
-                    v3 = result[0];
-                }
-                else
-                {
-                    v3 = vertices[index];
-                }
-                MathUtils.Cross(ref v1, ref v2, out old1);
-                MathUtils.Cross(ref v2, ref v3, out old2);
-                MathUtils.Cross(ref v1, ref v3, out new1);
-                if (Math.Abs(new1 - (old1 + old2)) > areaTolerance)
-                {
-                    result.Add(v2);
-                    v1 = v2;
-                }
-            }
-            return result;
-        }
-
-        //From Eric Jordan's convex decomposition library
 
         /// <summary>
         /// Merges all parallel edges in the list of vertices
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
-        public static void MergeParallelEdges(Vertices vertices, float tolerance)
+        public static Vertices MergeParallelEdges(Vertices vertices, float tolerance)
         {
+            //From Eric Jordan's convex decomposition library
+
             if (vertices.Count <= 3)
-                return; //Can't do anything useful here to a triangle
+                return vertices; //Can't do anything useful here to a triangle
 
             bool[] mergeMe = new bool[vertices.Count];
             int newNVertices = vertices.Count;
@@ -253,65 +159,56 @@ namespace FarseerPhysics.Common.PolygonManipulation
             }
 
             if (newNVertices == vertices.Count || newNVertices == 0)
-                return;
+                return vertices;
 
             int currIndex = 0;
 
             //Copy the vertices to a new list and clear the old
-            Vertices oldVertices = new Vertices(vertices);
-            vertices.Clear();
+            Vertices newVertices = new Vertices(newNVertices);
 
-            for (int i = 0; i < oldVertices.Count; ++i)
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 if (mergeMe[i] || newNVertices == 0 || currIndex == newNVertices)
                     continue;
 
                 Debug.Assert(currIndex < newNVertices);
 
-                vertices.Add(oldVertices[i]);
+                newVertices.Add(vertices[i]);
                 ++currIndex;
             }
-        }
 
-        //Misc
+            return newVertices;
+        }
 
         /// <summary>
         /// Merges the identical points in the polygon.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <returns></returns>
         public static Vertices MergeIdenticalPoints(Vertices vertices)
         {
-            //We use a dictonary here because HashSet is not avaliable on all platforms.
-            HashSet<Vector2> results = new HashSet<Vector2>();
+            HashSet<Vector2> unique = new HashSet<Vector2>();
 
-            for (int i = 0; i < vertices.Count; i++)
+            foreach (Vector2 vertex in vertices)
             {
-                results.Add(vertices[i]);
+                unique.Add(vertex);
             }
 
-            Vertices returnResults = new Vertices();
-            foreach (Vector2 v in results)
-            {
-                returnResults.Add(v);
-            }
-
-            return returnResults;
+            return new Vertices(unique);
         }
 
         /// <summary>
         /// Reduces the polygon by distance.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
-        /// <param name="distance">The distance between points. Points closer than this will be 'joined'.</param>
-        /// <returns></returns>
+        /// <param name="distance">The distance between points. Points closer than this will be removed.</param>
         public static Vertices ReduceByDistance(Vertices vertices, float distance)
         {
-            //We can't simplify polygons under 3 vertices
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return vertices;
 
-            Vertices simplified = new Vertices();
+            float distance2 = distance * distance;
+
+            Vertices simplified = new Vertices(vertices.Count);
 
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -319,7 +216,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
                 Vector2 next = vertices.NextVertex(i);
 
                 //If they are closer than the distance, continue
-                if ((next - current).LengthSquared() <= distance * distance)
+                if ((next - current).LengthSquared() <= distance2)
                     continue;
 
                 simplified.Add(current);
@@ -336,24 +233,70 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <returns></returns>
         public static Vertices ReduceByNth(Vertices vertices, int nth)
         {
-            //We can't simplify polygons under 3 vertices
-            if (vertices.Count < 3)
+            if (vertices.Count <= 3)
                 return vertices;
 
             if (nth == 0)
                 return vertices;
 
-            Vertices result = new Vertices(vertices.Count);
+            Vertices simplified = new Vertices(vertices.Count);
 
             for (int i = 0; i < vertices.Count; i++)
             {
                 if (i % nth == 0)
                     continue;
 
-                result.Add(vertices[i]);
+                simplified.Add(vertices[i]);
             }
 
-            return result;
+            return simplified;
+        }
+
+        /// <summary>
+        /// Simplify the polygon by removing all points that in pairs of 3 have an area less than the tolerance.
+        /// 
+        /// Pass in 0 as tolerance, and it will only remove collinear points.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="areaTolerance"></param>
+        /// <returns></returns>
+        public static Vertices ReduceByArea(Vertices vertices, float areaTolerance)
+        {
+            //From physics2d.net
+
+            if (vertices.Count <= 3)
+                return vertices;
+
+            if (areaTolerance < 0)
+                throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater than zero.");
+
+            Vertices simplified = new Vertices(vertices.Count);
+            Vector2 v3;
+            Vector2 v1 = vertices[vertices.Count - 2];
+            Vector2 v2 = vertices[vertices.Count - 1];
+            areaTolerance *= 2;
+
+            for (int i = 0; i < vertices.Count; ++i, v2 = v3)
+            {
+                v3 = i == vertices.Count - 1 ? simplified[0] : vertices[i];
+
+                float old1;
+                MathUtils.Cross(ref v1, ref v2, out old1);
+
+                float old2;
+                MathUtils.Cross(ref v2, ref v3, out old2);
+
+                float new1;
+                MathUtils.Cross(ref v1, ref v3, out new1);
+
+                if (Math.Abs(new1 - (old1 + old2)) > areaTolerance)
+                {
+                    simplified.Add(v2);
+                    v1 = v2;
+                }
+            }
+
+            return simplified;
         }
     }
 }
