@@ -86,8 +86,8 @@ namespace FarseerPhysics.TestBed.Framework
 
                 DrawString("****PAUSED****");
             }
-
-            World.Step(timeStep);
+            else
+                World.Step(timeStep);
 
             if (timeStep > 0.0f)
                 ++StepCount;

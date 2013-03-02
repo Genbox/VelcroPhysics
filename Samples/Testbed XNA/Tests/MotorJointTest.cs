@@ -26,7 +26,6 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -34,7 +33,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private MotorJoint _joint;
         private float _time;
-        private bool _go;
 
         MotorJointTest()
         {
@@ -50,26 +48,14 @@ namespace FarseerPhysics.TestBed.Tests
             _joint.MaxTorque = 1000.0f;
 
             World.AddJoint(_joint);
-
-            _go = true;
-            _time = 0.0f;
-        }
-
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-
-            if (keyboardManager.IsNewKeyPress(Keys.S))
-                _go = !_go;
-
-            base.Keyboard(keyboardManager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (_go && settings.Hz > 0.0f)
-            {
+            base.Update(settings, gameTime);
+
+            if (!settings.Pause && settings.Hz > 0.0f)
                 _time += 1.0f / settings.Hz;
-            }
 
             Vector2 linearOffset = new Vector2();
             linearOffset.X = 6.0f * (float)Math.Sin(2.0f * _time);
@@ -79,12 +65,6 @@ namespace FarseerPhysics.TestBed.Tests
 
             _joint.LinearOffset = linearOffset;
             _joint.AngularOffset = angularOffset;
-
-            //DebugView.DrawPoint(linearOffset, 4.0f, new Color(0.9f, 0.9f, 0.9f));
-
-            base.Update(settings, gameTime);
-
-            DrawString("Keys: (s) pause");
         }
 
         public static Test Create()
