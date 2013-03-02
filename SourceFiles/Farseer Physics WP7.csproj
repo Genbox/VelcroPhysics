@@ -209,6 +209,8 @@
     <Compile Include="Common\Vector2.cs" />
     <Compile Include="Common\Vector3.cs" />
     <Compile Include="Common\Vertices.cs" />
+    <Compile Include="Content\BodyContainer.cs" />
+    <Compile Include="Content\FarseerBodyContainerReader.cs" />
     <Compile Include="Content\FarseerPolygonContainerReader.cs" />
     <Compile Include="Content\PolygonContainer.cs" />
     <Compile Include="Controllers\AbstractForceController.cs" />

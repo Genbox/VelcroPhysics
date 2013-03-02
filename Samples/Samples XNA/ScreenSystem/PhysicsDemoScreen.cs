@@ -1,23 +1,17 @@
-﻿#region Using System
-using System;
-#endregion
-#region Using XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-#endregion
-#region Using Farseer
+﻿using System;
 using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
-#endregion
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class PhysicsDemoScreen : GameScreen
     {
-        private static bool _renderDebug = false;
+        private static bool _renderDebug;
         private static DebugViewFlags _flags = DebugViewFlags.PerformanceGraph | DebugViewFlags.DebugPanel;
-        private static bool _flagsChanged = false;
+        private static bool _flagsChanged;
 
         public Camera2D Camera;
         protected DebugViewXNA DebugView;

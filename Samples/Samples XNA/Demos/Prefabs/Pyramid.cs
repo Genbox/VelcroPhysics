@@ -1,68 +1,70 @@
 ﻿#region Using System
-using System;
+
 using System.Collections.Generic;
-#endregion
-#region Using XNA
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-#endregion
-#region Using Farseer
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
-using FarseerPhysics.Samples.ScreenSystem;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+#endregion
+#region Using XNA
+
+#endregion
+#region Using Farseer
+
 #endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
-  public class Pyramid
-  {
-    private Sprite _box;
-    private List<Body> _boxes;
-
-    public Pyramid(World world, Vector2 position, int count, float density)
+    public class Pyramid
     {
-      Vertices rect = PolygonTools.CreateRectangle(0.5f, 0.5f);
-      PolygonShape shape = new PolygonShape(rect, density);
+        private Sprite _box;
+        private List<Body> _boxes;
 
-      Vector2 rowStart = position;
-      rowStart.Y -= 0.5f + count * 1.1f;
-
-      Vector2 deltaRow = new Vector2(-0.625f, 1.1f);
-      const float spacing = 1.25f;
-
-      // Physics
-      _boxes = new List<Body>();
-
-      for (int i = 0; i < count; i++)
-      {
-        Vector2 pos = rowStart;
-
-        for (int j = 0; j < i + 1; j++)
+        public Pyramid(World world, Vector2 position, int count, float density)
         {
-          Body body = BodyFactory.CreateBody(world);
-          body.BodyType = BodyType.Dynamic;
-          body.Position = pos;
-          body.CreateFixture(shape);
-          _boxes.Add(body);
+            Vertices rect = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            PolygonShape shape = new PolygonShape(rect, density);
 
-          pos.X += spacing;
+            Vector2 rowStart = position;
+            rowStart.Y -= 0.5f + count * 1.1f;
+
+            Vector2 deltaRow = new Vector2(-0.625f, 1.1f);
+            const float spacing = 1.25f;
+
+            // Physics
+            _boxes = new List<Body>();
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 pos = rowStart;
+
+                for (int j = 0; j < i + 1; j++)
+                {
+                    Body body = BodyFactory.CreateBody(world);
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = pos;
+                    body.CreateFixture(shape);
+                    _boxes.Add(body);
+
+                    pos.X += spacing;
+                }
+                rowStart += deltaRow;
+            }
+
+            //GFX
+            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
         }
-        rowStart += deltaRow;
-      }
 
-      //GFX
-      _box = new Sprite(ContentWrapper.PolygonTexture(rect, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+        public void Draw(SpriteBatch batch)
+        {
+            foreach (Body body in _boxes)
+            {
+                batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+            }
+        }
     }
-
-    public void Draw(SpriteBatch batch)
-    {
-      foreach (Body body in _boxes)
-      {
-        batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
-      }
-    }
-  }
 }

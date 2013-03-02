@@ -1,5 +1,5 @@
-using Microsoft.Xna.Framework.Content;
 using FarseerPhysics.Common;
+using Microsoft.Xna.Framework.Content;
 
 namespace FarseerPhysics.Content
 {
@@ -7,12 +7,7 @@ namespace FarseerPhysics.Content
     {
         protected override PolygonContainer Read(ContentReader input, PolygonContainer existingInstance)
         {
-            PolygonContainer paths = existingInstance;
-
-            if (paths == null)
-            {
-                paths = new PolygonContainer();
-            }
+            PolygonContainer paths = existingInstance ?? new PolygonContainer();
 
             int count = input.ReadInt32();
             for (int i = 0; i < count; i++)

@@ -45,7 +45,7 @@ namespace FarseerPhysics.Common.Decomposition.CDT.Sets
 
     internal class ConstrainedPointSet : PointSet
     {
-        private List<TriangulationPoint> _constrainedPointList = null;
+        private List<TriangulationPoint> _constrainedPointList;
 
         public ConstrainedPointSet(List<TriangulationPoint> points, int[] index)
             : base(points)

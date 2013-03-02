@@ -1,52 +1,54 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Dynamics;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Dynamics;
 
 namespace FarseerPhysics.Content
 {
     public class FixtureTemplate
     {
-        public Shape shape;
-        public float restitution;
-        public float friction;
-        public string name;
+        public Shape Shape;
+        public float Restitution;
+        public float Friction;
+        public string Name;
     }
 
     public class BodyTemplate
     {
-        public List<FixtureTemplate> fixtures;
-        public float mass;
-        public BodyType bodyType;
+        public List<FixtureTemplate> Fixtures;
+        public float Mass;
+        public BodyType BodyType;
 
         public BodyTemplate()
         {
-            fixtures = new List<FixtureTemplate>();
+            Fixtures = new List<FixtureTemplate>();
         }
 
         public Body Create(World world)
         {
             Body body = new Body(world);
-            body.BodyType = bodyType;
-            foreach (FixtureTemplate fixtureTemplate in fixtures)
+            body.BodyType = BodyType;
+
+            foreach (FixtureTemplate fixtureTemplate in Fixtures)
             {
-                Fixture fixture = body.CreateFixture(fixtureTemplate.shape, fixtureTemplate.name);
-                fixture.Restitution = fixtureTemplate.restitution;
-                fixture.Friction = fixtureTemplate.friction;
+                Fixture fixture = body.CreateFixture(fixtureTemplate.Shape, fixtureTemplate.Name);
+                fixture.Restitution = fixtureTemplate.Restitution;
+                fixture.Friction = fixtureTemplate.Friction;
             }
-            if (mass > 0f)
-            {
-                body.Mass = mass;
-            }
+
+            if (Mass > 0f)
+                body.Mass = Mass;
+
             return body;
         }
 
         public BreakableBody CreateBreakable(World world)
         {
             List<Shape> shapes = new List<Shape>();
-            foreach (FixtureTemplate f in fixtures)
+            foreach (FixtureTemplate f in Fixtures)
             {
-                shapes.Add(f.shape);
+                shapes.Add(f.Shape);
             }
+
             BreakableBody body = new BreakableBody(shapes, world);
             world.AddBreakableBody(body);
 

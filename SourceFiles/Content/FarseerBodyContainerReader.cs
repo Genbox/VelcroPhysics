@@ -1,7 +1,7 @@
-using Microsoft.Xna.Framework.Content;
-using FarseerPhysics.Common;
 using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework.Content;
 
 namespace FarseerPhysics.Content
 {
@@ -9,30 +9,25 @@ namespace FarseerPhysics.Content
     {
         protected override BodyContainer Read(ContentReader input, BodyContainer existingInstance)
         {
-            BodyContainer bodies = existingInstance;
-
-            if (bodies == null)
-            {
-                bodies = new BodyContainer();
-            }
+            BodyContainer bodies = existingInstance ?? new BodyContainer();
 
             int count = input.ReadInt32();
             for (int i = 0; i < count; i++)
             {
                 string name = input.ReadString();
-                BodyTemplate body = new BodyTemplate()
-                {
-                    mass = input.ReadSingle(),
-                    bodyType = (BodyType)input.ReadInt32()
+                BodyTemplate body = new BodyTemplate
+                    {
+                    Mass = input.ReadSingle(),
+                    BodyType = (BodyType)input.ReadInt32()
                 };
                 int fixtureCount = input.ReadInt32();
                 for (int j = 0; j < fixtureCount; j++)
                 {
-                    FixtureTemplate fixture = new FixtureTemplate()
-                    {
-                        name = input.ReadString(),
-                        restitution = input.ReadSingle(),
-                        friction = input.ReadSingle()
+                    FixtureTemplate fixture = new FixtureTemplate
+                        {
+                        Name = input.ReadString(),
+                        Restitution = input.ReadSingle(),
+                        Friction = input.ReadSingle()
                     };
                     ShapeType type = (ShapeType)input.ReadInt32();
                     switch (type)
@@ -43,7 +38,7 @@ namespace FarseerPhysics.Content
                                 float radius = input.ReadSingle();
                                 CircleShape circle = new CircleShape(radius, density);
                                 circle.Position = input.ReadVector2();
-                                fixture.shape = circle;
+                                fixture.Shape = circle;
                             } break;
                         case ShapeType.Polygon:
                             {
@@ -56,7 +51,7 @@ namespace FarseerPhysics.Content
                                 }
                                 PolygonShape poly = new PolygonShape(verts, density);
                                 poly.MassData.Centroid = input.ReadVector2();
-                                fixture.shape = poly;
+                                fixture.Shape = poly;
                             } break;
                         case ShapeType.Edge:
                             {
@@ -71,7 +66,7 @@ namespace FarseerPhysics.Content
                                 {
                                     edge.Vertex3 = input.ReadVector2();
                                 }
-                                fixture.shape = edge;
+                                fixture.Shape = edge;
                             } break;
                         case ShapeType.Chain:
                             {
@@ -81,10 +76,10 @@ namespace FarseerPhysics.Content
                                 {
                                     verts.Add(input.ReadVector2());
                                 }
-                                fixture.shape = new ChainShape(verts);
+                                fixture.Shape = new ChainShape(verts);
                             } break;
                     }
-                    body.fixtures.Add(fixture);
+                    body.Fixtures.Add(fixture);
                 }
                 bodies[name] = body;
             }
