@@ -85,11 +85,9 @@ namespace FarseerPhysics.Collision.Shapes
             get { return _vertices; }
             set
             {
-                _vertices = value;
-                Debug.Assert(_vertices.Count >= 3 && _vertices.Count <= Settings.MaxPolygonVertices);
+                _vertices = Settings.ConserveMemory ? value : new Vertices(value);
 
-                // Create the convex hull using the Gift wrapping algorithm
-                // http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
+                Debug.Assert(_vertices.Count >= 3 && _vertices.Count <= Settings.MaxPolygonVertices);
 
                 if (Settings.UseConvexHullPolygons)
                 {
@@ -99,10 +97,6 @@ namespace FarseerPhysics.Collision.Shapes
                         _vertices.ForceCounterClockWise();
                     else
                         _vertices = GiftWrap.GetConvexHull(_vertices);
-                }
-                else
-                {
-                    _vertices = Settings.ConserveMemory ? _vertices : new Vertices(_vertices);
                 }
 
                 _normals = new Vertices(_vertices.Count);
