@@ -120,8 +120,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (d) dynamic, (s) static, (k) kinematic");
-            TextLine += 15;
+            DrawString("Keys: (d) dynamic, (s) static, (k) kinematic");
+            
         }
 
 

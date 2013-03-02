@@ -37,9 +37,9 @@ namespace FarseerPhysics.TestBed.Framework
     {
         internal DebugViewXNA DebugView;
         internal int StepCount;
-        internal int TextLine;
         internal World World;
         private FixedMouseJoint _fixedMouseJoint;
+        internal int TextLine;
 
         protected Test()
         {
@@ -84,8 +84,7 @@ namespace FarseerPhysics.TestBed.Framework
                 else
                     timeStep = 0.0f;
 
-                DebugView.DrawString(50, TextLine, "****PAUSED****");
-                TextLine += 15;
+                DrawString("****PAUSED****");
             }
 
             World.Step(timeStep);
@@ -177,5 +176,11 @@ namespace FarseerPhysics.TestBed.Framework
             return vertices;
         }
 #endif
+
+        protected void DrawString(string text)
+        {
+            DebugView.DrawString(50, TextLine, text);
+            TextLine += 15;
+        }
     }
 }

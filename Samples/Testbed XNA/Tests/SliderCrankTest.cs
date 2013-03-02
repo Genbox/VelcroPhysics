@@ -144,11 +144,11 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (f) toggle friction, (m) toggle motor");
-            TextLine += 15;
+            DrawString("Keys: (f) toggle friction, (m) toggle motor");
+            
             float torque = _joint1.GetMotorTorque(settings.Hz);
-            DebugView.DrawString(50, TextLine, "Motor Torque = " + torque);
-            TextLine += 15;
+            DrawString("Motor Torque = " + torque);
+            
         }
 
         internal static Test Create()

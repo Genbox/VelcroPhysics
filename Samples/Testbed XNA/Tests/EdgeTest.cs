@@ -108,9 +108,9 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Rotation: " + _circleFixture.Body.Rotation);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Revolutions: " + _circleFixture.Body.Revolutions);
+            DrawString("Rotation: " + _circleFixture.Body.Rotation);
+            
+            DrawString("Revolutions: " + _circleFixture.Body.Revolutions);
 
             base.Update(settings, gameTime);
         }

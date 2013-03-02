@@ -202,8 +202,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, toggle motor = m");
-            TextLine += 15;
+            DrawString("Keys: left = a, brake = s, right = d, toggle motor = m");
+            
 
             base.Update(settings, gameTime);
         }

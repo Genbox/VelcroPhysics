@@ -84,8 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(5, TextLine, "Keys: (s) pause");
-            TextLine += 15;
+            DrawString("Keys: (s) pause");
         }
 
         public static Test Create()

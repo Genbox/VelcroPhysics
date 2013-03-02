@@ -36,11 +36,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        public static Test Create()
-        {
-            return new ConvexHullTest();
-        }
-
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.A))
@@ -59,8 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolygonShape shape = new PolygonShape(new Vertices(_points), 0f);
 
-            DebugView.DrawString(5, TextLine, "Press g to generate a new random convex hull");
-            TextLine += 15;
+            DrawString("Press g to generate a new random convex hull");
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawPolygon(shape.Vertices.ToArray(), shape.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
@@ -74,15 +68,15 @@ namespace FarseerPhysics.TestBed.Tests
 
             DebugView.EndCustomDraw();
 
-            if (shape.Vertices.IsConvex() == false)
-            {
-                TextLine += 0;
-            }
-
             if (_auto)
             {
                 Generate();
             }
+        }
+
+        public static Test Create()
+        {
+            return new ConvexHullTest();
         }
     }
 }

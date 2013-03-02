@@ -50,8 +50,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Triangulation took " + _sw.ElapsedMilliseconds + " ms");
-            TextLine += 15;
+            DrawString("Triangulation took " + _sw.ElapsedMilliseconds + " ms");
+            
 
             base.Update(settings, gameTime);
         }

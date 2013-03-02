@@ -158,10 +158,10 @@ namespace FarseerPhysics.TestBed.Tests
 
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff, m to change the mode");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("Mode = {0}", _mode));
-            TextLine += 15;
+            DrawString("Press 1-5 to drop stuff, m to change the mode");
+            
+            DrawString(string.Format("Mode = {0}", _mode));
+            
 
             const float l = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);

@@ -96,7 +96,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Loaded: " + _nextFileName + " - Press T for next");
+            DrawString("Loaded: " + _nextFileName + " - Press T for next");
 
             Vector2 offset = new Vector2(-6, 12);
 

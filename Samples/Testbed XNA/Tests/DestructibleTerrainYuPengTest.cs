@@ -76,13 +76,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(50, TextLine, "Press: left mouse button to remove at mouse position.");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press: (A) to decrease the removal radius, (S) to increase it.");
-            TextLine += 15;
+            DrawString("Press: left mouse button to remove at mouse position.");
+            
+            DrawString("Press: (A) to decrease the removal radius, (S) to increase it.");
+            
             // Fighting against float decimals
             float radiusnumber = (float)((int)(Radius * 10)) / 10;
-            DebugView.DrawString(50, TextLine, "Radius: " + radiusnumber);
+            DrawString("Radius: " + radiusnumber);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
 

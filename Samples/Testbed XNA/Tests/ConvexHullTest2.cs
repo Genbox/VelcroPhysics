@@ -46,13 +46,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Melkman: Red");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Giftwrap: Green");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "ChainHull: Blue");
-            TextLine += 15;
-
+            DrawString("Melkman: Red");
+            DrawString("Giftwrap: Green");
+            DrawString("ChainHull: Blue");
+            
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             for (int i = 0; i < PointCount; i++)
             {

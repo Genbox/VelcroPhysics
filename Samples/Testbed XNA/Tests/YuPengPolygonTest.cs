@@ -96,32 +96,15 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            DebugView.DrawString(500, TextLine, "A,S,D = Create Rectangle");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Q,W,E = Create Circle");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Click to Drag polygons");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "1 = Select Subject while dragging [green]");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "2 = Select Clip while dragging [red]");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Space = Union");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Backspace = Subtract");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Shift = Intersect");
-            TextLine += 15;
-
-            DebugView.DrawString(500, TextLine, "Holes are colored light blue");
-            TextLine += 15;
+            DrawString("A,S,D = Create Rectangle");
+            DrawString("Q,W,E = Create Circle");
+            DrawString("Click to Drag polygons");
+            DrawString("1 = Select Subject while dragging [green]");
+            DrawString("2 = Select Clip while dragging [red]");
+            DrawString("Space = Union");
+            DrawString("Backspace = Subtract");
+            DrawString("Shift = Intersect");
+            DrawString("Holes are colored light blue");
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)

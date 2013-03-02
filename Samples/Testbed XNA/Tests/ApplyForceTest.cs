@@ -132,9 +132,8 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine,
-                                 "Note: The left side of the ship has a different density than the right side of the ship");
-            TextLine += 15;
+            DrawString("Note: The left side of the ship has a different density than the right side of the ship");
+            
 
             base.Update(settings, gameTime);
         }
@@ -142,18 +141,13 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.W))
-            {
-                Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -200.0f));
-                _body.ApplyForce(f);
-            }
+                _body.ApplyForce(_body.GetWorldVector(new Vector2(0.0f, -200.0f)));
+
             if (keyboardManager.IsKeyDown(Keys.A))
-            {
                 _body.ApplyTorque(50.0f);
-            }
+
             if (keyboardManager.IsKeyDown(Keys.D))
-            {
                 _body.ApplyTorque(-50.0f);
-            }
 
             base.Keyboard(keyboardManager);
         }

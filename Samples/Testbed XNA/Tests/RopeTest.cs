@@ -121,11 +121,11 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Press (j) to toggle the rope joint.");
-            TextLine += 15;
+            DrawString("Press (j) to toggle the rope joint.");
+            
 
-            DebugView.DrawString(50, TextLine, _useRopeJoint ? "Rope ON" : "Rope OFF");
-            TextLine += 15;
+            DrawString(_useRopeJoint ? "Rope ON" : "Rope OFF");
+            
 
             base.Update(settings, gameTime);
         }

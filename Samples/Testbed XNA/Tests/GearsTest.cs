@@ -125,13 +125,13 @@ namespace FarseerPhysics.TestBed.Tests
 
             float ratio = _joint4.Ratio;
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            DebugView.DrawString(50, TextLine, string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
-            TextLine += 15;
+            DrawString(string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
+            
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            DebugView.DrawString(50, TextLine, string.Format("theta2 + {0} * delta = {1}", ratio, value));
-            TextLine += 15;
+            DrawString(string.Format("theta2 + {0} * delta = {1}", ratio, value));
+            
         }
 
         internal static Test Create()
