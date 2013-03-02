@@ -108,7 +108,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(50, TextLine, "Press: (,) to launch a bullet.");
+            DrawString("Press: (,) to launch a bullet.");
 
             //if (StepCount == 300)
             //{
@@ -132,7 +132,7 @@ namespace FarseerPhysics.TestBed.Tests
             //    }
             //}
 
-            //TextLine += 15;
+            //
         }
 
         internal static Test Create()

@@ -157,7 +157,7 @@ namespace FarseerPhysics.TestBed.Tests
             v.X = -5.0f;
             _character.LinearVelocity = v;
 
-            DebugView.DrawString(50, TextLine, _collision ? "OnCollision fired" : "OnSeparation fired");
+            DrawString(_collision ? "OnCollision fired" : "OnSeparation fired");
 
             base.Update(settings, gameTime);
         }

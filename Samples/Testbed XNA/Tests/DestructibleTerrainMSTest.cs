@@ -125,16 +125,16 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Left click and drag the mouse to destroy terrain!");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Right click and drag the mouse to create terrain!");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Middle click to create circles!");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press t or y to cycle between decomposers: " + _terrain.Decomposer);
+            DrawString("Left click and drag the mouse to destroy terrain!");
+            
+            DrawString("Right click and drag the mouse to create terrain!");
+            
+            DrawString("Middle click to create circles!");
+            
+            DrawString("Press t or y to cycle between decomposers: " + _terrain.Decomposer);
             TextLine += 25;
-            DebugView.DrawString(50, TextLine, "Press g or h to decrease/increase circle radius: " + _circleRadius);
-            TextLine += 15;
+            DrawString("Press g or h to decrease/increase circle radius: " + _circleRadius);
+            
 
             base.Update(settings, gameTime);
         }

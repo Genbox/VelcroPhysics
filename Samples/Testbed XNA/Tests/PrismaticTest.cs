@@ -84,8 +84,8 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits, (m) motors, (p) speed");
-            TextLine += 15;
+            DrawString("Keys: (l) limits, (m) motors, (p) speed");
+            
         }
 
         internal static Test Create()

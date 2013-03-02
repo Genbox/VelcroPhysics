@@ -104,7 +104,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Keys: (l) limits on/off, (m) motor on/off");
+            DrawString("Keys: (l) limits on/off, (m) motor on/off");
         }
 
         internal static Test Create()

@@ -98,15 +98,15 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
-            DebugView.DrawString(50, TextLine, "Press: (,) to explode at mouse position.");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press: (A) to decrease the explosion radius, (S) to increase it.");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press: (D) to decrease the explosion power, (F) to increase it.");
-            TextLine += 15;
+            DrawString("Press: (,) to explode at mouse position.");
+            
+            DrawString("Press: (A) to decrease the explosion radius, (S) to increase it.");
+            
+            DrawString("Press: (D) to decrease the explosion power, (F) to increase it.");
+            
             // Fighting against float decimals
             float powernumber = (float)((int)(_force * 10)) / 10;
-            DebugView.DrawString(50, TextLine, "Power: " + powernumber);
+            DrawString("Power: " + powernumber);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);

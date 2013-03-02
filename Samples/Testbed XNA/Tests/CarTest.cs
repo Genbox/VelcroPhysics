@@ -247,12 +247,12 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
-            TextLine += 15;
+            DrawString("Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
+            
+            DrawString(string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
+            
+            DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
+            
 
             GameInstance.ViewCenter = _car.Position;
 

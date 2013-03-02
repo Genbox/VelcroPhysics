@@ -163,13 +163,13 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "This demonstrates a soft distance joint.");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press: (b) to delete a body, (j) to delete a joint");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Bodies removed: " + _removedBodies);
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Joints removed: " + _removedJoints);
+            DrawString("This demonstrates a soft distance joint.");
+            
+            DrawString("Press: (b) to delete a body, (j) to delete a joint");
+            
+            DrawString("Bodies removed: " + _removedBodies);
+            
+            DrawString("Joints removed: " + _removedJoints);
         }
 
         protected override void JointRemoved(Joint joint)

@@ -112,15 +112,15 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, string.Format("Center ({0}): Original polygon", _twoShape.Count));
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("Upper left ({0}): Simplified by removing points with an area of below 0.1", _upperLeft.Count));
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("Upper right ({0}): Simplified by removing every 3 point", _upperRight.Count));
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("Lower left ({0}): Simplified by removing points with a distance of less than 1", _lowerLeft.Count));
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, string.Format("Lower right ({0}): Simplified with Douglas Peucker", _lowerRight.Count));
+            DrawString(string.Format("Center ({0}): Original polygon", _twoShape.Count));
+            
+            DrawString(string.Format("Upper left ({0}): Simplified by removing points with an area of below 0.1", _upperLeft.Count));
+            
+            DrawString(string.Format("Upper right ({0}): Simplified by removing every 3 point", _upperRight.Count));
+            
+            DrawString(string.Format("Lower left ({0}): Simplified by removing points with a distance of less than 1", _lowerLeft.Count));
+            
+            DrawString(string.Format("Lower right ({0}): Simplified with Douglas Peucker", _lowerRight.Count));
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 

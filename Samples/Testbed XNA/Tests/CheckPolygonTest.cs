@@ -26,23 +26,18 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Use the mouse to create a polygon.");
-            TextLine += 30;
-            DebugView.DrawString(50, TextLine, "Simple: " + _vertices.IsSimple());
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Convex: " + _vertices.IsConvex());
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "CCW: " + _vertices.IsCounterClockWise());
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Area: " + _vertices.GetArea());
-            TextLine += 30;
+            DrawString("Use the mouse to create a polygon.");
+            DrawString("Simple: " + _vertices.IsSimple());
+            DrawString("Convex: " + _vertices.IsConvex());
+            DrawString("CCW: " + _vertices.IsCounterClockWise());
+            DrawString("Area: " + _vertices.GetArea());
 
             PolygonError returnCode = _vertices.CheckPolygon();
 
             if (returnCode == PolygonError.NoError)
-                DebugView.DrawString(50, TextLine, "Polygon is supported in Farseer Physics Engine");
+                DrawString("Polygon is supported in Farseer Physics Engine");
             else
-                DebugView.DrawString(50, TextLine, "Polygon is NOT supported in Farseer Physics Engine. Reason: " + returnCode);
+                DrawString("Polygon is NOT supported in Farseer Physics Engine. Reason: " + returnCode);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 

@@ -51,12 +51,12 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DebugView.DrawString(50, TextLine, "Press A,S,W,D move endpoint");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press Enter to cut");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press TAB to change endpoint");
-            TextLine += 15;
+            DrawString("Press A,S,W,D move endpoint");
+            
+            DrawString("Press Enter to cut");
+            
+            DrawString("Press TAB to change endpoint");
+            
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawSegment(_start, _end, Color.Red);
@@ -81,7 +81,7 @@ namespace FarseerPhysics.TestBed.Tests
                                   return 1;
                               }, _end, _start);
 
-            DebugView.DrawString(50, TextLine, "Fixtures: " + fixtures.Count);
+            DrawString("Fixtures: " + fixtures.Count);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             foreach (Vector2 entryPoint in entryPoints)

@@ -192,8 +192,8 @@ namespace FarseerPhysics.TestBed.Tests
             bool advanceRay = settings.Pause == false || settings.SingleStep;
 
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
-            TextLine += 15;
+            DrawString("Press 1-5 to drop stuff");
+            
 
             const float l = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);

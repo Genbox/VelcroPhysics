@@ -71,8 +71,8 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DebugView.DrawString(50, TextLine, "Press: (c) create a shape, (d) destroy a shape.");
-            TextLine += 15;
+            DrawString("Press: (c) create a shape, (d) destroy a shape.");
+            
         }
 
         internal static Test Create()

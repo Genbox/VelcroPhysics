@@ -287,12 +287,12 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.DrawCircle(callback.Circle.Position, callback.Circle.Radius, color);
             DebugView.EndCustomDraw();
 
-            DebugView.DrawString(50, TextLine, "Press 1-5 to drop stuff");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press a to (de)activate some bodies");
-            TextLine += 15;
-            DebugView.DrawString(50, TextLine, "Press d to destroy a body");
-            TextLine += 15;
+            DrawString("Press 1-5 to drop stuff");
+            
+            DrawString("Press a to (de)activate some bodies");
+            
+            DrawString("Press d to destroy a body");
+            
         }
 
         internal static Test Create()
