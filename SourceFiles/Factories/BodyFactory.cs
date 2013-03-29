@@ -156,7 +156,7 @@ namespace FarseerPhysics.Factories
             //There are too many vertices in the capsule. We decompose it.
             if (verts.Count >= Settings.MaxPolygonVertices)
             {
-                List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
+                List<Vertices> vertList = Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Earclip);
                 body = CreateCompoundPolygon(world, vertList, density, userData);
                 body.Position = position;
 
@@ -212,7 +212,7 @@ namespace FarseerPhysics.Factories
             //There are too many vertices in the capsule. We decompose it.
             if (verts.Count >= Settings.MaxPolygonVertices)
             {
-                List<Vertices> vertList = EarclipDecomposer.ConvexPartition(verts);
+                List<Vertices> vertList = Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Earclip);
                 Body body = CreateCompoundPolygon(world, vertList, density, userData);
                 body.Position = position;
                 return body;
@@ -246,7 +246,7 @@ namespace FarseerPhysics.Factories
         /// <returns></returns>
         public static BreakableBody CreateBreakableBody(World world, Vertices vertices, float density, Vector2 position)
         {
-            List<Vertices> triangles = EarclipDecomposer.ConvexPartition(vertices);
+            List<Vertices> triangles = Triangulate.ConvexPartition(vertices, TriangulationAlgorithm.Earclip);
 
             BreakableBody breakableBody = new BreakableBody(triangles, world, density);
             breakableBody.MainBody.Position = position;

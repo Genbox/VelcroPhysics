@@ -65,8 +65,7 @@ namespace FarseerPhysics.Common
 
             List<Vector2> verts = path.GetVertices(subdivisions);
 
-            List<Vertices> decomposedVerts = EarclipDecomposer.ConvexPartition(new Vertices(verts));
-            //List<Vertices> decomposedVerts = BayazitDecomposer.ConvexPartition(new Vertices(verts));
+            List<Vertices> decomposedVerts = Triangulate.ConvexPartition(new Vertices(verts), TriangulationAlgorithm.Earclip);
 
             foreach (Vertices item in decomposedVerts)
             {
