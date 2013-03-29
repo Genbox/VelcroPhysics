@@ -138,7 +138,7 @@ namespace FarseerPhysics.Factories
             //Close the arc
             arc.Add(arc[0]);
 
-            List<Vertices> triangles = EarclipDecomposer.ConvexPartition(arc);
+            List<Vertices> triangles = Triangulate.ConvexPartition(arc, TriangulationAlgorithm.Earclip);
 
             return AttachCompoundPolygon(triangles, density, body);
         }
