@@ -34,6 +34,13 @@ namespace FarseerPhysics
         // Common
 
         /// <summary>
+        /// If true, all collision callbacks have to return the same value, and agree
+        /// if there was a collision or not. Swtich this to false to revert to the 
+        /// collision agreement used in FPE 3.3.x
+        /// </summary>
+        public const bool AllCollisionCallbacksAgree = true;
+
+        /// <summary>
         /// Enabling diagnistics causes the engine to gather timing information.
         /// You can see how much time it took to solve the contacts, solve CCD
         /// and update the controllers.
@@ -85,7 +92,7 @@ namespace FarseerPhysics
         /// <summary>
         /// Maximum number of sub-steps per contact in continuous physics simulation.
         /// </summary>
-		public const int MaxSubSteps = 8;
+        public const int MaxSubSteps = 8;
 
         /// <summary>
         /// Enable/Disable warmstarting
@@ -106,29 +113,29 @@ namespace FarseerPhysics
         /// Farseer Physics Engine has a different way of filtering fixtures than Box2d.
         /// We have both FPE and Box2D filtering in the engine. If you are upgrading
         /// from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
-		/// to Category.All.
+        /// to Category.All.
         /// </summary>
         public static bool UseFPECollisionCategories;
 
-		/// <summary>
-		/// This is used by the Fixture constructor as the default value 
-		/// for Fixture.CollisionCategories member. Note that you may need to change this depending
-		/// on the setting of UseFPECollisionCategories, above.
-		/// </summary>
-		public static Category DefaultFixtureCollisionCategories = Category.Cat1;
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value 
+        /// for Fixture.CollisionCategories member. Note that you may need to change this depending
+        /// on the setting of UseFPECollisionCategories, above.
+        /// </summary>
+        public static Category DefaultFixtureCollisionCategories = Category.Cat1;
 
-		/// <summary>
-		/// This is used by the Fixture constructor as the default value 
-		/// for Fixture.CollidesWith member.
-		/// </summary>
-		public static Category DefaultFixtureCollidesWith = Category.All;
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value 
+        /// for Fixture.CollidesWith member.
+        /// </summary>
+        public static Category DefaultFixtureCollidesWith = Category.All;
 
 
-		/// <summary>
-		/// This is used by the Fixture constructor as the default value 
-		/// for Fixture.IgnoreCCDWith member.
-		/// </summary>
-		public static Category DefaultFixtureIgnoreCCDWith = Category.None;
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value 
+        /// for Fixture.IgnoreCCDWith member.
+        /// </summary>
+        public static Category DefaultFixtureIgnoreCCDWith = Category.None;
 
         /// <summary>
         /// Conserve memory makes sure that objects are used by reference instead of cloned.
@@ -255,7 +262,7 @@ namespace FarseerPhysics
         /// <returns></returns>
         public static float MixFriction(float friction1, float friction2)
         {
-            return (float) Math.Sqrt(friction1 * friction2);
+            return (float)Math.Sqrt(friction1 * friction2);
         }
 
         /// <summary>
