@@ -350,7 +350,6 @@ namespace FarseerPhysics.DebugView
                              "\n- Contacts: " + World.ContactList.Count +
                              "\n- Joints: " + World.JointList.Count +
                              "\n- Controllers: " + World.ControllerList.Count +
-                             "\n- Particles: " + World.Fluid.Particles.Count +
                              "\n- Proxies: " + World.ProxyCount);
 
             DrawString(x + 110, y, "Update time:" +

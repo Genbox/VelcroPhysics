@@ -131,7 +131,6 @@
     <Compile Include="Tests\CheckPolygonTest.cs" />
     <Compile Include="Tests\SimplificationTest.cs" />
     <Compile Include="Tests\TriangulationTest.cs" />
-    <Compile Include="Tests\FluidsTest.cs" />
     <Compile Include="Tests\TumblerTest.cs" />
     <Compile Include="Tests\MobileBalancedTest.cs" />
     <Compile Include="Tests\MobileTest.cs" />
