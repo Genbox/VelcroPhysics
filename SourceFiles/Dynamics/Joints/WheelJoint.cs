@@ -115,6 +115,16 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
+        public Vector2 LocalXAxisA
+        {
+            get { return _localXAxisA; }
+            set
+            {
+                _localXAxisA = BodyA.GetLocalVector(value);
+                _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+            }
+        }
+
         /// The desired motor speed in radians per second.
         public float MotorSpeed
         {
