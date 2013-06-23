@@ -38,22 +38,6 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
 {
-    [Flags]
-    public enum WorldFlags
-    {
-        /// <summary>
-        /// Flag that indicates a new fixture has been added to the world.
-        /// </summary>
-        NewFixture = (1 << 0),
-
-        /// <summary>
-        /// Flag that clear the forces after each time step.
-        /// </summary>
-        ClearForces = (1 << 2),
-
-        SubStepping = (1 << 4),
-    }
-
     /// <summary>
     /// The world class manages all physics entities, dynamic simulation,
     /// and asynchronous queries.
@@ -70,6 +54,10 @@ namespace FarseerPhysics.Dynamics
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private TOIInput _input = new TOIInput();
+        private Fixture _myFixture;
+        private Vector2 _point1;
+        private Vector2 _point2;
+        private List<Fixture> _testPointAllFixtures;
 
         /// <summary>
         /// Called for each fixture found in the query. You control how the ray cast
@@ -80,7 +68,7 @@ namespace FarseerPhysics.Dynamics
         private Func<RayCastInput, int, float> _rayCastCallbackWrapper;
 
         internal Queue<Contact> ContactPool = new Queue<Contact>(256);
-        internal WorldFlags Flags;
+        internal bool WorldHasNewFixture;
 
         /// <summary>
         /// Fires whenever a body has been added
@@ -133,8 +121,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         private World()
         {
-            Flags = WorldFlags.ClearForces;
-
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
@@ -1055,7 +1041,7 @@ namespace FarseerPhysics.Dynamics
                 // Also, some contacts can be destroyed.
                 ContactManager.FindNewContacts();
 
-                if (EnableSubStepping)
+                if (Settings.EnableSubStepping)
                 {
                     _stepComplete = false;
                     break;
@@ -1103,26 +1089,6 @@ namespace FarseerPhysics.Dynamics
         public Vector2 Gravity;
 
         /// <summary>
-        /// Set flag to control automatic clearing of forces after each time step.
-        /// </summary>
-        /// <value><c>true</c> if it should auto clear forces; otherwise, <c>false</c>.</value>
-        public bool AutoClearForces
-        {
-            set
-            {
-                if (value)
-                {
-                    Flags |= WorldFlags.ClearForces;
-                }
-                else
-                {
-                    Flags &= ~WorldFlags.ClearForces;
-                }
-            }
-            get { return (Flags & WorldFlags.ClearForces) == WorldFlags.ClearForces; }
-        }
-
-        /// <summary>
         /// Get the contact manager for testing.
         /// </summary>
         /// <value>The contact manager.</value>
@@ -1159,26 +1125,6 @@ namespace FarseerPhysics.Dynamics
         public List<Contact> ContactList
         {
             get { return ContactManager.ContactList; }
-        }
-
-        //TODO: Convert to setting
-        /// <summary>
-        /// Enable/disable single stepped continuous physics. For testing.
-        /// </summary>
-        public bool EnableSubStepping
-        {
-            set
-            {
-                if (value)
-                {
-                    Flags |= WorldFlags.SubStepping;
-                }
-                else
-                {
-                    Flags &= ~WorldFlags.SubStepping;
-                }
-            }
-            get { return (Flags & WorldFlags.SubStepping) == WorldFlags.SubStepping; }
         }
 
         /// <summary>
@@ -1298,10 +1244,10 @@ namespace FarseerPhysics.Dynamics
             }
 
             // If new fixtures were added, we need to find the new contacts.
-            if ((Flags & WorldFlags.NewFixture) == WorldFlags.NewFixture)
+            if (WorldHasNewFixture)
             {
                 ContactManager.FindNewContacts();
-                Flags &= ~WorldFlags.NewFixture;
+                WorldHasNewFixture = false;
             }
 
             TimeStep step;
@@ -1353,7 +1299,7 @@ namespace FarseerPhysics.Dynamics
                 FluidsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
 #endif
 
-            if ((Flags & WorldFlags.ClearForces) != 0)
+            if (Settings.AutoClearForces)
             {
                 ClearForces();
             }
@@ -1510,25 +1456,26 @@ namespace FarseerPhysics.Dynamics
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
-            Fixture myFixture = null;
+            _myFixture = null;
+            _point1 = point;
 
-            //TODO: Do not use anon
             // Query the world for overlapping shapes.
-            QueryAABB(
-                fixture =>
-                {
-                    bool inside = fixture.TestPoint(ref point);
-                    if (inside)
-                    {
-                        myFixture = fixture;
-                        return false;
-                    }
+            QueryAABB(TestPointCallback, ref aabb);
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+            return _myFixture;
+        }
 
-            return myFixture;
+        private bool TestPointCallback(Fixture fixture)
+        {
+            bool inside = fixture.TestPoint(ref _point1);
+            if (inside)
+            {
+                _myFixture = fixture;
+                return false;
+            }
+
+            // Continue the query.
+            return true;
         }
 
         /// <summary>
@@ -1543,22 +1490,23 @@ namespace FarseerPhysics.Dynamics
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
-            List<Fixture> fixtures = new List<Fixture>();
+            _point2 = point;
+            _testPointAllFixtures = new List<Fixture>();
 
-            //TODO: Do not use anon
             // Query the world for overlapping shapes.
-            QueryAABB(
-                fixture =>
-                {
-                    bool inside = fixture.TestPoint(ref point);
-                    if (inside)
-                        fixtures.Add(fixture);
+            QueryAABB(TestPointAllCallback, ref aabb);
 
-                    // Continue the query.
-                    return true;
-                }, ref aabb);
+            return _testPointAllFixtures;
+        }
 
-            return fixtures;
+        private bool TestPointAllCallback(Fixture fixture)
+        {
+            bool inside = fixture.TestPoint(ref _point2);
+            if (inside)
+                _testPointAllFixtures.Add(fixture);
+
+            // Continue the query.
+            return true;
         }
 
         /// Shift the world origin. Useful for large worlds.

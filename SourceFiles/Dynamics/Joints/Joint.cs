@@ -61,20 +61,6 @@ namespace FarseerPhysics.Dynamics.Joints
         Equal,
     }
 
-    internal struct Jacobian //TODO
-    {
-        public float AngularA;
-        public float AngularB;
-        public Vector2 Linear;
-
-        public void SetZero()
-        {
-            AngularA = 0.0f;
-            Linear = Vector2.Zero;
-            AngularB = 0.0f;
-        }
-    }
-
     /// <summary>
     /// A joint edge is used to connect bodies and joints together
     /// in a joint graph where each body is a node and each joint

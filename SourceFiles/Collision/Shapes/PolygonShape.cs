@@ -218,7 +218,6 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
-            //TODO: Could possibly speed this up with an AABB or Radius check? Only needed with large number of vertices.
             Vector2 pLocal = MathUtils.MulT(transform.q, point - transform.p);
 
             for (int i = 0; i < Vertices.Count; ++i)
