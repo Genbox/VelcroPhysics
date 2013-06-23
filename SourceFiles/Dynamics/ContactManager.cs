@@ -280,6 +280,10 @@ namespace FarseerPhysics.Dynamics
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
 
+                //Do no try to collide disabled bodies
+                if (!bodyA.Enabled || !bodyB.Enabled)
+                    continue;
+
                 // Is this contact flagged for filtering?
                 if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
                 {

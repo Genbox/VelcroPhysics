@@ -299,6 +299,12 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// <param name="contactManager">The contact manager.</param>
         internal void Update(ContactManager contactManager)
         {
+            Body bodyA = FixtureA.Body;
+            Body bodyB = FixtureB.Body;
+
+            if (FixtureA == null || FixtureB == null)
+                return;
+
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
@@ -309,8 +315,6 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             bool sensor = FixtureA.IsSensor || FixtureB.IsSensor;
 
-            Body bodyA = FixtureA.Body;
-            Body bodyB = FixtureB.Body;
 
             // Is this contact a sensor?
             if (sensor)
