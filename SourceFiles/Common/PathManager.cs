@@ -134,9 +134,8 @@ namespace FarseerPhysics.Common
             return EvenlyDistributeShapesAlongPath(world, path, shape, type, copies, null);
         }
 
-        //TODO: Comment better
         /// <summary>
-        /// Moves the body on the path.
+        /// Moves the given body along the defined path.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="body">The body.</param>
