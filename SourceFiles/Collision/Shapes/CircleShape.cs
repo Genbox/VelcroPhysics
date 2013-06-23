@@ -46,9 +46,8 @@ namespace FarseerPhysics.Collision.Shapes
             Debug.Assert(density >= 0);
 
             ShapeType = ShapeType.Circle;
-            _radius = radius;
             _position = Vector2.Zero;
-            ComputeProperties();
+            Radius = radius; // The Radius property cache 2radius and calls ComputeProperties(). So no need to call ComputeProperties() here.
         }
 
         internal CircleShape()
@@ -81,6 +80,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             CircleShape shape = new CircleShape();
             shape._radius = Radius;
+            shape._2radius = _2radius;
             shape._density = _density;
             shape._position = _position;
             shape.ShapeType = ShapeType;
@@ -92,7 +92,7 @@ namespace FarseerPhysics.Collision.Shapes
         {
             Vector2 center = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= Radius * Radius; //TODO: Cache Radius*Radius
+            return Vector2.Dot(d, d) <= _2radius;
         }
 
         public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
@@ -106,7 +106,7 @@ namespace FarseerPhysics.Collision.Shapes
 
             Vector2 position = transform.p + MathUtils.Mul(transform.q, Position);
             Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - Radius * Radius;
+            float b = Vector2.Dot(s, s) - _2radius;
 
             // Solve quadratic equation.
             Vector2 r = input.Point2 - input.Point1;
@@ -147,13 +147,13 @@ namespace FarseerPhysics.Collision.Shapes
 
         protected override sealed void ComputeProperties()
         {
-            float area = Settings.Pi * Radius * Radius;
+            float area = Settings.Pi * _2radius;
             MassData.Area = area;
             MassData.Mass = Density * area;
             MassData.Centroid = Position;
 
             // inertia about the local origin
-            MassData.Inertia = MassData.Mass * (0.5f * Radius * Radius + Vector2.Dot(Position, Position));
+            MassData.Inertia = MassData.Mass * (0.5f * _2radius + Vector2.Dot(Position, Position));
         }
 
         /// <summary>
@@ -181,14 +181,13 @@ namespace FarseerPhysics.Collision.Shapes
             {
                 //Completely wet
                 sc = p;
-                return Settings.Pi * Radius * Radius;
+                return Settings.Pi * _2radius;
             }
 
             //Magic
-            float r2 = Radius * Radius;
             float l2 = l * l;
-            float area = r2 * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(r2 - l2));
-            float com = -2.0f / 3.0f * (float)Math.Pow(r2 - l2, 1.5f) / area;
+            float area = _2radius * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(_2radius - l2));
+            float com = -2.0f / 3.0f * (float)Math.Pow(_2radius - l2, 1.5f) / area;
 
             sc.X = p.X + normal.X * com;
             sc.Y = p.Y + normal.Y * com;

@@ -122,6 +122,7 @@ namespace FarseerPhysics.Collision.Shapes
     {
         internal float _density;
         internal float _radius;
+        internal float _2radius;
 
         protected Shape(float density)
         {
@@ -179,6 +180,8 @@ namespace FarseerPhysics.Collision.Shapes
                 Debug.Assert(value >= 0);
 
                 _radius = value;
+                _2radius = _radius * _radius;
+
                 ComputeProperties();
             }
         }
