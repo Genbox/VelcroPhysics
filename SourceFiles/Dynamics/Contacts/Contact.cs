@@ -371,58 +371,51 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 if (touching)
                 {
-
-                    //TODO: Create a setting that can turn behavior on and off?
-#if true
-                    bool enabledA = true, enabledB = true;
-
-                    // Report the collision to both participants. Track which ones returned true so we can
-                    // later call OnSeparation if the contact is disabled for a different reason.
-                    if (FixtureA.OnCollision != null)
-                        foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
-                            enabledA = handler(FixtureA, FixtureB, this) && enabledA;
-
-                    // Reverse the order of the reported fixtures. The first fixture is always the one that the
-                    // user subscribed to.
-                    if (FixtureB.OnCollision != null)
-                        foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
-                            enabledB = handler(FixtureB, FixtureA, this) && enabledB;
-
-                    Enabled = enabledA && enabledB;
-
-                    // BeginContact can also return false and disable the contact
-                    if (enabledA && enabledB && contactManager.BeginContact != null)
+                    if (Settings.AllCollisionCallbacksAgree)
                     {
-                        Enabled = contactManager.BeginContact(this);
+                        bool enabledA = true, enabledB = true;
+
+                        // Report the collision to both participants. Track which ones returned true so we can
+                        // later call OnSeparation if the contact is disabled for a different reason.
+                        if (FixtureA.OnCollision != null)
+                            foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
+                                enabledA = handler(FixtureA, FixtureB, this) && enabledA;
+
+                        // Reverse the order of the reported fixtures. The first fixture is always the one that the
+                        // user subscribed to.
+                        if (FixtureB.OnCollision != null)
+                            foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
+                                enabledB = handler(FixtureB, FixtureA, this) && enabledB;
+
+                        Enabled = enabledA && enabledB;
+
+                        // BeginContact can also return false and disable the contact
+                        if (enabledA && enabledB && contactManager.BeginContact != null)
+                            Enabled = contactManager.BeginContact(this);
+                    }
+                    else
+                    {
+                        //Report the collision to both participants:
+                        if (FixtureA.OnCollision != null)
+                            foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
+                                Enabled = FixtureA.OnCollision(FixtureA, FixtureB, this);
+
+                        //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                        //user subscribed to.
+                        if (FixtureB.OnCollision != null)
+                            foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
+                                Enabled = FixtureB.OnCollision(FixtureB, FixtureA, this);
+
+                        //BeginContact can also return false and disable the contact
+                        if (contactManager.BeginContact != null)
+                            Enabled = contactManager.BeginContact(this);
                     }
 
                     // If the user disabled the contact (needed to exclude it in TOI solver) at any point by
                     // any of the callbacks, we need to mark it as not touching and call any separation
                     // callbacks for fixtures that didn't explicitly disable the collision.
                     if (!Enabled)
-                    {
                         Flags &= ~ContactFlags.Touching;
-                    }
-
-#else
-					//Report the collision to both participants:
-					if (FixtureA.OnCollision != null)
-						Enabled = FixtureA.OnCollision(FixtureA, FixtureB, this);
-
-					//Reverse the order of the reported fixtures. The first fixture is always the one that the
-					//user subscribed to.
-					if (FixtureB.OnCollision != null)
-						Enabled = FixtureB.OnCollision(FixtureB, FixtureA, this);
-
-					//BeginContact can also return false and disable the contact
-					if (contactManager.BeginContact != null)
-						Enabled = contactManager.BeginContact(this);
-
-					//if the user disabled the contact (needed to exclude it in TOI solver), we also need to mark
-					//it as not touching.
-					if (Enabled == false)
-						Flags &= ~ContactFlags.Touching;
-#endif
                 }
             }
             else
