@@ -33,7 +33,6 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Fluids;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics
@@ -104,8 +103,6 @@ namespace FarseerPhysics.Dynamics
 
         public ControllerDelegate ControllerRemoved;
 
-        public FluidSystem2 Fluid { get; private set; }
-
         /// <summary>
         /// If false, the whole simulation stops. It still processes added and removed geometries.
         /// </summary>
@@ -139,8 +136,6 @@ namespace FarseerPhysics.Dynamics
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
-
-            Fluid = new FluidSystem2(new Vec2(0, -1), 5000, 150, 150);
         }
 
         public World(Vector2 gravity, AABB span)
@@ -1291,8 +1286,6 @@ namespace FarseerPhysics.Dynamics
             if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 #endif
-
-            Fluid.Update(dt);
 
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
