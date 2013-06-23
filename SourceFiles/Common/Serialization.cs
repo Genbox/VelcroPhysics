@@ -729,6 +729,7 @@ namespace FarseerPhysics.Common
                                             f.CollidesWith = blueprint.CollidesWith;
                                             f.CollisionCategories = blueprint.CollisionCategories;
                                             f.CollisionGroup = blueprint.CollisionGroup;
+                                            f.IsSensor = blueprint.IsSensor;
                                         }
                                         break;
                                     }
