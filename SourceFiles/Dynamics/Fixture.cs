@@ -442,7 +442,7 @@ namespace FarseerPhysics.Dynamics
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
-            Body.World.Flags |= WorldFlags.NewFixture;
+            Body.World.WorldHasNewFixture = true;
 
             if (Body.World.FixtureAdded != null)
             {

@@ -376,8 +376,6 @@ namespace FarseerPhysics.Common
         /// </summary>
         public bool IsSimple()
         {
-            //TODO: Check for something like Bentley–Ottmann for simple polygon test, around O(n + log n), but with fewer assumptions.
-
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
             if (Count < 3)
                 return false;

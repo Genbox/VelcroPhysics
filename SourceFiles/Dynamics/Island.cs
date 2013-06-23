@@ -184,13 +184,12 @@ namespace FarseerPhysics.Dynamics
                 {
                     Joint joint = _joints[j];
 
-                    //if (!joint.Enabled) //TODO: Activate again
-                    //    continue;
+                    if (!joint.Enabled)
+                        continue;
 
                     joint.SolveVelocityConstraints(ref solverData);
 
-                    //TODO: Move up before solve?
-                    //joint.Validate(step.inv_dt); //TODO: Activate again
+                    joint.Validate(step.inv_dt);
                 }
 
                 _contactSolver.SolveVelocityConstraints();

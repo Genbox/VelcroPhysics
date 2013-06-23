@@ -255,6 +255,21 @@ namespace FarseerPhysics
         public const int MaxGJKIterations = 20;
 
         /// <summary>
+        /// This is only for debugging the solver
+        /// </summary>
+        public const bool EnableSubStepping = false;
+
+        /// <summary>
+        /// By default, forces are cleared automatically after each call to Step.
+        /// The default behavior is modified with this setting.
+        /// The purpose of this setting is to support sub-stepping. Sub-stepping is often used to maintain
+        /// a fixed sized time step under a variable frame-rate.
+        /// When you perform sub-stepping you should disable auto clearing of forces and instead call
+        /// ClearForces after all sub-steps are complete in one pass of your game loop.
+        /// </summary>
+        public const bool AutoClearForces = true;
+
+        /// <summary>
         /// Friction mixing law. Feel free to customize this.
         /// </summary>
         /// <param name="friction1">The friction1.</param>
