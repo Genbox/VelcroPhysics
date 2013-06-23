@@ -628,7 +628,6 @@ namespace FarseerPhysics.Dynamics
 
         public float Restitution
         {
-            //TODO: Fix bug when fixturecount = 0;
             get
             {
                 float res = 0;
@@ -639,7 +638,7 @@ namespace FarseerPhysics.Dynamics
                     res += f.Restitution;
                 }
 
-                return res / FixtureList.Count;
+                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
             }
             set
             {
@@ -653,7 +652,6 @@ namespace FarseerPhysics.Dynamics
 
         public float Friction
         {
-            //TODO: Fix bug when fixturecount = 0;
             get
             {
                 float res = 0;
@@ -664,7 +662,7 @@ namespace FarseerPhysics.Dynamics
                     res += f.Friction;
                 }
 
-                return res / FixtureList.Count;
+                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
             }
             set
             {
