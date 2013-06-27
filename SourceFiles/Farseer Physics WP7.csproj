@@ -250,14 +250,6 @@
     <Compile Include="Factories\FixtureFactory.cs" />
     <Compile Include="Factories\JointFactory.cs" />
     <Compile Include="Factories\LinkFactory.cs" />
-    <Compile Include="Fluids\FluidDefinition.cs" />
-    <Compile Include="Fluids\FluidParticle.cs" />
-    <Compile Include="Fluids\FluidSystem.cs" />
-    <Compile Include="Fluids\FluidSystem2.cs" />
-    <Compile Include="Fluids\HashGrid.cs" />
-    <Compile Include="Fluids\SpartialTable.cs" />
-    <Compile Include="Fluids\Spring.cs" />
-    <Compile Include="Fluids\SpringHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
