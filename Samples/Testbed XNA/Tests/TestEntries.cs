@@ -29,6 +29,8 @@ namespace FarseerPhysics.TestBed.Tests
         public static TestEntry[] TestList =
         {
             //Original tests
+            new TestEntry {Name = "Continuous Test", CreateTest = ContinuousTest.Create},
+            new TestEntry {Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create},
             new TestEntry {Name = "Motor joint", CreateTest = MotorJointTest.Create},
             new TestEntry {Name = "One-Sided Platform", CreateTest = OneSidedPlatformTest.Create},
             //new TestEntry {Name = "Dump Shell", CreateTest = DumpShellTest.Create},
@@ -61,8 +63,6 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "RopeJoint", CreateTest = RopeTest.Create},
             new TestEntry {Name = "Pinball", CreateTest = PinballTest.Create},
             new TestEntry {Name = "Bullet Test", CreateTest = BulletTest.Create},
-            new TestEntry {Name = "Continuous Test", CreateTest = ContinuousTest.Create},
-            new TestEntry {Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create},
             new TestEntry {Name = "Confined", CreateTest = ConfinedTest.Create},
             new TestEntry {Name = "Pyramid", CreateTest = PyramidTest.Create},
             new TestEntry {Name = "Theo Jansen's Walker", CreateTest = TheoJansenTest.Create},
@@ -106,7 +106,6 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Buoyancy test", CreateTest = BuoyancyTest.Create},
             new TestEntry {Name = "Convex hull test", CreateTest = ConvexHullTest2.Create},
             new TestEntry {Name = "Simple Wind Force Test", CreateTest = SimpleWindForceTest.Create},
-            new TestEntry {Name = "Quad Tree BroadPhase test", CreateTest = QuadTreeTest.Create},
             new TestEntry {Name = "Simplification", CreateTest = SimplificationTest.Create},
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},

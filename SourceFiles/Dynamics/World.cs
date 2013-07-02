@@ -138,13 +138,6 @@ namespace FarseerPhysics.Dynamics
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
         }
 
-        public World(Vector2 gravity, AABB span)
-            : this()
-        {
-            Gravity = gravity;
-            ContactManager = new ContactManager(new QuadTreeBroadPhase(span));
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
