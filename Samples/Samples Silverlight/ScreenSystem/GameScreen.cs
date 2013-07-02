@@ -273,7 +273,7 @@ namespace FarseerPhysics.ScreenSystem
             if (!input.LastKeyboardState.IsKeyDown(Key.F1) && input.CurrentKeyboardState.IsKeyDown(Key.F1))
             {
                 DebugViewEnabled = !DebugViewEnabled;
-                Settings.EnableDiagnostics = DebugViewEnabled;
+
                 if (DebugViewEnabled == false)
                     TxtDebug.Text = "";
             }

@@ -410,10 +410,9 @@ namespace FarseerPhysics
             }
         }
 
-        public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue)
+        public override void DrawPolygon(Vector2[] vertices, int count, float red, float green, float blue, bool closed = true)
         {
-            DrawPolygon(vertices, count,
-                        Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawPolygon(vertices, count, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawPolygon(Vector2[] vertices, int count, Color color)
