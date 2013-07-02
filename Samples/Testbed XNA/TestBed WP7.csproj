@@ -141,7 +141,6 @@
     <Compile Include="Tests\MobileBalancedTest.cs" />
     <Compile Include="Tests\MobileTest.cs" />
     <Compile Include="Tests\MotorJointTest.cs" />
-    <Compile Include="Tests\QuadTreeTest.cs" />
     <Compile Include="Tests\RopeTest.cs" />
     <Compile Include="Tests\SerializationTest.cs" />
     <Compile Include="Tests\SimpleWindForceTest.cs" />

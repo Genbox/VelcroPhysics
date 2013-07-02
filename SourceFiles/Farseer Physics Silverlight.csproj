@@ -82,14 +82,6 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="Collision\QuadTree.cs">
-      <SubType>
-      </SubType>
-    </Compile>
-    <Compile Include="Collision\QuadTreeBroadPhase.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Collision\Shapes\ChainShape.cs">
       <SubType>
       </SubType>
