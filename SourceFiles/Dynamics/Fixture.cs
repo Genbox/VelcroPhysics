@@ -111,7 +111,8 @@ namespace FarseerPhysics.Dynamics
 
         /// <summary>
         /// Fires when two shapes separate and a contact is removed between them.
-        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// Note: This can in some cases be called multiple times, as a fixture can have multiple contacts.
+        /// Note The first fixture argument is always the fixture that the delegate is subscribed to.
         /// </summary>
         public OnSeparationEventHandler OnSeparation;
 
