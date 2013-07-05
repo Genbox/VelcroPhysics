@@ -77,8 +77,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public PreSolveDelegate PreSolve;
 
-        private List<Contact> _calledContacts = new List<Contact>();
-
         internal ContactManager(IBroadPhase broadPhase)
         {
             BroadPhase = broadPhase;
@@ -215,22 +213,17 @@ namespace FarseerPhysics.Dynamics
 
             if (contact.IsTouching())
             {
-                if (!_calledContacts.Contains(contact))
-                {
-                    //Report the separation to both participants:
-                    if (fixtureA != null && fixtureA.OnSeparation != null)
-                        fixtureA.OnSeparation(fixtureA, fixtureB);
+                //Report the separation to both participants:
+                if (fixtureA != null && fixtureA.OnSeparation != null)
+                    fixtureA.OnSeparation(fixtureA, fixtureB);
 
-                    //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                    //user subscribed to.
-                    if (fixtureB != null && fixtureB.OnSeparation != null)
-                        fixtureB.OnSeparation(fixtureB, fixtureA);
-                }
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //user subscribed to.
+                if (fixtureB != null && fixtureB.OnSeparation != null)
+                    fixtureB.OnSeparation(fixtureB, fixtureA);
 
                 if (EndContact != null)
                     EndContact(contact);
-
-                _calledContacts.Add(contact);
             }
 
             // Remove from the world.
@@ -279,8 +272,6 @@ namespace FarseerPhysics.Dynamics
 
         internal void Collide()
         {
-            _calledContacts.Clear();
-
             // Update awake contacts.
 #if USE_ACTIVE_CONTACT_SET
 			ActiveList.AddRange(ActiveContacts);
