@@ -1,7 +1,8 @@
 ﻿#if XNA
 
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Common.TextureTools;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
@@ -25,7 +26,7 @@ namespace FarseerPhysics.TestBed.Tests
                                PointsPerUnit = 10,
                                CellSize = 50,
                                SubCellSize = 5,
-                               Decomposer = Decomposer.Earclip,
+                               Decomposer = TriangulationAlgorithm.Earclip,
                                Iterations = 2,
                            };
 
@@ -93,14 +94,14 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 _terrain.Decomposer++;
 
-                if (_terrain.Decomposer > Decomposer.Seidel)
+                if (_terrain.Decomposer > TriangulationAlgorithm.Seidel)
                     _terrain.Decomposer--;
             }
             else if (keyboardManager.IsNewKeyPress(Keys.Y))
             {
                 _terrain.Decomposer--;
 
-                if (_terrain.Decomposer < Decomposer.Bayazit)
+                if (_terrain.Decomposer < TriangulationAlgorithm.Bayazit)
                     _terrain.Decomposer++;
             }
 
@@ -126,16 +127,12 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Left click and drag the mouse to destroy terrain!");
-            
             DrawString("Right click and drag the mouse to create terrain!");
-            
             DrawString("Middle click to create circles!");
-            
             DrawString("Press t or y to cycle between decomposers: " + _terrain.Decomposer);
             TextLine += 25;
             DrawString("Press g or h to decrease/increase circle radius: " + _circleRadius);
             
-
             base.Update(settings, gameTime);
         }
 
