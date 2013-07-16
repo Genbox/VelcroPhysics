@@ -88,7 +88,7 @@ namespace FarseerPhysics.Dynamics
     /// Fixtures are created via Body.CreateFixture.
     /// Warning: You cannot reuse fixtures.
     /// </summary>
-    public class Fixture : IDisposable
+    public class Fixture : IDisposable, ICloneable
     {
         private static int _fixtureIdCounter;
 
@@ -488,42 +488,23 @@ namespace FarseerPhysics.Dynamics
             aabb = Proxies[childIndex].AABB;
         }
 
-        public Fixture Clone(Body body)
+        public object Clone()
         {
-            Fixture fixture = new Fixture();
+            return MemberwiseClone();
+        }
+
+        public Fixture CloneOnto(Body body)
+        {
+            Fixture fixture = (Fixture)Clone();
             fixture.Body = body;
-
-            if (Settings.ConserveMemory)
-                fixture.Shape = Shape;
-            else
-                fixture.Shape = Shape.Clone();
-
-            fixture.UserData = UserData;
-            fixture.UserBits = UserBits;
-            fixture.Restitution = Restitution;
-            fixture.Friction = Friction;
-            fixture.IsSensor = IsSensor;
-            fixture._collisionGroup = CollisionGroup;
-            fixture._collisionCategories = CollisionCategories;
-            fixture._collidesWith = CollidesWith;
-
-            if (_collisionIgnores != null)
-            {
-                fixture._collisionIgnores = new Dictionary<int, bool>();
-
-                foreach (KeyValuePair<int, bool> pair in _collisionIgnores)
-                {
-                    fixture._collisionIgnores.Add(pair.Key, pair.Value);
-                }
-            }
-
+            fixture.Shape = Shape.Clone();
             fixture.RegisterFixture();
             return fixture;
         }
 
         public Fixture DeepClone()
         {
-            Fixture fix = Clone(Body.Clone());
+            Fixture fix = CloneOnto((Body) Body.Clone());
             return fix;
         }
 

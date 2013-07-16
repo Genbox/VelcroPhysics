@@ -68,7 +68,7 @@ namespace FarseerPhysics.Dynamics
         IgnoreCCD = (1 << 7),
     }
 
-    public class Body : IDisposable
+    public class Body : IDisposable, ICloneable
     {
         private static int _bodyIdCounter;
 
@@ -1289,32 +1289,20 @@ namespace FarseerPhysics.Dynamics
 
         public Body DeepClone()
         {
-            Body body = Clone();
+            Body body = (Body)Clone();
 
             for (int i = 0; i < FixtureList.Count; i++)
             {
-                FixtureList[i].Clone(body);
+                FixtureList[i].CloneOnto(body);
             }
 
             return body;
         }
 
-        public Body Clone()
+        public object Clone()
         {
-            Body body = new Body();
-            body.World = World;
-            body.UserData = UserData;
-            body.LinearDamping = LinearDamping;
-            body.LinearVelocityInternal = LinearVelocityInternal;
-            body.AngularDamping = AngularDamping;
-            body.AngularVelocityInternal = AngularVelocityInternal;
-            body.Position = Position;
-            body.Rotation = Rotation;
-            body._bodyType = _bodyType;
-            body.Flags = Flags;
-
+            Body body = (Body)MemberwiseClone();
             World.AddBody(body);
-
             return body;
         }
 

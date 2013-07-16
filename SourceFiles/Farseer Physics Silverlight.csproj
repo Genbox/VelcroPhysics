@@ -297,6 +297,7 @@
       </SubType>
     </Compile>
     <Compile Include="Common\HashSet.cs" />
+    <Compile Include="Common\ICloneable.cs" />
     <Compile Include="Common\LineTools.cs">
       <SubType>
       </SubType>
