@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
@@ -15,13 +14,11 @@ namespace FarseerPhysics.Common
     /// control points on a Catmull-Rom
     /// curve.
     /// </summary>
-    [XmlRoot("Path")]
     public class Path
     {
         /// <summary>
         /// All the points that makes up the curve
         /// </summary>
-        [XmlElement("ControlPoints")]
         public List<Vector2> ControlPoints;
 
         private float _deltaT;
@@ -65,7 +62,6 @@ namespace FarseerPhysics.Common
         /// True if the curve is closed.
         /// </summary>
         /// <value><c>true</c> if closed; otherwise, <c>false</c>.</value>
-        [XmlElement("Closed")]
         public bool Closed { get; set; }
 
         /// <summary>
