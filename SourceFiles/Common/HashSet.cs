@@ -21,8 +21,6 @@ namespace FarseerPhysics.Common
             _dict = new Dictionary<T, short>();
         }
 
-        // Methods
-
         #region ICollection<T> Members
 
         public void Add(T item)

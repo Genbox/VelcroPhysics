@@ -132,9 +132,6 @@
     <Compile Include="Common\ConvexHull\ChainHull.cs" />
     <Compile Include="Common\ConvexHull\GiftWrap.cs" />
     <Compile Include="Common\ConvexHull\Melkman.cs" />
-    <Compile Include="Common\Curve.cs" />
-    <Compile Include="Common\CurveKey.cs" />
-    <Compile Include="Common\CurveKeyCollection.cs" />
     <Compile Include="Common\Decomposition\BayazitDecomposer.cs" />
     <Compile Include="Common\Decomposition\CDTDecomposer.cs" />
     <Compile Include="Common\Decomposition\CDT\Delaunay\DelaunayTriangle.cs" />
@@ -181,8 +178,6 @@
     <Compile Include="Common\ICloneable.cs" />
     <Compile Include="Common\LineTools.cs" />
     <Compile Include="Common\Math.cs" />
-    <Compile Include="Common\MathHelper.cs" />
-    <Compile Include="Common\Matrix.cs" />
     <Compile Include="Common\Path.cs" />
     <Compile Include="Common\PathManager.cs" />
     <Compile Include="Common\PhysicsLogic\FilterData.cs" />
@@ -198,8 +193,6 @@
     <Compile Include="Common\TextureTools\MarchingSquares.cs" />
     <Compile Include="Common\TextureTools\MSTerrain.cs" />
     <Compile Include="Common\TextureTools\TextureConverter.cs" />
-    <Compile Include="Common\Vector2.cs" />
-    <Compile Include="Common\Vector3.cs" />
     <Compile Include="Common\Vertices.cs" />
     <Compile Include="Content\BodyContainer.cs" />
     <Compile Include="Content\FarseerBodyContainerReader.cs" />
