@@ -1,5 +1,3 @@
-#if XNA
-
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
@@ -39,11 +37,11 @@ namespace FarseerPhysics.TestBed.Tests
                 time = 0;
                 if (save)
                 {
-                    WorldSerializer.Serialize(World, "out.xml");
+                    WorldSerializer.Serialize(World, "out.xml", SerializationFormat.XML);
                 }
                 else
                 {
-                    WorldSerializer.Deserialize(World, "out.xml");
+                    World = WorldSerializer.Deserialize("out.xml", SerializationFormat.XML);
                 }
 
                 save = !save;
@@ -58,4 +56,3 @@ namespace FarseerPhysics.TestBed.Tests
         }
     }
 }
-#endif

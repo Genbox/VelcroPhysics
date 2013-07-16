@@ -178,6 +178,7 @@
     <Compile Include="Common\Decomposition\Triangulate.cs" />
     <Compile Include="Common\FixedArray.cs" />
     <Compile Include="Common\HashSet.cs" />
+    <Compile Include="Common\ICloneable.cs" />
     <Compile Include="Common\LineTools.cs" />
     <Compile Include="Common\Math.cs" />
     <Compile Include="Common\MathHelper.cs" />

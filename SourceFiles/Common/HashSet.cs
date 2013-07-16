@@ -1,15 +1,12 @@
-
 #if WINDOWS_PHONE || XBOX
 
 //TODO: FIX
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace FarseerPhysics.Common
 {
-    
     public class HashSet<T> : ICollection<T>
     {
         private Dictionary<T, short> _dict;
@@ -26,7 +23,7 @@ namespace FarseerPhysics.Common
 
         // Methods
 
-#region ICollection<T> Members
+        #region ICollection<T> Members
 
         public void Add(T item)
         {
@@ -46,10 +43,10 @@ namespace FarseerPhysics.Common
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-			foreach (var item in _dict.Keys)
-			{
-				array[arrayIndex++] = item;
-			}
+            foreach (var item in _dict.Keys)
+            {
+                array[arrayIndex++] = item;
+            }
         }
 
         public bool Remove(T item)

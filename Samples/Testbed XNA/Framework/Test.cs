@@ -97,10 +97,10 @@ namespace FarseerPhysics.TestBed.Framework
         {
 #if XNA
             if (keyboardManager.IsNewKeyPress(Keys.F11))
-                WorldSerializer.Serialize(World, "out.xml");
+                WorldSerializer.Serialize(World, "out.xml", SerializationFormat.XML);
 
             if (keyboardManager.IsNewKeyPress(Keys.F12))
-                WorldSerializer.Deserialize(World, "out.xml");
+                World = WorldSerializer.Deserialize("out.xml", SerializationFormat.XML);
 #endif
         }
 
