@@ -254,7 +254,9 @@ namespace FarseerPhysics.Dynamics
             get { return _isSensor; }
             set
             {
-                Body.Awake = true;
+                if (Body != null)
+                    Body.Awake = true;
+
                 _isSensor = value;
             }
         }

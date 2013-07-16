@@ -116,7 +116,7 @@ namespace FarseerPhysics.Dynamics
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
-        private World()
+        public World(Vector2 gravity)
         {
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
@@ -136,15 +136,7 @@ namespace FarseerPhysics.Dynamics
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
-        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="World"/> class.
-        /// </summary>
-        /// <param name="gravity">The gravity.</param>
-        public World(Vector2 gravity)
-            : this()
-        {
             ContactManager = new ContactManager(new DynamicTreeBroadPhase());
             Gravity = gravity;
         }
