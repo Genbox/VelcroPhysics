@@ -87,7 +87,9 @@ namespace FarseerPhysics.Common
         private static void SerializeFixture(List<Shape> shapes, Fixture fixture)
         {
             _writer.WriteStartElement("Fixture");
-            _writer.WriteElementString("Shape", FindIndex<Shape>(shapes, fixture.Shape).ToString());
+            _writer.WriteAttributeString("Id", fixture.FixtureId.ToString());
+
+            _writer.WriteElementString("Shape", FindIndex(shapes, fixture.Shape).ToString());
             _writer.WriteElementString("Density", fixture.Shape.Density.ToString());
 
             _writer.WriteStartElement("FilterData");
@@ -113,6 +115,7 @@ namespace FarseerPhysics.Common
         private static void SerializeBody(List<Fixture> fixtures, Body body)
         {
             _writer.WriteStartElement("Body");
+            _writer.WriteAttributeString("Id", body.BodyId.ToString());
             _writer.WriteAttributeString("Type", body.BodyType.ToString());
 
             _writer.WriteElementString("Active", body.Enabled.ToString());
@@ -150,7 +153,6 @@ namespace FarseerPhysics.Common
                 return;
 
             _writer.WriteStartElement("Joint");
-
             _writer.WriteAttributeString("Type", joint.JointType.ToString());
 
             WriteElement("BodyA", FindIndex(bodies, joint.BodyA));
@@ -451,10 +453,10 @@ namespace FarseerPhysics.Common
 
         private static void Deserialize(World world, Stream stream)
         {
-            List<Body> _bodies = new List<Body>();
-            List<Fixture> _fixtures = new List<Fixture>();
-            List<Joint> _joints = new List<Joint>();
-            List<Shape> _shapes = new List<Shape>();
+            List<Body> bodies = new List<Body>();
+            List<Fixture> fixtures = new List<Fixture>();
+            List<Joint> joints = new List<Joint>();
+            List<Shape> shapes = new List<Shape>();
 
             XMLFragmentElement root = XMLFragmentParser.LoadFromStream(stream);
 
@@ -504,7 +506,7 @@ namespace FarseerPhysics.Common
                                         }
                                     }
 
-                                    _shapes.Add(shape);
+                                    shapes.Add(shape);
                                 }
                                 break;
                             case ShapeType.Polygon:
@@ -531,7 +533,7 @@ namespace FarseerPhysics.Common
                                         }
                                     }
 
-                                    _shapes.Add(shape);
+                                    shapes.Add(shape);
                                 }
                                 break;
                             case ShapeType.Edge:
@@ -563,7 +565,7 @@ namespace FarseerPhysics.Common
                                                 throw new Exception();
                                         }
                                     }
-                                    _shapes.Add(shape);
+                                    shapes.Add(shape);
                                 }
                                 break;
                         }
@@ -583,12 +585,14 @@ namespace FarseerPhysics.Common
                         if (element.Name.ToLower() != "fixture")
                             throw new Exception();
 
+                        fixture.FixtureId = int.Parse(element.Attributes[0].Value);
+
                         foreach (XMLFragmentElement sn in element.Elements)
                         {
                             switch (sn.Name.ToLower())
                             {
                                 case "shape":
-                                    fixture.Shape = _shapes[int.Parse(sn.Value)];
+                                    fixture.Shape = shapes[int.Parse(sn.Value)];
                                     break;
                                 case "density":
                                     fixture.Shape.Density = float.Parse(sn.Value);
@@ -626,7 +630,7 @@ namespace FarseerPhysics.Common
                             }
                         }
 
-                        _fixtures.Add(fixture);
+                        fixtures.Add(fixture);
                     }
                 }
             }
@@ -643,7 +647,8 @@ namespace FarseerPhysics.Common
                         if (element.Name.ToLower() != "body")
                             throw new Exception();
 
-                        body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), element.Attributes[0].Value, true);
+                        body.BodyId = int.Parse(element.Attributes[0].Value);
+                        body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), element.Attributes[1].Value, true);
 
                         foreach (XMLFragmentElement sn in element.Elements)
                         {
@@ -699,14 +704,14 @@ namespace FarseerPhysics.Common
                                     {
                                         foreach (XMLFragmentElement v in sn.Elements)
                                         {
-                                            _fixtures[int.Parse(v.Value)].CloneOnto(body);
+                                            fixtures[int.Parse(v.Value)].CloneOnto(body);
                                         }
                                         break;
                                     }
                             }
                         }
 
-                        _bodies.Add(body);
+                        bodies.Add(body);
                     }
                 }
             }
@@ -748,8 +753,8 @@ namespace FarseerPhysics.Common
                             }
                         }
 
-                        Body bodyA = _bodies[bodyAIndex];
-                        Body bodyB = _bodies[bodyBIndex];
+                        Body bodyA = bodies[bodyAIndex];
+                        Body bodyB = bodies[bodyBIndex];
 
                         switch (type)
                         {
@@ -793,7 +798,7 @@ namespace FarseerPhysics.Common
                         joint.UserData = userData;
                         joint.BodyA = bodyA;
                         joint.BodyB = bodyB;
-                        _joints.Add(joint);
+                        joints.Add(joint);
                         world.AddJoint(joint);
 
                         foreach (XMLFragmentElement sn in n.Elements)
@@ -1058,6 +1063,8 @@ namespace FarseerPhysics.Common
                     }
                 }
             }
+
+            world.ProcessChanges();
         }
 
         private static Vector2 ReadVector(XMLFragmentElement node)
@@ -1096,7 +1103,6 @@ namespace FarseerPhysics.Common
     internal class XMLFragmentAttribute
     {
         public string Name { get; set; }
-
         public string Value { get; set; }
     }
 
@@ -1116,20 +1122,13 @@ namespace FarseerPhysics.Common
         }
 
         public string Name { get; set; }
-
         public string Value { get; set; }
-
         public string OuterXml { get; set; }
-
         public string InnerXml { get; set; }
     }
 
     internal class XMLFragmentException : Exception
     {
-        public XMLFragmentException()
-        {
-        }
-
         public XMLFragmentException(string message)
             : base(message)
         {
@@ -1155,7 +1154,7 @@ namespace FarseerPhysics.Common
 
         public int Position { get; set; }
 
-        public int Length
+        private int Length
         {
             get { return Buffer.Length; }
         }
@@ -1168,11 +1167,6 @@ namespace FarseerPhysics.Common
                 Position++;
                 return c;
             }
-        }
-
-        public char Peek
-        {
-            get { return Buffer[Position]; }
         }
 
         public bool EndOfBuffer

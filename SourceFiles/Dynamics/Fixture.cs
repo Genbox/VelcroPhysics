@@ -91,6 +91,18 @@ namespace FarseerPhysics.Dynamics
     public class Fixture : IDisposable, ICloneable
     {
         private static int _fixtureIdCounter;
+        private bool _isSensor;
+        private float _friction;
+        private float _restitution;
+
+        internal Category _collidesWith;
+        internal Category _collisionCategories;
+        internal short _collisionGroup;
+        internal Dictionary<int, bool> _collisionIgnores;
+
+        public FixtureProxy[] Proxies;
+        public int ProxyCount;
+        public Category IgnoreCCDWith;
 
         /// <summary>
         /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
@@ -116,28 +128,9 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public OnSeparationEventHandler OnSeparation;
 
-        public FixtureProxy[] Proxies;
-        public int ProxyCount;
-        public Category IgnoreCCDWith;
-
-        internal Category _collidesWith;
-        internal Category _collisionCategories;
-        internal short _collisionGroup;
-        internal Dictionary<int, bool> _collisionIgnores;
-
-        private float _friction;
-        private float _restitution;
-
         internal Fixture()
         {
-        }
-
-        internal Fixture(Body body, Shape shape, object userData = null)
-        {
-#if DEBUG
-            if (shape.ShapeType == ShapeType.Polygon)
-                ((PolygonShape)shape).Vertices.AttachedToBody = true;
-#endif
+            FixtureId = _fixtureIdCounter++;
 
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
@@ -148,12 +141,18 @@ namespace FarseerPhysics.Dynamics
             //Fixture defaults
             Friction = 0.2f;
             Restitution = 0;
+        }
+
+        internal Fixture(Body body, Shape shape, object userData = null)
+            : this()
+        {
+#if DEBUG
+            if (shape.ShapeType == ShapeType.Polygon)
+                ((PolygonShape)shape).Vertices.AttachedToBody = true;
+#endif
 
             Body = body;
-            IsSensor = false;
-
             UserData = userData;
-
             Shape = Settings.ConserveMemory ? shape : shape.Clone();
 
             RegisterFixture();
@@ -243,8 +242,6 @@ namespace FarseerPhysics.Dynamics
         /// <value>The shape.</value>
         public Shape Shape { get; internal set; }
 
-        private bool _isSensor;
-
         /// <summary>
         /// Gets or sets a value indicating whether this fixture is a sensor.
         /// </summary>
@@ -315,7 +312,7 @@ namespace FarseerPhysics.Dynamics
         /// Gets a unique ID for this fixture.
         /// </summary>
         /// <value>The fixture id.</value>
-        public int FixtureId { get; private set; }
+        public int FixtureId { get; internal set; }
 
         #region IDisposable Members
 
@@ -427,8 +424,6 @@ namespace FarseerPhysics.Dynamics
             Proxies = new FixtureProxy[Shape.ChildCount];
             ProxyCount = 0;
 
-            FixtureId = _fixtureIdCounter++;
-
             if ((Body.Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
             {
                 IBroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
@@ -504,7 +499,7 @@ namespace FarseerPhysics.Dynamics
 
         public Fixture DeepClone()
         {
-            Fixture fix = CloneOnto((Body) Body.Clone());
+            Fixture fix = CloneOnto((Body)Body.Clone());
             return fix;
         }
 

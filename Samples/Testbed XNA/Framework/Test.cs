@@ -95,13 +95,14 @@ namespace FarseerPhysics.TestBed.Framework
 
         public virtual void Keyboard(KeyboardManager keyboardManager)
         {
-#if XNA
             if (keyboardManager.IsNewKeyPress(Keys.F11))
-                WorldSerializer.Serialize(World, "out.xml", SerializationFormat.XML);
+                WorldSerializer.Serialize(World, "out.xml");
 
             if (keyboardManager.IsNewKeyPress(Keys.F12))
-                World = WorldSerializer.Deserialize("out.xml", SerializationFormat.XML);
-#endif
+            {
+                World = WorldSerializer.Deserialize("out.xml");
+                Initialize();
+            }
         }
 
         public virtual void Gamepad(GamePadState state, GamePadState oldState)
