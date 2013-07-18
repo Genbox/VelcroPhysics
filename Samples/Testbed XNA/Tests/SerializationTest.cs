@@ -8,8 +8,8 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class SerializationTest : Test
     {
-        private bool save = true;
-        private double time;
+        private bool _save = true;
+        private double _time;
 
         private SerializationTest()
         {
@@ -24,31 +24,29 @@ namespace FarseerPhysics.TestBed.Tests
             rectangle.Position = new Vector2(-5, 10);
 
             FixtureFactory.AttachRectangle(2, 2, 2, new Vector2(1, 1), rectangle);
-
-            JointFactory.CreateDistanceJoint(World, circle, rectangle, Vector2.Zero, Vector2.Zero);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            time += gameTime.ElapsedGameTime.Milliseconds;
+            _time += gameTime.ElapsedGameTime.Milliseconds;
 
-            if (time > 100)
+            if (_time >= 200)
             {
-                time = 0;
-                if (save)
+                _time = 0;
+                if (_save)
                 {
-                    WorldSerializer.Serialize(World, "out.xml", SerializationFormat.XML);
+                    WorldSerializer.Serialize(World, "out.xml");
                 }
                 else
                 {
-                    World = WorldSerializer.Deserialize("out.xml", SerializationFormat.XML);
+                    World = WorldSerializer.Deserialize("out.xml");
+                    base.Initialize(); //To initialize the debug view
                 }
 
-                save = !save;
+                _save = !_save;
             }
             base.Update(settings, gameTime);
         }
-
 
         internal static Test Create()
         {
