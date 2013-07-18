@@ -301,7 +301,7 @@ namespace FarseerPhysics.Common
 
         private static void WriteDynamicType(Type type, object val)
         {
-            _writer.WriteElementString("Type", type.FullName);
+            _writer.WriteElementString("Type", type.AssemblyQualifiedName);
 
             _writer.WriteStartElement("Value");
             XmlSerializer serializer = new XmlSerializer(type);
@@ -699,7 +699,7 @@ namespace FarseerPhysics.Common
                                     {
                                         foreach (XMLFragmentElement v in sn.Elements)
                                         {
-                                            Fixture f = _fixtures[int.Parse(v.Value)].Clone(body);
+                                            _fixtures[int.Parse(v.Value)].CloneOnto(body);
                                         }
                                         break;
                                     }
