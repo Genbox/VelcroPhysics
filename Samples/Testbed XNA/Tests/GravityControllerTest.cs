@@ -29,9 +29,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class ControllerTest : Test
+    public class GravityControllerTest : Test
     {
-        private ControllerTest()
+        private GravityControllerTest()
         {
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -42,6 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             gravity.EnabledOnGroup = 2;
             gravity.DisabledOnCategories = Category.Cat2;
             gravity.EnabledOnCategories = Category.Cat3;
+            gravity.GravityType = GravityType.Linear;
 
             World.AddController(gravity);
 
@@ -72,25 +73,19 @@ namespace FarseerPhysics.TestBed.Tests
                 fix.CollisionGroup = 2;
 
                 if (i == 4)
-                {
                     circle.ControllerFilter.IgnoreController(ControllerType.GravityController);
-                }
 
                 if (i == 5)
-                {
                     fix.CollisionCategories = Category.Cat2;
-                }
 
                 if (i == 6)
-                {
                     fix.CollisionGroup = 3;
-                }
             }
         }
 
         public static Test Create()
         {
-            return new ControllerTest();
+            return new GravityControllerTest();
         }
     }
 }
