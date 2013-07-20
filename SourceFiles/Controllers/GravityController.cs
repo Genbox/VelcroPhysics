@@ -13,14 +13,14 @@ namespace FarseerPhysics.Controllers
 
     public class GravityController : Controller
     {
-        public List<Body> Bodies = new List<Body>();
-        public List<Vector2> Points = new List<Vector2>();
-
         public GravityController(float strength)
             : base(ControllerType.GravityController)
         {
             Strength = strength;
             MaxRadius = float.MaxValue;
+            GravityType = GravityType.DistanceSquared;
+            Points = new List<Vector2>();
+            Bodies = new List<Body>();
         }
 
         public GravityController(float strength, float maxRadius, float minRadius)
@@ -29,77 +29,70 @@ namespace FarseerPhysics.Controllers
             MinRadius = minRadius;
             MaxRadius = maxRadius;
             Strength = strength;
+            GravityType = GravityType.DistanceSquared;
+            Points = new List<Vector2>();
+            Bodies = new List<Body>();
         }
 
         public float MinRadius { get; set; }
         public float MaxRadius { get; set; }
         public float Strength { get; set; }
         public GravityType GravityType { get; set; }
+        public List<Body> Bodies { get; set; }
+        public List<Vector2> Points { get; set; }
 
         public override void Update(float dt)
         {
             Vector2 f = Vector2.Zero;
 
-            foreach (Body body1 in World.BodyList)
+            foreach (Body worldBody in World.BodyList)
             {
-                if (!IsActiveOn(body1))
+                if (!IsActiveOn(worldBody))
                     continue;
 
-                foreach (Body body2 in Bodies)
+                foreach (Body controllerBody in Bodies)
                 {
-                    if (body1 == body2 || (body1.IsStatic && body2.IsStatic) || !body2.Enabled)
+                    if (worldBody == controllerBody || (worldBody.IsStatic && controllerBody.IsStatic) || !controllerBody.Enabled)
                         continue;
 
-                    Vector2 d = body2.WorldCenter - body1.WorldCenter;
+                    Vector2 d = controllerBody.Position - worldBody.Position;
                     float r2 = d.LengthSquared();
 
-                    if (r2 < Settings.Epsilon)
-                        continue;
-
-                    float r = d.Length();
-
-                    if (r >= MaxRadius || r <= MinRadius)
+                    if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
                         continue;
 
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * body2.Mass * d;
+                            f = Strength / r2 * worldBody.Mass * controllerBody.Mass * d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / r2 * body1.Mass * body2.Mass * d;
+                            f = Strength / (float)Math.Sqrt(r2) * worldBody.Mass * controllerBody.Mass * d;
                             break;
                     }
 
-                    body1.ApplyForce(ref f);
-                    Vector2.Negate(ref f, out f);
-                    body2.ApplyForce(ref f);
+                    worldBody.ApplyForce(ref f);
                 }
 
                 foreach (Vector2 point in Points)
                 {
-                    Vector2 d = point - body1.Position;
+                    Vector2 d = point - worldBody.Position;
                     float r2 = d.LengthSquared();
 
-                    if (r2 < Settings.Epsilon)
-                        continue;
-
-                    float r = d.Length();
-
-                    if (r >= MaxRadius || r <= MinRadius)
+                    if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
                         continue;
 
                     switch (GravityType)
                     {
                         case GravityType.DistanceSquared:
-                            f = Strength / r2 / (float)Math.Sqrt(r2) * body1.Mass * d;
+                            f = Strength / r2 * worldBody.Mass * d;
                             break;
                         case GravityType.Linear:
-                            f = Strength / r2 * body1.Mass * d;
+                            f = Strength / (float)Math.Sqrt(r2) * worldBody.Mass * d;
                             break;
                     }
 
-                    body1.ApplyForce(ref f);
+                    worldBody.ApplyForce(ref f);
                 }
             }
         }

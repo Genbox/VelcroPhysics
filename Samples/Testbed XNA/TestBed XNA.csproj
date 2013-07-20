@@ -118,7 +118,7 @@
     <Compile Include="Tests\CompoundShapesTest.cs" />
     <Compile Include="Tests\ConfinedTest.cs" />
     <Compile Include="Tests\ContinuousTest.cs" />
-    <Compile Include="Tests\ControllerTest.cs" />
+    <Compile Include="Tests\GravityControllerTest.cs" />
     <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
