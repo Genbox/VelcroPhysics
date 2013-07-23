@@ -523,13 +523,17 @@ namespace FarseerPhysics.Dynamics
         public bool IsStatic
         {
             get { return _bodyType == BodyType.Static; }
-            set
-            {
-                if (value)
-                    BodyType = BodyType.Static;
-                else
-                    BodyType = BodyType.Dynamic;
-            }
+            set { BodyType = value ? BodyType.Static : BodyType.Dynamic; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this body is kinematic.
+        /// </summary>
+        /// <value><c>true</c> if this instance is kinematic; otherwise, <c>false</c>.</value>
+        public bool IsKinematic
+        {
+            get { return _bodyType == BodyType.Kinematic; }
+            set { BodyType = value ? BodyType.Kinematic : BodyType.Dynamic; }
         }
 
         /// <summary>
