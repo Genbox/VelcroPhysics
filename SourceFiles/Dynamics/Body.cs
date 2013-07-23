@@ -93,11 +93,6 @@ namespace FarseerPhysics.Dynamics
         public PhysicsLogicFilter PhysicsLogicFilter;
         public ControllerFilter ControllerFilter;
 
-        internal Body()
-        {
-            FixtureList = new List<Fixture>();
-        }
-
         public Body(World world, Vector2? position = null, float rotation = 0, object userdata = null)
         {
             FixtureList = new List<Fixture>();
@@ -708,7 +703,6 @@ namespace FarseerPhysics.Dynamics
         /// aren't a penetration problem due to the way content has been prepared.
         /// This is compared against the other Body's fixture CollisionCategories within World.SolveTOI().
         /// </summary>
-
         public Category IgnoreCCDWith
         {
             set
@@ -756,6 +750,7 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.IgnoreCCD;
             }
         }
+
         #region IDisposable Members
 
         public bool IsDisposed { get; set; }

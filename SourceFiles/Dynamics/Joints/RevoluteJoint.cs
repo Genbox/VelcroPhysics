@@ -88,18 +88,19 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second anchor.</param>
-        public RevoluteJoint(Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB, bool anchorsAreInWorldCoordinates = false)
+        public RevoluteJoint(Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
 
-            if (anchorsAreInWorldCoordinates)
+            if (useWorldCoordinates)
             {
                 LocalAnchorA = BodyA.GetLocalPoint(anchorA);
                 LocalAnchorB = BodyB.GetLocalPoint(anchorB);
             }
             else
             {
+                //Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchorA)); //TODO: use
                 LocalAnchorA = anchorA;
                 LocalAnchorB = anchorB;
             }

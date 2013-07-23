@@ -197,20 +197,20 @@ namespace FarseerPhysics.TestBed.Tests
                 _wheel2.Friction = 0.9f;
 
                 Vector2 axis = new Vector2(0.0f, 1.0f);
-                _spring1 = new WheelJoint(_car, _wheel1, _wheel1.Position, axis);
+                _spring1 = new WheelJoint(_car, _wheel1, _wheel1.Position, axis, true);
                 _spring1.MotorSpeed = 0.0f;
                 _spring1.MaxMotorTorque = 20.0f;
                 _spring1.MotorEnabled = true;
-                _spring1.SpringFrequencyHz = _hz;
-                _spring1.SpringDampingRatio = _zeta;
+                _spring1.Frequency = _hz;
+                _spring1.DampingRatio = _zeta;
                 World.AddJoint(_spring1);
 
-                _spring2 = new WheelJoint(_car, _wheel2, _wheel2.Position, axis);
+                _spring2 = new WheelJoint(_car, _wheel2, _wheel2.Position, axis, true);
                 _spring2.MotorSpeed = 0.0f;
                 _spring2.MaxMotorTorque = 10.0f;
                 _spring2.MotorEnabled = false;
-                _spring2.SpringFrequencyHz = _hz;
-                _spring2.SpringDampingRatio = _zeta;
+                _spring2.Frequency = _hz;
+                _spring2.DampingRatio = _zeta;
                 World.AddJoint(_spring2);
             }
         }
@@ -232,14 +232,14 @@ namespace FarseerPhysics.TestBed.Tests
             else if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 _hz = Math.Max(0.0f, _hz - 1.0f);
-                _spring1.SpringFrequencyHz = _hz;
-                _spring2.SpringFrequencyHz = _hz;
+                _spring1.Frequency = _hz;
+                _spring2.Frequency = _hz;
             }
             else if (keyboardManager.IsNewKeyPress(Keys.E))
             {
                 _hz += 1.0f;
-                _spring1.SpringFrequencyHz = _hz;
-                _spring2.SpringFrequencyHz = _hz;
+                _spring1.Frequency = _hz;
+                _spring2.Frequency = _hz;
             }
 
             base.Keyboard(keyboardManager);
@@ -248,11 +248,11 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
-            
+
             DrawString(string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
-            
+
             DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
-            
+
 
             GameInstance.ViewCenter = _car.Position;
 
