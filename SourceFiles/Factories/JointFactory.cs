@@ -219,8 +219,7 @@ namespace FarseerPhysics.Factories
 
         #region Distance Joint
 
-        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA,
-                                                        Vector2 anchorB)
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
         {
             DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB);
             world.AddJoint(distanceJoint);
@@ -229,9 +228,7 @@ namespace FarseerPhysics.Factories
 
         public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB)
         {
-            DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, Vector2.Zero, Vector2.Zero);
-            world.AddJoint(distanceJoint);
-            return distanceJoint;
+            return CreateDistanceJoint(world, bodyA, bodyB, Vector2.Zero, Vector2.Zero);
         }
 
         //public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor,
@@ -251,6 +248,11 @@ namespace FarseerPhysics.Factories
             FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchor);
             world.AddJoint(frictionJoint);
             return frictionJoint;
+        }
+
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB)
+        {
+            return CreateFrictionJoint(world, bodyA, bodyB, Vector2.Zero);
         }
 
         //public static FixedFrictionJoint CreateFixedFrictionJoint(World world, Body body, Vector2 bodyAnchor)
