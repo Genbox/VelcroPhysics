@@ -60,58 +60,50 @@ namespace FarseerPhysics.TestBed.Tests
                 _bodies[3] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 15.0f));
                 _bodies[3].BodyType = BodyType.Dynamic;
 
-                DistanceJoint dj = new DistanceJoint(ground, _bodies[0], new Vector2(-10.0f, 0.0f), new Vector2(-0.5f, -0.5f), false);
+                DistanceJoint dj = new DistanceJoint(ground, _bodies[0], new Vector2(-10.0f, 0.0f), new Vector2(-0.5f, -0.5f));
                 _joints[0] = dj;
-                //dj.Length = (dj.BodyB.GetWorldPoint(ref dj.LocalAnchorB) - dj.BodyA.GetWorldPoint(ref dj.LocalAnchorA)).Length();
                 dj.Frequency = 2.0f;
                 dj.DampingRatio = 0.0f;
                 World.AddJoint(_joints[0]);
 
-                DistanceJoint dj1 = new DistanceJoint(ground, _bodies[1], new Vector2(10.0f, 0.0f), new Vector2(0.5f, -0.5f), false);
+                DistanceJoint dj1 = new DistanceJoint(ground, _bodies[1], new Vector2(10.0f, 0.0f), new Vector2(0.5f, -0.5f));
                 _joints[1] = dj1;
-                //dj1.Length = (dj1.BodyB.GetWorldPoint(ref dj1.LocalAnchorB) - dj1.BodyA.GetWorldPoint(ref dj1.LocalAnchorA)).Length();
                 dj1.Frequency = 2.0f;
                 dj1.DampingRatio = 0.0f;
                 World.AddJoint(_joints[1]);
 
-                DistanceJoint dj2 = new DistanceJoint(ground, _bodies[2], new Vector2(10.0f, 20.0f), new Vector2(0.5f, 0.5f), false);
+                DistanceJoint dj2 = new DistanceJoint(ground, _bodies[2], new Vector2(10.0f, 20.0f), new Vector2(0.5f, 0.5f));
                 _joints[2] = dj2;
-                //dj2.Length = (dj2.BodyB.GetWorldPoint(ref dj2.LocalAnchorB) - dj2.BodyA.GetWorldPoint(ref dj2.LocalAnchorA)).Length();
                 dj2.Frequency = 2.0f;
                 dj2.DampingRatio = 0.0f;
                 World.AddJoint(_joints[2]);
 
-                DistanceJoint dj3 = new DistanceJoint(ground, _bodies[3], new Vector2(-10.0f, 20.0f), new Vector2(-0.5f, 0.5f), false);
+                DistanceJoint dj3 = new DistanceJoint(ground, _bodies[3], new Vector2(-10.0f, 20.0f), new Vector2(-0.5f, 0.5f));
                 _joints[3] = dj3;
-                //dj3.Length = (dj3.BodyB.GetWorldPoint(ref dj3.LocalAnchorB) - dj3.BodyA.GetWorldPoint(ref dj3.LocalAnchorA)).Length();
                 dj3.Frequency = 2.0f;
                 dj3.DampingRatio = 0.0f;
                 World.AddJoint(_joints[3]);
 
-                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.5f, 0.0f), new Vector2(-0.5f, 0.0f), false);
+                DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.5f, 0.0f), new Vector2(-0.5f, 0.0f));
                 _joints[4] = dj4;
-                // dj4.Length = (dj4.BodyB.GetWorldPoint(ref dj4.LocalAnchorB) - dj4.BodyA.GetWorldPoint(ref dj4.LocalAnchorA)).Length();
                 dj4.Frequency = 2.0f;
                 dj4.DampingRatio = 0.0f;
                 World.AddJoint(_joints[4]);
 
-                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.5f), new Vector2(0.0f, -0.5f), false);
+                DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.5f), new Vector2(0.0f, -0.5f));
                 _joints[5] = dj5;
-                // dj5.Length = (dj5.BodyB.GetWorldPoint(ref dj5.LocalAnchorB) - dj5.BodyA.GetWorldPoint(ref dj5.LocalAnchorA)).Length();
                 dj5.Frequency = 2.0f;
                 dj5.DampingRatio = 0.0f;
                 World.AddJoint(_joints[5]);
 
-                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(-0.5f, 0.0f), new Vector2(0.5f, 0.0f), false);
+                DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(-0.5f, 0.0f), new Vector2(0.5f, 0.0f));
                 _joints[6] = dj6;
-                //dj6.Length = (dj6.BodyB.GetWorldPoint(ref dj6.LocalAnchorB) - dj6.BodyA.GetWorldPoint(ref dj6.LocalAnchorA)).Length();
                 dj6.Frequency = 2.0f;
                 dj6.DampingRatio = 0.0f;
                 World.AddJoint(_joints[6]);
 
-                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, -0.5f), new Vector2(0.0f, 0.5f), false);
+                DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, -0.5f), new Vector2(0.0f, 0.5f));
                 _joints[7] = dj7;
-                // dj7.Length = (dj7.BodyB.GetWorldPoint(ref dj7.LocalAnchorB) - dj7.BodyA.GetWorldPoint(ref dj7.LocalAnchorA)).Length();
                 dj7.Frequency = 2.0f;
                 dj7.DampingRatio = 0.0f;
                 World.AddJoint(_joints[7]);
