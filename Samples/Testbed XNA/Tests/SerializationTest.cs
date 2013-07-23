@@ -15,15 +15,13 @@ namespace FarseerPhysics.TestBed.Tests
         {
             BodyFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
 
-            Body circle = BodyFactory.CreateCircle(World, 1, 1);
-            circle.BodyType = BodyType.Dynamic;
-            circle.Position = new Vector2(-10, 5);
+            Body bodyA = BodyFactory.CreateCircle(World, 1, 1, new Vector2(10, 5));
+            bodyA.BodyType = BodyType.Dynamic;
 
-            Body rectangle = BodyFactory.CreateRectangle(World, 1, 1, 1);
-            rectangle.BodyType = BodyType.Dynamic;
-            rectangle.Position = new Vector2(-5, 10);
+            Body bodyB = BodyFactory.CreateRectangle(World, 1, 1, 1, new Vector2(-1, 5));
+            bodyB.BodyType = BodyType.Dynamic;
 
-            FixtureFactory.AttachRectangle(2, 2, 2, new Vector2(1, 1), rectangle);
+            JointFactory.CreateDistanceJoint(World, bodyA, bodyB);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

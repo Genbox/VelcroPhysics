@@ -57,11 +57,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
         }
 
-        internal static Test Create()
-        {
-            return new DistanceTest();
-        }
-
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
@@ -78,11 +73,8 @@ namespace FarseerPhysics.TestBed.Tests
             Distance.ComputeDistance(out output, out cache, input);
 
             DrawString("Distance = " + output.Distance);
-            
-
             DrawString("Iterations = " + output.Iterations);
             
-
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);
@@ -113,31 +105,24 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
                 _positionB.X -= 0.1f;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 _positionB.X += 0.1f;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
                 _positionB.Y -= 0.1f;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.W))
-            {
                 _positionB.Y += 0.1f;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.Q))
-            {
                 _angleB += 0.1f * Settings.Pi;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.E))
-            {
                 _angleB -= 0.1f * Settings.Pi;
-            }
 
             _transformB.Set(_positionB, _angleB);
+        }
+
+        internal static Test Create()
+        {
+            return new DistanceTest();
         }
     }
 }

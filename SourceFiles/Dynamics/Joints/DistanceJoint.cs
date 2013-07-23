@@ -95,7 +95,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyB">The second body</param>
         /// <param name="localAnchorA">The first body anchor</param>
         /// <param name="localAnchorB">The second body anchor</param>
-        public DistanceJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = true)
+        public DistanceJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
@@ -107,7 +107,6 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 d = localAnchorB - localAnchorA;
                 Length = d.Length();
-
             }
             else
             {

@@ -171,25 +171,25 @@ namespace FarseerPhysics.TestBed.Tests
             // Using a soft distanceraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset);
+            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset, true);
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10.0f;
 
             World.AddJoint(djd);
 
-            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset);
+            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset, true);
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10.0f;
 
             World.AddJoint(djd2);
 
-            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
+            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset, true);
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10.0f;
 
             World.AddJoint(djd3);
 
-            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
+            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset, true);
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10.0f;
 
@@ -203,7 +203,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Keys: left = a, brake = s, right = d, toggle motor = m");
-            
+
 
             base.Update(settings, gameTime);
         }
@@ -211,21 +211,13 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
                 _motorJoint.MotorSpeed = -_motorSpeed;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
                 _motorJoint.MotorSpeed = 0.0f;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 _motorJoint.MotorSpeed = _motorSpeed;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.M))
-            {
                 _motorJoint.MotorEnabled = !_motorJoint.MotorEnabled;
-            }
 
             base.Keyboard(keyboardManager);
         }

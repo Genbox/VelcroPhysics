@@ -227,6 +227,13 @@ namespace FarseerPhysics.Factories
             return distanceJoint;
         }
 
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB)
+        {
+            DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, Vector2.Zero, Vector2.Zero);
+            world.AddJoint(distanceJoint);
+            return distanceJoint;
+        }
+
         //public static FixedDistanceJoint CreateFixedDistanceJoint(World world, Body body, Vector2 localAnchor,
         //                                                          Vector2 worldAnchor)
         //{
