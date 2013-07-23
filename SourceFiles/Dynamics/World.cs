@@ -35,6 +35,10 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
+#if SILVERLIGHT || WINDOWS_PHONE
+using Stopwatch = FarseerPhysics.Common.Stopwatch;
+#endif
+
 namespace FarseerPhysics.Dynamics
 {
     /// <summary>
@@ -57,6 +61,7 @@ namespace FarseerPhysics.Dynamics
         private Vector2 _point1;
         private Vector2 _point2;
         private List<Fixture> _testPointAllFixtures;
+        private Stopwatch _watch = new Stopwatch();
 
         /// <summary>
         /// Called for each fixture found in the query. You control how the ray cast
@@ -109,9 +114,6 @@ namespace FarseerPhysics.Dynamics
         public bool Enabled = true;
         public Island Island = new Island();
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
-        private Stopwatch _watch = new Stopwatch();
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
@@ -474,11 +476,10 @@ namespace FarseerPhysics.Dynamics
 
 #if USE_AWAKE_BODY_SET
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             // If AwakeBodyList is empty, the Island code will not have a chance
             // to update the diagnostics timer so reset the timer here. 
             Island.JointUpdateTime = 0;
-#endif
+      
             Debug.Assert(AwakeBodyList.Count == 0);
             AwakeBodyList.AddRange(AwakeBodySet);
 
@@ -1202,16 +1203,13 @@ namespace FarseerPhysics.Dynamics
             if (!Enabled)
                 return;
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
-#endif
+
             ProcessChanges();
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
-#endif
 
             //TODO: Add timing of finding new contacts
 
@@ -1234,25 +1232,20 @@ namespace FarseerPhysics.Dynamics
                 ControllerList[i].Update(dt);
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 ControllersUpdateTime = _watch.ElapsedTicks - AddRemoveTime;
-#endif
 
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime);
-#endif
+
             // Integrate velocities, solve velocity raints, and integrate positions.
             Solve(ref step);
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 SolveUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime);
-#endif
 
             // Handle TOI events.
             if (Settings.ContinuousPhysics)
@@ -1260,15 +1253,11 @@ namespace FarseerPhysics.Dynamics
                 SolveTOI(ref step);
             }
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
-#endif
 
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 FluidsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
-#endif
 
             if (Settings.AutoClearForces)
                 ClearForces();
@@ -1278,8 +1267,6 @@ namespace FarseerPhysics.Dynamics
                 BreakableBodyList[i].Update();
             }
 
-
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
@@ -1287,7 +1274,7 @@ namespace FarseerPhysics.Dynamics
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
-#endif
+
             _invDt0 = step.inv_dt;
         }
 
