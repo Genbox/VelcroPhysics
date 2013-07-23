@@ -149,9 +149,6 @@ namespace FarseerPhysics.Common
 
         private static void SerializeJoint(List<Body> bodies, Joint joint)
         {
-            if (joint.IsFixedType())
-                return;
-
             _writer.WriteStartElement("Joint");
             _writer.WriteAttributeString("Type", joint.JointType.ToString());
 
@@ -193,20 +190,17 @@ namespace FarseerPhysics.Common
                     break;
                 case JointType.Gear:
                     throw new Exception("Gear joint not supported by serialization");
-                //case JointType.Wheel:
-                //    {
-                //        WheelJoint ljd = (WheelJoint)joint;
+                case JointType.Wheel:
+                    {
+                        WheelJoint ljd = (WheelJoint)joint;
 
-                //        WriteElement("EnableMotor", ljd.MotorEnabled);
-                //        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
-                //        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
-                //        WriteElement("MotorSpeed", ljd.MotorSpeed);
-                //        WriteElement("DampingRatio", ljd.DampingRatio);
-                //        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
-                //        WriteElement("FrequencyHz", ljd.Frequency);
-                //        WriteElement("LocalXAxis", ljd.LocalXAxis);
-                //    }
-                //    break;
+                        WriteElement("EnableMotor", ljd.MotorEnabled);
+                        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
+                        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
+                        WriteElement("MotorSpeed", ljd.MotorSpeed);
+                        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
+                    }
+                    break;
                 case JointType.Prismatic:
                     {
                         PrismaticJoint pjd = (PrismaticJoint)joint;
@@ -224,21 +218,19 @@ namespace FarseerPhysics.Common
                         WriteElement("MotorSpeed", pjd.MotorSpeed);
                     }
                     break;
-                //case JointType.Pulley:
-                //    {
-                //        PulleyJoint pjd = (PulleyJoint)joint;
+                case JointType.Pulley:
+                    {
+                        PulleyJoint pjd = (PulleyJoint)joint;
 
-                //        WriteElement("GroundAnchorA", pjd.GroundAnchorA);
-                //        WriteElement("GroundAnchorB", pjd.GroundAnchorB);
-                //        WriteElement("LengthA", pjd.LengthA);
-                //        WriteElement("LengthB", pjd.LengthB);
-                //        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
-                //        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
-                //        WriteElement("MaxLengthA", pjd.MaxLengthA);
-                //        WriteElement("MaxLengthB", pjd.MaxLengthB);
-                //        WriteElement("Ratio", pjd.Ratio);
-                //    }
-                //    break;
+                        WriteElement("GroundAnchorA", pjd.GroundAnchorA);
+                        WriteElement("GroundAnchorB", pjd.GroundAnchorB);
+                        WriteElement("LengthA", pjd.LengthA);
+                        WriteElement("LengthB", pjd.LengthB);
+                        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
+                        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
+                        WriteElement("Ratio", pjd.Ratio);
+                    }
+                    break;
                 case JointType.Revolute:
                     {
                         RevoluteJoint rjd = (RevoluteJoint)joint;
@@ -274,26 +266,26 @@ namespace FarseerPhysics.Common
                         WriteElement("MaxLength", rjd.MaxLength);
                     }
                     break;
-                //case JointType.Angle:
-                //    {
-                //        AngleJoint aj = (AngleJoint)joint;
-                //        WriteElement("BiasFactor", aj.BiasFactor);
-                //        WriteElement("MaxImpulse", aj.MaxImpulse);
-                //        WriteElement("Softness", aj.Softness);
-                //        WriteElement("TargetAngle", aj.TargetAngle);
-                //    }
-                //    break;
-                //case JointType.Slider:
-                //    {
-                //        SliderJoint sliderJoint = (SliderJoint)joint;
-                //        WriteElement("DampingRatio", sliderJoint.DampingRatio);
-                //        WriteElement("FrequencyHz", sliderJoint.Frequency);
-                //        WriteElement("MaxLength", sliderJoint.MaxLength);
-                //        WriteElement("MinLength", sliderJoint.MinLength);
-                //        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
-                //        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
-                //    }
-                //    break;
+                case JointType.Angle:
+                    {
+                        AngleJoint aj = (AngleJoint)joint;
+                        WriteElement("BiasFactor", aj.BiasFactor);
+                        WriteElement("MaxImpulse", aj.MaxImpulse);
+                        WriteElement("Softness", aj.Softness);
+                        WriteElement("TargetAngle", aj.TargetAngle);
+                    }
+                    break;
+                case JointType.Slider:
+                    {
+                        SliderJoint sliderJoint = (SliderJoint)joint;
+                        WriteElement("DampingRatio", sliderJoint.DampingRatio);
+                        WriteElement("FrequencyHz", sliderJoint.Frequency);
+                        WriteElement("MaxLength", sliderJoint.MaxLength);
+                        WriteElement("MinLength", sliderJoint.MinLength);
+                        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
+                    }
+                    break;
                 default:
                     throw new Exception("Joint not supported");
             }
@@ -758,6 +750,21 @@ namespace FarseerPhysics.Common
 
                         switch (type)
                         {
+                            //case JointType.FixedMouse:
+                            //    joint = new FixedMouseJoint();
+                            //    break;
+                            //case JointType.FixedRevolute:
+                            //    break;
+                            //case JointType.FixedDistance:
+                            //    break;
+                            //case JointType.FixedLine:
+                            //    break;
+                            //case JointType.FixedPrismatic:
+                            //    break;
+                            //case JointType.FixedAngle:
+                            //    break;
+                            //case JointType.FixedFriction:
+                            //    break;
                             case JointType.Distance:
                                 joint = new DistanceJoint();
                                 break;
@@ -782,12 +789,15 @@ namespace FarseerPhysics.Common
                             case JointType.Rope:
                                 joint = new RopeJoint();
                                 break;
-                            //case JointType.Angle: //TODO
-                            //    joint = new AngleJoint();
-                            //    break;
-                            //case JointType.Slider:
-                            //    joint = new SliderJoint();
-                            //    break;
+                            case JointType.Angle:
+                                joint = new AngleJoint();
+                                break;
+                            case JointType.Slider:
+                                joint = new SliderJoint();
+                                break;
+                            case JointType.Motor:
+                                joint = new MotorJoint();
+                                break;
                             case JointType.Gear:
                                 throw new Exception("GearJoint is not supported.");
                             default:
@@ -915,40 +925,34 @@ namespace FarseerPhysics.Common
                                         }
                                     }
                                     break;
-                                //case JointType.Pulley:
-                                //    {
-                                //        switch (sn.Name.ToLower())
-                                //        {
-                                //            case "groundanchora":
-                                //                ((PulleyJoint)joint).GroundAnchorA = ReadVector(sn);
-                                //                break;
-                                //            case "groundanchorb":
-                                //                ((PulleyJoint)joint).GroundAnchorB = ReadVector(sn);
-                                //                break;
-                                //            case "lengtha":
-                                //                ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
-                                //                break;
-                                //            case "lengthb":
-                                //                ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
-                                //                break;
-                                //            case "localanchora":
-                                //                ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
-                                //                break;
-                                //            case "localanchorb":
-                                //                ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
-                                //                break;
-                                //            case "maxlengtha":
-                                //                ((PulleyJoint)joint).MaxLengthA = float.Parse(sn.Value);
-                                //                break;
-                                //            case "maxlengthb":
-                                //                ((PulleyJoint)joint).MaxLengthB = float.Parse(sn.Value);
-                                //                break;
-                                //            case "ratio":
-                                //                ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
-                                //                break;
-                                //        }
-                                //    }
-                                //    break;
+                                case JointType.Pulley:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "groundanchora":
+                                                ((PulleyJoint)joint).GroundAnchorA = ReadVector(sn);
+                                                break;
+                                            case "groundanchorb":
+                                                ((PulleyJoint)joint).GroundAnchorB = ReadVector(sn);
+                                                break;
+                                            case "lengtha":
+                                                ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
+                                                break;
+                                            case "lengthb":
+                                                ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "ratio":
+                                                ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
+                                                break;
+                                        }
+                                    }
+                                    break;
                                 case JointType.Revolute:
                                     {
                                         switch (sn.Name.ToLower())
@@ -1014,50 +1018,53 @@ namespace FarseerPhysics.Common
                                     break;
                                 case JointType.Gear:
                                     throw new Exception("Gear joint is unsupported");
-                                //case JointType.Angle: //TODO
-                                //    {
-                                //        switch (sn.Name.ToLower())
-                                //        {
-                                //            case "biasfactor":
-                                //                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
-                                //                break;
-                                //            case "maximpulse":
-                                //                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
-                                //                break;
-                                //            case "softness":
-                                //                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
-                                //                break;
-                                //            case "targetangle":
-                                //                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
-                                //                break;
-                                //        }
-                                //    }
-                                //    break;
-                                //case JointType.Slider:
-                                //    {
-                                //        switch (sn.Name.ToLower())
-                                //        {
-                                //            case "dampingratio":
-                                //                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                //                break;
-                                //            case "frequencyhz":
-                                //                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
-                                //                break;
-                                //            case "maxlength":
-                                //                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
-                                //                break;
-                                //            case "minlength":
-                                //                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
-                                //                break;
-                                //            case "localanchora":
-                                //                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
-                                //                break;
-                                //            case "localanchorb":
-                                //                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
-                                //                break;
-                                //        }
-                                //    }
-                                //    break;
+                                case JointType.Angle:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "biasfactor":
+                                                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
+                                                break;
+                                            case "maximpulse":
+                                                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
+                                                break;
+                                            case "softness":
+                                                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
+                                                break;
+                                            case "targetangle":
+                                                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case JointType.Slider:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "dampingratio":
+                                                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "maxlength":
+                                                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
+                                                break;
+                                            case "minlength":
+                                                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case JointType.Motor:
+                                    joint = new MotorJoint();
+                                    break;
                             }
                         }
                     }
