@@ -356,6 +356,7 @@
       </SubType>
     </Compile>
     <Compile Include="Common\Serialization.cs" />
+    <Compile Include="Common\Stopwatch.cs" />
     <Compile Include="Common\TextureTools\MarchingSquares.cs">
       <SubType>
       </SubType>
