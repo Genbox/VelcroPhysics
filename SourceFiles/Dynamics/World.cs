@@ -1199,29 +1199,21 @@ namespace FarseerPhysics.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
         {
+            if (!Enabled)
+                return;
+
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 _watch.Start();
 #endif
-
             ProcessChanges();
 
 #if (!SILVERLIGHT && !WINDOWS_PHONE)
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
 #endif
-            //If there is no change in time, no need to calculate anything.
-            if (dt == 0 || !Enabled)
-            {
-#if (!SILVERLIGHT && !WINDOWS_PHONE)
-                if (Settings.EnableDiagnostics)
-                {
-                    _watch.Stop();
-                    _watch.Reset();
-                }
-#endif
-                return;
-            }
+
+            //TODO: Add timing of finding new contacts
 
             // If new fixtures were added, we need to find the new contacts.
             if (WorldHasNewFixture)
@@ -1230,8 +1222,9 @@ namespace FarseerPhysics.Dynamics
                 WorldHasNewFixture = false;
             }
 
+            //FPE only: moved position and velocity iterations into Settings.cs
             TimeStep step;
-            step.inv_dt = 1.0f / dt;
+            step.inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
             step.dt = dt;
             step.dtRatio = _invDt0 * dt;
 
@@ -1278,9 +1271,7 @@ namespace FarseerPhysics.Dynamics
 #endif
 
             if (Settings.AutoClearForces)
-            {
                 ClearForces();
-            }
 
             for (int i = 0; i < BreakableBodyList.Count; i++)
             {
