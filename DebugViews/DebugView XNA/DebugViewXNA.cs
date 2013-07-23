@@ -443,8 +443,6 @@ namespace FarseerPhysics.DebugView
                 case JointType.Gear:
                     DrawSegment(x1, x2, color);
                     break;
-                //case JointType.Weld:
-                //    break;
                 default:
                     DrawSegment(x1, p1, color);
                     DrawSegment(p1, p2, color);

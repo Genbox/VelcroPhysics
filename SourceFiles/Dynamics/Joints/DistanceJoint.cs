@@ -93,25 +93,23 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        /// <param name="localAnchorA">The first body anchor</param>
-        /// <param name="localAnchorB">The second body anchor</param>
-        public DistanceJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = false)
+        /// <param name="anchorA">The first body anchor</param>
+        /// <param name="anchorB">The second body anchor</param>
+        public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Distance;
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
-
-                Vector2 d = localAnchorB - localAnchorA;
-                Length = d.Length();
+                LocalAnchorA = bodyA.GetLocalPoint(anchorA);
+                LocalAnchorB = bodyB.GetLocalPoint(anchorB);
+                Length = (anchorB - anchorA).Length();
             }
             else
             {
-                LocalAnchorA = localAnchorA;
-                LocalAnchorB = localAnchorB;
+                LocalAnchorA = anchorA;
+                LocalAnchorB = anchorB;
                 Length = (BodyB.GetWorldPoint(ref LocalAnchorB) - BodyA.GetWorldPoint(ref LocalAnchorA)).Length();
             }
         }
