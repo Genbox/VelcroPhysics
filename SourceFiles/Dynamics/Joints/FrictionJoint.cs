@@ -70,12 +70,21 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Friction;
         }
 
-        public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor)
+        public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Friction;
-            LocalAnchorA = anchor;
-            LocalAnchorB = anchor;
+
+            if (useWorldCoordinates)
+            {
+                LocalAnchorA = BodyA.GetLocalPoint(anchor);
+                LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            }
+            else
+            {
+                LocalAnchorA = anchor;
+                LocalAnchorB = anchor;
+            }
         }
 
         public override Vector2 WorldAnchorA
