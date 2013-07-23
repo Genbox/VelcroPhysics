@@ -100,7 +100,7 @@ namespace FarseerPhysics.TestBed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.CreateFixture(box);
 
-                _joint3 = new PrismaticJoint(ground, body3, body3.Position, new Vector2(0.0f, 1.0f));
+                _joint3 = new PrismaticJoint(ground, body3, body3.Position, new Vector2(0.0f, 1.0f), true);
                 _joint3.LowerLimit = -5.0f;
                 _joint3.UpperLimit = 5.0f;
                 _joint3.LimitEnabled = true;
@@ -126,12 +126,12 @@ namespace FarseerPhysics.TestBed.Tests
             float ratio = _joint4.Ratio;
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
             DrawString(string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
-            
+
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
             DrawString(string.Format("theta2 + {0} * delta = {1}", ratio, value));
-            
+
         }
 
         internal static Test Create()

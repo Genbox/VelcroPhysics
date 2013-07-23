@@ -109,33 +109,17 @@ namespace FarseerPhysics.Factories
         #region Prismatic Joint
 
         /// <summary>
-        /// Creates a prsimatic joint
-        /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
-        /// <param name="axis"></param>
-        /// <returns></returns>
-        public static PrismaticJoint CreatePrismaticJoint(Body bodyA, Body bodyB, Vector2 localanchorB, Vector2 axis)
-        {
-            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localanchorB));
-            PrismaticJoint joint = new PrismaticJoint(bodyA, bodyB, localanchorA, localanchorB, axis);
-            return joint;
-        }
-
-        /// <summary>
         /// Creates a prismatic joint and adds it to the world
         /// </summary>
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localanchorB"></param>
+        /// <param name="anchor"></param>
         /// <param name="axis"></param>
         /// <returns></returns>
-        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, Vector2 localanchorB,
-                                                          Vector2 axis)
+        public static PrismaticJoint CreatePrismaticJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis)
         {
-            PrismaticJoint joint = CreatePrismaticJoint(bodyA, bodyB, localanchorB, axis);
+            PrismaticJoint joint = new PrismaticJoint(bodyA, bodyB, anchor, axis);
             world.AddJoint(joint);
             return joint;
         }

@@ -28,7 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
-            new TestEntry {Name = "Serialization Test", CreateTest = SerializationTest.Create},
+            new TestEntry {Name = "Serialization", CreateTest = SerializationTest.Create},
       
             //Original tests
             new TestEntry {Name = "Continuous Test", CreateTest = ContinuousTest.Create},
@@ -88,7 +88,7 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "YuPeng Polygon", CreateTest = YuPengPolygonTest.Create},
             new TestEntry {Name = "Path Test", CreateTest = PathTest.Create},
             new TestEntry {Name = "Cutting of polygons", CreateTest = CuttingTest.Create},
-            new TestEntry {Name = "Controllers", CreateTest = ControllerTest.Create},
+            new TestEntry {Name = "Gravity Controller Test", CreateTest = GravityControllerTest.Create},
             new TestEntry {Name = "Texture to Vertices", CreateTest = TextureVerticesTest.Create},
             new TestEntry {Name = "Rounded rectangle", CreateTest = RoundedRectangle.Create},
             new TestEntry {Name = "Angle Joint", CreateTest = AngleJointTest.Create},
