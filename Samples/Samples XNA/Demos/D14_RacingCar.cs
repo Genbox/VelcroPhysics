@@ -238,16 +238,16 @@ namespace FarseerPhysics.Samples.Demos
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
                 _springBack.MotorEnabled = true;
-                _springBack.SpringFrequencyHz = _hzBack;
-                _springBack.SpringDampingRatio = _zeta;
+                _springBack.Frequency = _hzBack;
+                _springBack.DampingRatio = _zeta;
                 World.AddJoint(_springBack);
 
                 _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis);
                 _springFront.MotorSpeed = 0.0f;
                 _springFront.MaxMotorTorque = 10.0f;
                 _springFront.MotorEnabled = false;
-                _springFront.SpringFrequencyHz = _hzFront;
-                _springFront.SpringDampingRatio = _zeta;
+                _springFront.Frequency = _hzFront;
+                _springFront.DampingRatio = _zeta;
                 World.AddJoint(_springFront);
 
                 // GFX

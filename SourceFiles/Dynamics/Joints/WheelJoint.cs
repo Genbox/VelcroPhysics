@@ -37,8 +37,8 @@ namespace FarseerPhysics.Dynamics.Joints
     public class WheelJoint : Joint
     {
         // Solver shared
-        private Vector2 _localXAxisA;
-        private Vector2 _localYAxisA;
+        private Vector2 _localXAxis;
+        private Vector2 _localYAxis;
 
         private float _impulse;
         private float _motorImpulse;
@@ -68,6 +68,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
         private float _bias;
         private float _gamma;
+        private Vector2 _axis;
 
         // Linear constraint (point-to-line)
         // d = pB - pA = xB + rB - xA - rA
@@ -90,14 +91,25 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Wheel;
         }
 
-        public WheelJoint(Body bA, Body bB, Vector2 anchor, Vector2 axis)
-            : base(bA, bB)
+        public WheelJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
+            : base(bodyA, bodyB)
         {
             JointType = JointType.Wheel;
-            LocalAnchorA = bA.GetLocalPoint(anchor);
-            LocalAnchorB = bB.GetLocalPoint(anchor);
-            _localXAxisA = bA.GetLocalVector(axis);
-            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+
+            if (useWorldCoordinates)
+            {
+                LocalAnchorA = bodyA.GetLocalPoint(anchor);
+                LocalAnchorB = bodyB.GetLocalPoint(anchor);
+            }
+            else
+            {
+                LocalAnchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
+                LocalAnchorB = anchor;
+            }
+
+            _axis = axis; //FPE only: We maintain the original value as it is supposed to.
+            _localXAxis = bodyA.GetLocalVector(_axis);
+            _localYAxis = MathUtils.Cross(1.0f, _localXAxis);
         }
 
         public Vector2 LocalAnchorA { get; set; }
@@ -115,13 +127,14 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public Vector2 LocalXAxisA
+        public Vector2 LocalXAxis
         {
-            get { return _localXAxisA; }
+            get { return _axis; }
             set
             {
-                _localXAxisA = BodyA.GetLocalVector(value);
-                _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+                _axis = value; //FPE only: We maintain the original value as it is supposed to.
+                _localXAxis = BodyA.GetLocalVector(_axis);
+                _localYAxis = MathUtils.Cross(1.0f, _localXAxis);
             }
         }
 
@@ -148,10 +161,10 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// Suspension frequency, zero indicates no suspension
-        public float SpringFrequencyHz { get; set; }
+        public float Frequency { get; set; }
 
         /// Suspension damping ratio, one indicates critical damping
-        public float SpringDampingRatio { get; set; }
+        public float DampingRatio { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -196,7 +209,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Point to line constraint
             {
-                _ay = MathUtils.Mul(qA, _localYAxisA);
+                _ay = MathUtils.Mul(qA, _localYAxis);
                 _sAy = MathUtils.Cross(d1 + rA, _ay);
                 _sBy = MathUtils.Cross(rB, _ay);
 
@@ -212,9 +225,9 @@ namespace FarseerPhysics.Dynamics.Joints
             _springMass = 0.0f;
             _bias = 0.0f;
             _gamma = 0.0f;
-            if (SpringFrequencyHz > 0.0f)
+            if (Frequency > 0.0f)
             {
-                _ax = MathUtils.Mul(qA, _localXAxisA);
+                _ax = MathUtils.Mul(qA, _localXAxis);
                 _sAx = MathUtils.Cross(d1 + rA, _ax);
                 _sBx = MathUtils.Cross(rB, _ax);
 
@@ -227,10 +240,10 @@ namespace FarseerPhysics.Dynamics.Joints
                     float C = Vector2.Dot(d1, _ax);
 
                     // Frequency
-                    float omega = 2.0f * Settings.Pi * SpringFrequencyHz;
+                    float omega = 2.0f * Settings.Pi * Frequency;
 
                     // Damping coefficient
-                    float d = 2.0f * _springMass * SpringDampingRatio * omega;
+                    float d = 2.0f * _springMass * DampingRatio * omega;
 
                     // Spring stiffness
                     float k = _springMass * omega * omega;
@@ -379,7 +392,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
             Vector2 d = (cB - cA) + rB - rA;
 
-            Vector2 ay = MathUtils.Mul(qA, _localYAxisA);
+            Vector2 ay = MathUtils.Mul(qA, _localYAxis);
 
             float sAy = MathUtils.Cross(d + rA, ay);
             float sBy = MathUtils.Cross(rB, ay);
@@ -425,7 +438,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
                 Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
                 Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(_localXAxisA);
+                Vector2 axis = bA.GetWorldVector(_localXAxis);
 
                 float translation = Vector2.Dot(d, axis);
                 return translation;
@@ -453,9 +466,9 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public float GetMotorTorque(float inv_dt)
+        public float GetMotorTorque(float invDt)
         {
-            return inv_dt * _motorImpulse;
+            return invDt * _motorImpulse;
         }
     }
 }

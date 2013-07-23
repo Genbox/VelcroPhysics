@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using FarseerPhysics.Collision.Shapes;
@@ -170,88 +171,91 @@ namespace FarseerPhysics.Common
             {
                 case JointType.Distance:
                     {
-                        DistanceJoint djd = (DistanceJoint)joint;
+                        DistanceJoint distanceJoint = (DistanceJoint)joint;
 
-                        WriteElement("DampingRatio", djd.DampingRatio);
-                        WriteElement("FrequencyHz", djd.Frequency);
-                        WriteElement("Length", djd.Length);
-                        WriteElement("LocalAnchorA", djd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", djd.LocalAnchorB);
+                        WriteElement("DampingRatio", distanceJoint.DampingRatio);
+                        WriteElement("FrequencyHz", distanceJoint.Frequency);
+                        WriteElement("Length", distanceJoint.Length);
+                        WriteElement("LocalAnchorA", distanceJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", distanceJoint.LocalAnchorB);
                     }
                     break;
                 case JointType.Friction:
                     {
-                        FrictionJoint fjd = (FrictionJoint)joint;
-                        WriteElement("LocalAnchorA", fjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", fjd.LocalAnchorB);
-                        WriteElement("MaxForce", fjd.MaxForce);
-                        WriteElement("MaxTorque", fjd.MaxTorque);
+                        FrictionJoint frictionJoint = (FrictionJoint)joint;
+                        WriteElement("LocalAnchorA", frictionJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", frictionJoint.LocalAnchorB);
+                        WriteElement("MaxForce", frictionJoint.MaxForce);
+                        WriteElement("MaxTorque", frictionJoint.MaxTorque);
                     }
                     break;
                 case JointType.Gear:
                     throw new Exception("Gear joint not supported by serialization");
                 case JointType.Wheel:
                     {
-                        WheelJoint ljd = (WheelJoint)joint;
+                        WheelJoint wheelJoint = (WheelJoint)joint;
 
-                        WriteElement("EnableMotor", ljd.MotorEnabled);
-                        WriteElement("LocalAnchorA", ljd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", ljd.LocalAnchorB);
-                        WriteElement("MotorSpeed", ljd.MotorSpeed);
-                        WriteElement("MaxMotorTorque", ljd.MaxMotorTorque);
+                        WriteElement("EnableMotor", wheelJoint.MotorEnabled);
+                        WriteElement("LocalAnchorA", wheelJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", wheelJoint.LocalAnchorB);
+                        WriteElement("MotorSpeed", wheelJoint.MotorSpeed);
+                        WriteElement("DampingRatio", wheelJoint.DampingRatio);
+                        WriteElement("MaxMotorTorque", wheelJoint.MaxMotorTorque);
+                        WriteElement("FrequencyHz", wheelJoint.Frequency);
+                        WriteElement("LocalXAxis", wheelJoint.LocalXAxis);
                     }
                     break;
                 case JointType.Prismatic:
                     {
-                        PrismaticJoint pjd = (PrismaticJoint)joint;
+                        PrismaticJoint prismaticJoint = (PrismaticJoint)joint;
 
                         //NOTE: Does not conform with Box2DScene
 
-                        WriteElement("EnableLimit", pjd.LimitEnabled);
-                        WriteElement("EnableMotor", pjd.MotorEnabled);
-                        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
-                        WriteElement("LocalXAxis1", pjd.LocalXAxisA);
-                        WriteElement("LowerTranslation", pjd.LowerLimit);
-                        WriteElement("UpperTranslation", pjd.UpperLimit);
-                        WriteElement("MaxMotorForce", pjd.MaxMotorForce);
-                        WriteElement("MotorSpeed", pjd.MotorSpeed);
+                        WriteElement("EnableLimit", prismaticJoint.LimitEnabled);
+                        WriteElement("EnableMotor", prismaticJoint.MotorEnabled);
+                        WriteElement("LocalAnchorA", prismaticJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", prismaticJoint.LocalAnchorB);
+                        WriteElement("LocalXAxis1", prismaticJoint.LocalXAxisA);
+                        WriteElement("LowerTranslation", prismaticJoint.LowerLimit);
+                        WriteElement("UpperTranslation", prismaticJoint.UpperLimit);
+                        WriteElement("MaxMotorForce", prismaticJoint.MaxMotorForce);
+                        WriteElement("MotorSpeed", prismaticJoint.MotorSpeed);
                     }
                     break;
                 case JointType.Pulley:
                     {
-                        PulleyJoint pjd = (PulleyJoint)joint;
+                        PulleyJoint pulleyJoint = (PulleyJoint)joint;
 
-                        WriteElement("GroundAnchorA", pjd.GroundAnchorA);
-                        WriteElement("GroundAnchorB", pjd.GroundAnchorB);
-                        WriteElement("LengthA", pjd.LengthA);
-                        WriteElement("LengthB", pjd.LengthB);
-                        WriteElement("LocalAnchorA", pjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", pjd.LocalAnchorB);
-                        WriteElement("Ratio", pjd.Ratio);
+                        WriteElement("GroundAnchorA", pulleyJoint.GroundAnchorA);
+                        WriteElement("GroundAnchorB", pulleyJoint.GroundAnchorB);
+                        WriteElement("LengthA", pulleyJoint.LengthA);
+                        WriteElement("LengthB", pulleyJoint.LengthB);
+                        WriteElement("LocalAnchorA", pulleyJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", pulleyJoint.LocalAnchorB);
+                        WriteElement("Ratio", pulleyJoint.Ratio);
                     }
                     break;
                 case JointType.Revolute:
                     {
-                        RevoluteJoint rjd = (RevoluteJoint)joint;
+                        RevoluteJoint revoluteJoint = (RevoluteJoint)joint;
 
-                        WriteElement("EnableLimit", rjd.LimitEnabled);
-                        WriteElement("EnableMotor", rjd.MotorEnabled);
-                        WriteElement("LocalAnchorA", rjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", rjd.LocalAnchorB);
-                        WriteElement("LowerAngle", rjd.LowerLimit);
-                        WriteElement("MaxMotorTorque", rjd.MaxMotorTorque);
-                        WriteElement("MotorSpeed", rjd.MotorSpeed);
-                        WriteElement("ReferenceAngle", rjd.ReferenceAngle);
-                        WriteElement("UpperAngle", rjd.UpperLimit);
+                        WriteElement("EnableLimit", revoluteJoint.LimitEnabled);
+                        WriteElement("EnableMotor", revoluteJoint.MotorEnabled);
+                        WriteElement("LocalAnchorA", revoluteJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", revoluteJoint.LocalAnchorB);
+                        WriteElement("LowerAngle", revoluteJoint.LowerLimit);
+                        WriteElement("MaxMotorTorque", revoluteJoint.MaxMotorTorque);
+                        WriteElement("MotorSpeed", revoluteJoint.MotorSpeed);
+                        WriteElement("ReferenceAngle", revoluteJoint.ReferenceAngle);
+                        WriteElement("UpperAngle", revoluteJoint.UpperLimit);
                     }
                     break;
                 case JointType.Weld:
                     {
-                        WeldJoint wjd = (WeldJoint)joint;
+                        WeldJoint weldJoint = (WeldJoint)joint;
 
-                        WriteElement("LocalAnchorA", wjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", wjd.LocalAnchorB);
+                        WriteElement("LocalAnchorA", weldJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", weldJoint.LocalAnchorB);
                     }
                     break;
                 //
@@ -344,25 +348,11 @@ namespace FarseerPhysics.Common
 
             _writer.WriteStartElement("Shapes");
 
-            for (int i = 0; i < world.BodyList.Count; i++)
+            foreach (Body body in world.BodyList)
             {
-                Body body = world.BodyList[i];
-                for (int j = 0; j < body.FixtureList.Count; j++)
+                foreach (Fixture fixture in body.FixtureList)
                 {
-                    Fixture fixture = body.FixtureList[j];
-
-                    bool alreadyThere = false;
-                    for (int k = 0; k < shapes.Count; k++)
-                    {
-                        Shape s2 = shapes[k];
-                        if (fixture.Shape.CompareTo(s2))
-                        {
-                            alreadyThere = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyThere)
+                    if (!shapes.Any(s2 => fixture.Shape.CompareTo(s2)))
                     {
                         SerializeShape(fixture.Shape);
                         shapes.Add(fixture.Shape);
@@ -373,24 +363,11 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
             _writer.WriteStartElement("Fixtures");
 
-            for (int i = 0; i < world.BodyList.Count; i++)
+            foreach (Body body in world.BodyList)
             {
-                Body body = world.BodyList[i];
-                for (int j = 0; j < body.FixtureList.Count; j++)
+                foreach (Fixture fixture in body.FixtureList)
                 {
-                    Fixture fixture = body.FixtureList[j];
-                    bool alreadyThere = false;
-                    for (int k = 0; k < fixtures.Count; k++)
-                    {
-                        Fixture f2 = fixtures[k];
-                        if (fixture.CompareTo(f2))
-                        {
-                            alreadyThere = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyThere)
+                    if (!fixtures.Any(f2 => fixture.CompareTo(f2)))
                     {
                         SerializeFixture(shapes, fixture);
                         fixtures.Add(fixture);
@@ -401,9 +378,8 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
             _writer.WriteStartElement("Bodies");
 
-            for (int i = 0; i < world.BodyList.Count; i++)
+            foreach (Body body in world.BodyList)
             {
-                Body body = world.BodyList[i];
                 bodies.Add(body);
                 SerializeBody(fixtures, body);
             }
@@ -411,9 +387,8 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
             _writer.WriteStartElement("Joints");
 
-            for (int i = 0; i < world.JointList.Count; i++)
+            foreach (Joint joint in world.JointList)
             {
-                Joint joint = world.JointList[i];
                 SerializeJoint(bodies, joint);
             }
 
@@ -424,10 +399,28 @@ namespace FarseerPhysics.Common
             _writer.Close();
         }
 
-        private static int FindIndex<T>(List<T> list, T item)
+        private static int FindIndex(List<Body> list, Body item)
         {
             for (int i = 0; i < list.Count; ++i)
-                if (ReferenceEquals(list[i], item))
+                if (list[i] == item) //TODO: Should be CompareTo() to remove duplicates
+                    return i;
+
+            return -1;
+        }
+
+        private static int FindIndex(List<Fixture> list, Fixture item)
+        {
+            for (int i = 0; i < list.Count; ++i)
+                if (list[i].CompareTo(item))
+                    return i;
+
+            return -1;
+        }
+
+        private static int FindIndex(List<Shape> list, Shape item)
+        {
+            for (int i = 0; i < list.Count; ++i)
+                if (list[i].CompareTo(item))
                     return i;
 
             return -1;
@@ -857,37 +850,37 @@ namespace FarseerPhysics.Common
                                         }
                                     }
                                     break;
-                                //case JointType.Wheel:
-                                //    {
-                                //        switch (sn.Name.ToLower())
-                                //        {
-                                //            case "enablemotor":
-                                //                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                //                break;
-                                //            case "localanchora":
-                                //                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
-                                //                break;
-                                //            case "localanchorb":
-                                //                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
-                                //                break;
-                                //            case "motorspeed":
-                                //                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                //                break;
-                                //            case "dampingratio":
-                                //                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                //                break;
-                                //            case "maxmotortorque":
-                                //                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
-                                //                break;
-                                //            case "frequencyhz":
-                                //                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
-                                //                break;
-                                //            case "localxaxis":
-                                //                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
-                                //                break;
-                                //        }
-                                //    }
-                                //    break;
+                                case JointType.Wheel:
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "enablemotor":
+                                                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "motorspeed":
+                                                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                break;
+                                            case "dampingratio":
+                                                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "maxmotortorque":
+                                                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "localxaxis":
+                                                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
+                                                break;
+                                        }
+                                    }
+                                    break;
                                 case JointType.Prismatic:
                                     {
                                         switch (sn.Name.ToLower())

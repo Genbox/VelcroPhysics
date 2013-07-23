@@ -596,16 +596,15 @@ namespace FarseerPhysics.Dynamics
 
         internal bool CompareTo(Fixture fixture)
         {
-            return (
-                       CollidesWith == fixture.CollidesWith &&
-                       CollisionCategories == fixture.CollisionCategories &&
-                       CollisionGroup == fixture.CollisionGroup &&
-                       Friction == fixture.Friction &&
-                       IsSensor == fixture.IsSensor &&
-                       Restitution == fixture.Restitution &&
-                       Shape.CompareTo(fixture.Shape) &&
-                       UserData == fixture.UserData &&
-                       UserBits == fixture.UserBits);
+            return (CollidesWith == fixture.CollidesWith &&
+                    CollisionCategories == fixture.CollisionCategories &&
+                    CollisionGroup == fixture.CollisionGroup &&
+                    Friction == fixture.Friction &&
+                    IsSensor == fixture.IsSensor &&
+                    Restitution == fixture.Restitution &&
+                    Shape.CompareTo(fixture.Shape) &&
+                    UserData == fixture.UserData &&
+                    UserBits == fixture.UserBits);
         }
     }
 }
