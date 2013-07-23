@@ -52,7 +52,7 @@ namespace FarseerPhysics.TestBed.Tests
             // Bouncy limit
             Vector2 axis = new Vector2(2.0f, 1.0f);
             axis.Normalize();
-            _joint = new PrismaticJoint(ground, body, Vector2.Zero, axis);
+            _joint = new PrismaticJoint(ground, body, Vector2.Zero, Vector2.Zero, axis, true);
 
             // Non-bouncy limit
             //_joint = new PrismaticJoint(ground, body2, body2.Position, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
@@ -85,7 +85,6 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
             DrawString("Keys: (l) limits, (m) motors, (p) speed");
-            
         }
 
         internal static Test Create()

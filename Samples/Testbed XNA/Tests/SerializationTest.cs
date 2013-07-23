@@ -17,18 +17,22 @@ namespace FarseerPhysics.TestBed.Tests
         {
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
 
-            Body bodyA = BodyFactory.CreateCircle(World, 1, 1.5f, new Vector2(10, 25));
-            bodyA.BodyType = BodyType.Dynamic;
+            //Friction and distance joint
+            {
+                Body bodyA = BodyFactory.CreateCircle(World, 1, 1.5f, new Vector2(10, 25));
+                bodyA.BodyType = BodyType.Dynamic;
 
-            Body bodyB = BodyFactory.CreateRectangle(World, 1, 1, 1, new Vector2(-1, 25));
-            bodyB.BodyType = BodyType.Dynamic;
+                Body bodyB = BodyFactory.CreateRectangle(World, 1, 1, 1, new Vector2(-1, 25));
+                bodyB.BodyType = BodyType.Dynamic;
 
-            FrictionJoint frictionJoint = JointFactory.CreateFrictionJoint(World, bodyB, ground, Vector2.Zero);
-            frictionJoint.CollideConnected = true;
-            frictionJoint.MaxForce = 100;
+                FrictionJoint frictionJoint = JointFactory.CreateFrictionJoint(World, bodyB, ground, Vector2.Zero);
+                frictionJoint.CollideConnected = true;
+                frictionJoint.MaxForce = 100;
 
-            JointFactory.CreateDistanceJoint(World, bodyA, bodyB);
+                JointFactory.CreateDistanceJoint(World, bodyA, bodyB);
+            }
 
+            //Wheel joint
             {
                 Vertices vertices = new Vertices(6);
                 vertices.Add(new Vector2(-1.5f, -0.5f));
@@ -64,6 +68,23 @@ namespace FarseerPhysics.TestBed.Tests
                 spring2.MotorEnabled = false;
                 spring2.Frequency = 4;
                 spring2.DampingRatio = 0.7f;
+            }
+
+            {
+                Body body = BodyFactory.CreateRectangle(World, 2, 2, 5, new Vector2(-10.0f, 10.0f));
+                body.BodyType = BodyType.Dynamic;
+                body.Rotation = 0.5f * Settings.Pi;
+
+                Vector2 axis = new Vector2(2.0f, 1.0f);
+                axis.Normalize();
+
+                PrismaticJoint joint = JointFactory.CreatePrismaticJoint(World, ground, body, Vector2.Zero, axis);
+                joint.MotorSpeed = 5.0f;
+                joint.MaxMotorForce = 1000.0f;
+                joint.MotorEnabled = true;
+                joint.LowerLimit = -10.0f;
+                joint.UpperLimit = 20.0f;
+                joint.LimitEnabled = true;
             }
         }
 

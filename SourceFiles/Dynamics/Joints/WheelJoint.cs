@@ -37,7 +37,6 @@ namespace FarseerPhysics.Dynamics.Joints
     public class WheelJoint : Joint
     {
         // Solver shared
-        private Vector2 _localXAxis;
         private Vector2 _localYAxis;
 
         private float _impulse;
@@ -108,8 +107,8 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             _axis = axis; //FPE only: We maintain the original value as it is supposed to.
-            _localXAxis = bodyA.GetLocalVector(_axis);
-            _localYAxis = MathUtils.Cross(1.0f, _localXAxis);
+            LocalXAxis = bodyA.GetLocalVector(_axis);
+            _localYAxis = MathUtils.Cross(1.0f, LocalXAxis);
         }
 
         public Vector2 LocalAnchorA { get; set; }
@@ -127,16 +126,18 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public Vector2 LocalXAxis
+        public Vector2 Axis
         {
             get { return _axis; }
             set
             {
-                _axis = value; //FPE only: We maintain the original value as it is supposed to.
-                _localXAxis = BodyA.GetLocalVector(_axis);
-                _localYAxis = MathUtils.Cross(1.0f, _localXAxis);
+                _axis = value;
+                LocalXAxis = BodyA.GetLocalVector(_axis);
+                _localYAxis = MathUtils.Cross(1.0f, LocalXAxis);
             }
         }
+
+        public Vector2 LocalXAxis { get; private set; }
 
         /// The desired motor speed in radians per second.
         public float MotorSpeed
@@ -227,7 +228,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _gamma = 0.0f;
             if (Frequency > 0.0f)
             {
-                _ax = MathUtils.Mul(qA, _localXAxis);
+                _ax = MathUtils.Mul(qA, LocalXAxis);
                 _sAx = MathUtils.Cross(d1 + rA, _ax);
                 _sBx = MathUtils.Cross(rB, _ax);
 
@@ -438,7 +439,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
                 Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
                 Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(_localXAxis);
+                Vector2 axis = bA.GetWorldVector(LocalXAxis);
 
                 float translation = Vector2.Dot(d, axis);
                 return translation;

@@ -60,7 +60,7 @@ namespace FarseerPhysics.TestBed.Tests
                 rjd.MotorEnabled = true;
                 World.AddJoint(rjd);
 
-                PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
+                PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f), true);
                 pjd.MaxMotorForce = 1000.0f;
                 pjd.MotorEnabled = true;
                 pjd.LowerLimit = -10.0f;
@@ -84,13 +84,9 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.D))
-            {
                 _platform.BodyType = BodyType.Dynamic;
-            }
             if (keyboardManager.IsKeyDown(Keys.S))
-            {
                 _platform.BodyType = BodyType.Static;
-            }
             if (keyboardManager.IsKeyDown(Keys.K))
             {
                 _platform.BodyType = BodyType.Kinematic;
@@ -121,9 +117,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             base.Update(settings, gameTime);
             DrawString("Keys: (d) dynamic, (s) static, (k) kinematic");
-            
         }
-
 
         internal static Test Create()
         {

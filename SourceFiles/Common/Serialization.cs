@@ -172,7 +172,6 @@ namespace FarseerPhysics.Common
                 case JointType.Distance:
                     {
                         DistanceJoint distanceJoint = (DistanceJoint)joint;
-
                         WriteElement("DampingRatio", distanceJoint.DampingRatio);
                         WriteElement("FrequencyHz", distanceJoint.Frequency);
                         WriteElement("Length", distanceJoint.Length);
@@ -194,7 +193,6 @@ namespace FarseerPhysics.Common
                 case JointType.Wheel:
                     {
                         WheelJoint wheelJoint = (WheelJoint)joint;
-
                         WriteElement("EnableMotor", wheelJoint.MotorEnabled);
                         WriteElement("LocalAnchorA", wheelJoint.LocalAnchorA);
                         WriteElement("LocalAnchorB", wheelJoint.LocalAnchorB);
@@ -202,20 +200,19 @@ namespace FarseerPhysics.Common
                         WriteElement("DampingRatio", wheelJoint.DampingRatio);
                         WriteElement("MaxMotorTorque", wheelJoint.MaxMotorTorque);
                         WriteElement("FrequencyHz", wheelJoint.Frequency);
-                        WriteElement("LocalXAxis", wheelJoint.LocalXAxis);
+                        WriteElement("Axis", wheelJoint.Axis);
                     }
                     break;
                 case JointType.Prismatic:
                     {
-                        PrismaticJoint prismaticJoint = (PrismaticJoint)joint;
-
                         //NOTE: Does not conform with Box2DScene
 
+                        PrismaticJoint prismaticJoint = (PrismaticJoint)joint;
                         WriteElement("EnableLimit", prismaticJoint.LimitEnabled);
                         WriteElement("EnableMotor", prismaticJoint.MotorEnabled);
                         WriteElement("LocalAnchorA", prismaticJoint.LocalAnchorA);
                         WriteElement("LocalAnchorB", prismaticJoint.LocalAnchorB);
-                        WriteElement("LocalXAxis1", prismaticJoint.LocalXAxisA);
+                        WriteElement("Axis", prismaticJoint.Axis);
                         WriteElement("LowerTranslation", prismaticJoint.LowerLimit);
                         WriteElement("UpperTranslation", prismaticJoint.UpperLimit);
                         WriteElement("MaxMotorForce", prismaticJoint.MaxMotorForce);
@@ -225,7 +222,6 @@ namespace FarseerPhysics.Common
                 case JointType.Pulley:
                     {
                         PulleyJoint pulleyJoint = (PulleyJoint)joint;
-
                         WriteElement("GroundAnchorA", pulleyJoint.GroundAnchorA);
                         WriteElement("GroundAnchorB", pulleyJoint.GroundAnchorB);
                         WriteElement("LengthA", pulleyJoint.LengthA);
@@ -238,7 +234,6 @@ namespace FarseerPhysics.Common
                 case JointType.Revolute:
                     {
                         RevoluteJoint revoluteJoint = (RevoluteJoint)joint;
-
                         WriteElement("EnableLimit", revoluteJoint.LimitEnabled);
                         WriteElement("EnableMotor", revoluteJoint.MotorEnabled);
                         WriteElement("LocalAnchorA", revoluteJoint.LocalAnchorA);
@@ -253,7 +248,6 @@ namespace FarseerPhysics.Common
                 case JointType.Weld:
                     {
                         WeldJoint weldJoint = (WeldJoint)joint;
-
                         WriteElement("LocalAnchorA", weldJoint.LocalAnchorA);
                         WriteElement("LocalAnchorB", weldJoint.LocalAnchorB);
                     }
@@ -263,20 +257,19 @@ namespace FarseerPhysics.Common
                 //
                 case JointType.Rope:
                     {
-                        RopeJoint rjd = (RopeJoint)joint;
-
-                        WriteElement("LocalAnchorA", rjd.LocalAnchorA);
-                        WriteElement("LocalAnchorB", rjd.LocalAnchorB);
-                        WriteElement("MaxLength", rjd.MaxLength);
+                        RopeJoint ropeJoint = (RopeJoint)joint;
+                        WriteElement("LocalAnchorA", ropeJoint.LocalAnchorA);
+                        WriteElement("LocalAnchorB", ropeJoint.LocalAnchorB);
+                        WriteElement("MaxLength", ropeJoint.MaxLength);
                     }
                     break;
                 case JointType.Angle:
                     {
-                        AngleJoint aj = (AngleJoint)joint;
-                        WriteElement("BiasFactor", aj.BiasFactor);
-                        WriteElement("MaxImpulse", aj.MaxImpulse);
-                        WriteElement("Softness", aj.Softness);
-                        WriteElement("TargetAngle", aj.TargetAngle);
+                        AngleJoint angleJoint = (AngleJoint)joint;
+                        WriteElement("BiasFactor", angleJoint.BiasFactor);
+                        WriteElement("MaxImpulse", angleJoint.MaxImpulse);
+                        WriteElement("Softness", angleJoint.Softness);
+                        WriteElement("TargetAngle", angleJoint.TargetAngle);
                     }
                     break;
                 case JointType.Slider:
@@ -875,8 +868,8 @@ namespace FarseerPhysics.Common
                                             case "frequencyhz":
                                                 ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
                                                 break;
-                                            case "localxaxis":
-                                                ((WheelJoint)joint).LocalXAxis = ReadVector(sn);
+                                            case "axis":
+                                                ((WheelJoint)joint).Axis = ReadVector(sn);
                                                 break;
                                         }
                                     }
@@ -897,8 +890,8 @@ namespace FarseerPhysics.Common
                                             case "localanchorb":
                                                 ((PrismaticJoint)joint).LocalAnchorB = ReadVector(sn);
                                                 break;
-                                            case "local1axis1":
-                                                ((PrismaticJoint)joint).LocalXAxisA = ReadVector(sn);
+                                            case "axis":
+                                                ((PrismaticJoint)joint).Axis = ReadVector(sn);
                                                 break;
                                             case "maxmotorforce":
                                                 ((PrismaticJoint)joint).MaxMotorForce = float.Parse(sn.Value);
