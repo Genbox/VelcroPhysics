@@ -222,13 +222,14 @@ namespace FarseerPhysics.Common
                 case JointType.Pulley:
                     {
                         PulleyJoint pulleyJoint = (PulleyJoint)joint;
-                        WriteElement("GroundAnchorA", pulleyJoint.GroundAnchorA);
-                        WriteElement("GroundAnchorB", pulleyJoint.GroundAnchorB);
+                        WriteElement("WorldAnchorA", pulleyJoint.WorldAnchorA);
+                        WriteElement("WorldAnchorB", pulleyJoint.WorldAnchorB);
                         WriteElement("LengthA", pulleyJoint.LengthA);
                         WriteElement("LengthB", pulleyJoint.LengthB);
                         WriteElement("LocalAnchorA", pulleyJoint.LocalAnchorA);
                         WriteElement("LocalAnchorB", pulleyJoint.LocalAnchorB);
                         WriteElement("Ratio", pulleyJoint.Ratio);
+                        WriteElement("Constant", pulleyJoint.Constant);
                     }
                     break;
                 case JointType.Revolute:
@@ -915,11 +916,11 @@ namespace FarseerPhysics.Common
                                     {
                                         switch (sn.Name.ToLower())
                                         {
-                                            case "groundanchora":
-                                                ((PulleyJoint)joint).GroundAnchorA = ReadVector(sn);
+                                            case "worldanchora":
+                                                ((PulleyJoint)joint).WorldAnchorA = ReadVector(sn);
                                                 break;
-                                            case "groundanchorb":
-                                                ((PulleyJoint)joint).GroundAnchorB = ReadVector(sn);
+                                            case "worldanchorb":
+                                                ((PulleyJoint)joint).WorldAnchorB = ReadVector(sn);
                                                 break;
                                             case "lengtha":
                                                 ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
@@ -935,6 +936,9 @@ namespace FarseerPhysics.Common
                                                 break;
                                             case "ratio":
                                                 ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
+                                                break;
+                                            case "constant":
+                                                ((PulleyJoint)joint).Constant = float.Parse(sn.Value);
                                                 break;
                                         }
                                     }

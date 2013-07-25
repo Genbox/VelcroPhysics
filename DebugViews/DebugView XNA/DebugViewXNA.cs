@@ -405,11 +405,11 @@ namespace FarseerPhysics.DebugView
                     break;
                 case JointType.Pulley:
                     PulleyJoint pulley = (PulleyJoint)joint;
-                    Vector2 s1 = pulley.GroundAnchorA;
-                    Vector2 s2 = pulley.GroundAnchorB;
-                    DrawSegment(s1, p1, color);
-                    DrawSegment(s2, p2, color);
-                    DrawSegment(s1, s2, color);
+                    Vector2 s1 = b1.GetWorldPoint(pulley.LocalAnchorA);
+                    Vector2 s2 = b2.GetWorldPoint(pulley.LocalAnchorB);
+                    DrawSegment(p1, p2, color);
+                    DrawSegment(p1, s1, color);
+                    DrawSegment(p2, s2, color);
                     break;
                 case JointType.FixedMouse:
                     DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));

@@ -288,11 +288,10 @@ namespace FarseerPhysics
                 b2.GetTransform(out xf2);
                 x2 = xf2.p;
             }
-            Vector2 p2 = joint.WorldAnchorB;
 
             Vector2 x1 = xf1.p;
-
             Vector2 p1 = joint.WorldAnchorA;
+            Vector2 p2 = joint.WorldAnchorB;
 
             Color color = Color.FromArgb(255, 128, 205, 205);
 
@@ -305,11 +304,11 @@ namespace FarseerPhysics
                 case JointType.Pulley:
                     {
                         PulleyJoint pulley = (PulleyJoint)joint;
-                        Vector2 s1 = pulley.GroundAnchorA;
-                        Vector2 s2 = pulley.GroundAnchorB;
-                        DrawSegment(s1, p1, color);
-                        DrawSegment(s2, p2, color);
-                        DrawSegment(s1, s2, color);
+                        Vector2 s1 = b1.GetWorldPoint(pulley.LocalAnchorA);
+                        Vector2 s2 = b2.GetWorldPoint(pulley.LocalAnchorB);
+                        DrawSegment(p1, p2, color);
+                        DrawSegment(p1, s1, color);
+                        DrawSegment(p2, s2, color);
                     }
                     break;
 

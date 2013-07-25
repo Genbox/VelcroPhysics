@@ -70,6 +70,7 @@ namespace FarseerPhysics.TestBed.Tests
                 spring2.DampingRatio = 0.7f;
             }
 
+            //Prismatic joint
             {
                 Body body = BodyFactory.CreateRectangle(World, 2, 2, 5, new Vector2(-10.0f, 10.0f));
                 body.BodyType = BodyType.Dynamic;
@@ -85,6 +86,21 @@ namespace FarseerPhysics.TestBed.Tests
                 joint.LowerLimit = -10.0f;
                 joint.UpperLimit = 20.0f;
                 joint.LimitEnabled = true;
+            }
+
+            // Pulley joint
+            {
+                Body body1 = BodyFactory.CreateRectangle(World, 2, 4, 5, new Vector2(-10.0f, 16.0f));
+                body1.BodyType = BodyType.Dynamic;
+
+                Body body2 = BodyFactory.CreateRectangle(World, 2, 4, 5, new Vector2(10.0f, 16.0f));
+                body2.BodyType = BodyType.Dynamic;
+
+                Vector2 anchor1 = new Vector2(0, 2.0f);
+                Vector2 anchor2 = new Vector2(0, 2.0f);
+                Vector2 worldAnchor1 = new Vector2(-10.0f, 16.0f + 2.0f + 4.0f);
+                Vector2 worldAnchor2 = new Vector2(10.0f, 16.0f + 2.0f + 12.0f);
+                JointFactory.CreatePulleyJoint(World, body1, body2, worldAnchor1, worldAnchor2, anchor1, anchor2, 1.5f);
             }
         }
 

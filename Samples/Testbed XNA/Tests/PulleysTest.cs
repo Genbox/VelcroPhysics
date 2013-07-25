@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 anchor2 = new Vector2(10.0f, Y + B);
                 Vector2 groundAnchor1 = new Vector2(-10.0f, Y + B + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, Y + B + L);
-                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 1.5f);
+                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 1.5f, true);
                 World.AddJoint(_joint1);
             }
         }
@@ -76,7 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
             float ratio = _joint1.Ratio;
             float l = _joint1.LengthA + ratio * _joint1.LengthB;
             DrawString(string.Format("L1 + {0:n} * L2 = {1:n}", ratio, l));
-            
+
         }
 
         internal static Test Create()

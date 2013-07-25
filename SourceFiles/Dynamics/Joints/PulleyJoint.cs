@@ -51,26 +51,10 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class PulleyJoint : Joint
     {
-        /// <summary>
-        /// Get the first ground anchor.
-        /// </summary>
-        /// <value></value>
-        public Vector2 GroundAnchorA;
-
-        /// <summary>
-        /// Get the second ground anchor.
-        /// </summary>
-        /// <value></value>
-        public Vector2 GroundAnchorB;
-
         // Solver shared
-        public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
-
         private float _impulse;
         private float _limitImpulse1;
         private float _limitImpulse2;
-        private float _constant;
 
         // Solver temp
         private int _indexA;
@@ -98,48 +82,67 @@ namespace FarseerPhysics.Dynamics.Joints
         /// two dynamic body anchor points, max lengths for each side,
         /// and a pulley ratio.
         /// </summary>
-        /// <param name="bA">The first body.</param>
-        /// <param name="bB">The second body.</param>
-        /// <param name="groundA">The ground anchor for the first body.</param>
-        /// <param name="groundB">The ground anchor for the second body.</param>
+        /// <param name="bodyA">The first body.</param>
+        /// <param name="bodyB">The second body.</param>
+        /// <param name="worldAnchorA">The ground anchor for the first body.</param>
+        /// <param name="worldAnchorB">The ground anchor for the second body.</param>
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second body anchor.</param>
         /// <param name="ratio">The ratio.</param>
-        public PulleyJoint(Body bA, Body bB, Vector2 groundA, Vector2 groundB, Vector2 anchorA, Vector2 anchorB, float ratio)
-            : base(bA, bB)
+        public PulleyJoint(Body bodyA, Body bodyB, Vector2 worldAnchorA, Vector2 worldAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio, bool useWorldCoordinates = false)
+            : base(bodyA, bodyB)
         {
             JointType = JointType.Pulley;
 
-            GroundAnchorA = groundA;
-            GroundAnchorB = groundB;
-            LocalAnchorA = BodyA.GetLocalPoint(anchorA);
-            LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+            WorldAnchorA = worldAnchorA;
+            WorldAnchorB = worldAnchorB;
+
+            if (useWorldCoordinates)
+            {
+                LocalAnchorA = BodyA.GetLocalPoint(anchorA);
+                LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+
+                Vector2 dA = anchorA - worldAnchorA;
+                LengthA = dA.Length();
+                Vector2 dB = anchorB - worldAnchorB;
+                LengthB = dB.Length();
+            }
+            else
+            {
+                LocalAnchorA = anchorA;
+                LocalAnchorB = anchorB;
+
+                Vector2 dA = anchorA - BodyA.GetLocalPoint(worldAnchorA);
+                LengthA = dA.Length();
+                Vector2 dB = anchorB - BodyB.GetLocalPoint(worldAnchorB);
+                LengthB = dB.Length();
+            }
 
             Debug.Assert(ratio != 0.0f);
             Debug.Assert(ratio > Settings.Epsilon);
 
             Ratio = ratio;
-
-            Vector2 dA = anchorA - groundA;
-            LengthA = dA.Length();
-            Vector2 dB = anchorB - groundB;
-            LengthB = dB.Length();
-
-            _constant = LengthA + ratio * LengthB;
-
+            Constant = LengthA + ratio * LengthB;
             _impulse = 0.0f;
         }
 
-        public override Vector2 WorldAnchorA
-        {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-        }
+        public float Constant { get; internal set; }
 
-        public override Vector2 WorldAnchorB
-        {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
-        }
+        public Vector2 LocalAnchorA { get; set; }
+
+        public Vector2 LocalAnchorB { get; set; }
+
+        /// <summary>
+        /// Get the first ground anchor.
+        /// </summary>
+        /// <value></value>
+        public override sealed Vector2 WorldAnchorA { get; set; }
+
+        /// <summary>
+        /// Get the second ground anchor.
+        /// </summary>
+        /// <value></value>
+        public override sealed Vector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Get the current length of the segment attached to body1.
@@ -158,7 +161,7 @@ namespace FarseerPhysics.Dynamics.Joints
             get
             {
                 Vector2 p = BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 s = GroundAnchorA;
+                Vector2 s = WorldAnchorA;
                 Vector2 d = p - s;
                 return d.Length();
             }
@@ -169,7 +172,7 @@ namespace FarseerPhysics.Dynamics.Joints
             get
             {
                 Vector2 p = BodyB.GetWorldPoint(LocalAnchorB);
-                Vector2 s = GroundAnchorB;
+                Vector2 s = WorldAnchorB;
                 Vector2 d = p - s;
                 return d.Length();
             }
@@ -219,8 +222,8 @@ namespace FarseerPhysics.Dynamics.Joints
             _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
 
             // Get the pulley axes.
-            _uA = cA + _rA - GroundAnchorA;
-            _uB = cB + _rB - GroundAnchorB;
+            _uA = cA + _rA - WorldAnchorA;
+            _uB = cB + _rB - WorldAnchorB;
 
             float lengthA = _uA.Length();
             float lengthB = _uB.Length();
@@ -322,8 +325,8 @@ namespace FarseerPhysics.Dynamics.Joints
             Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
 
             // Get the pulley axes.
-            Vector2 uA = cA + rA - GroundAnchorA;
-            Vector2 uB = cB + rB - GroundAnchorB;
+            Vector2 uA = cA + rA - WorldAnchorA;
+            Vector2 uB = cB + rB - WorldAnchorB;
 
             float lengthA = uA.Length();
             float lengthB = uB.Length();
@@ -360,7 +363,7 @@ namespace FarseerPhysics.Dynamics.Joints
                 mass = 1.0f / mass;
             }
 
-            float C = _constant - lengthA - Ratio * lengthB;
+            float C = Constant - lengthA - Ratio * lengthB;
             float linearError = Math.Abs(C);
 
             float impulse = -mass * C;

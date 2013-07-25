@@ -190,6 +190,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override Vector2 WorldAnchorA
         {
             get { return _bodyA.GetWorldPoint(_localAnchorA); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         public override Vector2 WorldAnchorB
