@@ -246,11 +246,9 @@ namespace FarseerPhysics.Factories
 
         #region Pulley Joint
 
-        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA,
-                                                    Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
+        public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
         {
-            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB,
-                                                      ratio);
+            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
             world.AddJoint(pulleyJoint);
             return pulleyJoint;
         }

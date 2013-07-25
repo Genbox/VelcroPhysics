@@ -152,7 +152,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Get the anchor point on bodyA in world coordinates.
         /// </summary>
         /// <value></value>
-        public abstract Vector2 WorldAnchorA { get; }
+        public abstract Vector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the anchor point on bodyB in world coordinates.

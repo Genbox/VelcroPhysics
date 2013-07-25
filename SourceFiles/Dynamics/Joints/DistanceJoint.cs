@@ -134,6 +134,7 @@ namespace FarseerPhysics.Dynamics.Joints
         public override sealed Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         public override sealed Vector2 WorldAnchorB
