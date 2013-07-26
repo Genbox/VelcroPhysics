@@ -160,8 +160,8 @@ namespace FarseerPhysics.Dynamics
 
             for (int i = 0; i < JointCount; ++i)
             {
-                //if (_joints[i].Enabled) //TODO: Activate again
-                _joints[i].InitVelocityConstraints(ref solverData);
+                if (_joints[i].Enabled)
+                    _joints[i].InitVelocityConstraints(ref solverData);
             }
 
             if (Settings.EnableDiagnostics)
@@ -244,8 +244,9 @@ namespace FarseerPhysics.Dynamics
                 for (int j = 0; j < JointCount; ++j)
                 {
                     Joint joint = _joints[j];
-                    //if (!joint.Enabled) //TODO: Enable again
-                    //    continue;
+
+                    if (!joint.Enabled)
+                        continue;
 
                     bool jointOkay = joint.SolvePositionConstraints(ref solverData);
                     jointsOkay = jointsOkay && jointOkay;
