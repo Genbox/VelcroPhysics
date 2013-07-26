@@ -76,12 +76,8 @@ namespace FarseerPhysics.Samples.Demos
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsNewButtonPress(Buttons.A) ||
-                input.IsNewMouseButtonPress(MouseButtons.RightButton) ||
-                input.IsNewKeyPress(Keys.Space))
-            {
+            if (input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.RightButton) || input.IsNewKeyPress(Keys.Space))
                 _walker.Reverse();
-            }
 
             base.HandleInput(input, gameTime);
         }
@@ -96,7 +92,6 @@ namespace FarseerPhysics.Samples.Demos
             Sprites.End();
 
             _walker.Draw(Sprites, Lines, Camera);
-
             _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);

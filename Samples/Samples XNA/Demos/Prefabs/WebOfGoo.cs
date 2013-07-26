@@ -1,6 +1,4 @@
-﻿#region Using System
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
@@ -9,19 +7,11 @@ using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-#endregion
-#region Using XNA
-
-#endregion
-#region Using Farseer
-
-#endregion
-
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
     public class WebOfGoo
     {
-        private const float Breakpoint = 10f;
+        private const float Breakpoint = 100f;
 
         private List<List<Body>> _ringBodys;
         private List<DistanceJoint> _ringJoints;
@@ -52,7 +42,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     Body current = BodyFactory.CreateCircle(world, radius, 0.2f, vertices[j]);
                     current.BodyType = BodyType.Dynamic;
 
-                    DistanceJoint joint = new DistanceJoint(previous, current, Vector2.Zero, Vector2.Zero, false);
+                    DistanceJoint joint = new DistanceJoint(previous, current, Vector2.Zero, Vector2.Zero);
                     joint.Frequency = 4.0f;
                     joint.DampingRatio = 0.5f;
                     joint.Breakpoint = Breakpoint;
@@ -64,7 +54,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 }
 
                 //Connect the first and the last goo
-                DistanceJoint jointClose = new DistanceJoint(bodies[0], bodies[bodies.Count - 1], Vector2.Zero, Vector2.Zero, false);
+                DistanceJoint jointClose = new DistanceJoint(bodies[0], bodies[bodies.Count - 1], Vector2.Zero, Vector2.Zero);
                 jointClose.Frequency = 4.0f;
                 jointClose.DampingRatio = 0.5f;
                 jointClose.Breakpoint = Breakpoint;
@@ -84,7 +74,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             //Attach the outer ring to the anchor
             for (int i = 0; i < _ringBodys[rings - 2].Count; i++)
             {
-                DistanceJoint joint = new DistanceJoint(anchor, _ringBodys[rings - 2][i], frame[i], _ringBodys[rings - 2][i].Position);
+                DistanceJoint joint = new DistanceJoint(anchor, _ringBodys[rings - 2][i], frame[i], _ringBodys[rings - 2][i].Position, true);
                 joint.Frequency = 8.0f;
                 joint.DampingRatio = 0.5f;
                 joint.Breakpoint = Breakpoint;
@@ -97,7 +87,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             {
                 for (int j = 0; j < sides; j++)
                 {
-                    DistanceJoint joint = new DistanceJoint(_ringBodys[i - 1][j], _ringBodys[i][j], Vector2.Zero, Vector2.Zero, false);
+                    DistanceJoint joint = new DistanceJoint(_ringBodys[i - 1][j], _ringBodys[i][j], Vector2.Zero, Vector2.Zero);
                     joint.Frequency = 4.0f;
                     joint.DampingRatio = 0.5f;
                     joint.Breakpoint = Breakpoint;
@@ -112,7 +102,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         public void Draw(SpriteBatch batch)
         {
-            foreach (Joint joint in _ringJoints)
+            foreach (DistanceJoint joint in _ringJoints)
             {
                 if (joint.Enabled)
                 {

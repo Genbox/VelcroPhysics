@@ -60,13 +60,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
             _optionEntries.Add(new OptionEntry("Debug draw contact points", (PhysicsDemoScreen.Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints));
             _optionEntries.Add(new OptionEntry("Debug draw contact normals", (PhysicsDemoScreen.Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals));
             _optionEntries.Add(new OptionEntry("Debug draw controllers", (PhysicsDemoScreen.Flags & DebugViewFlags.Controllers) == DebugViewFlags.Controllers));
-            _optionEntries.Add(new OptionEntry("Play sound effects", ContentWrapper.SoundVolume == 100 ? true : false));
+            _optionEntries.Add(new OptionEntry("Play sound effects", ContentWrapper.SoundVolume == 100));
 
             for (int i = 0; i < _optionEntries.Count; i++)
             {
                 _optionEntrySize.X = Math.Max(_optionEntrySize.X, _optionEntries[i].Size.X);
                 _optionEntrySize.Y = Math.Max(_optionEntrySize.Y, _optionEntries[i].Size.Y);
             }
+
             _optionEntrySize.X += 20f + _optionEntrySize.Y;
             _optionTextOffset = new Vector2(-_optionEntrySize.Y / 2f, 0f);
             _optionCheckOffset = new Vector2(_optionEntrySize.X - _optionEntrySize.Y, 0f);
@@ -175,9 +176,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             }
 
             if (input.IsScreenExit())
-            {
                 ExitScreen();
-            }
         }
 
         /// <summary>
@@ -208,20 +207,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
             Quads.Begin();
             foreach (OptionEntry entry in _optionEntries)
             {
-                Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true,
-                             ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
-                Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true,
-                             ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
+                Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true, ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
+                Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true, ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
             }
             Quads.End();
 
             Sprites.Begin();
             foreach (OptionEntry entry in _optionEntries)
             {
-                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _optionTextOffset, ContentWrapper.Black * TransitionAlpha,
-                                   0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
-                Sprites.DrawString(_font, entry.Text, entry.Position + _optionTextOffset, entry.TextColor * TransitionAlpha,
-                                   0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _optionTextOffset, ContentWrapper.Black * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                Sprites.DrawString(_font, entry.Text, entry.Position + _optionTextOffset, entry.TextColor * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.Draw(_checkmark, entry.Position - _optionEntrySize / 2f + _optionCheckOffset, Color.White * entry.CheckedFade);
             }
             Sprites.End();
