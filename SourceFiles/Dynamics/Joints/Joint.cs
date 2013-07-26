@@ -94,9 +94,14 @@ namespace FarseerPhysics.Dynamics.Joints
     {
         /// <summary>
         /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
-        /// The default value is float.MaxValue
+        /// The default value is float.MaxValue, which means it never breaks.
         /// </summary>
         public float Breakpoint = float.MaxValue;
+
+        /// <summary>
+        /// Indicate if this join is enabled or not. Disabling a joint
+        /// means it is still in the simulation, but inactive.
+        /// </summary>
         public bool Enabled = true;
 
         internal JointEdge EdgeA = new JointEdge();
@@ -107,11 +112,12 @@ namespace FarseerPhysics.Dynamics.Joints
         {
         }
 
-        protected Joint(Body body, Body bodyB)
+        protected Joint(Body bodyA, Body bodyB)
         {
-            Debug.Assert(body != bodyB);
+            //Can't connect a joint to the same body twice.
+            Debug.Assert(bodyA != bodyB);
 
-            BodyA = body;
+            BodyA = bodyA;
             BodyB = bodyB;
 
             //Connected bodies should not collide by default
@@ -138,25 +144,23 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the first body attached to this joint.
         /// </summary>
-        /// <value></value>
         public Body BodyA { get; set; }
 
         /// <summary>
         /// Get the second body attached to this joint.
         /// </summary>
-        /// <value></value>
         public Body BodyB { get; set; }
 
         /// <summary>
         /// Get the anchor point on bodyA in world coordinates.
+        /// On some joints, this value indicate the anchor point within the world.
         /// </summary>
-        /// <value></value>
         public abstract Vector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the anchor point on bodyB in world coordinates.
+        /// On some joints, this value indicate the anchor point within the world.
         /// </summary>
-        /// <value></value>
         public abstract Vector2 WorldAnchorB { get; set; }
 
         /// <summary>
@@ -178,21 +182,19 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the reaction force on bodyB at the joint anchor in Newtons.
         /// </summary>
-        /// <param name="invDt">The inv_dt.</param>
-        /// <returns></returns>
+        /// <param name="invDt">The inverse delta time.</param>
         public abstract Vector2 GetReactionForce(float invDt);
 
         /// <summary>
         /// Get the reaction torque on bodyB in N*m.
         /// </summary>
-        /// <param name="invDt">The inv_dt.</param>
-        /// <returns></returns>
+        /// <param name="invDt">The inverse delta time.</param>
         public abstract float GetReactionTorque(float invDt);
 
         protected void WakeBodies()
         {
-            //if (BodyA != null)
-                //BodyA.Awake = true;
+            if (BodyA != null)
+                BodyA.Awake = true;
 
             if (BodyB != null)
                 BodyB.Awake = true;
@@ -214,19 +216,20 @@ namespace FarseerPhysics.Dynamics.Joints
 
         internal abstract void InitVelocityConstraints(ref SolverData data);
 
-        internal void Validate(float invDT)
+        internal void Validate(float invDt)
         {
             if (!Enabled)
                 return;
 
-            float jointError = GetReactionForce(invDT).Length();
-            if (Math.Abs(jointError) <= Breakpoint)
+            float jointErrorSquared = GetReactionForce(invDt).LengthSquared();
+
+            if (Math.Abs(jointErrorSquared) <= Breakpoint * Breakpoint)
                 return;
 
             Enabled = false;
 
             if (Broke != null)
-                Broke(this, jointError);
+                Broke(this, (float)Math.Sqrt(jointErrorSquared));
         }
 
         internal abstract void SolveVelocityConstraints(ref SolverData data);
