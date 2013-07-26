@@ -1,3 +1,4 @@
+using System;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -143,6 +144,20 @@ namespace FarseerPhysics.TestBed.Tests
             //Rope joint
             {
                 LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-20, 10), 0.1f, 0.5f, true, false, 10, 0.1f, true);
+            }
+
+            //Angle joint
+            {
+                Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
+                fA.BodyType = BodyType.Dynamic;
+                fA.Rotation = (float)(Math.PI / 3);
+
+                Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
+                fB.BodyType = BodyType.Dynamic;
+
+                AngleJoint joint = new AngleJoint(fA, fB);
+                joint.TargetAngle = (float)Math.PI / 2;
+                World.AddJoint(joint);
             }
         }
 
