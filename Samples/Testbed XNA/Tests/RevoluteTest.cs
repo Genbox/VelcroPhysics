@@ -39,25 +39,25 @@ namespace FarseerPhysics.TestBed.Tests
             //Ground
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            {
-                Body bodyB = BodyFactory.CreateCircle(World, 0.5f, 5f, new Vector2(-10.0f, 20.0f));
-                bodyB.BodyType = BodyType.Dynamic;
+            //{
+            //    Body bodyB = BodyFactory.CreateCircle(World, 0.5f, 5f, new Vector2(-10.0f, 20.0f));
+            //    bodyB.BodyType = BodyType.Dynamic;
 
-                const float w = 100.0f;
-                bodyB.AngularVelocity = w;
-                bodyB.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
+            //    const float w = 100.0f;
+            //    bodyB.AngularVelocity = w;
+            //    bodyB.LinearVelocity = new Vector2(-8.0f * w, 0.0f);
 
-                _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f), true);
-                _joint.MotorSpeed = 1.0f * Settings.Pi;
-                _joint.MaxMotorTorque = 10000.0f;
-                _joint.MotorEnabled = false;
-                _joint.LowerLimit = -0.25f * Settings.Pi;
-                _joint.UpperLimit = 0.5f * Settings.Pi;
-                _joint.LimitEnabled = true;
-                _joint.CollideConnected = true;
+            //    _joint = new RevoluteJoint(ground, bodyB, new Vector2(-10.0f, 12.0f), true);
+            //    _joint.MotorSpeed = 1.0f * Settings.Pi;
+            //    _joint.MaxMotorTorque = 10000.0f;
+            //    _joint.MotorEnabled = false;
+            //    _joint.LowerLimit = -0.25f * Settings.Pi;
+            //    _joint.UpperLimit = 0.5f * Settings.Pi;
+            //    _joint.LimitEnabled = true;
+            //    _joint.CollideConnected = true;
 
-                World.AddJoint(_joint);
-            }
+            //    World.AddJoint(_joint);
+            //}
 
             {
                 Body ball = BodyFactory.CreateCircle(World, 3.0f, 5.0f, new Vector2(5.0f, 30.0f));
