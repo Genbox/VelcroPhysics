@@ -142,11 +142,10 @@ namespace FarseerPhysics.Samples.Demos
 
                 _board.CreateFixture(box);
 
-                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(_ground, _board, Vector2.Zero);
+                RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(World, _ground, _board, Vector2.Zero);
                 teeterAxis.LowerLimit = -8.0f * Settings.Pi / 180.0f;
                 teeterAxis.UpperLimit = 8.0f * Settings.Pi / 180.0f;
                 teeterAxis.LimitEnabled = true;
-                World.AddJoint(teeterAxis);
 
                 _board.ApplyAngularImpulse(-100.0f);
             }

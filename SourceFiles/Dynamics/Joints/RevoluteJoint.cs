@@ -100,7 +100,6 @@ namespace FarseerPhysics.Dynamics.Joints
             }
             else
             {
-                //Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchorA)); //TODO: use
                 LocalAnchorA = anchorA;
                 LocalAnchorB = anchorB;
             }

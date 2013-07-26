@@ -100,11 +100,10 @@ namespace FarseerPhysics.TestBed.Tests
                 box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
                 body.CreateFixture(box);
 
-                RevoluteJoint jd = JointFactory.CreateRevoluteJoint(ground, body, Vector2.Zero);
+                RevoluteJoint jd = JointFactory.CreateRevoluteJoint(World, ground, body, Vector2.Zero);
                 jd.LowerLimit = -8.0f * Settings.Pi / 180.0f;
                 jd.UpperLimit = 8.0f * Settings.Pi / 180.0f;
                 jd.LimitEnabled = true;
-                World.AddJoint(jd);
 
                 body.ApplyAngularImpulse(100.0f);
             }

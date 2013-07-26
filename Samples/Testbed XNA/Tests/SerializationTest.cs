@@ -102,6 +102,21 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 worldAnchor2 = new Vector2(10.0f, 16.0f + 2.0f + 12.0f);
                 JointFactory.CreatePulleyJoint(World, body1, body2, worldAnchor1, worldAnchor2, anchor1, anchor2, 1.5f);
             }
+
+            //Revolute joint
+            {
+                Body ball = BodyFactory.CreateCircle(World, 3.0f, 5.0f, new Vector2(5.0f, 30.0f));
+                ball.BodyType = BodyType.Dynamic;
+
+                Body polygonBody = BodyFactory.CreateRectangle(World, 20, 0.4f, 2, new Vector2(10, 10));
+                polygonBody.BodyType = BodyType.Dynamic;
+                polygonBody.IsBullet = true;
+
+                RevoluteJoint joint = JointFactory.CreateRevoluteJoint(World, ground, polygonBody, new Vector2(10, 0));
+                joint.LowerLimit = -0.25f * Settings.Pi;
+                joint.UpperLimit = 0.0f * Settings.Pi;
+                joint.LimitEnabled = true;
+            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
