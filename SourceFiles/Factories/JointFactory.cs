@@ -54,39 +54,9 @@ namespace FarseerPhysics.Factories
 
         #region Weld Joint
 
-        /// <summary>
-        /// Creates a weld joint
-        /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="worldAnchor">World space coordinates of weld joint</param>
-        /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(Body bodyA, Body bodyB, Vector2 worldAnchor)
+        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
         {
-            WeldJoint joint = new WeldJoint(bodyA, bodyB, bodyA.GetLocalPoint(worldAnchor),
-                                            bodyB.GetLocalPoint(worldAnchor));
-            return joint;
-        }
-
-        /// <summary>
-        /// Creates a weld joint and adds it to the world
-        /// </summary>
-        /// <param name="world"></param>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="worldAnchor">World space coordinates of weld joint</param>
-        /// <returns></returns>
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 worldAnchor)
-        {
-            WeldJoint joint = CreateWeldJoint(bodyA, bodyB, worldAnchor);
-            world.AddJoint(joint);
-            return joint;
-        }
-
-        public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorA,
-                                                Vector2 localAnchorB)
-        {
-            WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, localAnchorA, localAnchorB);
+            WeldJoint weldJoint = new WeldJoint(bodyA, bodyB, anchorA, anchorB);
             world.AddJoint(weldJoint);
             return weldJoint;
         }
