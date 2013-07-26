@@ -70,12 +70,21 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Rope;
         }
 
-        public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB)
+        public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Rope;
-            LocalAnchorA = localAnchorA;
-            LocalAnchorB = localAnchorB;
+
+            if (useWorldCoordinates)
+            {
+                LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
+                LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
+            }
+            else
+            {
+                LocalAnchorA = localAnchorA;
+                LocalAnchorB = localAnchorB;
+            }
 
             //FPE feature: Setting default MaxLength
             Vector2 d = WorldAnchorB - WorldAnchorA;

@@ -52,6 +52,21 @@ namespace FarseerPhysics.Factories
 
         #endregion
 
+
+        #region Rope Joint
+
+        /// <summary>
+        /// Creates a revolute joint and adds it to the world
+        /// </summary>
+        public static RopeJoint CreateRopeJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
+        {
+            RopeJoint ropeJoint = new RopeJoint(bodyA, bodyB, anchorA, anchorB);
+            world.AddJoint(ropeJoint);
+            return ropeJoint;
+        }
+
+        #endregion
+
         #region Weld Joint
 
         public static WeldJoint CreateWeldJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)

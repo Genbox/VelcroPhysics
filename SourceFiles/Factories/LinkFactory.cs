@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -21,9 +22,10 @@ namespace FarseerPhysics.Factories
         /// <param name="numberOfLinks">The number of links.</param>
         /// <param name="linkDensity">The link density.</param>
         /// <returns></returns>
-        public static Path CreateChain(World world, Vector2 start, Vector2 end, float linkWidth, float linkHeight,
-                                       bool fixStart, bool fixEnd, int numberOfLinks, float linkDensity)
+        public static Path CreateChain(World world, Vector2 start, Vector2 end, float linkWidth, float linkHeight, bool fixStart, bool fixEnd, int numberOfLinks, float linkDensity, bool attachRopeJoint)
         {
+            Debug.Assert(numberOfLinks >= 2);
+
             //Chain start / end
             Path path = new Path();
             path.Add(start);
@@ -35,6 +37,7 @@ namespace FarseerPhysics.Factories
             //Use PathManager to create all the chainlinks based on the chainlink created before.
             List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(world, path, shape, BodyType.Dynamic, numberOfLinks);
 
+            //TODO
             //if (fixStart)
             //{
             //    //Fix the first chainlink to the world
@@ -51,9 +54,10 @@ namespace FarseerPhysics.Factories
             //}
 
             //Attach all the chainlinks together with a revolute joint
-            PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new Vector2(0, -linkHeight),
-                                                      new Vector2(0, linkHeight),
-                                                      false, false);
+            PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new Vector2(0, -linkHeight), new Vector2(0, linkHeight), false, false);
+
+            if (attachRopeJoint)
+                JointFactory.CreateRopeJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], Vector2.Zero, Vector2.Zero);
 
             return (path);
         }
