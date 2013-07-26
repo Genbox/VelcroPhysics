@@ -56,7 +56,7 @@ namespace FarseerPhysics.Factories
         #region Rope Joint
 
         /// <summary>
-        /// Creates a revolute joint and adds it to the world
+        /// Creates a rope joint and adds it to the world
         /// </summary>
         public static RopeJoint CreateRopeJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB)
         {
