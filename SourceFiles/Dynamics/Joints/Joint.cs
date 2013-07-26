@@ -42,7 +42,6 @@ namespace FarseerPhysics.Dynamics.Joints
         Motor,
 
         //FPE note: From here on and down, it is only FPE joints
-        Slider,
         Angle,
         FixedMouse,
         FixedRevolute,
