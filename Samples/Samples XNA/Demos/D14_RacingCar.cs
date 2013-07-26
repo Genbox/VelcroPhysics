@@ -233,7 +233,7 @@ namespace FarseerPhysics.Samples.Demos
                 _wheelFront.CreateFixture(new CircleShape(0.5f, 1f));
 
                 Vector2 axis = new Vector2(0.0f, -1.2f);
-                _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis);
+                _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis, true);
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
                 _springBack.MotorEnabled = true;
@@ -241,7 +241,7 @@ namespace FarseerPhysics.Samples.Demos
                 _springBack.DampingRatio = _zeta;
                 World.AddJoint(_springBack);
 
-                _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis);
+                _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis, true);
                 _springFront.MotorSpeed = 0.0f;
                 _springFront.MaxMotorTorque = 10.0f;
                 _springFront.MotorEnabled = false;
@@ -250,7 +250,6 @@ namespace FarseerPhysics.Samples.Demos
                 World.AddJoint(_springFront);
 
                 // GFX
-
                 _carBody = new Sprite(ContentWrapper.GetTexture("car"), ContentWrapper.CalculateOrigin(_car));
                 _wheel = new Sprite(ContentWrapper.GetTexture("wheel"));
             }
@@ -264,16 +263,13 @@ namespace FarseerPhysics.Samples.Demos
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            _springBack.MotorSpeed = Math.Sign(_acceleration) *
-                                     MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
+            _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
+
             if (Math.Abs(_springBack.MotorSpeed) < _maxSpeed * 0.06f)
-            {
                 _springBack.MotorEnabled = false;
-            }
             else
-            {
                 _springBack.MotorEnabled = true;
-            }
+
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 

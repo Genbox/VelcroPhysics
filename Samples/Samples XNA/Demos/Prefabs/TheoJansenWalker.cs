@@ -1,6 +1,4 @@
-﻿#region Using System
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -10,14 +8,6 @@ using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
-#region Using XNA
-
-#endregion
-#region Using Farseer
-
-#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
@@ -107,12 +97,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             // GFX
             Vector2[] points = { 
-        new Vector2(-5.4f, 6.1f),
-        new Vector2(-7.2f, 1.2f),
-        new Vector2(-4.3f, 1.9f),
-        new Vector2(-2.9f, -0.7f),
-        new Vector2(0.6f, -2.9f)
-      };
+                                new Vector2(-5.4f, 6.1f),
+                                new Vector2(-7.2f, 1.2f),
+                                new Vector2(-4.3f, 1.9f),
+                                new Vector2(-2.9f, -0.7f),
+                                new Vector2(0.6f, -2.9f)
+                               };
 
             _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, ContentWrapper.Black));
             _leftShoulder.Origin = ContentWrapper.CalculateOrigin(_leftShoulders[0]);
@@ -135,13 +125,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private void CreateLeg(World world, float direction, Vector2 wheelAnchor, int index)
         {
             Vector2[] points = {
-        new Vector2(5.4f * direction, 6.1f),
-        new Vector2(7.2f * direction, 1.2f),
-        new Vector2(4.3f * direction, 1.9f),
-        new Vector2(3.1f * direction, -0.8f),
-        new Vector2(6.0f * direction, -1.5f),
-        new Vector2(2.5f * direction, -3.7f)
-      };
+                                new Vector2(5.4f * direction, 6.1f),
+                                new Vector2(7.2f * direction, 1.2f),
+                                new Vector2(4.3f * direction, 1.9f),
+                                new Vector2(3.1f * direction, -0.8f),
+                                new Vector2(6.0f * direction, -1.5f),
+                                new Vector2(2.5f * direction, -3.7f)
+                               };
 
             PolygonShape legPolygon = new PolygonShape(1f);
             PolygonShape shoulderPolygon = new PolygonShape(1f);
@@ -151,6 +141,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 legPolygon.Vertices = new Vertices(new[] { points[0], points[1], points[2] });
                 shoulderPolygon.Vertices = new Vertices(new[] { Vector2.Zero, points[4] - points[3], points[5] - points[3] });
             }
+
             if (direction > 0f)
             {
                 legPolygon.Vertices = new Vertices(new[] { points[0], points[2], points[1] });
@@ -192,35 +183,34 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             // Using a soft distancejoint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            DistanceJoint djd = new DistanceJoint(leg, shoulder, points[1] + _position, points[4] + _position);
+            DistanceJoint djd = new DistanceJoint(leg, shoulder, points[1] + _position, points[4] + _position, true);
             djd.DampingRatio = 0.5f;
             djd.Frequency = 10f;
 
             world.AddJoint(djd);
             _walkerJoints.Add(djd);
 
-            DistanceJoint djd2 = new DistanceJoint(leg, shoulder, points[2] + _position, points[3] + _position);
+            DistanceJoint djd2 = new DistanceJoint(leg, shoulder, points[2] + _position, points[3] + _position, true);
             djd2.DampingRatio = 0.5f;
             djd2.Frequency = 10f;
 
             world.AddJoint(djd2);
             _walkerJoints.Add(djd2);
 
-            DistanceJoint djd3 = new DistanceJoint(leg, _wheel, points[2] + _position, wheelAnchor + _position);
+            DistanceJoint djd3 = new DistanceJoint(leg, _wheel, points[2] + _position, wheelAnchor + _position, true);
             djd3.DampingRatio = 0.5f;
             djd3.Frequency = 10f;
 
             world.AddJoint(djd3);
             _walkerJoints.Add(djd3);
 
-            DistanceJoint djd4 = new DistanceJoint(shoulder, _wheel, points[5] + _position, wheelAnchor + _position);
+            DistanceJoint djd4 = new DistanceJoint(shoulder, _wheel, points[5] + _position, wheelAnchor + _position, true);
             djd4.DampingRatio = 0.5f;
             djd4.Frequency = 10f;
 
             world.AddJoint(djd4);
             _walkerJoints.Add(djd4);
 
-            Vector2 anchor = points[3] - new Vector2(0f, -0.8f);
             RevoluteJoint rjd = new RevoluteJoint(shoulder, _chassis, points[3] + _position, true);
             world.AddJoint(rjd);
         }
