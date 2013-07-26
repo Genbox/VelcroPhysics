@@ -117,6 +117,28 @@ namespace FarseerPhysics.TestBed.Tests
                 joint.UpperLimit = 0.0f * Settings.Pi;
                 joint.LimitEnabled = true;
             }
+
+            //Weld joint
+            {
+                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
+
+                Body prevBody = ground;
+                for (int i = 0; i < 10; ++i)
+                {
+                    Body body = BodyFactory.CreateBody(World);
+                    body.BodyType = BodyType.Dynamic;
+                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    body.CreateFixture(shape);
+
+                    Vector2 anchor = new Vector2(0.5f, 0);
+
+                    if (i == 0)
+                        anchor = new Vector2(-15f, 5);
+
+                    JointFactory.CreateWeldJoint(World, prevBody, body, anchor, new Vector2(-0.5f, 0));
+                    prevBody = body;
+                }
+            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
