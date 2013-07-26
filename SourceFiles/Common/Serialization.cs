@@ -273,17 +273,6 @@ namespace FarseerPhysics.Common
                         WriteElement("TargetAngle", angleJoint.TargetAngle);
                     }
                     break;
-                case JointType.Slider:
-                    {
-                        SliderJoint sliderJoint = (SliderJoint)joint;
-                        WriteElement("DampingRatio", sliderJoint.DampingRatio);
-                        WriteElement("FrequencyHz", sliderJoint.Frequency);
-                        WriteElement("MaxLength", sliderJoint.MaxLength);
-                        WriteElement("MinLength", sliderJoint.MinLength);
-                        WriteElement("LocalAnchorA", sliderJoint.LocalAnchorA);
-                        WriteElement("LocalAnchorB", sliderJoint.LocalAnchorB);
-                    }
-                    break;
                 default:
                     throw new Exception("Joint not supported");
             }
@@ -779,9 +768,6 @@ namespace FarseerPhysics.Common
                             case JointType.Angle:
                                 joint = new AngleJoint();
                                 break;
-                            case JointType.Slider:
-                                joint = new SliderJoint();
-                                break;
                             case JointType.Motor:
                                 joint = new MotorJoint();
                                 break;
@@ -1023,31 +1009,6 @@ namespace FarseerPhysics.Common
                                                 break;
                                             case "targetangle":
                                                 ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
-                                                break;
-                                        }
-                                    }
-                                    break;
-                                case JointType.Slider:
-                                    {
-                                        switch (sn.Name.ToLower())
-                                        {
-                                            case "dampingratio":
-                                                ((SliderJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                                break;
-                                            case "frequencyhz":
-                                                ((SliderJoint)joint).Frequency = float.Parse(sn.Value);
-                                                break;
-                                            case "maxlength":
-                                                ((SliderJoint)joint).MaxLength = float.Parse(sn.Value);
-                                                break;
-                                            case "minlength":
-                                                ((SliderJoint)joint).MinLength = float.Parse(sn.Value);
-                                                break;
-                                            case "localanchora":
-                                                ((SliderJoint)joint).LocalAnchorA = ReadVector(sn);
-                                                break;
-                                            case "localanchorb":
-                                                ((SliderJoint)joint).LocalAnchorB = ReadVector(sn);
                                                 break;
                                         }
                                     }

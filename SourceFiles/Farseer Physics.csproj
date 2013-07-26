@@ -193,7 +193,6 @@
     <Compile Include="Dynamics\Joints\PulleyJoint.cs" />
     <Compile Include="Dynamics\Joints\RevoluteJoint.cs" />
     <Compile Include="Dynamics\Joints\RopeJoint.cs" />
-    <Compile Include="Dynamics\Joints\SliderJoint.cs" />
     <Compile Include="Dynamics\Joints\WeldJoint.cs" />
     <Compile Include="Dynamics\Joints\WheelJoint.cs" />
     <Compile Include="Dynamics\TimeStep.cs" />

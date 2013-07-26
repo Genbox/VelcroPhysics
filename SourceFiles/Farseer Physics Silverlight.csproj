@@ -480,10 +480,6 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="Dynamics\Joints\SliderJoint.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Dynamics\Joints\WeldJoint.cs">
       <SubType>
       </SubType>
