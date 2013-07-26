@@ -27,11 +27,9 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// A wheel joint. This joint provides two degrees of freedom: translation
-    /// along an axis fixed in bodyA and rotation in the plane. You can use a
-    /// joint limit to restrict the range of motion and a joint motor to drive
-    /// the rotation or to model rotational friction.
-    /// This joint is designed for vehicle suspensions.
+    /// A motor joint is used to control the relative motion
+    /// between two bodies. A typical usage is to control the movement
+    /// of a dynamic body with respect to the ground.
     /// </summary>
     public class MotorJoint : Joint
     {
@@ -42,7 +40,6 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _angularImpulse;
         private float _maxForce;
         private float _maxTorque;
-        private float _correctionFactor;
 
         // Solver temp
         private int _indexA;
@@ -65,19 +62,23 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Motor;
         }
 
-        public MotorJoint(Body bA, Body bB)
-            : base(bA, bB)
+        public MotorJoint(Body bodyA, Body bodyB, bool useWorldCoordinates = false)
+            : base(bodyA, bodyB)
         {
             JointType = JointType.Motor;
 
-            Vector2 xB = BodyA.Position;
-            _linearOffset = BodyA.GetLocalPoint(xB);
+            Vector2 xB = BodyB.Position;
+
+            if (useWorldCoordinates)
+                _linearOffset = BodyA.GetLocalPoint(xB);
+            else
+                _linearOffset = xB;
 
             //Defaults
             _angularOffset = 0.0f;
             _maxForce = 1.0f;
             _maxTorque = 1.0f;
-            _correctionFactor = 0.3f;
+            CorrectionFactor = 0.3f;
 
             float angleA = BodyA.Rotation;
             float angleB = BodyB.Rotation;
@@ -95,6 +96,8 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return BodyB.Position; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
+
+        public float CorrectionFactor { get; set; }
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
@@ -193,7 +196,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Solve angular friction
             {
-                float Cdot = wB - wA + inv_h * _correctionFactor * _angularError;
+                float Cdot = wB - wA + inv_h * CorrectionFactor * _angularError;
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
@@ -207,7 +210,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // Solve linear friction
             {
-                Vector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA) + inv_h * _correctionFactor * _linearError;
+                Vector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA) + inv_h * CorrectionFactor * _linearError;
 
                 Vector2 impulse = -MathUtils.Mul(ref _linearMass, ref Cdot);
                 Vector2 oldImpulse = _linearImpulse;
@@ -291,8 +294,7 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 if (value != _angularOffset)
                 {
-                    BodyA.Awake = true;
-                    BodyB.Awake = true;
+                    WakeBodies();
                     _angularOffset = value;
                 }
             }

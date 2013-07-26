@@ -273,6 +273,16 @@ namespace FarseerPhysics.Common
                         WriteElement("TargetAngle", angleJoint.TargetAngle);
                     }
                     break;
+                case JointType.Motor:
+                    {
+                        MotorJoint motorJoint = (MotorJoint)joint;
+                        WriteElement("AngularOffset", motorJoint.AngularOffset);
+                        WriteElement("LinearOffset", motorJoint.LinearOffset);
+                        WriteElement("MaxForce", motorJoint.MaxForce);
+                        WriteElement("MaxTorque", motorJoint.MaxTorque);
+                        WriteElement("CorrectionFactor", motorJoint.CorrectionFactor);
+                    }
+                    break;
                 default:
                     throw new Exception("Joint not supported");
             }
@@ -1014,7 +1024,24 @@ namespace FarseerPhysics.Common
                                     }
                                     break;
                                 case JointType.Motor:
-                                    joint = new MotorJoint();
+                                    switch (sn.Name.ToLower())
+                                    {
+                                        case "angularoffset":
+                                            ((MotorJoint)joint).AngularOffset = float.Parse(sn.Value);
+                                            break;
+                                        case "linearoffset":
+                                            ((MotorJoint)joint).LinearOffset = ReadVector(sn);
+                                            break;
+                                        case "maxforce":
+                                            ((MotorJoint)joint).MaxForce = float.Parse(sn.Value);
+                                            break;
+                                        case "maxtorque":
+                                            ((MotorJoint)joint).MaxTorque = float.Parse(sn.Value);
+                                            break;
+                                        case "correctionfactor":
+                                            ((MotorJoint)joint).CorrectionFactor = float.Parse(sn.Value);
+                                            break;
+                                    }
                                     break;
                             }
                         }
