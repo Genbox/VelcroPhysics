@@ -9,11 +9,22 @@ namespace FarseerPhysics.Factories
     /// </summary>
     public static class JointFactory
     {
+        #region Motor Joint
+
+        public static MotorJoint CreateMotorJoint(World world, Body bodyA, Body bodyB)
+        {
+            MotorJoint joint = new MotorJoint(bodyA, bodyB);
+            world.AddJoint(joint);
+            return joint;
+        }
+
+        #endregion
+
         #region Revolute Joint
 
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Vector2 localAnchorA, Body bodyB, Vector2 localAnchorB)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB)
         {
-            RevoluteJoint joint = new RevoluteJoint(bodyA, localAnchorA, bodyB, localAnchorB);
+            RevoluteJoint joint = new RevoluteJoint(bodyA, anchorA, bodyB, anchorB);
             world.AddJoint(joint);
             return joint;
         }
@@ -24,12 +35,12 @@ namespace FarseerPhysics.Factories
         /// <param name="world"></param>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
-        /// <param name="localAnchorB"></param>
+        /// <param name="anchorB"></param>
         /// <returns></returns>
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 localAnchorB)
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchorB)
         {
-            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(localAnchorB));
-            RevoluteJoint joint = new RevoluteJoint(bodyA, localanchorA, bodyB, localAnchorB);
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchorB));
+            RevoluteJoint joint = new RevoluteJoint(bodyA, localanchorA, bodyB, anchorB);
             world.AddJoint(joint);
             return joint;
         }

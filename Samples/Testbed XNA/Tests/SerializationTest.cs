@@ -12,7 +12,8 @@ namespace FarseerPhysics.TestBed.Tests
     public class SerializationTest : Test
     {
         private bool _save = true;
-        private double _time;
+        private float _time;
+        private MotorJoint _motorJoint;
 
         private SerializationTest()
         {
@@ -158,6 +159,19 @@ namespace FarseerPhysics.TestBed.Tests
                 AngleJoint joint = new AngleJoint(fA, fB);
                 joint.TargetAngle = (float)Math.PI / 2;
                 World.AddJoint(joint);
+            }
+
+            //Motor joint
+            {
+                Body body = BodyFactory.CreateRectangle(World, 4, 1, 2, new Vector2(0, 35));
+                body.BodyType = BodyType.Dynamic;
+                body.Friction = 0.6f;
+
+                _motorJoint = JointFactory.CreateMotorJoint(World, ground, body);
+                _motorJoint.MaxForce = 1000.0f;
+                _motorJoint.MaxTorque = 1000.0f;
+                _motorJoint.LinearOffset = new Vector2(0, 35);
+                _motorJoint.AngularOffset = (float)(Math.PI / 3f);
             }
         }
 
