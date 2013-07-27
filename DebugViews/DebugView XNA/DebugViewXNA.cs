@@ -380,7 +380,7 @@ namespace FarseerPhysics.DebugView
 
             Body b1 = joint.BodyA;
             Body b2 = joint.BodyB;
-            Transform xf1, xf2;
+            Transform xf1;
             b1.GetTransform(out xf1);
 
             Vector2 x2 = Vector2.Zero;
@@ -388,6 +388,7 @@ namespace FarseerPhysics.DebugView
             // WIP David
             if (!joint.IsFixedType())
             {
+                Transform xf2;
                 b2.GetTransform(out xf2);
                 x2 = xf2.p;
             }
@@ -416,8 +417,10 @@ namespace FarseerPhysics.DebugView
                     DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
                     break;
                 case JointType.Revolute:
-                    //DrawSegment(x2, p1, color);
-                    DrawSegment(p2, p1, color);
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    DrawSegment(x2, p2, color);
+
                     DrawSolidCircle(p2, 0.1f, Vector2.Zero, Color.Red);
                     DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
                     break;

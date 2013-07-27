@@ -28,9 +28,6 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
-            new TestEntry {Name = "Web", CreateTest = WebTest.Create},
-            new TestEntry {Name = "Serialization", CreateTest = SerializationTest.Create},
-      
             //Original tests
             new TestEntry {Name = "Continuous Test", CreateTest = ContinuousTest.Create},
             new TestEntry {Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create},
@@ -45,10 +42,7 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "ConvexHull", CreateTest = ConvexHullTest.Create},
             new TestEntry {Name = "Varying Restitution", CreateTest = VaryingRestitutionTest.Create},
             new TestEntry {Name = "Tumbler", CreateTest = TumblerTest.Create},
-#if (!XBOX360)
-            //Can crash the application on Xbox360
             new TestEntry {Name = "Tiles", CreateTest = TilesTest.Create},
-#endif
             new TestEntry {Name = "Cantilever", CreateTest = CantileverTest.Create},
             new TestEntry {Name = "Character collision", CreateTest = CharacterCollisionTest.Create},
             new TestEntry {Name = "Edge Test", CreateTest = EdgeTest.Create},
@@ -115,6 +109,7 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
 #endif
             new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
+            new TestEntry {Name = "Serialization", CreateTest = SerializationTest.Create},
             new TestEntry {Name = null, CreateTest = null}
         };
     }

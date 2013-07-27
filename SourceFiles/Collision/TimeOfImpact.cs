@@ -427,13 +427,10 @@ namespace FarseerPhysics.Collision
                             t = 0.5f * (a1 + a2);
                         }
 
-						// Bad inputs can cause t to become NaN at some point. Detect it here instead of dealing with
-						// the infinite loops the NaN will cause.
-						Debug.Assert(!float.IsNaN(t));
+                        ++rootIterCount;
+                        ++TOIRootIters;
 
                         float s = SeparationFunction.Evaluate(indexA, indexB, t);
-
-						Debug.Assert(!float.IsNaN(s));
 
                         if (Math.Abs(s - target) < tolerance)
                         {
@@ -453,9 +450,6 @@ namespace FarseerPhysics.Collision
                             a2 = t;
                             s2 = s;
                         }
-
-                        ++rootIterCount;
-                        ++TOIRootIters;
 
                         if (rootIterCount == 50)
                         {

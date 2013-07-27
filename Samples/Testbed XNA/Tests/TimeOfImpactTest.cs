@@ -76,10 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
             TimeOfImpact.CalculateTimeOfImpact(out output, input);
 
             DrawString("TOI = " + output.T);
-            
-
             DrawString(string.Format("Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters, TimeOfImpact.TOIMaxRootIters));
-            
 
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 

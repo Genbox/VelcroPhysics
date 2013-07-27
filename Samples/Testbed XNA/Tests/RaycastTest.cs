@@ -159,9 +159,7 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             DrawString("Press 1-5 to drop stuff, m to change the mode");
-            
             DrawString(string.Format("Mode = {0}", _mode));
-            
 
             const float l = 11.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
@@ -284,9 +282,8 @@ namespace FarseerPhysics.TestBed.Tests
                         Vector2 head = points[i] + 0.5f * normals[i];
                         DebugView.DrawSegment(points[i], head, new Color(0.9f, 0.9f, 0.4f));
                     }
+
                     DebugView.EndCustomDraw();
-                    break;
-                default:
                     break;
             }
 

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -65,39 +64,23 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (StepCount == 12)
-            {
-                StepCount += 0;
-            }
-
             base.Update(settings, gameTime);
 
             if (Distance.GJKCalls > 0)
             {
                 DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls, Distance.GJKMaxIters));
-                
             }
 
             if (TimeOfImpact.TOICalls > 0)
             {
                 DrawString(string.Format("TOI calls = {0:n}, Ave TOI iters = {1:n}, Max TOI iters = {2:n}", TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
-                
-
                 DrawString(string.Format("Ave TOI root iters = {0:n}, Max TOI root iters = {1:n}", TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
-                
             }
 
             if (StepCount % 60 == 0)
             {
                 //Launch();
             }
-        }
-
-        protected override void PostSolve(Contact contact, ContactVelocityConstraint impulse)
-        {
-            int i = 0;
-
-            base.PostSolve(contact, impulse);
         }
 
         internal static Test Create()
