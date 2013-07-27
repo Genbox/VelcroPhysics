@@ -61,7 +61,7 @@ namespace FarseerPhysics.TestBed.Tests
                     {
                         PolygonShape shape = new PolygonShape(0);
                         shape.Vertices = PolygonTools.CreateRectangle(a, a, position, 0.0f);
-                        Fixture fix = ground.CreateFixture(shape);
+                        ground.CreateFixture(shape);
                         ++_fixtureCount;
                         position.X += 2.0f * a;
                     }

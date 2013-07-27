@@ -36,40 +36,26 @@ namespace FarseerPhysics.TestBed.Tests
         private ChainTest()
         {
             //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            //Chain start / end
-            Path path = new Path();
-            path.Add(new Vector2(0, 25));
-            path.Add(new Vector2(40, 25));
-
-            //A single chainlink
-            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.125f, 0.6f), 20);
-
-            //Use PathFactory to create all the chainlinks based on the chainlink created before.
-            List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(World, path, shape, BodyType.Dynamic, 30);
-
-            foreach (Body chainLink in chainLinks)
             {
-                foreach (Fixture f in chainLink.FixtureList)
+                const float y = 25.0f;
+                Body prevBody = ground;
+                for (int i = 0; i < 30; ++i)
                 {
-                    f.Friction = 0.2f;
+                    Body body = BodyFactory.CreateRectangle(World, 1.2f, 0.25f, 20, new Vector2(0.5f + i, y));
+                    body.BodyType = BodyType.Dynamic;
+                    body.Friction = 0.2f;
+
+                    Vector2 anchor = new Vector2(i, y);
+                    RevoluteJoint joint = new RevoluteJoint(prevBody, body, anchor, true);
+
+                    //The chain is breakable
+                    joint.Breakpoint = 10000f;
+                    World.AddJoint(joint);
+
+                    prevBody = body;
                 }
-            }
-
-            //TODO
-            //Fix the first chainlink to the world
-            //FixedRevoluteJoint fixedJoint = new FixedRevoluteJoint(chainLinks[0], Vector2.Zero, chainLinks[0].Position);
-            //World.AddJoint(fixedJoint);
-
-            //Attach all the chainlinks together with a revolute joint
-            List<RevoluteJoint> joints = PathManager.AttachBodiesWithRevoluteJoint(World, chainLinks, new Vector2(0, -0.6f), new Vector2(0, 0.6f), false, false);
-
-            //The chain is breakable
-            for (int i = 0; i < joints.Count; i++)
-            {
-                RevoluteJoint r = joints[i];
-                r.Breakpoint = 10000f;
             }
         }
 
