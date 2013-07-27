@@ -101,7 +101,7 @@ namespace FarseerPhysics.Dynamics.Joints
             {
                 LocalAnchorA = anchorA;
                 LocalAnchorB = anchorB;
-                Length = (BodyB.GetWorldPoint(ref anchorA) - BodyA.GetWorldPoint(ref anchorB)).Length();
+                Length = (BodyB.GetWorldPoint(ref anchorB) - BodyA.GetWorldPoint(ref anchorA)).Length();
             }
         }
 
