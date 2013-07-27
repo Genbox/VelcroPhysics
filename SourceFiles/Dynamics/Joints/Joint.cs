@@ -92,11 +92,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
     public abstract class Joint
     {
-        /// <summary>
-        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
-        /// The default value is float.MaxValue, which means it never breaks.
-        /// </summary>
-        public float Breakpoint = float.MaxValue;
+        private float _breakpoint = float.MaxValue;
+        private double _breakpointSquared;
 
         /// <summary>
         /// Indicate if this join is enabled or not. Disabling a joint
@@ -175,6 +172,20 @@ namespace FarseerPhysics.Dynamics.Joints
         public bool CollideConnected { get; set; }
 
         /// <summary>
+        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
+        /// The default value is float.MaxValue, which means it never breaks.
+        /// </summary>
+        public float Breakpoint
+        {
+            get { return _breakpoint; }
+            set
+            {
+                _breakpoint = value;
+                _breakpointSquared = _breakpoint * _breakpoint;
+            }
+        }
+
+        /// <summary>
         /// Fires when the joint is broken.
         /// </summary>
         public event Action<Joint, float> Broke;
@@ -223,7 +234,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float jointErrorSquared = GetReactionForce(invDt).LengthSquared();
 
-            if (Math.Abs(jointErrorSquared) <= Breakpoint * Breakpoint)
+            if (Math.Abs(jointErrorSquared) <= _breakpointSquared)
                 return;
 
             Enabled = false;
