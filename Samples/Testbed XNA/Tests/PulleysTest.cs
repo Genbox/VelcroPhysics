@@ -64,7 +64,7 @@ namespace FarseerPhysics.TestBed.Tests
                 Vector2 anchor2 = new Vector2(10.0f, Y + B);
                 Vector2 groundAnchor1 = new Vector2(-10.0f, Y + B + L);
                 Vector2 groundAnchor2 = new Vector2(10.0f, Y + B + L);
-                _joint1 = new PulleyJoint(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 1.5f, true);
+                _joint1 = new PulleyJoint(body1, body2, anchor1, anchor2, groundAnchor1, groundAnchor2, 1.5f, true);
                 World.AddJoint(_joint1);
             }
         }

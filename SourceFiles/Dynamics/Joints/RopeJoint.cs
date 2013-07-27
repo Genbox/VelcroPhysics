@@ -36,14 +36,12 @@ namespace FarseerPhysics.Dynamics.Joints
     //   = invMassA + invIA * cross(rA, u)^2 + invMassB + invIB * cross(rB, u)^2
 
     /// <summary>
-    /// A rope joint enforces a maximum distance between two points
-    /// on two bodies. It has no other effect.
-    /// Warning: if you attempt to change the maximum length during
-    /// the simulation you will get some non-physical behavior.
-    /// A model that would allow you to dynamically modify the length
-    /// would have some sponginess, so I chose not to implement it
-    /// that way. See b2DistanceJoint if you want to dynamically
-    /// control length.
+    /// A rope joint enforces a maximum distance between two points on two bodies. It has no other effect.
+    /// It can be used on ropes that are made up of several connected bodies, and if there is a need to support a heavy body.
+    /// This joint is used for stabiliation of heavy objects on soft constraint joints.
+    /// 
+    /// Warning: if you attempt to change the maximum length during the simulation you will get some non-physical behavior.
+    /// Use the DistanceJoint instead if you want to dynamically control the length.
     /// </summary>
     public class RopeJoint : Joint
     {
@@ -62,7 +60,6 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _invIB;
         private float _mass;
         private Vector2 _rA, _rB;
-        private LimitState _state;
         private Vector2 _u;
 
         internal RopeJoint()
@@ -70,20 +67,28 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Rope;
         }
 
-        public RopeJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = false)
+        /// <summary>
+        /// Constructor for RopeJoint.
+        /// </summary>
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        /// <param name="anchorA">The anchor on the first body</param>
+        /// <param name="anchorB">The anchor on the second body</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
+        public RopeJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Rope;
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
+                LocalAnchorA = bodyA.GetLocalPoint(anchorA);
+                LocalAnchorB = bodyB.GetLocalPoint(anchorB);
             }
             else
             {
-                LocalAnchorA = localAnchorA;
-                LocalAnchorB = localAnchorB;
+                LocalAnchorA = anchorA;
+                LocalAnchorB = anchorB;
             }
 
             //FPE feature: Setting default MaxLength
@@ -91,29 +96,38 @@ namespace FarseerPhysics.Dynamics.Joints
             MaxLength = d.Length();
         }
 
-        /// Get the maximum length of the rope.
-        public float MaxLength { get; set; }
-
-        public LimitState State
-        {
-            get { return _state; }
-        }
-
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
         public Vector2 LocalAnchorA { get; set; }
 
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override sealed Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override sealed Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
+
+        /// <summary>
+        /// Get or set the maximum length of the rope.
+        /// By default, it is the distance between the two anchor points.
+        /// </summary>
+        public float MaxLength { get; set; }
+
+        /// <summary>
+        /// Gets the state of the joint.
+        /// </summary>
+        public LimitState State { get; private set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -157,11 +171,11 @@ namespace FarseerPhysics.Dynamics.Joints
             float C = _length - MaxLength;
             if (C > 0.0f)
             {
-                _state = LimitState.AtUpper;
+                State = LimitState.AtUpper;
             }
             else
             {
-                _state = LimitState.Inactive;
+                State = LimitState.Inactive;
             }
 
             if (_length > Settings.LinearSlop)

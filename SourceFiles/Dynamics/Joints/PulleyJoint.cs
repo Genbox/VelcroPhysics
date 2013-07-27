@@ -40,21 +40,19 @@ namespace FarseerPhysics.Dynamics.Joints
     //   = invMass1 + invI1 * cross(r1, u1)^2 + ratio^2 * (invMass2 + invI2 * cross(r2, u2)^2)
 
     /// <summary>
-    /// The pulley joint is connected to two bodies and two fixed ground points.
+    /// The pulley joint is connected to two bodies and two fixed world points.
     /// The pulley supports a ratio such that:
-    /// length1 + ratio * length2 <= constant
+    /// <![CDATA[length1 + ratio * length2 <= constant]]>
     /// Yes, the force transmitted is scaled by the ratio.
+    /// 
     /// Warning: the pulley joint can get a bit squirrelly by itself. They often
     /// work better when combined with prismatic joints. You should also cover the
-    /// the anchor points with static shapes to prevent one side from going to
-    /// zero length.
+    /// the anchor points with static shapes to prevent one side from going to zero length.
     /// </summary>
     public class PulleyJoint : Joint
     {
         // Solver shared
         private float _impulse;
-        private float _limitImpulse1;
-        private float _limitImpulse2;
 
         // Solver temp
         private int _indexA;
@@ -77,19 +75,17 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Initialize the bodies, anchors, lengths, max lengths, and ratio using the world anchors.
-        /// This requires two ground anchors,
-        /// two dynamic body anchor points, max lengths for each side,
-        /// and a pulley ratio.
+        /// Constructor for PulleyJoint.
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="worldAnchorA">The ground anchor for the first body.</param>
-        /// <param name="worldAnchorB">The ground anchor for the second body.</param>
-        /// <param name="anchorA">The first body anchor.</param>
-        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="anchorA">The anchor on the first body.</param>
+        /// <param name="anchorB">The anchor on the second body.</param>
+        /// <param name="worldAnchorA">The world anchor for the first body.</param>
+        /// <param name="worldAnchorB">The world anchor for the second body.</param>
         /// <param name="ratio">The ratio.</param>
-        public PulleyJoint(Body bodyA, Body bodyB, Vector2 worldAnchorA, Vector2 worldAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio, bool useWorldCoordinates = false)
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
+        public PulleyJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 worldAnchorA, Vector2 worldAnchorB, float ratio, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Pulley;
@@ -126,20 +122,24 @@ namespace FarseerPhysics.Dynamics.Joints
             _impulse = 0.0f;
         }
 
-        public float Constant { get; internal set; }
-
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
         public Vector2 LocalAnchorA { get; set; }
 
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
         /// <summary>
-        /// Get the first ground anchor.
+        /// Get the first world anchor.
         /// </summary>
         /// <value></value>
         public override sealed Vector2 WorldAnchorA { get; set; }
 
         /// <summary>
-        /// Get the second ground anchor.
+        /// Get the second world anchor.
         /// </summary>
         /// <value></value>
         public override sealed Vector2 WorldAnchorB { get; set; }
@@ -156,6 +156,9 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <value></value>
         public float LengthB { get; set; }
 
+        /// <summary>
+        /// The current length between the anchor point on BodyA and WorldAnchorA
+        /// </summary>
         public float CurrentLengthA
         {
             get
@@ -167,6 +170,9 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// The current length between the anchor point on BodyB and WorldAnchorB
+        /// </summary>
         public float CurrentLengthB
         {
             get
@@ -183,6 +189,9 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         /// <value></value>
         public float Ratio { get; set; }
+
+        //FPE note: Only used for serialization.
+        internal float Constant { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -266,8 +275,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 _impulse *= data.step.dtRatio;
 
                 // Warm starting.
-                Vector2 PA = -(_impulse + _limitImpulse1) * _uA;
-                Vector2 PB = (-Ratio * _impulse - _limitImpulse2) * _uB;
+                Vector2 PA = -(_impulse) * _uA;
+                Vector2 PB = (-Ratio * _impulse) * _uB;
 
                 vA += _invMassA * PA;
                 wA += _invIA * MathUtils.Cross(_rA, PA);

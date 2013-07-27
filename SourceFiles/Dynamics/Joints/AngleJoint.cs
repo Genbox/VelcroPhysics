@@ -1,3 +1,8 @@
+/*
+* Farseer Physics Engine:
+* Copyright (c) 2012 Ian Qvist
+*/
+
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -9,9 +14,6 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class AngleJoint : Joint
     {
-        public float BiasFactor;
-        public float MaxImpulse;
-        public float Softness;
         private float _bias;
         private float _jointError;
         private float _massFactor;
@@ -22,27 +24,17 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Angle;
         }
 
+        /// <summary>
+        /// Constructor for AngleJoint
+        /// </summary>
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
         public AngleJoint(Body bodyA, Body bodyB)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Angle;
-            TargetAngle = 0;
             BiasFactor = .2f;
-            Softness = 0f;
             MaxImpulse = float.MaxValue;
-        }
-
-        public float TargetAngle
-        {
-            get { return _targetAngle; }
-            set
-            {
-                if (value != _targetAngle)
-                {
-                    _targetAngle = value;
-                    WakeBodies();
-                }
-            }
         }
 
         public override Vector2 WorldAnchorA
@@ -56,6 +48,40 @@ namespace FarseerPhysics.Dynamics.Joints
             get { return BodyB.Position; }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
+
+        /// <summary>
+        /// The desired angle between BodyA and BodyB
+        /// </summary>
+        public float TargetAngle
+        {
+            get { return _targetAngle; }
+            set
+            {
+                if (value != _targetAngle)
+                {
+                    _targetAngle = value;
+                    WakeBodies();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bias factor.
+        /// Defaults to 0.2
+        /// </summary>
+        public float BiasFactor { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the maximum impulse
+        /// Defaults to float.MaxValue
+        /// </summary>
+        public float MaxImpulse { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the softness of the joint
+        /// Defaults to 0
+        /// </summary>
+        public float Softness { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {

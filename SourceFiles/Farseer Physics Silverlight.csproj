@@ -440,10 +440,6 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="Dynamics\Joints\FixedAngleJoint.cs">
-      <SubType>
-      </SubType>
-    </Compile>
     <Compile Include="Dynamics\Joints\FixedMouseJoint.cs">
       <SubType>
       </SubType>

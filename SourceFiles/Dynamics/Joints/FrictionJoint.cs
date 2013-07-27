@@ -44,9 +44,6 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FrictionJoint : Joint
     {
-        public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
-
         // Solver shared
         private Vector2 _linearImpulse;
         private float _angularImpulse;
@@ -70,6 +67,13 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Friction;
         }
 
+        /// <summary>
+        /// Constructor for FrictionJoint.
+        /// </summary>
+        /// <param name="bodyA"></param>
+        /// <param name="bodyB"></param>
+        /// <param name="anchor"></param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
@@ -87,16 +91,26 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
+        public Vector2 LocalAnchorA { get; set; }
+
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
+        public Vector2 LocalAnchorB { get; set; }
+
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
 
         /// <summary>
@@ -192,7 +206,6 @@ namespace FarseerPhysics.Dynamics.Joints
             data.velocities[_indexA].w = wA;
             data.velocities[_indexB].v = vB;
             data.velocities[_indexB].w = wB;
-
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
@@ -250,7 +263,6 @@ namespace FarseerPhysics.Dynamics.Joints
             data.velocities[_indexA].w = wA;
             data.velocities[_indexB].v = vB;
             data.velocities[_indexB].w = wB;
-
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

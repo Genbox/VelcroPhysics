@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
+            new TestEntry {Name = "Web", CreateTest = WebTest.Create},
             new TestEntry {Name = "Serialization", CreateTest = SerializationTest.Create},
       
             //Original tests

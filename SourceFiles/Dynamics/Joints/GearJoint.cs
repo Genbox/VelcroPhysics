@@ -46,15 +46,15 @@ namespace FarseerPhysics.Dynamics.Joints
     // K = J * invM * JT = invMass + invI * cross(r, ug)^2
 
     /// <summary>
-    /// A gear joint is used to connect two joints together. Either joint
-    /// can be a revolute or prismatic joint. You specify a gear ratio
-    /// to bind the motions together:
-    /// coordinate1 + ratio * coordinate2 = ant
+    /// A gear joint is used to connect two joints together.
+    /// Either joint can be a revolute or prismatic joint.
+    /// You specify a gear ratio to bind the motions together:
+    /// <![CDATA[coordinate1 + ratio * coordinate2 = ant]]>
     /// The ratio can be negative or positive. If one joint is a revolute joint
     /// and the other joint is a prismatic joint, then the ratio will have units
     /// of length or units of 1/length.
-    /// @warning You have to manually destroy the gear joint if joint1 or joint2
-    /// is destroyed.
+    ///
+    /// Warning: You have to manually destroy the gear joint if jointA or jointB is destroyed.
     /// </summary>
     public class GearJoint : Joint
     {
@@ -96,18 +96,18 @@ namespace FarseerPhysics.Dynamics.Joints
         /// Requires two existing revolute or prismatic joints (any combination will work).
         /// The provided joints must attach a dynamic body to a static body.
         /// </summary>
-        /// <param name="joint1">The first joint.</param>
-        /// <param name="joint2">The second joint.</param>
+        /// <param name="jointA">The first joint.</param>
+        /// <param name="jointB">The second joint.</param>
         /// <param name="ratio">The ratio.</param>
-        public GearJoint(Joint joint1, Joint joint2, float ratio = 1f)
+        public GearJoint(Joint jointA, Joint jointB, float ratio = 1f)
         {
             JointType = JointType.Gear;
-            Joint1 = joint1;
-            Joint2 = joint2;
+            JointA = jointA;
+            JointB = jointB;
             Ratio = ratio;
 
-            _typeA = joint1.JointType;
-            _typeB = joint2.JointType;
+            _typeA = jointA.JointType;
+            _typeB = jointB.JointType;
 
             Debug.Assert(_typeA == JointType.Revolute || _typeA == JointType.Prismatic || _typeA == JointType.FixedRevolute || _typeA == JointType.FixedPrismatic);
             Debug.Assert(_typeB == JointType.Revolute || _typeB == JointType.Prismatic || _typeB == JointType.FixedRevolute || _typeB == JointType.FixedPrismatic);
@@ -116,8 +116,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
             // TODO_ERIN there might be some problem with the joint edges in b2Joint.
 
-            _bodyC = Joint1.BodyA;
-            _bodyA = Joint1.BodyB;
+            _bodyC = JointA.BodyA;
+            _bodyA = JointA.BodyB;
 
             // Get geometry of joint1
             Transform xfA = _bodyA.Xf;
@@ -127,7 +127,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (_typeA == JointType.Revolute)
             {
-                RevoluteJoint revolute = (RevoluteJoint)joint1;
+                RevoluteJoint revolute = (RevoluteJoint)jointA;
                 _localAnchorC = revolute.LocalAnchorA;
                 _localAnchorA = revolute.LocalAnchorB;
                 _referenceAngleA = revolute.ReferenceAngle;
@@ -137,7 +137,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
             else
             {
-                PrismaticJoint prismatic = (PrismaticJoint)joint1;
+                PrismaticJoint prismatic = (PrismaticJoint)jointA;
                 _localAnchorC = prismatic.LocalAnchorA;
                 _localAnchorA = prismatic.LocalAnchorB;
                 _referenceAngleA = prismatic.ReferenceAngle;
@@ -148,8 +148,8 @@ namespace FarseerPhysics.Dynamics.Joints
                 coordinateA = Vector2.Dot(pA - pC, _localAxisC);
             }
 
-            _bodyD = Joint2.BodyA;
-            _bodyB = Joint2.BodyB;
+            _bodyD = JointB.BodyA;
+            _bodyB = JointB.BodyB;
 
             // Get geometry of joint2
             Transform xfB = _bodyB.Xf;
@@ -159,7 +159,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (_typeB == JointType.Revolute)
             {
-                RevoluteJoint revolute = (RevoluteJoint)joint2;
+                RevoluteJoint revolute = (RevoluteJoint)jointB;
                 _localAnchorD = revolute.LocalAnchorA;
                 _localAnchorB = revolute.LocalAnchorB;
                 _referenceAngleB = revolute.ReferenceAngle;
@@ -169,7 +169,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
             else
             {
-                PrismaticJoint prismatic = (PrismaticJoint)joint2;
+                PrismaticJoint prismatic = (PrismaticJoint)jointB;
                 _localAnchorD = prismatic.LocalAnchorA;
                 _localAnchorB = prismatic.LocalAnchorB;
                 _referenceAngleB = prismatic.ReferenceAngle;
@@ -181,9 +181,7 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             _ratio = ratio;
-
             _constant = coordinateA + _ratio * coordinateB;
-
             _impulse = 0.0f;
         }
 
@@ -215,13 +213,12 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// The first revolute/prismatic joint attached to the gear joint.
         /// </summary>
-        public Joint Joint1 { get; set; }
+        public Joint JointA { get; private set; }
 
         /// <summary>
         /// The second revolute/prismatic joint attached to the gear joint.
         /// </summary>
-        public Joint Joint2 { get; set; }
-
+        public Joint JointB { get; private set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {

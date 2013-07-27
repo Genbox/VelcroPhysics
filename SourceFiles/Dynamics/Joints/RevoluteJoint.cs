@@ -28,7 +28,7 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// A revolute joint rains to bodies to share a common point while they
+    /// A revolute joint constrains to bodies to share a common point while they
     /// are free to rotate about the point. The relative rotation about the shared
     /// point is the joint angle. You can limit the relative rotation with
     /// a joint limit that specifies a lower and upper angle. You can use a motor
@@ -71,24 +71,14 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Initialize the bodies and local anchor.
-        /// This requires defining an
-        /// anchor point where the bodies are joined. The definition
-        /// uses local anchor points so that the initial configuration
-        /// can violate the constraint slightly. You also need to
-        /// specify the initial relative angle for joint limits. This
-        /// helps when saving and loading a game.
-        /// The local anchor points are measured from the body's origin
-        /// rather than the center of mass because:
-        /// 1. you might not know where the center of mass will be.
-        /// 2. if you add/remove shapes from a body and recompute the mass,
-        /// the joints will be broken.
+        /// Constructor of RevoluteJoint. 
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second anchor.</param>
-        public RevoluteJoint(Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB, bool useWorldCoordinates = false)
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
+        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Revolute;
@@ -111,32 +101,42 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Initialize the bodies and world anchor.
+        /// Constructor of RevoluteJoint. 
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
-        /// <param name="anchor">The world coordinate anchor.</param>
-        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor, bool anchorsAreInWorldCoordinates = false)
-            : this(bodyA, anchor, bodyB, anchor, anchorsAreInWorldCoordinates)
+        /// <param name="anchor">The shared anchor.</param>
+        /// <param name="useWorldCoordinates"></param>
+        public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
+            : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates)
         {
         }
 
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
         public Vector2 LocalAnchorA { get; set; }
 
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
 
+        /// <summary>
+        /// The referance angle computed as BodyB angle minus BodyA angle.
+        /// </summary>
         public float ReferenceAngle
         {
             get { return _referenceAngle; }
@@ -150,7 +150,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the current joint angle in radians.
         /// </summary>
-        /// <value></value>
         public float JointAngle
         {
             get { return BodyB.Sweep.A - BodyA.Sweep.A - ReferenceAngle; }
@@ -159,7 +158,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the current joint angle speed in radians per second.
         /// </summary>
-        /// <value></value>
         public float JointSpeed
         {
             get { return BodyB.AngularVelocityInternal - BodyA.AngularVelocityInternal; }
@@ -186,7 +184,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the lower joint limit in radians.
         /// </summary>
-        /// <value></value>
         public float LowerLimit
         {
             get { return _lowerAngle; }
@@ -204,7 +201,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the upper joint limit in radians.
         /// </summary>
-        /// <value></value>
         public float UpperLimit
         {
             get { return _upperAngle; }
@@ -222,8 +218,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Set the joint limits, usually in meters.
         /// </summary>
-        /// <param name="lower"></param>
-        /// <param name="upper"></param>
+        /// <param name="lower">The lower limit</param>
+        /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
         {
             if (lower != _lowerAngle || upper != _upperAngle)
@@ -250,9 +246,8 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Set the motor speed in radians per second.
+        /// Get or set the motor speed in radians per second.
         /// </summary>
-        /// <value>The speed.</value>
         public float MotorSpeed
         {
             set
@@ -264,9 +259,8 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Set the maximum motor torque, usually in N-m.
+        /// Get or set the maximum motor torque, usually in N-m.
         /// </summary>
-        /// <value>The torque.</value>
         public float MaxMotorTorque
         {
             set
@@ -278,9 +272,8 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Get the current motor torque, usually in N-m.
+        /// Get or set the current motor impulse, usually in N-m.
         /// </summary>
-        /// <value></value>
         public float MotorImpulse
         {
             get { return _motorImpulse; }
@@ -291,20 +284,24 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
-        public float GetMotorTorque(float inv_dt)
+        /// <summary>
+        /// Gets the motor torque in N-m.
+        /// </summary>
+        /// <param name="invDt">The inverse delta time</param>
+        public float GetMotorTorque(float invDt)
         {
-            return inv_dt * _motorImpulse;
+            return invDt * _motorImpulse;
         }
 
-        public override Vector2 GetReactionForce(float inv_dt)
+        public override Vector2 GetReactionForce(float invDt)
         {
-            Vector2 P = new Vector2(_impulse.X, _impulse.Y);
-            return inv_dt * P;
+            Vector2 p = new Vector2(_impulse.X, _impulse.Y);
+            return invDt * p;
         }
 
-        public override float GetReactionTorque(float inv_dt)
+        public override float GetReactionTorque(float invDt)
         {
-            return inv_dt * _impulse.Z;
+            return invDt * _impulse.Z;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)

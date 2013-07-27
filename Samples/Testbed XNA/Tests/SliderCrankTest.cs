@@ -148,7 +148,6 @@ namespace FarseerPhysics.TestBed.Tests
             
             float torque = _joint1.GetMotorTorque(settings.Hz);
             DrawString("Motor Torque = " + torque);
-            
         }
 
         internal static Test Create()
