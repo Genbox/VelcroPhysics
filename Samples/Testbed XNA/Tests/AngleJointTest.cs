@@ -45,12 +45,11 @@ namespace FarseerPhysics.TestBed.Tests
             joint.TargetAngle = (float)Math.PI / 2;
             World.AddJoint(joint);
 
+            //Keep a body at a fixed angle without a joint 
             Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
             fC.BodyType = BodyType.Dynamic;
-
-            FixedAngleJoint fixedJoint = new FixedAngleJoint(fC);
-            fixedJoint.TargetAngle = (float)Math.PI / 3;
-            World.AddJoint(fixedJoint);
+            fC.Rotation = (float)(Math.PI / 3);
+            fC.FixedRotation = true; // Or set the Inertia to float.MaxValue
         }
 
         internal static Test Create()

@@ -44,15 +44,16 @@ namespace FarseerPhysics.Dynamics.Joints
     /// <summary>
     /// A weld joint essentially glues two bodies together. A weld joint may
     /// distort somewhat because the island constraint solver is approximate.
+    /// 
+    /// The joint is soft constraint based, which means the two bodies will move
+    /// relative to each other, when a force is applied. To combine two bodies
+    /// in a rigid fashion, combine the fixtures to a single body instead.
     /// </summary>
     public class WeldJoint : Joint
     {
         // Solver shared
-        public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
         private Vector3 _impulse;
         private float _gamma;
-
         private float _bias;
 
         // Solver temp
@@ -74,54 +75,71 @@ namespace FarseerPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// You need to specify a local anchor point
-        /// where they are attached and the relative body angle. The position
-        /// of the anchor point is important for computing the reaction torque.
-        /// You can change the anchor points relative to bodyA or bodyB by changing LocalAnchorA
-        /// and/or LocalAnchorB.
+        /// You need to specify an anchor point where they are attached.
+        /// The position of the anchor point is important for computing the reaction torque.
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        /// <param name="localAnchorA">The first body anchor.</param>
-        /// <param name="localAnchorB">The second body anchor.</param>
-        public WeldJoint(Body bodyA, Body bodyB, Vector2 localAnchorA, Vector2 localAnchorB, bool useWorldCoordinates = false)
+        /// <param name="anchorA">The first body anchor.</param>
+        /// <param name="anchorB">The second body anchor.</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
+        public WeldJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             JointType = JointType.Weld;
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(localAnchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(localAnchorB);
+                LocalAnchorA = bodyA.GetLocalPoint(anchorA);
+                LocalAnchorB = bodyB.GetLocalPoint(anchorB);
             }
             else
             {
-                LocalAnchorA = localAnchorA;
-                LocalAnchorB = localAnchorB;
+                LocalAnchorA = anchorA;
+                LocalAnchorB = anchorB;
             }
 
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
         }
 
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
+        public Vector2 LocalAnchorA { get; set; }
+
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
+        public Vector2 LocalAnchorB { get; set; }
+
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
 
         /// <summary>
-        /// The body2 angle minus body1 angle in the reference state (radians).
+        /// The bodyB angle minus bodyA angle in the reference state (radians).
         /// </summary>
-        public float ReferenceAngle { get; private set; }
+        public float ReferenceAngle { get; set; }
 
+        /// <summary>
+        /// The frequency of the joint. A higher frequency means a stiffer joint, but
+        /// a too high value can cause the joint to oscillate.
+        /// Default is 0, which means the joint does no spring calculations.
+        /// </summary>
         public float FrequencyHz { get; set; }
 
+        /// <summary>
+        /// The damping on the joint. The damping is only used when
+        /// the joint has a frequency (> 0). A higher value means more damping.
+        /// </summary>
         public float DampingRatio { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)

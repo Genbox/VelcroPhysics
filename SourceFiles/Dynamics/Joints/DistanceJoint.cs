@@ -50,16 +50,6 @@ namespace FarseerPhysics.Dynamics.Joints
     public class DistanceJoint : Joint
     {
         // Solver shared
-        /// <summary>
-        /// The local anchor point relative to bodyA's origin.
-        /// </summary>
-        public Vector2 LocalAnchorA;
-
-        /// <summary>
-        /// The local anchor point relative to bodyB's origin.
-        /// </summary>
-        public Vector2 LocalAnchorB;
-
         private float _bias;
         private float _gamma;
         private float _impulse;
@@ -95,6 +85,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="bodyB">The second body</param>
         /// <param name="anchorA">The first body anchor</param>
         /// <param name="anchorB">The second body anchor</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
@@ -102,16 +93,38 @@ namespace FarseerPhysics.Dynamics.Joints
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(anchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(anchorB);
+                LocalAnchorA = bodyA.GetLocalPoint(ref anchorA);
+                LocalAnchorB = bodyB.GetLocalPoint(ref anchorB);
                 Length = (anchorB - anchorA).Length();
             }
             else
             {
                 LocalAnchorA = anchorA;
                 LocalAnchorB = anchorB;
-                Length = (BodyB.GetWorldPoint(ref LocalAnchorB) - BodyA.GetWorldPoint(ref LocalAnchorA)).Length();
+                Length = (BodyB.GetWorldPoint(ref anchorA) - BodyA.GetWorldPoint(ref anchorB)).Length();
             }
+        }
+
+        /// <summary>
+        /// The local anchor point relative to bodyA's origin.
+        /// </summary>
+        public Vector2 LocalAnchorA { get; set; }
+
+        /// <summary>
+        /// The local anchor point relative to bodyB's origin.
+        /// </summary>
+        public Vector2 LocalAnchorB { get; set; }
+
+        public override sealed Vector2 WorldAnchorA
+        {
+            get { return BodyA.GetWorldPoint(LocalAnchorA); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+        }
+
+        public override sealed Vector2 WorldAnchorB
+        {
+            get { return BodyB.GetWorldPoint(LocalAnchorB); }
+            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
         /// <summary>
@@ -130,18 +143,6 @@ namespace FarseerPhysics.Dynamics.Joints
         /// The damping ratio. 0 = no damping, 1 = critical damping.
         /// </summary>
         public float DampingRatio { get; set; }
-
-        public override sealed Vector2 WorldAnchorA
-        {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
-        }
-
-        public override sealed Vector2 WorldAnchorB
-        {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
-        }
 
         /// <summary>
         /// Get the reaction force given the inverse time step. Unit is N.

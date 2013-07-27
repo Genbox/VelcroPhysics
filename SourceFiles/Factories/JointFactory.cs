@@ -24,7 +24,7 @@ namespace FarseerPhysics.Factories
 
         public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Vector2 anchorA, Body bodyB, Vector2 anchorB)
         {
-            RevoluteJoint joint = new RevoluteJoint(bodyA, anchorA, bodyB, anchorB);
+            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, anchorA, anchorB);
             world.AddJoint(joint);
             return joint;
         }
@@ -40,7 +40,7 @@ namespace FarseerPhysics.Factories
         public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchorB)
         {
             Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchorB));
-            RevoluteJoint joint = new RevoluteJoint(bodyA, localanchorA, bodyB, anchorB);
+            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, anchorB);
             world.AddJoint(joint);
             return joint;
         }
@@ -153,20 +153,6 @@ namespace FarseerPhysics.Factories
             return angleJoint;
         }
 
-        /// <summary>
-        /// Creates a fixed angle joint.
-        /// </summary>
-        /// <param name="world">The world.</param>
-        /// <param name="body">The body.</param>
-        /// <returns></returns>
-        public static FixedAngleJoint CreateFixedAngleJoint(World world, Body body)
-        {
-            FixedAngleJoint angleJoint = new FixedAngleJoint(body);
-            world.AddJoint(angleJoint);
-
-            return angleJoint;
-        }
-
         #endregion
 
         #region Distance Joint
@@ -231,7 +217,7 @@ namespace FarseerPhysics.Factories
 
         public static PulleyJoint CreatePulleyJoint(World world, Body bodyA, Body bodyB, Vector2 groundAnchorA, Vector2 groundAnchorB, Vector2 anchorA, Vector2 anchorB, float ratio)
         {
-            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, groundAnchorA, groundAnchorB, anchorA, anchorB, ratio);
+            PulleyJoint pulleyJoint = new PulleyJoint(bodyA, bodyB, anchorA, anchorB, groundAnchorA, groundAnchorB, ratio);
             world.AddJoint(pulleyJoint);
             return pulleyJoint;
         }

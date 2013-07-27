@@ -33,7 +33,6 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class PrismaticTest : Test
     {
-        //private FixedPrismaticJoint _fixedJoint;
         private PrismaticJoint _joint;
 
         private PrismaticTest()

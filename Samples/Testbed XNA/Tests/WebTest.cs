@@ -156,11 +156,11 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
             DrawString("This demonstrates a soft distance joint.");
-            
+
             DrawString("Press: (b) to delete a body, (j) to delete a joint");
-            
+
             DrawString("Bodies removed: " + _removedBodies);
-            
+
             DrawString("Joints removed: " + _removedJoints);
         }
 

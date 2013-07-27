@@ -160,7 +160,7 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(1.0f, -0.1f);
-            RevoluteJoint jd4 = new RevoluteJoint(b5,b6.GetWorldPoint(anchor), b6, anchor); //TODO: Check line
+            RevoluteJoint jd4 = new RevoluteJoint(b5, b6, b6.GetWorldPoint(anchor), anchor); //TODO: Check line
             jd4.CollideConnected = true;
             World.AddJoint(jd4);
 

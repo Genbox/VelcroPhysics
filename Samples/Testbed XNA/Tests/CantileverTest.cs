@@ -51,7 +51,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
                     World.AddJoint(jd);
 
                     prevBody = body;
@@ -71,7 +71,7 @@ namespace FarseerPhysics.TestBed.Tests
                     body.CreateFixture(shape);
 
                     Vector2 anchor = new Vector2(-15.0f + 2.0f * i, 15.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor);
+                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
                     jd.FrequencyHz = 5.0f;
                     jd.DampingRatio = 0.7f;
                     World.AddJoint(jd);
@@ -96,14 +96,13 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
                         World.AddJoint(jd);
                     }
 
                     prevBody = body;
                 }
             }
-
 
             {
                 PolygonShape shape = new PolygonShape(20f);
@@ -121,7 +120,7 @@ namespace FarseerPhysics.TestBed.Tests
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor);
+                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
                         jd.FrequencyHz = 8.0f;
                         jd.DampingRatio = 0.7f;
 

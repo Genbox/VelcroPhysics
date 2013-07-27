@@ -166,7 +166,7 @@ namespace FarseerPhysics.Common
 
             for (int i = 1; i < bodies.Count; i++)
             {
-                RevoluteJoint joint = new RevoluteJoint(bodies[i], localAnchorA, bodies[i - 1], localAnchorB);
+                RevoluteJoint joint = new RevoluteJoint(bodies[i], bodies[i - 1], localAnchorA, localAnchorB);
                 joint.CollideConnected = collideConnected;
                 world.AddJoint(joint);
                 joints.Add(joint);
@@ -174,7 +174,7 @@ namespace FarseerPhysics.Common
 
             if (connectFirstAndLast)
             {
-                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], localAnchorA, bodies[bodies.Count - 1], localAnchorB);
+                RevoluteJoint lastjoint = new RevoluteJoint(bodies[0], bodies[bodies.Count - 1], localAnchorA, localAnchorB);
                 lastjoint.CollideConnected = collideConnected;
                 world.AddJoint(lastjoint);
                 joints.Add(lastjoint);

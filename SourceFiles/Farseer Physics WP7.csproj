@@ -225,7 +225,6 @@
     <Compile Include="Dynamics\Island.cs" />
     <Compile Include="Dynamics\Joints\AngleJoint.cs" />
     <Compile Include="Dynamics\Joints\DistanceJoint.cs" />
-    <Compile Include="Dynamics\Joints\FixedAngleJoint.cs" />
     <Compile Include="Dynamics\Joints\FixedMouseJoint.cs" />
     <Compile Include="Dynamics\Joints\FrictionJoint.cs" />
     <Compile Include="Dynamics\Joints\GearJoint.cs" />

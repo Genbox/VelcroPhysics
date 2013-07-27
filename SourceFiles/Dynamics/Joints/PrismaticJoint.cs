@@ -92,14 +92,12 @@ namespace FarseerPhysics.Dynamics.Joints
 
     /// <summary>
     /// A prismatic joint. This joint provides one degree of freedom: translation
-    /// along an axis fixed in body1. Relative rotation is prevented. You can
+    /// along an axis fixed in bodyA. Relative rotation is prevented. You can
     /// use a joint limit to restrict the range of motion and a joint motor to
     /// drive the motion or to model joint friction.
     /// </summary>
     public class PrismaticJoint : Joint
     {
-        public Vector2 LocalAnchorA;
-        public Vector2 LocalAnchorB;
         private Vector2 _localYAxisA;
         private Vector3 _impulse;
         private float _lowerTranslation;
@@ -144,12 +142,21 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="anchorA">The first body anchor.</param>
         /// <param name="anchorB">The second body anchor.</param>
         /// <param name="axis">The axis.</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
             Initialize(anchorA, anchorB, axis, useWorldCoordinates);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bodyA"></param>
+        /// <param name="bodyB"></param>
+        /// <param name="anchor"></param>
+        /// <param name="axis"></param>
+        /// <param name="useWorldCoordinates"></param>
         public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
@@ -172,24 +179,31 @@ namespace FarseerPhysics.Dynamics.Joints
             }
 
             Axis = axis; //FPE only: store the orignal value for use in Serialization
-            LocalXAxis = BodyA.GetLocalVector(axis);
-            LocalXAxis.Normalize();
-            _localYAxisA = MathUtils.Cross(1.0f, LocalXAxis);
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
             _limitState = LimitState.Inactive;
         }
 
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
+        public Vector2 LocalAnchorA { get; set; }
+
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
+        public Vector2 LocalAnchorB { get; set; }
+
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
 
         /// <summary>
@@ -295,8 +309,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Set the joint limits, usually in meters.
         /// </summary>
-        /// <param name="lower"></param>
-        /// <param name="upper"></param>
+        /// <param name="lower">The lower limit</param>
+        /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
         {
             if (upper != _upperTranslation || lower != _lowerTranslation)
@@ -356,11 +370,18 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <value></value>
         public float MotorImpulse { get; set; }
 
+        /// <summary>
+        /// Gets the motor force.
+        /// </summary>
+        /// <param name="invDt">The inverse delta time</param>
         public float GetMotorForce(float invDt)
         {
             return invDt * MotorImpulse;
         }
 
+        /// <summary>
+        /// The axis at which the joint moves.
+        /// </summary>
         public Vector2 Axis
         {
             get { return _axis1; }
@@ -373,8 +394,14 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// The axis in local coordinates relative to BodyA
+        /// </summary>
         public Vector2 LocalXAxis { get; private set; }
 
+        /// <summary>
+        /// The reference angle.
+        /// </summary>
         public float ReferenceAngle { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)

@@ -92,7 +92,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
     public abstract class Joint
     {
-        private float _breakpoint = float.MaxValue;
+        private float _breakpoint;
         private double _breakpointSquared;
 
         /// <summary>
@@ -107,29 +107,27 @@ namespace FarseerPhysics.Dynamics.Joints
 
         protected Joint()
         {
+            Breakpoint = float.MaxValue;
+
+            //Connected bodies should not collide by default
+            CollideConnected = false;
         }
 
-        protected Joint(Body bodyA, Body bodyB)
+        protected Joint(Body bodyA, Body bodyB) : this()
         {
             //Can't connect a joint to the same body twice.
             Debug.Assert(bodyA != bodyB);
 
             BodyA = bodyA;
             BodyB = bodyB;
-
-            //Connected bodies should not collide by default
-            CollideConnected = false;
         }
 
         /// <summary>
         /// Constructor for fixed joint
         /// </summary>
-        protected Joint(Body body)
+        protected Joint(Body body) : this()
         {
             BodyA = body;
-
-            //Connected bodies should not collide by default
-            CollideConnected = false;
         }
 
         /// <summary>
@@ -191,13 +189,13 @@ namespace FarseerPhysics.Dynamics.Joints
         public event Action<Joint, float> Broke;
 
         /// <summary>
-        /// Get the reaction force on bodyB at the joint anchor in Newtons.
+        /// Get the reaction force on body at the joint anchor in Newtons.
         /// </summary>
         /// <param name="invDt">The inverse delta time.</param>
         public abstract Vector2 GetReactionForce(float invDt);
 
         /// <summary>
-        /// Get the reaction torque on bodyB in N*m.
+        /// Get the reaction torque on the body at the joint anchor in N*m.
         /// </summary>
         /// <param name="invDt">The inverse delta time.</param>
         public abstract float GetReactionTorque(float invDt);

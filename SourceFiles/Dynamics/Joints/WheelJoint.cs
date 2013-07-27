@@ -27,6 +27,22 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Dynamics.Joints
 {
+    // Linear constraint (point-to-line)
+    // d = pB - pA = xB + rB - xA - rA
+    // C = dot(ay, d)
+    // Cdot = dot(d, cross(wA, ay)) + dot(ay, vB + cross(wB, rB) - vA - cross(wA, rA))
+    //      = -dot(ay, vA) - dot(cross(d + rA, ay), wA) + dot(ay, vB) + dot(cross(rB, ay), vB)
+    // J = [-ay, -cross(d + rA, ay), ay, cross(rB, ay)]
+
+    // Spring linear constraint
+    // C = dot(ax, d)
+    // Cdot = = -dot(ax, vA) - dot(cross(d + rA, ax), wA) + dot(ax, vB) + dot(cross(rB, ax), vB)
+    // J = [-ax -cross(d+rA, ax) ax cross(rB, ax)]
+
+    // Motor rotational constraint
+    // Cdot = wB - wA
+    // J = [0 0 -1 0 0 1]
+
     /// <summary>
     /// A wheel joint. This joint provides two degrees of freedom: translation
     /// along an axis fixed in bodyA and rotation in the plane. You can use a
@@ -69,27 +85,19 @@ namespace FarseerPhysics.Dynamics.Joints
         private float _gamma;
         private Vector2 _axis;
 
-        // Linear constraint (point-to-line)
-        // d = pB - pA = xB + rB - xA - rA
-        // C = dot(ay, d)
-        // Cdot = dot(d, cross(wA, ay)) + dot(ay, vB + cross(wB, rB) - vA - cross(wA, rA))
-        //      = -dot(ay, vA) - dot(cross(d + rA, ay), wA) + dot(ay, vB) + dot(cross(rB, ay), vB)
-        // J = [-ay, -cross(d + rA, ay), ay, cross(rB, ay)]
-
-        // Spring linear constraint
-        // C = dot(ax, d)
-        // Cdot = = -dot(ax, vA) - dot(cross(d + rA, ax), wA) + dot(ax, vB) + dot(cross(rB, ax), vB)
-        // J = [-ax -cross(d+rA, ax) ax cross(rB, ax)]
-
-        // Motor rotational constraint
-        // Cdot = wB - wA
-        // J = [0 0 -1 0 0 1]
-
         internal WheelJoint()
         {
             JointType = JointType.Wheel;
         }
 
+        /// <summary>
+        /// Constructor for WheelJoint
+        /// </summary>
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        /// <param name="anchor">The anchor point</param>
+        /// <param name="axis">The axis</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public WheelJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
@@ -106,27 +114,34 @@ namespace FarseerPhysics.Dynamics.Joints
                 LocalAnchorB = anchor;
             }
 
-            _axis = axis; //FPE only: We maintain the original value as it is supposed to.
-            LocalXAxis = bodyA.GetLocalVector(_axis);
-            _localYAxis = MathUtils.Cross(1.0f, LocalXAxis);
+            Axis = axis; //FPE only: We maintain the original value as it is supposed to.
         }
 
+        /// <summary>
+        /// The local anchor point on BodyA
+        /// </summary>
         public Vector2 LocalAnchorA { get; set; }
 
+        /// <summary>
+        /// The local anchor point on BodyB
+        /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
         public override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
         }
 
+        /// <summary>
+        /// The axis at which the suspension moves.
+        /// </summary>
         public Vector2 Axis
         {
             get { return _axis; }
@@ -138,9 +153,14 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
+        /// The axis in local coordinates relative to BodyA
+        /// </summary>
         public Vector2 LocalXAxis { get; private set; }
 
+        /// <summary>
         /// The desired motor speed in radians per second.
+        /// </summary>
         public float MotorSpeed
         {
             get { return _motorSpeed; }
@@ -151,7 +171,9 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
         /// The maximum motor torque, usually in N-m.
+        /// </summary>
         public float MaxMotorTorque
         {
             get { return _maxMotorTorque; }
@@ -162,11 +184,70 @@ namespace FarseerPhysics.Dynamics.Joints
             }
         }
 
+        /// <summary>
         /// Suspension frequency, zero indicates no suspension
+        /// </summary>
         public float Frequency { get; set; }
 
+        /// <summary>
         /// Suspension damping ratio, one indicates critical damping
+        /// </summary>
         public float DampingRatio { get; set; }
+
+        /// <summary>
+        /// Gets the translation along the axis
+        /// </summary>
+        public float JointTranslation
+        {
+            get
+            {
+                Body bA = BodyA;
+                Body bB = BodyB;
+
+                Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
+                Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
+                Vector2 d = pB - pA;
+                Vector2 axis = bA.GetWorldVector(LocalXAxis);
+
+                float translation = Vector2.Dot(d, axis);
+                return translation;
+            }
+        }
+
+        /// <summary>
+        /// Gets the angular velocity of the joint
+        /// </summary>
+        public float JointSpeed
+        {
+            get
+            {
+                float wA = BodyA.AngularVelocity;
+                float wB = BodyB.AngularVelocity;
+                return wB - wA;
+            }
+        }
+
+        /// <summary>
+        /// Enable/disable the joint motor.
+        /// </summary>
+        public bool MotorEnabled
+        {
+            get { return _enableMotor; }
+            set
+            {
+                WakeBodies();
+                _enableMotor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the torque of the motor
+        /// </summary>
+        /// <param name="invDt">inverse delta time</param>
+        public float GetMotorTorque(float invDt)
+        {
+            return invDt * _motorImpulse;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -428,49 +509,6 @@ namespace FarseerPhysics.Dynamics.Joints
             data.positions[_indexB].a = aB;
 
             return Math.Abs(C) <= Settings.LinearSlop;
-        }
-
-        public float JointTranslation
-        {
-            get
-            {
-                Body bA = BodyA;
-                Body bB = BodyB;
-
-                Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
-                Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
-                Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(LocalXAxis);
-
-                float translation = Vector2.Dot(d, axis);
-                return translation;
-            }
-        }
-
-        public float JointSpeed
-        {
-            get
-            {
-                float wA = BodyA.AngularVelocity;
-                float wB = BodyB.AngularVelocity;
-                return wB - wA;
-            }
-        }
-
-        /// Enable/disable the joint motor.
-        public bool MotorEnabled
-        {
-            get { return _enableMotor; }
-            set
-            {
-                WakeBodies();
-                _enableMotor = value;
-            }
-        }
-
-        public float GetMotorTorque(float invDt)
-        {
-            return invDt * _motorImpulse;
         }
     }
 }

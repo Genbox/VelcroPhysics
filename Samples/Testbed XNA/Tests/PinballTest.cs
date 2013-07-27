@@ -75,7 +75,7 @@ namespace FarseerPhysics.TestBed.Tests
                 leftFlipper.CreateFixture(box);
                 rightFlipper.CreateFixture(box);
 
-                _leftJoint = new RevoluteJoint(ground, p1, leftFlipper, Vector2.Zero);
+                _leftJoint = new RevoluteJoint(ground, leftFlipper, p1, Vector2.Zero);
                 _leftJoint.MaxMotorTorque = 1000.0f;
                 _leftJoint.LimitEnabled = true;
                 _leftJoint.MotorEnabled = true;
@@ -84,7 +84,7 @@ namespace FarseerPhysics.TestBed.Tests
                 _leftJoint.UpperLimit = 5.0f * Settings.Pi / 180.0f;
                 World.AddJoint(_leftJoint);
 
-                _rightJoint = new RevoluteJoint(ground, p2, rightFlipper, Vector2.Zero);
+                _rightJoint = new RevoluteJoint(ground, rightFlipper, p2, Vector2.Zero);
                 _rightJoint.MaxMotorTorque = 1000.0f;
                 _rightJoint.LimitEnabled = true;
                 _rightJoint.MotorEnabled = true;

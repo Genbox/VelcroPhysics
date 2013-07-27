@@ -62,6 +62,12 @@ namespace FarseerPhysics.Dynamics.Joints
             JointType = JointType.Motor;
         }
 
+        /// <summary>
+        /// Constructor for MotorJoint.
+        /// </summary>
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public MotorJoint(Body bodyA, Body bodyB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
@@ -80,9 +86,7 @@ namespace FarseerPhysics.Dynamics.Joints
             _maxTorque = 1.0f;
             CorrectionFactor = 0.3f;
 
-            float angleA = BodyA.Rotation;
-            float angleB = BodyB.Rotation;
-            _angularOffset = angleB - angleA;
+            _angularOffset = BodyB.Rotation - BodyA.Rotation;
         }
 
         public override Vector2 WorldAnchorA
@@ -97,7 +101,76 @@ namespace FarseerPhysics.Dynamics.Joints
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public float CorrectionFactor { get; set; }
+        /// <summary>
+        /// The maximum amount of force that can be applied to BodyA
+        /// </summary>
+        public float MaxForce
+        {
+            set
+            {
+                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                _maxForce = value;
+            }
+            get { return _maxForce; }
+        }
+
+        /// <summary>
+        /// The maximum amount of torque that can be applied to BodyA
+        /// </summary>
+        public float MaxTorque
+        {
+            set
+            {
+                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
+                _maxTorque = value;
+            }
+            get { return _maxTorque; }
+        }
+
+        /// <summary>
+        /// The linear (translation) offset.
+        /// </summary>
+        public Vector2 LinearOffset
+        {
+            set
+            {
+                if (_linearOffset.X != value.X || _linearOffset.Y != value.Y)
+                {
+                    WakeBodies();
+                    _linearOffset = value;
+                }
+            }
+            get { return _linearOffset; }
+        }
+
+        /// <summary>
+        /// Get or set the angular offset.
+        /// </summary>
+        public float AngularOffset
+        {
+            set
+            {
+                if (_angularOffset != value)
+                {
+                    WakeBodies();
+                    _angularOffset = value;
+                }
+            }
+            get { return _angularOffset; }
+        }
+
+        //FPE note: Used for serialization.
+        internal float CorrectionFactor { get; set; }
+
+        public override Vector2 GetReactionForce(float invDt)
+        {
+            return invDt * _linearImpulse;
+        }
+
+        public override float GetReactionTorque(float invDt)
+        {
+            return invDt * _angularImpulse;
+        }
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
@@ -242,63 +315,6 @@ namespace FarseerPhysics.Dynamics.Joints
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
             return true;
-        }
-
-        public override Vector2 GetReactionForce(float invDt)
-        {
-            return invDt * _linearImpulse;
-        }
-
-        public override float GetReactionTorque(float invDt)
-        {
-            return invDt * _angularImpulse;
-        }
-
-        public float MaxForce
-        {
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _maxForce = value;
-            }
-            get { return _maxForce; }
-        }
-
-        public float MaxTorque
-        {
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _maxTorque = value;
-            }
-            get { return _maxTorque; }
-        }
-
-        public Vector2 LinearOffset
-        {
-            set
-            {
-                if (value.X != _linearOffset.X || value.Y != _linearOffset.Y)
-                {
-                    BodyA.Awake = true;
-                    BodyB.Awake = true;
-                    _linearOffset = value;
-                }
-            }
-            get { return _linearOffset; }
-        }
-
-        public float AngularOffset
-        {
-            set
-            {
-                if (value != _angularOffset)
-                {
-                    WakeBodies();
-                    _angularOffset = value;
-                }
-            }
-            get { return _angularOffset; }
         }
     }
 }
