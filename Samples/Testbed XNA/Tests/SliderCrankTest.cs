@@ -37,7 +37,7 @@ namespace FarseerPhysics.TestBed.Tests
     public class SliderCrankTest : Test
     {
         private RevoluteJoint _joint1;
-        //private FixedPrismaticJoint _joint2;
+        private PrismaticJoint _joint2;
 
         private SliderCrankTest()
         {
@@ -104,11 +104,11 @@ namespace FarseerPhysics.TestBed.Tests
                     RevoluteJoint rjd = new RevoluteJoint(prevBody, body, new Vector2(0, 17), true);
                     World.AddJoint(rjd);
 
-                    //_joint2 = new FixedPrismaticJoint(body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f)); //TODO
-                    //_joint2.MaxMotorForce = 1000.0f;
-                    //_joint2.MotorEnabled = true;
+                    _joint2 = new PrismaticJoint(ground, body, new Vector2(0.0f, 17.0f), new Vector2(0.0f, 1.0f), true);
+                    _joint2.MaxMotorForce = 1000.0f;
+                    _joint2.MotorEnabled = true;
 
-                    //World.AddJoint(_joint2);
+                    World.AddJoint(_joint2);
                 }
 
                 // Create a payload
@@ -129,8 +129,8 @@ namespace FarseerPhysics.TestBed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.F))
             {
-                //_joint2.MotorEnabled = !_joint2.MotorEnabled;
-                //_joint2.BodyB.Awake = true;
+                _joint2.MotorEnabled = !_joint2.MotorEnabled;
+                _joint2.BodyB.Awake = true;
             }
             if (keyboardManager.IsNewKeyPress(Keys.M))
             {
@@ -145,7 +145,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
             DrawString("Keys: (f) toggle friction, (m) toggle motor");
-            
+
             float torque = _joint1.GetMotorTorque(settings.Hz);
             DrawString("Motor Torque = " + torque);
         }
