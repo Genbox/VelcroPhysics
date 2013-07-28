@@ -35,8 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private DominosTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body b1 = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 Vertices box = PolygonTools.CreateRectangle(6.0f, 0.25f);
@@ -44,7 +43,6 @@ namespace FarseerPhysics.TestBed.Tests
 
                 Body ground = BodyFactory.CreateBody(World);
                 ground.Position = new Vector2(-1.5f, 10.0f);
-
                 ground.CreateFixture(shape);
             }
 
@@ -98,9 +96,9 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            //FixedRevoluteJoint jd = new FixedRevoluteJoint(b3, b3.GetLocalPoint(anchor), anchor); //TODO
-            //jd.CollideConnected = true;
-            //World.AddJoint(jd);
+            RevoluteJoint jd = new RevoluteJoint(b1, b3, anchor, true);
+            jd.CollideConnected = true;
+            World.AddJoint(jd);
 
             Body b4;
             {
@@ -115,8 +113,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            //FixedRevoluteJoint jd2 = new FixedRevoluteJoint(b4, b4.GetLocalPoint(anchor), anchor);  //TODO
-            //World.AddJoint(jd2);
+            RevoluteJoint jd2 = new RevoluteJoint(b2, b4, anchor, true);
+            World.AddJoint(jd2);
 
             Body b5;
             {
@@ -144,8 +142,8 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            //FixedRevoluteJoint jd3 = new FixedRevoluteJoint(b5, b5.GetLocalPoint(anchor), anchor);  //TODO
-            //World.AddJoint(jd3);
+            RevoluteJoint jd3 = new RevoluteJoint(b1, b5, anchor, true);
+            World.AddJoint(jd3);
 
             Body b6;
             {
@@ -159,8 +157,8 @@ namespace FarseerPhysics.TestBed.Tests
                 b6.CreateFixture(shape);
             }
 
-            anchor = new Vector2(1.0f, -0.1f);
-            RevoluteJoint jd4 = new RevoluteJoint(b5, b6, b6.GetWorldPoint(anchor), anchor); //TODO: Check line
+            anchor = new Vector2(7.50f, 4.0f);
+            RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor, true);
             jd4.CollideConnected = true;
             World.AddJoint(jd4);
 
@@ -177,8 +175,6 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             DistanceJoint djd = new DistanceJoint(b3, b7, new Vector2(6.0f, 0.0f), new Vector2(0.0f, -1.0f));
-            Vector2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
-            djd.Length = d.Length();
             World.AddJoint(djd);
 
             {
@@ -209,7 +205,7 @@ namespace FarseerPhysics.TestBed.Tests
                 BodyFactory.CreateRectangle(World, 5, 5, 1);
             }
 
-            return false;
+            return true;
         }
 
         internal static Test Create()
