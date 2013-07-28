@@ -20,8 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision;
+using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
@@ -30,34 +31,116 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class SensorTest : Test
     {
+        private const int Count = 7;
+        private Body[] _bodies = new Body[Count];
+        private Fixture _sensor;
+        private bool[] _touching = new bool[Count];
+
         private SensorTest()
         {
-            Body body = BodyFactory.CreateRectangle(World, 1, 1, 1);
-            body.BodyType = BodyType.Dynamic;
+            World.ContactManager.BeginContact += BeginContact;
+            World.ContactManager.EndContact += EndContact;
+
+            {
+                Body ground = BodyFactory.CreateBody(World);
+
+                {
+                    EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                    ground.CreateFixture(shape);
+                }
+
+                {
+                    CircleShape shape = new CircleShape(5.0f, 1);
+                    shape.Position = new Vector2(0.0f, 10.0f);
+
+                    _sensor = ground.CreateFixture(shape);
+                    _sensor.IsSensor = true;
+                }
+            }
+
+            {
+                CircleShape shape = new CircleShape(1.0f, 1);
+
+                for (int i = 0; i < Count; ++i)
+                {
+                    _touching[i] = false;
+                    _bodies[i] = BodyFactory.CreateBody(World);
+                    _bodies[i].BodyType = BodyType.Dynamic;
+                    _bodies[i].Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                    _bodies[i].UserData = i;
+
+                    _bodies[i].CreateFixture(shape);
+                }
+            }
+        }
+
+        // Implement contact listener.
+        private bool BeginContact(Contact contact)
+        {
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
+
+            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
+            {
+                _touching[(int)(fixtureB.Body.UserData)] = true;
+            }
+
+            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
+            {
+                _touching[(int)(fixtureA.Body.UserData)] = true;
+            }
+
+            return true;
+        }
+
+        // Implement contact listener.
+        private void EndContact(Contact contact)
+        {
+            Fixture fixtureA = contact.FixtureA;
+            Fixture fixtureB = contact.FixtureB;
+
+            if (fixtureA == _sensor && fixtureB.Body.UserData != null)
+            {
+                _touching[(int)(fixtureB.Body.UserData)] = false;
+            }
+
+            if (fixtureB == _sensor && fixtureA.Body.UserData != null)
+            {
+                _touching[(int)(fixtureA.Body.UserData)] = false;
+            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            Vector2 min = -new Vector2(10);
-            Vector2 max = new Vector2(10);
-
-            AABB affected = new AABB(ref min, ref max);
-            Fixture fix = null;
-            World.QueryAABB(fixture =>
-                                {
-                                    fix = fixture;
-                                    return true;
-                                }, ref affected);
-
-
-            //DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            //if (fix != null)
-            //    DebugView.DrawPoint(fix.Body.Position, 1, Color.Red);
-
-            //DebugView.DrawAABB(ref affected, Color.AliceBlue);
-            //DebugView.EndCustomDraw();
-
             base.Update(settings, gameTime);
+
+            // Traverse the contact results. Apply a force on shapes
+            // that overlap the sensor.
+            for (int i = 0; i < Count; ++i)
+            {
+                if (_touching[i] == false)
+                {
+                    continue;
+                }
+
+                Body body = _bodies[i];
+                Body ground = _sensor.Body;
+
+                CircleShape circle = (CircleShape)_sensor.Shape;
+                Vector2 center = ground.GetWorldPoint(circle.Position);
+
+                Vector2 position = body.Position;
+
+                Vector2 d = center - position;
+                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
+                {
+                    continue;
+                }
+
+                d.Normalize();
+                Vector2 f = 100.0f * d;
+                body.ApplyForce(f, position);
+            }
         }
 
         internal static Test Create()
