@@ -57,37 +57,13 @@ namespace FarseerPhysics.Collision.Shapes
         /// Create a new chainshape from the vertices.
         /// </summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
-        public ChainShape(Vertices vertices)
+        /// <param name="createLoop">Set to true to create a closed loop. It connects the first vertice to the last, and automatically adjusts connectivity to create smooth collisions along the chain.</param>
+        public ChainShape(Vertices vertices, bool createLoop = false)
             : base(0)
         {
             ShapeType = ShapeType.Chain;
             _radius = Settings.PolygonRadius;
 
-            Debug.Assert(vertices != null && vertices.Count >= 2);
-            Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); // FPE. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
-
-            for (int i = 1; i < vertices.Count; ++i)
-            {
-                Vector2 v1 = vertices[i - 1];
-                Vector2 v2 = vertices[i];
-
-                // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
-            }
-
-            //Only copy the items if we don't need to conserve memory.
-            Vertices = Settings.ConserveMemory ? vertices : new Vertices(vertices);
-
-            _hasPrevVertex = false;
-            _hasNextVertex = false;
-        }
-
-        /// <summary>
-        /// Create a loop. This automatically adjusts connectivity.
-        /// </summary>
-        /// <param name="vertices"></param>
-        public void CreateLoop(Vertices vertices)
-        {
             Debug.Assert(vertices != null && vertices.Count >= 3);
             Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); // FPE. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
 
@@ -100,10 +76,14 @@ namespace FarseerPhysics.Collision.Shapes
                 Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
-            Vertices = Settings.ConserveMemory ? vertices : new Vertices(vertices);
-            Vertices.Add(vertices[0]);
-            PrevVertex = Vertices[Vertices.Count - 2]; //FPE: We use the properties instead of the private fields here.
-            NextVertex = Vertices[1]; //FPE: We use the properties instead of the private fields here.
+            Vertices = new Vertices(vertices);
+
+            if (createLoop)
+            {
+                Vertices.Add(vertices[0]);
+                PrevVertex = Vertices[Vertices.Count - 2]; //FPE: We use the properties instead of the private fields here.
+                NextVertex = Vertices[1]; //FPE: We use the properties instead of the private fields here.
+            }
         }
 
         public override int ChildCount

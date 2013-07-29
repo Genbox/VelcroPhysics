@@ -23,7 +23,7 @@ namespace FarseerPhysics.Common.ConvexHull
             if (vertices.Count <= 3)
                 return vertices;
 
-            Vertices pointSet = Settings.ConserveMemory ? vertices : new Vertices(vertices);
+            Vertices pointSet = new Vertices(vertices);
 
             //Sort by X-axis
             pointSet.Sort(_pointComparer);

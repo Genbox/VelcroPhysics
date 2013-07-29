@@ -153,7 +153,7 @@ namespace FarseerPhysics.Dynamics
 
             Body = body;
             UserData = userData;
-            Shape = Settings.ConserveMemory ? shape : shape.Clone();
+            Shape = shape.Clone();
 
             RegisterFixture();
         }

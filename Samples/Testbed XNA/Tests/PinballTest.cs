@@ -54,8 +54,7 @@ namespace FarseerPhysics.TestBed.Tests
                 vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
 
-                ChainShape chain = new ChainShape(vertices);
-                chain.CreateLoop(vertices);
+                ChainShape chain = new ChainShape(vertices, true);
                 ground.CreateFixture(chain);
             }
 
