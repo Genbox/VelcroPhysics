@@ -264,8 +264,7 @@ namespace FarseerPhysics.Factories
             return breakableBody;
         }
 
-        public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position,
-                                         float angle, bool closed)
+        public static Body CreateLineArc(World world, float radians, int sides, float radius, Vector2 position, float angle, bool closed)
         {
             Body body = CreateBody(world);
             FixtureFactory.AttachLineArc(radians, sides, radius, position, angle, closed, body);

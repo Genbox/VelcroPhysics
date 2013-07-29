@@ -112,9 +112,7 @@ namespace FarseerPhysics.Factories
             List<Fixture> fixtures = new List<Fixture>(arc.Count);
 
             if (closed)
-            {
-                fixtures.Add(AttachChainShape(arc, body));
-            }
+                fixtures.Add(AttachLoopShape(arc, body));
 
             for (int i = 1; i < arc.Count; i++)
             {
