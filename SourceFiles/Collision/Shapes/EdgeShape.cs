@@ -128,21 +128,6 @@ namespace FarseerPhysics.Collision.Shapes
             ComputeProperties();
         }
 
-        public override Shape Clone()
-        {
-            EdgeShape edge = new EdgeShape();
-            edge._radius = _radius;
-            edge._density = _density;
-            edge.HasVertex0 = HasVertex0;
-            edge.HasVertex3 = HasVertex3;
-            edge.Vertex0 = Vertex0;
-            edge._vertex1 = _vertex1;
-            edge._vertex2 = _vertex2;
-            edge.Vertex3 = Vertex3;
-            edge.MassData = MassData;
-            return edge;
-        }
-
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             return false;
@@ -246,6 +231,21 @@ namespace FarseerPhysics.Collision.Shapes
                     Vertex1 == shape.Vertex1 &&
                     Vertex2 == shape.Vertex2 &&
                     Vertex3 == shape.Vertex3);
+        }
+
+        public override Shape Clone()
+        {
+            EdgeShape edge = new EdgeShape();
+            edge._radius = _radius;
+            edge._density = _density;
+            edge.HasVertex0 = HasVertex0;
+            edge.HasVertex3 = HasVertex3;
+            edge.Vertex0 = Vertex0;
+            edge._vertex1 = _vertex1;
+            edge._vertex2 = _vertex2;
+            edge.Vertex3 = Vertex3;
+            edge.MassData = MassData;
+            return edge;
         }
     }
 }

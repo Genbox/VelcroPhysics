@@ -442,19 +442,6 @@ namespace FarseerPhysics.Collision.Shapes
             return area;
         }
 
-        public override Shape Clone()
-        {
-            PolygonShape clone = new PolygonShape();
-            clone.ShapeType = ShapeType;
-            clone._radius = _radius;
-            clone._density = _density;
-            clone._vertices = new Vertices(Vertices);
-            clone._normals = new Vertices(Normals);
-
-            clone.MassData = MassData;
-            return clone;
-        }
-
         public bool CompareTo(PolygonShape shape)
         {
             if (Vertices.Count != shape.Vertices.Count)
@@ -467,6 +454,19 @@ namespace FarseerPhysics.Collision.Shapes
             }
 
             return (Radius == shape.Radius && MassData == shape.MassData);
+        }
+
+        public override Shape Clone()
+        {
+            PolygonShape clone = new PolygonShape();
+            clone.ShapeType = ShapeType;
+            clone._radius = _radius;
+            clone._density = _density;
+            clone._vertices = new Vertices(Vertices);
+            clone._normals = new Vertices(Normals);
+
+            clone.MassData = MassData;
+            return clone;
         }
     }
 }

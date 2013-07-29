@@ -76,18 +76,6 @@ namespace FarseerPhysics.Collision.Shapes
             }
         }
 
-        public override Shape Clone()
-        {
-            CircleShape shape = new CircleShape();
-            shape._radius = Radius;
-            shape._2radius = _2radius;
-            shape._density = _density;
-            shape._position = _position;
-            shape.ShapeType = ShapeType;
-            shape.MassData = MassData;
-            return shape;
-        }
-
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
             Vector2 center = transform.p + MathUtils.Mul(transform.q, Position);
@@ -156,16 +144,6 @@ namespace FarseerPhysics.Collision.Shapes
             MassData.Inertia = MassData.Mass * (0.5f * _2radius + Vector2.Dot(Position, Position));
         }
 
-        /// <summary>
-        /// Compare the circle to another circle
-        /// </summary>
-        /// <param name="shape">The other circle</param>
-        /// <returns>True if the two circles are the same size and have the same position</returns>
-        public bool CompareTo(CircleShape shape)
-        {
-            return (Radius == shape.Radius && Position == shape.Position);
-        }
-
         public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
@@ -193,6 +171,28 @@ namespace FarseerPhysics.Collision.Shapes
             sc.Y = p.Y + normal.Y * com;
 
             return area;
+        }
+
+        /// <summary>
+        /// Compare the circle to another circle
+        /// </summary>
+        /// <param name="shape">The other circle</param>
+        /// <returns>True if the two circles are the same size and have the same position</returns>
+        public bool CompareTo(CircleShape shape)
+        {
+            return (Radius == shape.Radius && Position == shape.Position);
+        }
+
+        public override Shape Clone()
+        {
+            CircleShape shape = new CircleShape();
+            shape._radius = Radius;
+            shape._2radius = _2radius;
+            shape._density = _density;
+            shape._position = _position;
+            shape.ShapeType = ShapeType;
+            shape.MassData = MassData;
+            return shape;
         }
     }
 }

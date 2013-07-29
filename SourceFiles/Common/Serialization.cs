@@ -78,7 +78,19 @@ namespace FarseerPhysics.Common
                         WriteElement("Vertex2", poly.Vertex2);
                     }
                     break;
-                    //TODO: Chain shape
+                case ShapeType.Chain:
+                    {
+                        ChainShape chain = (ChainShape)shape;
+
+                        _writer.WriteStartElement("Vertices");
+                        foreach (Vector2 v in chain.Vertices)
+                            WriteElement("Vertex", v);
+                        _writer.WriteEndElement();
+
+                        WriteElement("NextVertex", chain.NextVertex);
+                        WriteElement("PrevVertex", chain.PrevVertex);
+                    }
+                    break;
                 default:
                     throw new Exception();
             }
@@ -540,6 +552,37 @@ namespace FarseerPhysics.Common
                                             case "vertex3":
                                                 shape.Vertex3 = ReadVector(sn);
                                                 break;
+                                            default:
+                                                throw new Exception();
+                                        }
+                                    }
+                                    shapes.Add(shape);
+                                }
+                                break;
+                            case ShapeType.Chain:
+                                {
+                                    ChainShape shape = new ChainShape();
+                                    foreach (XMLFragmentElement sn in element.Elements)
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "vertices":
+                                                {
+                                                    List<Vector2> verts = new List<Vector2>(sn.Elements.Count);
+
+                                                    foreach (XMLFragmentElement vert in sn.Elements)
+                                                        verts.Add(ReadVector(vert));
+
+                                                    shape.Vertices = new Vertices(verts);
+                                                }
+                                                break;
+                                            case "nextvertex":
+                                                shape.NextVertex = ReadVector(sn);
+                                                break;
+                                            case "prevvertex":
+                                                shape.PrevVertex = ReadVector(sn);
+                                                break;
+
                                             default:
                                                 throw new Exception();
                                         }
@@ -1367,8 +1410,7 @@ namespace FarseerPhysics.Common
                         token = NextToken();
                         NextToken(); // skip >
 
-                        element.OuterXml =
-                            TrimControl(_buffer.Buffer.Substring(startOuterXml, _buffer.Position - startOuterXml)).Trim();
+                        element.OuterXml = TrimControl(_buffer.Buffer.Substring(startOuterXml, _buffer.Position - startOuterXml)).Trim();
                         element.InnerXml = TrimTags(element.OuterXml);
 
                         if (token != element.Name)
@@ -1394,7 +1436,7 @@ namespace FarseerPhysics.Common
             return element;
         }
 
-        internal void Parse()
+        private void Parse()
         {
             _rootNode = TryParseNode();
 

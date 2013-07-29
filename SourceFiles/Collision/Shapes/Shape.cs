@@ -241,6 +241,9 @@ namespace FarseerPhysics.Collision.Shapes
             if (shape is EdgeShape && this is EdgeShape)
                 return ((EdgeShape)this).CompareTo((EdgeShape)shape);
 
+            if (shape is ChainShape && this is ChainShape)
+                return ((ChainShape)this).CompareTo((ChainShape)shape);
+
             return false;
         }
 
