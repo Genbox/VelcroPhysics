@@ -85,7 +85,7 @@ namespace FarseerPhysics.Collision.Shapes
             get { return _vertices; }
             set
             {
-                _vertices = Settings.ConserveMemory ? value : new Vertices(value);
+                _vertices = new Vertices(value);
 
                 Debug.Assert(_vertices.Count >= 3 && _vertices.Count <= Settings.MaxPolygonVertices);
 
@@ -448,17 +448,8 @@ namespace FarseerPhysics.Collision.Shapes
             clone.ShapeType = ShapeType;
             clone._radius = _radius;
             clone._density = _density;
-
-            if (Settings.ConserveMemory)
-            {
-                clone._vertices = Vertices;
-                clone._normals = Normals;
-            }
-            else
-            {
-                clone._vertices = new Vertices(Vertices);
-                clone._normals = new Vertices(Normals);
-            }
+            clone._vertices = new Vertices(Vertices);
+            clone._normals = new Vertices(Normals);
 
             clone.MassData = MassData;
             return clone;

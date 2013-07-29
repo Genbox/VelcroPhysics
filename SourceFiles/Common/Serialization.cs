@@ -78,6 +78,7 @@ namespace FarseerPhysics.Common
                         WriteElement("Vertex2", poly.Vertex2);
                     }
                     break;
+                    //TODO: Chain shape
                 default:
                     throw new Exception();
             }

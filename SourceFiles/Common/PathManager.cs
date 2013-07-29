@@ -38,7 +38,7 @@ namespace FarseerPhysics.Common
 
             if (path.Closed)
             {
-                ChainShape chain = new ChainShape(verts);
+                ChainShape chain = new ChainShape(verts, true);
                 body.CreateFixture(chain);
             }
             else
@@ -65,7 +65,7 @@ namespace FarseerPhysics.Common
 
             List<Vector2> verts = path.GetVertices(subdivisions);
 
-            List<Vertices> decomposedVerts = Triangulate.ConvexPartition(new Vertices(verts), TriangulationAlgorithm.Earclip);
+            List<Vertices> decomposedVerts = Triangulate.ConvexPartition(new Vertices(verts), TriangulationAlgorithm.Bayazit);
 
             foreach (Vertices item in decomposedVerts)
             {

@@ -27,13 +27,11 @@ namespace FarseerPhysics.Factories
 
         public static Fixture AttachLoopShape(Vertices vertices, Body body, object userData = null)
         {
-            ChainShape shape = new ChainShape();
-            shape.CreateLoop(vertices);
+            ChainShape shape = new ChainShape(vertices, true);
             return body.CreateFixture(shape, userData);
         }
 
-        public static Fixture AttachRectangle(float width, float height, float density, Vector2 offset, Body body,
-                                              object userData = null)
+        public static Fixture AttachRectangle(float width, float height, float density, Vector2 offset, Body body, object userData = null)
         {
             Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
             rectangleVertices.Translate(ref offset);
@@ -105,8 +103,7 @@ namespace FarseerPhysics.Factories
             return res;
         }
 
-        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle,
-                                                  bool closed, Body body)
+        public static List<Fixture> AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle, bool closed, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
@@ -127,8 +124,7 @@ namespace FarseerPhysics.Factories
             return fixtures;
         }
 
-        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius,
-                                                   Vector2 position, float angle, Body body)
+        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Vector2 position, float angle, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2 + angle);

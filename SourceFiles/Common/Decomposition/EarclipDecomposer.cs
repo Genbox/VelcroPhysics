@@ -73,6 +73,10 @@ namespace FarseerPhysics.Common.Decomposition
         /// </remarks>
         private static List<Vertices> TriangulatePolygon(Vertices vertices, float tolerance)
         {
+            //FPE note: Check is needed as invalid triangles can be returned in recursive calls.
+            if (vertices.Count < 3)
+                return new List<Vertices>();
+
             List<Vertices> results = new List<Vertices>();
 
             //Recurse and split on pinch points
