@@ -92,15 +92,6 @@ namespace FarseerPhysics.Collision.Shapes
             get { return Vertices.Count - 1; }
         }
 
-        public override Shape Clone()
-        {
-            ChainShape loop = new ChainShape();
-            loop._density = _density;
-            loop._radius = _radius;
-            loop.Vertices = Vertices;
-            loop.MassData = MassData;
-            return loop;
-        }
 
         /// <summary>
         /// Establish connectivity to a vertex that precedes the first vertex.
@@ -233,6 +224,35 @@ namespace FarseerPhysics.Collision.Shapes
         {
             sc = Vector2.Zero;
             return 0;
+        }
+
+        /// <summary>
+        /// Compare the chain to another chain
+        /// </summary>
+        /// <param name="shape">The other chain</param>
+        /// <returns>True if the two chain shapes are the same</returns>
+        public bool CompareTo(ChainShape shape)
+        {
+            if (Vertices.Count != shape.Vertices.Count)
+                return false;
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                if (Vertices[i] != shape.Vertices[i])
+                    return false;
+            }
+
+            return PrevVertex == shape.PrevVertex && NextVertex == shape.NextVertex;
+        }
+
+        public override Shape Clone()
+        {
+            ChainShape loop = new ChainShape();
+            loop._density = _density;
+            loop._radius = _radius;
+            loop.Vertices = Vertices;
+            loop.MassData = MassData;
+            return loop;
         }
     }
 }

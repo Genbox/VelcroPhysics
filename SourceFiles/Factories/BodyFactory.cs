@@ -271,8 +271,7 @@ namespace FarseerPhysics.Factories
             return body;
         }
 
-        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius,
-                                          Vector2 position, float angle)
+        public static Body CreateSolidArc(World world, float density, float radians, int sides, float radius, Vector2 position, float angle)
         {
             Body body = CreateBody(world);
             FixtureFactory.AttachSolidArc(density, radians, sides, radius, position, angle, body);
