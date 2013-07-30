@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FarseerPhysics.Samples.Demos;
 using FarseerPhysics.Samples.MediaSystem;
 using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
@@ -39,7 +40,6 @@ namespace FarseerPhysics.Samples
         private List<GameScreen> _screensToUpdate = new List<GameScreen>();
 
         private List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
-        private List<RenderTarget2D> _previews = new List<RenderTarget2D>();
 
         private MenuScreen _menuScreen;
 
@@ -96,34 +96,32 @@ namespace FarseerPhysics.Samples
 #endif
 
             // Create rendertarget for transitions
-            PresentationParameters _pp = GraphicsDevice.PresentationParameters;
-            _transitions.Add(new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth, _pp.BackBufferHeight, false,
-                                                SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
-                                                RenderTargetUsage.DiscardContents));
+            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+            _transitions.Add(new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents));
 
             _menuScreen = new MenuScreen();
 
-            Assembly SamplesFramework = Assembly.GetExecutingAssembly();
-            foreach (Type SampleType in SamplesFramework.GetTypes())
+            Assembly samplesFramework = Assembly.GetExecutingAssembly();
+            foreach (Type sampleType in samplesFramework.GetTypes())
             {
-                if (SampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
+                if (sampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
                 {
-                    PhysicsDemoScreen DemoScreen = SamplesFramework.CreateInstance(SampleType.ToString()) as PhysicsDemoScreen;
+                    PhysicsDemoScreen demoScreen = samplesFramework.CreateInstance(sampleType.ToString()) as PhysicsDemoScreen;
 #if WINDOWS
-                    Console.WriteLine("Loading demo: " + DemoScreen.GetTitle());
+                    Console.WriteLine("Loading demo: " + demoScreen.GetTitle());
 #endif
-                    RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, _pp.BackBufferWidth / 2, _pp.BackBufferHeight / 2, false,
-                                                                SurfaceFormat.Color, _pp.DepthStencilFormat, _pp.MultiSampleCount,
+                    RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth / 2, pp.BackBufferHeight / 2, false,
+                                                                SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount,
                                                                 RenderTargetUsage.DiscardContents);
 
-                    DemoScreen.Framework = this;
-                    DemoScreen.IsExiting = false;
+                    demoScreen.Framework = this;
+                    demoScreen.IsExiting = false;
 
-                    DemoScreen.Sprites = _spriteBatch;
-                    DemoScreen.Lines = _lineBatch;
-                    DemoScreen.Quads = _quadRenderer;
+                    demoScreen.Sprites = _spriteBatch;
+                    demoScreen.Lines = _lineBatch;
+                    demoScreen.Quads = _quadRenderer;
 
-                    DemoScreen.LoadContent();
+                    demoScreen.LoadContent();
 
                     // "Abuse" transition rendertarget to render screen preview
                     GraphicsDevice.SetRenderTarget(_transitions[0]);
@@ -132,10 +130,11 @@ namespace FarseerPhysics.Samples
                     _quadRenderer.Begin();
                     _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, ContentWrapper.Grey, Color.White * 0.3f);
                     _quadRenderer.End();
+
                     // Update ensures that the screen is fully visible, we "cover" it so that no physics are run
-                    DemoScreen.Update(new GameTime(DemoScreen.TransitionOnTime, DemoScreen.TransitionOnTime), true, false);
-                    DemoScreen.Draw(new GameTime());
-                    DemoScreen.Draw(new GameTime());
+                    demoScreen.Update(new GameTime(demoScreen.TransitionOnTime, demoScreen.TransitionOnTime), true, false);
+                    demoScreen.Draw(new GameTime());
+                    demoScreen.Draw(new GameTime());
 
                     GraphicsDevice.SetRenderTarget(preview);
                     GraphicsDevice.Clear(Color.Transparent);
@@ -146,9 +145,9 @@ namespace FarseerPhysics.Samples
 
                     GraphicsDevice.SetRenderTarget(null);
 
-                    DemoScreen.ExitScreen();
-                    DemoScreen.Update(new GameTime(DemoScreen.TransitionOffTime, DemoScreen.TransitionOffTime), true, false);
-                    _menuScreen.AddMenuItem(DemoScreen, preview);
+                    demoScreen.ExitScreen();
+                    demoScreen.Update(new GameTime(demoScreen.TransitionOffTime, demoScreen.TransitionOffTime), true, false);
+                    _menuScreen.AddMenuItem(demoScreen, preview);
                 }
             }
 

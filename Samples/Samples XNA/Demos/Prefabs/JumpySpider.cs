@@ -9,8 +9,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 {
     public class JumpySpider
     {
-        private const float FlexTime = 0.5f;
-        private const float RelaxTime = 4f;
+        private const float FlexTime = 5000f;
+        private const float RelaxTime = 5000f;
 
         private const float ShoulderFlexed = -1.2f;
         private const float ShoulderRelaxed = -0.2f;
@@ -35,7 +35,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private Sprite _upperLeg;
         private Sprite _lowerLeg;
 
-        private float _spiderBodyRadius = 0.65f;
+        private const float SpiderBodyRadius = 0.65f;
         private Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
         private Vector2 _lowerLegSize = new Vector2(1.8f, 0.3f);
 
@@ -44,31 +44,23 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public JumpySpider(World world, Vector2 position)
         {
             // Body
-            _circle = BodyFactory.CreateCircle(world, _spiderBodyRadius, 0.1f, position);
+            _circle = BodyFactory.CreateCircle(world, SpiderBodyRadius, 0.1f, position);
             _circle.BodyType = BodyType.Dynamic;
 
             // Left upper leg
-            _leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                     _circle.Position - new Vector2(_spiderBodyRadius, 0f) -
-                                                     new Vector2(_upperLegSize.X / 2f, 0f));
+            _leftUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f, _circle.Position - new Vector2(SpiderBodyRadius, 0f) - new Vector2(_upperLegSize.X / 2f, 0f));
             _leftUpper.BodyType = BodyType.Dynamic;
 
             // Left lower leg
-            _leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                     _circle.Position - new Vector2(_spiderBodyRadius, 0f) -
-                                                     new Vector2(_upperLegSize.X, 0f) - new Vector2(_lowerLegSize.X / 2f, 0f));
+            _leftLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f, _circle.Position - new Vector2(SpiderBodyRadius, 0f) - new Vector2(_upperLegSize.X, 0f) - new Vector2(_lowerLegSize.X / 2f, 0f));
             _leftLower.BodyType = BodyType.Dynamic;
 
             // Right upper leg
-            _rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f,
-                                                     _circle.Position + new Vector2(_spiderBodyRadius, 0f) +
-                                                     new Vector2(_upperLegSize.X / 2f, 0f));
+            _rightUpper = BodyFactory.CreateRectangle(world, _upperLegSize.X, _upperLegSize.Y, 0.1f, _circle.Position + new Vector2(SpiderBodyRadius, 0f) + new Vector2(_upperLegSize.X / 2f, 0f));
             _rightUpper.BodyType = BodyType.Dynamic;
 
             // Right lower leg
-            _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f,
-                                                     _circle.Position + new Vector2(_spiderBodyRadius, 0f) +
-                                                     new Vector2(_upperLegSize.X, 0f) + new Vector2(_lowerLegSize.X / 2f, 0f));
+            _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f, _circle.Position + new Vector2(SpiderBodyRadius, 0f) + new Vector2(_upperLegSize.X, 0f) + new Vector2(_lowerLegSize.X / 2f, 0f));
             _rightLower.BodyType = BodyType.Dynamic;
 
             //Create joints
@@ -89,7 +81,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _rightKneeAngleJoint.MaxImpulse = 3;
 
             //GFX
-            _torso = new Sprite(ContentWrapper.CircleTexture(_spiderBodyRadius, "square", ContentWrapper.Grey, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _torso = new Sprite(ContentWrapper.CircleTexture(SpiderBodyRadius, "square", ContentWrapper.Grey, ContentWrapper.Gold, ContentWrapper.Black, 1f));
             _upperLeg = new Sprite(ContentWrapper.TextureFromShape(_leftUpper.FixtureList[0].Shape, ContentWrapper.Grey, ContentWrapper.Black));
             _lowerLeg = new Sprite(ContentWrapper.TextureFromShape(_leftLower.FixtureList[0].Shape, ContentWrapper.Gold, ContentWrapper.Black));
 
@@ -135,18 +127,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(_lowerLeg.Image, ConvertUnits.ToDisplayUnits(_leftLower.Position), null,
-                       Color.White, _leftLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLeg.Image, ConvertUnits.ToDisplayUnits(_rightLower.Position), null,
-                       Color.White, _rightLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Image, ConvertUnits.ToDisplayUnits(_leftLower.Position), null, Color.White, _leftLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Image, ConvertUnits.ToDisplayUnits(_rightLower.Position), null, Color.White, _rightLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLeg.Image, ConvertUnits.ToDisplayUnits(_leftUpper.Position), null,
-                       Color.White, _leftUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLeg.Image, ConvertUnits.ToDisplayUnits(_rightUpper.Position), null,
-                       Color.White, _rightUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Image, ConvertUnits.ToDisplayUnits(_leftUpper.Position), null, Color.White, _leftUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Image, ConvertUnits.ToDisplayUnits(_rightUpper.Position), null, Color.White, _rightUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_circle.Position), null,
-                       Color.White, _circle.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_circle.Position), null, Color.White, _circle.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }
