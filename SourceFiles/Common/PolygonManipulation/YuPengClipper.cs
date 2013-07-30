@@ -57,8 +57,7 @@ namespace FarseerPhysics.Common.PolygonManipulation
         /// <param name="error">The error generated (if any)</param>
         /// <returns>A list of closed polygons, which make up the result of the clipping operation.
         /// Outer contours are ordered counter clockwise, holes are ordered clockwise.</returns>
-        private static List<Vertices> Execute(Vertices subject, Vertices clip,
-                                              PolyClipType clipType, out PolyClipError error)
+        private static List<Vertices> Execute(Vertices subject, Vertices clip, PolyClipType clipType, out PolyClipError error)
         {
             Debug.Assert(subject.IsSimple() && clip.IsSimple(), "Non simple input!", "Input polygons must be simple (cannot intersect themselves).");
 

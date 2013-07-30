@@ -21,7 +21,7 @@ namespace FarseerPhysics.TestBed.Tests
         {
             World = new World(new Vector2(0, -10));
 
-            _terrain = new MSTerrain(World, new AABB(new Vector2(0, 0), 80, 80))
+            _terrain = new MSTerrain(World, new AABB(new Vector2(0, 0), 100, 100))
                            {
                                PointsPerUnit = 10,
                                CellSize = 50,
@@ -36,15 +36,28 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Initialize()
         {
             Texture2D texture = GameInstance.Content.Load<Texture2D>("Terrain");
+            Color[] colorData = new Color[texture.Width * texture.Height];
 
-            _terrain.ApplyTexture(texture, new Vector2(400, 0), InsideTerrainTest);
+            texture.GetData(colorData);
+
+            sbyte[,] data = new sbyte[texture.Width, texture.Height];
+
+            for (int y = 0; y < texture.Height; y++)
+            {
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    bool inside = colorData[(y * texture.Width) + x] == Color.Black;
+
+                    if (!inside)
+                        data[x, y] = 1;
+                    else
+                        data[x, y] = -1;
+                }
+            }
+
+            _terrain.ApplyData(data);
 
             base.Initialize();
-        }
-
-        private bool InsideTerrainTest(Color color)
-        {
-            return color == Color.Black;
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -132,7 +145,7 @@ namespace FarseerPhysics.TestBed.Tests
             DrawString("Press t or y to cycle between decomposers: " + _terrain.Decomposer);
             TextLine += 25;
             DrawString("Press g or h to decrease/increase circle radius: " + _circleRadius);
-            
+
             base.Update(settings, gameTime);
         }
 
