@@ -1,21 +1,13 @@
-﻿#if XNA
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common.Decomposition;
 using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace FarseerPhysics.Common.TextureTools
 {
-    /// <summary>
-    /// Return true if the specified color is inside the terrain.
-    /// </summary>
-    public delegate bool TerrainTester(Color color);
-
     /// <summary>
     /// Simple class to maintain a terrain.
     /// </summary>
@@ -124,64 +116,14 @@ namespace FarseerPhysics.Common.TextureTools
         }
 
         /// <summary>
-        /// Apply a texture to the terrain using the specified TerrainTester.
+        /// Apply the specified texture data to the terrain.
         /// </summary>
-        /// <param name="texture">Texture to apply.</param>
-        /// <param name="position">Top left position of the texture relative to the terrain.</param>
-        /// <param name="tester">Delegate method used to determine what colors should be included in the terrain.</param>
-        public void ApplyTexture(Texture2D texture, Vector2 position, TerrainTester tester)
+        /// <param name="data"></param>
+        public void ApplyData(sbyte[,] data)
         {
-            Color[] colorData = new Color[texture.Width * texture.Height];
-
-            texture.GetData(colorData);
-
-            for (int y = (int)position.Y; y < texture.Height + (int)position.Y; y++)
+            for (int y = 0; y < data.GetUpperBound(1); y++)
             {
-                for (int x = (int)position.X; x < texture.Width + (int)position.X; x++)
-                {
-                    if (x >= 0 && x < _localWidth && y >= 0 && y < _localHeight)
-                    {
-                        bool inside = tester(colorData[((y - (int)position.Y) * texture.Width) + (x - (int)position.X)]);
-
-                        if (!inside)
-                            _terrainMap[x, y] = 1;
-                        else
-                            _terrainMap[x, y] = -1;
-                    }
-                }
-            }
-
-            // generate terrain
-            for (int gy = 0; gy < _ynum; gy++)
-            {
-                for (int gx = 0; gx < _xnum; gx++)
-                {
-                    //remove old terrain object at grid cell
-                    if (_bodyMap[gx, gy] != null)
-                    {
-                        for (int i = 0; i < _bodyMap[gx, gy].Count; i++)
-                        {
-                            World.RemoveBody(_bodyMap[gx, gy][i]);
-                        }
-                    }
-
-                    _bodyMap[gx, gy] = null;
-
-                    //generate new one
-                    GenerateTerrain(gx, gy);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Apply a texture to the terrain using the specified TerrainTester.
-        /// </summary>
-        /// <param name="position">Top left position of the texture relative to the terrain.</param>
-        public void ApplyData(sbyte[,] data, Vector2 position)
-        {
-            for (int y = (int)position.Y; y < data.GetUpperBound(1) + (int)position.Y; y++)
-            {
-                for (int x = (int)position.X; x < data.GetUpperBound(0) + (int)position.X; x++)
+                for (int x = 0; x < data.GetUpperBound(0); x++)
                 {
                     if (x >= 0 && x < _localWidth && y >= 0 && y < _localHeight)
                     {
@@ -210,35 +152,6 @@ namespace FarseerPhysics.Common.TextureTools
                     GenerateTerrain(gx, gy);
                 }
             }
-        }
-
-        /// <summary>
-        /// Convert a texture to an sbtye array compatible with ApplyData().
-        /// </summary>
-        /// <param name="texture">Texture to convert.</param>
-        /// <param name="tester"></param>
-        /// <returns></returns>
-        public static sbyte[,] ConvertTextureToData(Texture2D texture, TerrainTester tester)
-        {
-            sbyte[,] data = new sbyte[texture.Width, texture.Height];
-            Color[] colorData = new Color[texture.Width * texture.Height];
-
-            texture.GetData(colorData);
-
-            for (int y = 0; y < texture.Height; y++)
-            {
-                for (int x = 0; x < texture.Width; x++)
-                {
-                    bool inside = tester(colorData[(y * texture.Width) + x]);
-
-                    if (!inside)
-                        data[x, y] = 1;
-                    else
-                        data[x, y] = -1;
-                }
-            }
-
-            return data;
         }
 
         /// <summary>
@@ -326,7 +239,7 @@ namespace FarseerPhysics.Common.TextureTools
                 // does this need to be negative?
                 item.Scale(ref scale);
                 item.Translate(ref _topLeft);
-                item.ForceCounterClockWise();
+                item.ForceCounterClockWise(); //TODO: Take a look at this
                 Vertices p = SimplifyTools.CollinearSimplify(item);
 
                 List<Vertices> decompPolys = Triangulate.ConvexPartition(p, Decomposer);
@@ -340,4 +253,3 @@ namespace FarseerPhysics.Common.TextureTools
         }
     }
 }
-#endif

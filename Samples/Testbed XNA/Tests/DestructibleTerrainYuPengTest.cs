@@ -77,9 +77,9 @@ namespace FarseerPhysics.TestBed.Tests
             base.Update(settings, gameTime);
 
             DrawString("Press: left mouse button to remove at mouse position.");
-            
+
             DrawString("Press: (A) to decrease the removal radius, (S) to increase it.");
-            
+
             // Fighting against float decimals
             float radiusnumber = (float)((int)(Radius * 10)) / 10;
             DrawString("Radius: " + radiusnumber);
@@ -215,6 +215,9 @@ namespace FarseerPhysics.TestBed.Tests
 
             PolyClipError error;
             List<Vertices> result = YuPengClipper.Difference(Vertices, transformedshape, out error);
+
+            if (error != PolyClipError.None)
+                return false;
 
             //Need to check if the entire shape was cut, 
             //so we can destroy/erase it

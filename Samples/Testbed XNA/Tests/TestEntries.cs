@@ -77,8 +77,9 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Sensor Test", CreateTest = SensorTest.Create},
             new TestEntry {Name = "Slider Crank", CreateTest = SliderCrankTest.Create},
             new TestEntry {Name = "Varying Friction", CreateTest = VaryingFrictionTest.Create},
+#if WINDOWS
             new TestEntry {Name = "Add Pair Stress Test", CreateTest = AddPairTest.Create},
-
+#endif
             //FPE tests
             new TestEntry {Name = "YuPeng Polygon", CreateTest = YuPengPolygonTest.Create},
             new TestEntry {Name = "Path Test", CreateTest = PathTest.Create},
@@ -94,11 +95,6 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Circle penetration", CreateTest = CirclePenetrationTest.Create},
             new TestEntry {Name = "Clone Test", CreateTest = CloneTest.Create},
             new TestEntry {Name = "Serialization Test", CreateTest = SerializationTest.Create},
-
-#if (XNA)
-            new TestEntry {Name = "Destructible Terrain MS Test", CreateTest = DestructibleTerrainMSTest.Create},
-#endif
-
             new TestEntry {Name = "Destructible Terrain YuPeng Test", CreateTest = DestructibleTerrainYuPengTest.Create},
             new TestEntry {Name = "Deletion test", CreateTest = DeletionTest.Create},
             new TestEntry {Name = "Buoyancy test", CreateTest = BuoyancyTest.Create},
@@ -108,8 +104,8 @@ namespace FarseerPhysics.TestBed.Tests
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
 #endif
+            new TestEntry {Name = "Destructible Terrain MS Test", CreateTest = DestructibleTerrainMSTest.Create},
             new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
-            new TestEntry {Name = "Serialization", CreateTest = SerializationTest.Create},
             new TestEntry {Name = null, CreateTest = null}
         };
     }
