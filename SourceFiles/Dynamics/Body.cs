@@ -68,7 +68,7 @@ namespace FarseerPhysics.Dynamics
         IgnoreCCD = (1 << 7),
     }
 
-    public class Body : IDisposable, ICloneable
+    public class Body : IDisposable
     {
         private static int _bodyIdCounter;
 
@@ -171,9 +171,7 @@ namespace FarseerPhysics.Dynamics
             set
             {
                 if (_bodyType == value)
-                {
                     return;
-                }
 
                 _bodyType = value;
 
@@ -459,8 +457,6 @@ namespace FarseerPhysics.Dynamics
             get { return (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
         }
 
-        public bool InWorld { get; internal set; }
-
         /// <summary>
         /// Gets all the fixtures attached to this body.
         /// </summary>
@@ -590,7 +586,7 @@ namespace FarseerPhysics.Dynamics
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                if (_bodyType != BodyType.Dynamic)
+                if (_bodyType != BodyType.Dynamic) //Make an assert
                     return;
 
                 _mass = value;
@@ -613,10 +609,10 @@ namespace FarseerPhysics.Dynamics
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                if (_bodyType != BodyType.Dynamic)
+                if (_bodyType != BodyType.Dynamic) //Make an assert
                     return;
 
-                if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
+                if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0) //Make an assert
                 {
                     _inertia = value - Mass * Vector2.Dot(LocalCenter, LocalCenter);
                     Debug.Assert(_inertia > 0.0f);
@@ -750,40 +746,6 @@ namespace FarseerPhysics.Dynamics
                     Flags &= ~BodyFlags.IgnoreCCD;
             }
         }
-
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                // Forcing OnSeparation for contacts from the ContactList.
-                //ContactEdge contactEdge = ContactList;
-                //Contact contact;
-
-                //while (contactEdge != null && (contact = contactEdge.Contact) != null)
-                //{
-                //    //Report the separation to both participants:
-                //    if (contact.FixtureA != null && contact.FixtureA.OnSeparation != null)
-                //        contact.FixtureA.OnSeparation(contact.FixtureA, contact.FixtureB);
-
-                //    //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                //    //user subscribed to.
-                //    if (contact.FixtureB != null && contact.FixtureB.OnSeparation != null)
-                //        contact.FixtureB.OnSeparation(contact.FixtureB, contact.FixtureA);
-
-                //    contactEdge = contactEdge.Next;
-                //}
-
-                World.RemoveBody(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Resets the dynamics of this body.
@@ -1286,25 +1248,6 @@ namespace FarseerPhysics.Dynamics
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
 
-        public Body DeepClone()
-        {
-            Body body = (Body)Clone();
-
-            for (int i = 0; i < FixtureList.Count; i++)
-            {
-                FixtureList[i].CloneOnto(body);
-            }
-
-            return body;
-        }
-
-        public object Clone()
-        {
-            Body body = (Body)MemberwiseClone();
-            World.AddBody(body);
-            return body;
-        }
-
         internal void SynchronizeFixtures()
         {
             Transform xf1 = new Transform();
@@ -1425,6 +1368,68 @@ namespace FarseerPhysics.Dynamics
                     f.RestoreCollisionWith(f2);
                 }
             }
+        }
+
+        #region IDisposable Members
+
+        public bool IsDisposed { get; set; }
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                //TODO: Revise
+                // Forcing OnSeparation for contacts from the ContactList.
+                //ContactEdge contactEdge = ContactList;
+                //Contact contact;
+
+                //while (contactEdge != null && (contact = contactEdge.Contact) != null)
+                //{
+                //    //Report the separation to both participants:
+                //    if (contact.FixtureA != null && contact.FixtureA.OnSeparation != null)
+                //        contact.FixtureA.OnSeparation(contact.FixtureA, contact.FixtureB);
+
+                //    //Reverse the order of the reported fixtures. The first fixture is always the one that the
+                //    //user subscribed to.
+                //    if (contact.FixtureB != null && contact.FixtureB.OnSeparation != null)
+                //        contact.FixtureB.OnSeparation(contact.FixtureB, contact.FixtureA);
+
+                //    contactEdge = contactEdge.Next;
+                //}
+
+                World.RemoveBody(this);
+                IsDisposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        #endregion
+
+        internal Body Clone()
+        {
+            Body body = new Body(World, Position, Rotation, UserData);
+            body._bodyType = _bodyType;
+            body.LinearDamping = LinearDamping;
+            body.LinearVelocityInternal = LinearVelocityInternal;
+            body.AngularDamping = AngularDamping;
+            body.AngularVelocityInternal = AngularVelocityInternal;
+            body.GravityScale = GravityScale;
+            body.UserData = UserData;
+            body.Flags = Flags;
+            return body;
+        }
+
+        public Body DeepClone()
+        {
+            Body body = Clone();
+
+            int count = FixtureList.Count; //Make a copy of the count. Otherwise it causes an infinite loop.
+            for (int i = 0; i < count; i++)
+            {
+                FixtureList[i].CloneOnto(body);
+            }
+
+            return body;
         }
     }
 }

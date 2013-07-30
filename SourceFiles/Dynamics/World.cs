@@ -329,7 +329,6 @@ namespace FarseerPhysics.Dynamics
 #endif
                     // Add to world list.
                     BodyList.Add(body);
-                    body.InWorld = true;
 
                     if (BodyAdded != null)
                         BodyAdded(body);
@@ -386,7 +385,6 @@ namespace FarseerPhysics.Dynamics
 
                     // Remove world body list.
                     BodyList.Remove(body);
-                    body.InWorld = false;
 
                     if (BodyRemoved != null)
                         BodyRemoved(body);

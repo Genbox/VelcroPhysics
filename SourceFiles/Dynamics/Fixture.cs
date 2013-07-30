@@ -88,7 +88,7 @@ namespace FarseerPhysics.Dynamics
     /// Fixtures are created via Body.CreateFixture.
     /// Warning: You cannot reuse fixtures.
     /// </summary>
-    public class Fixture : IDisposable, ICloneable
+    public class Fixture : IDisposable
     {
         private static int _fixtureIdCounter;
         private bool _isSensor;
@@ -386,7 +386,7 @@ namespace FarseerPhysics.Dynamics
         /// flagged for filtering.
         /// This methods flags all contacts associated with the body for filtering.
         /// </summary>
-        internal void Refilter()
+        private void Refilter()
         {
             // Flag associated contacts for filtering.
             ContactEdge edge = Body.ContactList;
@@ -481,26 +481,6 @@ namespace FarseerPhysics.Dynamics
         {
             Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
             aabb = Proxies[childIndex].AABB;
-        }
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
-
-        public Fixture CloneOnto(Body body)
-        {
-            Fixture fixture = (Fixture)Clone();
-            fixture.Body = body;
-            fixture.Shape = Shape.Clone();
-            fixture.RegisterFixture();
-            return fixture;
-        }
-
-        public Fixture DeepClone()
-        {
-            Fixture fix = CloneOnto((Body)Body.Clone());
-            return fix;
         }
 
         internal void Destroy()
@@ -605,6 +585,39 @@ namespace FarseerPhysics.Dynamics
                     Shape.CompareTo(fixture.Shape) &&
                     UserData == fixture.UserData &&
                     UserBits == fixture.UserBits);
+        }
+
+        public Fixture CloneOnto(Body body)
+        {
+            Fixture fixture = new Fixture();
+            fixture.Body = body;
+            fixture.Shape = Shape.Clone();
+            fixture.UserData = UserData;
+            fixture.Restitution = Restitution;
+            fixture.Friction = Friction;
+            fixture.IsSensor = IsSensor;
+            fixture._collisionGroup = _collisionGroup;
+            fixture._collisionCategories = _collisionCategories;
+            fixture._collidesWith = _collidesWith;
+            fixture.IgnoreCCDWith = IgnoreCCDWith;
+
+            if (_collisionIgnores != null)
+            {
+                fixture._collisionIgnores = new Dictionary<int, bool>();
+
+                foreach (KeyValuePair<int, bool> pair in _collisionIgnores)
+                {
+                    fixture._collisionIgnores.Add(pair.Key, pair.Value);
+                }
+            }
+
+            fixture.RegisterFixture();
+            return fixture;
+        }
+
+        public Fixture DeepClone()
+        {
+            return CloneOnto(Body.Clone());
         }
     }
 }

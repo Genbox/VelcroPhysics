@@ -462,9 +462,8 @@ namespace FarseerPhysics.Collision.Shapes
             clone.ShapeType = ShapeType;
             clone._radius = _radius;
             clone._density = _density;
-            clone._vertices = new Vertices(Vertices);
-            clone._normals = new Vertices(Normals);
-
+            clone._vertices = new Vertices(_vertices);
+            clone._normals = new Vertices(_normals);
             clone.MassData = MassData;
             return clone;
         }
