@@ -72,7 +72,7 @@ namespace FarseerPhysics.Collision.Shapes
             set
             {
                 _position = value;
-                ComputeProperties();
+                ComputeProperties(); //TODO: Optimize here
             }
         }
 
@@ -185,14 +185,14 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override Shape Clone()
         {
-            CircleShape shape = new CircleShape();
-            shape._radius = Radius;
-            shape._2radius = _2radius;
-            shape._density = _density;
-            shape._position = _position;
-            shape.ShapeType = ShapeType;
-            shape.MassData = MassData;
-            return shape;
+            CircleShape clone = new CircleShape();
+            clone.ShapeType = ShapeType;
+            clone._radius = Radius;
+            clone._2radius = _2radius; //FPE note: We also copy the cache
+            clone._density = _density;
+            clone._position = _position;
+            clone.MassData = MassData;
+            return clone;
         }
     }
 }

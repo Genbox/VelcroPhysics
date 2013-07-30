@@ -92,7 +92,6 @@ namespace FarseerPhysics.Collision.Shapes
             get { return Vertices.Count - 1; }
         }
 
-
         /// <summary>
         /// Establish connectivity to a vertex that precedes the first vertex.
         /// Don't call this for loops.
@@ -247,12 +246,17 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override Shape Clone()
         {
-            ChainShape loop = new ChainShape();
-            loop._density = _density;
-            loop._radius = _radius;
-            loop.Vertices = Vertices;
-            loop.MassData = MassData;
-            return loop;
+            ChainShape clone = new ChainShape();
+            clone.ShapeType = ShapeType;
+            clone._density = _density;
+            clone._radius = _radius;
+            clone.PrevVertex = _prevVertex;
+            clone.NextVertex = _nextVertex;
+            clone._hasNextVertex = _hasNextVertex;
+            clone._hasPrevVertex = _hasPrevVertex;
+            clone.Vertices = new Vertices(Vertices);
+            clone.MassData = MassData;
+            return clone;
         }
     }
 }

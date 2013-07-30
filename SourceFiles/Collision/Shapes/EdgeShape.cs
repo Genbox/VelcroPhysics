@@ -235,17 +235,18 @@ namespace FarseerPhysics.Collision.Shapes
 
         public override Shape Clone()
         {
-            EdgeShape edge = new EdgeShape();
-            edge._radius = _radius;
-            edge._density = _density;
-            edge.HasVertex0 = HasVertex0;
-            edge.HasVertex3 = HasVertex3;
-            edge.Vertex0 = Vertex0;
-            edge._vertex1 = _vertex1;
-            edge._vertex2 = _vertex2;
-            edge.Vertex3 = Vertex3;
-            edge.MassData = MassData;
-            return edge;
+            EdgeShape clone = new EdgeShape();
+            clone.ShapeType = ShapeType;
+            clone._radius = _radius;
+            clone._density = _density;
+            clone.HasVertex0 = HasVertex0;
+            clone.HasVertex3 = HasVertex3;
+            clone.Vertex0 = Vertex0;
+            clone._vertex1 = _vertex1;
+            clone._vertex2 = _vertex2;
+            clone.Vertex3 = Vertex3;
+            clone.MassData = MassData;
+            return clone;
         }
     }
 }
