@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework;
 namespace FarseerPhysics.Common.TextureTools
 {
     /// <summary>
-    /// Simple class to maintain a terrain.
+    /// Simple class to maintain a terrain. It can keep track
     /// </summary>
-    public class MSTerrain
+    public class Terrain
     {
         /// <summary>
         /// World to manage terrain in.
@@ -77,12 +77,32 @@ namespace FarseerPhysics.Common.TextureTools
         private AABB _dirtyArea;
         private Vector2 _topLeft;
 
-        public MSTerrain(World world, AABB area)
+        /// <summary>
+        /// Creates a new terrain.
+        /// </summary>
+        /// <param name="world">The World</param>
+        /// <param name="area">The area of the terrain.</param>
+        public Terrain(World world, AABB area)
         {
             World = world;
-            Width = area.Extents.X * 2;
-            Height = area.Extents.Y * 2;
+            Width = area.Width;
+            Height = area.Height;
             Center = area.Center;
+        }
+
+        /// <summary>
+        /// Creates a new terrain
+        /// </summary>
+        /// <param name="world">The World</param>
+        /// <param name="position">The position (center) of the terrain.</param>
+        /// <param name="width">The width of the terrain.</param>
+        /// <param name="height">The height of the terrain.</param>
+        public Terrain(World world, Vector2 position, float width, float height)
+        {
+            World = world;
+            Width = width;
+            Height = height;
+            Center = position;
         }
 
         /// <summary>
@@ -119,39 +139,21 @@ namespace FarseerPhysics.Common.TextureTools
         /// Apply the specified texture data to the terrain.
         /// </summary>
         /// <param name="data"></param>
-        public void ApplyData(sbyte[,] data)
+        /// <param name="offset"></param>
+        public void ApplyData(sbyte[,] data, Vector2 offset = default(Vector2))
         {
-            for (int y = 0; y < data.GetUpperBound(1); y++)
+            for (int x = 0; x < data.GetUpperBound(0); x++)
             {
-                for (int x = 0; x < data.GetUpperBound(0); x++)
+                for (int y = 0; y < data.GetUpperBound(1); y++)
                 {
-                    if (x >= 0 && x < _localWidth && y >= 0 && y < _localHeight)
+                    if (x + offset.X >= 0 && x + offset.X < _localWidth && y + offset.Y >= 0 && y + offset.Y < _localHeight)
                     {
-                        _terrainMap[x, y] = data[x, y];
+                        _terrainMap[(int)(x + offset.X), (int)(y + offset.Y)] = data[x, y];
                     }
                 }
             }
 
-            // generate terrain
-            for (int gy = 0; gy < _ynum; gy++)
-            {
-                for (int gx = 0; gx < _xnum; gx++)
-                {
-                    //remove old terrain object at grid cell
-                    if (_bodyMap[gx, gy] != null)
-                    {
-                        for (int i = 0; i < _bodyMap[gx, gy].Count; i++)
-                        {
-                            World.RemoveBody(_bodyMap[gx, gy][i]);
-                        }
-                    }
-
-                    _bodyMap[gx, gy] = null;
-
-                    //generate new one
-                    GenerateTerrain(gx, gy);
-                }
-            }
+            RemoveOldData(0, _xnum, 0, _ynum);
         }
 
         /// <summary>
@@ -188,36 +190,44 @@ namespace FarseerPhysics.Common.TextureTools
         public void RegenerateTerrain()
         {
             //iterate effected cells
-            var gx0 = (int)(_dirtyArea.LowerBound.X / CellSize);
-            var gx1 = (int)(_dirtyArea.UpperBound.X / CellSize) + 1;
-            if (gx0 < 0) gx0 = 0;
-            if (gx1 > _xnum) gx1 = _xnum;
-            var gy0 = (int)(_dirtyArea.LowerBound.Y / CellSize);
-            var gy1 = (int)(_dirtyArea.UpperBound.Y / CellSize) + 1;
-            if (gy0 < 0) gy0 = 0;
-            if (gy1 > _ynum) gy1 = _ynum;
+            int xStart = (int)(_dirtyArea.LowerBound.X / CellSize);
+            if (xStart < 0) xStart = 0;
 
-            for (int gx = gx0; gx < gx1; gx++)
+            int xEnd = (int)(_dirtyArea.UpperBound.X / CellSize) + 1;
+            if (xEnd > _xnum) xEnd = _xnum;
+
+            int yStart = (int)(_dirtyArea.LowerBound.Y / CellSize);
+            if (yStart < 0) yStart = 0;
+
+            int yEnd = (int)(_dirtyArea.UpperBound.Y / CellSize) + 1;
+            if (yEnd > _ynum) yEnd = _ynum;
+
+            RemoveOldData(xStart, xEnd, yStart, yEnd);
+
+            _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+        }
+
+        private void RemoveOldData(int xStart, int xEnd, int yStart, int yEnd)
+        {
+            for (int x = xStart; x < xEnd; x++)
             {
-                for (int gy = gy0; gy < gy1; gy++)
+                for (int y = yStart; y < yEnd; y++)
                 {
                     //remove old terrain object at grid cell
-                    if (_bodyMap[gx, gy] != null)
+                    if (_bodyMap[x, y] != null)
                     {
-                        for (int i = 0; i < _bodyMap[gx, gy].Count; i++)
+                        for (int i = 0; i < _bodyMap[x, y].Count; i++)
                         {
-                            World.RemoveBody(_bodyMap[gx, gy][i]);
+                            World.RemoveBody(_bodyMap[x, y][i]);
                         }
                     }
 
-                    _bodyMap[gx, gy] = null;
+                    _bodyMap[x, y] = null;
 
                     //generate new one
-                    GenerateTerrain(gx, gy);
+                    GenerateTerrain(x, y);
                 }
             }
-
-            _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
         }
 
         private void GenerateTerrain(int gx, int gy)
@@ -234,15 +244,14 @@ namespace FarseerPhysics.Common.TextureTools
             Vector2 scale = new Vector2(1f / PointsPerUnit, 1f / -PointsPerUnit);
 
             // create physics object for this grid cell
-            foreach (var item in polys)
+            foreach (Vertices item in polys)
             {
                 // does this need to be negative?
                 item.Scale(ref scale);
                 item.Translate(ref _topLeft);
-                item.ForceCounterClockWise(); //TODO: Take a look at this
-                Vertices p = SimplifyTools.CollinearSimplify(item);
+                Vertices simplified = SimplifyTools.CollinearSimplify(item);
 
-                List<Vertices> decompPolys = Triangulate.ConvexPartition(p, Decomposer);
+                List<Vertices> decompPolys = Triangulate.ConvexPartition(simplified, Decomposer);
 
                 foreach (Vertices poly in decompPolys)
                 {
