@@ -95,7 +95,6 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Circle penetration", CreateTest = CirclePenetrationTest.Create},
             new TestEntry {Name = "Clone Test", CreateTest = CloneTest.Create},
             new TestEntry {Name = "Serialization Test", CreateTest = SerializationTest.Create},
-            new TestEntry {Name = "Destructible Terrain YuPeng Test", CreateTest = DestructibleTerrainYuPengTest.Create},
             new TestEntry {Name = "Deletion test", CreateTest = DeletionTest.Create},
             new TestEntry {Name = "Buoyancy test", CreateTest = BuoyancyTest.Create},
             new TestEntry {Name = "Convex hull test", CreateTest = ConvexHullTest2.Create},
@@ -104,7 +103,7 @@ namespace FarseerPhysics.TestBed.Tests
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
 #endif
-            new TestEntry {Name = "Destructible Terrain MS Test", CreateTest = DestructibleTerrainMSTest.Create},
+            new TestEntry {Name = "Destructible Terrain Test", CreateTest = DestructibleTerrainMSTest.Create},
             new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
             new TestEntry {Name = null, CreateTest = null}
         };
