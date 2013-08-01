@@ -348,6 +348,7 @@ namespace FarseerPhysics.Common
 
         /// <summary>
         /// Indicates if the vertices are in counter clockwise order.
+        /// Warning: If the area of the polygon is 0, it is unable to determine the winding.
         /// </summary>
         public bool IsCounterClockWise()
         {
@@ -410,29 +411,16 @@ namespace FarseerPhysics.Common
         public PolygonError CheckPolygon()
         {
             if (Count < 3 || Count > Settings.MaxPolygonVertices)
-            {
                 return PolygonError.InvalidAmountOfVertices;
-            }
 
             if (!IsSimple())
-            {
                 return PolygonError.NotSimple;
-            }
 
-            if (!IsCounterClockWise())
-            {
-                return PolygonError.NotCounterClockWise;
-            }
+            if (GetArea() <= Settings.Epsilon)
+                return PolygonError.AreaTooSmall;
 
             if (!IsConvex())
-            {
                 return PolygonError.NotConvex;
-            }
-
-            if (GetArea() < Settings.Epsilon)
-            {
-                return PolygonError.AreaTooSmall;
-            }
 
             //Check if the sides are of adequate length.
             for (int i = 0; i < Count; ++i)
@@ -444,6 +432,9 @@ namespace FarseerPhysics.Common
                     return PolygonError.SideTooSmall;
                 }
             }
+
+            if (!IsCounterClockWise())
+                return PolygonError.NotCounterClockWise;
 
             return PolygonError.NoError;
         }

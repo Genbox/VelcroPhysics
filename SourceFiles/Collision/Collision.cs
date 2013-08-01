@@ -274,6 +274,16 @@ namespace FarseerPhysics.Collision
             UpperBound = center + new Vector2(width / 2, height / 2);
         }
 
+        public float Width
+        {
+            get { return UpperBound.X - LowerBound.X; }
+        }
+
+        public float Height
+        {
+            get { return UpperBound.Y - LowerBound.Y; }
+        }
+
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>

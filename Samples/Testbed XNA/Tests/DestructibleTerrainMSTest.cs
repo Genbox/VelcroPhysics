@@ -1,4 +1,4 @@
-﻿#if XNA
+﻿#if WINDOWS
 
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common.Decomposition;
@@ -15,13 +15,15 @@ namespace FarseerPhysics.TestBed.Tests
     public class DestructibleTerrainMSTest : Test
     {
         private float _circleRadius = 2.5f;
-        private MSTerrain _terrain;
+        private Terrain _terrain;
+        private AABB _terrainArea;
 
         private DestructibleTerrainMSTest()
         {
             World = new World(new Vector2(0, -10));
 
-            _terrain = new MSTerrain(World, new AABB(new Vector2(0, 0), 100, 100))
+            _terrainArea = new AABB(new Vector2(0, 0), 100, 100);
+            _terrain = new Terrain(World, _terrainArea)
                            {
                                PointsPerUnit = 10,
                                CellSize = 50,
@@ -46,6 +48,7 @@ namespace FarseerPhysics.TestBed.Tests
             {
                 for (int x = 0; x < texture.Width; x++)
                 {
+                    //If the color on the coordinate is black, we include it in the terrain.
                     bool inside = colorData[(y * texture.Width) + x] == Color.Black;
 
                     if (!inside)
@@ -55,7 +58,7 @@ namespace FarseerPhysics.TestBed.Tests
                 }
             }
 
-            _terrain.ApplyData(data);
+            _terrain.ApplyData(data, new Vector2(250, 250));
 
             base.Initialize();
         }
@@ -73,8 +76,7 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawSolidCircle(position, _circleRadius, Vector2.UnitY, Color.Blue * 0.5f);
                 DebugView.EndCustomDraw();
             }
-
-            if (state.LeftButton == ButtonState.Pressed)
+            else if (state.LeftButton == ButtonState.Pressed)
             {
                 DrawCircleOnMap(position, 1);
                 _terrain.RegenerateTerrain();
@@ -83,8 +85,7 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawSolidCircle(position, _circleRadius, Vector2.UnitY, Color.Red * 0.5f);
                 DebugView.EndCustomDraw();
             }
-
-            if (state.MiddleButton == ButtonState.Pressed)
+            else if (state.MiddleButton == ButtonState.Pressed)
             {
                 Body circle = BodyFactory.CreateCircle(World, 1, 1);
                 circle.BodyType = BodyType.Dynamic;
@@ -95,13 +96,9 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.G))
-            {
                 _circleRadius += 0.05f;
-            }
             else if (keyboardManager.IsKeyDown(Keys.H))
-            {
                 _circleRadius -= 0.05f;
-            }
 
             if (keyboardManager.IsNewKeyPress(Keys.T))
             {
@@ -139,6 +136,10 @@ namespace FarseerPhysics.TestBed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
+            DebugView.DrawAABB(ref _terrainArea, Color.Red * 0.5f);
+            DebugView.EndCustomDraw();
+
             DrawString("Left click and drag the mouse to destroy terrain!");
             DrawString("Right click and drag the mouse to create terrain!");
             DrawString("Middle click to create circles!");

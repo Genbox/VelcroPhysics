@@ -297,7 +297,6 @@
       </SubType>
     </Compile>
     <Compile Include="Common\HashSet.cs" />
-    <Compile Include="Common\ICloneable.cs" />
     <Compile Include="Common\LineTools.cs">
       <SubType>
       </SubType>
@@ -361,7 +360,7 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="Common\TextureTools\MSTerrain.cs" />
+    <Compile Include="Common\TextureTools\Terrain.cs" />
     <Compile Include="Common\TextureTools\TextureConverter.cs">
       <SubType>
       </SubType>
