@@ -620,18 +620,21 @@ namespace FarseerPhysics.Collision
         /// The number of calls made to the ComputeDistance() function.
         /// Note: This is only activated when Settings.EnableDiagnostics = true
         /// </summary>
+        [ThreadStatic]
         public static int GJKCalls;
 
         /// <summary>
         /// The number of iterations that was made on the last call to ComputeDistance().
         /// Note: This is only activated when Settings.EnableDiagnostics = true
         /// </summary>
+        [ThreadStatic]
         public static int GJKIters;
 
         /// <summary>
         /// The maximum numer of iterations ever mae with calls to the CompteDistance() funtion.
         /// Note: This is only activated when Settings.EnableDiagnostics = true
         /// </summary>
+        [ThreadStatic]
         public static int GJKMaxIters;
 
         public static void ComputeDistance(out DistanceOutput output, out SimplexCache cache, DistanceInput input)

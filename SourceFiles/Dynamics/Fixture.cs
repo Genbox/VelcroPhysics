@@ -90,6 +90,7 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public class Fixture : IDisposable
     {
+        [ThreadStatic]
         private static int _fixtureIdCounter;
         private bool _isSensor;
         private float _friction;

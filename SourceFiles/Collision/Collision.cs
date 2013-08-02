@@ -590,7 +590,8 @@ namespace FarseerPhysics.Collision
     /// </summary>
     public static class Collision
     {
-        private static DistanceInput _input = new DistanceInput();
+        [ThreadStatic]
+        private static DistanceInput _input;
 
         /// <summary>
         /// Test overlap between the two shapes.
@@ -604,6 +605,7 @@ namespace FarseerPhysics.Collision
         /// <returns></returns>
         public static bool TestOverlap(Shape shapeA, int indexA, Shape shapeB, int indexB, ref Transform xfA, ref Transform xfB)
         {
+            _input = _input ?? new DistanceInput();
             _input.ProxyA.Set(shapeA, indexA);
             _input.ProxyB.Set(shapeB, indexB);
             _input.TransformA = xfA;
