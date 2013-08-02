@@ -75,8 +75,8 @@ namespace FarseerPhysics.Controllers
                                     if (fixture.Body.IsStatic || !fixture.Body.Awake)
                                         return true;
 
-                                    if (!_uniqueBodies.ContainsKey(fixture.Body.BodyId))
-                                        _uniqueBodies.Add(fixture.Body.BodyId, fixture.Body);
+                                    if (!_uniqueBodies.ContainsKey(fixture.Body.IslandIndex))
+                                        _uniqueBodies.Add(fixture.Body.IslandIndex, fixture.Body);
 
                                     return true;
                                 }, ref _container);
@@ -100,7 +100,7 @@ namespace FarseerPhysics.Controllers
                     Shape shape = fixture.Shape;
 
                     Vector2 sc;
-                    float sarea = shape.ComputeSubmergedArea(ref _normal, _offset, ref body.Xf, out sc);
+                    float sarea = shape.ComputeSubmergedArea(ref _normal, _offset, ref body._xf, out sc);
                     area += sarea;
                     areac.X += sarea * sc.X;
                     areac.Y += sarea * sc.Y;

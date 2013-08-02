@@ -94,11 +94,11 @@ namespace FarseerPhysics.Dynamics
         private bool _isSensor;
         private float _friction;
         private float _restitution;
+        private Dictionary<int, bool> _collisionIgnores;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
-        internal Dictionary<int, bool> _collisionIgnores;
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
@@ -403,7 +403,7 @@ namespace FarseerPhysics.Dynamics
                 edge = edge.Next;
             }
 
-            World world = Body.World;
+            World world = Body._world;
 
             if (world == null)
             {
@@ -426,8 +426,8 @@ namespace FarseerPhysics.Dynamics
 
             if (Body.Enabled)
             {
-                IBroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
-                CreateProxies(broadPhase, ref Body.Xf);
+                IBroadPhase broadPhase = Body._world.ContactManager.BroadPhase;
+                CreateProxies(broadPhase, ref Body._xf);
             }
 
             Body.FixtureList.Add(this);
@@ -440,11 +440,11 @@ namespace FarseerPhysics.Dynamics
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
-            Body.World.WorldHasNewFixture = true;
+            Body._world._worldHasNewFixture = true;
 
-            if (Body.World.FixtureAdded != null)
+            if (Body._world.FixtureAdded != null)
             {
-                Body.World.FixtureAdded(this);
+                Body._world.FixtureAdded(this);
             }
         }
 
@@ -455,7 +455,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public bool TestPoint(ref Vector2 point)
         {
-            return Shape.TestPoint(ref Body.Xf, ref point);
+            return Shape.TestPoint(ref Body._xf, ref point);
         }
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
-            return Shape.RayCast(out output, ref input, ref Body.Xf, childIndex);
+            return Shape.RayCast(out output, ref input, ref Body._xf, childIndex);
         }
 
         /// <summary>
@@ -505,13 +505,13 @@ namespace FarseerPhysics.Dynamics
             OnSeparation = null;
             AfterCollision = null;
 
-            if (Body.World.FixtureRemoved != null)
+            if (Body._world.FixtureRemoved != null)
             {
-                Body.World.FixtureRemoved(this);
+                Body._world.FixtureRemoved(this);
             }
 
-            Body.World.FixtureAdded = null;
-            Body.World.FixtureRemoved = null;
+            Body._world.FixtureAdded = null;
+            Body._world.FixtureRemoved = null;
             OnSeparation = null;
             OnCollision = null;
         }

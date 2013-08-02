@@ -105,7 +105,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _jointError = (bW - aW - TargetAngle);
             _bias = -BiasFactor * data.step.inv_dt * _jointError;
-            _massFactor = (1 - Softness) / (BodyA.InvI + BodyB.InvI);
+            _massFactor = (1 - Softness) / (BodyA._invI + BodyB._invI);
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
@@ -115,8 +115,8 @@ namespace FarseerPhysics.Dynamics.Joints
 
             float p = (_bias - data.velocities[indexB].w + data.velocities[indexA].w) * _massFactor;
 
-            data.velocities[indexA].w -= BodyA.InvI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
-            data.velocities[indexB].w += BodyB.InvI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
+            data.velocities[indexA].w -= BodyA._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
+            data.velocities[indexB].w += BodyB._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

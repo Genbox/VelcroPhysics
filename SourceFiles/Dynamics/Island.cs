@@ -38,6 +38,16 @@ namespace FarseerPhysics.Dynamics
     /// </summary>
     public class Island
     {
+        private ContactManager _contactManager;
+        private ContactSolver _contactSolver = new ContactSolver();
+        private Contact[] _contacts;
+        private Joint[] _joints;
+        private float _tmpTime;
+
+        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private Stopwatch _watch = new Stopwatch();
+
         public Body[] Bodies;
         public int BodyCount;
         public int ContactCount;
@@ -49,17 +59,7 @@ namespace FarseerPhysics.Dynamics
         public int BodyCapacity;
         public int ContactCapacity;
         public int JointCapacity;
-
-        private ContactManager _contactManager;
-        private ContactSolver _contactSolver = new ContactSolver();
-        private Contact[] _contacts;
-        private Joint[] _joints;
         public float JointUpdateTime;
-        private float _tmpTime;
-
-        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
-        private Stopwatch _watch = new Stopwatch();
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -106,20 +106,20 @@ namespace FarseerPhysics.Dynamics
             {
                 Body b = Bodies[i];
 
-                Vector2 c = b.Sweep.C;
-                float a = b.Sweep.A;
-                Vector2 v = b.LinearVelocityInternal;
-                float w = b.AngularVelocityInternal;
+                Vector2 c = b._sweep.C;
+                float a = b._sweep.A;
+                Vector2 v = b._linearVelocity;
+                float w = b._angularVelocity;
 
                 // Store positions for continuous collision.
-                b.Sweep.C0 = b.Sweep.C;
-                b.Sweep.A0 = b.Sweep.A;
+                b._sweep.C0 = b._sweep.C;
+                b._sweep.A0 = b._sweep.A;
 
                 if (b.BodyType == BodyType.Dynamic)
                 {
                     // Integrate velocities.
-                    v += h * (b.GravityScale * gravity + b.InvMass * b.Force);
-                    w += h * b.InvI * b.Torque;
+                    v += h * (b.GravityScale * gravity + b._invMass * b._force);
+                    w += h * b._invI * b._torque;
 
                     // Apply damping.
                     // ODE: dv/dt + c * v = 0
@@ -276,10 +276,10 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyCount; ++i)
             {
                 Body body = Bodies[i];
-                body.Sweep.C = _positions[i].c;
-                body.Sweep.A = _positions[i].a;
-                body.LinearVelocityInternal = _velocities[i].v;
-                body.AngularVelocityInternal = _velocities[i].w;
+                body._sweep.C = _positions[i].c;
+                body._sweep.A = _positions[i].a;
+                body._linearVelocity = _velocities[i].v;
+                body._angularVelocity = _velocities[i].w;
                 body.SynchronizeTransform();
             }
 
@@ -296,15 +296,15 @@ namespace FarseerPhysics.Dynamics
                     if (b.BodyType == BodyType.Static)
                         continue;
 
-                    if (!b.SleepingAllowed || b.AngularVelocityInternal * b.AngularVelocityInternal > AngTolSqr || Vector2.Dot(b.LinearVelocityInternal, b.LinearVelocityInternal) > LinTolSqr)
+                    if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr || Vector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
                     {
-                        b.SleepTime = 0.0f;
+                        b._sleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
                     else
                     {
-                        b.SleepTime += h;
-                        minSleepTime = Math.Min(minSleepTime, b.SleepTime);
+                        b._sleepTime += h;
+                        minSleepTime = Math.Min(minSleepTime, b._sleepTime);
                     }
                 }
 
@@ -328,10 +328,10 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyCount; ++i)
             {
                 Body b = Bodies[i];
-                _positions[i].c = b.Sweep.C;
-                _positions[i].a = b.Sweep.A;
-                _velocities[i].v = b.LinearVelocityInternal;
-                _velocities[i].w = b.AngularVelocityInternal;
+                _positions[i].c = b._sweep.C;
+                _positions[i].a = b._sweep.A;
+                _velocities[i].v = b._linearVelocity;
+                _velocities[i].w = b._angularVelocity;
             }
 
             _contactSolver.Reset(subStep, ContactCount, _contacts, _positions, _velocities, warmstarting);
@@ -347,10 +347,10 @@ namespace FarseerPhysics.Dynamics
             }
 
             // Leap of faith to new safe state.
-            Bodies[toiIndexA].Sweep.C0 = _positions[toiIndexA].c;
-            Bodies[toiIndexA].Sweep.A0 = _positions[toiIndexA].a;
-            Bodies[toiIndexB].Sweep.C0 = _positions[toiIndexB].c;
-            Bodies[toiIndexB].Sweep.A0 = _positions[toiIndexB].a;
+            Bodies[toiIndexA]._sweep.C0 = _positions[toiIndexA].c;
+            Bodies[toiIndexA]._sweep.A0 = _positions[toiIndexA].a;
+            Bodies[toiIndexB]._sweep.C0 = _positions[toiIndexB].c;
+            Bodies[toiIndexB]._sweep.A0 = _positions[toiIndexB].a;
 
             // No warm starting is needed for TOI events because warm
             // starting impulses were applied in the discrete solver.
@@ -401,10 +401,10 @@ namespace FarseerPhysics.Dynamics
 
                 // Sync bodies
                 Body body = Bodies[i];
-                body.Sweep.C = c;
-                body.Sweep.A = a;
-                body.LinearVelocityInternal = v;
-                body.AngularVelocityInternal = w;
+                body._sweep.C = c;
+                body._sweep.A = a;
+                body._linearVelocity = v;
+                body._angularVelocity = w;
                 body.SynchronizeTransform();
             }
 
@@ -415,8 +415,7 @@ namespace FarseerPhysics.Dynamics
         {
             Debug.Assert(BodyCount < BodyCapacity);
             body.IslandIndex = BodyCount;
-            Bodies[BodyCount] = body;
-            ++BodyCount;
+            Bodies[BodyCount++] = body;
         }
 
         public void Add(Contact contact)

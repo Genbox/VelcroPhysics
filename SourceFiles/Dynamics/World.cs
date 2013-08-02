@@ -65,8 +65,8 @@ namespace FarseerPhysics.Dynamics
         private Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
         private Func<RayCastInput, int, float> _rayCastCallbackWrapper;
 
-        internal Queue<Contact> ContactPool = new Queue<Contact>(256);
-        internal bool WorldHasNewFixture;
+        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
+        internal bool _worldHasNewFixture;
 
         /// <summary>
         /// Fires whenever a body has been added
@@ -431,7 +431,7 @@ namespace FarseerPhysics.Dynamics
 #else
             foreach (Body b in BodyList)
             {
-                b.Island = false;
+                b._island = false;
             }
 #endif
 
@@ -443,7 +443,7 @@ namespace FarseerPhysics.Dynamics
 #else
             foreach (Contact c in ContactManager.ContactList)
             {
-                c.Flags &= ~ContactFlags.Island;
+                c._flags &= ~ContactFlags.Island;
             }
 #endif
             foreach (Joint j in JointList)
@@ -472,7 +472,7 @@ namespace FarseerPhysics.Dynamics
             {
                 Body seed = BodyList[index];
 #endif
-                if (seed.Island)
+                if (seed._island)
                 {
                     continue;
                 }
@@ -497,7 +497,7 @@ namespace FarseerPhysics.Dynamics
             if (!IslandSet.Contains(body))
                 IslandSet.Add(body);
 #endif
-                seed.Island = true;
+                seed._island = true;
 
                 // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
@@ -523,7 +523,7 @@ namespace FarseerPhysics.Dynamics
                         Contact contact = ce.Contact;
 
                         // Has this contact already been added to an island?
-                        if ((contact.Flags & ContactFlags.Island) != ContactFlags.None)
+                        if ((contact._flags & ContactFlags.Island) != ContactFlags.None)
                         {
                             continue;
                         }
@@ -543,12 +543,12 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         Island.Add(contact);
-                        contact.Flags |= ContactFlags.Island;
+                        contact._flags |= ContactFlags.Island;
 
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if (other.Island)
+                        if (other._island)
                         {
                             continue;
                         }
@@ -560,7 +560,7 @@ namespace FarseerPhysics.Dynamics
                         if (!IslandSet.Contains(body))
                             IslandSet.Add(body);
 #endif
-                        other.Island = true;
+                        other._island = true;
                     }
 
                     // Search all joints connect to this body.
@@ -586,7 +586,7 @@ namespace FarseerPhysics.Dynamics
                             Island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
 
-                            if (other.Island)
+                            if (other._island)
                             {
                                 continue;
                             }
@@ -597,7 +597,7 @@ namespace FarseerPhysics.Dynamics
                             if (!IslandSet.Contains(body))
                                 IslandSet.Add(body);
 #endif
-                            other.Island = true;
+                            other._island = true;
                         }
                         else
                         {
@@ -616,7 +616,7 @@ namespace FarseerPhysics.Dynamics
                     Body b = Island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
-                        b.Island = false;
+                        b._island = false;
                     }
                 }
             }
@@ -629,7 +629,7 @@ namespace FarseerPhysics.Dynamics
 #endif
             {
                 // If a body was not in an island then it did not move.
-                if (!b.Island)
+                if (!b._island)
                 {
                     continue;
                 }
@@ -684,8 +684,8 @@ namespace FarseerPhysics.Dynamics
 #else
                 for (int i = 0; i < BodyList.Count; i++)
                 {
-                    BodyList[i].Island = false;
-                    BodyList[i].Sweep.Alpha0 = 0.0f;
+                    BodyList[i]._island = false;
+                    BodyList[i]._sweep.Alpha0 = 0.0f;
                 }
 #endif
 #if USE_ACTIVE_CONTACT_SET
@@ -697,7 +697,7 @@ namespace FarseerPhysics.Dynamics
                     Contact c = ContactManager.ContactList[i];
 #endif
                     // Invalidate TOI
-                    c.Flags &= ~(ContactFlags.TOI | ContactFlags.Island);
+                    c._flags &= ~(ContactFlags.TOI | ContactFlags.Island);
                     c.TOICount = 0;
                     c.TOI = 1.0f;
                 }
@@ -732,7 +732,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     float alpha;
-                    if ((c.Flags & ContactFlags.TOI) == ContactFlags.TOI)
+                    if ((c._flags & ContactFlags.TOI) == ContactFlags.TOI)
                     {
                         // This contact has a valid cached TOI.
                         alpha = c.TOI;
@@ -792,17 +792,17 @@ namespace FarseerPhysics.Dynamics
 #endif
                         // Compute the TOI for this contact.
                         // Put the sweeps onto the same time interval.
-                        float alpha0 = bA.Sweep.Alpha0;
+                        float alpha0 = bA._sweep.Alpha0;
 
-                        if (bA.Sweep.Alpha0 < bB.Sweep.Alpha0)
+                        if (bA._sweep.Alpha0 < bB._sweep.Alpha0)
                         {
-                            alpha0 = bB.Sweep.Alpha0;
-                            bA.Sweep.Advance(alpha0);
+                            alpha0 = bB._sweep.Alpha0;
+                            bA._sweep.Advance(alpha0);
                         }
-                        else if (bB.Sweep.Alpha0 < bA.Sweep.Alpha0)
+                        else if (bB._sweep.Alpha0 < bA._sweep.Alpha0)
                         {
-                            alpha0 = bA.Sweep.Alpha0;
-                            bB.Sweep.Advance(alpha0);
+                            alpha0 = bA._sweep.Alpha0;
+                            bB._sweep.Advance(alpha0);
                         }
 
                         Debug.Assert(alpha0 < 1.0f);
@@ -810,8 +810,8 @@ namespace FarseerPhysics.Dynamics
                         // Compute the time of impact in interval [0, minTOI]
                         _input.ProxyA.Set(fA.Shape, c.ChildIndexA);
                         _input.ProxyB.Set(fB.Shape, c.ChildIndexB);
-                        _input.SweepA = bA.Sweep;
-                        _input.SweepB = bB.Sweep;
+                        _input.SweepA = bA._sweep;
+                        _input.SweepB = bB._sweep;
                         _input.TMax = 1.0f;
 
                         TOIOutput output;
@@ -829,7 +829,7 @@ namespace FarseerPhysics.Dynamics
                         }
 
                         c.TOI = alpha;
-                        c.Flags |= ContactFlags.TOI;
+                        c._flags |= ContactFlags.TOI;
                     }
 
                     if (alpha < minAlpha)
@@ -853,15 +853,15 @@ namespace FarseerPhysics.Dynamics
                 Body bA0 = fA1.Body;
                 Body bB0 = fB1.Body;
 
-                Sweep backup1 = bA0.Sweep;
-                Sweep backup2 = bB0.Sweep;
+                Sweep backup1 = bA0._sweep;
+                Sweep backup2 = bB0._sweep;
 
                 bA0.Advance(minAlpha);
                 bB0.Advance(minAlpha);
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(ContactManager);
-                minContact.Flags &= ~ContactFlags.TOI;
+                minContact._flags &= ~ContactFlags.TOI;
                 ++minContact.TOICount;
 
                 // Is the contact solid?
@@ -869,8 +869,8 @@ namespace FarseerPhysics.Dynamics
                 {
                     // Restore the sweeps.
                     minContact.Enabled = false;
-                    bA0.Sweep = backup1;
-                    bB0.Sweep = backup2;
+                    bA0._sweep = backup1;
+                    bB0._sweep = backup2;
                     bA0.SynchronizeTransform();
                     bB0.SynchronizeTransform();
                     continue;
@@ -885,9 +885,9 @@ namespace FarseerPhysics.Dynamics
                 Island.Add(bB0);
                 Island.Add(minContact);
 
-                bA0.Island = true;
-                bB0.Island = true;
-                minContact.Flags |= ContactFlags.Island;
+                bA0._island = true;
+                bB0._island = true;
+                minContact._flags |= ContactFlags.Island;
 
                 // Get contacts on bodyA and bodyB.
                 Body[] bodies = { bA0, bB0 };
@@ -911,7 +911,7 @@ namespace FarseerPhysics.Dynamics
                             }
 
                             // Has this contact already been added to the island?
-                            if ((contact.Flags & ContactFlags.Island) != ContactFlags.None)
+                            if ((contact._flags & ContactFlags.Island) != ContactFlags.None)
                             {
                                 continue;
                             }
@@ -931,8 +931,8 @@ namespace FarseerPhysics.Dynamics
                             }
 
                             // Tentatively advance the body to the TOI.
-                            Sweep backup = other.Sweep;
-                            if (!other.Island)
+                            Sweep backup = other._sweep;
+                            if (!other._island)
                             {
                                 other.Advance(minAlpha);
                             }
@@ -943,7 +943,7 @@ namespace FarseerPhysics.Dynamics
                             // Was the contact disabled by the user?
                             if (contact.Enabled == false)
                             {
-                                other.Sweep = backup;
+                                other._sweep = backup;
                                 other.SynchronizeTransform();
                                 continue;
                             }
@@ -951,23 +951,23 @@ namespace FarseerPhysics.Dynamics
                             // Are there contact points?
                             if (contact.IsTouching() == false)
                             {
-                                other.Sweep = backup;
+                                other._sweep = backup;
                                 other.SynchronizeTransform();
                                 continue;
                             }
 
                             // Add the contact to the island
-                            contact.Flags |= ContactFlags.Island;
+                            contact._flags |= ContactFlags.Island;
                             Island.Add(contact);
 
                             // Has the other body already been added to the island?
-                            if (other.Island)
+                            if (other._island)
                             {
                                 continue;
                             }
 
                             // Add the other body to the island.
-                            other.Island = true;
+                            other._island = true;
 
                             if (other.BodyType != BodyType.Static)
                             {
@@ -998,7 +998,7 @@ namespace FarseerPhysics.Dynamics
                 for (int i = 0; i < Island.BodyCount; ++i)
                 {
                     Body body = Island.Bodies[i];
-                    body.Island = false;
+                    body._island = false;
 
                     if (body.BodyType != BodyType.Dynamic)
                     {
@@ -1010,7 +1010,7 @@ namespace FarseerPhysics.Dynamics
                     // Invalidate all contact TOIs on this displaced body.
                     for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                     {
-                        ce.Contact.Flags &= ~(ContactFlags.TOI | ContactFlags.Island);
+                        ce.Contact._flags &= ~(ContactFlags.TOI | ContactFlags.Island);
                     }
                 }
 
@@ -1217,10 +1217,10 @@ namespace FarseerPhysics.Dynamics
             //TODO: Add timing of finding new contacts
 
             // If new fixtures were added, we need to find the new contacts.
-            if (WorldHasNewFixture)
+            if (_worldHasNewFixture)
             {
                 ContactManager.FindNewContacts();
-                WorldHasNewFixture = false;
+                _worldHasNewFixture = false;
             }
 
             //FPE only: moved position and velocity iterations into Settings.cs
@@ -1291,8 +1291,8 @@ namespace FarseerPhysics.Dynamics
             for (int i = 0; i < BodyList.Count; i++)
             {
                 Body body = BodyList[i];
-                body.Force = Vector2.Zero;
-                body.Torque = 0.0f;
+                body._force = Vector2.Zero;
+                body._torque = 0.0f;
             }
         }
 
@@ -1476,9 +1476,9 @@ namespace FarseerPhysics.Dynamics
         {
             foreach (Body b in BodyList)
             {
-                b.Xf.p -= newOrigin;
-                b.Sweep.C0 -= newOrigin;
-                b.Sweep.C -= newOrigin;
+                b._xf.p -= newOrigin;
+                b._sweep.C0 -= newOrigin;
+                b._sweep.C -= newOrigin;
             }
 
             foreach (Joint joint in JointList)

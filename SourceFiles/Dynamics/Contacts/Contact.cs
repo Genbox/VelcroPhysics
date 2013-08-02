@@ -104,6 +104,8 @@ namespace FarseerPhysics.Dynamics.Contacts
     /// </summary>
     public class Contact
     {
+        private ContactType _type;
+
         private static EdgeShape _edge = new EdgeShape();
 
         private static ContactType[,] _registers = new[,]
@@ -137,12 +139,24 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                                // 3,3 is invalid (no ContactType.Loop)
                                                            },
                                                        };
+        // Nodes for connecting bodies.
+        internal ContactEdge NodeA = new ContactEdge();
+        internal ContactEdge NodeB = new ContactEdge();
+
+        internal ContactFlags _flags;
+        internal int TOICount;
 
         public Fixture FixtureA;
         public Fixture FixtureB;
-        internal ContactFlags Flags;
         public float Friction { get; set; }
         public float Restitution { get; set; }
+        public float TOI;
+
+        /// <summary>
+        /// Get the contact manifold. Do not modify the manifold unless you understand the
+        /// internals of Box2D.
+        /// </summary>
+        public Manifold Manifold;
 
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
         public float TangentSpeed { get; set; }
@@ -156,19 +170,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         {
             Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
         }
-
-        /// <summary>
-        /// Get the contact manifold. Do not modify the manifold unless you understand the
-        /// internals of Box2D.
-        /// </summary>
-        public Manifold Manifold;
-
-        // Nodes for connecting bodies.
-        internal ContactEdge NodeA = new ContactEdge();
-        internal ContactEdge NodeB = new ContactEdge();
-        public float TOI;
-        internal int TOICount;
-        private ContactType _type;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {
@@ -187,15 +188,15 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 if (value)
                 {
-                    Flags |= ContactFlags.Enabled;
+                    _flags |= ContactFlags.Enabled;
                 }
                 else
                 {
-                    Flags &= ~ContactFlags.Enabled;
+                    _flags &= ~ContactFlags.Enabled;
                 }
             }
 
-            get { return (Flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
+            get { return (_flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
         }
 
         /// <summary>
@@ -203,7 +204,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// </summary>
         public void Enable()
         {
-            Flags |= ContactFlags.Enabled;
+            _flags |= ContactFlags.Enabled;
         }
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// </summary>
         public void Disable()
         {
-            Flags &= ~ContactFlags.Enabled;
+            _flags &= ~ContactFlags.Enabled;
         }
 
         /// <summary>
@@ -236,7 +237,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
-            ContactSolver.WorldManifold.Initialize(ref Manifold, ref bodyA.Xf, shapeA.Radius, ref bodyB.Xf, shapeB.Radius, out normal, out points);
+            ContactSolver.WorldManifold.Initialize(ref Manifold, ref bodyA._xf, shapeA.Radius, ref bodyB._xf, shapeB.Radius, out normal, out points);
         }
 
         /// <summary>
@@ -247,7 +248,7 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// </returns>
         public bool IsTouching()
         {
-            return (Flags & ContactFlags.Touching) == ContactFlags.Touching;
+            return (_flags & ContactFlags.Touching) == ContactFlags.Touching;
         }
 
         /// <summary>
@@ -255,12 +256,12 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// </summary>
         public void FlagForFiltering()
         {
-            Flags |= ContactFlags.Filter;
+            _flags |= ContactFlags.Filter;
         }
 
         private void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
         {
-            Flags = ContactFlags.Enabled;
+            _flags = ContactFlags.Enabled;
 
             FixtureA = fA;
             FixtureB = fB;
@@ -308,10 +309,10 @@ namespace FarseerPhysics.Dynamics.Contacts
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
-            Flags |= ContactFlags.Enabled;
+            _flags |= ContactFlags.Enabled;
 
             bool touching;
-            bool wasTouching = (Flags & ContactFlags.Touching) == ContactFlags.Touching;
+            bool wasTouching = (_flags & ContactFlags.Touching) == ContactFlags.Touching;
 
             bool sensor = FixtureA.IsSensor || FixtureB.IsSensor;
 
@@ -321,14 +322,14 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 Shape shapeA = FixtureA.Shape;
                 Shape shapeB = FixtureB.Shape;
-                touching = Collision.Collision.TestOverlap(shapeA, ChildIndexA, shapeB, ChildIndexB, ref bodyA.Xf, ref bodyB.Xf);
+                touching = Collision.Collision.TestOverlap(shapeA, ChildIndexA, shapeB, ChildIndexB, ref bodyA._xf, ref bodyB._xf);
 
                 // Sensors don't generate manifolds.
                 Manifold.PointCount = 0;
             }
             else
             {
-                Evaluate(ref Manifold, ref bodyA.Xf, ref bodyB.Xf);
+                Evaluate(ref Manifold, ref bodyA._xf, ref bodyB._xf);
                 touching = Manifold.PointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
@@ -364,11 +365,11 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             if (touching)
             {
-                Flags |= ContactFlags.Touching;
+                _flags |= ContactFlags.Touching;
             }
             else
             {
-                Flags &= ~ContactFlags.Touching;
+                _flags &= ~ContactFlags.Touching;
             }
 
             if (wasTouching == false)
@@ -419,7 +420,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     // any of the callbacks, we need to mark it as not touching and call any separation
                     // callbacks for fixtures that didn't explicitly disable the collision.
                     if (!Enabled)
-                        Flags &= ~ContactFlags.Touching;
+                        _flags &= ~ContactFlags.Touching;
                 }
             }
             else
@@ -494,7 +495,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
-            Queue<Contact> pool = fixtureA.Body.World.ContactPool;
+            Queue<Contact> pool = fixtureA.Body._world._contactPool;
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
@@ -534,7 +535,7 @@ namespace FarseerPhysics.Dynamics.Contacts
 #if USE_ACTIVE_CONTACT_SET
             FixtureA.Body.World.ContactManager.RemoveActiveContact(this);
 #endif
-            FixtureA.Body.World.ContactPool.Enqueue(this);
+            FixtureA.Body._world._contactPool.Enqueue(this);
 
             if (Manifold.PointCount > 0 && FixtureA.IsSensor == false && FixtureB.IsSensor == false)
             {

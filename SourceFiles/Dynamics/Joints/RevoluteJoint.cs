@@ -152,7 +152,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         public float JointAngle
         {
-            get { return BodyB.Sweep.A - BodyA.Sweep.A - ReferenceAngle; }
+            get { return BodyB._sweep.A - BodyA._sweep.A - ReferenceAngle; }
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// </summary>
         public float JointSpeed
         {
-            get { return BodyB.AngularVelocityInternal - BodyA.AngularVelocityInternal; }
+            get { return BodyB._angularVelocity - BodyA._angularVelocity; }
         }
 
         /// <summary>
@@ -308,12 +308,12 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             _indexA = BodyA.IslandIndex;
             _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA.Sweep.LocalCenter;
-            _localCenterB = BodyB.Sweep.LocalCenter;
-            _invMassA = BodyA.InvMass;
-            _invMassB = BodyB.InvMass;
-            _invIA = BodyA.InvI;
-            _invIB = BodyB.InvI;
+            _localCenterA = BodyA._sweep.LocalCenter;
+            _localCenterB = BodyB._sweep.LocalCenter;
+            _invMassA = BodyA._invMass;
+            _invMassB = BodyB._invMass;
+            _invIA = BodyA._invI;
+            _invIB = BodyB._invI;
 
             float aA = data.positions[_indexA].a;
             Vector2 vA = data.velocities[_indexA].v;
