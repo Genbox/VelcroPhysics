@@ -21,7 +21,6 @@
 */
 //#define USE_ACTIVE_CONTACT_SET
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using FarseerPhysics.Collision;
@@ -59,42 +58,6 @@ namespace FarseerPhysics.Dynamics.Contacts
         /// The previous contact edge in the body's contact list
         /// </summary>
         public ContactEdge Prev;
-    }
-
-    [Flags]
-    public enum ContactFlags
-    {
-        None = 0,
-
-        /// <summary>
-        /// Used when crawling contact graph when forming islands.
-        /// </summary>
-        Island = 0x0001,
-
-        /// <summary>
-        /// Set when the shapes are touching.
-        /// </summary>
-        Touching = 0x0002,
-
-        /// <summary>
-        /// This contact can be disabled (by user)
-        /// </summary>
-        Enabled = 0x0004,
-
-        /// <summary>
-        /// This contact needs filtering because a fixture filter was changed.
-        /// </summary>
-        Filter = 0x0008,
-
-        /// <summary>
-        /// This bullet contact had a TOI event
-        /// </summary>
-        BulletHit = 0x0010,
-
-        /// <summary>
-        /// This contact has a valid TOI i the field TOI
-        /// </summary>
-        TOI = 0x0020
     }
 
     /// <summary>
@@ -140,17 +103,15 @@ namespace FarseerPhysics.Dynamics.Contacts
                                                            },
                                                        };
         // Nodes for connecting bodies.
-        internal ContactEdge NodeA = new ContactEdge();
-        internal ContactEdge NodeB = new ContactEdge();
-
-        internal ContactFlags _flags;
-        internal int TOICount;
+        internal ContactEdge _nodeA = new ContactEdge();
+        internal ContactEdge _nodeB = new ContactEdge();
+        internal int _toiCount;
+        internal float _toi;
 
         public Fixture FixtureA;
         public Fixture FixtureB;
         public float Friction { get; set; }
         public float Restitution { get; set; }
-        public float TOI;
 
         /// <summary>
         /// Get the contact manifold. Do not modify the manifold unless you understand the
@@ -160,6 +121,38 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
         public float TangentSpeed { get; set; }
+
+        /// Enable/disable this contact. This can be used inside the pre-solve
+        /// contact listener. The contact is only disabled for the current
+        /// time step (or sub-step in continuous collisions).
+        /// NOTE: If you are setting Enabled to a constant true or false,
+        /// use the explicit Enable() or Disable() functions instead to 
+        /// save the CPU from doing a branch operation.
+        public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Get the child primitive index for fixture A.
+        /// </summary>
+        /// <value>The child index A.</value>
+        public int ChildIndexA { get; internal set; }
+
+        /// <summary>
+        /// Get the child primitive index for fixture B.
+        /// </summary>
+        /// <value>The child index B.</value>
+        public int ChildIndexB { get; internal set; }
+
+        /// <summary>
+        /// Determines whether this contact is touching.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance is touching; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsTouching { get; set; }
+
+        internal bool IslandFlag { get; set; }
+        internal bool TOIFlag { get; set; }
+        internal bool FilterFlag { get; set; }
 
         public void ResetRestitution()
         {
@@ -176,57 +169,6 @@ namespace FarseerPhysics.Dynamics.Contacts
             Reset(fA, indexA, fB, indexB);
         }
 
-        /// Enable/disable this contact. This can be used inside the pre-solve
-        /// contact listener. The contact is only disabled for the current
-        /// time step (or sub-step in continuous collisions).
-        /// NOTE: If you are setting Enabled to a constant true or false,
-        /// use the explicit Enable() or Disable() functions instead to 
-        /// save the CPU from doing a branch operation.
-        public bool Enabled
-        {
-            set
-            {
-                if (value)
-                {
-                    _flags |= ContactFlags.Enabled;
-                }
-                else
-                {
-                    _flags &= ~ContactFlags.Enabled;
-                }
-            }
-
-            get { return (_flags & ContactFlags.Enabled) == ContactFlags.Enabled; }
-        }
-
-        /// <summary>
-        /// Enable this contact.
-        /// </summary>
-        public void Enable()
-        {
-            _flags |= ContactFlags.Enabled;
-        }
-
-        /// <summary>
-        /// Disable this contact.
-        /// </summary>
-        public void Disable()
-        {
-            _flags &= ~ContactFlags.Enabled;
-        }
-
-        /// <summary>
-        /// Get the child primitive index for fixture A.
-        /// </summary>
-        /// <value>The child index A.</value>
-        public int ChildIndexA { get; internal set; }
-
-        /// <summary>
-        /// Get the child primitive index for fixture B.
-        /// </summary>
-        /// <value>The child index B.</value>
-        public int ChildIndexB { get; internal set; }
-
         /// <summary>
         /// Gets the world manifold.
         /// </summary>
@@ -240,28 +182,13 @@ namespace FarseerPhysics.Dynamics.Contacts
             ContactSolver.WorldManifold.Initialize(ref Manifold, ref bodyA._xf, shapeA.Radius, ref bodyB._xf, shapeB.Radius, out normal, out points);
         }
 
-        /// <summary>
-        /// Determines whether this contact is touching.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance is touching; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsTouching()
-        {
-            return (_flags & ContactFlags.Touching) == ContactFlags.Touching;
-        }
-
-        /// <summary>
-        /// Flag this contact for filtering. Filtering will occur the next time step.
-        /// </summary>
-        public void FlagForFiltering()
-        {
-            _flags |= ContactFlags.Filter;
-        }
-
         private void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
         {
-            _flags = ContactFlags.Enabled;
+            Enabled = true;
+            IsTouching = false;
+            IslandFlag = false;
+            FilterFlag = false;
+            TOIFlag = false;
 
             FixtureA = fA;
             FixtureB = fB;
@@ -271,17 +198,17 @@ namespace FarseerPhysics.Dynamics.Contacts
 
             Manifold.PointCount = 0;
 
-            NodeA.Contact = null;
-            NodeA.Prev = null;
-            NodeA.Next = null;
-            NodeA.Other = null;
+            _nodeA.Contact = null;
+            _nodeA.Prev = null;
+            _nodeA.Next = null;
+            _nodeA.Other = null;
 
-            NodeB.Contact = null;
-            NodeB.Prev = null;
-            NodeB.Next = null;
-            NodeB.Other = null;
+            _nodeB.Contact = null;
+            _nodeB.Prev = null;
+            _nodeB.Next = null;
+            _nodeB.Other = null;
 
-            TOICount = 0;
+            _toiCount = 0;
 
             //FPE: We only set the friction and restitution if we are not destroying the contact
             if (FixtureA != null && FixtureB != null)
@@ -309,13 +236,12 @@ namespace FarseerPhysics.Dynamics.Contacts
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
-            _flags |= ContactFlags.Enabled;
+            Enabled = true;
 
             bool touching;
-            bool wasTouching = (_flags & ContactFlags.Touching) == ContactFlags.Touching;
+            bool wasTouching = IsTouching;
 
             bool sensor = FixtureA.IsSensor || FixtureB.IsSensor;
-
 
             // Is this contact a sensor?
             if (sensor)
@@ -363,14 +289,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                 }
             }
 
-            if (touching)
-            {
-                _flags |= ContactFlags.Touching;
-            }
-            else
-            {
-                _flags &= ~ContactFlags.Touching;
-            }
+            IsTouching = touching;
 
             if (wasTouching == false)
             {
@@ -420,7 +339,7 @@ namespace FarseerPhysics.Dynamics.Contacts
                     // any of the callbacks, we need to mark it as not touching and call any separation
                     // callbacks for fixtures that didn't explicitly disable the collision.
                     if (!Enabled)
-                        _flags &= ~ContactFlags.Touching;
+                        IsTouching = false;
                 }
             }
             else
@@ -499,9 +418,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
-                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon))
-                    &&
-                    !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
+                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon)) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
                 {
                     c.Reset(fixtureA, indexA, fixtureB, indexB);
                 }
@@ -513,9 +430,7 @@ namespace FarseerPhysics.Dynamics.Contacts
             else
             {
                 // Edge+Polygon is non-symetrical due to the way Erin handles collision type registration.
-                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon))
-                    &&
-                    !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
+                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon)) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
                 {
                     c = new Contact(fixtureA, indexA, fixtureB, indexB);
                 }

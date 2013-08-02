@@ -397,7 +397,7 @@ namespace FarseerPhysics.Dynamics
                 Fixture fixtureB = contact.FixtureB;
                 if (fixtureA == this || fixtureB == this)
                 {
-                    contact.FlagForFiltering();
+                    contact.FilterFlag = true;
                 }
 
                 edge = edge.Next;

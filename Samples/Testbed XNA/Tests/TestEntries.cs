@@ -28,6 +28,8 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
+            new TestEntry {Name = "Pyramid", CreateTest = PyramidTest.Create},
+
             //Original tests
             new TestEntry {Name = "Continuous Test", CreateTest = ContinuousTest.Create},
             new TestEntry {Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create},
