@@ -62,12 +62,6 @@ namespace FarseerPhysics.Dynamics
         private Vector2 _point2;
         private List<Fixture> _testPointAllFixtures;
         private Stopwatch _watch = new Stopwatch();
-
-        /// <summary>
-        /// Called for each fixture found in the query. You control how the ray cast
-        /// proceeds by returning a float:
-        /// <returns>-1 to filter, 0 to terminate, fraction to clip the ray for closest hit, 1 to continue</returns>
-        /// </summary>
         private Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
         private Func<RayCastInput, int, float> _rayCastCallbackWrapper;
 
@@ -104,22 +98,23 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         public JointDelegate JointRemoved;
 
+        /// <summary>
+        /// Fires every time a controller is added to the World.
+        /// </summary>
         public ControllerDelegate ControllerAdded;
 
-        public ControllerDelegate ControllerRemoved;
-
         /// <summary>
-        /// If false, the whole simulation stops. It still processes added and removed geometries.
+        /// Fires every time a controlelr is removed form the World.
         /// </summary>
-        public bool Enabled = true;
-        public Island Island = new Island();
-
+        public ControllerDelegate ControllerRemoved;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World"/> class.
         /// </summary>
         public World(Vector2 gravity)
         {
+            Island = new Island();
+            Enabled = true;
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
@@ -422,17 +417,6 @@ namespace FarseerPhysics.Dynamics
             return rayCastInput.MaxFraction;
         }
 
-        private void SetIsland(Body body)
-        {
-#if USE_ISLAND_SET
-            if (!IslandSet.Contains(body))
-            {
-                IslandSet.Add(body);
-            }
-#endif
-            body.Flags |= BodyFlags.Island;
-        }
-
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
@@ -447,7 +431,7 @@ namespace FarseerPhysics.Dynamics
 #else
             foreach (Body b in BodyList)
             {
-                b.Flags &= ~BodyFlags.Island;
+                b.Island = false;
             }
 #endif
 
@@ -488,7 +472,7 @@ namespace FarseerPhysics.Dynamics
             {
                 Body seed = BodyList[index];
 #endif
-                if ((seed.Flags & (BodyFlags.Island)) != BodyFlags.None)
+                if (seed.Island)
                 {
                     continue;
                 }
@@ -508,7 +492,12 @@ namespace FarseerPhysics.Dynamics
                 Island.Clear();
                 int stackCount = 0;
                 _stack[stackCount++] = seed;
-                SetIsland(seed);
+
+#if USE_ISLAND_SET
+            if (!IslandSet.Contains(body))
+                IslandSet.Add(body);
+#endif
+                seed.Island = true;
 
                 // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
@@ -559,14 +548,19 @@ namespace FarseerPhysics.Dynamics
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
+                        if (other.Island)
                         {
                             continue;
                         }
 
                         Debug.Assert(stackCount < stackSize);
                         _stack[stackCount++] = other;
-                        SetIsland(other);
+
+#if USE_ISLAND_SET
+                        if (!IslandSet.Contains(body))
+                            IslandSet.Add(body);
+#endif
+                        other.Island = true;
                     }
 
                     // Search all joints connect to this body.
@@ -592,14 +586,18 @@ namespace FarseerPhysics.Dynamics
                             Island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
 
-                            if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
+                            if (other.Island)
                             {
                                 continue;
                             }
 
                             Debug.Assert(stackCount < stackSize);
                             _stack[stackCount++] = other;
-                            SetIsland(other);
+#if USE_ISLAND_SET
+                            if (!IslandSet.Contains(body))
+                                IslandSet.Add(body);
+#endif
+                            other.Island = true;
                         }
                         else
                         {
@@ -618,7 +616,7 @@ namespace FarseerPhysics.Dynamics
                     Body b = Island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
-                        b.Flags &= ~BodyFlags.Island;
+                        b.Island = false;
                     }
                 }
             }
@@ -631,7 +629,7 @@ namespace FarseerPhysics.Dynamics
 #endif
             {
                 // If a body was not in an island then it did not move.
-                if ((b.Flags & BodyFlags.Island) != BodyFlags.Island)
+                if (!b.Island)
                 {
                     continue;
                 }
@@ -686,7 +684,7 @@ namespace FarseerPhysics.Dynamics
 #else
                 for (int i = 0; i < BodyList.Count; i++)
                 {
-                    BodyList[i].Flags &= ~BodyFlags.Island;
+                    BodyList[i].Island = false;
                     BodyList[i].Sweep.Alpha0 = 0.0f;
                 }
 #endif
@@ -887,8 +885,8 @@ namespace FarseerPhysics.Dynamics
                 Island.Add(bB0);
                 Island.Add(minContact);
 
-                bA0.Flags |= BodyFlags.Island;
-                bB0.Flags |= BodyFlags.Island;
+                bA0.Island = true;
+                bB0.Island = true;
                 minContact.Flags |= ContactFlags.Island;
 
                 // Get contacts on bodyA and bodyB.
@@ -934,7 +932,7 @@ namespace FarseerPhysics.Dynamics
 
                             // Tentatively advance the body to the TOI.
                             Sweep backup = other.Sweep;
-                            if ((other.Flags & BodyFlags.Island) == 0)
+                            if (!other.Island)
                             {
                                 other.Advance(minAlpha);
                             }
@@ -963,13 +961,13 @@ namespace FarseerPhysics.Dynamics
                             Island.Add(contact);
 
                             // Has the other body already been added to the island?
-                            if ((other.Flags & BodyFlags.Island) != BodyFlags.None)
+                            if (other.Island)
                             {
                                 continue;
                             }
 
                             // Add the other body to the island.
-                            other.Flags |= BodyFlags.Island;
+                            other.Island = true;
 
                             if (other.BodyType != BodyType.Static)
                             {
@@ -1000,7 +998,7 @@ namespace FarseerPhysics.Dynamics
                 for (int i = 0; i < Island.BodyCount; ++i)
                 {
                     Body body = Island.Bodies[i];
-                    body.Flags &= ~BodyFlags.Island;
+                    body.Island = false;
 
                     if (body.BodyType != BodyType.Dynamic)
                     {
@@ -1105,6 +1103,13 @@ namespace FarseerPhysics.Dynamics
         {
             get { return ContactManager.ContactList; }
         }
+
+        /// <summary>
+        /// If false, the whole simulation stops. It still processes added and removed geometries.
+        /// </summary>
+        public bool Enabled { get; set; }
+
+        public Island Island { get; private set; }
 
         /// <summary>
         /// Add a rigid body.

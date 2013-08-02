@@ -54,20 +54,6 @@ namespace FarseerPhysics.Dynamics
         Dynamic,
     }
 
-    [Flags]
-    public enum BodyFlags
-    {
-        None = 0,
-        Island = (1 << 0),
-        Awake = (1 << 1),
-        AutoSleep = (1 << 2),
-        Bullet = (1 << 3),
-        FixedRotation = (1 << 4),
-        Enabled = (1 << 5),
-        IgnoreGravity = (1 << 6),
-        IgnoreCCD = (1 << 7),
-    }
-
     public class Body : IDisposable
     {
         private static int _bodyIdCounter;
@@ -77,18 +63,22 @@ namespace FarseerPhysics.Dynamics
         private float _inertia;
         private float _linearDamping;
         private float _mass;
+        private bool _sleepingAllowed = true;
+        private bool _awake = true;
+        internal bool _enabled = true;
+        private bool _fixedRotation;
 
         internal float AngularVelocityInternal;
-        internal BodyFlags Flags;
+        internal Vector2 LinearVelocityInternal;
         internal Vector2 Force;
         internal float InvI;
         internal float InvMass;
-        internal Vector2 LinearVelocityInternal;
         internal float SleepTime;
         internal Sweep Sweep; // the swept motion for CCD
         internal float Torque;
         internal World World;
         internal Transform Xf; // the body origin transform
+        internal bool Island;
 
         public PhysicsLogicFilter PhysicsLogicFilter;
         public ControllerFilter ControllerFilter;
@@ -101,13 +91,8 @@ namespace FarseerPhysics.Dynamics
 
             UserData = userdata;
             GravityScale = 1.0f;
-            AppendFlags(BodyFlags.AutoSleep);
-
-#if !USE_AWAKE_BODY_SET
-            Awake = true;
-#endif
             BodyType = BodyType.Static;
-            Enabled = true;
+            Enabled = true; //FPE note: Also creates proxies in the broadphase
 
             Xf.q.Set(rotation);
 
@@ -120,22 +105,7 @@ namespace FarseerPhysics.Dynamics
                 Sweep.A = rotation;
             }
 
-            world.AddBody(this);
-        }
-
-        private void AppendFlags(BodyFlags flag)
-        {
-            Flags |= flag;
-        }
-
-        private void RemoveFlags(BodyFlags flag)
-        {
-            Flags &= ~flag;
-        }
-
-        private bool HasFlag(BodyFlags flag)
-        {
-            return (Flags & flag) == flag;
+            world.AddBody(this); //FPE note: bodies can't live without a World
         }
 
         public int IslandIndex { get; set; }
@@ -291,17 +261,7 @@ namespace FarseerPhysics.Dynamics
         /// Gets or sets a value indicating whether this body should be included in the CCD solver.
         /// </summary>
         /// <value><c>true</c> if this instance is included in CCD; otherwise, <c>false</c>.</value>
-        public bool IsBullet
-        {
-            set
-            {
-                if (value)
-                    Flags |= BodyFlags.Bullet;
-                else
-                    Flags &= ~BodyFlags.Bullet;
-            }
-            get { return (Flags & BodyFlags.Bullet) == BodyFlags.Bullet; }
-        }
+        public bool IsBullet { get; set; }
 
         /// <summary>
         /// You can disable sleeping on this body. If you disable sleeping, the
@@ -312,15 +272,12 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (value)
-                    AppendFlags(BodyFlags.AutoSleep);
-                else
-                {
-                    RemoveFlags(BodyFlags.AutoSleep);
+                if (!value)
                     Awake = true;
-                }
+
+                _sleepingAllowed = value;
             }
-            get { return HasFlag(BodyFlags.AutoSleep); }
+            get { return _sleepingAllowed; }
         }
 
         /// <summary>
@@ -334,9 +291,8 @@ namespace FarseerPhysics.Dynamics
             {
                 if (value)
                 {
-                    if (!HasFlag(BodyFlags.Awake))
+                    if (!_awake)
                     {
-                        AppendFlags(BodyFlags.Awake);
                         SleepTime = 0.0f;
                         World.ContactManager.UpdateContacts(ContactList, true);
 #if USE_AWAKE_BODY_SET
@@ -357,17 +313,14 @@ namespace FarseerPhysics.Dynamics
 						World.AwakeBodySet.Remove(this);
 					}
 #endif
-                    RemoveFlags(BodyFlags.Awake);
+                    ResetDynamics();
                     SleepTime = 0.0f;
-                    LinearVelocityInternal = Vector2.Zero;
-                    AngularVelocityInternal = 0.0f;
-                    Force = Vector2.Zero;
-                    Torque = 0.0f;
                     World.ContactManager.UpdateContacts(ContactList, false);
-
                 }
+
+                _awake = value;
             }
-            get { return (Flags & BodyFlags.Awake) == BodyFlags.Awake; }
+            get { return _awake; }
         }
 
         /// <summary>
@@ -390,13 +343,11 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                if (value == Enabled)
+                if (value == _enabled)
                     return;
 
                 if (value)
                 {
-                    Flags |= BodyFlags.Enabled;
-
                     // Create all proxies.
                     IBroadPhase broadPhase = World.ContactManager.BroadPhase;
                     for (int i = 0; i < FixtureList.Count; i++)
@@ -408,8 +359,6 @@ namespace FarseerPhysics.Dynamics
                 }
                 else
                 {
-                    Flags &= ~BodyFlags.Enabled;
-
                     // Destroy all proxies.
                     IBroadPhase broadPhase = World.ContactManager.BroadPhase;
 
@@ -428,8 +377,10 @@ namespace FarseerPhysics.Dynamics
                     }
                     ContactList = null;
                 }
+
+                _enabled = value;
             }
-            get { return (Flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
+            get { return _enabled; }
         }
 
         /// <summary>
@@ -441,20 +392,15 @@ namespace FarseerPhysics.Dynamics
         {
             set
             {
-                bool status = (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation;
-                if (status == value)
+                if (_fixedRotation == value)
                     return;
 
-                if (value)
-                    Flags |= BodyFlags.FixedRotation;
-                else
-                    Flags &= ~BodyFlags.FixedRotation;
+                _fixedRotation = value;
 
                 AngularVelocityInternal = 0f;
-
                 ResetMassData();
             }
-            get { return (Flags & BodyFlags.FixedRotation) == BodyFlags.FixedRotation; }
+            get { return _fixedRotation; }
         }
 
         /// <summary>
@@ -531,17 +477,7 @@ namespace FarseerPhysics.Dynamics
         /// Gets or sets a value indicating whether this body ignores gravity.
         /// </summary>
         /// <value><c>true</c> if  it ignores gravity; otherwise, <c>false</c>.</value>
-        public bool IgnoreGravity
-        {
-            get { return (Flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
-            set
-            {
-                if (value)
-                    Flags |= BodyFlags.IgnoreGravity;
-                else
-                    Flags &= ~BodyFlags.IgnoreGravity;
-            }
-        }
+        public bool IgnoreGravity { get; set; } //TODO
 
         /// <summary>
         /// Get the world position of the center of mass.
@@ -612,7 +548,7 @@ namespace FarseerPhysics.Dynamics
                 if (_bodyType != BodyType.Dynamic) //Make an assert
                     return;
 
-                if (value > 0.0f && (Flags & BodyFlags.FixedRotation) == 0) //Make an assert
+                if (value > 0.0f && !_fixedRotation) //Make an assert
                 {
                     _inertia = value - Mass * Vector2.Dot(LocalCenter, LocalCenter);
                     Debug.Assert(_inertia > 0.0f);
@@ -735,17 +671,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public bool IgnoreCCD
-        {
-            get { return (Flags & BodyFlags.IgnoreCCD) == BodyFlags.IgnoreCCD; }
-            set
-            {
-                if (value)
-                    Flags |= BodyFlags.IgnoreCCD;
-                else
-                    Flags &= ~BodyFlags.IgnoreCCD;
-            }
-        }
+        public bool IgnoreCCD { get; set; } //TODO
 
         /// <summary>
         /// Resets the dynamics of this body.
@@ -810,7 +736,7 @@ namespace FarseerPhysics.Dynamics
                 }
             }
 
-            if ((Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
+            if (_enabled)
             {
                 IBroadPhase broadPhase = World.ContactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
@@ -1098,7 +1024,7 @@ namespace FarseerPhysics.Dynamics
                 InvMass = 1.0f;
             }
 
-            if (_inertia > 0.0f && (Flags & BodyFlags.FixedRotation) == 0)
+            if (_inertia > 0.0f && !_fixedRotation)
             {
                 // Center the inertia about the center of mass.
                 _inertia -= _mass * Vector2.Dot(localCenter, localCenter);
@@ -1409,13 +1335,21 @@ namespace FarseerPhysics.Dynamics
         {
             Body body = new Body(World, Position, Rotation, UserData);
             body._bodyType = _bodyType;
-            body.LinearDamping = LinearDamping;
             body.LinearVelocityInternal = LinearVelocityInternal;
-            body.AngularDamping = AngularDamping;
             body.AngularVelocityInternal = AngularVelocityInternal;
             body.GravityScale = GravityScale;
             body.UserData = UserData;
-            body.Flags = Flags;
+            body._enabled = _enabled;
+            body._fixedRotation = _fixedRotation;
+            body._sleepingAllowed = _sleepingAllowed;
+            body._linearDamping = _linearDamping;
+            body._angularDamping = _angularDamping;
+            body._awake = _awake;
+            body.IsBullet = IsBullet;
+            body.IgnoreCCD = IgnoreCCD;
+            body.IgnoreGravity = IgnoreGravity;
+            body.Torque = Torque;
+
             return body;
         }
 

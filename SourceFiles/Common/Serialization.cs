@@ -677,10 +677,7 @@ namespace FarseerPhysics.Common
                             switch (sn.Name.ToLower())
                             {
                                 case "active":
-                                    if (bool.Parse(sn.Value))
-                                        body.Flags |= BodyFlags.Enabled;
-                                    else
-                                        body.Flags &= ~BodyFlags.Enabled;
+                                    body._enabled = bool.Parse(sn.Value);
                                     break;
                                 case "allowsleep":
                                     body.SleepingAllowed = bool.Parse(sn.Value);
