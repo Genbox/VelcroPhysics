@@ -168,28 +168,28 @@ namespace FarseerPhysics.Dynamics
             // Connect to island graph.
 
             // Connect to body A
-            c.NodeA.Contact = c;
-            c.NodeA.Other = bodyB;
+            c._nodeA.Contact = c;
+            c._nodeA.Other = bodyB;
 
-            c.NodeA.Prev = null;
-            c.NodeA.Next = bodyA.ContactList;
+            c._nodeA.Prev = null;
+            c._nodeA.Next = bodyA.ContactList;
             if (bodyA.ContactList != null)
             {
-                bodyA.ContactList.Prev = c.NodeA;
+                bodyA.ContactList.Prev = c._nodeA;
             }
-            bodyA.ContactList = c.NodeA;
+            bodyA.ContactList = c._nodeA;
 
             // Connect to body B
-            c.NodeB.Contact = c;
-            c.NodeB.Other = bodyA;
+            c._nodeB.Contact = c;
+            c._nodeB.Other = bodyA;
 
-            c.NodeB.Prev = null;
-            c.NodeB.Next = bodyB.ContactList;
+            c._nodeB.Prev = null;
+            c._nodeB.Next = bodyB.ContactList;
             if (bodyB.ContactList != null)
             {
-                bodyB.ContactList.Prev = c.NodeB;
+                bodyB.ContactList.Prev = c._nodeB;
             }
-            bodyB.ContactList = c.NodeB;
+            bodyB.ContactList = c._nodeB;
 
             // Wake up the bodies
             if (fixtureA.IsSensor == false && fixtureB.IsSensor == false)
@@ -211,7 +211,7 @@ namespace FarseerPhysics.Dynamics
             Body bodyA = fixtureA.Body;
             Body bodyB = fixtureB.Body;
 
-            if (contact.IsTouching())
+            if (contact.IsTouching)
             {
                 //Report the separation to both participants:
                 if (fixtureA != null && fixtureA.OnSeparation != null)
@@ -230,35 +230,35 @@ namespace FarseerPhysics.Dynamics
             ContactList.Remove(contact);
 
             // Remove from body 1
-            if (contact.NodeA.Prev != null)
+            if (contact._nodeA.Prev != null)
             {
-                contact.NodeA.Prev.Next = contact.NodeA.Next;
+                contact._nodeA.Prev.Next = contact._nodeA.Next;
             }
 
-            if (contact.NodeA.Next != null)
+            if (contact._nodeA.Next != null)
             {
-                contact.NodeA.Next.Prev = contact.NodeA.Prev;
+                contact._nodeA.Next.Prev = contact._nodeA.Prev;
             }
 
-            if (contact.NodeA == bodyA.ContactList)
+            if (contact._nodeA == bodyA.ContactList)
             {
-                bodyA.ContactList = contact.NodeA.Next;
+                bodyA.ContactList = contact._nodeA.Next;
             }
 
             // Remove from body 2
-            if (contact.NodeB.Prev != null)
+            if (contact._nodeB.Prev != null)
             {
-                contact.NodeB.Prev.Next = contact.NodeB.Next;
+                contact._nodeB.Prev.Next = contact._nodeB.Next;
             }
 
-            if (contact.NodeB.Next != null)
+            if (contact._nodeB.Next != null)
             {
-                contact.NodeB.Next.Prev = contact.NodeB.Prev;
+                contact._nodeB.Next.Prev = contact._nodeB.Prev;
             }
 
-            if (contact.NodeB == bodyB.ContactList)
+            if (contact._nodeB == bodyB.ContactList)
             {
-                bodyB.ContactList = contact.NodeB.Next;
+                bodyB.ContactList = contact._nodeB.Next;
             }
 
 #if USE_ACTIVE_CONTACT_SET
@@ -295,7 +295,7 @@ namespace FarseerPhysics.Dynamics
                     continue;
 
                 // Is this contact flagged for filtering?
-                if ((c._flags & ContactFlags.Filter) == ContactFlags.Filter)
+                if (c.FilterFlag)
                 {
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
@@ -322,7 +322,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Clear the filtering flag.
-                    c._flags &= ~ContactFlags.Filter;
+                    c.FilterFlag = false;
                 }
 
                 bool activeA = bodyA.Awake && bodyA.BodyType != BodyType.Static;
