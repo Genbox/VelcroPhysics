@@ -295,7 +295,7 @@ namespace FarseerPhysics.Dynamics
                     continue;
 
                 // Is this contact flagged for filtering?
-                if ((c.Flags & ContactFlags.Filter) == ContactFlags.Filter)
+                if ((c._flags & ContactFlags.Filter) == ContactFlags.Filter)
                 {
                     // Should these bodies collide?
                     if (bodyB.ShouldCollide(bodyA) == false)
@@ -322,7 +322,7 @@ namespace FarseerPhysics.Dynamics
                     }
 
                     // Clear the filtering flag.
-                    c.Flags &= ~ContactFlags.Filter;
+                    c._flags &= ~ContactFlags.Filter;
                 }
 
                 bool activeA = bodyA.Awake && bodyA.BodyType != BodyType.Static;

@@ -81,7 +81,7 @@ namespace FarseerPhysics.Dynamics.Joints
             Debug.Assert(anchor.IsValid());
 
             _target = anchor;
-            LocalAnchorA = MathUtils.MulT(BodyA.Xf, anchor);
+            LocalAnchorA = MathUtils.MulT(BodyA._xf, anchor);
         }
 
         /// <summary>
@@ -159,9 +159,9 @@ namespace FarseerPhysics.Dynamics.Joints
         internal override void InitVelocityConstraints(ref SolverData data)
         {
             _indexA = BodyA.IslandIndex;
-            _localCenterA = BodyA.Sweep.LocalCenter;
-            _invMassA = BodyA.InvMass;
-            _invIA = BodyA.InvI;
+            _localCenterA = BodyA._sweep.LocalCenter;
+            _invMassA = BodyA._invMass;
+            _invIA = BodyA._invI;
 
             Vector2 cA = data.positions[_indexA].c;
             float aA = data.positions[_indexA].a;

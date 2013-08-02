@@ -129,7 +129,7 @@ namespace FarseerPhysics.Common
         private static void SerializeBody(List<Fixture> fixtures, Body body)
         {
             _writer.WriteStartElement("Body");
-            _writer.WriteAttributeString("Id", body.BodyId.ToString());
+            _writer.WriteAttributeString("Id", body.IslandIndex.ToString());
             _writer.WriteAttributeString("Type", body.BodyType.ToString());
 
             _writer.WriteElementString("Active", body.Enabled.ToString());
@@ -669,7 +669,7 @@ namespace FarseerPhysics.Common
                         if (element.Name.ToLower() != "body")
                             throw new Exception();
 
-                        body.BodyId = int.Parse(element.Attributes[0].Value);
+                        body.IslandIndex = int.Parse(element.Attributes[0].Value);
                         body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), element.Attributes[1].Value, true);
 
                         foreach (XMLFragmentElement sn in element.Elements)

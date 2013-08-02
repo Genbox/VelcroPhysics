@@ -235,15 +235,15 @@ namespace FarseerPhysics.Dynamics.Joints
 
                 Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - BodyA.LocalCenter);
                 Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - BodyB.LocalCenter);
-                Vector2 p1 = BodyA.Sweep.C + r1;
-                Vector2 p2 = BodyB.Sweep.C + r2;
+                Vector2 p1 = BodyA._sweep.C + r1;
+                Vector2 p2 = BodyB._sweep.C + r2;
                 Vector2 d = p2 - p1;
                 Vector2 axis = BodyA.GetWorldVector(LocalXAxis);
 
-                Vector2 v1 = BodyA.LinearVelocityInternal;
-                Vector2 v2 = BodyB.LinearVelocityInternal;
-                float w1 = BodyA.AngularVelocityInternal;
-                float w2 = BodyB.AngularVelocityInternal;
+                Vector2 v1 = BodyA._linearVelocity;
+                Vector2 v2 = BodyB._linearVelocity;
+                float w1 = BodyA._angularVelocity;
+                float w2 = BodyB._angularVelocity;
 
                 float speed = Vector2.Dot(d, MathUtils.Cross(w1, axis)) + Vector2.Dot(axis, v2 + MathUtils.Cross(w2, r2) - v1 - MathUtils.Cross(w1, r1));
                 return speed;
@@ -418,12 +418,12 @@ namespace FarseerPhysics.Dynamics.Joints
         {
             _indexA = BodyA.IslandIndex;
             _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA.Sweep.LocalCenter;
-            _localCenterB = BodyB.Sweep.LocalCenter;
-            _invMassA = BodyA.InvMass;
-            _invMassB = BodyB.InvMass;
-            _invIA = BodyA.InvI;
-            _invIB = BodyB.InvI;
+            _localCenterA = BodyA._sweep.LocalCenter;
+            _localCenterB = BodyB._sweep.LocalCenter;
+            _invMassA = BodyA._invMass;
+            _invMassB = BodyB._invMass;
+            _invIA = BodyA._invI;
+            _invIB = BodyB._invI;
 
             Vector2 cA = data.positions[_indexA].c;
             float aA = data.positions[_indexA].a;
