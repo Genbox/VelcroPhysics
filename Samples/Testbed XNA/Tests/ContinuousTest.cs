@@ -52,6 +52,10 @@ namespace FarseerPhysics.TestBed.Tests
             _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
             _box.LinearVelocity = new Vector2(0.0f, -100.0f);
             _box.AngularVelocity = _angularVelocity;
+
+            Distance.GJKCalls = 0; Distance.GJKIters = 0; Distance.GJKMaxIters = 0;
+            TimeOfImpact.TOICalls = 0; TimeOfImpact.TOIIters = 0;
+            TimeOfImpact.TOIRootIters = 0; TimeOfImpact.TOIMaxRootIters = 0;
         }
 
         private void Launch()

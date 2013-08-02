@@ -63,17 +63,20 @@ namespace FarseerPhysics.Collision
 
     public static class SeparationFunction
     {
+        [ThreadStatic]
         private static Vector2 _axis;
+        [ThreadStatic]
         private static Vector2 _localPoint;
-        private static DistanceProxy _proxyA = new DistanceProxy();
-        private static DistanceProxy _proxyB = new DistanceProxy();
+        [ThreadStatic]
+        private static DistanceProxy _proxyA;
+        [ThreadStatic]
+        private static DistanceProxy _proxyB;
+        [ThreadStatic]
         private static Sweep _sweepA, _sweepB;
+        [ThreadStatic]
         private static SeparationFunctionType _type;
 
-        public static void Set(ref SimplexCache cache,
-                               DistanceProxy proxyA, ref Sweep sweepA,
-                               DistanceProxy proxyB, ref Sweep sweepB,
-                               float t1)
+        public static void Set(ref SimplexCache cache, DistanceProxy proxyA, ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, float t1)
         {
             _localPoint = Vector2.Zero;
             _proxyA = proxyA;
@@ -97,7 +100,6 @@ namespace FarseerPhysics.Collision
                 Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
                 _axis = pointB - pointA;
                 _axis.Normalize();
-                return;
             }
             else if (cache.IndexA[0] == cache.IndexA[1])
             {
@@ -121,9 +123,7 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
-                    s = -s;
                 }
-                return;
             }
             else
             {
@@ -147,10 +147,10 @@ namespace FarseerPhysics.Collision
                 if (s < 0.0f)
                 {
                     _axis = -_axis;
-                    s = -s;
                 }
-                return;
             }
+
+            //FPE note: the returned value that used to be here has been removed, as it was not used.
         }
 
         public static float FindMinSeparation(out int indexA, out int indexB, float t)
@@ -240,7 +240,6 @@ namespace FarseerPhysics.Collision
 
                         return separation;
                     }
-
                 case SeparationFunctionType.FaceA:
                     {
                         Vector2 normal = MathUtils.Mul(ref xfA.q, _axis);
@@ -252,7 +251,6 @@ namespace FarseerPhysics.Collision
                         float separation = Vector2.Dot(pointB - pointA, normal);
                         return separation;
                     }
-
                 case SeparationFunctionType.FaceB:
                     {
                         Vector2 normal = MathUtils.Mul(ref xfB.q, _axis);
@@ -264,7 +262,6 @@ namespace FarseerPhysics.Collision
                         float separation = Vector2.Dot(pointA - pointB, normal);
                         return separation;
                     }
-
                 default:
                     Debug.Assert(false);
                     return 0.0f;
@@ -277,9 +274,12 @@ namespace FarseerPhysics.Collision
         // CCD via the local separating axis method. This seeks progression
         // by computing the largest time at which separation is maintained.
 
+        [ThreadStatic]
         public static int TOICalls, TOIIters, TOIMaxIters;
+        [ThreadStatic]
         public static int TOIRootIters, TOIMaxRootIters;
-        private static DistanceInput _distanceInput = new DistanceInput();
+        [ThreadStatic]
+        private static DistanceInput _distanceInput;
 
         /// <summary>
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
@@ -292,7 +292,8 @@ namespace FarseerPhysics.Collision
         /// <param name="input">The input.</param>
         public static void CalculateTimeOfImpact(out TOIOutput output, TOIInput input)
         {
-            ++TOICalls;
+            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                ++TOICalls;
 
             output = new TOIOutput();
             output.State = TOIOutputState.Unknown;
@@ -318,7 +319,7 @@ namespace FarseerPhysics.Collision
             int iter = 0;
 
             // Prepare input for distance query.
-            SimplexCache cache;
+            _distanceInput = _distanceInput ?? new DistanceInput();
             _distanceInput.ProxyA = input.ProxyA;
             _distanceInput.ProxyB = input.ProxyB;
             _distanceInput.UseRadii = false;
@@ -336,6 +337,7 @@ namespace FarseerPhysics.Collision
                 _distanceInput.TransformA = xfA;
                 _distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
+                SimplexCache cache;
                 Distance.ComputeDistance(out distanceOutput, out cache, _distanceInput);
 
                 // If the shapes are overlapped, we give up on continuous collision.
@@ -428,7 +430,9 @@ namespace FarseerPhysics.Collision
                         }
 
                         ++rootIterCount;
-                        ++TOIRootIters;
+
+                        if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                            ++TOIRootIters;
 
                         float s = SeparationFunction.Evaluate(indexA, indexB, t);
 
@@ -457,7 +461,8 @@ namespace FarseerPhysics.Collision
                         }
                     }
 
-                    TOIMaxRootIters = Math.Max(TOIMaxRootIters, rootIterCount);
+                    if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                        TOIMaxRootIters = Math.Max(TOIMaxRootIters, rootIterCount);
 
                     ++pushBackIter;
 
@@ -468,7 +473,9 @@ namespace FarseerPhysics.Collision
                 }
 
                 ++iter;
-                ++TOIIters;
+
+                if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                    ++TOIIters;
 
                 if (done)
                 {
@@ -484,7 +491,8 @@ namespace FarseerPhysics.Collision
                 }
             }
 
-            TOIMaxIters = Math.Max(TOIMaxIters, iter);
+            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                TOIMaxIters = Math.Max(TOIMaxIters, iter);
         }
     }
 }
