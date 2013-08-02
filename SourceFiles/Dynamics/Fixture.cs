@@ -424,7 +424,7 @@ namespace FarseerPhysics.Dynamics
             Proxies = new FixtureProxy[Shape.ChildCount];
             ProxyCount = 0;
 
-            if ((Body.Flags & BodyFlags.Enabled) == BodyFlags.Enabled)
+            if (Body.Enabled)
             {
                 IBroadPhase broadPhase = Body.World.ContactManager.BroadPhase;
                 CreateProxies(broadPhase, ref Body.Xf);
