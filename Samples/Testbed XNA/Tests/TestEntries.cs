@@ -28,6 +28,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         public static TestEntry[] TestList =
         {
+            new TestEntry {Name = "YuPeng Polygon", CreateTest = YuPengPolygonTest.Create},
             new TestEntry {Name = "YuPeng terrain", CreateTest = DestructibleTerrainYuPengTest.Create},
 
             //Original tests
@@ -83,7 +84,6 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Add Pair Stress Test", CreateTest = AddPairTest.Create},
 #endif
             //FPE tests
-            new TestEntry {Name = "YuPeng Polygon", CreateTest = YuPengPolygonTest.Create},
             new TestEntry {Name = "Path Test", CreateTest = PathTest.Create},
             new TestEntry {Name = "Cutting of polygons", CreateTest = CuttingTest.Create},
             new TestEntry {Name = "Gravity Controller Test", CreateTest = GravityControllerTest.Create},
