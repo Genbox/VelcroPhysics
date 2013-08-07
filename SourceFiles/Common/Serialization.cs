@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using FarseerPhysics.Collision.Shapes;
@@ -11,6 +12,9 @@ using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Common
 {
+    /// <summary>
+    /// Serialize the world into an XML file
+    /// </summary>
     public static class WorldSerializer
     {
         /// <summary>
@@ -47,6 +51,7 @@ namespace FarseerPhysics.Common
         {
             _writer.WriteStartElement("Shape");
             _writer.WriteAttributeString("Type", shape.ShapeType.ToString());
+            _writer.WriteAttributeString("Density", shape.Density.ToString());
 
             switch (shape.ShapeType)
             {
@@ -98,18 +103,16 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
         }
 
-        private static void SerializeFixture(List<Shape> shapes, Fixture fixture)
+        private static void SerializeFixture(Fixture fixture)
         {
             _writer.WriteStartElement("Fixture");
             _writer.WriteAttributeString("Id", fixture.FixtureId.ToString());
-
-            _writer.WriteElementString("Shape", FindIndex(shapes, fixture.Shape).ToString());
-            _writer.WriteElementString("Density", fixture.Shape.Density.ToString());
 
             _writer.WriteStartElement("FilterData");
             _writer.WriteElementString("CategoryBits", ((int)fixture.CollisionCategories).ToString());
             _writer.WriteElementString("MaskBits", ((int)fixture.CollidesWith).ToString());
             _writer.WriteElementString("GroupIndex", fixture.CollisionGroup.ToString());
+            _writer.WriteElementString("CollisionIgnores", Join("|", fixture._collisionIgnores));
             _writer.WriteEndElement();
 
             _writer.WriteElementString("Friction", fixture.Friction.ToString());
@@ -126,12 +129,10 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
         }
 
-        private static void SerializeBody(List<Fixture> fixtures, Body body)
+        private static void SerializeBody(List<Fixture> fixtures, List<Shape> shapes, Body body)
         {
             _writer.WriteStartElement("Body");
-            _writer.WriteAttributeString("Id", body.IslandIndex.ToString());
             _writer.WriteAttributeString("Type", body.BodyType.ToString());
-
             _writer.WriteElementString("Active", body.Enabled.ToString());
             _writer.WriteElementString("AllowSleep", body.SleepingAllowed.ToString());
             _writer.WriteElementString("Angle", body.Rotation.ToString());
@@ -151,10 +152,13 @@ namespace FarseerPhysics.Common
                 _writer.WriteEndElement();
             }
 
-            _writer.WriteStartElement("Fixtures");
+            _writer.WriteStartElement("Bindings");
             for (int i = 0; i < body.FixtureList.Count; i++)
             {
-                _writer.WriteElementString("ID", FindIndex(fixtures, body.FixtureList[i]).ToString());
+                _writer.WriteStartElement("Pair");
+                _writer.WriteAttributeString("FixtureId", FindIndex(fixtures, body.FixtureList[i]).ToString());
+                _writer.WriteAttributeString("ShapeId", FindIndex(shapes, body.FixtureList[i].Shape).ToString());
+                _writer.WriteEndElement();
             }
 
             _writer.WriteEndElement();
@@ -335,6 +339,66 @@ namespace FarseerPhysics.Common
             _writer.WriteElementString(name, val.ToString());
         }
 
+        private static int FindIndex(List<Body> list, Body item)
+        {
+            for (int i = 0; i < list.Count; ++i)
+                if (list[i] == item)
+                    return i;
+
+            return -1;
+        }
+
+        private static int FindIndex(List<Fixture> list, Fixture item)
+        {
+            for (int i = 0; i < list.Count; ++i)
+                if (list[i].CompareTo(item))
+                    return i;
+
+            return -1;
+        }
+
+        private static int FindIndex(List<Shape> list, Shape item)
+        {
+            for (int i = 0; i < list.Count; ++i)
+                if (list[i].CompareTo(item))
+                    return i;
+
+            return -1;
+        }
+
+        private static String Join<T>(String separator, IEnumerable<T> values)
+        {
+            using (IEnumerator<T> en = values.GetEnumerator())
+            {
+                if (!en.MoveNext())
+                    return String.Empty;
+
+                StringBuilder result = new StringBuilder();
+                if (en.Current != null)
+                {
+                    // handle the case that the enumeration has null entries
+                    // and the case where their ToString() override is broken
+                    string value = en.Current.ToString();
+                    if (value != null)
+                        result.Append(value);
+                }
+
+                while (en.MoveNext())
+                {
+                    result.Append(separator);
+                    if (en.Current != null)
+                    {
+                        // handle the case that the enumeration has null entries
+                        // and the case where their ToString() override is broken
+                        string value = en.Current.ToString();
+                        if (value != null)
+                            result.Append(value);
+                    }
+                }
+                return result.ToString();
+            }
+        }
+
         internal static void Serialize(World world, Stream stream)
         {
             List<Body> bodies = new List<Body>();
@@ -349,7 +413,7 @@ namespace FarseerPhysics.Common
             _writer = XmlWriter.Create(stream, settings);
 
             _writer.WriteStartElement("World");
-            _writer.WriteAttributeString("Version", "2");
+            _writer.WriteAttributeString("Version", "3");
             WriteElement("Gravity", world.Gravity);
 
             _writer.WriteStartElement("Shapes");
@@ -375,7 +439,7 @@ namespace FarseerPhysics.Common
                 {
                     if (!fixtures.Any(f2 => fixture.CompareTo(f2)))
                     {
-                        SerializeFixture(shapes, fixture);
+                        SerializeFixture(fixture);
                         fixtures.Add(fixture);
                     }
                 }
@@ -387,7 +451,7 @@ namespace FarseerPhysics.Common
             foreach (Body body in world.BodyList)
             {
                 bodies.Add(body);
-                SerializeBody(fixtures, body);
+                SerializeBody(fixtures, shapes, body);
             }
 
             _writer.WriteEndElement();
@@ -403,33 +467,6 @@ namespace FarseerPhysics.Common
 
             _writer.Flush();
             _writer.Close();
-        }
-
-        private static int FindIndex(List<Body> list, Body item)
-        {
-            for (int i = 0; i < list.Count; ++i)
-                if (list[i] == item) //TODO: Should be CompareTo() to remove duplicates
-                    return i;
-
-            return -1;
-        }
-
-        private static int FindIndex(List<Fixture> list, Fixture item)
-        {
-            for (int i = 0; i < list.Count; ++i)
-                if (list[i].CompareTo(item))
-                    return i;
-
-            return -1;
-        }
-
-        private static int FindIndex(List<Shape> list, Shape item)
-        {
-            for (int i = 0; i < list.Count; ++i)
-                if (list[i].CompareTo(item))
-                    return i;
-
-            return -1;
         }
     }
 
@@ -475,12 +512,14 @@ namespace FarseerPhysics.Common
                             throw new Exception();
 
                         ShapeType type = (ShapeType)Enum.Parse(typeof(ShapeType), element.Attributes[0].Value, true);
+                        float density = float.Parse(element.Attributes[1].Value);
 
                         switch (type)
                         {
                             case ShapeType.Circle:
                                 {
                                     CircleShape shape = new CircleShape();
+                                    shape._density = density;
 
                                     foreach (XMLFragmentElement sn in element.Elements)
                                     {
@@ -503,6 +542,7 @@ namespace FarseerPhysics.Common
                             case ShapeType.Polygon:
                                 {
                                     PolygonShape shape = new PolygonShape();
+                                    shape._density = density;
 
                                     foreach (XMLFragmentElement sn in element.Elements)
                                     {
@@ -530,6 +570,8 @@ namespace FarseerPhysics.Common
                             case ShapeType.Edge:
                                 {
                                     EdgeShape shape = new EdgeShape();
+                                    shape._density = density;
+
                                     foreach (XMLFragmentElement sn in element.Elements)
                                     {
                                         switch (sn.Name.ToLower())
@@ -562,6 +604,8 @@ namespace FarseerPhysics.Common
                             case ShapeType.Chain:
                                 {
                                     ChainShape shape = new ChainShape();
+                                    shape._density = density;
+
                                     foreach (XMLFragmentElement sn in element.Elements)
                                     {
                                         switch (sn.Name.ToLower())
@@ -613,12 +657,6 @@ namespace FarseerPhysics.Common
                         {
                             switch (sn.Name.ToLower())
                             {
-                                case "shape":
-                                    fixture.Shape = shapes[int.Parse(sn.Value)];
-                                    break;
-                                case "density":
-                                    fixture.Shape.Density = float.Parse(sn.Value);
-                                    break;
                                 case "filterdata":
                                     foreach (XMLFragmentElement ssn in sn.Elements)
                                     {
@@ -632,6 +670,13 @@ namespace FarseerPhysics.Common
                                                 break;
                                             case "groupindex":
                                                 fixture._collisionGroup = short.Parse(ssn.Value);
+                                                break;
+                                            case "CollisionIgnores":
+                                                string[] split = ssn.Value.Split('|');
+                                                foreach (string s in split)
+                                                {
+                                                    fixture._collisionIgnores.Add(int.Parse(s));
+                                                }
                                                 break;
                                         }
                                     }
@@ -669,8 +714,7 @@ namespace FarseerPhysics.Common
                         if (element.Name.ToLower() != "body")
                             throw new Exception();
 
-                        body.IslandIndex = int.Parse(element.Attributes[0].Value);
-                        body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), element.Attributes[1].Value, true);
+                        body.BodyType = (BodyType)Enum.Parse(typeof(BodyType), element.Attributes[0].Value, true);
 
                         foreach (XMLFragmentElement sn in element.Elements)
                         {
@@ -719,11 +763,13 @@ namespace FarseerPhysics.Common
                                 case "userdata":
                                     body.UserData = ReadSimpleType(sn, null, false);
                                     break;
-                                case "fixtures":
+                                case "bindings":
                                     {
-                                        foreach (XMLFragmentElement v in sn.Elements)
+                                        foreach (XMLFragmentElement pair in sn.Elements)
                                         {
-                                            fixtures[int.Parse(v.Value)].CloneOnto(body);
+                                            Fixture fix = fixtures[int.Parse(pair.Attributes[0].Value)];
+                                            fix.Shape = shapes[int.Parse(pair.Attributes[1].Value)].Clone();
+                                            fix.CloneOnto(body);
                                         }
                                         break;
                                     }
@@ -1159,11 +1205,6 @@ namespace FarseerPhysics.Common
             : base(message)
         {
         }
-
-        public XMLFragmentException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
     }
 
     internal class FileBuffer
@@ -1226,13 +1267,6 @@ namespace FarseerPhysics.Common
         public void Load(Stream stream)
         {
             _buffer = new FileBuffer(stream);
-        }
-
-        public static XMLFragmentElement LoadFromFile(string fileName)
-        {
-            XMLFragmentParser x = new XMLFragmentParser(fileName);
-            x.Parse();
-            return x.RootNode;
         }
 
         public static XMLFragmentElement LoadFromStream(Stream stream)

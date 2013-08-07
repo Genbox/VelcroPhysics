@@ -26,7 +26,9 @@ namespace FarseerPhysics.TestBed.Tests
             box.AngularVelocity = 0.5f;
             box.LinearVelocity = new Vector2(0, 10);
 
+            //This clones the body and all attached fixtures
             Body boxClone1 = box.DeepClone();
+
             //Swiching the body type to static will reset all forces. This will affect the next clone.
             boxClone1.BodyType = BodyType.Static;
             boxClone1.Position += new Vector2(-10, 0);

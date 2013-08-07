@@ -352,7 +352,7 @@ namespace FarseerPhysics
 
         private void DrawShape(Fixture fixture, Transform xf, Color color)
         {
-            switch (fixture.ShapeType)
+            switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {
