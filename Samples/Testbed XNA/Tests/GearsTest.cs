@@ -67,9 +67,7 @@ namespace FarseerPhysics.TestBed.Tests
                 RevoluteJoint joint2 = new RevoluteJoint(body2, body3, body3.Position, true);
                 World.AddJoint(joint2);
 
-                GearJoint joint4 = new GearJoint(joint1, joint2, circle2.Radius / circle1.Radius);
-                joint4.BodyA = body1;
-                joint4.BodyB = body3;
+                GearJoint joint4 = new GearJoint(body1, body3, joint1, joint2, circle2.Radius / circle1.Radius);
                 World.AddJoint(joint4);
             }
 
@@ -107,14 +105,10 @@ namespace FarseerPhysics.TestBed.Tests
 
                 World.AddJoint(_joint3);
 
-                _joint4 = new GearJoint(_joint1, _joint2, circle2.Radius / circle1.Radius);
-                _joint4.BodyA = body1;
-                _joint4.BodyB = body2;
+                _joint4 = new GearJoint(body1, body2, _joint1, _joint2, circle2.Radius / circle1.Radius);
                 World.AddJoint(_joint4);
 
-                _joint5 = new GearJoint(_joint2, _joint3, -1.0f / circle2.Radius);
-                _joint5.BodyA = body2;
-                _joint5.BodyB = body3;
+                _joint5 = new GearJoint(body2, body3, _joint2, _joint3, -1.0f / circle2.Radius);
                 World.AddJoint(_joint5);
             }
         }
@@ -127,11 +121,9 @@ namespace FarseerPhysics.TestBed.Tests
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
             DrawString(string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
 
-
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
             DrawString(string.Format("theta2 + {0} * delta = {1}", ratio, value));
-
         }
 
         internal static Test Create()
