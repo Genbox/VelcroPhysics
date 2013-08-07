@@ -99,9 +99,13 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <param name="jointA">The first joint.</param>
         /// <param name="jointB">The second joint.</param>
         /// <param name="ratio">The ratio.</param>
-        public GearJoint(Joint jointA, Joint jointB, float ratio = 1f)
+        /// <param name="bodyA">The first body</param>
+        /// <param name="bodyB">The second body</param>
+        public GearJoint(Body bodyA, Body bodyB, Joint jointA, Joint jointB, float ratio = 1f)
         {
             JointType = JointType.Gear;
+            BodyA = bodyA;
+            BodyB = bodyB;
             JointA = jointA;
             JointB = jointB;
             Ratio = ratio;

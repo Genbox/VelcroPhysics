@@ -139,12 +139,12 @@ namespace FarseerPhysics.Dynamics.Joints
         /// <summary>
         /// Get the first body attached to this joint.
         /// </summary>
-        public Body BodyA { get; set; }
+        public Body BodyA { get; internal set; }
 
         /// <summary>
         /// Get the second body attached to this joint.
         /// </summary>
-        public Body BodyB { get; set; }
+        public Body BodyB { get; internal set; }
 
         /// <summary>
         /// Get the anchor point on bodyA in world coordinates.

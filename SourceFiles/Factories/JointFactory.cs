@@ -204,9 +204,9 @@ namespace FarseerPhysics.Factories
 
         #region Gear Joint
 
-        public static GearJoint CreateGearJoint(World world, Joint jointA, Joint jointB, float ratio)
+        public static GearJoint CreateGearJoint(World world, Body bodyA, Body bodyB, Joint jointA, Joint jointB, float ratio)
         {
-            GearJoint gearJoint = new GearJoint(jointA, jointB, ratio);
+            GearJoint gearJoint = new GearJoint(bodyA, bodyB, jointA, jointB, ratio);
             world.AddJoint(gearJoint);
             return gearJoint;
         }
