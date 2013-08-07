@@ -23,7 +23,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -95,11 +97,11 @@ namespace FarseerPhysics.Dynamics
         private bool _isSensor;
         private float _friction;
         private float _restitution;
-        private Dictionary<int, bool> _collisionIgnores;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
+        internal HashSet<int> _collisionIgnores;
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
@@ -136,6 +138,7 @@ namespace FarseerPhysics.Dynamics
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
+            _collisionIgnores = new HashSet<int>();
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
 
@@ -228,15 +231,6 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the type of the child Shape. You can use this to down cast to the concrete Shape.
-        /// </summary>
-        /// <value>The type of the shape.</value>
-        public ShapeType ShapeType
-        {
-            get { return Shape.ShapeType; }
-        }
-
-        /// <summary>
         /// Get the child Shape. You can modify the child Shape, however you should not change the
         /// number of vertices because this will crash some collision caching mechanisms.
         /// </summary>
@@ -270,12 +264,6 @@ namespace FarseerPhysics.Dynamics
         /// </summary>
         /// <value>The user data.</value>
         public object UserData { get; set; }
-
-        /// <summary>
-        /// User bits. Use this to store application flags or values specific to this fixture.
-        /// </summary>
-        /// <value>The user data.</value>
-        public long UserBits { get; set; }
 
         /// <summary>
         /// Set the coefficient of friction. This will _not_ change the friction of
@@ -337,12 +325,9 @@ namespace FarseerPhysics.Dynamics
         /// <param name="fixture">The fixture.</param>
         public void RestoreCollisionWith(Fixture fixture)
         {
-            if (_collisionIgnores == null)
-                return;
-
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
+            if (_collisionIgnores.Contains(fixture.FixtureId))
             {
-                _collisionIgnores[fixture.FixtureId] = false;
+                _collisionIgnores.Remove(fixture.FixtureId);
                 Refilter();
             }
         }
@@ -353,15 +338,11 @@ namespace FarseerPhysics.Dynamics
         /// <param name="fixture">The fixture.</param>
         public void IgnoreCollisionWith(Fixture fixture)
         {
-            if (_collisionIgnores == null)
-                _collisionIgnores = new Dictionary<int, bool>();
-
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
-                _collisionIgnores[fixture.FixtureId] = true;
-            else
-                _collisionIgnores.Add(fixture.FixtureId, true);
-
-            Refilter();
+            if (!_collisionIgnores.Contains(fixture.FixtureId))
+            {
+                _collisionIgnores.Add(fixture.FixtureId);
+                Refilter();
+            }
         }
 
         /// <summary>
@@ -373,13 +354,7 @@ namespace FarseerPhysics.Dynamics
         /// </returns>
         public bool IsFixtureIgnored(Fixture fixture)
         {
-            if (_collisionIgnores == null)
-                return false;
-
-            if (_collisionIgnores.ContainsKey(fixture.FixtureId))
-                return _collisionIgnores[fixture.FixtureId];
-
-            return false;
+            return _collisionIgnores.Contains(fixture.FixtureId);
         }
 
         /// <summary>
@@ -487,7 +462,7 @@ namespace FarseerPhysics.Dynamics
         internal void Destroy()
         {
 #if DEBUG
-            if (ShapeType == ShapeType.Polygon)
+            if (Shape.ShapeType == ShapeType.Polygon)
                 ((PolygonShape)Shape).Vertices.AttachedToBody = false;
 #endif
 
@@ -575,19 +550,51 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
+        /// <summary>
+        /// Only compares the values of this fixture, and not the attached shape or body.
+        /// This is used for deduplication in serialization only.
+        /// </summary>
         internal bool CompareTo(Fixture fixture)
         {
-            return (CollidesWith == fixture.CollidesWith &&
-                    CollisionCategories == fixture.CollisionCategories &&
-                    CollisionGroup == fixture.CollisionGroup &&
+            return (_collidesWith == fixture._collidesWith &&
+                    _collisionCategories == fixture._collisionCategories &&
+                    _collisionGroup == fixture._collisionGroup &&
                     Friction == fixture.Friction &&
                     IsSensor == fixture.IsSensor &&
                     Restitution == fixture.Restitution &&
-                    Shape.CompareTo(fixture.Shape) &&
                     UserData == fixture.UserData &&
-                    UserBits == fixture.UserBits);
+                    IgnoreCCDWith == fixture.IgnoreCCDWith &&
+                    SequenceEqual(_collisionIgnores, fixture._collisionIgnores));
         }
 
+        private bool SequenceEqual<T>(HashSet<T> first, HashSet<T> second)
+        {
+            if (first.Count != second.Count)
+                return false;
+
+            using (IEnumerator<T> enumerator1 = first.GetEnumerator())
+            {
+                using (IEnumerator<T> enumerator2 = second.GetEnumerator())
+                {
+                    while (enumerator1.MoveNext())
+                    {
+                        if (!enumerator2.MoveNext() || !Equals(enumerator1.Current, enumerator2.Current))
+                            return false;
+                    }
+
+                    if (enumerator2.MoveNext())
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Clones the fixture and attached shape onto the specified body.
+        /// </summary>
+        /// <param name="body">The body you wish to clone the fixture onto.</param>
+        /// <returns>The cloned fixture.</returns>
         public Fixture CloneOnto(Body body)
         {
             Fixture fixture = new Fixture();
@@ -602,23 +609,13 @@ namespace FarseerPhysics.Dynamics
             fixture._collidesWith = _collidesWith;
             fixture.IgnoreCCDWith = IgnoreCCDWith;
 
-            if (_collisionIgnores != null)
+            foreach (int ignore in _collisionIgnores)
             {
-                fixture._collisionIgnores = new Dictionary<int, bool>();
-
-                foreach (KeyValuePair<int, bool> pair in _collisionIgnores)
-                {
-                    fixture._collisionIgnores.Add(pair.Key, pair.Value);
-                }
+                fixture._collisionIgnores.Add(ignore);
             }
 
             fixture.RegisterFixture();
             return fixture;
-        }
-
-        public Fixture DeepClone()
-        {
-            return CloneOnto(Body.Clone());
         }
     }
 }

@@ -407,8 +407,8 @@ namespace FarseerPhysics.Dynamics.Contacts
 
         internal static Contact Create(Fixture fixtureA, int indexA, Fixture fixtureB, int indexB)
         {
-            ShapeType type1 = fixtureA.ShapeType;
-            ShapeType type2 = fixtureB.ShapeType;
+            ShapeType type1 = fixtureA.Shape.ShapeType;
+            ShapeType type2 = fixtureB.Shape.ShapeType;
 
             Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
             Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);

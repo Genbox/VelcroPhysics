@@ -1267,12 +1267,9 @@ namespace FarseerPhysics.Dynamics
         {
             for (int i = 0; i < FixtureList.Count; i++)
             {
-                Fixture f = FixtureList[i];
                 for (int j = 0; j < other.FixtureList.Count; j++)
                 {
-                    Fixture f2 = other.FixtureList[j];
-
-                    f.IgnoreCollisionWith(f2);
+                    FixtureList[i].IgnoreCollisionWith(other.FixtureList[j]);
                 }
             }
         }
@@ -1281,12 +1278,9 @@ namespace FarseerPhysics.Dynamics
         {
             for (int i = 0; i < FixtureList.Count; i++)
             {
-                Fixture f = FixtureList[i];
                 for (int j = 0; j < other.FixtureList.Count; j++)
                 {
-                    Fixture f2 = other.FixtureList[j];
-
-                    f.RestoreCollisionWith(f2);
+                    FixtureList[i].RestoreCollisionWith(other.FixtureList[j]);
                 }
             }
         }
@@ -1326,9 +1320,15 @@ namespace FarseerPhysics.Dynamics
 
         #endregion
 
-        internal Body Clone()
+        /// <summary>
+        /// Makes a clone of the body. Fixtures and therefore shapes are not included.
+        /// Use DeepClone() to clone the body, as well as fixtures and shapes.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        public Body Clone(World world = null)
         {
-            Body body = new Body(_world, Position, Rotation, UserData);
+            Body body = new Body(world ?? _world, Position, Rotation, UserData);
             body._bodyType = _bodyType;
             body._linearVelocity = _linearVelocity;
             body._angularVelocity = _angularVelocity;
@@ -1348,9 +1348,14 @@ namespace FarseerPhysics.Dynamics
             return body;
         }
 
-        public Body DeepClone()
+        /// <summary>
+        /// Clones the body and all attached fixtures and shapes. Simply said, it makes a complete copy of the body.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        public Body DeepClone(World world = null)
         {
-            Body body = Clone();
+            Body body = Clone(world ?? _world);
 
             int count = FixtureList.Count; //Make a copy of the count. Otherwise it causes an infinite loop.
             for (int i = 0; i < count; i++)

@@ -196,7 +196,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         private bool BallCollision(Fixture fixturea, Fixture fixtureb, Contact contact)
         {
-            if (fixtureb.ShapeType == ShapeType.Edge)
+            if (fixtureb.Shape.ShapeType == ShapeType.Edge)
             {
                 //Remove everything from the world
                 World.Clear();
