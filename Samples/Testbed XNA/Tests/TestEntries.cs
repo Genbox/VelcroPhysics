@@ -103,8 +103,8 @@ namespace FarseerPhysics.TestBed.Tests
             new TestEntry {Name = "Simplification", CreateTest = SimplificationTest.Create},
 #if WINDOWS
             new TestEntry {Name = "Triangulation", CreateTest = TriangulationTest.Create},
+            new TestEntry {Name = "Destructible Terrain Test", CreateTest = DestructibleTerrainTest.Create},
 #endif
-            new TestEntry {Name = "Destructible Terrain Test", CreateTest = DestructibleTerrainMSTest.Create},
             new TestEntry {Name = "Check polygon", CreateTest = CheckPolygonTest.Create},
             new TestEntry {Name = null, CreateTest = null}
         };

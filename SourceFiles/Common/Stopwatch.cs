@@ -1,3 +1,4 @@
+#if SILVERLIGHT
 using System;
 
 namespace FarseerPhysics.Common
@@ -108,3 +109,4 @@ namespace FarseerPhysics.Common
         }
     }
 }
+#endif

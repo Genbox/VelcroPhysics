@@ -170,12 +170,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Farseer Physics ContentPipelineExtension\Farseer Physics ContentPipelineExtension.csproj">
-      <Project>{7DBD4899-FE50-4EA8-A5E4-24BCBB71E89B}</Project>
-      <Name>Farseer Physics ContentPipelineExtension</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Pipeline\farseerBody.svg">
       <Name>farseerBody</Name>
       <Importer>FarseerSVGImporter</Importer>
@@ -221,6 +215,12 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Misc\ContentPipelineExtension\ContentPipelineExtension.csproj">
+      <Project>{7DBD4899-FE50-4EA8-A5E4-24BCBB71E89B}</Project>
+      <Name>ContentPipelineExtension</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

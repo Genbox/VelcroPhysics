@@ -196,9 +196,6 @@
     <Compile Include="Common\PolygonManipulation\YuPengClipper.cs" />
     <Compile Include="Common\PolygonTools.cs" />
     <Compile Include="Common\Serialization.cs" />
-    <Compile Include="Common\Stopwatch.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Common\TextureTools\MarchingSquares.cs" />
     <Compile Include="Common\TextureTools\Terrain.cs" />
     <Compile Include="Common\TextureTools\TextureConverter.cs" />
@@ -248,6 +245,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
+    <Reference Include="Microsoft.Phone, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />

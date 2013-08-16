@@ -12,13 +12,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
-    public class DestructibleTerrainMSTest : Test
+    public class DestructibleTerrainTest : Test
     {
         private float _circleRadius = 2.5f;
         private Terrain _terrain;
         private AABB _terrainArea;
 
-        private DestructibleTerrainMSTest()
+        private DestructibleTerrainTest()
         {
             World = new World(new Vector2(0, -10));
 
@@ -152,7 +152,7 @@ namespace FarseerPhysics.TestBed.Tests
 
         internal static Test Create()
         {
-            return new DestructibleTerrainMSTest();
+            return new DestructibleTerrainTest();
         }
     }
 }
