@@ -27,10 +27,6 @@ using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
-#if SILVERLIGHT || WINDOWS_PHONE
-using Stopwatch = FarseerPhysics.Common.Stopwatch;
-#endif
-
 namespace FarseerPhysics.Dynamics
 {
     /// <summary>

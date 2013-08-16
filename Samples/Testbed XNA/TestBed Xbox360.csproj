@@ -95,7 +95,6 @@
     <Compile Include="Tests\CompoundShapesTest.cs" />
     <Compile Include="Tests\ConfinedTest.cs" />
     <Compile Include="Tests\ContinuousTest.cs" />
-    <Compile Include="Tests\ControllerTest.cs" />
     <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\BulletTest.cs" />
     <Compile Include="Tests\CirclePenetrationTest.cs" />
@@ -104,10 +103,11 @@
     <Compile Include="Tests\ConveyorBeltTest.cs" />
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DeletionTest.cs" />
-    <Compile Include="Tests\DestructibleTerrainMSTest.cs" />
+    <Compile Include="Tests\DestructibleTerrainTest.cs" />
     <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmarkTest.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
+    <Compile Include="Tests\GravityControllerTest.cs" />
     <Compile Include="Tests\LockTest.cs" />
     <Compile Include="Tests\MobileBalancedTest.cs" />
     <Compile Include="Tests\MobileTest.cs" />
@@ -121,7 +121,6 @@
     <Compile Include="Tests\EdgeShapesTest.cs" />
     <Compile Include="Tests\EdgeTest.cs" />
     <Compile Include="Tests\GearsTest.cs" />
-    <Compile Include="Tests\LineJointTest.cs" />
     <Compile Include="Tests\OneSidedPlatformTest.cs" />
     <Compile Include="Tests\PathTest.cs" />
     <Compile Include="Tests\PinballTest.cs" />
