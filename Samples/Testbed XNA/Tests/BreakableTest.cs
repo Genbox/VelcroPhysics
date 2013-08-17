@@ -41,7 +41,6 @@ namespace FarseerPhysics.TestBed.Tests
         private bool _broke;
         private Fixture _piece1;
         private Fixture _piece2;
-        private PolygonShape _shape1;
         private PolygonShape _shape2;
         private Vector2 _velocity;
 
@@ -58,8 +57,8 @@ namespace FarseerPhysics.TestBed.Tests
 
             Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
-            _shape1 = new PolygonShape(box, 1);
-            _piece1 = _body1.CreateFixture(_shape1);
+            PolygonShape shape1 = new PolygonShape(box, 1);
+            _piece1 = _body1.CreateFixture(shape1);
 
             box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
             _shape2 = new PolygonShape(box, 1);

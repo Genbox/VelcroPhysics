@@ -20,6 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
+
 namespace FarseerPhysics.TestBed
 {
     internal static class Program
@@ -27,6 +29,9 @@ namespace FarseerPhysics.TestBed
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+#if WINDOWS
+        [STAThread]
+#endif
         private static void Main(string[] args)
         {
             using (Game1 game = new Game1())

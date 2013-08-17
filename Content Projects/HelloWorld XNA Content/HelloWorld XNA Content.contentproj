@@ -46,20 +46,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="circleSprite.png">
-      <Name>circleSprite</Name>
+    <Compile Include="CircleSprite.png">
+      <Name>CircleSprite</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="groundSprite.png">
-      <Name>groundSprite</Name>
+    <Compile Include="GroundSprite.png">
+      <Name>GroundSprite</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="font.spritefont">
-      <Name>font</Name>
+    <Compile Include="Font.spritefont">
+      <Name>Font</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
