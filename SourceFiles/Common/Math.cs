@@ -788,9 +788,8 @@ namespace FarseerPhysics.Common
         {
             Debug.Assert(Alpha0 < 1.0f);
             float beta = (alpha - Alpha0) / (1.0f - Alpha0);
-            C0.X = (1.0f - beta) * C0.X + beta * C.X;
-            C0.Y = (1.0f - beta) * C0.Y + beta * C.Y;
-            A0 = (1.0f - beta) * A0 + beta * A;
+            C0 += beta * (C - C0);
+            A0 += beta * (A - A0);
             Alpha0 = alpha;
         }
 
