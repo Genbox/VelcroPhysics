@@ -71,7 +71,7 @@
     <Compile Include="SVGPathParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceFiles\Farseer Physics XNA.csproj">
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
       <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics XNA</Name>
     </ProjectReference>
