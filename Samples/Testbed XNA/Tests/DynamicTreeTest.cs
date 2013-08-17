@@ -134,11 +134,9 @@ namespace FarseerPhysics.TestBed.Tests
                 DebugView.DrawPoint(p, 0.1f, cr);
             }
             DebugView.EndCustomDraw();
-            {
-                //int height = _tree.GetHeight();
-                //DrawString("Dynamic tree height = {0}", height);
-                
-            }
+
+            int height = _tree.Height;
+            DrawString("Dynamic tree height = " + height);
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
