@@ -74,7 +74,7 @@ namespace FarseerPhysics.TestBed.Tests
             if (keyboardManager.IsNewKeyPress(Keys.M))
                 _joint.MotorEnabled = !_joint.MotorEnabled;
 
-            if (keyboardManager.IsNewKeyPress(Keys.P))
+            if (keyboardManager.IsNewKeyPress(Keys.S))
                 _joint.MotorSpeed = -_joint.MotorSpeed;
 
             base.Keyboard(keyboardManager);
@@ -83,7 +83,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-            DrawString("Keys: (l) limits, (m) motors, (p) speed");
+            DrawString("Keys: (l) limits, (m) motors, (s) speed");
         }
 
         internal static Test Create()

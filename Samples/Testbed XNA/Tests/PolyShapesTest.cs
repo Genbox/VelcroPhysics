@@ -288,11 +288,8 @@ namespace FarseerPhysics.TestBed.Tests
             DebugView.EndCustomDraw();
 
             DrawString("Press 1-5 to drop stuff");
-            
             DrawString("Press a to (de)activate some bodies");
-            
             DrawString("Press d to destroy a body");
-            
         }
 
         internal static Test Create()

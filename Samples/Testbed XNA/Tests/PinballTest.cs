@@ -121,8 +121,7 @@ namespace FarseerPhysics.TestBed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
-
-            DebugView.DrawString(5, TextLine, "Press 'a' to control the flippers");
+            DrawString("Press 'a' to control the flippers");
         }
 
         internal static Test Create()
