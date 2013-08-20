@@ -45,8 +45,7 @@ namespace FarseerPhysics.Controllers
         /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
         /// <param name="rotationalDragCoefficient">Rotational drag coefficient of the fluid</param>
         /// <param name="gravity">The direction gravity acts. Buoyancy force will act in opposite direction of gravity.</param>
-        public BuoyancyController(AABB container, float density, float linearDragCoefficient,
-                                  float rotationalDragCoefficient, Vector2 gravity)
+        public BuoyancyController(AABB container, float density, float linearDragCoefficient, float rotationalDragCoefficient, Vector2 gravity)
             : base(ControllerType.BuoyancyController)
         {
             Container = container;
@@ -75,8 +74,8 @@ namespace FarseerPhysics.Controllers
                                     if (fixture.Body.IsStatic || !fixture.Body.Awake)
                                         return true;
 
-                                    if (!_uniqueBodies.ContainsKey(fixture.Body.IslandIndex))
-                                        _uniqueBodies.Add(fixture.Body.IslandIndex, fixture.Body);
+                                    if (!_uniqueBodies.ContainsKey(fixture.Body.BodyId))
+                                        _uniqueBodies.Add(fixture.Body.BodyId, fixture.Body);
 
                                     return true;
                                 }, ref _container);

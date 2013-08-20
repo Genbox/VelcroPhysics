@@ -56,6 +56,9 @@ namespace FarseerPhysics.Dynamics
 
     public class Body : IDisposable
     {
+        [ThreadStatic]
+        private static int _bodyIdCounter;
+
         private float _angularDamping;
         private BodyType _bodyType;
         private float _inertia;
@@ -84,6 +87,7 @@ namespace FarseerPhysics.Dynamics
         public Body(World world, Vector2? position = null, float rotation = 0, object userdata = null)
         {
             FixtureList = new List<Fixture>();
+            BodyId = _bodyIdCounter++;
             _world = world;
 
             UserData = userdata;
@@ -105,9 +109,17 @@ namespace FarseerPhysics.Dynamics
             world.AddBody(this); //FPE note: bodies can't live without a World
         }
 
+        /// <summary>
+        /// A unique id for this body.
+        /// </summary>
+        public int BodyId { get; private set; }
+
         public int IslandIndex { get; set; }
 
+        /// <summary>
         /// Scale the gravity applied to this body.
+        /// Defaults to 1. A value of 2 means double the gravity is applied to this body.
+        /// </summary>
         public float GravityScale { get; set; }
 
         /// <summary>

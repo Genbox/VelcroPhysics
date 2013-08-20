@@ -9,8 +9,6 @@ namespace FarseerPhysics.TestBed.Tests
 {
     public class BuoyancyTest : Test
     {
-        private AABB _container;
-
         private BuoyancyTest()
         {
             World.Gravity = new Vector2(0, -9.82f);
@@ -34,8 +32,8 @@ namespace FarseerPhysics.TestBed.Tests
                 offset += 7;
             }
 
-            _container = new AABB(new Vector2(0, 10), 60, 10);
-            BuoyancyController buoyancy = new BuoyancyController(_container, 2, 2, 1, World.Gravity);
+            AABB container = new AABB(new Vector2(0, 10), 60, 10);
+            BuoyancyController buoyancy = new BuoyancyController(container, 2, 2, 1, World.Gravity);
             World.AddController(buoyancy);
         }
 
