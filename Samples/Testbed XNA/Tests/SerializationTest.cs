@@ -144,7 +144,7 @@ namespace FarseerPhysics.TestBed.Tests
 
             //Rope joint
             {
-                LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-20, 10), 0.1f, 0.5f, true, false, 10, 0.1f, true);
+                LinkFactory.CreateChain(World, new Vector2(-10, 10), new Vector2(-20, 10), 0.1f, 0.5f, 10, 0.1f, true);
             }
 
             //Angle joint
