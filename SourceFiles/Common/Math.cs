@@ -623,70 +623,70 @@ namespace FarseerPhysics.Common
             M.ez.Y = M.ey.Z;
             M.ez.Z = det * (a11 * a22 - a12 * a12);
         }
-
-        /// Get the inverse of this matrix as a 2-by-2.
-        /// Returns the zero matrix if singular.
-        public void GetInverse22(Mat33 M)
-        {
-            float a = ex.X, b = ey.X, c = ex.Y, d = ey.Y;
-            float det = a * d - b * c;
-            if (det != 0.0f) //TODO: float tol
-            {
-                det = 1.0f / det;
-            }
-
-            M.ex.X = det * d; M.ey.X = -det * b; M.ex.Z = 0.0f;
-            M.ex.Y = -det * c; M.ey.Y = det * a; M.ey.Z = 0.0f;
-            M.ez.X = 0.0f; M.ez.Y = 0.0f; M.ez.Z = 0.0f;
-        }
     }
 
+    /// <summary>
     /// Rotation
+    /// </summary>
     public struct Rot
     {
+        /// Sine and cosine
+        public float s, c;
+
+        /// <summary>
         /// Initialize from an angle in radians
+        /// </summary>
+        /// <param name="angle">Angle in radians</param>
         public Rot(float angle)
         {
-            /// TODO_ERIN optimize
+            // TODO_ERIN optimize
             s = (float)Math.Sin(angle);
             c = (float)Math.Cos(angle);
         }
 
+        /// <summary>
         /// Set using an angle in radians.
+        /// </summary>
+        /// <param name="angle"></param>
         public void Set(float angle)
         {
-            /// TODO_ERIN optimize
+            // TODO_ERIN optimize
             s = (float)Math.Sin(angle);
             c = (float)Math.Cos(angle);
         }
 
+        /// <summary>
         /// Set to the identity rotation
+        /// </summary>
         public void SetIdentity()
         {
             s = 0.0f;
             c = 1.0f;
         }
 
+        /// <summary>
         /// Get the angle in radians
+        /// </summary>
         public float GetAngle()
         {
             return (float)Math.Atan2(s, c);
         }
 
+        /// <summary>
         /// Get the x-axis
+        /// </summary>
         public Vector2 GetXAxis()
         {
             return new Vector2(c, s);
         }
 
-        /// Get the u-axis
+        /// <summary>
+        /// Get the y-axis
+        /// </summary>
         public Vector2 GetYAxis()
         {
             return new Vector2(-s, c);
         }
-
-        /// Sine and cosine
-        public float s, c;
     }
 
     /// <summary>

@@ -1293,25 +1293,6 @@ namespace FarseerPhysics.Dynamics
         {
             if (!IsDisposed)
             {
-                //TODO: Revise
-                // Forcing OnSeparation for contacts from the ContactList.
-                //ContactEdge contactEdge = ContactList;
-                //Contact contact;
-
-                //while (contactEdge != null && (contact = contactEdge.Contact) != null)
-                //{
-                //    //Report the separation to both participants:
-                //    if (contact.FixtureA != null && contact.FixtureA.OnSeparation != null)
-                //        contact.FixtureA.OnSeparation(contact.FixtureA, contact.FixtureB);
-
-                //    //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                //    //user subscribed to.
-                //    if (contact.FixtureB != null && contact.FixtureB.OnSeparation != null)
-                //        contact.FixtureB.OnSeparation(contact.FixtureB, contact.FixtureA);
-
-                //    contactEdge = contactEdge.Next;
-                //}
-
                 _world.RemoveBody(this);
                 IsDisposed = true;
                 GC.SuppressFinalize(this);
