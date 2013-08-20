@@ -1,7 +1,5 @@
 #if WINDOWS_PHONE || XBOX
 
-//TODO: FIX
-
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,24 +7,25 @@ namespace FarseerPhysics.Common
 {
     public class HashSet<T> : ICollection<T>
     {
-        private Dictionary<T, short> _dict;
+        private Dictionary<T, byte> _dict;
 
         public HashSet(int capacity)
         {
-            _dict = new Dictionary<T, short>(capacity);
+            _dict = new Dictionary<T, byte>(capacity);
         }
 
         public HashSet()
         {
-            _dict = new Dictionary<T, short>();
+            _dict = new Dictionary<T, byte>();
         }
 
         #region ICollection<T> Members
 
         public void Add(T item)
         {
-            // We don't care for the value in dictionary, Keys matter.
-            _dict.Add(item, 0);
+            // We don't care for the value in dictionary, only keys matter.
+            if (!_dict.ContainsKey(item))
+                _dict.Add(item, 0);
         }
 
         public void Clear()
