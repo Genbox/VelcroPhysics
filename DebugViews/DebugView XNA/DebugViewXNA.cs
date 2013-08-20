@@ -17,7 +17,6 @@ using Microsoft.Xna.Framework.Graphics;
 namespace FarseerPhysics.DebugView
 {
     /// <summary>
-    /// A debug view that works in XNA.
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
@@ -149,6 +148,7 @@ namespace FarseerPhysics.DebugView
                     }
                 }
             }
+
             if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
             {
                 const float axisScale = 0.3f;
@@ -169,8 +169,10 @@ namespace FarseerPhysics.DebugView
                         DrawSegment(p1, p2, new Color(0.4f, 0.9f, 0.4f));
                     }
                 }
+
                 _pointCount = 0;
             }
+
             if ((Flags & DebugViewFlags.PolygonPoints) == DebugViewFlags.PolygonPoints)
             {
                 foreach (Body body in World.BodyList)
@@ -192,6 +194,7 @@ namespace FarseerPhysics.DebugView
                     }
                 }
             }
+
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
                 foreach (Joint j in World.JointList)
@@ -199,6 +202,7 @@ namespace FarseerPhysics.DebugView
                     DrawJoint(j);
                 }
             }
+
             if ((Flags & DebugViewFlags.AABB) == DebugViewFlags.AABB)
             {
                 Color color = new Color(0.9f, 0.3f, 0.9f);
@@ -222,6 +226,7 @@ namespace FarseerPhysics.DebugView
                     }
                 }
             }
+
             if ((Flags & DebugViewFlags.CenterOfMass) == DebugViewFlags.CenterOfMass)
             {
                 foreach (Body b in World.BodyList)
@@ -232,6 +237,7 @@ namespace FarseerPhysics.DebugView
                     DrawTransform(ref xf);
                 }
             }
+
             if ((Flags & DebugViewFlags.Controllers) == DebugViewFlags.Controllers)
             {
                 for (int i = 0; i < World.ControllerList.Count; i++)
@@ -246,10 +252,9 @@ namespace FarseerPhysics.DebugView
                     }
                 }
             }
+
             if ((Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel)
-            {
                 DrawDebugPanel();
-            }
         }
 
         private void DrawPerformanceGraph()
@@ -304,7 +309,6 @@ namespace FarseerPhysics.DebugView
 
             DrawSolidPolygon(_background, 4, Color.DarkGray, true);
         }
-
 
         private void DrawDebugPanel()
         {
@@ -502,9 +506,8 @@ namespace FarseerPhysics.DebugView
         public void DrawPolygon(Vector2[] vertices, int count, Color color, bool closed = true)
         {
             if (!_primitiveBatch.IsReady())
-            {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            }
+
             for (int i = 0; i < count - 1; i++)
             {
                 _primitiveBatch.AddVertex(vertices[i], color, PrimitiveType.LineList);
@@ -525,9 +528,8 @@ namespace FarseerPhysics.DebugView
         public void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline = true)
         {
             if (!_primitiveBatch.IsReady())
-            {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            }
+
             if (count == 2)
             {
                 DrawPolygon(vertices, count, color);
@@ -544,9 +546,7 @@ namespace FarseerPhysics.DebugView
             }
 
             if (outline)
-            {
                 DrawPolygon(vertices, count, color);
-            }
         }
 
         public override void DrawCircle(Vector2 center, float radius, float red, float green, float blue)
@@ -557,9 +557,7 @@ namespace FarseerPhysics.DebugView
         public void DrawCircle(Vector2 center, float radius, Color color)
         {
             if (!_primitiveBatch.IsReady())
-            {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            }
 
             const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
@@ -567,9 +565,7 @@ namespace FarseerPhysics.DebugView
             for (int i = 0; i < CircleSegments; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center +
-                             radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _primitiveBatch.AddVertex(v1, color, PrimitiveType.LineList);
                 _primitiveBatch.AddVertex(v2, color, PrimitiveType.LineList);
@@ -586,9 +582,8 @@ namespace FarseerPhysics.DebugView
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
         {
             if (!_primitiveBatch.IsReady())
-            {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            }
+
             const double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 
@@ -600,9 +595,7 @@ namespace FarseerPhysics.DebugView
             for (int i = 1; i < CircleSegments - 1; i++)
             {
                 Vector2 v1 = center + radius * new Vector2((float)Math.Cos(theta), (float)Math.Sin(theta));
-                Vector2 v2 = center +
-                             radius *
-                             new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
+                Vector2 v2 = center + radius * new Vector2((float)Math.Cos(theta + increment), (float)Math.Sin(theta + increment));
 
                 _primitiveBatch.AddVertex(v0, colorFill, PrimitiveType.TriangleList);
                 _primitiveBatch.AddVertex(v1, colorFill, PrimitiveType.TriangleList);
@@ -610,8 +603,8 @@ namespace FarseerPhysics.DebugView
 
                 theta += increment;
             }
-            DrawCircle(center, radius, color);
 
+            DrawCircle(center, radius, color);
             DrawSegment(center, center + axis * radius, color);
         }
 
@@ -623,9 +616,8 @@ namespace FarseerPhysics.DebugView
         public void DrawSegment(Vector2 start, Vector2 end, Color color)
         {
             if (!_primitiveBatch.IsReady())
-            {
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            }
+            
             _primitiveBatch.AddVertex(start, color, PrimitiveType.LineList);
             _primitiveBatch.AddVertex(end, color, PrimitiveType.LineList);
         }

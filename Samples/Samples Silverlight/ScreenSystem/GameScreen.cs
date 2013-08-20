@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
+using FarseerPhysics.DebugView;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
@@ -34,7 +34,7 @@ namespace FarseerPhysics.ScreenSystem
     {
         private FixedMouseJoint _fixedMouseJoint;
         private bool _otherScreenHasFocus;
-        public bool firstRun = true;
+        public bool FirstRun = true;
 
         protected GameScreen()
         {

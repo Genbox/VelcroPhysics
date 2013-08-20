@@ -8,45 +8,49 @@ using System.Windows.Shapes;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
+using FarseerPhysics.Controllers;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Transform = FarseerPhysics.Common.Transform;
 
-namespace FarseerPhysics
+namespace FarseerPhysics.DebugView
 {
     /// <summary>
-    /// A debug view that works in Silverlight.
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
     public class DebugViewSilverlight : DebugViewBase, IDisposable
     {
         private const int MaxContactPoints = 2048;
-
-        public Color DefaultShapeColor = Color.FromArgb(255, 230, 179, 179);
-
-        public Color InactiveShapeColor = Color.FromArgb(255, 128, 128, 77);
-        public Color KinematicShapeColor = Color.FromArgb(255, 128, 128, 230);
-        public Color SleepingShapeColor = Color.FromArgb(255, 153, 153, 153);
-        public Color StaticShapeColor = Color.FromArgb(255, 128, 230, 128);
         private Canvas _debugCanvas;
         private int _pointCount;
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
         private TextBlock _txtDebug;
+        private StringBuilder _debugPanelSb = new StringBuilder();
+        private Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
+
+        public Color DefaultShapeColor = Color.FromArgb(255, 230, 179, 179);
+        public Color InactiveShapeColor = Color.FromArgb(255, 128, 128, 77);
+        public Color KinematicShapeColor = Color.FromArgb(255, 128, 128, 230);
+        public Color SleepingShapeColor = Color.FromArgb(255, 153, 153, 153);
+        public Color StaticShapeColor = Color.FromArgb(255, 128, 230, 128);
 
         public DebugViewSilverlight(Canvas debugCanvas, TextBlock txtDebug, World world)
             : base(world)
         {
             _debugCanvas = debugCanvas;
             _txtDebug = txtDebug;
+
             if (world != null)
                 world.ContactManager.PreSolve += PreSolve;
+
             Transform = new CompositeTransform();
 
             //Default flags
             AppendFlags(DebugViewFlags.Shape);
+            AppendFlags(DebugViewFlags.Controllers);
             AppendFlags(DebugViewFlags.Joint);
         }
 
@@ -68,25 +72,22 @@ namespace FarseerPhysics
                 Manifold manifold = contact.Manifold;
 
                 if (manifold.PointCount == 0)
-                {
                     return;
-                }
 
                 Fixture fixtureA = contact.FixtureA;
 
                 FixedArray2<PointState> state1, state2;
                 Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
-                Vector2 normal;
                 FixedArray2<Vector2> points;
+                Vector2 normal;
                 contact.GetWorldManifold(out normal, out points);
 
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
                     if (fixtureA == null)
-                    {
                         _points[i] = new ContactPoint();
-                    }
+
                     ContactPoint cp = _points[_pointCount];
                     cp.Position = points[i];
                     cp.Normal = normal;
@@ -102,6 +103,28 @@ namespace FarseerPhysics
         /// </summary>
         public void DrawDebugData()
         {
+            if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
+            {
+                foreach (Body b in World.BodyList)
+                {
+                    Transform xf;
+                    b.GetTransform(out xf);
+                    foreach (Fixture f in b.FixtureList)
+                    {
+                        if (b.Enabled == false)
+                            DrawShape(f, xf, InactiveShapeColor);
+                        else if (b.BodyType == BodyType.Static)
+                            DrawShape(f, xf, StaticShapeColor);
+                        else if (b.BodyType == BodyType.Kinematic)
+                            DrawShape(f, xf, KinematicShapeColor);
+                        else if (b.Awake == false)
+                            DrawShape(f, xf, SleepingShapeColor);
+                        else
+                            DrawShape(f, xf, DefaultShapeColor);
+                    }
+                }
+            }
+
             if ((Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints)
             {
                 const float axisScale = 0.3f;
@@ -111,15 +134,9 @@ namespace FarseerPhysics
                     ContactPoint point = _points[i];
 
                     if (point.State == PointState.Add)
-                    {
-                        // Add
                         DrawPoint(point.Position, 0.1f, Color.FromArgb(255, 77, 243, 77));
-                    }
                     else if (point.State == PointState.Persist)
-                    {
-                        // Persist
                         DrawPoint(point.Position, 0.1f, Color.FromArgb(255, 77, 77, 243));
-                    }
 
                     if ((Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals)
                     {
@@ -154,43 +171,6 @@ namespace FarseerPhysics
                 }
             }
 
-            if ((Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel)
-            {
-                DrawDebugPanel();
-            }
-
-            if ((Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape)
-            {
-                foreach (Body b in World.BodyList)
-                {
-                    Transform xf;
-                    b.GetTransform(out xf);
-                    foreach (Fixture f in b.FixtureList)
-                    {
-                        if (b.Enabled == false)
-                        {
-                            DrawShape(f, xf, InactiveShapeColor);
-                        }
-                        else if (b.BodyType == BodyType.Static)
-                        {
-                            DrawShape(f, xf, StaticShapeColor);
-                        }
-                        else if (b.BodyType == BodyType.Kinematic)
-                        {
-                            DrawShape(f, xf, KinematicShapeColor);
-                        }
-                        else if (b.Awake == false)
-                        {
-                            DrawShape(f, xf, SleepingShapeColor);
-                        }
-                        else
-                        {
-                            DrawShape(f, xf, DefaultShapeColor);
-                        }
-                    }
-                }
-            }
-
             if ((Flags & DebugViewFlags.Joint) == DebugViewFlags.Joint)
             {
                 foreach (Joint j in World.JointList)
@@ -204,28 +184,21 @@ namespace FarseerPhysics
                 Color color = Color.FromArgb(255, 230, 77, 230);
                 IBroadPhase bp = World.ContactManager.BroadPhase;
 
-                foreach (Body b in World.BodyList)
+                foreach (Body body in World.BodyList)
                 {
-                    if (b.Enabled == false)
-                    {
+                    if (body.Enabled == false)
                         continue;
-                    }
 
-                    foreach (Fixture f in b.FixtureList)
+                    foreach (Fixture f in body.FixtureList)
                     {
-                        //for (int t = 0; t < f.ProxyCount; ++t)
-                        //{
-                        //    FixtureProxy proxy = f.Proxies[t];
-                        //    AABB aabb;
-                        //    bp.GetFatAABB(proxy.ProxyId, out aabb);
-                        //    Vector2[] vs = new Vector2[4];
-                        //    vs[0] = new Vector2(aabb.LowerBound.X, aabb.LowerBound.Y);
-                        //    vs[1] = new Vector2(aabb.UpperBound.X, aabb.LowerBound.Y);
-                        //    vs[2] = new Vector2(aabb.UpperBound.X, aabb.UpperBound.Y);
-                        //    vs[3] = new Vector2(aabb.LowerBound.X, aabb.UpperBound.Y);
+                        for (int t = 0; t < f.ProxyCount; ++t)
+                        {
+                            FixtureProxy proxy = f.Proxies[t];
+                            AABB aabb;
+                            bp.GetFatAABB(proxy.ProxyId, out aabb);
 
-                        //    DrawPolygon(vs, 4, color);
-                        //}
+                            DrawAABB(ref aabb, color);
+                        }
                     }
                 }
             }
@@ -240,58 +213,82 @@ namespace FarseerPhysics
                     DrawTransform(ref xf);
                 }
             }
+
+            if ((Flags & DebugViewFlags.Controllers) == DebugViewFlags.Controllers)
+            {
+                for (int i = 0; i < World.ControllerList.Count; i++)
+                {
+                    Controller controller = World.ControllerList[i];
+
+                    BuoyancyController buoyancy = controller as BuoyancyController;
+                    if (buoyancy != null)
+                    {
+                        AABB container = buoyancy.Container;
+                        DrawAABB(ref container, Colors.Blue);
+                    }
+                }
+            }
+
+            if ((Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel)
+                DrawDebugPanel();
         }
 
         private void DrawDebugPanel()
         {
             if (_txtDebug != null)
             {
-                int fixtures = 0;
+                int fixtureCount = 0;
                 for (int i = 0; i < World.BodyList.Count; i++)
                 {
-                    fixtures += World.BodyList[i].FixtureList.Count;
+                    fixtureCount += World.BodyList[i].FixtureList.Count;
                 }
 
-                StringBuilder output = new StringBuilder();
-                output.AppendLine("Bodies: " + World.BodyList.Count);
-                output.AppendLine("Fixtures: " + fixtures);
-                output.AppendLine("Contacts: " + World.ContactList.Count);
-                output.AppendLine("Joints: " + World.JointList.Count);
-                output.AppendLine("Proxies: " + World.ProxyCount);
-                output.AppendLine("Breakable: " + World.BreakableBodyList.Count);
-                output.AppendLine("Controllers: " + World.ControllerList.Count);
+                _debugPanelSb.Clear();
+                _debugPanelSb.AppendLine("Objects:");
+                _debugPanelSb.Append("- Bodies: ").AppendLine(World.BodyList.Count.ToString());
+                _debugPanelSb.Append("- Fixtures: ").AppendLine(fixtureCount.ToString());
+                _debugPanelSb.Append("- Contacts: ").AppendLine(World.ContactList.Count.ToString());
+                _debugPanelSb.Append("- Joints: ").AppendLine(World.JointList.Count.ToString());
+                _debugPanelSb.Append("- Controllers: ").AppendLine(World.ControllerList.Count.ToString());
+                _debugPanelSb.Append("- Proxies: ").AppendLine(World.ProxyCount.ToString());
 
-                output.AppendLine();
+                _debugPanelSb.AppendLine();
 
-                output.AppendLine("Controllers: " + World.ControllersUpdateTime);
-                output.AppendLine("Contacts: " + World.ContactsUpdateTime);
-                output.AppendLine("Solve: " + World.SolveUpdateTime);
-                output.AppendLine("CCD: " + World.ContinuousPhysicsTime);
-                output.AppendLine("Total: " + World.UpdateTime);
+                _debugPanelSb.AppendLine("Update time:");
+                _debugPanelSb.Append("- Body: ").AppendLine(string.Format("{0} ms", World.SolveUpdateTime / TimeSpan.TicksPerMillisecond));
+                _debugPanelSb.Append("- Contact: ").AppendLine(string.Format("{0} ms", World.ContactsUpdateTime / TimeSpan.TicksPerMillisecond));
+                _debugPanelSb.Append("- CCD: ").AppendLine(string.Format("{0} ms", World.ContinuousPhysicsTime / TimeSpan.TicksPerMillisecond));
+                _debugPanelSb.Append("- Joint: ").AppendLine(string.Format("{0} ms", World.Island.JointUpdateTime / TimeSpan.TicksPerMillisecond));
+                _debugPanelSb.Append("- Controller: ").AppendLine(string.Format("{0} ms", World.ControllersUpdateTime / TimeSpan.TicksPerMillisecond));
+                _debugPanelSb.Append("- Total: ").AppendLine(string.Format("{0} ms", World.UpdateTime / TimeSpan.TicksPerMillisecond));
 
-                _txtDebug.Text = output.ToString();
+                _txtDebug.Text = _debugPanelSb.ToString();
             }
         }
 
         private void DrawJoint(Joint joint)
         {
+            if (!joint.Enabled)
+                return;
+
             Body b1 = joint.BodyA;
             Body b2 = joint.BodyB;
-            Transform xf1, xf2;
+            Transform xf1;
             b1.GetTransform(out xf1);
 
-            Vector2 x2 = new Vector2();
+            Vector2 x2 = Vector2.Zero;
 
             // WIP David
             if (!joint.IsFixedType())
             {
+                Transform xf2;
                 b2.GetTransform(out xf2);
                 x2 = xf2.p;
             }
 
-            Vector2 x1 = xf1.p;
             Vector2 p1 = joint.WorldAnchorA;
             Vector2 p2 = joint.WorldAnchorB;
+            Vector2 x1 = xf1.p;
 
             Color color = Color.FromArgb(255, 128, 205, 205);
 
@@ -300,30 +297,32 @@ namespace FarseerPhysics
                 case JointType.Distance:
                     DrawSegment(p1, p2, color);
                     break;
-
                 case JointType.Pulley:
-                    {
-                        PulleyJoint pulley = (PulleyJoint)joint;
-                        Vector2 s1 = b1.GetWorldPoint(pulley.LocalAnchorA);
-                        Vector2 s2 = b2.GetWorldPoint(pulley.LocalAnchorB);
-                        DrawSegment(p1, p2, color);
-                        DrawSegment(p1, s1, color);
-                        DrawSegment(p2, s2, color);
-                    }
+                    PulleyJoint pulley = (PulleyJoint)joint;
+                    Vector2 s1 = b1.GetWorldPoint(pulley.LocalAnchorA);
+                    Vector2 s2 = b2.GetWorldPoint(pulley.LocalAnchorB);
+                    DrawSegment(p1, p2, color);
+                    DrawSegment(p1, s1, color);
+                    DrawSegment(p2, s2, color);
                     break;
-
                 case JointType.FixedMouse:
                     DrawPoint(p1, 0.5f, Color.FromArgb(255, 0, 255, 0));
                     DrawSegment(p1, p2, Color.FromArgb(255, 205, 205, 205));
                     break;
                 case JointType.Revolute:
-                    //DrawSegment(x2, p1, color);
-                    DrawSegment(p2, p1, color);
-                    DrawSolidCircle(p2, 0.1f, new Vector2(), Colors.Red);
-                    DrawSolidCircle(p1, 0.1f, new Vector2(), Colors.Blue);
+                    DrawSegment(x1, p1, color);
+                    DrawSegment(p1, p2, color);
+                    DrawSegment(x2, p2, color);
+
+                    DrawSolidCircle(p2, 0.1f, Vector2.Zero, Colors.Red);
+                    DrawSolidCircle(p1, 0.1f, Vector2.Zero, Colors.Blue);
+                    break;
+                case JointType.FixedAngle:
+                    //Should not draw anything.
                     break;
                 case JointType.FixedRevolute:
-                    DrawSolidCircle(p1, 0.1f, new Vector2(), Colors.Purple);
+                    DrawSegment(x1, p1, color);
+                    DrawSolidCircle(p1, 0.1f, Vector2.Zero, Colors.Purple);
                     break;
                 case JointType.FixedLine:
                     DrawSegment(x1, p1, color);
@@ -339,8 +338,6 @@ namespace FarseerPhysics
                     break;
                 case JointType.Gear:
                     DrawSegment(x1, x2, color);
-                    //DrawSegment(x1, p1, color);
-                    //DrawSegment(p1, p2, color);
                     break;
                 default:
                     DrawSegment(x1, p1, color);
@@ -371,14 +368,13 @@ namespace FarseerPhysics
                         PolygonShape poly = (PolygonShape)fixture.Shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            vertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
+                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
                         }
 
-                        DrawSolidPolygon(vertices, vertexCount, color);
+                        DrawSolidPolygon(_tempVertices, vertexCount, color);
                     }
                     break;
 
@@ -395,14 +391,12 @@ namespace FarseerPhysics
                 case ShapeType.Chain:
                     {
                         ChainShape chain = (ChainShape)fixture.Shape;
-                        int count = chain.Vertices.Count;
 
-                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[count - 1]);
-                        for (int i = 0; i < count; ++i)
+                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
                         {
-                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
                             DrawSegment(v1, v2, color);
-                            v1 = v2;
                         }
                     }
                     break;
@@ -429,8 +423,7 @@ namespace FarseerPhysics
 
         public override void DrawSolidPolygon(Vector2[] vertices, int count, float red, float green, float blue)
         {
-            DrawSolidPolygon(vertices, count,
-                             Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)), true);
+            DrawSolidPolygon(vertices, count, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)), true);
         }
 
         public void DrawSolidPolygon(Vector2[] vertices, int count, Color color)
@@ -455,18 +448,16 @@ namespace FarseerPhysics
             {
                 poly.Points.Add(Transform.Transform(new Point(vertices[i].X, vertices[i].Y)));
             }
+
             _debugCanvas.Children.Add(poly);
 
             if (outline)
-            {
                 DrawPolygon(vertices, count, color);
-            }
         }
 
         public override void DrawCircle(Vector2 center, float radius, float red, float green, float blue)
         {
-            DrawCircle(center, radius,
-                       Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawCircle(center, radius, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawCircle(Vector2 center, float radius, Color color)
@@ -486,11 +477,9 @@ namespace FarseerPhysics
             _debugCanvas.Children.Add(circle);
         }
 
-        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green,
-                                             float blue)
+        public override void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float green, float blue)
         {
-            DrawSolidCircle(center, radius, axis,
-                            Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
+            DrawSolidCircle(center, radius, axis, Color.FromArgb(255, (byte)(red * 255), (byte)(green * 255), (byte)(blue * 255)));
         }
 
         public void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color)
