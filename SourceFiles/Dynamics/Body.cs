@@ -666,7 +666,7 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public bool IgnoreCCD { get; set; } //TODO
+        public bool IgnoreCCD { get; set; }
 
         /// <summary>
         /// Resets the dynamics of this body.

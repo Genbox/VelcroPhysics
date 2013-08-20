@@ -27,6 +27,7 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.TestBed.Framework;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace FarseerPhysics.TestBed.Tests
 {
@@ -34,6 +35,7 @@ namespace FarseerPhysics.TestBed.Tests
     {
         private float _angularVelocity;
         private Body _box;
+        private Body _ground;
 
         private ContinuousTest()
         {
@@ -41,7 +43,7 @@ namespace FarseerPhysics.TestBed.Tests
             list.Add(PolygonTools.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
             list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
-            BodyFactory.CreateCompoundPolygon(World, list, 0);
+            _ground = BodyFactory.CreateCompoundPolygon(World, list, 0);
 
             _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
             _box.Position = new Vector2(0, 20);
@@ -70,10 +72,10 @@ namespace FarseerPhysics.TestBed.Tests
         {
             base.Update(settings, gameTime);
 
+            DrawString("Press C to toggle CCD. CCD is Currently: " + (_ground.IgnoreCCD ? "Off" : "On"));
+
             if (Distance.GJKCalls > 0)
-            {
                 DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls, Distance.GJKMaxIters));
-            }
 
             if (TimeOfImpact.TOICalls > 0)
             {
@@ -82,9 +84,15 @@ namespace FarseerPhysics.TestBed.Tests
             }
 
             if (StepCount % 60 == 0)
-            {
-                //Launch();
-            }
+                Launch();
+        }
+
+        public override void Keyboard(KeyboardManager keyboardManager)
+        {
+            base.Keyboard(keyboardManager);
+
+            if (keyboardManager.IsNewKeyPress(Keys.C))
+                _ground.IgnoreCCD = !_ground.IgnoreCCD;
         }
 
         internal static Test Create()
