@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -47,27 +48,19 @@ namespace FarseerPhysics.DebugView
         private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
 
         //Debug panel
-#if XBOX
         public Vector2 DebugPanelPosition = new Vector2(55, 100);
-#else
-        public Vector2 DebugPanelPosition = new Vector2(40, 100);
-#endif
-        private int _max;
-        private int _avg;
-        private int _min;
+        private float _max;
+        private float _avg;
+        private float _min;
+        private StringBuilder _debugPanelSb = new StringBuilder();
 
         //Performance graph
         public bool AdaptiveLimits = true;
         public int ValuesToGraph = 500;
-        public int MinimumValue;
-        public int MaximumValue = 1000;
-        private List<float> _graphValues = new List<float>();
-
-#if XBOX
-        public Rectangle PerformancePanelBounds = new Rectangle(265, 100, 200, 100);
-#else
-        public Rectangle PerformancePanelBounds = new Rectangle(250, 100, 200, 100);
-#endif
+        public float MinimumValue;
+        public float MaximumValue = 10;
+        private List<float> _graphValues = new List<float>(500);
+        public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
         private Vector2[] _background = new Vector2[4];
         public bool Enabled = true;
 
@@ -104,9 +97,7 @@ namespace FarseerPhysics.DebugView
                 Manifold manifold = contact.Manifold;
 
                 if (manifold.PointCount == 0)
-                {
                     return;
-                }
 
                 Fixture fixtureA = contact.FixtureA;
 
@@ -120,9 +111,8 @@ namespace FarseerPhysics.DebugView
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
                     if (fixtureA == null)
-                    {
                         _points[i] = new ContactPoint();
-                    }
+
                     ContactPoint cp = _points[_pointCount];
                     cp.Position = points[i];
                     cp.Normal = normal;
@@ -147,25 +137,15 @@ namespace FarseerPhysics.DebugView
                     foreach (Fixture f in b.FixtureList)
                     {
                         if (b.Enabled == false)
-                        {
                             DrawShape(f, xf, InactiveShapeColor);
-                        }
                         else if (b.BodyType == BodyType.Static)
-                        {
                             DrawShape(f, xf, StaticShapeColor);
-                        }
                         else if (b.BodyType == BodyType.Kinematic)
-                        {
                             DrawShape(f, xf, KinematicShapeColor);
-                        }
                         else if (b.Awake == false)
-                        {
                             DrawShape(f, xf, SleepingShapeColor);
-                        }
                         else
-                        {
                             DrawShape(f, xf, DefaultShapeColor);
-                        }
                     }
                 }
             }
@@ -178,15 +158,9 @@ namespace FarseerPhysics.DebugView
                     ContactPoint point = _points[i];
 
                     if (point.State == PointState.Add)
-                    {
-                        // Add
                         DrawPoint(point.Position, 0.1f, new Color(0.3f, 0.95f, 0.3f));
-                    }
                     else if (point.State == PointState.Persist)
-                    {
-                        // Persist
                         DrawPoint(point.Position, 0.1f, new Color(0.3f, 0.3f, 0.95f));
-                    }
 
                     if ((Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals)
                     {
@@ -233,9 +207,7 @@ namespace FarseerPhysics.DebugView
                 foreach (Body body in World.BodyList)
                 {
                     if (body.Enabled == false)
-                    {
                         continue;
-                    }
 
                     foreach (Fixture f in body.FixtureList)
                     {
@@ -282,7 +254,7 @@ namespace FarseerPhysics.DebugView
 
         private void DrawPerformanceGraph()
         {
-            _graphValues.Add(World.UpdateTime);
+            _graphValues.Add(World.UpdateTime / TimeSpan.TicksPerMillisecond);
 
             if (_graphValues.Count > ValuesToGraph + 1)
                 _graphValues.RemoveAt(0);
@@ -294,9 +266,9 @@ namespace FarseerPhysics.DebugView
             // we must have at least 2 values to start rendering
             if (_graphValues.Count > 2)
             {
-                _max = (int)_graphValues.Max();
-                _avg = (int)_graphValues.Average();
-                _min = (int)_graphValues.Min();
+                _max = _graphValues.Max();
+                _avg = _graphValues.Average();
+                _min = _graphValues.Min();
 
                 if (AdaptiveLimits)
                 {
@@ -320,9 +292,9 @@ namespace FarseerPhysics.DebugView
                 }
             }
 
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, "Max: " + _max);
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, "Avg: " + _avg);
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, "Min: " + _min);
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, string.Format("Max: {0} ms", _max));
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, string.Format("Avg: {0} ms", _avg));
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, string.Format("Min: {0} ms", _min));
 
             //Draw background.
             _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
@@ -333,33 +305,45 @@ namespace FarseerPhysics.DebugView
             DrawSolidPolygon(_background, 4, Color.DarkGray, true);
         }
 
+
         private void DrawDebugPanel()
         {
-            int fixtures = 0;
+            int fixtureCount = 0;
             for (int i = 0; i < World.BodyList.Count; i++)
             {
-                fixtures += World.BodyList[i].FixtureList.Count;
+                fixtureCount += World.BodyList[i].FixtureList.Count;
             }
 
             int x = (int)DebugPanelPosition.X;
             int y = (int)DebugPanelPosition.Y;
 
-            DrawString(x, y, "Objects:" +
-                             "\n- Bodies: " + World.BodyList.Count +
-                             "\n- Fixtures: " + fixtures +
-                             "\n- Contacts: " + World.ContactList.Count +
-                             "\n- Joints: " + World.JointList.Count +
-                             "\n- Controllers: " + World.ControllerList.Count +
-                             "\n- Proxies: " + World.ProxyCount);
+#if XBOX
+            _debugPanelSb = new StringBuilder();
+#else
+            _debugPanelSb.Clear();
+#endif
+            _debugPanelSb.AppendLine("Objects:");
+            _debugPanelSb.Append("- Bodies: ").AppendLine(World.BodyList.Count.ToString());
+            _debugPanelSb.Append("- Fixtures: ").AppendLine(fixtureCount.ToString());
+            _debugPanelSb.Append("- Contacts: ").AppendLine(World.ContactList.Count.ToString());
+            _debugPanelSb.Append("- Joints: ").AppendLine(World.JointList.Count.ToString());
+            _debugPanelSb.Append("- Controllers: ").AppendLine(World.ControllerList.Count.ToString());
+            _debugPanelSb.Append("- Proxies: ").AppendLine(World.ProxyCount.ToString());
+            DrawString(x, y, _debugPanelSb.ToString());
 
-            DrawString(x + 110, y, "Update time:" +
-                                   "\n- Body: " + World.SolveUpdateTime +
-                                   "\n- Contact: " + World.ContactsUpdateTime +
-                                   "\n- CCD: " + World.ContinuousPhysicsTime +
-                                   "\n- Joint: " + World.Island.JointUpdateTime +
-                                   "\n- Controller: " + World.ControllersUpdateTime +
-                                   "\n- Fluids: " + World.FluidsUpdateTime +
-                                   "\n- Total: " + World.UpdateTime);
+#if XBOX
+            _debugPanelSb = new StringBuilder();
+#else
+            _debugPanelSb.Clear();
+#endif
+            _debugPanelSb.AppendLine("Update time:");
+            _debugPanelSb.Append("- Body: ").AppendLine(string.Format("{0} ms", World.SolveUpdateTime / TimeSpan.TicksPerMillisecond));
+            _debugPanelSb.Append("- Contact: ").AppendLine(string.Format("{0} ms", World.ContactsUpdateTime / TimeSpan.TicksPerMillisecond));
+            _debugPanelSb.Append("- CCD: ").AppendLine(string.Format("{0} ms", World.ContinuousPhysicsTime / TimeSpan.TicksPerMillisecond));
+            _debugPanelSb.Append("- Joint: ").AppendLine(string.Format("{0} ms", World.Island.JointUpdateTime / TimeSpan.TicksPerMillisecond));
+            _debugPanelSb.Append("- Controller: ").AppendLine(string.Format("{0} ms", World.ControllersUpdateTime / TimeSpan.TicksPerMillisecond));
+            _debugPanelSb.Append("- Total: ").AppendLine(string.Format("{0} ms", World.UpdateTime / TimeSpan.TicksPerMillisecond));
+            DrawString(x + 110, y, _debugPanelSb.ToString());
         }
 
         public void DrawAABB(ref AABB aabb, Color color)
