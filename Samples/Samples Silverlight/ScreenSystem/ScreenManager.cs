@@ -180,10 +180,10 @@ namespace FarseerPhysics.ScreenSystem
             _screens.Add(screen);
 
             IDemoScreen demoScreen = screen as IDemoScreen;
-            if (demoScreen != null && screen.firstRun)
+            if (demoScreen != null && screen.FirstRun)
             {
                 AddScreen(new PauseScreen(demoScreen.GetTitle(), demoScreen.GetDetails()));
-                screen.firstRun = false;
+                screen.FirstRun = false;
             }
         }
 
