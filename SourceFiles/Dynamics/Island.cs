@@ -38,7 +38,6 @@ namespace FarseerPhysics.Dynamics
         private ContactSolver _contactSolver = new ContactSolver();
         private Contact[] _contacts;
         private Joint[] _joints;
-        private float _tmpTime;
 
         private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
         private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
@@ -155,10 +154,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-            {
                 _watch.Start();
-                _tmpTime = 0;
-            }
 
             for (int i = 0; i < JointCount; ++i)
             {
@@ -167,10 +163,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-                _tmpTime += _watch.ElapsedTicks;
-
-            if (Settings.EnableDiagnostics)
-                _watch.Start();
+                _watch.Stop();
 
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
@@ -182,19 +175,17 @@ namespace FarseerPhysics.Dynamics
                     if (!joint.Enabled)
                         continue;
 
-                    joint.SolveVelocityConstraints(ref solverData);
+                    if (Settings.EnableDiagnostics)
+                        _watch.Start();
 
+                    joint.SolveVelocityConstraints(ref solverData);
                     joint.Validate(step.inv_dt);
+
+                    if (Settings.EnableDiagnostics)
+                        _watch.Stop();
                 }
 
                 _contactSolver.SolveVelocityConstraints();
-            }
-
-            if (Settings.EnableDiagnostics)
-            {
-                _watch.Stop();
-                _tmpTime += _watch.ElapsedTicks;
-                _watch.Reset();
             }
 
             // Store impulses for warm starting.
@@ -233,8 +224,6 @@ namespace FarseerPhysics.Dynamics
                 _velocities[i].w = w;
             }
 
-            if (Settings.EnableDiagnostics)
-                _watch.Start();
 
             // Solve position constraints
             bool positionSolved = false;
@@ -250,7 +239,14 @@ namespace FarseerPhysics.Dynamics
                     if (!joint.Enabled)
                         continue;
 
+                    if (Settings.EnableDiagnostics)
+                        _watch.Start();
+
                     bool jointOkay = joint.SolvePositionConstraints(ref solverData);
+
+                    if (Settings.EnableDiagnostics)
+                        _watch.Stop();
+
                     jointsOkay = jointsOkay && jointOkay;
                 }
 
@@ -264,14 +260,8 @@ namespace FarseerPhysics.Dynamics
 
             if (Settings.EnableDiagnostics)
             {
-                _watch.Stop();
-                _tmpTime += _watch.ElapsedTicks;
+                JointUpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
-            }
-
-            if (Settings.EnableDiagnostics)
-            {
-                JointUpdateTime = _tmpTime;
             }
 
             // Copy state buffers back to the bodies

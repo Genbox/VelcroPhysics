@@ -1042,11 +1042,11 @@ namespace FarseerPhysics.Dynamics
 
         public float AddRemoveTime { get; private set; }
 
+        public float NewContactsTime { get; private set; }
+
         public float ContactsUpdateTime { get; private set; }
 
         public float SolveUpdateTime { get; private set; }
-
-        public float FluidsUpdateTime { get; private set; }
 
         /// <summary>
         /// Get the number of broad-phase proxies.
@@ -1212,14 +1212,15 @@ namespace FarseerPhysics.Dynamics
             if (Settings.EnableDiagnostics)
                 AddRemoveTime = _watch.ElapsedTicks;
 
-            //TODO: Add timing of finding new contacts
-
             // If new fixtures were added, we need to find the new contacts.
             if (_worldHasNewFixture)
             {
                 ContactManager.FindNewContacts();
                 _worldHasNewFixture = false;
             }
+
+            if (Settings.EnableDiagnostics)
+                NewContactsTime = _watch.ElapsedTicks - AddRemoveTime;
 
             //FPE only: moved position and velocity iterations into Settings.cs
             TimeStep step;
@@ -1234,19 +1235,19 @@ namespace FarseerPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-                ControllersUpdateTime = _watch.ElapsedTicks - AddRemoveTime;
+                ControllersUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime);
 
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
             if (Settings.EnableDiagnostics)
-                ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime);
+                ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime);
 
             // Integrate velocities, solve velocity raints, and integrate positions.
             Solve(ref step);
 
             if (Settings.EnableDiagnostics)
-                SolveUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime);
+                SolveUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime + ContactsUpdateTime);
 
             // Handle TOI events.
             if (Settings.ContinuousPhysics)
@@ -1255,10 +1256,7 @@ namespace FarseerPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-                ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
-
-            if (Settings.EnableDiagnostics)
-                FluidsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime + ContinuousPhysicsTime);
+                ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
 
             if (Settings.AutoClearForces)
                 ClearForces();
@@ -1268,15 +1266,14 @@ namespace FarseerPhysics.Dynamics
                 BreakableBodyList[i].Update();
             }
 
+            _invDt0 = step.inv_dt;
+
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
-
                 UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
-
-            _invDt0 = step.inv_dt;
         }
 
         /// <summary>
