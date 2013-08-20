@@ -472,7 +472,7 @@ namespace FarseerPhysics.Dynamics
         /// Gets or sets a value indicating whether this body ignores gravity.
         /// </summary>
         /// <value><c>true</c> if  it ignores gravity; otherwise, <c>false</c>.</value>
-        public bool IgnoreGravity { get; set; } //TODO
+        public bool IgnoreGravity { get; set; }
 
         /// <summary>
         /// Get the world position of the center of mass.

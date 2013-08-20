@@ -76,7 +76,10 @@ namespace FarseerPhysics.TestBed.Tests
                     circle.ControllerFilter.IgnoreController(ControllerType.GravityController);
 
                 if (i == 5)
+                {
                     fix.CollisionCategories = Category.Cat2;
+                    fix.Body.IgnoreGravity = true;
+                }
 
                 if (i == 6)
                     fix.CollisionGroup = 3;
