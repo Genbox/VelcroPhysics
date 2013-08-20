@@ -114,7 +114,13 @@ namespace FarseerPhysics.Dynamics
                 if (b.BodyType == BodyType.Dynamic)
                 {
                     // Integrate velocities.
-                    v += h * (b.GravityScale * gravity + b._invMass * b._force);
+
+                    // FPE: Only apply gravity if the body wants it.
+                    if (b.IgnoreGravity)
+                        v += h * (b._invMass * b._force);
+                    else
+                        v += h * (b.GravityScale * gravity + b._invMass * b._force);
+
                     w += h * b._invI * b._torque;
 
                     // Apply damping.
