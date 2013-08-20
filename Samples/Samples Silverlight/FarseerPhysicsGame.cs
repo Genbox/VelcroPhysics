@@ -11,8 +11,7 @@ namespace FarseerPhysics
     /// </summary>
     public class FarseerPhysicsGame : Game
     {
-        public FarseerPhysicsGame(UserControl userControl, Canvas drawingCanvas, Canvas debugCanvas, TextBlock txtFPS,
-                                  TextBlock txtDebug)
+        public FarseerPhysicsGame(UserControl userControl, Canvas drawingCanvas, Canvas debugCanvas, TextBlock txtFPS, TextBlock txtDebug)
             : base(userControl, drawingCanvas, debugCanvas, txtDebug)
         {
             TargetElapsedTime = new TimeSpan(0, 0, 0, 0, 16);
