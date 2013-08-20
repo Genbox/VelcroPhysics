@@ -160,7 +160,7 @@ namespace FarseerPhysics.ScreenSystem
         {
             if (World != null)
             {
-                new Border(World, ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 2);
+                new Border(World, ScreenManager.ScreenWidth, ScreenManager.ScreenHeight, 1);
             }
         }
 
