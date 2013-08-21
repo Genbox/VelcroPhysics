@@ -38,15 +38,12 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _farseerPoly = Framework.Content.Load<PolygonContainer>("Pipeline/farseerPolygon");
+            _farseerPoly = Framework.Content.Load<PolygonContainer>("Pipeline/FarseerPolygon");
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix projection = Camera.SimProjection;
-            Matrix view = Camera.SimView;
-
-            DebugView.BeginCustomDraw(ref projection, ref view);
+            DebugView.BeginCustomDraw(Camera.SimProjection, Camera.SimView);
             foreach (Polygon p in _farseerPoly.Values)
             {
                 DebugView.DrawPolygon(p.Vertices.ToArray(), p.Vertices.Count, Color.Black, p.Closed);

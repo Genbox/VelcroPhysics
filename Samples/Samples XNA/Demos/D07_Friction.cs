@@ -73,23 +73,27 @@ namespace FarseerPhysics.Samples.Demos
             }
 
             // create sprite based on body
-            _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
+            _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "Square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+
             for (int i = 0; i < 5; ++i)
             {
                 Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
                              Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
             Lines.Begin(Camera.SimProjection, Camera.SimView);
+
             foreach (Fixture f in _ramps.FixtureList)
             {
                 Lines.DrawLineShape(f.Shape, ContentWrapper.Teal);
             }
+
             Lines.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

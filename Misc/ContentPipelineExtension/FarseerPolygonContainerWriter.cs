@@ -15,9 +15,9 @@ namespace FarseerPhysics.ContentPipeline
             foreach (KeyValuePair<string, Polygon> p in container)
             {
                 output.Write(p.Key);
-                output.Write(p.Value.closed);
-                output.Write(p.Value.vertices.Count);
-                foreach (Vector2 vec in p.Value.vertices)
+                output.Write(p.Value.Closed);
+                output.Write(p.Value.Vertices.Count);
+                foreach (Vector2 vec in p.Value.Vertices)
                 {
                     output.Write(vec);
                 }

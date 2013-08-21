@@ -45,7 +45,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             _hoverFade = 0.0;
             _selectionFade = 0.0;
 
-            SpriteFont font = ContentWrapper.GetFont("menuFont");
+            SpriteFont font = ContentWrapper.GetFont("MenuFont");
             _size = font.MeasureString(text);
         }
 

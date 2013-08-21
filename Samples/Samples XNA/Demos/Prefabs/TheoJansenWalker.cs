@@ -35,7 +35,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         private Vector2 _position;
 
-        private Color[] _walkerColors = new[] { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
+        private Color[] _walkerColors = { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
 
         public TheoJansenWalker(World world, Vector2 position)
         {
@@ -65,7 +65,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             // Wheel
             CircleShape circle = new CircleShape(1.6f, 1f);
-            _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, ContentWrapper.Black, 3f));
+            _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "Stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, ContentWrapper.Black, 3f));
 
             _wheel = BodyFactory.CreateBody(world);
             _wheel.BodyType = BodyType.Dynamic;
@@ -152,27 +152,23 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             leg.BodyType = BodyType.Dynamic;
             leg.Position = _position;
             leg.AngularDamping = 10f;
+
             if (direction < 0f)
-            {
                 _leftLegs[index] = leg;
-            }
+
             if (direction > 0f)
-            {
                 _rightLegs[index] = leg;
-            }
 
             Body shoulder = BodyFactory.CreateBody(world);
             shoulder.BodyType = BodyType.Dynamic;
             shoulder.Position = points[3] + _position;
             shoulder.AngularDamping = 10f;
+
             if (direction < 0f)
-            {
                 _leftShoulders[index] = shoulder;
-            }
+
             if (direction > 0f)
-            {
                 _rightShoulders[index] = shoulder;
-            }
 
             Fixture legFixture = leg.CreateFixture(legPolygon);
             legFixture.CollisionGroup = -1;

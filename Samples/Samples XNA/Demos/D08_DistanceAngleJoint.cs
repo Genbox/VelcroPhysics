@@ -110,36 +110,41 @@ namespace FarseerPhysics.Samples.Demos
             World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero, false));
 
             // create sprites based on bodies
-            _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
-            _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "stripe", ContentWrapper.Red, ContentWrapper.Blue, ContentWrapper.Grey, 4f));
+            _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
+            _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", ContentWrapper.Red, ContentWrapper.Blue, ContentWrapper.Grey, 4f));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Lines.Begin(Camera.SimProjection, Camera.SimView);
+
             foreach (Fixture f in _obstacles.FixtureList)
             {
                 Lines.DrawLine(_distanceBody[0].Position, _distanceBody[1].Position, ContentWrapper.Black);
                 Lines.DrawLine(_distanceBody[2].Position, _distanceBody[3].Position, ContentWrapper.Black);
             }
+
             Lines.End();
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+
             for (int i = 0; i < 3; i++)
             {
-                Sprites.Draw(_angleCube.Image, ConvertUnits.ToDisplayUnits(_angleBody[i].Position), null,
-                             Color.White, _angleBody[i].Rotation, _angleCube.Origin, 1f, SpriteEffects.None, 0f);
+                Sprites.Draw(_angleCube.Image, ConvertUnits.ToDisplayUnits(_angleBody[i].Position), null, Color.White, _angleBody[i].Rotation, _angleCube.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             for (int i = 0; i < 4; i++)
             {
-                Sprites.Draw(_distanceCube.Image, ConvertUnits.ToDisplayUnits(_distanceBody[i].Position), null,
-                             Color.White, _distanceBody[i].Rotation, _distanceCube.Origin, 1f, SpriteEffects.None, 0f);
+                Sprites.Draw(_distanceCube.Image, ConvertUnits.ToDisplayUnits(_distanceBody[i].Position), null, Color.White, _distanceBody[i].Rotation, _distanceCube.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
             Lines.Begin(Camera.SimProjection, Camera.SimView);
+            
             foreach (Fixture f in _obstacles.FixtureList)
             {
                 Lines.DrawLineShape(f.Shape, ContentWrapper.Black);
             }
+
             Lines.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

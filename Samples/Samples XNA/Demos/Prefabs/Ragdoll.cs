@@ -1,20 +1,10 @@
-﻿#region Using System
-
-using FarseerPhysics.Common;
+﻿using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
-#region Using XNA
-
-#endregion
-#region Using Farseer
-
-#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
@@ -125,7 +115,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
 
             // head -> upper body
-            DistanceJoint jointHeadBody = new DistanceJoint(_head, _upperBody, new Vector2(0f, 1f), new Vector2(-0.75f, 0f), false);
+            DistanceJoint jointHeadBody = new DistanceJoint(_head, _upperBody, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
             jointHeadBody.CollideConnected = true;
             jointHeadBody.DampingRatio = DampingRatio;
             jointHeadBody.Frequency = Frequency;
@@ -133,7 +123,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointHeadBody);
 
             // lowerLeftArm -> upperLeftArm
-            DistanceJoint jointLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm, new Vector2(0f, -1f), new Vector2(0f, 1f), false);
+            DistanceJoint jointLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
             jointLeftArm.CollideConnected = true;
             jointLeftArm.DampingRatio = DampingRatio;
             jointLeftArm.Frequency = Frequency;
@@ -141,14 +131,14 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointLeftArm);
 
             // upperLeftArm -> upper body
-            DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, 1f), false);
+            DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, 1f));
             jointLeftArmBody.DampingRatio = DampingRatio;
             jointLeftArmBody.Frequency = Frequency;
             jointLeftArmBody.Length = 0.02f;
             world.AddJoint(jointLeftArmBody);
 
             // lowerRightArm -> upperRightArm
-            DistanceJoint jointRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm, new Vector2(0f, -1f), new Vector2(0f, 1f), false);
+            DistanceJoint jointRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
             jointRightArm.CollideConnected = true;
             jointRightArm.DampingRatio = DampingRatio;
             jointRightArm.Frequency = Frequency;
@@ -156,14 +146,14 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointRightArm);
 
             // upperRightArm -> upper body
-            DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, -1f), false);
+            DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, -1f));
             jointRightArmBody.DampingRatio = DampingRatio;
             jointRightArmBody.Frequency = 25;
             jointRightArmBody.Length = 0.02f;
             world.AddJoint(jointRightArmBody);
 
             // lowerLeftLeg -> upperLeftLeg
-            DistanceJoint jointLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f), false);
+            DistanceJoint jointLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
             jointLeftLeg.CollideConnected = true;
             jointLeftLeg.DampingRatio = DampingRatio;
             jointLeftLeg.Frequency = Frequency;
@@ -171,7 +161,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointLeftLeg);
 
             // upperLeftLeg -> lower body
-            DistanceJoint jointLeftLegBody = new DistanceJoint(_upperLeftLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, 0.8f), false);
+            DistanceJoint jointLeftLegBody = new DistanceJoint(_upperLeftLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, 0.8f));
             jointLeftLegBody.CollideConnected = true;
             jointLeftLegBody.DampingRatio = DampingRatio;
             jointLeftLegBody.Frequency = Frequency;
@@ -179,7 +169,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointLeftLegBody);
 
             // lowerRightleg -> upperRightleg
-            DistanceJoint jointRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f), false);
+            DistanceJoint jointRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
             jointRightLeg.CollideConnected = true;
             jointRightLeg.DampingRatio = DampingRatio;
             jointRightLeg.Frequency = Frequency;
@@ -187,7 +177,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointRightLeg);
 
             // upperRightleg -> lower body
-            DistanceJoint jointRightLegBody = new DistanceJoint(_upperRightLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, -0.8f), false);
+            DistanceJoint jointRightLegBody = new DistanceJoint(_upperRightLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, -0.8f));
             jointRightLegBody.CollideConnected = true;
             jointRightLegBody.DampingRatio = DampingRatio;
             jointRightLegBody.Frequency = Frequency;
@@ -207,10 +197,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             world.AddJoint(jointLowerTorso);
 
             // GFX
-            _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
-            _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
-            _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
-            _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
+            _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
+            _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "Stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
+            _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
+            _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
         }
 
         public Body Body
@@ -220,35 +210,23 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
-                       Color.White, _lowerLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
-                       Color.White, _lowerRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null, Color.White, _lowerLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null, Color.White, _lowerRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
-                       Color.White, _upperLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
-                       Color.White, _upperRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null, Color.White, _upperLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null, Color.White, _upperRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
-                       Color.White, _lowerLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
-                       Color.White, _lowerRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null, Color.White, _lowerLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null, Color.White, _lowerRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
-                       Color.White, _upperLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
-                       Color.White, _upperRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null, Color.White, _upperLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null, Color.White, _upperRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_lowerBody.Position), null,
-                       Color.White, _lowerBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_middleBody.Position), null,
-                       Color.White, _middleBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_upperBody.Position), null,
-                       Color.White, _upperBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_lowerBody.Position), null, Color.White, _lowerBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_middleBody.Position), null, Color.White, _middleBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_upperBody.Position), null, Color.White, _upperBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_face.Image, ConvertUnits.ToDisplayUnits(_head.Position), null,
-                       Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_face.Image, ConvertUnits.ToDisplayUnits(_head.Position), null, Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

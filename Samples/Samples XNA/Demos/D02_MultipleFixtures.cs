@@ -80,7 +80,7 @@ namespace FarseerPhysics.Samples.Demos
             SetUserAgent(_rectangles, 200f, 200f);
 
             // create sprite based on rectangle fixture
-            _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
             _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 
@@ -88,11 +88,10 @@ namespace FarseerPhysics.Samples.Demos
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
-            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
-                         Color.White, _rectangles.Rotation, _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
+            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
+
             // draw second rectangle
-            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
-                         Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
+            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

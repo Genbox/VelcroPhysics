@@ -9,6 +9,10 @@ namespace FarseerPhysics.ContentPipeline
     [ContentProcessor(DisplayName = "Farseer Polygon Processor")]
     class FarseerPolygonProcessor : ContentProcessor<List<RawBodyTemplate>, PolygonContainer>
     {
+        private float _scaleFactor = 1f;
+        private int _bezierIterations = 3;
+        private bool _decompose = false;
+
         [DisplayName("Pixel to meter ratio")]
         [Description("The length of one physics simulation unit in pixels.")]
         [DefaultValue(1)]
@@ -17,7 +21,6 @@ namespace FarseerPhysics.ContentPipeline
             get { return (int)(1f / _scaleFactor); }
             set { _scaleFactor = 1f / value; }
         }
-        private float _scaleFactor = 1f;
 
         [DisplayName("Cubic bézier iterations")]
         [Description("Amount of subdivisions for decomposing cubic bézier curves into line segments.")]
@@ -27,7 +30,6 @@ namespace FarseerPhysics.ContentPipeline
             get { return _bezierIterations; }
             set { _bezierIterations = value; }
         }
-        private int _bezierIterations = 3;
 
         [DisplayName("Decompose paths")]
         [Description("Decompose paths into convex polygons.")]
@@ -37,7 +39,6 @@ namespace FarseerPhysics.ContentPipeline
             get { return _decompose; }
             set { _decompose = value; }
         }
-        private bool _decompose = false;
 
         public override PolygonContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
         {
@@ -56,18 +57,18 @@ namespace FarseerPhysics.ContentPipeline
 
             foreach (RawBodyTemplate body in input)
             {
-                foreach (RawFixtureTemplate fixture in body.fixtures)
+                foreach (RawFixtureTemplate fixture in body.Fixtures)
                 {
-                    List<Polygon> paths = parser.ParseSVGPath(fixture.path, fixture.transformation * matScale);
+                    List<Polygon> paths = parser.ParseSVGPath(fixture.Path, fixture.Transformation * matScale);
                     if (paths.Count == 1)
                     {
-                        polygons.Add(fixture.name, paths[0]);
+                        polygons.Add(fixture.Name, paths[0]);
                     }
                     else
                     {
                         for (int i = 0; i < paths.Count; i++)
                         {
-                            polygons.Add(fixture.name + i.ToString(), paths[i]);
+                            polygons.Add(fixture.Name + i.ToString(), paths[i]);
                         }
                     }
                 }

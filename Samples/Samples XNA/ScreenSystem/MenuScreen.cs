@@ -72,8 +72,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-            _font = ContentWrapper.GetFont("menuFont");
-            _samplesLogo = ContentWrapper.GetTexture("samplesLogo");
+            _font = ContentWrapper.GetFont("MenuFont");
+            _samplesLogo = ContentWrapper.GetTexture("SamplesLogo");
 
             _titleOrigin = new Vector2(_samplesLogo.Width, _samplesLogo.Height) / 2f;
             _titlePosition = new Vector2(viewport.Width / 2f, TitleBarHeight / 2f);
@@ -131,9 +131,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         {
             Rectangle boundingBox = new Rectangle((int)(_previewPosition.X - _previewOrigin.X), (int)(_previewPosition.Y - _previewOrigin.Y), 2 * (int)_previewOrigin.X, 2 * (int)_previewOrigin.Y);
             if (boundingBox.Contains((int)position.X, (int)position.Y))
-            {
                 return true;
-            }
+
             return false;
         }
 
@@ -141,9 +140,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         {
             Rectangle boundingBox = new Rectangle((int)(_menuSlider.Position.X - _menuEntrySize.Y / 2f), (int)(_menuSlider.Position.Y - _menuEntrySize.Y / 2f), (int)_menuEntrySize.Y, (int)_menuEntrySize.Y);
             if (boundingBox.Contains((int)position.X, (int)position.Y))
-            {
                 return true;
-            }
+
             return false;
         }
 
@@ -165,7 +163,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     {
                         Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
                         Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
-                        ContentWrapper.PlaySoundEffect("click");
+                        ContentWrapper.PlaySoundEffect("Click");
                     }
                 }
                 if (_hoverEntry != -1)
@@ -176,7 +174,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                         {
                             Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
                             Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
-                            ContentWrapper.PlaySoundEffect("click");
+                            ContentWrapper.PlaySoundEffect("Click");
                         }
                     }
                     else

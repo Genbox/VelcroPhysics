@@ -6,19 +6,19 @@ namespace FarseerPhysics.ContentPipeline
 {
     struct RawFixtureTemplate
     {
-        public string path;
-        public string name;
-        public Matrix transformation;
-        public float density;
-        public float friction;
-        public float restitution;
+        public string Path;
+        public string Name;
+        public Matrix Transformation;
+        public float Density;
+        public float Friction;
+        public float Restitution;
     }
 
     struct RawBodyTemplate
     {
-        public List<RawFixtureTemplate> fixtures;
-        public string name;
-        public float mass;
-        public BodyType bodyType;
+        public List<RawFixtureTemplate> Fixtures;
+        public string Name;
+        public float Mass;
+        public BodyType BodyType;
     }
 }

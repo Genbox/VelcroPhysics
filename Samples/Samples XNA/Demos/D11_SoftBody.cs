@@ -112,18 +112,22 @@ namespace FarseerPhysics.Samples.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+            
             foreach (Body body in _softBodies)
             {
                 Sprites.Draw(_softBodyBox.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _softBodyBox.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             foreach (Body body in _softBodies)
             {
                 Sprites.Draw(_softBodyCircle.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _softBodyCircle.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             foreach (Body body in _bridgeBodies)
             {
                 Sprites.Draw(_bridgeBox.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _bridgeBox.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

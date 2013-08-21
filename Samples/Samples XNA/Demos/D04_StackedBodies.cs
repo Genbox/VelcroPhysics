@@ -8,7 +8,7 @@ namespace FarseerPhysics.Samples.Demos
     internal class D04_StackedBodies : PhysicsDemoScreen
     {
 #if XBOX
-    private const int PyramidBaseBodyCount = 10;
+        private const int PyramidBaseBodyCount = 10;
 #else
         private const int PyramidBaseBodyCount = 14;
 #endif

@@ -62,9 +62,7 @@ namespace FarseerPhysics.Samples.MediaSystem
             if (disposing && !_isDisposed)
             {
                 if (_basicEffect != null)
-                {
                     _basicEffect.Dispose();
-                }
 
                 _isDisposed = true;
             }
@@ -73,9 +71,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void Begin(Matrix projection, Matrix view)
         {
             if (_hasBegun)
-            {
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
-            }
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
             //tell our basic effect to begin.
@@ -96,20 +92,16 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void DrawLineShape(Shape shape, Color color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
-            }
-            if (shape.ShapeType != ShapeType.Edge &&
-                shape.ShapeType != ShapeType.Chain)
-            {
+
+            if (shape.ShapeType != ShapeType.Edge && shape.ShapeType != ShapeType.Chain)
                 throw new NotSupportedException("The specified shapeType is not supported by LineBatch.");
-            }
+
             if (shape.ShapeType == ShapeType.Edge)
             {
                 if (_lineVertsCount >= _lineVertices.Length)
-                {
                     Flush();
-                }
+
                 EdgeShape edge = (EdgeShape)shape;
                 _lineVertices[_lineVertsCount].Position = new Vector3(edge.Vertex1, 0f);
                 _lineVertices[_lineVertsCount + 1].Position = new Vector3(edge.Vertex2, 0f);
@@ -184,9 +176,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void End()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before End can be called.");
-            }
 
             // Draw whatever the user wanted us to draw
             Flush();
@@ -197,9 +187,8 @@ namespace FarseerPhysics.Samples.MediaSystem
         private void Flush()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before Flush can be called.");
-            }
+
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
