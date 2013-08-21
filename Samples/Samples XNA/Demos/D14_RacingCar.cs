@@ -138,7 +138,7 @@ namespace FarseerPhysics.Samples.Demos
 
                 PolygonShape box = new PolygonShape(1f);
                 box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
-                _teeter = new Sprite(ContentWrapper.TextureFromShape(box, "stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1f));
+                _teeter = new Sprite(ContentWrapper.TextureFromShape(box, "Stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1f));
 
                 _board.CreateFixture(box);
 
@@ -181,7 +181,7 @@ namespace FarseerPhysics.Samples.Demos
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
                 box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
-                _box = new Sprite(ContentWrapper.TextureFromShape(box, "square", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 1f));
+                _box = new Sprite(ContentWrapper.TextureFromShape(box, "Square", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 1f));
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;
@@ -250,8 +250,8 @@ namespace FarseerPhysics.Samples.Demos
                 World.AddJoint(_springFront);
 
                 // GFX
-                _carBody = new Sprite(ContentWrapper.GetTexture("car"), ContentWrapper.CalculateOrigin(_car));
-                _wheel = new Sprite(ContentWrapper.GetTexture("wheel"));
+                _carBody = new Sprite(ContentWrapper.GetTexture("Car"), ContentWrapper.CalculateOrigin(_car));
+                _wheel = new Sprite(ContentWrapper.GetTexture("Wheel"));
             }
 
             Camera.MinRotation = -0.05f;
@@ -276,21 +276,13 @@ namespace FarseerPhysics.Samples.Demos
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.GamePadState.ThumbSticks.Left.X > 0.5f || input.KeyboardState.IsKeyDown(Keys.D))
-            {
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
-            }
             else if (input.GamePadState.ThumbSticks.Left.X < -0.5f || input.KeyboardState.IsKeyDown(Keys.A))
-            {
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
-            }
             else if (input.IsNewButtonPress(Buttons.A) || input.IsNewKeyRelease(Keys.S))
-            {
                 _acceleration = 0f;
-            }
             else
-            {
                 _acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
-            }
 
             base.HandleInput(input, gameTime);
         }
@@ -298,17 +290,21 @@ namespace FarseerPhysics.Samples.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+            
             // draw car
             Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, 1f, SpriteEffects.None, 0f);
+            
             // draw teeter
             Sprites.Draw(_teeter.Image, ConvertUnits.ToDisplayUnits(_board.Position), null, Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
+            
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
                 Sprites.Draw(_bridge.Image, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position), null, Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f, SpriteEffects.None, 0f);
             }
+            
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
@@ -317,6 +313,7 @@ namespace FarseerPhysics.Samples.Demos
             Sprites.End();
 
             Lines.Begin(Camera.SimProjection, Camera.SimView);
+            
             // draw ground
             for (int i = 0; i < _ground.FixtureList.Count; ++i)
             {

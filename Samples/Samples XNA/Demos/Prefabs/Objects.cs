@@ -1,20 +1,10 @@
-﻿#region Using System
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
-#region Using XNA
-
-#endregion
-#region Using Farseer
-
-#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {

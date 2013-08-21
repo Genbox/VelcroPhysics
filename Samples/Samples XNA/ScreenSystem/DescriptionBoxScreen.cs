@@ -40,7 +40,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            _font = ContentWrapper.GetFont("detailsFont");
+            _font = ContentWrapper.GetFont("DetailsFont");
 
             // Center the message text in the viewport.
             Viewport viewport = Framework.GraphicsDevice.Viewport;

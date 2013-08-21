@@ -27,7 +27,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            _farseerLogoTexture = ContentWrapper.GetTexture("logo");
+            _farseerLogoTexture = ContentWrapper.GetTexture("Logo");
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
             _farseerLogoPosition = new Vector2((viewport.Width - _farseerLogoTexture.Width) / 2f - 100f, (viewport.Height - _farseerLogoTexture.Height) / 2f);

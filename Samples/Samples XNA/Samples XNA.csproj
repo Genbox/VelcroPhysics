@@ -74,7 +74,6 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Input.Touch, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -86,7 +85,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demos\Old_D18_BreakableBodies.cs" />
     <Compile Include="Demos\D17_SVGtoBody.cs" />
     <Compile Include="Demos\D16_SVGtoPolygon.cs" />
     <Compile Include="Demos\D08_DistanceAngleJoint.cs" />
@@ -98,6 +96,7 @@
     <Compile Include="Demos\D13_TheoJansenWalker.cs" />
     <Compile Include="Demos\D12_WebOfGoo.cs" />
     <Compile Include="Demos\D18_BreakableBody.cs" />
+    <Compile Include="ScreenSystem\LogoScreen.cs" />
     <Compile Include="ScreenSystem\OptionEntry.cs" />
     <Compile Include="ScreenSystem\OptionsScreen.cs" />
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="ScreenSystem\PhysicsDemoScreen.cs" />
     <Compile Include="ScreenSystem\BackgroundScreen.cs" />
     <Compile Include="ScreenSystem\MenuSlider.cs" />
-    <Compile Include="ScreenSystem\LogoScreen.cs" />
     <Compile Include="ScreenSystem\MenuEntry.cs" />
     <Compile Include="ScreenSystem\MenuScreen.cs" />
     <Compile Include="ScreenSystem\DescriptionBoxScreen.cs" />
@@ -148,7 +146,7 @@
       <Name>DebugView XNA</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SourceFiles\Farseer Physics XNA.csproj">
-      <Project>{0a850700-1abb-4288-a391-6726b90ebeb9}</Project>
+      <Project>{0A850700-1ABB-4288-A391-6726B90EBEB9}</Project>
       <Name>Farseer Physics XNA</Name>
     </ProjectReference>
   </ItemGroup>

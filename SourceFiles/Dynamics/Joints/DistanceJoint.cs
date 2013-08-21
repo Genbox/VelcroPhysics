@@ -79,7 +79,7 @@ namespace FarseerPhysics.Dynamics.Joints
         /// distance joint. If you don't supply a length, the local anchor points
         /// is used so that the initial configuration can violate the constraint
         /// slightly. This helps when saving and loading a game.
-        /// @warning Do not use a zero or short length.
+        /// Warning Do not use a zero or short length.
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>

@@ -19,13 +19,11 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-#define USE_IGNORE_CCD_CATEGORIES
+//#define USE_IGNORE_CCD_CATEGORIES
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using FarseerPhysics.Collision;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
@@ -282,7 +280,7 @@ namespace FarseerPhysics.Dynamics
         }
 
         /// <summary>
-        /// Set the coefficient of restitution. This will _not_ change the restitution of
+        /// Set the coefficient of restitution. This will not change the restitution of
         /// existing contacts.
         /// </summary>
         /// <value>The restitution.</value>

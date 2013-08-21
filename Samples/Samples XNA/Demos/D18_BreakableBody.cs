@@ -61,13 +61,13 @@ namespace FarseerPhysics.Samples.Demos
             _border = new Border(World, Lines, Framework.GraphicsDevice);
             for (int i = 0; i < 3; i++)
             {
-                _breakableCookie[i] = Framework.Content.Load<BodyContainer>("pipeline/farseerBreakableBody")["cookie"].CreateBreakable(World);
+                _breakableCookie[i] = Framework.Content.Load<BodyContainer>("Pipeline/FarseerBreakableBody")["Cookie"].CreateBreakable(World);
                 _breakableCookie[i].Strength = 120f;
                 _breakableCookie[i].MainBody.Position = new Vector2(-20.33f + 15f * i, -5.33f);
             }
 
             _breakableSprite = new List<Sprite>();
-            List<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "cookie");
+            List<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "Cookie");
             for (int i = 0; i < _breakableCookie[0].Parts.Count; i++)
             {
                 AABB bounds;
@@ -77,8 +77,7 @@ namespace FarseerPhysics.Samples.Demos
                 Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableCookie[0].Parts[i].Body.Position - bounds.LowerBound);
                 _breakableSprite.Add(new Sprite(textures[i], origin));
             }
-            _completeSprite = new Sprite(ContentWrapper.GetTexture("cookie"), Vector2.Zero);
-
+            _completeSprite = new Sprite(ContentWrapper.GetTexture("Cookie"), Vector2.Zero);
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)

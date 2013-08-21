@@ -14,6 +14,9 @@ namespace FarseerPhysics.ContentPipeline
     [ContentProcessor(DisplayName = "Farseer Texture Processor")]
     class FarseerTextureProcessor : ContentProcessor<Texture2DContent, List<Vertices>>
     {
+        private float _scaleFactor = 1f;
+        private bool _holeDetection;
+
         [DisplayName("Pixel to meter ratio")]
         [Description("The length of one physics simulation unit in pixels.")]
         [DefaultValue(1)]
@@ -22,7 +25,6 @@ namespace FarseerPhysics.ContentPipeline
             get { return (int)(1f / _scaleFactor); }
             set { _scaleFactor = 1f / value; }
         }
-        private float _scaleFactor = 1f;
 
         [DisplayName("Hole detection")]
         [Description("Detect holes in the traced texture.")]
@@ -32,14 +34,11 @@ namespace FarseerPhysics.ContentPipeline
             get { return _holeDetection; }
             set { _holeDetection = value; }
         }
-        private bool _holeDetection = false;
 
         public override List<Vertices> Process(Texture2DContent input, ContentProcessorContext context)
         {
             if (ScaleFactor < 1)
-            {
                 throw new Exception("Pixel to meter ratio must be greater than zero.");
-            }
 
             PixelBitmapContent<Color> bitmapContent = (PixelBitmapContent<Color>)input.Faces[0][0];
             uint[] colorData = new uint[bitmapContent.Width * bitmapContent.Height];

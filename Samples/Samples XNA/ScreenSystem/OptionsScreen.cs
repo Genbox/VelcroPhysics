@@ -81,8 +81,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-            _font = ContentWrapper.GetFont("menuFont");
-            _checkmark = ContentWrapper.GetTexture("checkmark");
+            _font = ContentWrapper.GetFont("MenuFont");
+            _checkmark = ContentWrapper.GetTexture("Checkmark");
 
             _optionStart = (viewport.Height - (_optionEntries.Count - 1) * (_optionEntrySize.Y + EntrySpacer)) / 2f;
             _optionSpacing = _optionEntrySize.Y + EntrySpacer;
@@ -171,7 +171,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                             ContentWrapper.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
                             break;
                     }
-                    ContentWrapper.PlaySoundEffect("click");
+                    ContentWrapper.PlaySoundEffect("Click");
                 }
             }
 

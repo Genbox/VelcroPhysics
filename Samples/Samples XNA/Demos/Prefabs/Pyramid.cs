@@ -1,6 +1,4 @@
-﻿#region Using System
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
@@ -8,14 +6,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
-#region Using XNA
-
-#endregion
-#region Using Farseer
-
-#endregion
 
 namespace FarseerPhysics.Samples.Demos.Prefabs
 {
@@ -56,7 +46,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             }
 
             //GFX
-            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
         }
 
         public void Draw(SpriteBatch batch)

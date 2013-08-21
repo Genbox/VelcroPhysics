@@ -53,30 +53,31 @@ namespace FarseerPhysics.Samples.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            Vector2 _position = new Vector2(-15f, -8f);
-            float _restitution = 0f;
+            Vector2 position = new Vector2(-15f, -8f);
+            float restitution = 0f;
 
             for (int i = 0; i < 6; ++i)
             {
-                _circle[i] = BodyFactory.CreateCircle(World, 1.5f, 1f, _position);
+                _circle[i] = BodyFactory.CreateCircle(World, 1.5f, 1f, position);
                 _circle[i].BodyType = BodyType.Dynamic;
-                _circle[i].Restitution = _restitution;
-                _position.X += 6f;
-                _restitution += 0.2f;
+                _circle[i].Restitution = restitution;
+                position.X += 6f;
+                restitution += 0.2f;
             }
 
             // create sprite based on body
-            _circleSprite = new Sprite(ContentWrapper.TextureFromShape(_circle[0].FixtureList[0].Shape, "square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
+            _circleSprite = new Sprite(ContentWrapper.TextureFromShape(_circle[0].FixtureList[0].Shape, "Square", ContentWrapper.Green, ContentWrapper.Lime, ContentWrapper.Black, 1f));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+            
             for (int i = 0; i < 6; ++i)
             {
-                Sprites.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position),
-                             null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f, SpriteEffects.None, 0f);
+                Sprites.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position), null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

@@ -18,9 +18,8 @@ namespace FarseerPhysics.Samples.MediaSystem
         public QuadRenderer(GraphicsDevice graphicsDevice)
         {
             if (graphicsDevice == null)
-            {
                 throw new ArgumentNullException("graphicsDevice");
-            }
+
             _device = graphicsDevice;
             _isDisposed = false;
 
@@ -52,9 +51,7 @@ namespace FarseerPhysics.Samples.MediaSystem
             if (disposing && !_isDisposed)
             {
                 if (_basicEffect != null)
-                {
                     _basicEffect.Dispose();
-                }
 
                 _isDisposed = true;
             }
@@ -63,9 +60,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void Begin()
         {
             if (_hasBegun)
-            {
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
-            }
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
             _device.RasterizerState = RasterizerState.CullNone;
@@ -76,9 +71,7 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void End()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before End can be called.");
-            }
 
             _hasBegun = false;
         }
@@ -91,57 +84,53 @@ namespace FarseerPhysics.Samples.MediaSystem
         public void Render(Vector2 v1, Vector2 v2, Texture2D texture, bool outline, Color outlineColor, params Color[] color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
+
+            if (texture == null)
+            {
+                _basicEffect.TextureEnabled = false;
             }
             else
             {
-                if (texture == null)
+                _basicEffect.Texture = texture;
+                _basicEffect.TextureEnabled = true;
+            }
+
+            _verticesQuad[0].Position.X = v1.X;
+            _verticesQuad[0].Position.Y = v1.Y;
+
+            _verticesQuad[1].Position.X = v2.X;
+            _verticesQuad[1].Position.Y = v1.Y;
+
+            _verticesQuad[2].Position.X = v1.X;
+            _verticesQuad[2].Position.Y = v2.Y;
+
+            _verticesQuad[3].Position.X = v2.X;
+            _verticesQuad[3].Position.Y = v2.Y;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (color.Length > 0)
                 {
-                    _basicEffect.TextureEnabled = false;
+                    _verticesQuad[i].Color = color[i % color.Length];
                 }
                 else
                 {
-                    _basicEffect.Texture = texture;
-                    _basicEffect.TextureEnabled = true;
+                    _verticesQuad[i].Color = Color.White;
                 }
+            }
 
-                _verticesQuad[0].Position.X = v1.X;
-                _verticesQuad[0].Position.Y = v1.Y;
+            _basicEffect.CurrentTechnique.Passes[0].Apply();
+            _device.DrawUserPrimitives(PrimitiveType.TriangleStrip, _verticesQuad, 0, 2);
 
-                _verticesQuad[1].Position.X = v2.X;
-                _verticesQuad[1].Position.Y = v1.Y;
-
-                _verticesQuad[2].Position.X = v1.X;
-                _verticesQuad[2].Position.Y = v2.Y;
-
-                _verticesQuad[3].Position.X = v2.X;
-                _verticesQuad[3].Position.Y = v2.Y;
-
+            if (outline)
+            {
                 for (int i = 0; i < 4; i++)
                 {
-                    if (color.Length > 0)
-                    {
-                        _verticesQuad[i].Color = color[i % color.Length];
-                    }
-                    else
-                    {
-                        _verticesQuad[i].Color = Color.White;
-                    }
+                    _verticesQuad[i].Color = outlineColor;
                 }
-
                 _basicEffect.CurrentTechnique.Passes[0].Apply();
-                _device.DrawUserPrimitives(PrimitiveType.TriangleStrip, _verticesQuad, 0, 2);
-
-                if (outline)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        _verticesQuad[i].Color = outlineColor;
-                    }
-                    _basicEffect.CurrentTechnique.Passes[0].Apply();
-                    _device.DrawUserIndexedPrimitives(PrimitiveType.LineStrip, _verticesQuad, 0, 4, _lineBuffer, 0, 4);
-                }
+                _device.DrawUserIndexedPrimitives(PrimitiveType.LineStrip, _verticesQuad, 0, 4, _lineBuffer, 0, 4);
             }
         }
     }

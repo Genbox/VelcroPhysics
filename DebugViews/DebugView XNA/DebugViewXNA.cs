@@ -617,7 +617,7 @@ namespace FarseerPhysics.DebugView
         {
             if (!_primitiveBatch.IsReady())
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
-            
+
             _primitiveBatch.AddVertex(start, color, PrimitiveType.LineList);
             _primitiveBatch.AddVertex(end, color, PrimitiveType.LineList);
         }
@@ -707,6 +707,11 @@ namespace FarseerPhysics.DebugView
                 // Draw start shape
                 DrawSolidPolygon(baseVerts, 4, color, false);
             }
+        }
+
+        public void BeginCustomDraw(Matrix projection, Matrix view)
+        {
+            BeginCustomDraw(ref projection, ref view);
         }
 
         public void BeginCustomDraw(ref Matrix projection, ref Matrix view)

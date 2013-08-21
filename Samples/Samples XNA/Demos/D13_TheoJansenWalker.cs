@@ -58,7 +58,6 @@ namespace FarseerPhysics.Samples.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-
             CircleShape shape = new CircleShape(0.25f, 1);
             _grain = new Sprite(ContentWrapper.CircleTexture(0.25f, ContentWrapper.Gold, ContentWrapper.Grey));
 

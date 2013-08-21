@@ -60,21 +60,20 @@ namespace FarseerPhysics.Samples.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            List<Vertices> tracedObject = Framework.Content.Load<List<Vertices>>("pipeline/object");
+            List<Vertices> tracedObject = Framework.Content.Load<List<Vertices>>("Pipeline/Object");
 
             // Create a single body with multiple fixtures
             _compound = BodyFactory.CreateCompoundPolygon(World, tracedObject, 1f, BodyType.Dynamic);
             _compound.BodyType = BodyType.Dynamic;
 
             SetUserAgent(_compound, 200f, 200f);
-            _objectSprite = new Sprite(ContentWrapper.GetTexture("objectImage"), ContentWrapper.CalculateOrigin(_compound));
+            _objectSprite = new Sprite(ContentWrapper.GetTexture("Logo"), ContentWrapper.CalculateOrigin(_compound));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            Sprites.Draw(_objectSprite.Image, ConvertUnits.ToDisplayUnits(_compound.Position),
-                         null, Color.White, _compound.Rotation, _objectSprite.Origin, 1f, SpriteEffects.None, 0f);
+            Sprites.Draw(_objectSprite.Image, ConvertUnits.ToDisplayUnits(_compound.Position), null, Color.White, _compound.Rotation, _objectSprite.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 
             _border.Draw(Camera.SimProjection, Camera.SimView);

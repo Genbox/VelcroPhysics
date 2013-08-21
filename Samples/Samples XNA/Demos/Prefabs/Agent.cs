@@ -45,7 +45,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             //GFX
             _box = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRectangle(1.75f, 0.2f), Color.White, ContentWrapper.Black));
-            _knob = new Sprite(ContentWrapper.CircleTexture(0.5f, "square", ContentWrapper.Black, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _knob = new Sprite(ContentWrapper.CircleTexture(0.5f, "Square", ContentWrapper.Black, ContentWrapper.Gold, ContentWrapper.Black, 1f));
 
             _offset = ConvertUnits.ToDisplayUnits(2f);
         }
@@ -78,25 +78,15 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public void Draw(SpriteBatch batch)
         {
             //cross
-            batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                       Color.White, _agentBody.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation + MathHelper.Pi / 2f, _box.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation + MathHelper.Pi / 2f, _box.Origin, 1f, SpriteEffects.None, 0f);
+            
             //knobs
-            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation, _knob.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation, _knob.Origin + new Vector2(0f, _offset), 1f,
-                        SpriteEffects.None, 0f);
-            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation, _knob.Origin - new Vector2(0f, _offset), 1f,
-                        SpriteEffects.None, 0f);
-            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation, _knob.Origin + new Vector2(_offset, 0f), 1f,
-                        SpriteEffects.None, 0f);
-            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null,
-                        Color.White, _agentBody.Rotation, _knob.Origin - new Vector2(_offset, 0f), 1f,
-                        SpriteEffects.None, 0f);
+            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _knob.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _knob.Origin + new Vector2(0f, _offset), 1f, SpriteEffects.None, 0f);
+            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _knob.Origin - new Vector2(0f, _offset), 1f, SpriteEffects.None, 0f);
+            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _knob.Origin + new Vector2(_offset, 0f), 1f, SpriteEffects.None, 0f);
+            batch.Draw(_knob.Image, ConvertUnits.ToDisplayUnits(_agentBody.Position), null, Color.White, _agentBody.Rotation, _knob.Origin - new Vector2(_offset, 0f), 1f, SpriteEffects.None, 0f);
         }
     }
 }

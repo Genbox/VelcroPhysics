@@ -197,9 +197,9 @@ namespace FarseerPhysics.ContentPipeline
 
             foreach (Polygon poly in result)
             {
-                for (int i = 0; i < poly.vertices.Count; i++)
+                for (int i = 0; i < poly.Vertices.Count; i++)
                 {
-                    poly.vertices[i] = Vector2.Transform(poly.vertices[i], transformation);
+                    poly.Vertices[i] = Vector2.Transform(poly.Vertices[i], transformation);
                 }
             }
             return result;

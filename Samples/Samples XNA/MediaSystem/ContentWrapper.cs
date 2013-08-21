@@ -16,6 +16,7 @@ namespace FarseerPhysics.Samples.MediaSystem
     public class ContentWrapper : GameComponent
     {
         private const int CircleSegments = 32;
+        private static int _soundVolume;
 
         public static Color Gold = new Color(246, 187, 53);
         public static Color Red = new Color(215, 1, 51);
@@ -54,7 +55,6 @@ namespace FarseerPhysics.Samples.MediaSystem
                 SoundEffect.MasterVolume = _soundVolume / 100f;
             }
         }
-        private static int _soundVolume;
 
         private ContentWrapper(Game game)
             : base(game)
@@ -63,9 +63,9 @@ namespace FarseerPhysics.Samples.MediaSystem
             FileInfo[] currentFileList;
 
             // First create a blank texture
-            _textureList["blank"] = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _textureList["blank"].SetData(new[] { Color.White });
-            _textureList["blank"].Name = "blank";
+            _textureList["Blank"] = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            _textureList["Blank"].SetData(new[] { Color.White });
+            _textureList["Blank"].Name = "Blank";
 
             // Load all graphics
             string[] gfxFolders = { "Common", "DemoGFX", "Materials" };
@@ -142,19 +142,14 @@ namespace FarseerPhysics.Samples.MediaSystem
         public static SpriteFont GetFont(string fontName)
         {
             if (_contentWrapper != null && _fontList.ContainsKey(fontName))
-            {
                 return _fontList[fontName];
-            }
             else
-            {
                 throw new FileNotFoundException();
-            }
         }
 
         public static Vector2 CalculateOrigin(Body body)
         {
             Vector2 lowerBound = new Vector2(float.MaxValue);
-            AABB bounds;
             Transform transform;
             body.GetTransform(out transform);
 
@@ -162,6 +157,7 @@ namespace FarseerPhysics.Samples.MediaSystem
             {
                 for (int j = 0; j < body.FixtureList[i].Shape.ChildCount; j++)
                 {
+                    AABB bounds;
                     body.FixtureList[i].Shape.ComputeAABB(out bounds, ref transform, j);
                     Vector2.Min(ref lowerBound, ref bounds.LowerBound, out lowerBound);
                 }
@@ -173,7 +169,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         public static Texture2D TextureFromShape(Shape shape, Color color, Color outlineColor)
         {
-            return TextureFromShape(shape, "blank", color, color, outlineColor, 1f);
+            return TextureFromShape(shape, "Blank", color, color, outlineColor, 1f);
         }
 
         public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
@@ -195,7 +191,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         public static Texture2D CircleTexture(float radius, Color color, Color outlineColor)
         {
-            return CircleTexture(radius, "blank", color, color, outlineColor, 1f);
+            return CircleTexture(radius, "Blank", color, color, outlineColor, 1f);
         }
 
         public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
@@ -210,13 +206,9 @@ namespace FarseerPhysics.Samples.MediaSystem
 
                 radius = ConvertUnits.ToDisplayUnits(radius);
                 if (_textureList.ContainsKey(pattern))
-                {
                     materialScale /= _textureList[pattern].Width;
-                }
                 else
-                {
                     materialScale = 1f;
-                }
 
                 Vector2 start = new Vector2(radius, 0f);
 
@@ -259,7 +251,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         public static Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
         {
-            return PolygonTexture(vertices, "blank", color, color, outlineColor, 1f);
+            return PolygonTexture(vertices, "Blank", color, color, outlineColor, 1f);
         }
 
         public static Texture2D PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
@@ -270,7 +262,7 @@ namespace FarseerPhysics.Samples.MediaSystem
 
         public static Texture2D PolygonTexture(Vertices vertices, Color color, Color outlineColor)
         {
-            return PolygonTexture(vertices, "blank", color, color, outlineColor, 1f);
+            return PolygonTexture(vertices, "Blank", color, color, outlineColor, 1f);
         }
 
         public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
@@ -381,12 +373,9 @@ namespace FarseerPhysics.Samples.MediaSystem
                                 verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j) - polygonBounds.Center, 0f);
                                 verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1) - polygonBounds.Center, 0f);
 
-                                verticesFill[i][3 * j].TextureCoordinate = new Vector2(decomposedVertices[i][0].X / _textureList[textureName].Width,
-                                                                                       decomposedVertices[i][0].Y / _textureList[textureName].Height - 1f);
-                                verticesFill[i][3 * j + 1].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j).X / _textureList[textureName].Width,
-                                                                                           decomposedVertices[i].NextVertex(j).Y / _textureList[textureName].Height - 1f);
-                                verticesFill[i][3 * j + 2].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j + 1).X / _textureList[textureName].Width,
-                                                                                           decomposedVertices[i].NextVertex(j + 1).Y / _textureList[textureName].Height - 1f);
+                                verticesFill[i][3 * j].TextureCoordinate = new Vector2(decomposedVertices[i][0].X / _textureList[textureName].Width, decomposedVertices[i][0].Y / _textureList[textureName].Height - 1f);
+                                verticesFill[i][3 * j + 1].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j).Y / _textureList[textureName].Height - 1f);
+                                verticesFill[i][3 * j + 2].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j + 1).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j + 1).Y / _textureList[textureName].Height - 1f);
                                 verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.Transparent;
                             }
                         }
@@ -396,7 +385,7 @@ namespace FarseerPhysics.Samples.MediaSystem
                     }
                     else
                     {
-                        result.Add(_textureList["blank"]);
+                        result.Add(_textureList["Blank"]);
                     }
                 }
             }
@@ -424,13 +413,15 @@ namespace FarseerPhysics.Samples.MediaSystem
             _effect.View = halfPixelOffset;
             // render shape;
             _effect.TextureEnabled = true;
-            _effect.Texture = _textureList["blank"];
+            _effect.Texture = _textureList["Blank"];
             _effect.VertexColorEnabled = true;
             _effect.Techniques[0].Passes[0].Apply();
+
             for (int i = 0; i < verticesFill.Count; i++)
             {
                 Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
             }
+
             if (pattern != null)
             {
                 _effect.Texture = pattern;
@@ -462,13 +453,9 @@ namespace FarseerPhysics.Samples.MediaSystem
         public static void PlaySoundEffect(string soundName)
         {
             if (_contentWrapper != null && _soundList.ContainsKey(soundName))
-            {
                 _soundList[soundName].Play();
-            }
             else
-            {
                 throw new FileNotFoundException();
-            }
         }
 
         /// <summary>
@@ -476,7 +463,6 @@ namespace FarseerPhysics.Samples.MediaSystem
         /// </summary>
         /// <param name="soundName">The name of the sound to play.</param>
         /// <param name="looped">True if sound effect should loop.</param>
-        /// <param name="instance">The SoundEffectInstance created for this sound effect.</param>
         public static SoundEffectInstance PlaySoundEffect(string soundName, bool looped)
         {
             SoundEffectInstance instance = null;

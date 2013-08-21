@@ -12,8 +12,8 @@ namespace FarseerPhysics.ContentPipeline
     [ContentImporter(".svg", DisplayName = "Farseer SVG Importer", DefaultProcessor = "FarseerBodyProcessor")]
     class FarseerSVGImporter : ContentImporter<List<RawBodyTemplate>>
     {
-        private const string isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
-        private const string isCommaWhitespace = @"\A[\s,]*";
+        private const string IsNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
+        private const string IsCommaWhitespace = @"\A[\s,]*";
 
         private Stack<Matrix> _transformations;
         private List<RawBodyTemplate> _parsedSVG;
@@ -27,9 +27,9 @@ namespace FarseerPhysics.ContentPipeline
             _parsedSVG = new List<RawBodyTemplate>();
             _parsedSVG.Add(new RawBodyTemplate()
             {
-                name = "importer_default_path_container",
-                fixtures = new List<RawFixtureTemplate>(),
-                mass = 0f
+                Name = "importer_default_path_container",
+                Fixtures = new List<RawFixtureTemplate>(),
+                Mass = 0f
             });
 
             XmlDocument input = new XmlDocument();
@@ -72,49 +72,49 @@ namespace FarseerPhysics.ContentPipeline
                     }
                     _currentBody = new RawBodyTemplate()
                     {
-                        fixtures = new List<RawFixtureTemplate>(),
-                        mass = bodyMass,
-                        name = ID,
-                        bodyType = type
+                        Fixtures = new List<RawFixtureTemplate>(),
+                        Mass = bodyMass,
+                        Name = ID,
+                        BodyType = type
                     };
                     killBody = true;
                 }
                 if (currentElement.Name == "path")
                 {
                     RawFixtureTemplate fixture = new RawFixtureTemplate();
-                    fixture.path = currentElement.Attributes["d"].Value;
-                    fixture.transformation = Matrix.Identity;
+                    fixture.Path = currentElement.Attributes["d"].Value;
+                    fixture.Transformation = Matrix.Identity;
                     foreach (Matrix m in _transformations)
                     {
-                        fixture.transformation *= m;
+                        fixture.Transformation *= m;
                     }
                     if (currentElement.HasAttribute("id"))
                     {
-                        fixture.name = currentElement.Attributes["id"].Value;
+                        fixture.Name = currentElement.Attributes["id"].Value;
                     }
                     else
                     {
-                        fixture.name = "empty_id";
+                        fixture.Name = "empty_id";
                     }
-                    if (!(currentElement.HasAttribute("fp_density") && float.TryParse(currentElement.Attributes["fp_density"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.density)))
+                    if (!(currentElement.HasAttribute("fp_density") && float.TryParse(currentElement.Attributes["fp_density"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Density)))
                     {
-                        fixture.density = 1f;
+                        fixture.Density = 1f;
                     }
-                    if (!(currentElement.HasAttribute("fp_friction") && float.TryParse(currentElement.Attributes["fp_friction"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.friction)))
+                    if (!(currentElement.HasAttribute("fp_friction") && float.TryParse(currentElement.Attributes["fp_friction"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Friction)))
                     {
-                        fixture.friction = 0.5f;
+                        fixture.Friction = 0.5f;
                     }
-                    if (!(currentElement.HasAttribute("fp_restitution") && float.TryParse(currentElement.Attributes["fp_restitution"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.restitution)))
+                    if (!(currentElement.HasAttribute("fp_restitution") && float.TryParse(currentElement.Attributes["fp_restitution"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Restitution)))
                     {
-                        fixture.restitution = 0f;
+                        fixture.Restitution = 0f;
                     }
                     if (_currentBody.HasValue)
                     {
-                        _currentBody.Value.fixtures.Add(fixture);
+                        _currentBody.Value.Fixtures.Add(fixture);
                     }
                     else
                     {
-                        _parsedSVG[0].fixtures.Add(fixture);
+                        _parsedSVG[0].Fixtures.Add(fixture);
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace FarseerPhysics.ContentPipeline
             }
             if (killBody)
             {
-                if (_currentBody.Value.fixtures.Count > 0)
+                if (_currentBody.Value.Fixtures.Count > 0)
                 {
                     _parsedSVG.Add(_currentBody.Value);
                 }
@@ -212,10 +212,10 @@ namespace FarseerPhysics.ContentPipeline
 
             while (!string.IsNullOrEmpty(parameters))
             {
-                parameters = Regex.Replace(parameters, isCommaWhitespace, "");
-                if (Regex.IsMatch(parameters, isNumber))
+                parameters = Regex.Replace(parameters, IsCommaWhitespace, "");
+                if (Regex.IsMatch(parameters, IsNumber))
                 {
-                    int matchLength = Regex.Match(parameters, isNumber).Length;
+                    int matchLength = Regex.Match(parameters, IsNumber).Length;
                     arguments[argumentCount++] = float.Parse(parameters.Substring(0, matchLength), CultureInfo.InvariantCulture);
                     parameters = parameters.Remove(0, matchLength);
                 }

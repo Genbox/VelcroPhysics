@@ -27,7 +27,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         public void LoadContent()
         {
-            _font = ContentWrapper.GetFont("detailsFont");
+            _font = ContentWrapper.GetFont("DetailsFont");
         }
 
         public void Update(GameTime gameTime)
