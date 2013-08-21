@@ -46,132 +46,125 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\logo.png">
-      <Name>logo</Name>
+    <Compile Include="Common\Logo.png">
+      <Name>Logo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\detailsFont.spritefont">
-      <Name>detailsFont</Name>
+    <Compile Include="Fonts\DetailsFont.spritefont">
+      <Name>DetailsFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\menuFont.spritefont">
-      <Name>menuFont</Name>
+    <Compile Include="Fonts\MenuFont.spritefont">
+      <Name>MenuFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pipeline\object.png">
-      <Name>object</Name>
+    <Compile Include="Pipeline\Object.png">
+      <Name>Object</Name>
       <Importer>TextureImporter</Importer>
       <Processor>FarseerTextureProcessor</Processor>
       <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\cursor.png">
-      <Name>cursor</Name>
+    <Compile Include="Common\Cursor.png">
+      <Name>Cursor</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\link.png">
-      <Name>link</Name>
+    <Compile Include="DemoGFX\Link.png">
+      <Name>Link</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\goo.png">
-      <Name>goo</Name>
+    <Compile Include="DemoGFX\Goo.png">
+      <Name>Goo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\car.png">
-      <Name>car</Name>
+    <Compile Include="DemoGFX\Car.png">
+      <Name>Car</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="DemoGFX\wheel.png">
-      <Name>wheel</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\buttons.png">
-      <Name>buttons</Name>
+    <Compile Include="DemoGFX\Wheel.png">
+      <Name>Wheel</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoSFX\click.wav">
-      <Name>click</Name>
+    <Compile Include="Common\Buttons.png">
+      <Name>Buttons</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoSFX\Click.wav">
+      <Name>Click</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Materials\square.png">
-      <Name>square</Name>
+    <Compile Include="Materials\Square.png">
+      <Name>Square</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Materials\stripe.png">
-      <Name>stripe</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\samplesLogo.png">
-      <Name>samplesLogo</Name>
+    <Compile Include="Materials\Stripe.png">
+      <Name>Stripe</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\objectImage.png">
-      <Name>objectImage</Name>
+    <Compile Include="Common\SamplesLogo.png">
+      <Name>SamplesLogo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\breakableObjects.png">
-      <Name>breakableObjects</Name>
+    <Compile Include="DemoGFX\Logo.png">
+      <Name>Logo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\checkmark.png">
-      <Name>checkmark</Name>
+    <Compile Include="Common\Checkmark.png">
+      <Name>Checkmark</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pipeline\farseerPolygon.svg">
-      <Name>farseerPolygon</Name>
+    <Compile Include="Pipeline\FarseerPolygon.svg">
+      <Name>FarseerPolygon</Name>
       <Importer>FarseerSVGImporter</Importer>
       <Processor>FarseerPolygonProcessor</Processor>
       <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pipeline\farseerBody.svg">
-      <Name>farseerBody</Name>
+    <Compile Include="Pipeline\FarseerBody.svg">
+      <Name>FarseerBody</Name>
       <Importer>FarseerSVGImporter</Importer>
       <Processor>FarseerBodyProcessor</Processor>
       <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
@@ -179,39 +172,39 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\club.png">
-      <Name>club</Name>
+    <Compile Include="DemoGFX\Club.png">
+      <Name>Club</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="DemoGFX\diamond.png">
-      <Name>diamond</Name>
+    <Compile Include="DemoGFX\Diamond.png">
+      <Name>Diamond</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="DemoGFX\heart.png">
-      <Name>heart</Name>
+    <Compile Include="DemoGFX\Heart.png">
+      <Name>Heart</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="DemoGFX\spade.png">
-      <Name>spade</Name>
+    <Compile Include="DemoGFX\Spade.png">
+      <Name>Spade</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Pipeline\farseerBreakableBody.svg">
+    <Compile Include="Pipeline\FarseerBreakableBody.svg">
       <SubType>Designer</SubType>
-      <Name>farseerBreakableBody</Name>
+      <Name>FarseerBreakableBody</Name>
       <Importer>FarseerSVGImporter</Importer>
       <Processor>FarseerBodyProcessor</Processor>
       <ProcessorParameters_ScaleFactor>24</ProcessorParameters_ScaleFactor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DemoGFX\cookie.png">
-      <Name>cookie</Name>
+    <Compile Include="DemoGFX\Cookie.png">
+      <Name>Cookie</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
