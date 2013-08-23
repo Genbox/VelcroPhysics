@@ -104,7 +104,6 @@
     <Compile Include="Tests\CuttingTest.cs" />
     <Compile Include="Tests\DeletionTest.cs" />
     <Compile Include="Tests\DestructibleTerrainTest.cs" />
-    <Compile Include="Tests\DestructibleTerrainYuPengTest.cs" />
     <Compile Include="Tests\EdgeShapeBenchmarkTest.cs" />
     <Compile Include="Tests\ExplosionTest.cs" />
     <Compile Include="Tests\GravityControllerTest.cs" />
