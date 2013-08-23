@@ -9,7 +9,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class PhysicsDemoScreen : GameScreen
     {
-        private static DebugViewFlags _flags = DebugViewFlags.PerformanceGraph | DebugViewFlags.DebugPanel;
+        private static DebugViewFlags _flags = DebugViewFlags.DebugPanel;
         private static bool _flagsChanged;
 
         protected Camera2D Camera;
