@@ -82,7 +82,6 @@ namespace FarseerPhysics.TestBed.Tests
 #endif
             //FPE tests
             new TestEntry {Name = "YuPeng Polygon", CreateTest = YuPengPolygonTest.Create},
-            new TestEntry {Name = "YuPeng terrain", CreateTest = DestructibleTerrainYuPengTest.Create},
             new TestEntry {Name = "Path Test", CreateTest = PathTest.Create},
             new TestEntry {Name = "Cutting of polygons", CreateTest = CuttingTest.Create},
             new TestEntry {Name = "Gravity Controller Test", CreateTest = GravityControllerTest.Create},
