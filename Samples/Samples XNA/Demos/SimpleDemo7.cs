@@ -55,11 +55,10 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0f, 20f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
+            _ragdoll = new Ragdoll(World, ScreenManager, Vector2.Zero);
 
-            _ragdoll = new Ragdoll(World, this, Vector2.Zero);
             LoadObstacles();
-
             SetUserAgent(_ragdoll.Body, 1000f, 400f);
         }
 
@@ -77,9 +76,7 @@ namespace FarseerPhysics.Samples.Demos
             _obstacles[3].Position = new Vector2(7f, -5f);
 
             // create sprite based on body
-            _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape,
-                                                                         MaterialType.Dots,
-                                                                         Color.SandyBrown, 0.8f));
+            _obstacle = new Sprite(ScreenManager.Assets.TextureFromShape(_obstacles[0].FixtureList[0].Shape, MaterialType.Dots, Color.SandyBrown, 0.8f));
         }
 
         public override void Draw(GameTime gameTime)
@@ -87,10 +84,7 @@ namespace FarseerPhysics.Samples.Demos
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 4; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
-                                               null,
-                                               Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position), null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);
             }
             _ragdoll.Draw();
             ScreenManager.SpriteBatch.End();

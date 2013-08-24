@@ -14,10 +14,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
         private Sprite _box;
         private List<Body> _boxes;
-        private PhysicsGameScreen _screen;
+        private SpriteBatch _batch;
 
-        public Pyramid(World world, PhysicsGameScreen screen, Vector2 position, int count, float density)
+        public Pyramid(World world, ScreenManager screenManager, Vector2 position, int count, float density)
         {
+            _batch = screenManager.SpriteBatch;
+
             Vertices rect = PolygonTools.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(rect, density);
 
@@ -47,21 +49,17 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 rowStart += deltaRow;
             }
 
-            _screen = screen;
 
             //GFX
-            AssetCreator creator = _screen.ScreenManager.Assets;
+            AssetCreator creator = screenManager.Assets;
             _box = new Sprite(creator.TextureFromVertices(rect, MaterialType.Dots, Color.SaddleBrown, 2f));
         }
 
         public void Draw()
         {
-            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
-
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
-                            Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+                _batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null, Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
         }
     }

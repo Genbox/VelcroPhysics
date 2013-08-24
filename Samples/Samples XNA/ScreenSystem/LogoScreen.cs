@@ -32,9 +32,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public override void LoadContent()
         {
             if (_content == null)
-            {
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
-            }
 
             _farseerLogoTexture = _content.Load<Texture2D>("Common/logo");
 
@@ -57,12 +55,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.KeyboardState.GetPressedKeys().Length > 0 ||
-                input.GamePadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||
-                input.MouseState.LeftButton == ButtonState.Pressed)
-            {
+            if (input.KeyboardState.GetPressedKeys().Length > 0 || input.GamePadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) || input.MouseState.LeftButton == ButtonState.Pressed)
                 _duration = TimeSpan.Zero;
-            }
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
@@ -70,9 +64,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         {
             _duration -= gameTime.ElapsedGameTime;
             if (_duration <= TimeSpan.Zero)
-            {
                 ExitScreen();
-            }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }

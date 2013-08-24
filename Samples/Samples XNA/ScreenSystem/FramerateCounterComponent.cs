@@ -47,10 +47,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
             string fps = string.Format(_format, "{0} fps", _frameRate);
 
             _screenManager.SpriteBatch.Begin();
-            _screenManager.SpriteBatch.DrawString(_screenManager.Fonts.FrameRateCounterFont, fps,
-                                                  _position + Vector2.One, Color.Black);
-            _screenManager.SpriteBatch.DrawString(_screenManager.Fonts.FrameRateCounterFont, fps,
-                                                  _position, Color.White);
+            _screenManager.SpriteBatch.DrawString(_screenManager.Fonts.FrameRateCounterFont, fps, _position + Vector2.One, Color.Black);
+            _screenManager.SpriteBatch.DrawString(_screenManager.Fonts.FrameRateCounterFont, fps, _position, Color.White);
             _screenManager.SpriteBatch.End();
         }
     }

@@ -78,10 +78,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 // variable time step but never less then 30 Hz
                 World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
             }
-            else
-            {
-                World.Step(0f);
-            }
+
             Camera.Update(gameTime);
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -101,59 +98,39 @@ namespace FarseerPhysics.Samples.ScreenSystem
             }
 
             if (input.IsNewKeyPress(Keys.F1))
-            {
                 EnableOrDisableFlag(DebugViewFlags.Shape);
-            }
             if (input.IsNewKeyPress(Keys.F2))
             {
                 EnableOrDisableFlag(DebugViewFlags.DebugPanel);
                 EnableOrDisableFlag(DebugViewFlags.PerformanceGraph);
             }
             if (input.IsNewKeyPress(Keys.F3))
-            {
                 EnableOrDisableFlag(DebugViewFlags.Joint);
-            }
             if (input.IsNewKeyPress(Keys.F4))
             {
                 EnableOrDisableFlag(DebugViewFlags.ContactPoints);
                 EnableOrDisableFlag(DebugViewFlags.ContactNormals);
             }
             if (input.IsNewKeyPress(Keys.F5))
-            {
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
-            }
             if (input.IsNewKeyPress(Keys.F6))
-            {
                 EnableOrDisableFlag(DebugViewFlags.Controllers);
-            }
             if (input.IsNewKeyPress(Keys.F7))
-            {
                 EnableOrDisableFlag(DebugViewFlags.CenterOfMass);
-            }
             if (input.IsNewKeyPress(Keys.F8))
-            {
                 EnableOrDisableFlag(DebugViewFlags.AABB);
-            }
 
             if (input.IsNewButtonPress(Buttons.Back) || input.IsNewKeyPress(Keys.Escape))
-            {
                 ExitScreen();
-            }
 
             if (HasCursor)
-            {
                 HandleCursor(input);
-            }
 
             if (_userAgent != null)
-            {
                 HandleUserAgent(input);
-            }
 
             if (EnableCameraControl)
-            {
                 HandleCamera(input, gameTime);
-            }
 
             base.HandleInput(input, gameTime);
         }
@@ -162,9 +139,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         {
             Vector2 position = Camera.ConvertScreenToWorld(input.Cursor);
 
-            if ((input.IsNewButtonPress(Buttons.A) ||
-                 input.IsNewMouseButtonPress(MouseButtons.LeftButton)) &&
-                _fixedMouseJoint == null)
+            if ((input.IsNewButtonPress(Buttons.A) || input.IsNewMouseButtonPress(MouseButtons.LeftButton)) && _fixedMouseJoint == null)
             {
                 Fixture savedFixture = World.TestPoint(position);
                 if (savedFixture != null)
@@ -177,18 +152,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 }
             }
 
-            if ((input.IsNewButtonRelease(Buttons.A) ||
-                 input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) &&
-                _fixedMouseJoint != null)
+            if ((input.IsNewButtonRelease(Buttons.A) || input.IsNewMouseButtonRelease(MouseButtons.LeftButton)) && _fixedMouseJoint != null)
             {
                 World.RemoveJoint(_fixedMouseJoint);
                 _fixedMouseJoint = null;
             }
 
             if (_fixedMouseJoint != null)
-            {
                 _fixedMouseJoint.WorldAnchorB = position;
-            }
         }
 
         private void HandleCamera(InputHelper input, GameTime gameTime)
@@ -196,43 +167,26 @@ namespace FarseerPhysics.Samples.ScreenSystem
             Vector2 camMove = Vector2.Zero;
 
             if (input.KeyboardState.IsKeyDown(Keys.Up))
-            {
                 camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.Down))
-            {
                 camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.Left))
-            {
                 camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.Right))
-            {
                 camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.PageUp))
-            {
                 Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.PageDown))
-            {
                 Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
-            }
             if (camMove != Vector2.Zero)
-            {
                 Camera.MoveCamera(camMove);
-            }
             if (input.IsNewKeyPress(Keys.Home))
-            {
                 Camera.ResetCamera();
-            }
         }
 
         private void HandleUserAgent(InputHelper input)
         {
-            Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X,
-                                                      -input.GamePadState.ThumbSticks.Right.Y);
+            Vector2 force = _agentForce * new Vector2(input.GamePadState.ThumbSticks.Right.X, -input.GamePadState.ThumbSticks.Right.Y);
             float torque = _agentTorque * (input.GamePadState.Triggers.Right - input.GamePadState.Triggers.Left);
 
             _userAgent.ApplyForce(force);
@@ -244,29 +198,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
             torque = 0;
 
             if (input.KeyboardState.IsKeyDown(Keys.A))
-            {
                 force += new Vector2(-forceAmount, 0);
-            }
             if (input.KeyboardState.IsKeyDown(Keys.S))
-            {
                 force += new Vector2(0, forceAmount);
-            }
             if (input.KeyboardState.IsKeyDown(Keys.D))
-            {
                 force += new Vector2(forceAmount, 0);
-            }
             if (input.KeyboardState.IsKeyDown(Keys.W))
-            {
                 force += new Vector2(0, -forceAmount);
-            }
             if (input.KeyboardState.IsKeyDown(Keys.Q))
-            {
                 torque -= _agentTorque;
-            }
             if (input.KeyboardState.IsKeyDown(Keys.E))
-            {
                 torque += _agentTorque;
-            }
 
             _userAgent.ApplyForce(force);
             _userAgent.ApplyTorque(torque);
@@ -275,21 +217,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
         private void EnableOrDisableFlag(DebugViewFlags flag)
         {
             if ((DebugView.Flags & flag) == flag)
-            {
                 DebugView.RemoveFlags(flag);
-            }
             else
-            {
                 DebugView.AppendFlags(flag);
-            }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix projection = Camera.SimProjection;
-            Matrix view = Camera.SimView;
-
-            DebugView.RenderDebugData(ref projection, ref view);
+            DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
             base.Draw(gameTime);
         }
     }

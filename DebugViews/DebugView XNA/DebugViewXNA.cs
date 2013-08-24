@@ -724,6 +724,11 @@ namespace FarseerPhysics.DebugView
             _primitiveBatch.End();
         }
 
+        public void RenderDebugData(Matrix projection, Matrix view)
+        {
+            RenderDebugData(ref projection, ref view);
+        }
+
         public void RenderDebugData(ref Matrix projection, ref Matrix view)
         {
             if (!Enabled)

@@ -14,13 +14,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
     {
         private Vector2 _baseOrigin;
         private bool _flip;
-        private bool _hover;
-
-        /// <summary>
-        /// The position at which the entry is drawn. This is set by the MenuScreen
-        /// each frame in Update.
-        /// </summary>
-        private Vector2 _position;
 
         private float _scale;
         private GameScreen _screen;
@@ -44,7 +37,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             _scale = 1f;
             _sprite = sprite;
             _baseOrigin = new Vector2(_sprite.Width / 2f, _sprite.Height / 2f);
-            _hover = false;
+            Hover = false;
             _flip = flip;
             Position = position;
         }
@@ -52,22 +45,9 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// <summary>
         /// Gets or sets the position at which to draw this menu entry.
         /// </summary>
-        public Vector2 Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
+        public Vector2 Position { get; set; }
 
-        public bool Hover
-        {
-            get { return _hover; }
-            set { _hover = value; }
-        }
-
-        public GameScreen Screen
-        {
-            get { return _screen; }
-        }
+        public bool Hover { get; set; }
 
         /// <summary>
         /// Updates the menu entry.
@@ -75,32 +55,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public void Update(GameTime gameTime)
         {
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
-            if (_hover)
-            {
-                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1f);
-            }
-            else
-            {
-                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0f);
-            }
+            _selectionFade = Hover ? Math.Min(_selectionFade + fadeSpeed, 1f) : Math.Max(_selectionFade - fadeSpeed, 0f);
             _scale = 1f + 0.1f * _selectionFade;
         }
 
         public void Collide(Vector2 position)
         {
-            Rectangle collisonBox = new Rectangle((int)(Position.X - _sprite.Width / 2f),
-                                                  (int)(Position.Y - _sprite.Height / 2f),
-                                                  (_sprite.Width),
-                                                  (_sprite.Height));
+            Rectangle collisonBox = new Rectangle((int)(Position.X - _sprite.Width / 2f), (int)(Position.Y - _sprite.Height / 2f), (_sprite.Width), (_sprite.Height));
 
-            if (collisonBox.Contains((int)position.X, (int)position.Y))
-            {
-                _hover = true;
-            }
-            else
-            {
-                _hover = false;
-            }
+            Hover = collisonBox.Contains((int)position.X, (int)position.Y);
         }
 
         /// <summary>
@@ -111,8 +74,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
             Color color = Color.Lerp(Color.White, new Color(255, 210, 0), _selectionFade);
 
-            batch.Draw(_sprite, _position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero,
-                        _scale, _flip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+            batch.Draw(_sprite, Position - _baseOrigin * _scale, null, color, 0f, Vector2.Zero, _scale, _flip ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
         }
     }
 }

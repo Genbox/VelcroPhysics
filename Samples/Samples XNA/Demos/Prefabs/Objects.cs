@@ -23,12 +23,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private Category _collidesWith;
         private Category _collisionCategories;
         private Sprite _object;
-        private PhysicsGameScreen _screen;
+        private SpriteBatch _batch;
 
-        public Objects(World world, PhysicsGameScreen screen, Vector2 startPosition, Vector2 endPosition, int count,
-                       float radius, ObjectType type)
+        public Objects(World world, ScreenManager screenManager, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
         {
+            _batch = screenManager.SpriteBatch;
             _bodies = new List<Body>(count);
+
             CollidesWith = Category.All;
             CollisionCategories = Category.All;
 
@@ -62,27 +63,21 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 body.CollidesWith = CollidesWith;
             }
 
-            _screen = screen;
-
             //GFX
-            AssetCreator creator = _screen.ScreenManager.Assets;
+            AssetCreator creator = screenManager.Assets;
             switch (type)
             {
                 case ObjectType.Circle:
                     _object = new Sprite(creator.CircleTexture(radius, MaterialType.Dots, Color.DarkRed, 0.8f));
                     break;
                 case ObjectType.Rectangle:
-                    _object =
-                        new Sprite(creator.TextureFromVertices(PolygonTools.CreateRectangle(radius / 2f, radius / 2f),
-                                                                MaterialType.Dots, Color.Blue, 0.8f));
+                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateRectangle(radius / 2f, radius / 2f), MaterialType.Dots, Color.Blue, 0.8f));
                     break;
                 case ObjectType.Star:
-                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 0f, 1f),
-                                                                      MaterialType.Dots, Color.Yellow, 0.8f));
+                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 0f, 1f), MaterialType.Dots, Color.Yellow, 0.8f));
                     break;
                 case ObjectType.Gear:
-                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 100f, 1f),
-                                                                      MaterialType.Dots, Color.DarkGreen, 0.8f));
+                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 100f, 1f), MaterialType.Dots, Color.DarkGreen, 0.8f));
                     break;
             }
         }
@@ -117,12 +112,9 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         public void Draw()
         {
-            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
-
             for (int i = 0; i < _bodies.Count; ++i)
             {
-                batch.Draw(_object.Texture, ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
-                            Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
+                _batch.Draw(_object.Texture, ConvertUnits.ToDisplayUnits(_bodies[i].Position), null, Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
             }
         }
     }

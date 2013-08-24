@@ -45,7 +45,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
 #if WINDOWS || XBOX
             _spiderweb = new Spiderweb(World, HiddenBody, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);

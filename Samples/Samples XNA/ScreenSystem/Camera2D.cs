@@ -7,29 +7,29 @@ namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class Camera2D
     {
-        private const float MinZoom = 0.02f;
-        private const float MaxZoom = 20f;
         private static GraphicsDevice _graphics;
 
-        private Matrix _batchView;
+        private const float MinZoom = 0.02f;
+        private const float MaxZoom = 20f;
 
         private Vector2 _currentPosition;
-
         private float _currentRotation;
-
         private float _currentZoom;
         private Vector2 _maxPosition;
         private float _maxRotation;
         private Vector2 _minPosition;
         private float _minRotation;
         private bool _positionTracking;
-        private Matrix _projection;
         private bool _rotationTracking;
         private Vector2 _targetPosition;
         private float _targetRotation;
         private Body _trackingBody;
         private Vector2 _translateCenter;
-        private Matrix _view;
+
+        public Matrix SimProjection;
+        public Matrix SimView;
+        public Matrix View;
+
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -38,31 +38,13 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
-                                                             1f);
-            _view = Matrix.Identity;
-            _batchView = Matrix.Identity;
+            SimProjection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width), ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f, 1f);
+            SimView = Matrix.Identity;
+            View = Matrix.Identity;
 
-            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
-                                           ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
+            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f), ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
-        }
-
-        public Matrix View
-        {
-            get { return _batchView; }
-        }
-
-        public Matrix SimView
-        {
-            get { return _view; }
-        }
-
-        public Matrix SimProjection
-        {
-            get { return _projection; }
         }
 
         /// <summary>
@@ -272,18 +254,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
             Vector3 translateCenter = new Vector3(_translateCenter, 0f);
             Vector3 translateBody = new Vector3(-_currentPosition, 0f);
 
-            _view = Matrix.CreateTranslation(translateBody) *
-                    matRotation *
-                    matZoom *
-                    Matrix.CreateTranslation(translateCenter);
+            SimView = Matrix.CreateTranslation(translateBody) * matRotation * matZoom * Matrix.CreateTranslation(translateCenter);
 
             translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
             translateBody = ConvertUnits.ToDisplayUnits(translateBody);
 
-            _batchView = Matrix.CreateTranslation(translateBody) *
-                         matRotation *
-                         matZoom *
-                         Matrix.CreateTranslation(translateCenter);
+            View = Matrix.CreateTranslation(translateBody) * matRotation * matZoom * Matrix.CreateTranslation(translateCenter);
         }
 
         /// <summary>
@@ -319,7 +295,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             float inertia;
             if (distance < 10f)
             {
-                inertia = (float) Math.Pow(distance / 10.0, 2.0);
+                inertia = (float)Math.Pow(distance / 10.0, 2.0);
             }
             else
             {
@@ -331,7 +307,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             float rotInertia;
             if (Math.Abs(rotDelta) < 5f)
             {
-                rotInertia = (float) Math.Pow(rotDelta / 5.0, 2.0);
+                rotInertia = (float)Math.Pow(rotDelta / 5.0, 2.0);
             }
             else
             {
@@ -342,8 +318,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 rotDelta /= Math.Abs(rotDelta);
             }
 
-            _currentPosition += 100f * delta * inertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
-            _currentRotation += 80f * rotDelta * rotInertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _currentPosition += 100f * delta * inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentRotation += 80f * rotDelta * rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }
@@ -351,18 +327,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public Vector2 ConvertScreenToWorld(Vector2 location)
         {
             Vector3 t = new Vector3(location, 0);
-
-            t = _graphics.Viewport.Unproject(t, _projection, _view, Matrix.Identity);
-
+            t = _graphics.Viewport.Unproject(t, SimProjection, SimView, Matrix.Identity);
             return new Vector2(t.X, t.Y);
         }
 
         public Vector2 ConvertWorldToScreen(Vector2 location)
         {
             Vector3 t = new Vector3(location, 0);
-
-            t = _graphics.Viewport.Project(t, _projection, _view, Matrix.Identity);
-
+            t = _graphics.Viewport.Project(t, SimProjection, SimView, Matrix.Identity);
             return new Vector2(t.X, t.Y);
         }
     }

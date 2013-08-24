@@ -22,21 +22,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
     public class InputHelper
     {
         private readonly List<GestureSample> _gestures = new List<GestureSample>();
-        private GamePadState _currentGamePadState;
-        private KeyboardState _currentKeyboardState;
-        private MouseState _currentMouseState;
-        private GamePadState _currentVirtualState;
 
-        private GamePadState _lastGamePadState;
-        private KeyboardState _lastKeyboardState;
-        private MouseState _lastMouseState;
-        private GamePadState _lastVirtualState;
         private bool _handleVirtualStick;
 
-        private Vector2 _cursor;
-        private bool _cursorIsValid;
         private bool _cursorIsVisible;
-        private bool _cursorMoved;
         private Sprite _cursorSprite;
 
 #if WINDOWS_PHONE
@@ -53,73 +42,49 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public InputHelper(ScreenManager manager)
         {
-            _currentKeyboardState = new KeyboardState();
-            _currentGamePadState = new GamePadState();
-            _currentMouseState = new MouseState();
-            _currentVirtualState = new GamePadState();
+            KeyboardState = new KeyboardState();
+            GamePadState = new GamePadState();
+            MouseState = new MouseState();
+            VirtualState = new GamePadState();
 
-            _lastKeyboardState = new KeyboardState();
-            _lastGamePadState = new GamePadState();
-            _lastMouseState = new MouseState();
-            _lastVirtualState = new GamePadState();
+            PreviousKeyboardState = new KeyboardState();
+            PreviousGamePadState = new GamePadState();
+            PreviousMouseState = new MouseState();
+            PreviousVirtualState = new GamePadState();
 
             _manager = manager;
 
             _cursorIsVisible = false;
-            _cursorMoved = false;
+            IsCursorMoved = false;
 #if WINDOWS_PHONE
-            _cursorIsValid = false;
+            IsCursorValid = false;
 #else
-            _cursorIsValid = true;
+            IsCursorValid = true;
 #endif
-            _cursor = Vector2.Zero;
+            Cursor = Vector2.Zero;
 
             _handleVirtualStick = false;
         }
 
-        public GamePadState GamePadState
-        {
-            get { return _currentGamePadState; }
-        }
+        public GamePadState GamePadState { get; private set; }
 
-        public KeyboardState KeyboardState
-        {
-            get { return _currentKeyboardState; }
-        }
+        public KeyboardState KeyboardState { get; private set; }
 
-        public MouseState MouseState
-        {
-            get { return _currentMouseState; }
-        }
+        public MouseState MouseState { get; private set; }
 
-        public GamePadState VirtualState
-        {
-            get { return _currentVirtualState; }
-        }
+        public GamePadState VirtualState { get; private set; }
 
-        public GamePadState PreviousGamePadState
-        {
-            get { return _lastGamePadState; }
-        }
+        public GamePadState PreviousGamePadState { get; private set; }
 
-        public KeyboardState PreviousKeyboardState
-        {
-            get { return _lastKeyboardState; }
-        }
+        public KeyboardState PreviousKeyboardState { get; private set; }
 
-        public MouseState PreviousMouseState
-        {
-            get { return _lastMouseState; }
-        }
+        public MouseState PreviousMouseState { get; private set; }
 
-        public GamePadState PreviousVirtualState
-        {
-            get { return _lastVirtualState; }
-        }
+        public GamePadState PreviousVirtualState { get; private set; }
 
         public bool ShowCursor
         {
-            get { return _cursorIsVisible && _cursorIsValid; }
+            get { return _cursorIsVisible && IsCursorValid; }
             set { _cursorIsVisible = value; }
         }
 
@@ -129,20 +94,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
             set { _handleVirtualStick = value; }
         }
 
-        public Vector2 Cursor
-        {
-            get { return _cursor; }
-        }
+        public Vector2 Cursor { get; private set; }
 
-        public bool IsCursorMoved
-        {
-            get { return _cursorMoved; }
-        }
+        public bool IsCursorMoved { get; private set; }
 
-        public bool IsCursorValid
-        {
-            get { return _cursorIsValid; }
-        }
+        public bool IsCursorValid { get; private set; }
 
         public void LoadContent()
         {
@@ -164,33 +120,25 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            _lastKeyboardState = _currentKeyboardState;
-            _lastGamePadState = _currentGamePadState;
-            _lastMouseState = _currentMouseState;
-            if (_handleVirtualStick)
-            {
-                _lastVirtualState = _currentVirtualState;
-            }
+            PreviousKeyboardState = KeyboardState;
+            PreviousGamePadState = GamePadState;
+            PreviousMouseState = MouseState;
 
-            _currentKeyboardState = Keyboard.GetState();
-            _currentGamePadState = GamePad.GetState(PlayerIndex.One);
-            _currentMouseState = Mouse.GetState();
+            if (_handleVirtualStick)
+                PreviousVirtualState = VirtualState;
+
+            KeyboardState = Keyboard.GetState();
+            GamePadState = GamePad.GetState(PlayerIndex.One);
+            MouseState = Mouse.GetState();
 
             if (_handleVirtualStick)
             {
 #if XBOX
-            _currentVirtualState= GamePad.GetState(PlayerIndex.One);
+                VirtualState = GamePad.GetState(PlayerIndex.One);
 #elif WINDOWS
-                if (GamePad.GetState(PlayerIndex.One).IsConnected)
-                {
-                    _currentVirtualState = GamePad.GetState(PlayerIndex.One);
-                }
-                else
-                {
-                    _currentVirtualState = HandleVirtualStickWin();
-                }
+                VirtualState = GamePad.GetState(PlayerIndex.One).IsConnected ? GamePad.GetState(PlayerIndex.One) : HandleVirtualStickWin();
 #elif WINDOWS_PHONE
-                _currentVirtualState = HandleVirtualStickWP7();
+                VirtualState = HandleVirtualStickWP7();
 #endif
             }
 
@@ -201,57 +149,38 @@ namespace FarseerPhysics.Samples.ScreenSystem
             }
 
             // Update cursor
-            Vector2 oldCursor = _cursor;
-            if (_currentGamePadState.IsConnected && _currentGamePadState.ThumbSticks.Left != Vector2.Zero)
+            Vector2 oldCursor = Cursor;
+            if (GamePadState.IsConnected && GamePadState.ThumbSticks.Left != Vector2.Zero)
             {
-                Vector2 temp = _currentGamePadState.ThumbSticks.Left;
-                _cursor += temp * new Vector2(300f, -300f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                Mouse.SetPosition((int)_cursor.X, (int)_cursor.Y);
+                Vector2 temp = GamePadState.ThumbSticks.Left;
+                Cursor += temp * new Vector2(300f, -300f) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Mouse.SetPosition((int)Cursor.X, (int)Cursor.Y);
             }
             else
             {
-                _cursor.X = _currentMouseState.X;
-                _cursor.Y = _currentMouseState.Y;
+                Cursor = new Vector2(MouseState.X, MouseState.Y);
             }
-            _cursor.X = MathHelper.Clamp(_cursor.X, 0f, _viewport.Width);
-            _cursor.Y = MathHelper.Clamp(_cursor.Y, 0f, _viewport.Height);
 
-            if (_cursorIsValid && oldCursor != _cursor)
-            {
-                _cursorMoved = true;
-            }
+            Cursor = new Vector2(MathHelper.Clamp(Cursor.X, 0f, _viewport.Width), MathHelper.Clamp(Cursor.Y, 0f, _viewport.Height));
+
+            if (IsCursorValid && oldCursor != Cursor)
+                IsCursorMoved = true;
             else
-            {
-                _cursorMoved = false;
-            }
+                IsCursorMoved = false;
 
 #if WINDOWS
-            if (_viewport.Bounds.Contains(_currentMouseState.X, _currentMouseState.Y))
-            {
-                _cursorIsValid = true;
-            }
-            else
-            {
-                _cursorIsValid = false;
-            }
+            IsCursorValid = _viewport.Bounds.Contains(MouseState.X, MouseState.Y);
 #elif WINDOWS_PHONE
-            if (_currentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                _cursorIsValid = true;
-            }
-            else
-            {
-                _cursorIsValid = false;
-            }
+            IsCursorValid = MouseState.LeftButton == ButtonState.Pressed;
 #endif
         }
 
         public void Draw()
         {
-            if (_cursorIsVisible && _cursorIsValid)
+            if (_cursorIsVisible && IsCursorValid)
             {
                 _manager.SpriteBatch.Begin();
-                _manager.SpriteBatch.Draw(_cursorSprite.Texture, _cursor, null, Color.White, 0f, _cursorSprite.Origin, 1f, SpriteEffects.None, 0f);
+                _manager.SpriteBatch.Draw(_cursorSprite.Texture, Cursor, null, Color.White, 0f, _cursorSprite.Origin, 1f, SpriteEffects.None, 0f);
                 _manager.SpriteBatch.End();
             }
 #if WINDOWS_PHONE
@@ -268,45 +197,31 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         private GamePadState HandleVirtualStickWin()
         {
-            Vector2 _leftStick = Vector2.Zero;
-            List<Buttons> _buttons = new List<Buttons>();
+            Vector2 leftStick = Vector2.Zero;
+            List<Buttons> buttons = new List<Buttons>();
 
-            if (_currentKeyboardState.IsKeyDown(Keys.A))
-            {
-                _leftStick.X -= 1f;
-            }
-            if (_currentKeyboardState.IsKeyDown(Keys.S))
-            {
-                _leftStick.Y -= 1f;
-            }
-            if (_currentKeyboardState.IsKeyDown(Keys.D))
-            {
-                _leftStick.X += 1f;
-            }
-            if (_currentKeyboardState.IsKeyDown(Keys.W))
-            {
-                _leftStick.Y += 1f;
-            }
-            if (_currentKeyboardState.IsKeyDown(Keys.Space))
-            {
-                _buttons.Add(Buttons.A);
-            }
-            if (_currentKeyboardState.IsKeyDown(Keys.LeftControl))
-            {
-                _buttons.Add(Buttons.B);
-            }
-            if (_leftStick != Vector2.Zero)
-            {
-                _leftStick.Normalize();
-            }
+            if (KeyboardState.IsKeyDown(Keys.A))
+                leftStick.X -= 1f;
+            if (KeyboardState.IsKeyDown(Keys.S))
+                leftStick.Y -= 1f;
+            if (KeyboardState.IsKeyDown(Keys.D))
+                leftStick.X += 1f;
+            if (KeyboardState.IsKeyDown(Keys.W))
+                leftStick.Y += 1f;
+            if (KeyboardState.IsKeyDown(Keys.Space))
+                buttons.Add(Buttons.A);
+            if (KeyboardState.IsKeyDown(Keys.LeftControl))
+                buttons.Add(Buttons.B);
+            if (leftStick != Vector2.Zero)
+                leftStick.Normalize();
 
-            return new GamePadState(_leftStick, Vector2.Zero, 0f, 0f, _buttons.ToArray());
+            return new GamePadState(leftStick, Vector2.Zero, 0f, 0f, buttons.ToArray());
         }
 
         private GamePadState HandleVirtualStickWP7()
         {
-            List<Buttons> _buttons = new List<Buttons>();
-            Vector2 _stick = Vector2.Zero;
+            List<Buttons> buttons = new List<Buttons>();
+            Vector2 stick = Vector2.Zero;
 #if WINDOWS_PHONE
             _phoneA.Pressed = false;
             _phoneB.Pressed = false;
@@ -319,15 +234,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
             }
             if (_phoneA.Pressed)
             {
-                _buttons.Add(Buttons.A);
+                buttons.Add(Buttons.A);
             }
             if (_phoneB.Pressed)
             {
-                _buttons.Add(Buttons.B);
+                buttons.Add(Buttons.B);
             }
-            _stick = _phoneStick.StickPosition;
+            stick = _phoneStick.StickPosition;
 #endif
-            return new GamePadState(_stick, Vector2.Zero, 0f, 0f, _buttons.ToArray());
+            return new GamePadState(stick, Vector2.Zero, 0f, 0f, buttons.ToArray());
         }
 
         /// <summary>
@@ -335,14 +250,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public bool IsNewKeyPress(Keys key)
         {
-            return (_currentKeyboardState.IsKeyDown(key) &&
-                    _lastKeyboardState.IsKeyUp(key));
+            return (KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key));
         }
 
         public bool IsNewKeyRelease(Keys key)
         {
-            return (_lastKeyboardState.IsKeyDown(key) &&
-                    _currentKeyboardState.IsKeyUp(key));
+            return (PreviousKeyboardState.IsKeyDown(key) && KeyboardState.IsKeyUp(key));
         }
 
         /// <summary>
@@ -350,14 +263,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public bool IsNewButtonPress(Buttons button)
         {
-            return (_currentGamePadState.IsButtonDown(button) &&
-                    _lastGamePadState.IsButtonUp(button));
+            return (GamePadState.IsButtonDown(button) && PreviousGamePadState.IsButtonUp(button));
         }
 
         public bool IsNewButtonRelease(Buttons button)
         {
-            return (_lastGamePadState.IsButtonDown(button) &&
-                    _currentGamePadState.IsButtonUp(button));
+            return (PreviousGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button));
         }
 
         /// <summary>
@@ -368,20 +279,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
             switch (button)
             {
                 case MouseButtons.LeftButton:
-                    return (_currentMouseState.LeftButton == ButtonState.Pressed &&
-                            _lastMouseState.LeftButton == ButtonState.Released);
+                    return (MouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released);
                 case MouseButtons.RightButton:
-                    return (_currentMouseState.RightButton == ButtonState.Pressed &&
-                            _lastMouseState.RightButton == ButtonState.Released);
+                    return (MouseState.RightButton == ButtonState.Pressed && PreviousMouseState.RightButton == ButtonState.Released);
                 case MouseButtons.MiddleButton:
-                    return (_currentMouseState.MiddleButton == ButtonState.Pressed &&
-                            _lastMouseState.MiddleButton == ButtonState.Released);
+                    return (MouseState.MiddleButton == ButtonState.Pressed && PreviousMouseState.MiddleButton == ButtonState.Released);
                 case MouseButtons.ExtraButton1:
-                    return (_currentMouseState.XButton1 == ButtonState.Pressed &&
-                            _lastMouseState.XButton1 == ButtonState.Released);
+                    return (MouseState.XButton1 == ButtonState.Pressed && PreviousMouseState.XButton1 == ButtonState.Released);
                 case MouseButtons.ExtraButton2:
-                    return (_currentMouseState.XButton2 == ButtonState.Pressed &&
-                            _lastMouseState.XButton2 == ButtonState.Released);
+                    return (MouseState.XButton2 == ButtonState.Pressed && PreviousMouseState.XButton2 == ButtonState.Released);
                 default:
                     return false;
             }
@@ -397,20 +303,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
             switch (button)
             {
                 case MouseButtons.LeftButton:
-                    return (_lastMouseState.LeftButton == ButtonState.Pressed &&
-                            _currentMouseState.LeftButton == ButtonState.Released);
+                    return (PreviousMouseState.LeftButton == ButtonState.Pressed && MouseState.LeftButton == ButtonState.Released);
                 case MouseButtons.RightButton:
-                    return (_lastMouseState.RightButton == ButtonState.Pressed &&
-                            _currentMouseState.RightButton == ButtonState.Released);
+                    return (PreviousMouseState.RightButton == ButtonState.Pressed && MouseState.RightButton == ButtonState.Released);
                 case MouseButtons.MiddleButton:
-                    return (_lastMouseState.MiddleButton == ButtonState.Pressed &&
-                            _currentMouseState.MiddleButton == ButtonState.Released);
+                    return (PreviousMouseState.MiddleButton == ButtonState.Pressed && MouseState.MiddleButton == ButtonState.Released);
                 case MouseButtons.ExtraButton1:
-                    return (_lastMouseState.XButton1 == ButtonState.Pressed &&
-                            _currentMouseState.XButton1 == ButtonState.Released);
+                    return (PreviousMouseState.XButton1 == ButtonState.Pressed && MouseState.XButton1 == ButtonState.Released);
                 case MouseButtons.ExtraButton2:
-                    return (_lastMouseState.XButton2 == ButtonState.Pressed &&
-                            _currentMouseState.XButton2 == ButtonState.Released);
+                    return (PreviousMouseState.XButton2 == ButtonState.Pressed && MouseState.XButton2 == ButtonState.Released);
                 default:
                     return false;
             }
@@ -421,29 +322,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public bool IsMenuSelect()
         {
-            return IsNewKeyPress(Keys.Space) ||
-                   IsNewKeyPress(Keys.Enter) ||
-                   IsNewButtonPress(Buttons.A) ||
-                   IsNewButtonPress(Buttons.Start) ||
-                   IsNewMouseButtonPress(MouseButtons.LeftButton);
+            return IsNewKeyPress(Keys.Space) || IsNewKeyPress(Keys.Enter) || IsNewButtonPress(Buttons.A) || IsNewButtonPress(Buttons.Start) || IsNewMouseButtonPress(MouseButtons.LeftButton);
         }
 
         public bool IsMenuPressed()
         {
-            return _currentKeyboardState.IsKeyDown(Keys.Space) ||
-                   _currentKeyboardState.IsKeyDown(Keys.Enter) ||
-                   _currentGamePadState.IsButtonDown(Buttons.A) ||
-                   _currentGamePadState.IsButtonDown(Buttons.Start) ||
-                   _currentMouseState.LeftButton == ButtonState.Pressed;
+            return KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.Enter) || GamePadState.IsButtonDown(Buttons.A) || GamePadState.IsButtonDown(Buttons.Start) || MouseState.LeftButton == ButtonState.Pressed;
         }
 
         public bool IsMenuReleased()
         {
-            return IsNewKeyRelease(Keys.Space) ||
-                   IsNewKeyRelease(Keys.Enter) ||
-                   IsNewButtonRelease(Buttons.A) ||
-                   IsNewButtonRelease(Buttons.Start) ||
-                   IsNewMouseButtonRelease(MouseButtons.LeftButton);
+            return IsNewKeyRelease(Keys.Space) || IsNewKeyRelease(Keys.Enter) || IsNewButtonRelease(Buttons.A) || IsNewButtonRelease(Buttons.Start) || IsNewMouseButtonRelease(MouseButtons.LeftButton);
         }
 
         /// <summary>
@@ -451,8 +340,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public bool IsMenuCancel()
         {
-            return IsNewKeyPress(Keys.Escape) ||
-                   IsNewButtonPress(Buttons.Back);
+            return IsNewKeyPress(Keys.Escape) || IsNewButtonPress(Buttons.Back);
         }
     }
 }

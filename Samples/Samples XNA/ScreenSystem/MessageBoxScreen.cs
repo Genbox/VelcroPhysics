@@ -49,10 +49,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             const int hPad = 32;
             const int vPad = 16;
 
-            _backgroundRectangle = new Rectangle((int)_textPosition.X - hPad,
-                                                 (int)_textPosition.Y - vPad,
-                                                 (int)textSize.X + hPad * 2,
-                                                 (int)textSize.Y + vPad * 2);
+            _backgroundRectangle = new Rectangle((int)_textPosition.X - hPad, (int)_textPosition.Y - vPad, (int)textSize.X + hPad * 2, (int)textSize.Y + vPad * 2);
         }
 
         /// <summary>
@@ -60,11 +57,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsMenuSelect() || input.IsMenuCancel() ||
-                input.IsNewMouseButtonPress(MouseButtons.LeftButton))
-            {
+            if (input.IsMenuSelect() || input.IsMenuCancel() || input.IsNewMouseButtonPress(MouseButtons.LeftButton))
                 ExitScreen();
-            }
         }
 
         /// <summary>

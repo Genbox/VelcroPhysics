@@ -42,7 +42,7 @@ namespace FarseerPhysics.Samples.Demos
         #endregion
 
 #if XBOX || WINDOWS_PHONE
-    //Xbox360 / WP7 can't handle as many geometries
+        //Xbox360 / WP7 can't handle as many geometries
         private const int PyramidBaseBodyCount = 10;
 #else
         private const int PyramidBaseBodyCount = 14;
@@ -58,11 +58,9 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0f, 20f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
-
-            _agent = new Agent(World, this, new Vector2(5f, -10f));
-
-            _pyramid = new Pyramid(World, this, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
+            _border = new Border(World, ScreenManager, Camera);
+            _agent = new Agent(World, ScreenManager, new Vector2(5f, -10f));
+            _pyramid = new Pyramid(World, ScreenManager, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
 
             SetUserAgent(_agent.Body, 1000f, 400f);
         }

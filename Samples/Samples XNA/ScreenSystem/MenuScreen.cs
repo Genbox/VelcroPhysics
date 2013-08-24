@@ -82,10 +82,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
             _menuOffset = 0f;
             _maxOffset = Math.Max(0f, (_menuEntries.Count - NumEntries) * _menuBorderMargin);
 
-            _scrollUp = new MenuButton(_texScrollButton, false,
-                                       new Vector2(scrollBarPos, _menuBorderTop - _texScrollButton.Height), this);
-            _scrollDown = new MenuButton(_texScrollButton, true,
-                                         new Vector2(scrollBarPos, _menuBorderBottom + _texScrollButton.Height), this);
+            _scrollUp = new MenuButton(_texScrollButton, false, new Vector2(scrollBarPos, _menuBorderTop - _texScrollButton.Height), this);
+            _scrollDown = new MenuButton(_texScrollButton, true, new Vector2(scrollBarPos, _menuBorderBottom + _texScrollButton.Height), this);
             _scrollSlider = new MenuButton(_texSlider, false, new Vector2(scrollBarPos, _menuBorderTop), this);
 
             _scrollLock = false;
@@ -102,13 +100,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
             {
                 float width = entry.GetWidth();
                 float height = entry.GetHeight();
-                Rectangle rect = new Rectangle((int)(entry.Position.X - width / 2f),
-                                               (int)(entry.Position.Y - height / 2f),
-                                               (int)width, (int)height);
+                Rectangle rect = new Rectangle((int)(entry.Position.X - width / 2f), (int)(entry.Position.Y - height / 2f), (int)width, (int)height);
+
                 if (rect.Contains((int)position.X, (int)position.Y) && entry.Alpha > 0.1f)
-                {
                     return index;
-                }
+
                 ++index;
             }
             return -1;
@@ -123,13 +119,9 @@ namespace FarseerPhysics.Samples.ScreenSystem
             // Mouse or touch on a menu item
             int hoverIndex = GetMenuEntryAt(input.Cursor);
             if (hoverIndex > -1 && _menuEntries[hoverIndex].IsSelectable() && !_scrollLock)
-            {
                 _selectedEntry = hoverIndex;
-            }
             else
-            {
                 _selectedEntry = -1;
-            }
 
             _scrollSlider.Hover = false;
             if (input.IsCursorValid)
@@ -149,23 +141,17 @@ namespace FarseerPhysics.Samples.ScreenSystem
             if (input.IsMenuSelect() && _selectedEntry != -1)
             {
                 if (_menuEntries[_selectedEntry].IsExitItem())
-                {
                     ScreenManager.Game.Exit();
-                }
                 else if (_menuEntries[_selectedEntry].Screen != null)
                 {
                     ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
+
                     if (_menuEntries[_selectedEntry].Screen is IDemoScreen)
-                    {
-                        ScreenManager.AddScreen(
-                            new MessageBoxScreen((_menuEntries[_selectedEntry].Screen as IDemoScreen).GetDetails()));
-                    }
+                        ScreenManager.AddScreen(new MessageBoxScreen((_menuEntries[_selectedEntry].Screen as IDemoScreen).GetDetails()));
                 }
             }
             else if (input.IsMenuCancel())
-            {
                 ScreenManager.Game.Exit();
-            }
 
             if (input.IsMenuPressed())
             {
@@ -184,10 +170,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     _scrollLock = true;
                 }
             }
+
             if (input.IsMenuReleased())
-            {
                 _scrollLock = false;
-            }
+
             if (_scrollLock)
             {
                 _scrollSlider.Hover = true;
@@ -214,32 +200,19 @@ namespace FarseerPhysics.Samples.ScreenSystem
             {
                 position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2f;
                 if (ScreenState == ScreenState.TransitionOn)
-                {
                     position.X -= transitionOffset * 256;
-                }
                 else
-                {
                     position.X += transitionOffset * 256;
-                }
 
                 // set the entry's position
                 _menuEntries[i].Position = position;
 
                 if (position.Y < _menuBorderTop)
-                {
-                    _menuEntries[i].Alpha = 1f -
-                                            Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
-                }
+                    _menuEntries[i].Alpha = 1f - Math.Min(_menuBorderTop - position.Y, _menuBorderMargin) / _menuBorderMargin;
                 else if (position.Y > _menuBorderBottom)
-                {
-                    _menuEntries[i].Alpha = 1f -
-                                            Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) /
-                                            _menuBorderMargin;
-                }
+                    _menuEntries[i].Alpha = 1f - Math.Min(position.Y - _menuBorderBottom, _menuBorderMargin) / _menuBorderMargin;
                 else
-                {
                     _menuEntries[i].Alpha = 1f;
-                }
 
                 // move down for the next entry the size of this entry
                 position.Y += _menuEntries[i].GetHeight();
@@ -252,8 +225,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// <summary>
         /// Updates the menu.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                    bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -284,7 +256,6 @@ namespace FarseerPhysics.Samples.ScreenSystem
             // Draw each menu entry in turn.
             for (int i = 0; i < _menuEntries.Count; ++i)
             {
-                bool isSelected = IsActive && (i == _selectedEntry);
                 _menuEntries[i].Draw();
             }
 
@@ -293,10 +264,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
             // the movement slow down as it nears the end).
             Vector2 transitionOffset = new Vector2(0f, (float)Math.Pow(TransitionPosition, 2) * 100f);
 
-            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset + Vector2.One * 2f, Color.Black, 0,
-                                   _titleOrigin, 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset, new Color(255, 210, 0), 0,
-                                   _titleOrigin, 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset + Vector2.One * 2f, Color.Black, 0, _titleOrigin, 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, _menuTitle, _titlePosition - transitionOffset, new Color(255, 210, 0), 0, _titleOrigin, 1f, SpriteEffects.None, 0);
             _scrollUp.Draw();
             _scrollSlider.Draw();
             _scrollDown.Draw();

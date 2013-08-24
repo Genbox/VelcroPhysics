@@ -56,7 +56,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             Texture2D alphabet = ScreenManager.Content.Load<Texture2D>("Samples/alphabet");
 

@@ -40,10 +40,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
             logoSize.X = logoSize.Y * LogoWidthHeightRatio;
 
             float border = viewport.Height * LogoScreenBorderRatio;
-            Vector2 logoPosition = new Vector2(viewport.Width - border - logoSize.X,
-                                               viewport.Height - border - logoSize.Y);
-            _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X,
-                                             (int)logoSize.Y);
+            Vector2 logoPosition = new Vector2(viewport.Width - border - logoSize.X, viewport.Height - border - logoSize.Y);
+            _logoDestination = new Rectangle((int)logoPosition.X, (int)logoPosition.Y, (int)logoSize.X, (int)logoSize.Y);
             _viewport = viewport.Bounds;
         }
 
@@ -54,8 +52,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// coveredByOtherScreen parameter to false in order to stop the base
         /// Update method wanting to transition off.
         /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                    bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
         }
