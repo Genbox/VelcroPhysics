@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 

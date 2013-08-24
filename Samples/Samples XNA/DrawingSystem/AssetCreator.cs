@@ -51,7 +51,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
             }
             // calculate body offset from its center and add a 1 pixel border
             // because we generate the textures a little bigger than the actual body's fixtures
-            return SamplesFramework.ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1f);
+            return ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1f);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -82,7 +82,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
             Vertices verts = new Vertices(vertices);
 
             // scale to display units (i.e. pixels) for rendering to texture
-            Vector2 scale = SamplesFramework.ConvertUnits.ToDisplayUnits(Vector2.One);
+            Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
             verts.Scale(ref scale);
 
             // translate the boundingbox center to the texture center
@@ -150,8 +150,8 @@ namespace FarseerPhysics.Samples.DrawingSystem
             const float segmentSize = MathHelper.TwoPi / CircleSegments;
             float theta = segmentSize;
 
-            radiusX = SamplesFramework.ConvertUnits.ToDisplayUnits(radiusX);
-            radiusY = SamplesFramework.ConvertUnits.ToDisplayUnits(radiusY);
+            radiusX = ConvertUnits.ToDisplayUnits(radiusX);
+            radiusY = ConvertUnits.ToDisplayUnits(radiusY);
             materialScale /= _materials[type].Width;
 
             Vector2 start = new Vector2(radiusX, 0f);

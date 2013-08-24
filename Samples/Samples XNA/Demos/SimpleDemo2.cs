@@ -6,7 +6,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.DrawingSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -82,7 +81,7 @@ namespace FarseerPhysics.Samples.Demos
             // create sprite based on rectangle fixture
             _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromVertices(rect1, MaterialType.Squares,
                                                                                    Color.Orange, 1f));
-            _offset = new Vector2(SamplesFramework.ConvertUnits.ToDisplayUnits(2f), 0f);
+            _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 
         public override void Draw(GameTime gameTime)
@@ -90,12 +89,12 @@ namespace FarseerPhysics.Samples.Demos
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           SamplesFramework.ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
             // draw second rectangle
             ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           SamplesFramework.ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
+                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
                                            Color.White, _rectangles.Rotation,
                                            _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();

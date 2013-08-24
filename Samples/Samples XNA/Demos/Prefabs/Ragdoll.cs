@@ -240,30 +240,30 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public void Draw()
         {
             SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
-            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
                         Color.White, _lowerLeftLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
                         Color.White, _lowerRightLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
                         Color.White, _upperLeftLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
                         Color.White, _upperRightLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_lowerArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
                         Color.White, _lowerLeftArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
+            batch.Draw(_lowerArm.Texture, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
                         Color.White, _lowerRightArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
                         Color.White, _upperLeftArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
+            batch.Draw(_upperArm.Texture, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
                         Color.White, _upperRightArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_body.Position), null,
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_body.Position), null,
                         Color.White, _body.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_face.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_head.Position), null,
+            batch.Draw(_face.Texture, ConvertUnits.ToDisplayUnits(_head.Position), null,
                         Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }
     }

@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.ScreenSystem
 {
     /// <summary>
     /// Displays the FPS

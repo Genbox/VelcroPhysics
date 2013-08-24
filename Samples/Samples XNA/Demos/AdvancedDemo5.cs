@@ -7,7 +7,6 @@ using FarseerPhysics.Common.PolygonManipulation;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -92,7 +91,7 @@ namespace FarseerPhysics.Samples.Demos
 #else
                 const float scale = 1f;
 #endif
-                Vector2 vertScale = new Vector2(SamplesFramework.ConvertUnits.ToSimUnits(1)) * scale;
+                Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * scale;
                 foreach (Vertices vertices in triangulated)
                 {
                     vertices.Scale(ref vertScale);

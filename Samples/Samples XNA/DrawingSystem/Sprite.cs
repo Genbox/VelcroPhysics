@@ -10,8 +10,8 @@ namespace FarseerPhysics.Samples.DrawingSystem
 
         public Sprite(Texture2D texture, Vector2 origin)
         {
-            this.Texture = texture;
-            this.Origin = origin;
+            Texture = texture;
+            Origin = origin;
         }
 
         public Sprite(Texture2D sprite)

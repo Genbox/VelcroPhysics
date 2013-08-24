@@ -7,8 +7,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class Camera2D
     {
-        private const float _minZoom = 0.02f;
-        private const float _maxZoom = 20f;
+        private const float MinZoom = 0.02f;
+        private const float MaxZoom = 20f;
         private static GraphicsDevice _graphics;
 
         private Matrix _batchView;
@@ -38,14 +38,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _projection = Matrix.CreateOrthographicOffCenter(0f, SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                             SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
+            _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
+                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
                                                              1f);
             _view = Matrix.Identity;
             _batchView = Matrix.Identity;
 
-            _translateCenter = new Vector2(SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
-                                           SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
+            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
+                                           ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
         }
@@ -70,10 +70,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 Position
         {
-            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_currentPosition); }
+            get { return ConvertUnits.ToDisplayUnits(_currentPosition); }
             set
             {
-                _targetPosition = SamplesFramework.ConvertUnits.ToSimUnits(value);
+                _targetPosition = ConvertUnits.ToSimUnits(value);
                 if (_minPosition != _maxPosition)
                 {
                     Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
@@ -88,8 +88,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 MinPosition
         {
-            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_minPosition); }
-            set { _minPosition = SamplesFramework.ConvertUnits.ToSimUnits(value); }
+            get { return ConvertUnits.ToDisplayUnits(_minPosition); }
+            set { _minPosition = ConvertUnits.ToSimUnits(value); }
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 MaxPosition
         {
-            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_maxPosition); }
-            set { _maxPosition = SamplesFramework.ConvertUnits.ToSimUnits(value); }
+            get { return ConvertUnits.ToDisplayUnits(_maxPosition); }
+            set { _maxPosition = ConvertUnits.ToSimUnits(value); }
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             set
             {
                 _currentZoom = value;
-                _currentZoom = MathHelper.Clamp(_currentZoom, _minZoom, _maxZoom);
+                _currentZoom = MathHelper.Clamp(_currentZoom, MinZoom, MaxZoom);
             }
         }
 
@@ -277,8 +277,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     matZoom *
                     Matrix.CreateTranslation(translateCenter);
 
-            translateCenter = SamplesFramework.ConvertUnits.ToDisplayUnits(translateCenter);
-            translateBody = SamplesFramework.ConvertUnits.ToDisplayUnits(translateBody);
+            translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
+            translateBody = ConvertUnits.ToDisplayUnits(translateBody);
 
             _batchView = Matrix.CreateTranslation(translateBody) *
                          matRotation *

@@ -108,7 +108,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _link = new Sprite(content.Load<Texture2D>("Samples/link"));
             _goo = new Sprite(content.Load<Texture2D>("Samples/goo"));
 
-            _spriteScale = 2f * SamplesFramework.ConvertUnits.ToDisplayUnits(_radius) / _goo.Texture.Width;
+            _spriteScale = 2f * ConvertUnits.ToDisplayUnits(_radius) / _goo.Texture.Width;
         }
 
         public void Draw(SpriteBatch batch)
@@ -117,9 +117,9 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             {
                 if (j.Enabled && j.JointType != JointType.FixedMouse)
                 {
-                    Vector2 pos = SamplesFramework.ConvertUnits.ToDisplayUnits((j.WorldAnchorA + j.WorldAnchorB) / 2f);
+                    Vector2 pos = ConvertUnits.ToDisplayUnits((j.WorldAnchorA + j.WorldAnchorB) / 2f);
                     Vector2 AtoB = j.WorldAnchorB - j.WorldAnchorA;
-                    float distance = SamplesFramework.ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * _spriteScale;
+                    float distance = ConvertUnits.ToDisplayUnits(AtoB.Length()) + 8f * _spriteScale;
                     Vector2 scale = new Vector2(distance / _link.Texture.Width, _spriteScale);
                     Vector2 unitx = Vector2.UnitX;
                     float angle = (float)MathUtils.VectorAngle(ref unitx, ref AtoB);
@@ -131,7 +131,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             {
                 if (b.Enabled && b.FixtureList[0].Shape.ShapeType == ShapeType.Circle)
                 {
-                    batch.Draw(_goo.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, 0f, _goo.Origin, _spriteScale, SpriteEffects.None, 0f);
+                    batch.Draw(_goo.Texture, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, 0f, _goo.Origin, _spriteScale, SpriteEffects.None, 0f);
                 }
             }
         }

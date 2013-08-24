@@ -8,8 +8,8 @@
     <ProjectGuid>{2ACA1733-86AF-404D-B8DB-333990D68DCE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameName1</RootNamespace>
-    <AssemblyName>GameName1</AssemblyName>
+    <RootNamespace>FarseerPhysics.Samples</RootNamespace>
+    <AssemblyName>Samples MonoGame</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -71,7 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenSystem\BackgroundScreen.cs" />
     <Compile Include="ScreenSystem\Camera2D.cs" />
-    <Compile Include="ScreenSystem\ConvertUnits.cs" />
     <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\IDemoScreen.cs" />

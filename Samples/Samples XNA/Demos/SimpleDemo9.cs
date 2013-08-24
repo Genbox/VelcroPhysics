@@ -5,7 +5,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.DrawingSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -85,7 +84,7 @@ namespace FarseerPhysics.Samples.Demos
             for (int i = 0; i < 5; ++i)
             {
                 ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                               SamplesFramework.ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
+                                               ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
                                                Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f,
                                                SpriteEffects.None, 0f);
             }

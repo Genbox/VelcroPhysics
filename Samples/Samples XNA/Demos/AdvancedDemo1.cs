@@ -7,7 +7,6 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -94,7 +93,7 @@ namespace FarseerPhysics.Samples.Demos
 #endif
 
             //scale the vertices from graphics space to sim space
-            Vector2 vertScale = new Vector2(SamplesFramework.ConvertUnits.ToSimUnits(1)) * _scale;
+            Vector2 vertScale = new Vector2(ConvertUnits.ToSimUnits(1)) * _scale;
             foreach (Vertices vertices in list)
             {
                 vertices.Scale(ref vertScale);
@@ -108,7 +107,7 @@ namespace FarseerPhysics.Samples.Demos
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-            ScreenManager.SpriteBatch.Draw(_polygonTexture, SamplesFramework.ConvertUnits.ToDisplayUnits(_compound.Position),
+            ScreenManager.SpriteBatch.Draw(_polygonTexture, ConvertUnits.ToDisplayUnits(_compound.Position),
                                            null, Color.Tomato, _compound.Rotation, _origin, _scale, SpriteEffects.None,
                                            0f);
             ScreenManager.SpriteBatch.End();

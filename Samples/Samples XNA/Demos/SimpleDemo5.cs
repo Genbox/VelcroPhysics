@@ -2,7 +2,6 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Samples.Demos
