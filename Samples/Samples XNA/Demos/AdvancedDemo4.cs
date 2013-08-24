@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.Samples.Demos
@@ -49,7 +48,7 @@ namespace FarseerPhysics.Samples.Demos
             _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
 
 #if WINDOWS || XBOX
-            _spiderweb = new Spiderweb(World, HiddenBody, Vector2.Zero, SamplesFramework.ConvertUnits.ToSimUnits(12), 5, 12);
+            _spiderweb = new Spiderweb(World, HiddenBody, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
 #elif WINDOWS_PHONE
             _spiderweb = new Spiderweb(World, HiddenBody, Vector2.Zero, ConvertUnits.ToSimUnits(8), 5, 12);
 #endif

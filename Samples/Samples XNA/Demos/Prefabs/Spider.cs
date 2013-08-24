@@ -126,17 +126,17 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         {
             SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
 
-            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_leftLower.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLower.Position), null,
                         Color.White, _leftLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_rightLower.Position), null,
+            batch.Draw(_lowerLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLower.Position), null,
                         Color.White, _rightLower.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_leftUpper.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_leftUpper.Position), null,
                         Color.White, _leftUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_rightUpper.Position), null,
+            batch.Draw(_upperLeg.Texture, ConvertUnits.ToDisplayUnits(_rightUpper.Position), null,
                         Color.White, _rightUpper.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_circle.Position), null,
+            batch.Draw(_torso.Texture, ConvertUnits.ToDisplayUnits(_circle.Position), null,
                         Color.White, _circle.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
         }
     }

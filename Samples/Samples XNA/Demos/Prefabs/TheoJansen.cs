@@ -276,7 +276,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             SpriteBatch _spriteBatch = _screen.ScreenManager.SpriteBatch;
 
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
-            _spriteBatch.Draw(_body.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_chassis.Position), null,
+            _spriteBatch.Draw(_body.Texture, ConvertUnits.ToDisplayUnits(_chassis.Position), null,
                               Color.White, _chassis.Rotation, _body.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
 
@@ -290,18 +290,18 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _spriteBatch.Begin(0, null, null, null, null, null, _screen.Camera.View);
             for (int i = 0; i < 3; ++i)
             {
-                _spriteBatch.Draw(_leftLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
+                _spriteBatch.Draw(_leftLeg.Texture, ConvertUnits.ToDisplayUnits(_leftLegs[i].Position), null,
                                   Color.White, _leftLegs[i].Rotation, _leftLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_leftShoulder.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
+                _spriteBatch.Draw(_leftShoulder.Texture, ConvertUnits.ToDisplayUnits(_leftShoulders[i].Position), null,
                                   Color.White, _leftShoulders[i].Rotation, _leftShoulder.Origin, 1f, SpriteEffects.None,
                                   0f);
-                _spriteBatch.Draw(_rightLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
+                _spriteBatch.Draw(_rightLeg.Texture, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null,
                                   Color.White, _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
-                _spriteBatch.Draw(_rightShoulder.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
+                _spriteBatch.Draw(_rightShoulder.Texture, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null,
                                   Color.White, _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f,
                                   SpriteEffects.None, 0f);
             }
-            _spriteBatch.Draw(_engine.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_wheel.Position), null,
+            _spriteBatch.Draw(_engine.Texture, ConvertUnits.ToDisplayUnits(_wheel.Position), null,
                               Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
             _spriteBatch.End();
         }

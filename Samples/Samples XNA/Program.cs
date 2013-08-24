@@ -1,4 +1,4 @@
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples
 {
     internal static class Program
     {

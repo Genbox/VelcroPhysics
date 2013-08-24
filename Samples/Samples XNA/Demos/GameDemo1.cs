@@ -8,7 +8,6 @@ using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.DrawingSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -293,21 +292,21 @@ namespace FarseerPhysics.Samples.Demos
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw car
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
                                            Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
                                            0f);
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
                                            Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
                                            0f);
-            ScreenManager.SpriteBatch.Draw(_carBody.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_car.Position), null,
+            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.Position), null,
                                            Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
             // draw teeter
-            ScreenManager.SpriteBatch.Draw(_teeter.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_board.Position), null,
+            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.Position), null,
                                            Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_bridge.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
+                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
                                                null,
                                                Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f,
                                                SpriteEffects.None, 0f);
@@ -315,7 +314,7 @@ namespace FarseerPhysics.Samples.Demos
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_box.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
                                                Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();

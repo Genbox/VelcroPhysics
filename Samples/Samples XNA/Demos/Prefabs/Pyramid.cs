@@ -60,7 +60,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                batch.Draw(_box.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                batch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
                             Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
         }

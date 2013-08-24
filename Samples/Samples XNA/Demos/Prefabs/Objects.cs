@@ -121,7 +121,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             for (int i = 0; i < _bodies.Count; ++i)
             {
-                batch.Draw(_object.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
+                batch.Draw(_object.Texture, ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
                             Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
             }
         }

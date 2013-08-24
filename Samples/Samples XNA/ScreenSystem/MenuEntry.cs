@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.ScreenSystem
 {
     public enum EntryType
     {

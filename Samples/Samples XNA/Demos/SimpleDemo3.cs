@@ -4,7 +4,6 @@ using FarseerPhysics.Factories;
 using FarseerPhysics.Samples.Demos.Prefabs;
 using FarseerPhysics.Samples.DrawingSystem;
 using FarseerPhysics.Samples.ScreenSystem;
-using FarseerPhysics.SamplesFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -94,7 +93,7 @@ namespace FarseerPhysics.Samples.Demos
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 5; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
+                ScreenManager.SpriteBatch.Draw(_obstacle.Texture, ConvertUnits.ToDisplayUnits(_obstacles[i].Position),
                                                null,
                                                Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f,
                                                SpriteEffects.None, 0f);

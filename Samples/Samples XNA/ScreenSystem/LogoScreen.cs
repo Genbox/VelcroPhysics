@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.SamplesFramework
+namespace FarseerPhysics.Samples.ScreenSystem
 {
     public class LogoScreen : GameScreen
     {

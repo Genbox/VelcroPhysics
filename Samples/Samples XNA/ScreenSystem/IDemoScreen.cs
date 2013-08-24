@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.SamplesFramework
+﻿namespace FarseerPhysics.Samples.ScreenSystem
 {
     public interface IDemoScreen
     {

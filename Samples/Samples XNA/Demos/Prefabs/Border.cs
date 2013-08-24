@@ -21,8 +21,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _world = world;
             _screen = screen;
 
-            float halfWidth = SamplesFramework.ConvertUnits.ToSimUnits(viewport.Width) / 2f - 0.75f;
-            float halfHeight = SamplesFramework.ConvertUnits.ToSimUnits(viewport.Height) / 2f - 0.75f;
+            float halfWidth = ConvertUnits.ToSimUnits(viewport.Width) / 2f - 0.75f;
+            float halfHeight = ConvertUnits.ToSimUnits(viewport.Height) / 2f - 0.75f;
 
             Vertices borders = new Vertices(4);
             borders.Add(new Vector2(-halfWidth, halfHeight));
