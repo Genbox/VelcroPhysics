@@ -59,10 +59,10 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             //Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
-            _agent = new Agent(World, this, Vector2.Zero);
+            _agent = new Agent(World, ScreenManager, Vector2.Zero);
 
             //Collide with all but stars
             _agent.CollisionCategories = Category.All & ~Category.Cat4;
@@ -70,7 +70,7 @@ namespace FarseerPhysics.Samples.Demos
 
             Vector2 startPosition = new Vector2(-20f, -11f);
             Vector2 endPosition = new Vector2(20, -11f);
-            _circles = new Objects(World, this, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
+            _circles = new Objects(World, ScreenManager, startPosition, endPosition, 15, 0.6f, ObjectType.Circle);
 
             //Collide with itself only
             _circles.CollisionCategories = Category.Cat1;
@@ -78,7 +78,7 @@ namespace FarseerPhysics.Samples.Demos
 
             startPosition = new Vector2(-20, 11f);
             endPosition = new Vector2(20, 11f);
-            _rectangles = new Objects(World, this, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
+            _rectangles = new Objects(World, ScreenManager, startPosition, endPosition, 15, 1.2f, ObjectType.Rectangle);
 
             //Collides with itself only
             _rectangles.CollisionCategories = Category.Cat2;
@@ -86,7 +86,7 @@ namespace FarseerPhysics.Samples.Demos
 
             startPosition = new Vector2(-20, 7);
             endPosition = new Vector2(-20, -7);
-            _gears = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
+            _gears = new Objects(World, ScreenManager, startPosition, endPosition, 5, 0.6f, ObjectType.Gear);
 
             //Collides with stars
             _gears.CollisionCategories = Category.Cat3;
@@ -94,7 +94,7 @@ namespace FarseerPhysics.Samples.Demos
 
             startPosition = new Vector2(20, 7);
             endPosition = new Vector2(20, -7);
-            _stars = new Objects(World, this, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
+            _stars = new Objects(World, ScreenManager, startPosition, endPosition, 5, 0.6f, ObjectType.Star);
 
             //Collides with gears
             _stars.CollisionCategories = Category.Cat4;

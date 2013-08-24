@@ -108,15 +108,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
         /// </summary>
-        public bool IsActive
-        {
-            get
-            {
-                return !_otherScreenHasFocus &&
-                       (ScreenState == ScreenState.TransitionOn ||
-                        ScreenState == ScreenState.Active);
-            }
-        }
+        public bool IsActive { get { return !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active); } }
 
         /// <summary>
         /// Gets the manager that this screen belongs to.
@@ -141,9 +133,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 // if this screen is active and the gesture types are changing,
                 // we have to update the TouchPanel ourself.
                 if (ScreenState == ScreenState.Active)
-                {
                     TouchPanel.EnabledGestures = value;
-                }
             }
         }
 
@@ -166,8 +156,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
-        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                   bool coveredByOtherScreen)
+        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             _otherScreenHasFocus = otherScreenHasFocus;
 
@@ -176,39 +165,19 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 // If the screen is going away to die, it should transition off.
                 ScreenState = ScreenState.TransitionOff;
 
+                // When the transition finishes, remove the screen.
                 if (!UpdateTransition(gameTime, TransitionOffTime, 1))
-                {
-                    // When the transition finishes, remove the screen.
                     ScreenManager.RemoveScreen(this);
-                }
             }
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                if (UpdateTransition(gameTime, TransitionOffTime, 1))
-                {
-                    // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOff;
-                }
-                else
-                {
-                    // Transition finished!
-                    ScreenState = ScreenState.Hidden;
-                }
+                ScreenState = UpdateTransition(gameTime, TransitionOffTime, 1) ? ScreenState.TransitionOff : ScreenState.Hidden;
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                if (UpdateTransition(gameTime, TransitionOnTime, -1))
-                {
-                    // Still busy transitioning.
-                    ScreenState = ScreenState.TransitionOn;
-                }
-                else
-                {
-                    // Transition finished!
-                    ScreenState = ScreenState.Active;
-                }
+                ScreenState = UpdateTransition(gameTime, TransitionOnTime, -1) ? ScreenState.TransitionOn : ScreenState.Active;
             }
         }
 
@@ -221,21 +190,15 @@ namespace FarseerPhysics.Samples.ScreenSystem
             float transitionDelta;
 
             if (time == TimeSpan.Zero)
-            {
                 transitionDelta = 1f;
-            }
             else
-            {
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
-                                           time.TotalMilliseconds);
-            }
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / time.TotalMilliseconds);
 
             // Update the transition position.
             TransitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (TransitionPosition <= 0)) ||
-                ((direction > 0) && (TransitionPosition >= 1)))
+            if (((direction < 0) && (TransitionPosition <= 0)) || ((direction > 0) && (TransitionPosition >= 1)))
             {
                 TransitionPosition = MathHelper.Clamp(TransitionPosition, 0, 1);
                 return false;

@@ -56,7 +56,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
             _rectangle.BodyType = BodyType.Dynamic;
@@ -64,18 +64,13 @@ namespace FarseerPhysics.Samples.Demos
             SetUserAgent(_rectangle, 100f, 100f);
 
             // create sprite based on body
-            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape,
-                                                                                MaterialType.Squares,
-                                                                                Color.Orange, 1f));
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle.FixtureList[0].Shape, MaterialType.Squares, Color.Orange, 1f));
         }
 
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle.Position),
-                                           null,
-                                           Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f,
-                                           SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);

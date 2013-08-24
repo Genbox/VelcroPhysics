@@ -57,9 +57,9 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0f, 20f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
-            _agent = new Agent(World, this, new Vector2(-6.9f, -11f));
+            _agent = new Agent(World, ScreenManager, new Vector2(-6.9f, -11f));
 
             LoadObstacles();
 

@@ -59,7 +59,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             Vertices rect1 = PolygonTools.CreateRectangle(2f, 2f);
             Vertices rect2 = PolygonTools.CreateRectangle(2f, 2f);
@@ -88,15 +88,10 @@ namespace FarseerPhysics.Samples.Demos
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw first rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
-                                           Color.White, _rectangles.Rotation,
-                                           _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
+
             // draw second rectangle
-            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                           ConvertUnits.ToDisplayUnits(_rectangles.Position), null,
-                                           Color.White, _rectangles.Rotation,
-                                           _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             ScreenManager.SpriteBatch.End();
             _border.Draw();
             base.Draw(gameTime);

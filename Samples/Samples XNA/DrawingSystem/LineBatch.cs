@@ -24,17 +24,11 @@ namespace FarseerPhysics.Samples.DrawingSystem
         private VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
 
-        public LineBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize)
-        {
-        }
-
-        public LineBatch(GraphicsDevice graphicsDevice, int bufferSize)
+        public LineBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)
         {
             if (graphicsDevice == null)
-            {
                 throw new ArgumentNullException("graphicsDevice");
-            }
+
             _device = graphicsDevice;
 
             _lineVertices = new VertexPositionColor[bufferSize - bufferSize % 2];
@@ -68,9 +62,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
         public void Begin(Matrix projection, Matrix view)
         {
             if (_hasBegun)
-            {
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
-            }
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
             //tell our basic effect to begin.
@@ -91,20 +83,16 @@ namespace FarseerPhysics.Samples.DrawingSystem
         public void DrawLineShape(Shape shape, Color color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
-            }
-            if (shape.ShapeType != ShapeType.Edge &&
-                shape.ShapeType != ShapeType.Chain)
-            {
+
+            if (shape.ShapeType != ShapeType.Edge && shape.ShapeType != ShapeType.Chain)
                 throw new NotSupportedException("The specified shapeType is not supported by LineBatch.");
-            }
+
             if (shape.ShapeType == ShapeType.Edge)
             {
                 if (_lineVertsCount >= _lineVertices.Length)
-                {
                     Flush();
-                }
+
                 EdgeShape edge = (EdgeShape)shape;
                 _lineVertices[_lineVertsCount].Position = new Vector3(edge.Vertex1, 0f);
                 _lineVertices[_lineVertsCount + 1].Position = new Vector3(edge.Vertex2, 0f);
@@ -117,9 +105,8 @@ namespace FarseerPhysics.Samples.DrawingSystem
                 for (int i = 0; i < chain.Vertices.Count; ++i)
                 {
                     if (_lineVertsCount >= _lineVertices.Length)
-                    {
                         Flush();
-                    }
+
                     _lineVertices[_lineVertsCount].Position = new Vector3(chain.Vertices[i], 0f);
                     _lineVertices[_lineVertsCount + 1].Position = new Vector3(chain.Vertices.NextVertex(i), 0f);
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
@@ -136,13 +123,11 @@ namespace FarseerPhysics.Samples.DrawingSystem
         public void DrawLine(Vector2 v1, Vector2 v2, Color color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
-            }
+
             if (_lineVertsCount >= _lineVertices.Length)
-            {
                 Flush();
-            }
+
             _lineVertices[_lineVertsCount].Position = new Vector3(v1, 0f);
             _lineVertices[_lineVertsCount + 1].Position = new Vector3(v2, 0f);
             _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
@@ -155,9 +140,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
         public void End()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before End can be called.");
-            }
 
             // Draw whatever the user wanted us to draw
             Flush();
@@ -168,9 +151,8 @@ namespace FarseerPhysics.Samples.DrawingSystem
         private void Flush()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before Flush can be called.");
-            }
+
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;

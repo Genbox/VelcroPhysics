@@ -60,8 +60,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 }
 
                 //Connect the first and the last box
-                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0],
-                                                                       Vector2.Zero, bodies[bodies.Count - 1], Vector2.Zero);
+                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], Vector2.Zero, bodies[bodies.Count - 1], Vector2.Zero);
                 djEnd.Frequency = 4.0f;
                 djEnd.DampingRatio = 0.5f;
                 djEnd.Breakpoint = breakpoint;
@@ -95,8 +94,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     Body prevFixture = prev[j];
                     Body currentFixture = current[j];
 
-                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, Vector2.Zero,
-                                                                        currentFixture, Vector2.Zero);
+                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, Vector2.Zero, currentFixture, Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
                 }

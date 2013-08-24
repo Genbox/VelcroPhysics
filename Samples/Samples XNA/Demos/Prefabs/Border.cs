@@ -13,16 +13,16 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private Body _anchor;
         private BasicEffect _basicEffect;
         private VertexPositionColorTexture[] _borderVerts;
-        private PhysicsGameScreen _screen;
-        private World _world;
+        private Camera2D _camera;
+        private ScreenManager _screenManager;
 
-        public Border(World world, PhysicsGameScreen screen, Viewport viewport)
+        public Border(World world, ScreenManager screenManager, Camera2D camera)
         {
-            _world = world;
-            _screen = screen;
+            _screenManager = screenManager;
+            _camera = camera;
 
-            float halfWidth = ConvertUnits.ToSimUnits(viewport.Width) / 2f - 0.75f;
-            float halfHeight = ConvertUnits.ToSimUnits(viewport.Height) / 2f - 0.75f;
+            float halfWidth = ConvertUnits.ToSimUnits(screenManager.GraphicsDevice.Viewport.Width) / 2f - 0.75f;
+            float halfHeight = ConvertUnits.ToSimUnits(screenManager.GraphicsDevice.Viewport.Height) / 2f - 0.75f;
 
             Vertices borders = new Vertices(4);
             borders.Add(new Vector2(-halfWidth, halfHeight));
@@ -30,36 +30,24 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             borders.Add(new Vector2(halfWidth, -halfHeight));
             borders.Add(new Vector2(-halfWidth, -halfHeight));
 
-            _anchor = BodyFactory.CreateLoopShape(_world, borders);
+            _anchor = BodyFactory.CreateLoopShape(world, borders);
             _anchor.CollisionCategories = Category.All;
             _anchor.CollidesWith = Category.All;
 
-            _basicEffect = new BasicEffect(_screen.ScreenManager.GraphicsDevice);
+            _basicEffect = new BasicEffect(screenManager.GraphicsDevice);
             _basicEffect.VertexColorEnabled = true;
             _basicEffect.TextureEnabled = true;
-            _basicEffect.Texture = _screen.ScreenManager.Content.Load<Texture2D>("Materials/pavement");
+            _basicEffect.Texture = screenManager.Content.Load<Texture2D>("Materials/pavement");
 
             VertexPositionColorTexture[] vertice = new VertexPositionColorTexture[8];
-            vertice[0] = new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f),
-                                                        Color.LightGray, new Vector2(-halfWidth, -halfHeight) / 5.25f);
-            vertice[1] = new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f),
-                                                        Color.LightGray, new Vector2(halfWidth, -halfHeight) / 5.25f);
-            vertice[2] = new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f),
-                                                        Color.LightGray, new Vector2(halfWidth, halfHeight) / 5.25f);
-            vertice[3] = new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f),
-                                                        Color.LightGray, new Vector2(-halfWidth, halfHeight) / 5.25f);
-            vertice[4] = new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f),
-                                                        Color.LightGray,
-                                                        new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f);
-            vertice[5] = new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f),
-                                                        Color.LightGray,
-                                                        new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f);
-            vertice[6] = new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f),
-                                                        Color.LightGray,
-                                                        new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f);
-            vertice[7] = new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f),
-                                                        Color.LightGray,
-                                                        new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f);
+            vertice[0] = new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f), Color.LightGray, new Vector2(-halfWidth, -halfHeight) / 5.25f);
+            vertice[1] = new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f), Color.LightGray, new Vector2(halfWidth, -halfHeight) / 5.25f);
+            vertice[2] = new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f), Color.LightGray, new Vector2(halfWidth, halfHeight) / 5.25f);
+            vertice[3] = new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f), Color.LightGray, new Vector2(-halfWidth, halfHeight) / 5.25f);
+            vertice[4] = new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f), Color.LightGray, new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f);
+            vertice[5] = new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f), Color.LightGray, new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f);
+            vertice[6] = new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f), Color.LightGray, new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f);
+            vertice[7] = new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f), Color.LightGray, new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f);
 
             _borderVerts = new VertexPositionColorTexture[24];
             _borderVerts[0] = vertice[0];
@@ -90,18 +78,18 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
         public void Draw()
         {
-            GraphicsDevice device = _screen.ScreenManager.GraphicsDevice;
-            LineBatch batch = _screen.ScreenManager.LineBatch;
+            GraphicsDevice device = _screenManager.GraphicsDevice;
+            LineBatch batch = _screenManager.LineBatch;
 
             device.SamplerStates[0] = SamplerState.AnisotropicWrap;
             device.RasterizerState = RasterizerState.CullNone;
-            _basicEffect.Projection = _screen.Camera.SimProjection;
-            _basicEffect.View = _screen.Camera.SimView;
+            _basicEffect.Projection = _camera.SimProjection;
+            _basicEffect.View = _camera.SimView;
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
             device.DrawUserPrimitives(PrimitiveType.TriangleList, _borderVerts, 0, 8);
 
-            batch.Begin(_screen.Camera.SimProjection, _screen.Camera.SimView);
+            batch.Begin(_camera.SimProjection, _camera.SimView);
             batch.DrawLineShape(_anchor.FixtureList[0].Shape);
             batch.End();
         }

@@ -46,19 +46,14 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
-
-            _walker = new TheoJansenWalker(World, this, Vector2.Zero);
+            _border = new Border(World, ScreenManager, Camera);
+            _walker = new TheoJansenWalker(World, ScreenManager, Camera, Vector2.Zero);
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsNewButtonPress(Buttons.B) ||
-                input.IsNewMouseButtonPress(MouseButtons.RightButton) ||
-                input.IsNewKeyPress(Keys.Space))
-            {
+            if (input.IsNewButtonPress(Buttons.B) || input.IsNewMouseButtonPress(MouseButtons.RightButton) || input.IsNewKeyPress(Keys.Space))
                 _walker.Reverse();
-            }
 
             base.HandleInput(input, gameTime);
         }

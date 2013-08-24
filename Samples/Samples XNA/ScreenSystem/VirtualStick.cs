@@ -31,21 +31,19 @@ namespace FarseerPhysics.Samples.ScreenSystem
             {
                 Vector2 delta = touchLocation.Position - _position;
                 if (delta.LengthSquared() <= 2025f)
-                {
                     _picked = touchLocation.Id;
-                }
             }
-            if ((touchLocation.State == TouchLocationState.Pressed ||
-                touchLocation.State == TouchLocationState.Moved) && touchLocation.Id == _picked)
+
+            if ((touchLocation.State == TouchLocationState.Pressed || touchLocation.State == TouchLocationState.Moved) && touchLocation.Id == _picked)
             {
                 Vector2 delta = touchLocation.Position - _center;
                 if (delta != Vector2.Zero)
                 {
-                    float _length = delta.Length();
-                    if (_length > 25f)
-                    {
-                        delta *= (25f / _length);
-                    }
+                    float length = delta.Length();
+
+                    if (length > 25f)
+                        delta *= (25f / length);
+
                     StickPosition = delta / 25f;
                     StickPosition.Y *= -1f;
                     _position = _center + delta;
@@ -61,10 +59,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(_socketSprite.Texture, _center, null, Color.White, 0f,
-                       _socketSprite.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_stickSprite.Texture, _position, null, Color.White, 0f,
-                       _stickSprite.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_socketSprite.Texture, _center, null, Color.White, 0f, _socketSprite.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_stickSprite.Texture, _position, null, Color.White, 0f, _stickSprite.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

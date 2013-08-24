@@ -52,7 +52,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0f, 20f);
 
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             _ramps = new List<Body>();
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
@@ -83,10 +83,7 @@ namespace FarseerPhysics.Samples.Demos
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 5; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture,
-                                               ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
-                                               Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null, Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
             ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);

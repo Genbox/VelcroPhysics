@@ -58,9 +58,7 @@ namespace FarseerPhysics.Samples.Demos
 
             World.Gravity = new Vector2(0, 9.82f);
 
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
-
-            _border = new Border(World, this, ScreenManager.GraphicsDevice.Viewport);
+            _border = new Border(World, ScreenManager, Camera);
 
             /* Bridge */
             //We make a path using 2 points.
@@ -72,14 +70,12 @@ namespace FarseerPhysics.Samples.Demos
             Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 20);
 
-            _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape,
-                                                                        BodyType.Dynamic, 29);
-            _bridgeBox =
-                new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
+            _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29);
+            _bridgeBox = new Sprite(ScreenManager.Assets.TextureFromShape(shape, MaterialType.Dots, Color.SandyBrown, 1f));
 
             //Attach the first and last fixtures to the world
-            JointFactory.CreateRevoluteJoint(World, ground, Vector2.Zero, _bridgeBodies[0], new Vector2(0f, -0.5f));
-            JointFactory.CreateRevoluteJoint(World, ground, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f));
+            JointFactory.CreateRevoluteJoint(World, HiddenBody, _bridgeBodies[0], new Vector2(0f, -0.5f));
+            JointFactory.CreateRevoluteJoint(World, HiddenBody, _bridgeBodies[_bridgeBodies.Count - 1], new Vector2(0, 0.5f));
 
             PathManager.AttachBodiesWithRevoluteJoint(World, _bridgeBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), false, true);
 

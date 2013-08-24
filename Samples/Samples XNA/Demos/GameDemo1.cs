@@ -37,7 +37,7 @@ namespace FarseerPhysics.Samples.Demos
         private Sprite _teeter;
         private Sprite _wheel;
 
-        private float _maxSpeed = 50.0f;
+        private const float MaxSpeed = 50.0f;
 
         #region IDemoScreen Members
 
@@ -254,8 +254,8 @@ namespace FarseerPhysics.Samples.Demos
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, _maxSpeed, Math.Abs(_acceleration));
-            if (Math.Abs(_springBack.MotorSpeed) < _maxSpeed * 0.06f)
+            _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, MaxSpeed, Math.Abs(_acceleration));
+            if (Math.Abs(_springBack.MotorSpeed) < MaxSpeed * 0.06f)
             {
                 _springBack.MotorEnabled = false;
             }
@@ -269,21 +269,13 @@ namespace FarseerPhysics.Samples.Demos
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.VirtualState.ThumbSticks.Left.X > 0.5f)
-            {
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
-            }
             else if (input.VirtualState.ThumbSticks.Left.X < -0.5f)
-            {
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
-            }
             else if (input.VirtualState.Buttons.A == ButtonState.Pressed)
-            {
                 _acceleration = 0f;
-            }
             else
-            {
                 _acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
-            }
 
             base.HandleInput(input, gameTime);
         }
@@ -292,30 +284,23 @@ namespace FarseerPhysics.Samples.Demos
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             // draw car
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null,
-                                           Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
-                                           0f);
-            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null,
-                                           Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None,
-                                           0f);
-            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.Position), null,
-                                           Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_wheel.Texture, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, _scale, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_carBody.Texture, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, _scale, SpriteEffects.None, 0f);
+
             // draw teeter
-            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.Position), null,
-                                           Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
+            ScreenManager.SpriteBatch.Draw(_teeter.Texture, ConvertUnits.ToDisplayUnits(_board.Position), null, Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
+
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position),
-                                               null,
-                                               Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f,
-                                               SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_bridge.Texture, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position), null, Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
-                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
-                                               Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+                ScreenManager.SpriteBatch.Draw(_box.Texture, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null, Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
 

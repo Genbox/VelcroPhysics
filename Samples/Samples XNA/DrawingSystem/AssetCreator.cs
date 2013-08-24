@@ -37,7 +37,6 @@ namespace FarseerPhysics.Samples.DrawingSystem
         public static Vector2 CalculateOrigin(Body b)
         {
             Vector2 lBound = new Vector2(float.MaxValue);
-            AABB bounds;
             Transform trans;
             b.GetTransform(out trans);
 
@@ -45,10 +44,12 @@ namespace FarseerPhysics.Samples.DrawingSystem
             {
                 for (int j = 0; j < b.FixtureList[i].Shape.ChildCount; ++j)
                 {
+                    AABB bounds;
                     b.FixtureList[i].Shape.ComputeAABB(out bounds, ref trans, j);
                     Vector2.Min(ref lBound, ref bounds.LowerBound, out lBound);
                 }
             }
+
             // calculate body offset from its center and add a 1 pixel border
             // because we generate the textures a little bigger than the actual body's fixtures
             return ConvertUnits.ToDisplayUnits(b.Position - lBound) + new Vector2(1f);
@@ -100,8 +101,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
                 decomposedVerts = new List<Vertices>();
                 decomposedVerts.Add(verts);
             }
-            List<VertexPositionColorTexture[]> verticesFill =
-                new List<VertexPositionColorTexture[]>(decomposedVerts.Count);
+            List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVerts.Count);
 
             materialScale /= _materials[type].Width;
 
@@ -117,8 +117,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
                     verticesFill[i][3 * j].TextureCoordinate = decomposedVerts[i][0] * materialScale;
                     verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVerts[i].NextVertex(j) * materialScale;
                     verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVerts[i].NextVertex(j + 1) * materialScale;
-                    verticesFill[i][3 * j].Color =
-                        verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
+                    verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = color;
                 }
             }
 
@@ -131,10 +130,8 @@ namespace FarseerPhysics.Samples.DrawingSystem
                 verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = Color.Black;
             }
 
-            Vector2 vertsSize = new Vector2(vertsBounds.UpperBound.X - vertsBounds.LowerBound.X,
-                                            vertsBounds.UpperBound.Y - vertsBounds.LowerBound.Y);
-            return RenderTexture((int)vertsSize.X, (int)vertsSize.Y,
-                                 _materials[type], verticesFill, verticesOutline);
+            Vector2 vertsSize = new Vector2(vertsBounds.UpperBound.X - vertsBounds.LowerBound.X, vertsBounds.UpperBound.Y - vertsBounds.LowerBound.Y);
+            return RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _materials[type], verticesFill, verticesOutline);
         }
 
         public Texture2D CircleTexture(float radius, MaterialType type, Color color, float materialScale)
@@ -142,8 +139,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
             return EllipseTexture(radius, radius, type, color, materialScale);
         }
 
-        public Texture2D EllipseTexture(float radiusX, float radiusY, MaterialType type, Color color,
-                                        float materialScale)
+        public Texture2D EllipseTexture(float radiusX, float radiusY, MaterialType type, Color color, float materialScale)
         {
             VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
             VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
@@ -181,8 +177,7 @@ namespace FarseerPhysics.Samples.DrawingSystem
                 {
                     verticesOutline[2 * CircleSegments - 2].Position = new Vector3(p2, 0f);
                     verticesOutline[2 * CircleSegments - 1].Position = new Vector3(start, 0f);
-                    verticesOutline[2 * CircleSegments - 2].Color =
-                        verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
+                    verticesOutline[2 * CircleSegments - 2].Color = verticesOutline[2 * CircleSegments - 1].Color = Color.Black;
                 }
                 verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
                 verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
@@ -191,28 +186,21 @@ namespace FarseerPhysics.Samples.DrawingSystem
                 theta += segmentSize;
             }
 
-            return RenderTexture((int)(radiusX * 2f), (int)(radiusY * 2f),
-                                 _materials[type], verticesFill, verticesOutline);
+            return RenderTexture((int)(radiusX * 2f), (int)(radiusY * 2f), _materials[type], verticesFill, verticesOutline);
         }
 
-        private Texture2D RenderTexture(int width, int height, Texture2D material,
-                                        VertexPositionColorTexture[] verticesFill,
-                                        VertexPositionColor[] verticesOutline)
+        private Texture2D RenderTexture(int width, int height, Texture2D material, VertexPositionColorTexture[] verticesFill, VertexPositionColor[] verticesOutline)
         {
             List<VertexPositionColorTexture[]> fill = new List<VertexPositionColorTexture[]>(1);
             fill.Add(verticesFill);
             return RenderTexture(width, height, material, fill, verticesOutline);
         }
 
-        private Texture2D RenderTexture(int width, int height, Texture2D material,
-                                        List<VertexPositionColorTexture[]> verticesFill,
-                                        VertexPositionColor[] verticesOutline)
+        private Texture2D RenderTexture(int width, int height, Texture2D material, List<VertexPositionColorTexture[]> verticesFill, VertexPositionColor[] verticesOutline)
         {
             Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
             PresentationParameters pp = _device.PresentationParameters;
-            RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, SurfaceFormat.Color,
-                                                        DepthFormat.None, pp.MultiSampleCount,
-                                                        RenderTargetUsage.DiscardContents);
+            RenderTarget2D texture = new RenderTarget2D(_device, width + 2, height + 2, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
             _device.RasterizerState = RasterizerState.CullNone;
             _device.SamplerStates[0] = SamplerState.LinearWrap;
 
