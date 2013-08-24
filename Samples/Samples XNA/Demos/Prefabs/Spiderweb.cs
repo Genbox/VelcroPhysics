@@ -59,7 +59,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     bodies.Add(bod);
                 }
 
-                //Connect the first and the last box
+                //Connect the first and the last goo
                 DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], Vector2.Zero, bodies[bodies.Count - 1], Vector2.Zero);
                 djEnd.Frequency = 4.0f;
                 djEnd.DampingRatio = 0.5f;
@@ -72,15 +72,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             Vertices lastRing = PolygonTools.CreateCircle(rings * 2.9f, sides);
             lastRing.Translate(ref position);
 
-            List<Body> lastRingFixtures = ringBodys[ringBodys.Count - 1];
+            List<Body> lastRingBodies = ringBodys[ringBodys.Count - 1];
 
-            //Fix each of the fixtures of the outer ring
-            for (int j = 0; j < lastRingFixtures.Count; ++j)
+            //Fix each of the body of the outer ring
+            for (int j = 0; j < lastRingBodies.Count; ++j)
             {
-                DistanceJoint fdj = JointFactory.CreateDistanceJoint(world, ground, Vector2.Zero, lastRingFixtures[j], lastRing[j]);
-                fdj.Frequency = 4.0f;
-                fdj.DampingRatio = 0.5f;
-                fdj.Breakpoint = breakpoint;
+                lastRingBodies[j].IsStatic = true;
             }
 
             //Interconnect the rings
@@ -127,7 +124,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             foreach (Body b in _world.BodyList)
             {
-                if (b.Enabled && b.FixtureList[0].Shape.ShapeType == ShapeType.Circle)
+                if (b.Enabled && b.FixtureList.Count > 0 && b.FixtureList[0].Shape.ShapeType == ShapeType.Circle)
                 {
                     batch.Draw(_goo.Texture, ConvertUnits.ToDisplayUnits(b.Position), null, Color.White, 0f, _goo.Origin, _spriteScale, SpriteEffects.None, 0f);
                 }

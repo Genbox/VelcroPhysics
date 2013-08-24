@@ -127,8 +127,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-                if (screen.ScreenState == ScreenState.TransitionOn ||
-                    screen.ScreenState == ScreenState.Active)
+                if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.Active)
                 {
                     // If this is the first active screen we came across,
                     // give it a chance to handle input.
@@ -143,9 +142,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     // If this is an active non-popup, inform any subsequent
                     // screens that they are covered by it.
                     if (!screen.IsPopup)
-                    {
                         coveredByOtherScreen = true;
-                    }
                 }
             }
         }
@@ -191,9 +188,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     ++transitionCount;
                 }
                 else
-                {
                     screen.Draw(gameTime);
-                }
             }
             _input.Draw();
         }

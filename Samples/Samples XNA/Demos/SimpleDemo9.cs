@@ -57,13 +57,11 @@ namespace FarseerPhysics.Samples.Demos
             _ramps = new List<Body>();
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f)));
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(12f, -5.6f), new Vector2(12f, -3.2f)));
-
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-10f, 4.4f), new Vector2(20f, -1.4f)));
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-12f, 2.6f), new Vector2(-12f, 5f)));
-
             _ramps.Add(BodyFactory.CreateEdge(World, new Vector2(-20f, 6.8f), new Vector2(10f, 11.5f)));
 
-            float[] friction = new[] { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
+            float[] friction = { 0.75f, 0.45f, 0.28f, 0.17f, 0.0f };
             for (int i = 0; i < 5; ++i)
             {
                 _rectangle[i] = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 1f);
@@ -72,10 +70,8 @@ namespace FarseerPhysics.Samples.Demos
                 _rectangle[i].Friction = friction[i];
             }
 
-            // create sprite based on body
-            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle[0].FixtureList[0].Shape,
-                                                                                MaterialType.Squares,
-                                                                                Color.ForestGreen, 0.8f));
+            // Create sprite based on body
+            _rectangleSprite = new Sprite(ScreenManager.Assets.TextureFromShape(_rectangle[0].FixtureList[0].Shape, MaterialType.Squares, Color.ForestGreen, 0.8f));
         }
 
         public override void Draw(GameTime gameTime)
@@ -86,12 +82,14 @@ namespace FarseerPhysics.Samples.Demos
                 ScreenManager.SpriteBatch.Draw(_rectangleSprite.Texture, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null, Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
             ScreenManager.SpriteBatch.End();
+            
             ScreenManager.LineBatch.Begin(Camera.SimProjection, Camera.SimView);
             for (int i = 0; i < _ramps.Count; ++i)
             {
-                ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.DarkGreen);
+                ScreenManager.LineBatch.DrawLineShape(_ramps[i].FixtureList[0].Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
+
             _border.Draw();
             base.Draw(gameTime);
         }
