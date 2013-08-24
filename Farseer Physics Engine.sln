@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBed XNA Content", "Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentPipelineExtension", "Misc\ContentPipelineExtension\ContentPipelineExtension.csproj", "{7DBD4899-FE50-4EA8-A5E4-24BCBB71E89B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testbed OpenGL", "Samples\Testbed XNA\Testbed OpenGL.csproj", "{360EB797-331E-4A3E-9168-4CE3B260F13E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testbed MonoGame", "Samples\Testbed XNA\Testbed MonoGame.csproj", "{360EB797-331E-4A3E-9168-4CE3B260F13E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoGame", "MonoGame", "{DD1DBDA5-155A-4436-8C13-86EC5C67858B}"
 EndProject
@@ -71,7 +71,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples MonoGame", "Samples
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 29
+		SccNumberOfProjects = 30
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -186,6 +186,10 @@ Global
 		SccProjectTopLevelParentUniqueName28 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName28 = Samples/Samples\u0020XNA
 		SccLocalPath28 = Samples\\Samples\u0020XNA
+		SccProjectUniqueName29 = Samples\\Testbed\u0020XNA\\Testbed\u0020MonoGame.csproj
+		SccProjectTopLevelParentUniqueName29 = Farseer\u0020Physics\u0020Engine.sln
+		SccProjectName29 = Samples/Testbed\u0020XNA
+		SccLocalPath29 = Samples\\Testbed\u0020XNA
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Android|Any CPU = Android|Any CPU
