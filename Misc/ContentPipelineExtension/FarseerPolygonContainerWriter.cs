@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using FarseerPhysics.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
-using FarseerPhysics.Content;
 
 namespace FarseerPhysics.ContentPipeline
 {

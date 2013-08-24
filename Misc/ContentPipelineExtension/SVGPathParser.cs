@@ -21,11 +21,11 @@
  */
 
 using System;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
-using Microsoft.Xna.Framework;
 using FarseerPhysics.Common;
+using Microsoft.Xna.Framework;
 
 namespace FarseerPhysics.ContentPipeline
 {
