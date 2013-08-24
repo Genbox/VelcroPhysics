@@ -11,6 +11,10 @@
     <RootNamespace>FarseerPhysics.DebugView</RootNamespace>
     <AssemblyName>DebugView MonoGame</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>%24/FarseerPhysics/DebugViews/DebugView XNA</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
+    <SccAuxPath>https://tfs.codeplex.com/tfs/tfs01</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
