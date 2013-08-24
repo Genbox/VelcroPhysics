@@ -50,7 +50,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     bod.BodyType = BodyType.Dynamic;
                     bod.Position += position;
 
-                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prev, Vector2.Zero, bod, Vector2.Zero);
+                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prev, bod, Vector2.Zero, Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
                     dj.Breakpoint = breakpoint;
@@ -60,7 +60,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 }
 
                 //Connect the first and the last goo
-                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], Vector2.Zero, bodies[bodies.Count - 1], Vector2.Zero);
+                DistanceJoint djEnd = JointFactory.CreateDistanceJoint(world, bodies[0], bodies[bodies.Count - 1], Vector2.Zero, Vector2.Zero);
                 djEnd.Frequency = 4.0f;
                 djEnd.DampingRatio = 0.5f;
                 djEnd.Breakpoint = breakpoint;
@@ -91,7 +91,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     Body prevFixture = prev[j];
                     Body currentFixture = current[j];
 
-                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, Vector2.Zero, currentFixture, Vector2.Zero);
+                    DistanceJoint dj = JointFactory.CreateDistanceJoint(world, prevFixture, currentFixture, Vector2.Zero, Vector2.Zero);
                     dj.Frequency = 4.0f;
                     dj.DampingRatio = 0.5f;
                 }
