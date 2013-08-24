@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{1681ADA2-B2F3-4157-A603-82C742379856}</ProjectGuid>
+    <ProjectGuid>{5B41022E-1DFC-45FD-896B-B5905A3AAE68}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -136,9 +136,9 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
+    <ProjectReference Include="..\..\Content Projects\New Samples XNA Content\New Samples XNA Content.contentproj">
       <Project>{C8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-      <Name>Samples XNA Content %28Content%29</Name>
+      <Name>New Samples XNA Content %28Content%29</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView XNA.csproj">

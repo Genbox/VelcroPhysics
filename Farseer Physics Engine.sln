@@ -69,7 +69,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples Xbox360", "Samples\
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 25
+		SccNumberOfProjects = 28
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
@@ -168,6 +168,18 @@ Global
 		SccProjectTopLevelParentUniqueName24 = Farseer\u0020Physics\u0020Engine.sln
 		SccProjectName24 = Content\u0020Projects/Samples\u0020XNA\u0020Content
 		SccLocalPath24 = Content\u0020Projects\\Samples\u0020XNA\u0020Content
+		SccProjectUniqueName25 = Samples\\Samples\u0020XNA\\Samples\u0020XNA.csproj
+		SccProjectTopLevelParentUniqueName25 = Farseer\u0020Physics\u0020Engine.sln
+		SccProjectName25 = Samples/Samples\u0020XNA/Samples\u0020XNA
+		SccLocalPath25 = Samples\\Samples\u0020XNA
+		SccProjectUniqueName26 = Samples\\Samples\u0020XNA\\Samples\u0020Xbox360.csproj
+		SccProjectTopLevelParentUniqueName26 = Farseer\u0020Physics\u0020Engine.sln
+		SccProjectName26 = Samples/Samples\u0020XNA/Samples\u0020XNA
+		SccLocalPath26 = Samples\\Samples\u0020XNA
+		SccProjectUniqueName27 = Samples\\Samples\u0020XNA\\Samples\u0020WP7.csproj
+		SccProjectTopLevelParentUniqueName27 = Farseer\u0020Physics\u0020Engine.sln
+		SccProjectName27 = Samples/Samples\u0020XNA/Samples\u0020XNA
+		SccLocalPath27 = Samples\\Samples\u0020XNA
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Android|Any CPU = Android|Any CPU
@@ -1782,7 +1794,6 @@ Global
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Any CPU.ActiveCfg = Debug|Windows Phone
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Mixed Platforms.ActiveCfg = Debug|Windows Phone
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Mixed Platforms.Build.0 = Debug|Windows Phone
-		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Mixed Platforms.Deploy.0 = Debug|Windows Phone
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
 		{03DAFF97-4C0A-4238-8612-A6271DFFF84B}.Debug|Windows Phone.Deploy.0 = Debug|Windows Phone
@@ -1863,7 +1874,6 @@ Global
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
-		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Mixed Platforms.Deploy.0 = Debug|Xbox 360
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Windows Phone.ActiveCfg = Debug|Xbox 360
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|x86.ActiveCfg = Debug|Xbox 360
 		{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
