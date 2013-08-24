@@ -1,9 +1,19 @@
-using System;
-using FarseerPhysics.Samples.MediaSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+#region File Description
 
-namespace FarseerPhysics.Samples.ScreenSystem
+//-----------------------------------------------------------------------------
+// PlayerIndexEventArgs.cs
+//
+// XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+
+#endregion
+
+using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input.Touch;
+
+namespace FarseerPhysics.SamplesFramework
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -25,6 +35,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public abstract class GameScreen
     {
+        private GestureType _enabledGestures = GestureType.None;
         private bool _otherScreenHasFocus;
 
         public GameScreen()
@@ -34,9 +45,12 @@ namespace FarseerPhysics.Samples.ScreenSystem
             TransitionOffTime = TimeSpan.Zero;
             TransitionOnTime = TimeSpan.Zero;
             HasCursor = false;
+            HasVirtualStick = false;
         }
 
         public bool HasCursor { get; set; }
+
+        public bool HasVirtualStick { get; set; }
 
         /// <summary>
         /// Normally when one screen is brought up over the top of another,
@@ -98,18 +112,40 @@ namespace FarseerPhysics.Samples.ScreenSystem
         {
             get
             {
-                return !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active);
+                return !_otherScreenHasFocus &&
+                       (ScreenState == ScreenState.TransitionOn ||
+                        ScreenState == ScreenState.Active);
             }
         }
 
         /// <summary>
-        /// Gets the main game type that this screen belongs to.
+        /// Gets the manager that this screen belongs to.
         /// </summary>
-        public FarseerPhysicsSamples Framework { get; internal set; }
+        public ScreenManager ScreenManager { get; internal set; }
 
-        public SpriteBatch Sprites { get; protected internal set; }
-        public LineBatch Lines { get; protected internal set; }
-        public QuadRenderer Quads { get; protected internal set; }
+        /// <summary>
+        /// Gets the gestures the screen is interested in. Screens should be as specific
+        /// as possible with gestures to increase the accuracy of the gesture engine.
+        /// For example, most menus only need Tap or perhaps Tap and VerticalDrag to operate.
+        /// These gestures are handled by the ScreenManager when screens change and
+        /// all gestures are placed in the InputState passed to the HandleInput method.
+        /// </summary>
+        public GestureType EnabledGestures
+        {
+            get { return _enabledGestures; }
+            protected set
+            {
+                _enabledGestures = value;
+
+                // the screen manager handles this during screen changes, but
+                // if this screen is active and the gesture types are changing,
+                // we have to update the TouchPanel ourself.
+                if (ScreenState == ScreenState.Active)
+                {
+                    TouchPanel.EnabledGestures = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Load graphics content for the screen.
@@ -143,7 +179,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 if (!UpdateTransition(gameTime, TransitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    Framework.RemoveScreen(this);
+                    ScreenManager.RemoveScreen(this);
                 }
             }
             else if (coveredByOtherScreen)
@@ -190,14 +226,16 @@ namespace FarseerPhysics.Samples.ScreenSystem
             }
             else
             {
-                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / time.TotalMilliseconds);
+                transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds /
+                                           time.TotalMilliseconds);
             }
 
             // Update the transition position.
             TransitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (TransitionPosition <= 0)) || ((direction > 0) && (TransitionPosition >= 1)))
+            if (((direction < 0) && (TransitionPosition <= 0)) ||
+                ((direction > 0) && (TransitionPosition >= 1)))
             {
                 TransitionPosition = MathHelper.Clamp(TransitionPosition, 0, 1);
                 return false;
@@ -233,7 +271,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             if (TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                Framework.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
             else
             {

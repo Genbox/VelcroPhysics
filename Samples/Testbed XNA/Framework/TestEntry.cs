@@ -1,6 +1,6 @@
 using System;
 
-namespace FarseerPhysics.TestBed.Framework
+namespace FarseerPhysics.Testbed.Framework
 {
     public struct TestEntry
     {

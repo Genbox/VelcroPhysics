@@ -2,7 +2,8 @@
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.MediaSystem;
+using FarseerPhysics.Samples.DrawingSystem;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -22,15 +23,16 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private Category _collidesWith;
         private Category _collisionCategories;
         private Sprite _object;
+        private PhysicsGameScreen _screen;
 
-        public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
+        public Objects(World world, PhysicsGameScreen screen, Vector2 startPosition, Vector2 endPosition, int count,
+                       float radius, ObjectType type)
         {
             _bodies = new List<Body>(count);
             CollidesWith = Category.All;
             CollisionCategories = Category.All;
 
-            // Physics
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
             {
                 switch (type)
                 {
@@ -49,29 +51,38 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 }
             }
 
-            for (int i = 0; i < _bodies.Count; i++)
+            for (int i = 0; i < _bodies.Count; ++i)
             {
                 Body body = _bodies[i];
                 body.BodyType = BodyType.Dynamic;
                 body.Position = Vector2.Lerp(startPosition, endPosition, i / (float)(count - 1));
-                body.Restitution = 0.7f;
-                body.Friction = 0.2f;
+                body.Restitution = .7f;
+                body.Friction = .2f;
+                body.CollisionCategories = CollisionCategories;
+                body.CollidesWith = CollidesWith;
             }
 
+            _screen = screen;
+
             //GFX
+            AssetCreator creator = _screen.ScreenManager.Assets;
             switch (type)
             {
                 case ObjectType.Circle:
-                    _object = new Sprite(ContentWrapper.CircleTexture(radius, ContentWrapper.Gold, ContentWrapper.Grey));
+                    _object = new Sprite(creator.CircleTexture(radius, MaterialType.Dots, Color.DarkRed, 0.8f));
                     break;
                 case ObjectType.Rectangle:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRectangle(radius / 2f, radius / 2f), ContentWrapper.Red, ContentWrapper.Grey));
+                    _object =
+                        new Sprite(creator.TextureFromVertices(PolygonTools.CreateRectangle(radius / 2f, radius / 2f),
+                                                                MaterialType.Dots, Color.Blue, 0.8f));
                     break;
                 case ObjectType.Star:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateGear(radius, 10, 0f, 1f), ContentWrapper.Brown, ContentWrapper.Black));
+                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 0f, 1f),
+                                                                      MaterialType.Dots, Color.Yellow, 0.8f));
                     break;
                 case ObjectType.Gear:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateGear(radius, 10, 100f, 1f), ContentWrapper.Orange, ContentWrapper.Grey));
+                    _object = new Sprite(creator.TextureFromVertices(PolygonTools.CreateGear(radius, 10, 100f, 1f),
+                                                                      MaterialType.Dots, Color.DarkGreen, 0.8f));
                     break;
             }
         }
@@ -104,11 +115,14 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             }
         }
 
-        public void Draw(SpriteBatch batch)
+        public void Draw()
         {
-            foreach (Body body in _bodies)
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
+
+            for (int i = 0; i < _bodies.Count; ++i)
             {
-                batch.Draw(_object.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
+                batch.Draw(_object.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_bodies[i].Position), null,
+                            Color.White, _bodies[i].Rotation, _object.Origin, 1f, SpriteEffects.None, 0f);
             }
         }
     }

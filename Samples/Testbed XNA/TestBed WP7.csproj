@@ -50,7 +50,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
     <XnaRefreshLevel>1</XnaRefreshLevel>
-    <GameStartupType>FarseerPhysics.TestBed.Game1</GameStartupType>
+    <GameStartupType>FarseerPhysics.Testbed.Game1</GameStartupType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Windows Phone' ">
     <OutputPath>bin\Windows Phone\Debug</OutputPath>

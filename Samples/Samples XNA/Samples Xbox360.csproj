@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{A4072A54-0737-484C-B8EB-471985F2E8AB}</ProjectGuid>
+    <ProjectGuid>{3E5754CB-4DE2-4EBD-8C33-18DD6E90EC3D}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FarseerPhysics.Samples</RootNamespace>
-    <AssemblyName>Samples Xbox360</AssemblyName>
+    <AssemblyName>Samples XNA</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
     <XnaProfile>HiDef</XnaProfile>
-    <XnaCrossPlatformGroupID>cea5807e-8a0d-458d-9edc-4e786589e6da</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>caa5807e-8a0d-458d-9edc-4e786589e6da</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
@@ -33,10 +33,25 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
+    <OutputPath>bin\Xbox 360\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
+    <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Xbox 360' ">
     <OutputPath>bin\Xbox 360\Debug</OutputPath>
@@ -50,18 +65,69 @@
     <DefineConstants>DEBUG;TRACE;XBOX;XBOX360</DefineConstants>
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Xbox 360' ">
-    <OutputPath>bin\Xbox 360\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoStdLib>true</NoStdLib>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE;XBOX;XBOX360</DefineConstants>
-    <XnaCompressContent>true</XnaCompressContent>
-  </PropertyGroup>
   <ItemGroup>
+    <None Include="GameThumbnail.png">
+      <XnaPlatformSpecific>true</XnaPlatformSpecific>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DrawingSystem\LineBatch.cs" />
+    <Compile Include="Demos\AdvancedDemo1.cs" />
+    <Compile Include="Demos\AdvancedDemo2.cs" />
+    <Compile Include="Demos\AdvancedDemo3.cs" />
+    <Compile Include="Demos\AdvancedDemo4.cs" />
+    <Compile Include="Demos\AdvancedDemo5.cs" />
+    <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
+    <Compile Include="DrawingSystem\AssetCreator.cs" />
+    <Compile Include="DrawingSystem\Sprite.cs" />
+    <Compile Include="Demos\GameDemo1.cs" />
+    <Compile Include="Demos\Prefabs\Agent.cs" />
+    <Compile Include="Demos\Prefabs\Border.cs" />
+    <Compile Include="Demos\Prefabs\Objects.cs" />
+    <Compile Include="Demos\Prefabs\Pyramid.cs" />
+    <Compile Include="Demos\Prefabs\Ragdoll.cs" />
+    <Compile Include="Demos\Prefabs\Spider.cs" />
+    <Compile Include="Demos\Prefabs\Spiderweb.cs" />
+    <Compile Include="Demos\Prefabs\TheoJansen.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="ScreenSystem\Camera2D.cs" />
+    <Compile Include="ScreenSystem\ConvertUnits.cs" />
+    <Compile Include="ScreenSystem\GameScreen.cs" />
+    <Compile Include="ScreenSystem\IDemoScreen.cs" />
+    <Compile Include="ScreenSystem\InputHelper.cs" />
+    <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
+    <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
+    <Compile Include="ScreenSystem\SpriteFonts.cs" />
+    <Compile Include="ScreenSystem\BackgroundScreen.cs" />
+    <Compile Include="ScreenSystem\MenuButton.cs" />
+    <Compile Include="ScreenSystem\LogoScreen.cs" />
+    <Compile Include="ScreenSystem\MenuEntry.cs" />
+    <Compile Include="ScreenSystem\MenuScreen.cs" />
+    <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
+    <Compile Include="Demos\SimpleDemo1.cs" />
+    <Compile Include="Demos\SimpleDemo2.cs" />
+    <Compile Include="Demos\SimpleDemo3.cs" />
+    <Compile Include="Demos\SimpleDemo4.cs" />
+    <Compile Include="Demos\SimpleDemo5.cs" />
+    <Compile Include="Demos\SimpleDemo6.cs" />
+    <Compile Include="Demos\SimpleDemo7.cs" />
+    <Compile Include="Demos\SimpleDemo8.cs" />
+    <Compile Include="Demos\SimpleDemo9.cs" />
+    <Compile Include="ScreenSystem\VirtualButton.cs" />
+    <Compile Include="ScreenSystem\VirtualStick.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Game.ico" />
+    <Content Include="GameThumbnail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
+      <Project>{A8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
+      <Name>Samples XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
     <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
       <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
       <Name>DebugView Xbox360</Name>
@@ -71,58 +137,6 @@
       <Name>Farseer Physics Xbox360</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DrawingSystem\LineBatch.cs" />
-    <Compile Include="DrawingSystem\Sprite.cs" />
-    <Compile Include="Samples\AdvancedDemo1.cs" />
-    <Compile Include="Samples\AdvancedDemo2.cs" />
-    <Compile Include="Samples\AdvancedDemo3.cs" />
-    <Compile Include="Samples\AdvancedDemo4.cs" />
-    <Compile Include="Samples\AdvancedDemo5.cs" />
-    <Compile Include="DrawingSystem\AssetCreator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="FarseerPhysicsGame.cs" />
-    <Compile Include="Samples\GameDemo1.cs" />
-    <Compile Include="Samples\Prefabs\Agent.cs" />
-    <Compile Include="Samples\Prefabs\Border.cs" />
-    <Compile Include="Samples\Prefabs\Objects.cs" />
-    <Compile Include="Samples\Prefabs\Pyramid.cs" />
-    <Compile Include="Samples\Prefabs\Ragdoll.cs" />
-    <Compile Include="Samples\Prefabs\Spider.cs" />
-    <Compile Include="Samples\Prefabs\Spiderweb.cs" />
-    <Compile Include="Samples\Prefabs\TheoJansen.cs" />
-    <Compile Include="ScreenSystem\BackgroundScreen.cs" />
-    <Compile Include="ScreenSystem\Camera2D.cs" />
-    <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
-    <Compile Include="ScreenSystem\GameScreen.cs" />
-    <Compile Include="ScreenSystem\IDemoScreen.cs" />
-    <Compile Include="ScreenSystem\InputHelper.cs" />
-    <Compile Include="ScreenSystem\LogoScreen.cs" />
-    <Compile Include="ScreenSystem\MenuButton.cs" />
-    <Compile Include="ScreenSystem\MenuEntry.cs" />
-    <Compile Include="ScreenSystem\MenuScreen.cs" />
-    <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
-    <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
-    <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
-    <Compile Include="ScreenSystem\SpriteFonts.cs" />
-    <Compile Include="Samples\SimpleDemo1.cs" />
-    <Compile Include="Samples\SimpleDemo2.cs" />
-    <Compile Include="Samples\SimpleDemo3.cs" />
-    <Compile Include="Samples\SimpleDemo4.cs" />
-    <Compile Include="Samples\SimpleDemo5.cs" />
-    <Compile Include="Samples\SimpleDemo6.cs" />
-    <Compile Include="Samples\SimpleDemo7.cs" />
-    <Compile Include="Samples\SimpleDemo8.cs" />
-    <Compile Include="Samples\SimpleDemo9.cs" />
-    <Compile Include="ScreenSystem\VirtualButton.cs" />
-    <Compile Include="ScreenSystem\VirtualStick.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="GameThumbnail.png" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
@@ -152,52 +166,22 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Avatar">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.GamerServices">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Graphics">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Input.Touch">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Net">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Storage">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Video">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Xact">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="mscorlib">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Core">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="Microsoft.Xna.Framework.Avatar" />
+    <Reference Include="Microsoft.Xna.Framework.Game" />
+    <Reference Include="Microsoft.Xna.Framework.GamerServices" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics" />
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
+    <Reference Include="Microsoft.Xna.Framework.Net" />
+    <Reference Include="Microsoft.Xna.Framework.Storage" />
+    <Reference Include="Microsoft.Xna.Framework.Video" />
+    <Reference Include="Microsoft.Xna.Framework.Xact" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

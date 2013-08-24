@@ -26,16 +26,15 @@ using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.Testbed.Tests
 {
     public class CarTest : Test
     {
         private Body _car;
-
         private float _hz;
         private float _speed;
         private WheelJoint _spring1;
@@ -74,16 +73,12 @@ namespace FarseerPhysics.TestBed.Tests
                 }
 
                 FixtureFactory.AttachEdge(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f), ground);
-
                 x += 80.0f;
                 FixtureFactory.AttachEdge(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f), ground);
-
                 x += 40.0f;
                 FixtureFactory.AttachEdge(new Vector2(x, 0.0f), new Vector2(x + 10.0f, 5.0f), ground);
-
                 x += 20.0f;
                 FixtureFactory.AttachEdge(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f), ground);
-
                 x += 40.0f;
                 FixtureFactory.AttachEdge(new Vector2(x, 0.0f), new Vector2(x, 20.0f), ground);
 

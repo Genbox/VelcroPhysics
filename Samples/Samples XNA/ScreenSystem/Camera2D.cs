@@ -38,14 +38,14 @@ namespace FarseerPhysics.Samples.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
+            _projection = Matrix.CreateOrthographicOffCenter(0f, SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
+                                                             SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
                                                              1f);
             _view = Matrix.Identity;
             _batchView = Matrix.Identity;
 
-            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
-                                           ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
+            _translateCenter = new Vector2(SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
+                                           SamplesFramework.ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
         }
@@ -70,10 +70,10 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 Position
         {
-            get { return ConvertUnits.ToDisplayUnits(_currentPosition); }
+            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_currentPosition); }
             set
             {
-                _targetPosition = ConvertUnits.ToSimUnits(value);
+                _targetPosition = SamplesFramework.ConvertUnits.ToSimUnits(value);
                 if (_minPosition != _maxPosition)
                 {
                     Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
@@ -88,8 +88,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 MinPosition
         {
-            get { return ConvertUnits.ToDisplayUnits(_minPosition); }
-            set { _minPosition = ConvertUnits.ToSimUnits(value); }
+            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_minPosition); }
+            set { _minPosition = SamplesFramework.ConvertUnits.ToSimUnits(value); }
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public Vector2 MaxPosition
         {
-            get { return ConvertUnits.ToDisplayUnits(_maxPosition); }
-            set { _maxPosition = ConvertUnits.ToSimUnits(value); }
+            get { return SamplesFramework.ConvertUnits.ToDisplayUnits(_maxPosition); }
+            set { _maxPosition = SamplesFramework.ConvertUnits.ToSimUnits(value); }
         }
 
         /// <summary>
@@ -277,8 +277,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
                     matZoom *
                     Matrix.CreateTranslation(translateCenter);
 
-            translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
-            translateBody = ConvertUnits.ToDisplayUnits(translateBody);
+            translateCenter = SamplesFramework.ConvertUnits.ToDisplayUnits(translateCenter);
+            translateBody = SamplesFramework.ConvertUnits.ToDisplayUnits(translateBody);
 
             _batchView = Matrix.CreateTranslation(translateBody) *
                          matRotation *
@@ -319,7 +319,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             float inertia;
             if (distance < 10f)
             {
-                inertia = (float)Math.Pow(distance / 10.0, 2.0);
+                inertia = (float) Math.Pow(distance / 10.0, 2.0);
             }
             else
             {
@@ -331,7 +331,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
             float rotInertia;
             if (Math.Abs(rotDelta) < 5f)
             {
-                rotInertia = (float)Math.Pow(rotDelta / 5.0, 2.0);
+                rotInertia = (float) Math.Pow(rotDelta / 5.0, 2.0);
             }
             else
             {
@@ -342,8 +342,8 @@ namespace FarseerPhysics.Samples.ScreenSystem
                 rotDelta /= Math.Abs(rotDelta);
             }
 
-            _currentPosition += 100f * delta * inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _currentRotation += 80f * rotDelta * rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _currentPosition += 100f * delta * inertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _currentRotation += 80f * rotDelta * rotInertia * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             SetView();
         }

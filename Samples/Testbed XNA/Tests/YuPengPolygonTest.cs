@@ -6,11 +6,11 @@
 using System.Collections.Generic;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.Testbed.Tests
 {
   public class YuPengPolygonTest : Test
   {

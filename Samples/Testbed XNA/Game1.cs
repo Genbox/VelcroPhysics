@@ -22,12 +22,12 @@
 
 using System;
 using FarseerPhysics.Common;
-using FarseerPhysics.TestBed.Framework;
-using FarseerPhysics.TestBed.Tests;
+using FarseerPhysics.Testbed.Framework;
+using FarseerPhysics.Testbed.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed
+namespace FarseerPhysics.Testbed
 {
     /// <summary>
     /// This is the main type for your game

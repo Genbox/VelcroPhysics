@@ -31,7 +31,7 @@ using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Framework
+namespace FarseerPhysics.Testbed.Framework
 {
     public class Test
     {
