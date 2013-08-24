@@ -196,35 +196,36 @@ namespace FarseerPhysics.Samples.Demos
             // car
             {
                 Vertices vertices = new Vertices(8);
-                vertices.Add(new Vector2(-1.5f, -0.5f));
-                vertices.Add(new Vector2(1.5f, -0.5f));
-                vertices.Add(new Vector2(1.5f, 0.0f));
-                vertices.Add(new Vector2(0.0f, 0.9f));
-                vertices.Add(new Vector2(-1.15f, 0.9f));
-                vertices.Add(new Vector2(-1.5f, 0.2f));
+                vertices.Add(new Vector2(-2.5f, 0.08f));
+                vertices.Add(new Vector2(-2.375f, -0.46f));
+                vertices.Add(new Vector2(-0.58f, -0.92f));
+                vertices.Add(new Vector2(0.46f, -0.92f));
+                vertices.Add(new Vector2(2.5f, -0.17f));
+                vertices.Add(new Vector2(2.5f, 0.205f));
+                vertices.Add(new Vector2(2.3f, 0.33f));
+                vertices.Add(new Vector2(-2.25f, 0.35f));
 
-                PolygonShape chassis = new PolygonShape(vertices, 1);
-
-                CircleShape circle = new CircleShape(0.4f, 1);
+                PolygonShape chassis = new PolygonShape(vertices, 2);
+                CircleShape wheelShape = new CircleShape(0.5f, 0.8f);
 
                 _car = new Body(World);
                 _car.BodyType = BodyType.Dynamic;
-                _car.Position = new Vector2(0.0f, 1.0f);
+                _car.Position = new Vector2(0.0f, -1.0f);
                 _car.CreateFixture(chassis);
 
                 _wheelBack = new Body(World);
                 _wheelBack.BodyType = BodyType.Dynamic;
-                _wheelBack.Position = new Vector2(-1.0f, 0.35f);
-                _wheelBack.CreateFixture(circle);
+                _wheelBack.Position = new Vector2(-1.709f, -0.78f);
+                _wheelBack.CreateFixture(wheelShape);
                 _wheelBack.Friction = 0.9f;
 
+                wheelShape.Density = 1;
                 _wheelFront = new Body(World);
                 _wheelFront.BodyType = BodyType.Dynamic;
-                _wheelFront.Position = new Vector2(1.0f, 0.4f);
-                _wheelFront.CreateFixture(circle);
-                _wheelFront.Friction = 0.9f;
+                _wheelFront.Position = new Vector2(1.54f, -0.8f);
+                _wheelFront.CreateFixture(wheelShape);
 
-                Vector2 axis = new Vector2(0.0f, 1.0f);
+                Vector2 axis = new Vector2(0.0f, -1.2f);
                 _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis, true);
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
