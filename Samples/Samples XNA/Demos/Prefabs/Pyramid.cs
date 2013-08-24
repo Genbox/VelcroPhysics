@@ -3,7 +3,8 @@ using FarseerPhysics.Collision.Shapes;
 using FarseerPhysics.Common;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.MediaSystem;
+using FarseerPhysics.Samples.DrawingSystem;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,8 +14,9 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
         private Sprite _box;
         private List<Body> _boxes;
+        private PhysicsGameScreen _screen;
 
-        public Pyramid(World world, Vector2 position, int count, float density)
+        public Pyramid(World world, PhysicsGameScreen screen, Vector2 position, int count, float density)
         {
             Vertices rect = PolygonTools.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(rect, density);
@@ -25,14 +27,13 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             Vector2 deltaRow = new Vector2(-0.625f, 1.1f);
             const float spacing = 1.25f;
 
-            // Physics
             _boxes = new List<Body>();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; ++i)
             {
                 Vector2 pos = rowStart;
 
-                for (int j = 0; j < i + 1; j++)
+                for (int j = 0; j < i + 1; ++j)
                 {
                     Body body = BodyFactory.CreateBody(world);
                     body.BodyType = BodyType.Dynamic;
@@ -42,18 +43,25 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
                     pos.X += spacing;
                 }
+
                 rowStart += deltaRow;
             }
 
+            _screen = screen;
+
             //GFX
-            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            AssetCreator creator = _screen.ScreenManager.Assets;
+            _box = new Sprite(creator.TextureFromVertices(rect, MaterialType.Dots, Color.SaddleBrown, 2f));
         }
 
-        public void Draw(SpriteBatch batch)
+        public void Draw()
         {
-            foreach (Body body in _boxes)
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
+
+            for (int i = 0; i < _boxes.Count; ++i)
             {
-                batch.Draw(_box.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
+                batch.Draw(_box.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_boxes[i].Position), null,
+                            Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
         }
     }

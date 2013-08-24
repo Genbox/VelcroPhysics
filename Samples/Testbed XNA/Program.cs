@@ -22,7 +22,7 @@
 
 using System;
 
-namespace FarseerPhysics.TestBed
+namespace FarseerPhysics.Testbed
 {
     internal static class Program
     {

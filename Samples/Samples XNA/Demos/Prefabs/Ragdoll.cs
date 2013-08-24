@@ -2,7 +2,8 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.MediaSystem;
+using FarseerPhysics.Samples.DrawingSystem;
+using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,55 +11,61 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 {
     public class Ragdoll
     {
-        private const float ArmDensity = 10f;
-        private const float LegDensity = 15f;
-        private const float LimbAngularDamping = 2f;
-        private const float DampingRatio = 1f;
-        private const float Frequency = 25f;
+        private const float ArmDensity = 10;
+        private const float LegDensity = 15;
+        private const float LimbAngularDamping = 7;
 
-        private Body _head;
-        private Body _upperBody;
-        private Body _middleBody;
-        private Body _lowerBody;
-        private Body _upperLeftArm;
-        private Body _lowerLeftArm;
-        private Body _upperRightArm;
-        private Body _lowerRightArm;
-        private Body _upperLeftLeg;
-        private Body _lowerLeftLeg;
-        private Body _upperRightLeg;
-        private Body _lowerRightLeg;
-
+        private Body _body;
         private Sprite _face;
-        private Sprite _torso;
-        private Sprite _upperLimb;
-        private Sprite _lowerLimb;
+        private Body _head;
+        private Sprite _lowerArm;
 
-        public Ragdoll(World world, Vector2 position)
+        private Body _lowerLeftArm;
+        private Body _lowerLeftLeg;
+        private Sprite _lowerLeg;
+        private Body _lowerRightArm;
+        private Body _lowerRightLeg;
+        private PhysicsGameScreen _screen;
+        private Sprite _torso;
+        private Sprite _upperArm;
+
+        private Body _upperLeftArm;
+        private Body _upperLeftLeg;
+        private Sprite _upperLeg;
+        private Body _upperRightArm;
+        private Body _upperRightLeg;
+
+        public Ragdoll(World world, PhysicsGameScreen screen, Vector2 position)
         {
-            // Physics
-            // Head
-            _head = BodyFactory.CreateCircle(world, 0.75f, 10f);
+            CreateBody(world, position);
+            CreateJoints(world);
+
+            _screen = screen;
+            CreateGFX();
+        }
+
+        public Body Body
+        {
+            get { return _body; }
+        }
+
+        //Torso
+        private void CreateBody(World world, Vector2 position)
+        {
+            //Head
+            _head = BodyFactory.CreateCircle(world, 0.9f, 10f);
             _head.BodyType = BodyType.Dynamic;
             _head.AngularDamping = LimbAngularDamping;
             _head.Mass = 2f;
             _head.Position = position;
 
-            // Torso
-            _upperBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
-            _upperBody.BodyType = BodyType.Dynamic;
-            _upperBody.Mass = 1f;
-            _upperBody.SetTransform(position + new Vector2(0f, 1.75f), MathHelper.Pi / 2f);
-            _middleBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
-            _middleBody.BodyType = BodyType.Dynamic;
-            _middleBody.Mass = 1f;
-            _middleBody.SetTransform(position + new Vector2(0f, 3f), MathHelper.Pi / 2f);
-            _lowerBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
-            _lowerBody.BodyType = BodyType.Dynamic;
-            _lowerBody.Mass = 1f;
-            _lowerBody.SetTransform(position + new Vector2(0f, 4.25f), MathHelper.Pi / 2f);
+            //Body
+            _body = BodyFactory.CreateRoundedRectangle(world, 2f, 4f, 0.5f, 0.7f, 2, 10f);
+            _body.BodyType = BodyType.Dynamic;
+            _body.Mass = 2f;
+            _body.Position = position + new Vector2(0f, 3f);
 
-            // Left Arm
+            //Left Arm
             _lowerLeftArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _lowerLeftArm.BodyType = BodyType.Dynamic;
             _lowerLeftArm.AngularDamping = LimbAngularDamping;
@@ -73,7 +80,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _upperLeftArm.Rotation = 1.4f;
             _upperLeftArm.Position = position + new Vector2(-2f, 1.8f);
 
-            // Right Arm
+            //Right Arm
             _lowerRightArm = BodyFactory.CreateCapsule(world, 1f, 0.45f, ArmDensity);
             _lowerRightArm.BodyType = BodyType.Dynamic;
             _lowerRightArm.AngularDamping = LimbAngularDamping;
@@ -88,7 +95,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _upperRightArm.Rotation = -1.4f;
             _upperRightArm.Position = position + new Vector2(2f, 1.8f);
 
-            // Left Leg
+            //Left Leg
             _lowerLeftLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerLeftLeg.BodyType = BodyType.Dynamic;
             _lowerLeftLeg.AngularDamping = LimbAngularDamping;
@@ -101,7 +108,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _upperLeftLeg.Mass = 2f;
             _upperLeftLeg.Position = position + new Vector2(-0.6f, 6f);
 
-            // Right Leg
+            //Right Leg
             _lowerRightLeg = BodyFactory.CreateCapsule(world, 1f, 0.5f, LegDensity);
             _lowerRightLeg.BodyType = BodyType.Dynamic;
             _lowerRightLeg.AngularDamping = LimbAngularDamping;
@@ -113,120 +120,151 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _upperRightLeg.AngularDamping = LimbAngularDamping;
             _upperRightLeg.Mass = 2f;
             _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
-
-            // head -> upper body
-            DistanceJoint jointHeadBody = new DistanceJoint(_head, _upperBody, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
-            jointHeadBody.CollideConnected = true;
-            jointHeadBody.DampingRatio = DampingRatio;
-            jointHeadBody.Frequency = Frequency;
-            jointHeadBody.Length = 0.025f;
-            world.AddJoint(jointHeadBody);
-
-            // lowerLeftArm -> upperLeftArm
-            DistanceJoint jointLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
-            jointLeftArm.CollideConnected = true;
-            jointLeftArm.DampingRatio = DampingRatio;
-            jointLeftArm.Frequency = Frequency;
-            jointLeftArm.Length = 0.02f;
-            world.AddJoint(jointLeftArm);
-
-            // upperLeftArm -> upper body
-            DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, 1f));
-            jointLeftArmBody.DampingRatio = DampingRatio;
-            jointLeftArmBody.Frequency = Frequency;
-            jointLeftArmBody.Length = 0.02f;
-            world.AddJoint(jointLeftArmBody);
-
-            // lowerRightArm -> upperRightArm
-            DistanceJoint jointRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
-            jointRightArm.CollideConnected = true;
-            jointRightArm.DampingRatio = DampingRatio;
-            jointRightArm.Frequency = Frequency;
-            jointRightArm.Length = 0.02f;
-            world.AddJoint(jointRightArm);
-
-            // upperRightArm -> upper body
-            DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, -1f));
-            jointRightArmBody.DampingRatio = DampingRatio;
-            jointRightArmBody.Frequency = 25;
-            jointRightArmBody.Length = 0.02f;
-            world.AddJoint(jointRightArmBody);
-
-            // lowerLeftLeg -> upperLeftLeg
-            DistanceJoint jointLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
-            jointLeftLeg.CollideConnected = true;
-            jointLeftLeg.DampingRatio = DampingRatio;
-            jointLeftLeg.Frequency = Frequency;
-            jointLeftLeg.Length = 0.05f;
-            world.AddJoint(jointLeftLeg);
-
-            // upperLeftLeg -> lower body
-            DistanceJoint jointLeftLegBody = new DistanceJoint(_upperLeftLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, 0.8f));
-            jointLeftLegBody.CollideConnected = true;
-            jointLeftLegBody.DampingRatio = DampingRatio;
-            jointLeftLegBody.Frequency = Frequency;
-            jointLeftLegBody.Length = 0.02f;
-            world.AddJoint(jointLeftLegBody);
-
-            // lowerRightleg -> upperRightleg
-            DistanceJoint jointRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
-            jointRightLeg.CollideConnected = true;
-            jointRightLeg.DampingRatio = DampingRatio;
-            jointRightLeg.Frequency = Frequency;
-            jointRightLeg.Length = 0.05f;
-            world.AddJoint(jointRightLeg);
-
-            // upperRightleg -> lower body
-            DistanceJoint jointRightLegBody = new DistanceJoint(_upperRightLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, -0.8f));
-            jointRightLegBody.CollideConnected = true;
-            jointRightLegBody.DampingRatio = DampingRatio;
-            jointRightLegBody.Frequency = Frequency;
-            jointRightLegBody.Length = 0.02f;
-            world.AddJoint(jointRightLegBody);
-
-            // upper body -> middle body
-            RevoluteJoint jointUpperTorso = new RevoluteJoint(_upperBody, _middleBody, _upperBody.Position + new Vector2(0f, 0.625f), true);
-            jointUpperTorso.LimitEnabled = true;
-            jointUpperTorso.SetLimits(-MathHelper.Pi / 16f, MathHelper.Pi / 16f);
-            world.AddJoint(jointUpperTorso);
-
-            // middle body -> lower body
-            RevoluteJoint jointLowerTorso = new RevoluteJoint(_middleBody, _lowerBody, _middleBody.Position + new Vector2(0f, 0.625f), true);
-            jointLowerTorso.LimitEnabled = true;
-            jointLowerTorso.SetLimits(-MathHelper.Pi / 8f, MathHelper.Pi / 8f);
-            world.AddJoint(jointLowerTorso);
-
-            // GFX
-            _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
-            _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "Stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
-            _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
-            _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
         }
 
-        public Body Body
+        private void CreateJoints(World world)
         {
-            get { return _upperBody; }
+            const float dampingRatio = 1f;
+            const float frequency = 25f;
+
+            //head -> body
+            DistanceJoint jHeadBody = new DistanceJoint(_head, _body,
+                                                        new Vector2(0f, 1f),
+                                                        new Vector2(0f, -2f));
+            jHeadBody.CollideConnected = true;
+            jHeadBody.DampingRatio = dampingRatio;
+            jHeadBody.Frequency = frequency;
+            jHeadBody.Length = 0.025f;
+            world.AddJoint(jHeadBody);
+
+            //lowerLeftArm -> upperLeftArm
+            DistanceJoint jLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm,
+                                                       new Vector2(0f, -1f),
+                                                       new Vector2(0f, 1f));
+            jLeftArm.CollideConnected = true;
+            jLeftArm.DampingRatio = dampingRatio;
+            jLeftArm.Frequency = frequency;
+            jLeftArm.Length = 0.02f;
+            world.AddJoint(jLeftArm);
+
+            //upperLeftArm -> body
+            DistanceJoint jLeftArmBody = new DistanceJoint(_upperLeftArm, _body,
+                                                           new Vector2(0f, -1f),
+                                                           new Vector2(-1f, -1.5f));
+            jLeftArmBody.CollideConnected = true;
+            jLeftArmBody.DampingRatio = dampingRatio;
+            jLeftArmBody.Frequency = frequency;
+            jLeftArmBody.Length = 0.02f;
+            world.AddJoint(jLeftArmBody);
+
+            //lowerRightArm -> upperRightArm
+            DistanceJoint jRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm,
+                                                        new Vector2(0f, -1f),
+                                                        new Vector2(0f, 1f));
+            jRightArm.CollideConnected = true;
+            jRightArm.DampingRatio = dampingRatio;
+            jRightArm.Frequency = frequency;
+            jRightArm.Length = 0.02f;
+            world.AddJoint(jRightArm);
+
+            //upperRightArm -> body
+            DistanceJoint jRightArmBody = new DistanceJoint(_upperRightArm, _body,
+                                                            new Vector2(0f, -1f),
+                                                            new Vector2(1f, -1.5f));
+
+            jRightArmBody.CollideConnected = true;
+            jRightArmBody.DampingRatio = dampingRatio;
+            jRightArmBody.Frequency = 25;
+            jRightArmBody.Length = 0.02f;
+            world.AddJoint(jRightArmBody);
+
+            //lowerLeftLeg -> upperLeftLeg
+            DistanceJoint jLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg,
+                                                       new Vector2(0f, -1.1f),
+                                                       new Vector2(0f, 1f));
+            jLeftLeg.CollideConnected = true;
+            jLeftLeg.DampingRatio = dampingRatio;
+            jLeftLeg.Frequency = frequency;
+            jLeftLeg.Length = 0.05f;
+            world.AddJoint(jLeftLeg);
+
+            //upperLeftLeg -> body
+            DistanceJoint jLeftLegBody = new DistanceJoint(_upperLeftLeg, _body,
+                                                           new Vector2(0f, -1.1f),
+                                                           new Vector2(-0.8f, 1.9f));
+            jLeftLegBody.CollideConnected = true;
+            jLeftLegBody.DampingRatio = dampingRatio;
+            jLeftLegBody.Frequency = frequency;
+            jLeftLegBody.Length = 0.02f;
+            world.AddJoint(jLeftLegBody);
+
+            //lowerRightleg -> upperRightleg
+            DistanceJoint jRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg,
+                                                        new Vector2(0f, -1.1f),
+                                                        new Vector2(0f, 1f));
+            jRightLeg.CollideConnected = true;
+            jRightLeg.DampingRatio = dampingRatio;
+            jRightLeg.Frequency = frequency;
+            jRightLeg.Length = 0.05f;
+            world.AddJoint(jRightLeg);
+
+            //upperRightleg -> body
+            DistanceJoint jRightLegBody = new DistanceJoint(_upperRightLeg, _body,
+                                                            new Vector2(0f, -1.1f),
+                                                            new Vector2(0.8f, 1.9f));
+            jRightLegBody.CollideConnected = true;
+            jRightLegBody.DampingRatio = dampingRatio;
+            jRightLegBody.Frequency = frequency;
+            jRightLegBody.Length = 0.02f;
+            world.AddJoint(jRightLegBody);
         }
 
-        public void Draw(SpriteBatch batch)
+        private void CreateGFX()
         {
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null, Color.White, _lowerLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null, Color.White, _lowerRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            AssetCreator creator = _screen.ScreenManager.Assets;
+            _face = new Sprite(creator.CircleTexture(0.9f, MaterialType.Squares, Color.Gray, 1f));
+            _torso = new Sprite(creator.TextureFromVertices(PolygonTools.CreateRoundedRectangle(2f, 4f, 0.5f, 0.7f, 2),
+                                                             MaterialType.Squares, Color.LightSlateGray, 0.8f));
 
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null, Color.White, _upperLeftLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_lowerLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null, Color.White, _upperRightLeg.Rotation, _lowerLimb.Origin, 1f, SpriteEffects.None, 0f);
+            _upperArm = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
+                                                                MaterialType.Squares, Color.DimGray, 0.8f));
+            _lowerArm = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(1.9f, 0.45f, 16),
+                                                                MaterialType.Squares, Color.DarkSlateGray, 0.8f));
 
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null, Color.White, _lowerLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null, Color.White, _lowerRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+            _upperLeg = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
+                                                                MaterialType.Squares, Color.DimGray, 0.8f));
+            _lowerLeg = new Sprite(creator.TextureFromVertices(PolygonTools.CreateCapsule(2f, 0.5f, 16),
+                                                                MaterialType.Squares, Color.DarkSlateGray, 0.8f));
+        }
 
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null, Color.White, _upperLeftArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_upperLimb.Image, ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null, Color.White, _upperRightArm.Rotation, _upperLimb.Origin, 1f, SpriteEffects.None, 0f);
+        public void Draw()
+        {
+            SpriteBatch batch = _screen.ScreenManager.SpriteBatch;
+            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerLeftLeg.Position), null,
+                        Color.White, _lowerLeftLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerRightLeg.Position), null,
+                        Color.White, _lowerRightLeg.Rotation, _lowerLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_lowerBody.Position), null, Color.White, _lowerBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_middleBody.Position), null, Color.White, _middleBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_upperBody.Position), null, Color.White, _upperBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperLeftLeg.Position), null,
+                        Color.White, _upperLeftLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperLeg.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperRightLeg.Position), null,
+                        Color.White, _upperRightLeg.Rotation, _upperLeg.Origin, 1f, SpriteEffects.None, 0f);
 
-            batch.Draw(_face.Image, ConvertUnits.ToDisplayUnits(_head.Position), null, Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerLeftArm.Position), null,
+                        Color.White, _lowerLeftArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_lowerArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_lowerRightArm.Position), null,
+                        Color.White, _lowerRightArm.Rotation, _lowerArm.Origin, 1f, SpriteEffects.None, 0f);
+
+            batch.Draw(_upperArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperLeftArm.Position), null,
+                        Color.White, _upperLeftArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_upperArm.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_upperRightArm.Position), null,
+                        Color.White, _upperRightArm.Rotation, _upperArm.Origin, 1f, SpriteEffects.None, 0f);
+
+            batch.Draw(_torso.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_body.Position), null,
+                        Color.White, _body.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+
+            batch.Draw(_face.Texture, SamplesFramework.ConvertUnits.ToDisplayUnits(_head.Position), null,
+                        Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }
     }
 }

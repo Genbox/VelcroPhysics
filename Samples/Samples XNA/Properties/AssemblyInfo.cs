@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Farseer Physics Samples")]
-[assembly: AssemblyProduct("Farseer Physics Samples XNA")]
-[assembly: AssemblyDescription("Farseer Physics 3.5 XNA Samples")]
+[assembly: AssemblyTitle("Farseer Physics Engine Samples XNA")]
+[assembly: AssemblyProduct("Farseer Physics Engine Samples XNA")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Farseer Physics")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2012")]
+[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -25,7 +24,7 @@ using System.Runtime.InteropServices;
 // project is exposed to COM. On other platforms, it unique identifies the
 // title storage container when deploying this assembly to the device.
 
-[assembly: Guid("a5cadde4-30b3-4d0a-a337-8bcebd7f64fd")]
+[assembly: Guid("b5cadde4-31b3-4d0a-a337-8bcebd7f64fd")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -36,4 +35,3 @@ using System.Runtime.InteropServices;
 //
 
 [assembly: AssemblyVersion("3.5.0.*")]
-[assembly: NeutralResourcesLanguage("en")]

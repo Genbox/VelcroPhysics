@@ -1,10 +1,10 @@
 using FarseerPhysics.Collision;
 using FarseerPhysics.Common;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.Testbed.Tests
 {
     public class CheckPolygonTest : Test
     {

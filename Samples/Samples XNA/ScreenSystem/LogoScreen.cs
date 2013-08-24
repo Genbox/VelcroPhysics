@@ -1,21 +1,25 @@
 using System;
-using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace FarseerPhysics.SamplesFramework
 {
     public class LogoScreen : GameScreen
     {
+        private const float LogoScreenHeightRatio = 4f / 6f;
+        private const float LogoWidthHeightRatio = 1.4f;
+
+        private ContentManager _content;
+        private Rectangle _destination;
         private TimeSpan _duration;
         private Texture2D _farseerLogoTexture;
-        private Vector2 _farseerLogoPosition;
 
         public LogoScreen(TimeSpan duration)
         {
             _duration = duration;
-            HasCursor = false;
-            TransitionOffTime = TimeSpan.FromSeconds(0.6);
+            TransitionOffTime = TimeSpan.FromSeconds(2.0);
         }
 
         /// <summary>
@@ -27,21 +31,42 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            _farseerLogoTexture = ContentWrapper.GetTexture("Logo");
-            Viewport viewport = Framework.GraphicsDevice.Viewport;
+            if (_content == null)
+            {
+                _content = new ContentManager(ScreenManager.Game.Services, "Content");
+            }
 
-            _farseerLogoPosition = new Vector2((viewport.Width - _farseerLogoTexture.Width) / 2f - 100f, (viewport.Height - _farseerLogoTexture.Height) / 2f);
+            _farseerLogoTexture = _content.Load<Texture2D>("Common/logo");
+
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            int rectHeight = (int)(viewport.Height * LogoScreenHeightRatio);
+            int rectWidth = (int)(rectHeight * LogoWidthHeightRatio);
+            int posX = viewport.Bounds.Center.X - rectWidth / 2;
+            int posY = viewport.Bounds.Center.Y - rectHeight / 2;
+
+            _destination = new Rectangle(posX, posY, rectWidth, rectHeight);
+        }
+
+        /// <summary>
+        /// Unloads graphics content for this screen.
+        /// </summary>
+        public override void UnloadContent()
+        {
+            _content.Unload();
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
-            if (input.IsMenuSelect() || input.IsMenuCancel())
+            if (input.KeyboardState.GetPressedKeys().Length > 0 ||
+                input.GamePadState.IsButtonDown(Buttons.A | Buttons.Start | Buttons.Back) ||
+                input.MouseState.LeftButton == ButtonState.Pressed)
             {
                 _duration = TimeSpan.Zero;
             }
         }
 
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus,
+                                    bool coveredByOtherScreen)
         {
             _duration -= gameTime.ElapsedGameTime;
             if (_duration <= TimeSpan.Zero)
@@ -54,11 +79,11 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            Framework.GraphicsDevice.Clear(Color.White);
+            ScreenManager.GraphicsDevice.Clear(Color.White);
 
-            Sprites.Begin();
-            Sprites.Draw(_farseerLogoTexture, _farseerLogoPosition, Color.White);
-            Sprites.End();
+            ScreenManager.SpriteBatch.Begin();
+            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, _destination, Color.White);
+            ScreenManager.SpriteBatch.End();
         }
     }
 }

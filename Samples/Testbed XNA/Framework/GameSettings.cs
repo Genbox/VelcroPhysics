@@ -1,4 +1,4 @@
-namespace FarseerPhysics.TestBed.Framework
+namespace FarseerPhysics.Testbed.Framework
 {
     public class GameSettings
     {

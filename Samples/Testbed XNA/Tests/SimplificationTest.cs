@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using FarseerPhysics.Common;
 using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.Testbed.Tests
 {
     public class SimplificationTest : Test
     {

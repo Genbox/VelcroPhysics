@@ -23,10 +23,10 @@
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Joints;
 using FarseerPhysics.Factories;
-using FarseerPhysics.TestBed.Framework;
+using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.TestBed.Tests
+namespace FarseerPhysics.Testbed.Tests
 {
     public class TumblerTest : Test
     {

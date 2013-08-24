@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.TestBed.Framework
+namespace FarseerPhysics.Testbed.Framework
 {
     public class KeyboardManager
     {
