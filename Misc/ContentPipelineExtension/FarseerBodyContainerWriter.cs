@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using FarseerPhysics.Collision.Shapes;
+using FarseerPhysics.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
-using FarseerPhysics.Content;
-using FarseerPhysics.Collision.Shapes;
 
 namespace FarseerPhysics.ContentPipeline
 {
