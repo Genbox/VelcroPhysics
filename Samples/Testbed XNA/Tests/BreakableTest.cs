@@ -72,7 +72,7 @@ namespace FarseerPhysics.Testbed.Tests
         public override void Initialize()
         {
             //load texture that will represent the physics body
-            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("rock");
+            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("Rock");
 
             //Create an array to hold the data from the texture
             uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
