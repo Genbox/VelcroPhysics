@@ -46,7 +46,7 @@ namespace FarseerPhysics.Testbed.Tests
             FixtureFactory.AttachRectangle(20, 1, 5, new Vector2(0, 10), tumblerBody);
             FixtureFactory.AttachRectangle(20, 1, 5, new Vector2(0, -10), tumblerBody);
 
-            RevoluteJoint joint = JointFactory.CreateRevoluteJoint(World, ground, new Vector2(0, 10), tumblerBody, Vector2.Zero);
+            RevoluteJoint joint = JointFactory.CreateRevoluteJoint(World, ground, tumblerBody, new Vector2(0, 10), Vector2.Zero);
             joint.ReferenceAngle = 0.0f;
             joint.MotorSpeed = 0.05f * Settings.Pi;
             joint.MaxMotorTorque = 1e8f;

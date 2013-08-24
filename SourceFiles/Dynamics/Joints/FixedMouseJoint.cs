@@ -45,7 +45,7 @@ namespace FarseerPhysics.Dynamics.Joints
     /// </summary>
     public class FixedMouseJoint : Joint
     {
-        private Vector2 _target;
+        private Vector2 _worldAnchor;
         private float _frequency;
         private float _dampingRatio;
         private float _beta;
@@ -69,8 +69,8 @@ namespace FarseerPhysics.Dynamics.Joints
         /// tuning parameters, and the time step.
         /// </summary>
         /// <param name="body">The body.</param>
-        /// <param name="anchor">The target.</param>
-        public FixedMouseJoint(Body body, Vector2 anchor)
+        /// <param name="worldAnchor">The target.</param>
+        public FixedMouseJoint(Body body, Vector2 worldAnchor)
             : base(body)
         {
             JointType = JointType.FixedMouse;
@@ -78,10 +78,10 @@ namespace FarseerPhysics.Dynamics.Joints
             DampingRatio = 0.7f;
             MaxForce = 1000 * body.Mass;
 
-            Debug.Assert(anchor.IsValid());
+            Debug.Assert(worldAnchor.IsValid());
 
-            _target = anchor;
-            LocalAnchorA = MathUtils.MulT(BodyA._xf, anchor);
+            _worldAnchor = worldAnchor;
+            LocalAnchorA = MathUtils.MulT(BodyA._xf, worldAnchor);
         }
 
         /// <summary>
@@ -97,11 +97,11 @@ namespace FarseerPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorB
         {
-            get { return _target; }
+            get { return _worldAnchor; }
             set
             {
                 WakeBodies();
-                _target = value;
+                _worldAnchor = value;
             }
         }
 
@@ -207,7 +207,7 @@ namespace FarseerPhysics.Dynamics.Joints
 
             _mass = K.Inverse;
 
-            _C = cA + _rA - _target;
+            _C = cA + _rA - _worldAnchor;
             _C *= _beta;
 
             // Cheat with some damping

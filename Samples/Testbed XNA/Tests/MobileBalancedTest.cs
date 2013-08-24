@@ -41,7 +41,7 @@ namespace FarseerPhysics.Testbed.Tests
 
             Body root = AddNode(ground, Vector2.Zero, 0, 3.0f, a);
 
-            JointFactory.CreateRevoluteJoint(World, ground, Vector2.Zero, root, h);
+            JointFactory.CreateRevoluteJoint(World, ground, root, Vector2.Zero, h);
         }
 
         private Body AddNode(Body parent, Vector2 localAnchor, int depth, float offset, float a)
@@ -67,8 +67,8 @@ namespace FarseerPhysics.Testbed.Tests
             Body body1 = AddNode(body, a1, depth + 1, 0.5f * offset, a);
             Body body2 = AddNode(body, a2, depth + 1, 0.5f * offset, a);
 
-            JointFactory.CreateRevoluteJoint(World, body, a1, body1, h);
-            JointFactory.CreateRevoluteJoint(World, body, a2, body2, h);
+            JointFactory.CreateRevoluteJoint(World, body, body1, a1, h);
+            JointFactory.CreateRevoluteJoint(World, body, body2, a2, h);
 
             return body;
         }

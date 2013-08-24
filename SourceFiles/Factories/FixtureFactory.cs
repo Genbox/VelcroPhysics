@@ -67,8 +67,7 @@ namespace FarseerPhysics.Factories
             return body.CreateFixture(polygon, userData);
         }
 
-        public static Fixture AttachEllipse(float xRadius, float yRadius, int edges, float density, Body body,
-                                            object userData = null)
+        public static Fixture AttachEllipse(float xRadius, float yRadius, int edges, float density, Body body, object userData = null)
         {
             if (xRadius <= 0)
                 throw new ArgumentOutOfRangeException("xRadius", "X-radius must be more than 0");

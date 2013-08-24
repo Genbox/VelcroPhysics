@@ -149,14 +149,6 @@ namespace FarseerPhysics.Dynamics.Joints
             Initialize(anchorA, anchorB, axis, useWorldCoordinates);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bodyA"></param>
-        /// <param name="bodyB"></param>
-        /// <param name="anchor"></param>
-        /// <param name="axis"></param>
-        /// <param name="useWorldCoordinates"></param>
         public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB)
         {
