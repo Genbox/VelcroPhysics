@@ -119,21 +119,6 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
-      <Project>{A8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-      <Name>Samples XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
-      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
-      <Name>DebugView Xbox360</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
-      <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
-      <Name>Farseer Physics Xbox360</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
@@ -160,24 +145,28 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
+      <Project>{A8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
+      <Name>Samples XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView Xbox360</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
+      <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
+      <Name>Farseer Physics Xbox360</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework" />
-    <Reference Include="Microsoft.Xna.Framework.Avatar" />
     <Reference Include="Microsoft.Xna.Framework.Game" />
-    <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
-    <Reference Include="Microsoft.Xna.Framework.Net" />
-    <Reference Include="Microsoft.Xna.Framework.Storage" />
-    <Reference Include="Microsoft.Xna.Framework.Video" />
-    <Reference Include="Microsoft.Xna.Framework.Xact" />
     <Reference Include="mscorlib" />
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

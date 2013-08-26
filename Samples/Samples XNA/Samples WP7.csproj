@@ -135,21 +135,6 @@
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
-      <Project>{A8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
-      <Name>Samples XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
-      <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
-      <Name>DebugView WP7</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SourceFiles\Farseer Physics WP7.csproj">
-      <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
-      <Name>Farseer Physics WP7</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
@@ -176,24 +161,28 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Samples XNA Content\Samples XNA Content.contentproj">
+      <Project>{A8D1B1FB-E7FA-4BCF-BC8A-4D5D93429F67}</Project>
+      <Name>Samples XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
+      <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
+      <Name>DebugView WP7</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics WP7.csproj">
+      <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
+      <Name>Farseer Physics WP7</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework" />
-    <Reference Include="Microsoft.Xna.Framework.Avatar" />
     <Reference Include="Microsoft.Xna.Framework.Game" />
-    <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
-    <Reference Include="Microsoft.Xna.Framework.Net" />
-    <Reference Include="Microsoft.Xna.Framework.Storage" />
-    <Reference Include="Microsoft.Xna.Framework.Video" />
-    <Reference Include="Microsoft.Xna.Framework.Xact" />
     <Reference Include="mscorlib" />
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

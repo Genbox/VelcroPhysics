@@ -5,11 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Debug View Android")]
-[assembly: AssemblyProduct("Debug View Android")]
+[assembly: AssemblyTitle("Debug View XNA")]
 [assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Farseer Physics Engine")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
+[assembly: AssemblyProduct("Farseer Physics Engine")]
+[assembly: AssemblyCopyright("Copyright Ian Qvist © 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -207,21 +207,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Content Projects\Testbed XNA Content\TestBed XNA Content.contentproj">
-      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
-      <Name>TestBed XNA Content %28Content%29</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
-      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
-      <Name>DebugView Xbox360</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
-      <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
-      <Name>Farseer Physics Xbox360</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
@@ -252,6 +237,21 @@
     <None Include="Data\nazca_monkey.dat" />
     <None Include="Data\star.dat" />
     <None Include="Data\strange.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\Testbed XNA Content\TestBed XNA Content.contentproj">
+      <Project>{301F9A16-7581-4461-A369-D59064FB740E}</Project>
+      <Name>TestBed XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView Xbox360</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
+      <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
+      <Name>Farseer Physics Xbox360</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

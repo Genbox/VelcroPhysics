@@ -6,10 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Farseer Physics Engine Samples XNA")]
-[assembly: AssemblyProduct("Farseer Physics Engine Samples XNA")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Farseer Physics")]
-[assembly: AssemblyCopyright("Copyright © Farseer Physics Engine 2011")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Farseer Physics Engine")]
+[assembly: AssemblyProduct("Farseer Physics Engine")]
+[assembly: AssemblyCopyright("Copyright Ian Qvist © 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
