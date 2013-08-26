@@ -62,6 +62,15 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\HelloWorld XNA Content\HelloWorld XNA Content.contentproj">
+      <Project>{1999498C-698A-41C7-8C90-DD4D3B353D5B}</Project>
+      <Name>HelloWorld XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView Xbox360.csproj">
+      <Project>{4897A388-8A29-4D6E-A737-50B82A46B543}</Project>
+      <Name>DebugView Xbox360</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SourceFiles\Farseer Physics Xbox360.csproj">
       <Project>{448C63FB-8177-4CC6-B2AD-1D44031B3C2E}</Project>
       <Name>Farseer Physics Xbox360</Name>
@@ -108,44 +117,16 @@
     <Reference Include="Microsoft.Xna.Framework">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Avatar">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework.Game">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.GamerServices">
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Graphics">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Net">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Storage">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Video">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Xact">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Core">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
       <Private>False</Private>
     </Reference>
   </ItemGroup>

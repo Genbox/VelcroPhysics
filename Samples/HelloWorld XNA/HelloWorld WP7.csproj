@@ -69,6 +69,15 @@
     <XnaCompressContent>false</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Content Projects\HelloWorld XNA Content\HelloWorld XNA Content.contentproj">
+      <Project>{1999498C-698A-41C7-8C90-DD4D3B353D5B}</Project>
+      <Name>HelloWorld XNA Content %28Content%29</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DebugViews\DebugView XNA\DebugView WP7.csproj">
+      <Project>{F658A60D-5941-4CBE-8EC1-8AE20E93F60E}</Project>
+      <Name>DebugView WP7</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SourceFiles\Farseer Physics WP7.csproj">
       <Project>{4DA8DC0C-EC1E-4C31-8B00-9C0DB87C5D0A}</Project>
       <Name>Farseer Physics WP7</Name>
@@ -127,16 +136,10 @@
   <ItemGroup />
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework" />
-    <Reference Include="Microsoft.Xna.Framework.Avatar" />
     <Reference Include="Microsoft.Xna.Framework.Game" />
-    <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="mscorlib" />
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
