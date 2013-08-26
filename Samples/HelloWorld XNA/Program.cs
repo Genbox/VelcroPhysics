@@ -1,6 +1,5 @@
-namespace FarseerPhysics.HelloWorld
+namespace FarseerPhysics.Samples
 {
-#if WINDOWS || XBOX
     static class Program
     {
         /// <summary>
@@ -14,6 +13,5 @@ namespace FarseerPhysics.HelloWorld
             }
         }
     }
-#endif
 }
 

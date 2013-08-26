@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.HelloWorld
+namespace FarseerPhysics.Samples
 {
     public class Game1 : Game
     {
@@ -63,8 +63,8 @@ namespace FarseerPhysics.HelloWorld
             _font = Content.Load<SpriteFont>("font");
 
             // Load sprites
-            _circleSprite = Content.Load<Texture2D>("circleSprite"); //  96px x 96px => 1.5m x 1.5m
-            _groundSprite = Content.Load<Texture2D>("groundSprite"); // 512px x 64px =>   8m x 1m
+            _circleSprite = Content.Load<Texture2D>("CircleSprite"); //  96px x 96px => 1.5m x 1.5m
+            _groundSprite = Content.Load<Texture2D>("GroundSprite"); // 512px x 64px =>   8m x 1m
 
             /* We need XNA to draw the ground and circle at the center of the shapes */
             _groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
