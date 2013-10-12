@@ -650,9 +650,18 @@ namespace FarseerPhysics.Common
         /// <param name="angle"></param>
         public void Set(float angle)
         {
-            // TODO_ERIN optimize
-            s = (float)Math.Sin(angle);
-            c = (float)Math.Cos(angle);
+            //FPE: Optimization
+            if (angle == 0)
+            {
+                s = 0;
+                c = 1;
+            }
+            else
+            {
+                // TODO_ERIN optimize
+                s = (float)Math.Sin(angle);
+                c = (float)Math.Cos(angle);
+            }
         }
 
         /// <summary>

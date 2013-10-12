@@ -306,16 +306,12 @@ namespace FarseerPhysics.Dynamics
                     if (body.Awake)
                     {
                         if (!AwakeBodySet.Contains(body))
-                        {
                             AwakeBodySet.Add(body);
-                        }
                     }
                     else
                     {
                         if (AwakeBodySet.Contains(body))
-                        {
                             AwakeBodySet.Remove(body);
-                        }
                     }
 #endif
                     // Add to world list.
@@ -1128,8 +1124,7 @@ namespace FarseerPhysics.Dynamics
         /// <param name="body">The body.</param>
         public void RemoveBody(Body body)
         {
-            Debug.Assert(!_bodyRemoveList.Contains(body),
-                         "The body is already marked for removal. You are removing the body more than once.");
+            Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
 
             if (!_bodyRemoveList.Contains(body))
                 _bodyRemoveList.Add(body);

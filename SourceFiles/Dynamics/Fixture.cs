@@ -416,10 +416,9 @@ namespace FarseerPhysics.Dynamics
             // to be created at the beginning of the next time step.
             Body._world._worldHasNewFixture = true;
 
+            //FPE: Added event
             if (Body._world.FixtureAdded != null)
-            {
                 Body._world.FixtureAdded(this);
-            }
         }
 
         /// <summary>

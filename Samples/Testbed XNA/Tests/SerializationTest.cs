@@ -13,7 +13,6 @@ namespace FarseerPhysics.Testbed.Tests
     {
         private bool _save = true;
         private float _time;
-        private MotorJoint _motorJoint;
 
         private SerializationTest()
         {
@@ -98,11 +97,12 @@ namespace FarseerPhysics.Testbed.Tests
                 Body body2 = BodyFactory.CreateRectangle(World, 2, 4, 5, new Vector2(10.0f, 16.0f));
                 body2.BodyType = BodyType.Dynamic;
 
-                Vector2 anchor1 = new Vector2(0, 2.0f);
-                Vector2 anchor2 = new Vector2(0, 2.0f);
-                Vector2 worldAnchor1 = new Vector2(-10.0f, 16.0f + 2.0f + 4.0f);
+                Vector2 anchor1 = new Vector2(-10.0f, 16.0f + 2.0f);
+                Vector2 anchor2 = new Vector2(10.0f, 16.0f + 2.0f);
+                Vector2 worldAnchor1 = new Vector2(-10.0f, 16.0f + 2.0f + 12.0f);
                 Vector2 worldAnchor2 = new Vector2(10.0f, 16.0f + 2.0f + 12.0f);
-                JointFactory.CreatePulleyJoint(World, body1, body2, worldAnchor1, worldAnchor2, anchor1, anchor2, 1.5f);
+
+                JointFactory.CreatePulleyJoint(World, body1, body2, anchor1, anchor2, worldAnchor1, worldAnchor2, 1.5f, true);
             }
 
             //Revolute joint
@@ -167,11 +167,11 @@ namespace FarseerPhysics.Testbed.Tests
                 body.BodyType = BodyType.Dynamic;
                 body.Friction = 0.6f;
 
-                _motorJoint = JointFactory.CreateMotorJoint(World, ground, body);
-                _motorJoint.MaxForce = 1000.0f;
-                _motorJoint.MaxTorque = 1000.0f;
-                _motorJoint.LinearOffset = new Vector2(0, 35);
-                _motorJoint.AngularOffset = (float)(Math.PI / 3f);
+                MotorJoint motorJoint = JointFactory.CreateMotorJoint(World, ground, body);
+                motorJoint.MaxForce = 1000.0f;
+                motorJoint.MaxTorque = 1000.0f;
+                motorJoint.LinearOffset = new Vector2(0, 35);
+                motorJoint.AngularOffset = (float)(Math.PI / 3f);
             }
         }
 
@@ -179,21 +179,22 @@ namespace FarseerPhysics.Testbed.Tests
         {
             _time += gameTime.ElapsedGameTime.Milliseconds;
 
-            //if (_time >= 200)
-            //{
-            //    _time = 0;
-            //    if (_save)
-            //    {
-            //        WorldSerializer.Serialize(World, "out.xml");
-            //    }
-            //    else
-            //    {
-            //        World = WorldSerializer.Deserialize("out.xml");
-            //        base.Initialize(); //To initialize the debug view
-            //    }
+            if (_time >= 300)
+            {
+                _time = 0;
+                if (_save)
+                {
+                    WorldSerializer.Serialize(World, "out.xml");
+                }
+                else
+                {
+                    World = WorldSerializer.Deserialize("out.xml");
+                    base.Initialize(); //To initialize the debug view
+                }
 
-            //    _save = !_save;
-            //}
+                _save = !_save;
+            }
+
             base.Update(settings, gameTime);
         }
 
