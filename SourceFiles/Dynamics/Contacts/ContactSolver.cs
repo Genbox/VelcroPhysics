@@ -928,7 +928,6 @@ namespace FarseerPhysics.Dynamics.Contacts
             {
                 Debug.Assert(pc.pointCount > 0);
 
-
                 switch (pc.type)
                 {
                     case ManifoldType.Circles:

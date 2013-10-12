@@ -102,21 +102,17 @@ namespace FarseerPhysics.Factories
             return res;
         }
 
-        public static Fixture AttachLineArc(float radians, int sides, float radius, Vector2 position, float angle, bool closed, Body body)
+        public static Fixture AttachLineArc(float radians, int sides, float radius, bool closed, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
-            arc.Translate(ref position);
-
+            arc.Rotate((MathHelper.Pi - radians) / 2);
             return closed ? AttachLoopShape(arc, body) : AttachChainShape(arc, body);
         }
 
-        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Vector2 position, float angle, Body body)
+        public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Body body)
         {
             Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
-            arc.Rotate((MathHelper.Pi - radians) / 2 + angle);
-
-            arc.Translate(ref position);
+            arc.Rotate((MathHelper.Pi - radians) / 2);
 
             //Close the arc
             arc.Add(arc[0]);

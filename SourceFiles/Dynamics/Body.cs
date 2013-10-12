@@ -64,11 +64,11 @@ namespace FarseerPhysics.Dynamics
         private float _inertia;
         private float _linearDamping;
         private float _mass;
-        private bool _sleepingAllowed = true;
-        private bool _awake = true;
+        private bool _sleepingAllowed;
+        private bool _awake;
         private bool _fixedRotation;
 
-        internal bool _enabled = true;
+        internal bool _enabled;
         internal float _angularVelocity;
         internal Vector2 _linearVelocity;
         internal Vector2 _force;
@@ -84,24 +84,33 @@ namespace FarseerPhysics.Dynamics
         public PhysicsLogicFilter PhysicsLogicFilter;
         public ControllerFilter ControllerFilter;
 
-        public Body(World world, Vector2? position = null, float rotation = 0, object userdata = null)
+        public Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
         {
             FixtureList = new List<Fixture>();
             BodyId = _bodyIdCounter++;
+
             _world = world;
+            _enabled = true;
+            _awake = true;
+            _sleepingAllowed = true;
 
             UserData = userdata;
             GravityScale = 1.0f;
-            BodyType = BodyType.Static;
-            Enabled = true; //FPE note: Also creates proxies in the broadphase
+            BodyType = bodyType;
 
             _xf.q.Set(rotation);
 
-            if (position.HasValue)
+            //FPE: optimization
+            if (position != Vector2.Zero)
             {
-                _xf.p = position.Value;
+                _xf.p = position;
                 _sweep.C0 = _xf.p;
                 _sweep.C = _xf.p;
+            }
+
+            //FPE: optimization
+            if (rotation != 0)
+            {
                 _sweep.A0 = rotation;
                 _sweep.A = rotation;
             }
@@ -861,9 +870,7 @@ namespace FarseerPhysics.Dynamics
             if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)
-                {
                     Awake = true;
-                }
 
                 _force += force;
                 _torque += (point.X - _sweep.C.X) * force.Y - (point.Y - _sweep.C.Y) * force.X;
@@ -883,9 +890,7 @@ namespace FarseerPhysics.Dynamics
             if (_bodyType == BodyType.Dynamic)
             {
                 if (Awake == false)
-                {
                     Awake = true;
-                }
 
                 _torque += torque;
             }
@@ -1011,7 +1016,7 @@ namespace FarseerPhysics.Dynamics
                 _inertia += massData.Inertia;
             }
 
-            //Static bodies only have mass, they don't have other properties. A little hacky tho...
+            //FPE: Static bodies only have mass, they don't have other properties. A little hacky tho...
             if (BodyType == BodyType.Static)
             {
                 _sweep.C0 = _sweep.C = _xf.p;
@@ -1321,7 +1326,7 @@ namespace FarseerPhysics.Dynamics
         /// <returns></returns>
         public Body Clone(World world = null)
         {
-            Body body = new Body(world ?? _world, Position, Rotation, UserData);
+            Body body = new Body(world ?? _world, Position, Rotation);
             body._bodyType = _bodyType;
             body._linearVelocity = _linearVelocity;
             body._angularVelocity = _angularVelocity;

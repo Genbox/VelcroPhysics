@@ -18,12 +18,11 @@ namespace FarseerPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
-        public BreakableBody(IEnumerable<Vertices> vertices, World world, float density)
+        public BreakableBody(World world, IEnumerable<Vertices> vertices, float density, Vector2 position = new Vector2(), float rotation = 0)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
-            MainBody = new Body(_world);
-            MainBody.BodyType = BodyType.Dynamic;
+            MainBody = new Body(_world, position, rotation, BodyType.Dynamic);
 
             foreach (Vertices part in vertices)
             {
@@ -33,12 +32,11 @@ namespace FarseerPhysics.Dynamics
             }
         }
 
-        public BreakableBody(IEnumerable<Shape> shapes, World world)
+        public BreakableBody(World world, IEnumerable<Shape> shapes, Vector2 position = new Vector2(), float rotation = 0)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
-            MainBody = new Body(_world);
-            MainBody.BodyType = BodyType.Dynamic;
+            MainBody = new Body(_world, position, rotation, BodyType.Dynamic);
 
             foreach (Shape part in shapes)
             {
@@ -122,12 +120,8 @@ namespace FarseerPhysics.Dynamics
 
                 MainBody.DestroyFixture(oldFixture);
 
-                Body body = BodyFactory.CreateBody(_world);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = MainBody.Position;
-                body.Rotation = MainBody.Rotation;
-                body.UserData = MainBody.UserData;
-
+                Body body = BodyFactory.CreateBody(_world,MainBody.Position,MainBody.Rotation,BodyType.Dynamic,MainBody.UserData);
+                
                 Fixture newFixture = body.CreateFixture(shape);
                 newFixture.UserData = userData;
                 Parts[i] = newFixture;

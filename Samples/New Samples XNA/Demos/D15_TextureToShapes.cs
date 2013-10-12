@@ -63,8 +63,7 @@ namespace FarseerPhysics.Samples.Demos
             List<Vertices> tracedObject = Framework.Content.Load<List<Vertices>>("Pipeline/Object");
 
             // Create a single body with multiple fixtures
-            _compound = BodyFactory.CreateCompoundPolygon(World, tracedObject, 1f, BodyType.Dynamic);
-            _compound.BodyType = BodyType.Dynamic;
+            _compound = BodyFactory.CreateCompoundPolygon(World, tracedObject, 1f, Vector2.Zero, 0, BodyType.Dynamic);
 
             SetUserAgent(_compound, 200f, 200f);
             _objectSprite = new Sprite(ContentWrapper.GetTexture("Logo"), ContentWrapper.CalculateOrigin(_compound));

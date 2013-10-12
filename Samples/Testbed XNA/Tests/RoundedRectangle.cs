@@ -16,20 +16,20 @@ namespace FarseerPhysics.Testbed.Tests
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             //Arcs
-            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 10), 0, false);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, new Vector2(-20, 10), 0, false);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 10), 0, false);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 10), 0, false);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, false, new Vector2(-15, 10));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, false, new Vector2(-20, 10));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, false, new Vector2(-25, 10));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, false, new Vector2(-30, 10));
 
-            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 25), 0, true);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, new Vector2(-20, 25), 0, true);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 25), 0, true);
-            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 25), 0, true);
+            BodyFactory.CreateLineArc(World, MathHelper.Pi * 1.5f, 50, 2, true, new Vector2(-15, 25));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi, 50, 2, true, new Vector2(-20, 25));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 1.5f, 50, 2, true, new Vector2(-25, 25));
+            BodyFactory.CreateLineArc(World, MathHelper.Pi / 2, 50, 2, true, new Vector2(-30, 25));
 
-            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 40), 0);
-            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi, 50, 2, new Vector2(-20, 40), 0);
-            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 40), 0);
-            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 40), 0);
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi * 1.5f, 50, 2, new Vector2(-15, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi, 50, 2, new Vector2(-20, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 1.5f, 50, 2, new Vector2(-25, 40));
+            BodyFactory.CreateSolidArc(World, 1, MathHelper.Pi / 2, 50, 2, new Vector2(-30, 40));
 
             Create(0);
         }

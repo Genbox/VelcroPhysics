@@ -100,7 +100,7 @@ namespace FarseerPhysics.Samples.Demos
             }
 
             //Create a single body with multiple fixtures
-            _compound = BodyFactory.CreateCompoundPolygon(World, list, 1f, BodyType.Dynamic);
+            _compound = BodyFactory.CreateCompoundPolygon(World, list, 1f, Vector2.Zero, 0, BodyType.Dynamic);
             _compound.BodyType = BodyType.Dynamic;
         }
 

@@ -97,7 +97,7 @@ namespace FarseerPhysics.Samples.Demos
                     vertices.Scale(ref vertScale);
                 }
 
-                BreakableBody breakableBody = new BreakableBody(triangulated, World, 1);
+                BreakableBody breakableBody = new BreakableBody(World, triangulated, 1);
                 breakableBody.MainBody.Position = new Vector2(xOffset, yOffset);
                 breakableBody.Strength = 100;
                 World.AddBreakableBody(breakableBody);

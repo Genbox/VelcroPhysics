@@ -79,8 +79,7 @@ namespace FarseerPhysics.Samples
             Vector2 circlePosition = ConvertUnits.ToSimUnits(_screenCenter) + new Vector2(0, -1.5f);
 
             // Create the circle fixture
-            _circleBody = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(96 / 2f), 1f, circlePosition);
-            _circleBody.BodyType = BodyType.Dynamic;
+            _circleBody = BodyFactory.CreateCircle(_world, ConvertUnits.ToSimUnits(96 / 2f), 1f, circlePosition,BodyType.Dynamic);
 
             // Give it some bounce and friction
             _circleBody.Restitution = 0.3f;

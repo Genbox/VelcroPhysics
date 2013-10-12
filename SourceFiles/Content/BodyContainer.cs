@@ -49,7 +49,7 @@ namespace FarseerPhysics.Content
                 shapes.Add(f.Shape);
             }
 
-            BreakableBody body = new BreakableBody(shapes, world);
+            BreakableBody body = new BreakableBody(world, shapes);
             world.AddBreakableBody(body);
 
             return body;
