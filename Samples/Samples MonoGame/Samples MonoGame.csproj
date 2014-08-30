@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2ACA1733-86AF-404D-B8DB-333990D68DCE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FarseerPhysics.Samples</RootNamespace>
+    <AssemblyName>Samples MonoGame</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\WindowsGL\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\WindowsGL\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Demos\AdvancedDemo1.cs" />
+    <Compile Include="Demos\AdvancedDemo2.cs" />
+    <Compile Include="Demos\AdvancedDemo3.cs" />
+    <Compile Include="Demos\AdvancedDemo4.cs" />
+    <Compile Include="Demos\AdvancedDemo5.cs" />
+    <Compile Include="Demos\GameDemo1.cs" />
+    <Compile Include="Demos\Prefabs\Agent.cs" />
+    <Compile Include="Demos\Prefabs\Border.cs" />
+    <Compile Include="Demos\Prefabs\Objects.cs" />
+    <Compile Include="Demos\Prefabs\Pyramid.cs" />
+    <Compile Include="Demos\Prefabs\Ragdoll.cs" />
+    <Compile Include="Demos\Prefabs\Spider.cs" />
+    <Compile Include="Demos\Prefabs\Spiderweb.cs" />
+    <Compile Include="Demos\Prefabs\TheoJansen.cs" />
+    <Compile Include="Demos\SimpleDemo1.cs" />
+    <Compile Include="Demos\SimpleDemo2.cs" />
+    <Compile Include="Demos\SimpleDemo3.cs" />
+    <Compile Include="Demos\SimpleDemo4.cs" />
+    <Compile Include="Demos\SimpleDemo5.cs" />
+    <Compile Include="Demos\SimpleDemo6.cs" />
+    <Compile Include="Demos\SimpleDemo7.cs" />
+    <Compile Include="Demos\SimpleDemo8.cs" />
+    <Compile Include="Demos\SimpleDemo9.cs" />
+    <Compile Include="DrawingSystem\AssetCreator.cs" />
+    <Compile Include="DrawingSystem\LineBatch.cs" />
+    <Compile Include="DrawingSystem\Sprite.cs" />
+    <Compile Include="FarseerPhysicsGame.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenSystem\BackgroundScreen.cs" />
+    <Compile Include="ScreenSystem\Camera2D.cs" />
+    <Compile Include="ScreenSystem\FramerateCounterComponent.cs" />
+    <Compile Include="ScreenSystem\GameScreen.cs" />
+    <Compile Include="ScreenSystem\IDemoScreen.cs" />
+    <Compile Include="ScreenSystem\InputHelper.cs" />
+    <Compile Include="ScreenSystem\LogoScreen.cs" />
+    <Compile Include="ScreenSystem\MenuButton.cs" />
+    <Compile Include="ScreenSystem\MenuEntry.cs" />
+    <Compile Include="ScreenSystem\MenuScreen.cs" />
+    <Compile Include="ScreenSystem\MessageBoxScreen.cs" />
+    <Compile Include="ScreenSystem\PhysicsGameScreen.cs" />
+    <Compile Include="ScreenSystem\ScreenManagerComponent.cs" />
+    <Compile Include="ScreenSystem\SpriteFonts.cs" />
+    <Compile Include="ScreenSystem\VirtualButton.cs" />
+    <Compile Include="ScreenSystem\VirtualStick.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
+      <Link>SDL.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Fonts\detailsFont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Fonts\frameRateCounterFont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Fonts\menufont.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\alphabet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\car.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\goo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\link.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\object.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Samples\wheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Materials\blank.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Materials\dots.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Materials\pavement.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Materials\squares.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Materials\waves.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\arrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\buttons.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\cursor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\gradient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\popup.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\slider.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\socket.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\Common\stick.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DebugViews\DebugView MonoGame\DebugView MonoGame.csproj">
+      <Project>{566F1803-90B5-4947-8730-57F092FBB002}</Project>
+      <Name>DebugView MonoGame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SourceFiles\Farseer Physics MonoGame.csproj">
+      <Project>{0aad36e3-51a5-4a07-ab60-5c8a66bd38b7}</Project>
+      <Name>Farseer Physics MonoGame</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
