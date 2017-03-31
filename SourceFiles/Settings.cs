@@ -1,6 +1,6 @@
 ﻿/*
-* Farseer Physics Engine:
-* Copyright (c) 2012 Ian Qvist
+* Velcro Physics:
+* Copyright (c) 2017 Ian Qvist
 * 
 * Original source Box2D:
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
@@ -110,7 +110,7 @@ namespace VelcroPhysics
         public static int MaxPolygonVertices = 8;
 
         /// <summary>
-        /// Farseer Physics Engine has a different way of filtering fixtures than Box2d.
+        /// Velcro Physics has a different way of filtering fixtures than Box2d.
         /// We have both FPE and Box2D filtering in the engine. If you are upgrading
         /// from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
         /// to Category.All.

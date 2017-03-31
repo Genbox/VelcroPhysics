@@ -1,6 +1,6 @@
 ﻿/*
-* Farseer Physics Engine:
-* Copyright (c) 2012 Ian Qvist
+* Velcro Physics:
+* Copyright (c) 2017 Ian Qvist
 */
 
 using System;
