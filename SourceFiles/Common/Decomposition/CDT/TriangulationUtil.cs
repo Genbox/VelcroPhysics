@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FarseerPhysics.Common.Decomposition.CDT
+namespace VelcroPhysics.Common.Decomposition.CDT
 {
     /**
      * @author Thomas Åhlén, thahlen@gmail.com

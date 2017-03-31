@@ -34,7 +34,7 @@ SOFTWARE.
 
 using System;
 
-namespace Microsoft.Xna.Framework
+namespace VelcroPhysics.Common
 {
     public enum CurveLoopType
     {

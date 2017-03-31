@@ -22,7 +22,7 @@
 
 using System;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     public struct FixedArray2<T>
     {

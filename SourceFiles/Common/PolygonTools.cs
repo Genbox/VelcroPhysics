@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common.TextureTools;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common.TextureTools;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     public static class PolygonTools
     {

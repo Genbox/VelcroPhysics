@@ -1,8 +1,8 @@
 ﻿using System;
-using FarseerPhysics.Common.PhysicsLogic;
-using FarseerPhysics.Dynamics;
+using VelcroPhysics.Common.PhysicsLogic;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Controllers
+namespace VelcroPhysics.Controllers
 {
     [Flags]
     public enum ControllerType

@@ -31,7 +31,7 @@
 
 using System;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     internal class PointOnEdgeException : NotImplementedException
     {

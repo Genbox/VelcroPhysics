@@ -24,11 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Collision
+namespace VelcroPhysics.Collision
 {
     internal enum ContactFeatureType : byte
     {

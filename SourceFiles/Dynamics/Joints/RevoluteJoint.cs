@@ -21,10 +21,9 @@
 */
 
 using System;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A revolute joint constrains to bodies to share a common point while they

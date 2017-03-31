@@ -22,12 +22,11 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     /// <summary>
     /// This is an internal class.

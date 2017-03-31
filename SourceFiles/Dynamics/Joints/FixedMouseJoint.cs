@@ -21,10 +21,9 @@
 */
 
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     // p = attached point, m = mouse point
     // C = p - m

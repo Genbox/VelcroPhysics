@@ -28,14 +28,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     /// <summary>
     /// The world class manages all physics entities, dynamic simulation,

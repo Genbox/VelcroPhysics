@@ -21,10 +21,9 @@
 */
 
 using System;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     // Point-to-point constraint
     // C = p2 - p1

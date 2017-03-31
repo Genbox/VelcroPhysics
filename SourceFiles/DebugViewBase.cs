@@ -4,11 +4,10 @@
 */
 
 using System;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics
+namespace VelcroPhysics
 {
     [Flags]
     public enum DebugViewFlags

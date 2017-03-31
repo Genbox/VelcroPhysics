@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Factories
+namespace VelcroPhysics.Factories
 {
     /// <summary>
     /// An easy to use factory for creating bodies

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Controllers
+namespace VelcroPhysics.Controllers
 {
     public sealed class BuoyancyController : Controller
     {

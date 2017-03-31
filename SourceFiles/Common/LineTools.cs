@@ -1,8 +1,7 @@
 ﻿using System;
-using FarseerPhysics.Collision;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     /// <summary>
     /// Collection of helper methods for misc collisions.

@@ -1,8 +1,8 @@
 ﻿using System;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Controllers
+namespace VelcroPhysics.Controllers
 {
     public abstract class AbstractForceController : Controller
     {

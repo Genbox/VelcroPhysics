@@ -23,12 +23,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Dynamics.Contacts
 {
     /// <summary>
     /// A contact edge is used to connect bodies and contacts together

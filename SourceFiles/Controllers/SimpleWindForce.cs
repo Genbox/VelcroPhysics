@@ -1,7 +1,7 @@
-﻿using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+﻿using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Controllers
+namespace VelcroPhysics.Controllers
 {
     /// <summary>
     /// Reference implementation for forces based on AbstractForceController

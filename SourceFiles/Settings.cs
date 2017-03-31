@@ -21,9 +21,9 @@
 */
 
 using System;
-using FarseerPhysics.Dynamics;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics
+namespace VelcroPhysics
 {
     public static class Settings
     {

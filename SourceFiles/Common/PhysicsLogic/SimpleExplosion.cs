@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Common.PhysicsLogic
 {
     /// <summary>
     /// Creates a simple explosion that ignores other bodies hiding behind static bodies.

@@ -22,10 +22,9 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     // Pulley:
     // length1 = norm(p1 - s1)

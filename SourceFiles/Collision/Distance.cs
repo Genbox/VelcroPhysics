@@ -22,11 +22,10 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Collision
+namespace VelcroPhysics.Collision
 {
     /// <summary>
     /// A distance proxy is used by the GJK algorithm.

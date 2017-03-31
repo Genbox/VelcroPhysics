@@ -30,9 +30,9 @@
  */
 
 using System;
-using FarseerPhysics.Common.Decomposition.CDT.Polygon;
+using VelcroPhysics.Common.Decomposition.CDT.Polygon;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Util
+namespace VelcroPhysics.Common.Decomposition.CDT.Util
 {
     internal class PolygonGenerator
     {

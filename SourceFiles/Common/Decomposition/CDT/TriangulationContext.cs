@@ -30,10 +30,9 @@
  */
 
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using FarseerPhysics.Common.Decomposition.CDT.Delaunay;
+using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
 
-namespace FarseerPhysics.Common.Decomposition.CDT
+namespace VelcroPhysics.Common.Decomposition.CDT
 {
     internal abstract class TriangulationContext
     {

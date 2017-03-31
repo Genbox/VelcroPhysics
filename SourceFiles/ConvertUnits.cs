@@ -3,9 +3,9 @@
 * Copyright (c) 2012 Ian Qvist
 */
 
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics
+namespace VelcroPhysics
 {
     /// <summary>
     /// Convert units between display and simulation units.

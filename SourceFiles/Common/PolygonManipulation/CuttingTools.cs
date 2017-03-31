@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
 
-namespace FarseerPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Common.PolygonManipulation
 {
     public static class CuttingTools
     {

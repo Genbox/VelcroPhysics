@@ -21,10 +21,9 @@
 */
 
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Collision.Shapes
+namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
     /// A chain shape is a free form sequence of line segments.

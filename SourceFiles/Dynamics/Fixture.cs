@@ -24,13 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics.Contacts;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics.Contacts;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     [Flags]
     public enum Category

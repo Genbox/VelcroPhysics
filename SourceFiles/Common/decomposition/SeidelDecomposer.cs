@@ -5,11 +5,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common.Decomposition.Seidel;
-using Microsoft.Xna.Framework;
-using Point = FarseerPhysics.Common.Decomposition.Seidel.Point;
+using VelcroPhysics.Common.Decomposition.Seidel;
+using Point = VelcroPhysics.Common.Decomposition.Seidel.Point;
 
-namespace FarseerPhysics.Common.Decomposition
+namespace VelcroPhysics.Common.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm created by Raimund Seidel

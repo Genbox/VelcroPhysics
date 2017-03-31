@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Dynamics;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Controllers
+namespace VelcroPhysics.Controllers
 {
     /// <summary>
     /// Put a limit on the linear (translation - the movespeed) and angular (rotation) velocity

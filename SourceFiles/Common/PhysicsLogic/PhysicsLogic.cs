@@ -1,7 +1,7 @@
 using System;
-using FarseerPhysics.Dynamics;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Common.PhysicsLogic
 {
     [Flags]
     public enum PhysicsLogicType

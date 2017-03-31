@@ -21,10 +21,10 @@
 */
 
 using System;
-using FarseerPhysics.Dynamics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Collision
+namespace VelcroPhysics.Collision
 {
     internal struct Pair : IComparable<Pair>
     {

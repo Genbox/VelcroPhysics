@@ -20,12 +20,12 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     /// <summary>
     /// This delegate is called when a contact is deleted

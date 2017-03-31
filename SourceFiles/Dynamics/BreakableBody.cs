@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Factories;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Factories;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     /// <summary>
     /// A type of body that supports multiple fixtures that can break apart.

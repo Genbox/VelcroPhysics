@@ -24,16 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.PhysicsLogic;
-using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.PhysicsLogic;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     /// <summary>
     /// The body type.

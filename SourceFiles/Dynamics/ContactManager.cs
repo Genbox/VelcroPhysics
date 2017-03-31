@@ -22,10 +22,10 @@
 //#define USE_ACTIVE_CONTACT_SET
 
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Dynamics.Contacts;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Dynamics.Contacts;
 
-namespace FarseerPhysics.Dynamics
+namespace VelcroPhysics.Dynamics
 {
     public class ContactManager
     {

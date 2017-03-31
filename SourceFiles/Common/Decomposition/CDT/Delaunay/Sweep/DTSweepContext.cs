@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 {
     /**
      * 

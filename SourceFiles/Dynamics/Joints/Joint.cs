@@ -22,9 +22,9 @@
 
 using System;
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     public enum JointType
     {

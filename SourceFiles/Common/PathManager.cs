@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     /// <summary>
     /// An easy to use manager for creating paths.

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
 
-namespace FarseerPhysics.Common.TextureTools
+namespace VelcroPhysics.Common.TextureTools
 {
     // Ported by Matthew Bettcher - Feb 2011
 

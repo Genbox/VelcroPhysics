@@ -22,10 +22,9 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     // Linear constraint (point-to-line)
     // d = p2 - p1 = x2 + r2 - x1 - r1

@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     /// <summary>
     /// Serialize the world into an XML file

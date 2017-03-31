@@ -23,10 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Collision
+namespace VelcroPhysics.Collision
 {
     /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.

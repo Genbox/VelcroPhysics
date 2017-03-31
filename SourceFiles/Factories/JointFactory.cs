@@ -1,8 +1,8 @@
-﻿using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using Microsoft.Xna.Framework;
+﻿using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Factories
+namespace VelcroPhysics.Factories
 {
     /// <summary>
     /// An easy to use factory for using joints.

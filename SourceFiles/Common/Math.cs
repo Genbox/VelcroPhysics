@@ -23,9 +23,8 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework;
 
-namespace FarseerPhysics.Common
+namespace VelcroPhysics.Common
 {
     public static class MathUtils
     {

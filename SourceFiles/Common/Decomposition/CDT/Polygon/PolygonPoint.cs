@@ -34,7 +34,7 @@
 // Future possibilities
 //   Documentation!
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Polygon
+namespace VelcroPhysics.Common.Decomposition.CDT.Polygon
 {
     internal class PolygonPoint : TriangulationPoint
     {

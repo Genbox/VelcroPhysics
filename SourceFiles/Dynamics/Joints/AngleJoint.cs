@@ -5,9 +5,9 @@
 
 using System;
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Dynamics.Joints
+namespace VelcroPhysics.Dynamics.Joints
 {
     /// <summary>
     /// Maintains a fixed angle between two bodies

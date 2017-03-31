@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Common.PolygonManipulation;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
 
-namespace FarseerPhysics.Common.TextureTools
+namespace VelcroPhysics.Common.TextureTools
 {
     /// <summary>
     /// Simple class to maintain a terrain. It can keep track

@@ -22,10 +22,9 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Common;
-using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Collision
+namespace VelcroPhysics.Collision
 {
     /// <summary>
     /// Input parameters for CalculateTimeOfImpact

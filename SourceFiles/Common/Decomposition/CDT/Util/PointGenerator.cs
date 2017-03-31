@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FarseerPhysics.Common.Decomposition.CDT.Util
+namespace VelcroPhysics.Common.Decomposition.CDT.Util
 {
     internal class PointGenerator
     {
