@@ -466,7 +466,7 @@ namespace FarseerPhysics.Common
             _writer.WriteEndElement();
 
             _writer.Flush();
-            _writer.Close();
+            _writer.Dispose();
         }
     }
 
