@@ -1,4 +1,4 @@
-# Welcome to Velcro Physics
+# Welcome to Velcro Physics (Formerly Farseer Physics Engine)
 
 ## What is this?
 Velcro Physics is a high performance 2D collision detection system with realistic physics responses.
