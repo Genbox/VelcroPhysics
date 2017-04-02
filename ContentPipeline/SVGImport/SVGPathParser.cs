@@ -26,6 +26,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Common;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipeline.SVGImport
 {

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.ContentPipeline.SVGImport;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

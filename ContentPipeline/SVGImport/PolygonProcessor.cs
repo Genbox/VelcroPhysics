@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipeline.SVGImport
 {

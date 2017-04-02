@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipeline.SVGImport
 {

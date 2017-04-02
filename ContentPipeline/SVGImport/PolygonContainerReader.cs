@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Content;
 using VelcroPhysics.Common;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipeline.SVGImport
 {

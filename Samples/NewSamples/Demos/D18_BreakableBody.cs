@@ -10,6 +10,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {
