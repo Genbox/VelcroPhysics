@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <RootNamespace>VelcroPhysics</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\Curve.cs" />
+    <Compile Remove="Common\CurveKey.cs" />
+    <Compile Remove="Common\CurveKeyCollection.cs" />
+    <Compile Remove="Common\HashSet.cs" />
+    <Compile Remove="Common\MathHelper.cs" />
+    <Compile Remove="Common\Matrix.cs" />
+    <Compile Remove="Common\Stopwatch.cs" />
+    <Compile Remove="Common\Vector2.cs" />
+    <Compile Remove="Common\Vector3.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.6.0.1625" />
+  </ItemGroup>
+
+</Project>
