@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.DebugView
+namespace VelcroPhysics.DebugView
 {
     public class PrimitiveBatch : IDisposable
     {

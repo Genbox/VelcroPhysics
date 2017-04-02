@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.DebugView
+namespace VelcroPhysics.DebugView
 {
     /// <summary>
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
-    public class DebugViewXNA : DebugViewBase, IDisposable
+    public class DebugView : DebugViewBase, IDisposable
     {
         //Drawing
         private PrimitiveBatch _primitiveBatch;
@@ -69,7 +69,7 @@ namespace FarseerPhysics.DebugView
         public const int CircleSegments = 32;
 #endif
 
-        public DebugViewXNA(World world)
+        public DebugView(World world)
             : base(world)
         {
             world.ContactManager.PreSolve += PreSolve;

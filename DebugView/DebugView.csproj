@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <AssemblyName>VelcroPhysics.DebugView</AssemblyName>
+    <RootNamespace>VelcroPhysics.DebugView</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SourceFiles\VelcroPhysics.MonoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.6.0.1625" />
+  </ItemGroup>
+
+</Project>
