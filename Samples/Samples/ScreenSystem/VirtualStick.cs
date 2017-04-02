@@ -1,9 +1,9 @@
-﻿using FarseerPhysics.Samples.DrawingSystem;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using VelcroPhysics.Samples.Samples1.DrawingSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples1.ScreenSystem
 {
     public sealed class VirtualStick
     {

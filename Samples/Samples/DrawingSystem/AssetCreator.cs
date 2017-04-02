@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Samples.DrawingSystem
+namespace VelcroPhysics.Samples.Samples1.DrawingSystem
 {
     public enum MaterialType
     {

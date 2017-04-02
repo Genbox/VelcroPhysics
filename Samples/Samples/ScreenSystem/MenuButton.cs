@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples1.ScreenSystem
 {
     /// <summary>
     /// Helper class represents a single entry in a MenuScreen. By default this

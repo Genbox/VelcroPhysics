@@ -1,9 +1,9 @@
 ﻿using System;
-using FarseerPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision.Shapes;
 
-namespace FarseerPhysics.Samples.DrawingSystem
+namespace VelcroPhysics.Samples.Samples1.DrawingSystem
 {
     public class LineBatch : IDisposable
     {

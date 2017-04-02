@@ -1,18 +1,18 @@
 using System;
-using FarseerPhysics.Samples.Demos;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Samples.Samples1.Demos;
+using VelcroPhysics.Samples.Samples1.ScreenSystem;
 
-namespace FarseerPhysics.Samples
+namespace VelcroPhysics.Samples.Samples1
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class FarseerPhysicsGame : Game
+    public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
 
-        public FarseerPhysicsGame()
+        public Game1()
         {
             Window.Title = "Farseer Samples Framework";
             _graphics = new GraphicsDeviceManager(this);

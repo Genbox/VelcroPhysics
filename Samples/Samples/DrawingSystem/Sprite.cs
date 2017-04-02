@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.DrawingSystem
+namespace VelcroPhysics.Samples.Samples1.DrawingSystem
 {
     public struct Sprite
     {

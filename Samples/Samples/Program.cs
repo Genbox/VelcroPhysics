@@ -1,16 +1,20 @@
-namespace FarseerPhysics.Samples
+﻿using System;
+
+namespace VelcroPhysics.Samples.Samples1
 {
-    internal static class Program
+    /// <summary>
+    /// The main class.
+    /// </summary>
+    public static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        private static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
-            using (FarseerPhysicsGame game = new FarseerPhysicsGame())
-            {
+            using (var game = new Game1())
                 game.Run();
-            }
         }
     }
 }

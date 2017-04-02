@@ -1,12 +1,12 @@
-﻿using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.DrawingSystem;
-using FarseerPhysics.Samples.ScreenSystem;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Samples.Samples1.DrawingSystem;
+using VelcroPhysics.Samples.Samples1.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos.Prefabs
+namespace VelcroPhysics.Samples.Samples1.Demos.Prefabs
 {
     public class Spider
     {

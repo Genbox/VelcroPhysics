@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Samples.Samples1.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples1.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples1.Demos
 {
     internal class SimpleDemo4 : PhysicsGameScreen, IDemoScreen
     {

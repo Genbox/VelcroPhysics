@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples1.ScreenSystem
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can
@@ -11,11 +11,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
     /// </summary>
     public class MenuScreen : GameScreen
     {
-#if WINDOWS || XBOX
         private const float NumEntries = 15;
-#elif WINDOWS_PHONE
-        private const float NumEntries = 9;
-#endif
         private List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private string _menuTitle;
         private Vector2 _titlePosition;

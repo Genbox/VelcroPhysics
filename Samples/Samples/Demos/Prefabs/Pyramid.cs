@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.DrawingSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Samples.Samples1.DrawingSystem;
+using VelcroPhysics.Samples.Samples1.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos.Prefabs
+namespace VelcroPhysics.Samples.Samples1.Demos.Prefabs
 {
     public class Pyramid
     {

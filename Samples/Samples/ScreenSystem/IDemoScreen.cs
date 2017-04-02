@@ -1,4 +1,4 @@
-﻿namespace FarseerPhysics.Samples.ScreenSystem
+﻿namespace VelcroPhysics.Samples.Samples1.ScreenSystem
 {
     public interface IDemoScreen
     {

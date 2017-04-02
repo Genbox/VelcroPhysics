@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.PolygonManipulation;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Common.PolygonManipulation;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Samples.Samples1.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples1.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples1.Demos
 {
     internal class AdvancedDemo1 : PhysicsGameScreen, IDemoScreen
     {
