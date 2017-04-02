@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.Content;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.MediaSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common;
+using VelcroPhysics.ContentPipeline.SVGImport;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D18_BreakableBody : PhysicsDemoScreen
     {

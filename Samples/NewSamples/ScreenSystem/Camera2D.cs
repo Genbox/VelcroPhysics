@@ -1,9 +1,9 @@
 ﻿using System;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Dynamics;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     public class Camera2D
     {

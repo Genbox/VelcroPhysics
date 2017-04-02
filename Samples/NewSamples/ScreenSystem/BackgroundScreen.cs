@@ -1,8 +1,8 @@
 ﻿using System;
-using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.

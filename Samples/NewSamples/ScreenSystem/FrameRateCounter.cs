@@ -1,10 +1,10 @@
 using System;
 using System.Globalization;
-using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
     /// Displays the FPS

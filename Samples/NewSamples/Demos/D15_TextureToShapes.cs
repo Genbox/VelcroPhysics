@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.MediaSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D15_TextureToShapes : PhysicsDemoScreen
     {

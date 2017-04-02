@@ -1,13 +1,13 @@
 ﻿using System.Text;
-using FarseerPhysics.Content;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.MediaSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.ContentPipeline.SVGImport;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D17_SVGtoBody : PhysicsDemoScreen
     {

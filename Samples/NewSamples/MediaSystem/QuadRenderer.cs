@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarseerPhysics.Samples.MediaSystem
+namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {
     public class QuadRenderer : IDisposable
     {

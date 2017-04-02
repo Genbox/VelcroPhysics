@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.MediaSystem;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D11_SoftBody : PhysicsDemoScreen
     {

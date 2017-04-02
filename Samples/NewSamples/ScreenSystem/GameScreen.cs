@@ -1,9 +1,9 @@
 using System;
-using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -105,7 +105,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         /// <summary>
         /// Gets the main game type that this screen belongs to.
         /// </summary>
-        public FarseerPhysicsSamples Framework { get; internal set; }
+        public Game1 Framework { get; internal set; }
 
         public SpriteBatch Sprites { get; protected internal set; }
         public LineBatch Lines { get; protected internal set; }

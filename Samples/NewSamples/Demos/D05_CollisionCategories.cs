@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Samples.Demos.Prefabs;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D05_CollisionCategories : PhysicsDemoScreen
     {

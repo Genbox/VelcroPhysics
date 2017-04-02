@@ -1,10 +1,10 @@
 ﻿using System;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
 
-namespace FarseerPhysics.Samples.MediaSystem
+namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {
     public class LineBatch : IDisposable
     {

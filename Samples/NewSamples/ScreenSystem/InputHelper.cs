@@ -1,9 +1,9 @@
-﻿using FarseerPhysics.Samples.MediaSystem;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
     ///   an enum of all available mouse buttons.

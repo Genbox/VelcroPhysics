@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using FarseerPhysics.Samples.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Samples.Samples2.MediaSystem;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can

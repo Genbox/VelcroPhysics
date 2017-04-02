@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Dynamics;
 using Path = System.IO.Path;
 
-namespace FarseerPhysics.Samples.MediaSystem
+namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {
     public class ContentWrapper : GameComponent
     {

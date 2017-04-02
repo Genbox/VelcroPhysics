@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using FarseerPhysics.Content;
-using FarseerPhysics.Samples.ScreenSystem;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.ContentPipeline.SVGImport;
+using VelcroPhysics.Samples.Samples2.ScreenSystem;
 
-namespace FarseerPhysics.Samples.Demos
+namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D16_SVGtoPolygon : PhysicsDemoScreen
     {

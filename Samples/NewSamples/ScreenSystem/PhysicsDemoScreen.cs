@@ -1,11 +1,10 @@
 ﻿using System;
-using FarseerPhysics.DebugView;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Samples.ScreenSystem
+namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     public class PhysicsDemoScreen : GameScreen
     {
@@ -13,7 +12,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
         private static bool _flagsChanged;
 
         protected Camera2D Camera;
-        protected DebugViewXNA DebugView;
+        protected DebugView.DebugView DebugView;
         protected World World;
 
         private float _agentForce;
@@ -64,7 +63,7 @@ namespace FarseerPhysics.Samples.ScreenSystem
 
             if (DebugView == null)
             {
-                DebugView = new DebugViewXNA(World);
+                DebugView = new DebugView.DebugView(World);
                 DebugView.DefaultShapeColor = Color.White;
                 DebugView.SleepingShapeColor = Color.LightGray;
                 DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
