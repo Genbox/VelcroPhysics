@@ -1,11 +1,11 @@
-﻿using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     internal class SimpleWindForceTest : Test
     {

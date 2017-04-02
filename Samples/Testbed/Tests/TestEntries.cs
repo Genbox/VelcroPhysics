@@ -20,9 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Testbed.Framework;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public static class TestEntries
     {

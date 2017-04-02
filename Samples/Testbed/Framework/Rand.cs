@@ -1,6 +1,6 @@
 using System;
 
-namespace FarseerPhysics.Testbed.Framework
+namespace VelcroPhysics.Testbed.Framework
 {
     public static class Rand
     {

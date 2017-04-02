@@ -20,13 +20,13 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class TimeOfImpactTest : Test
     {

@@ -17,15 +17,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class ShapeEditingTest : Test
     {

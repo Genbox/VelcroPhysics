@@ -20,14 +20,14 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Controllers;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Controllers;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class GravityControllerTest : Test
     {

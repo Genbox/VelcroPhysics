@@ -1,12 +1,12 @@
-﻿using FarseerPhysics.Common;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class CloneTest : Test
     {

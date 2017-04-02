@@ -20,15 +20,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Joints;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class BodyTypesTest : Test
     {

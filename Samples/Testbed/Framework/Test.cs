@@ -21,21 +21,19 @@
 */
 
 using System;
-using System.IO;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.DebugView;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Joints;
 
-namespace FarseerPhysics.Testbed.Framework
+namespace VelcroPhysics.Testbed.Framework
 {
     public class Test
     {
-        internal DebugViewXNA DebugView;
+        internal DebugView.DebugView DebugView;
         internal int StepCount;
         internal World World;
         private FixedMouseJoint _fixedMouseJoint;
@@ -58,7 +56,7 @@ namespace FarseerPhysics.Testbed.Framework
 
         public virtual void Initialize()
         {
-            DebugView = new DebugViewXNA(World);
+            DebugView = new DebugView.DebugView(World);
             DebugView.LoadContent(GameInstance.GraphicsDevice, GameInstance.Content);
         }
 

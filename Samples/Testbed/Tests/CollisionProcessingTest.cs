@@ -21,15 +21,15 @@
 */
 
 using System.Collections.Generic;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class CollisionProcessingTest : Test
     {

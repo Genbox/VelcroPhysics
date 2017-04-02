@@ -1,4 +1,4 @@
-namespace FarseerPhysics.Testbed.Framework
+namespace VelcroPhysics.Testbed.Framework
 {
     public class GameSettings
     {

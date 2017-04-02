@@ -22,12 +22,12 @@
 
 using System;
 using System.Diagnostics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class DynamicTreeTest : Test
     {

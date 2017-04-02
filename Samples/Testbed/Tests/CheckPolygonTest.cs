@@ -1,10 +1,10 @@
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class CheckPolygonTest : Test
     {

@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace FarseerPhysics.Testbed.Framework
+namespace VelcroPhysics.Testbed.Framework
 {
     public class KeyboardManager
     {

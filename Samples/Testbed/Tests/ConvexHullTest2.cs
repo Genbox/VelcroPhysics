@@ -1,9 +1,9 @@
-using FarseerPhysics.Common;
-using FarseerPhysics.Common.ConvexHull;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
+using VelcroPhysics.Common.ConvexHull;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class ConvexHullTest2 : Test
     {

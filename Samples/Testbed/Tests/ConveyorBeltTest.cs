@@ -20,14 +20,14 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Factories;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class ConveyorBeltTest : Test
     {

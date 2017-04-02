@@ -20,15 +20,15 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using FarseerPhysics.Collision;
-using FarseerPhysics.Collision.Shapes;
-using FarseerPhysics.Common;
-using FarseerPhysics.Dynamics.Contacts;
-using FarseerPhysics.Testbed.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Testbed.Tests
 {
     public class PolyCollisionTest : Test
     {
