@@ -9,8 +9,8 @@
     <ProjectGuid>{7A80C882-DBE7-4DC9-B0F9-6C42B1202B40}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VelcroPhysics.Testbed</RootNamespace>
-    <AssemblyName>VelcroPhysics.Testbed</AssemblyName>
+    <RootNamespace>VelcroPhysics.Samples.Testbed</RootNamespace>
+    <AssemblyName>VelcroPhysics.Samples.Testbed</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
