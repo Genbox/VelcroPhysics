@@ -25,9 +25,9 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ConfinedTest : Test
     {

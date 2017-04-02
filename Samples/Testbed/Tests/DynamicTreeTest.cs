@@ -25,9 +25,9 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
-using VelcroPhysics.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class DynamicTreeTest : Test
     {

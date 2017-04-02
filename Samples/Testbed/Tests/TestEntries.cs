@@ -20,9 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using VelcroPhysics.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public static class TestEntries
     {

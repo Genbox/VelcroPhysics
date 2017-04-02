@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Testbed.Framework
+namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public static class Rand
     {

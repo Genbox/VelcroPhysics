@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     internal class SimpleWindForceTest : Test
     {

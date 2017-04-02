@@ -29,7 +29,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Dynamics.Joints;
 
-namespace VelcroPhysics.Testbed.Framework
+namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public class Test
     {

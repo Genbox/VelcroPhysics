@@ -5,9 +5,9 @@ using VelcroPhysics.Common;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class TextureVerticesTest : Test
     {

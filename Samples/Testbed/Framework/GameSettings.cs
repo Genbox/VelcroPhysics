@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Testbed.Framework
+namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public class GameSettings
     {

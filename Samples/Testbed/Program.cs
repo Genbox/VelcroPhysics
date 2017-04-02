@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VelcroPhysics.Testbed
+namespace VelcroPhysics.Samples.Testbed
 {
     public static class Program
     {

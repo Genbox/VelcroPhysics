@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Common;
-using VelcroPhysics.Testbed.Framework;
-using VelcroPhysics.Testbed.Tests;
+using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Samples.Testbed.Tests;
 
-namespace VelcroPhysics.Testbed
+namespace VelcroPhysics.Samples.Testbed
 {
 	public class Game1 : Game
 	{
