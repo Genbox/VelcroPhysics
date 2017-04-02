@@ -1,17 +1,16 @@
-namespace FarseerPhysics.Samples
+﻿using System;
+
+namespace VelcroPhysics.Samples.HelloWorld
 {
-    static class Program
+#if WINDOWS || LINUX
+    public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
-            using (Game1 game = new Game1())
-            {
+            using (var game = new Game1())
                 game.Run();
-            }
         }
     }
+#endif
 }
-
