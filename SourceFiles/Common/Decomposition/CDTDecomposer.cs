@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Common.Decomposition.CDT;
 using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
 using VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep;

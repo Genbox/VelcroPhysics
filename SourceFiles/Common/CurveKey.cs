@@ -34,7 +34,7 @@ SOFTWARE.
 
 using System;
 
-namespace VelcroPhysics.Common
+namespace Microsoft.Xna.Framework
 {
     public class CurveKey : IEquatable<CurveKey>, IComparable<CurveKey>
     {

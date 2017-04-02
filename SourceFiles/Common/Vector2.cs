@@ -36,7 +36,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace VelcroPhysics.Common
+namespace Microsoft.Xna.Framework
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2 : IEquatable<Vector2>

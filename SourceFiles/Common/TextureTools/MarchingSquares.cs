@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
 
 namespace VelcroPhysics.Common.TextureTools

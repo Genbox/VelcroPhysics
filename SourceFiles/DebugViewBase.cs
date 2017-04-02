@@ -4,6 +4,7 @@
 */
 
 using System;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 

@@ -32,7 +32,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
-namespace VelcroPhysics.Common
+namespace Microsoft.Xna.Framework
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Matrix : IEquatable<Matrix>

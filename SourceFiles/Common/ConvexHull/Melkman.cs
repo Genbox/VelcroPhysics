@@ -1,4 +1,6 @@
-﻿namespace VelcroPhysics.Common.ConvexHull
+﻿using Microsoft.Xna.Framework;
+
+namespace VelcroPhysics.Common.ConvexHull
 {
     /// <summary>
     /// Creates a convex hull.

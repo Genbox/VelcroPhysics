@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Common.Decomposition.Seidel;
 using Point = VelcroPhysics.Common.Decomposition.Seidel.Point;
 

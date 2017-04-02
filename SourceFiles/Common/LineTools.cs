@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
 
 namespace VelcroPhysics.Common

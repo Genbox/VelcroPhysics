@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
 
 namespace VelcroPhysics.Common

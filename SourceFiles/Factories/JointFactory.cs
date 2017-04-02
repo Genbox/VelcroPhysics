@@ -1,4 +1,5 @@
-﻿using VelcroPhysics.Common;
+﻿using Microsoft.Xna.Framework;
+using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 
