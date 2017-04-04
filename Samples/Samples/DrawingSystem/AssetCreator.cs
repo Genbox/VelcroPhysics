@@ -212,14 +212,14 @@ namespace VelcroPhysics.Samples.Samples1.DrawingSystem
             _effect.TextureEnabled = true;
             _effect.Texture = material;
             _effect.VertexColorEnabled = true;
-            _effect.Techniques[0].Passes[0].Apply();
+            _effect.CurrentTechnique.Passes[0].Apply();
             for (int i = 0; i < verticesFill.Count; ++i)
             {
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
             }
             // render outline;
             _effect.TextureEnabled = false;
-            _effect.Techniques[0].Passes[0].Apply();
+            _effect.CurrentTechnique.Passes[0].Apply();
             _device.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
             _device.SetRenderTarget(null);
             return texture;

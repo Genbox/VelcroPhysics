@@ -411,11 +411,13 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             Game.GraphicsDevice.Clear(Color.Transparent);
             _effect.Projection = Matrix.CreateOrthographic(width + 2f, -height - 2f, 0f, 1f);
             _effect.View = halfPixelOffset;
+
             // render shape;
             _effect.TextureEnabled = true;
             _effect.Texture = _textureList["Blank"];
             _effect.VertexColorEnabled = true;
-            _effect.Techniques[0].Passes[0].Apply();
+
+            _effect.CurrentTechnique.Passes[0].Apply();
 
             for (int i = 0; i < verticesFill.Count; i++)
             {
@@ -425,7 +427,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             if (pattern != null)
             {
                 _effect.Texture = pattern;
-                _effect.Techniques[0].Passes[0].Apply();
+                _effect.CurrentTechnique.Passes[0].Apply();
                 for (int i = 0; i < verticesFill.Count; i++)
                 {
                     for (int j = 0; j < verticesFill[i].Length; j++)
@@ -435,13 +437,15 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                     Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
                 }
             }
+
             // render outline;
             if (verticesOutline.Length > 1)
             {
                 _effect.TextureEnabled = false;
-                _effect.Techniques[0].Passes[0].Apply();
+                _effect.CurrentTechnique.Passes[0].Apply();
                 Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
             }
+
             Game.GraphicsDevice.SetRenderTarget(null);
             return texture;
         }
