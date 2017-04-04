@@ -62,21 +62,21 @@
 #begin Pipeline/FarseerBody.svg
 /importer:SVGImporter
 /processor:BodyProcessor
-/processorParam:ScaleFactor=1
+/processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /build:Pipeline/FarseerBody.svg
 
 #begin Pipeline/FarseerBreakableBody.svg
 /importer:SVGImporter
 /processor:BodyProcessor
-/processorParam:ScaleFactor=1
+/processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /build:Pipeline/FarseerBreakableBody.svg
 
 #begin Pipeline/FarseerPolygon.svg
 /importer:SVGImporter
 /processor:PolygonProcessor
-/processorParam:ScaleFactor=1
+/processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /processorParam:DecomposePaths=False
 /build:Pipeline/FarseerPolygon.svg
@@ -84,8 +84,8 @@
 #begin Pipeline/Object.png
 /importer:TextureImporter
 /processor:TextureToVerticesProcessor
-/processorParam:ScaleFactor=1
-/processorParam:HoleDetection=False
+/processorParam:ScaleFactor=24
+/processorParam:HoleDetection=True
 /build:Pipeline/Object.png
 
 #begin Common/Buttons.png
