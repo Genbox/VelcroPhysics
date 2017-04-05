@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         }
         #endregion
 
-        private PolygonContainer _farseerPoly;
+        private PolygonContainer _poly;
 
         public override void LoadContent()
         {
@@ -39,13 +39,13 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _farseerPoly = Framework.Content.Load<PolygonContainer>("Pipeline/FarseerPolygon");
+            _poly = Framework.Content.Load<PolygonContainer>("Pipeline/Polygon");
         }
 
         public override void Draw(GameTime gameTime)
         {
             DebugView.BeginCustomDraw(Camera.SimProjection, Camera.SimView);
-            foreach (Polygon p in _farseerPoly.Values)
+            foreach (Polygon p in _poly.Values)
             {
                 DebugView.DrawPolygon(p.Vertices.ToArray(), p.Vertices.Count, Color.Black, p.Closed);
             }

@@ -59,27 +59,27 @@
 /processorParam:TextureFormat=Color
 /build:Materials/Stripe.png
 
-#begin Pipeline/FarseerBody.svg
+#begin Pipeline/Body.svg
 /importer:SVGImporter
 /processor:BodyProcessor
 /processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
-/build:Pipeline/FarseerBody.svg
+/build:Pipeline/Body.svg
 
-#begin Pipeline/FarseerBreakableBody.svg
+#begin Pipeline/BreakableBody.svg
 /importer:SVGImporter
 /processor:BodyProcessor
 /processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
-/build:Pipeline/FarseerBreakableBody.svg
+/build:Pipeline/BreakableBody.svg
 
-#begin Pipeline/FarseerPolygon.svg
+#begin Pipeline/Polygon.svg
 /importer:SVGImporter
 /processor:PolygonProcessor
 /processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /processorParam:DecomposePaths=False
-/build:Pipeline/FarseerPolygon.svg
+/build:Pipeline/Polygon.svg
 
 #begin Pipeline/Object.png
 /importer:TextureImporter

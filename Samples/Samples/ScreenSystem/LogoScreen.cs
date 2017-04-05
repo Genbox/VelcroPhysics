@@ -14,7 +14,7 @@ namespace VelcroPhysics.Samples.Samples1.ScreenSystem
         private ContentManager _content;
         private Rectangle _destination;
         private TimeSpan _duration;
-        private Texture2D _farseerLogoTexture;
+        private Texture2D _logoTexture;
 
         public LogoScreen(TimeSpan duration)
         {
@@ -34,7 +34,7 @@ namespace VelcroPhysics.Samples.Samples1.ScreenSystem
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _farseerLogoTexture = _content.Load<Texture2D>("Common/logo");
+            _logoTexture = _content.Load<Texture2D>("Common/logo");
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             int rectHeight = (int)(viewport.Height * LogoScreenHeightRatio);
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Samples1.ScreenSystem
             ScreenManager.GraphicsDevice.Clear(Color.White);
 
             ScreenManager.SpriteBatch.Begin();
-            ScreenManager.SpriteBatch.Draw(_farseerLogoTexture, _destination, Color.White);
+            ScreenManager.SpriteBatch.Draw(_logoTexture, _destination, Color.White);
             ScreenManager.SpriteBatch.End();
         }
     }

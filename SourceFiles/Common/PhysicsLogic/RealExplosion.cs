@@ -9,7 +9,7 @@ using VelcroPhysics.Dynamics;
 namespace VelcroPhysics.Common.PhysicsLogic
 {
     // Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
-    // Ported to Farseer 3.0 by Nicolás Hormazábal
+    // Ported by Nicolás Hormazábal
 
     internal struct ShapeData
     {

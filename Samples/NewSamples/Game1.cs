@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Samples2
 
 		public Game1()
 		{
-			Window.Title = "Farseer Physics Samples";
+			Window.Title = "Velcro Physics Samples";
 
 			_graphics = new GraphicsDeviceManager(this);
 			_graphics.PreferMultiSampling = true;

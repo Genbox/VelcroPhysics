@@ -8,8 +8,8 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
     public class LogoScreen : GameScreen
     {
         private TimeSpan _duration;
-        private Texture2D _farseerLogoTexture;
-        private Vector2 _farseerLogoPosition;
+        private Texture2D _logoTexture;
+        private Vector2 _logoPosition;
 
         public LogoScreen(TimeSpan duration)
         {
@@ -27,10 +27,10 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            _farseerLogoTexture = ContentWrapper.GetTexture("Logo");
+            _logoTexture = ContentWrapper.GetTexture("Logo");
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-            _farseerLogoPosition = new Vector2((viewport.Width - _farseerLogoTexture.Width) / 2f - 100f, (viewport.Height - _farseerLogoTexture.Height) / 2f);
+            _logoPosition = new Vector2((viewport.Width - _logoTexture.Width) / 2f - 100f, (viewport.Height - _logoTexture.Height) / 2f);
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
@@ -57,7 +57,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             Framework.GraphicsDevice.Clear(Color.White);
 
             Sprites.Begin();
-            Sprites.Draw(_farseerLogoTexture, _farseerLogoPosition, Color.White);
+            Sprites.Draw(_logoTexture, _logoPosition, Color.White);
             Sprites.End();
         }
     }

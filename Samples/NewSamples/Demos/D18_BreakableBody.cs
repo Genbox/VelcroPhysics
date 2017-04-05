@@ -62,7 +62,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             _border = new Border(World, Lines, Framework.GraphicsDevice);
             for (int i = 0; i < 3; i++)
             {
-                _breakableCookie[i] = Framework.Content.Load<BodyContainer>("Pipeline/FarseerBreakableBody")["Cookie"].CreateBreakable(World);
+                _breakableCookie[i] = Framework.Content.Load<BodyContainer>("Pipeline/BreakableBody")["Cookie"].CreateBreakable(World);
                 _breakableCookie[i].Strength = 120f;
                 _breakableCookie[i].MainBody.Position = new Vector2(-20.33f + 15f * i, -5.33f);
             }

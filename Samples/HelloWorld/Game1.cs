@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.HelloWorld
 			_groundOrigin = new Vector2(_groundSprite.Width / 2f, _groundSprite.Height / 2f);
 			_circleOrigin = new Vector2(_circleSprite.Width / 2f, _circleSprite.Height / 2f);
 
-			// Farseer expects objects to be scaled to MKS (meters, kilos, seconds)
+			// Velcro Physics expects objects to be scaled to MKS (meters, kilos, seconds)
 			// 1 meters equals 64 pixels here
 			ConvertUnits.SetDisplayUnitToSimUnitRatio(64f);
 

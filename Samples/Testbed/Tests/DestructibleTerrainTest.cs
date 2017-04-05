@@ -1,15 +1,15 @@
-﻿
-#if WINDOWS
-using FarseerPhysics.Collision;
-using FarseerPhysics.Common.Decomposition;
-using FarseerPhysics.Common.TextureTools;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
+﻿#if WINDOWS
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision;
+using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Common.TextureTools;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
+using VelcroPhysics.Samples.Testbed.Framework;
 
-namespace FarseerPhysics.Testbed.Tests
+namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class DestructibleTerrainTest : Test
     {

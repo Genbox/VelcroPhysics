@@ -26,7 +26,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override string GetDetails()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows the stacking stability of farseer physics.");
+            sb.AppendLine("This demo shows the stacking stability");
             sb.AppendLine("It shows a bunch of rectangular bodies stacked in the shape of a pyramid.");
             sb.AppendLine();
             sb.AppendLine("GamePad:");

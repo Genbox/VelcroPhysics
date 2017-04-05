@@ -170,11 +170,11 @@
     <Content Include="Content\DemoSFX\Click.wav" />
     <Content Include="Content\Materials\Square.png" />
     <Content Include="Content\Materials\Stripe.png" />
-    <Content Include="Content\Pipeline\FarseerBody.svg">
+    <Content Include="Content\Pipeline\Body.svg">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Content\Pipeline\FarseerBreakableBody.svg" />
-    <Content Include="Content\Pipeline\FarseerPolygon.svg" />
+    <Content Include="Content\Pipeline\BreakableBody.svg" />
+    <Content Include="Content\Pipeline\Polygon.svg" />
     <Content Include="Content\Pipeline\Object.png" />
   </ItemGroup>
   <ItemGroup>

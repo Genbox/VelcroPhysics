@@ -14,7 +14,7 @@ namespace VelcroPhysics.Samples.Samples1
 
         public Game1()
         {
-            Window.Title = "Farseer Samples Framework";
+            Window.Title = "Velcro Samples Framework";
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferMultiSampling = true;
 #if WINDOWS || XBOX
@@ -75,7 +75,7 @@ namespace VelcroPhysics.Samples.Samples1
 
             GameDemo1 game1 = new GameDemo1();
 
-            MenuScreen menuScreen = new MenuScreen("Farseer Samples");
+            MenuScreen menuScreen = new MenuScreen("Velcro Physics Samples");
 
             menuScreen.AddMenuItem("Simple Samples", EntryType.Separator, null);
             menuScreen.AddMenuItem(simple1.GetTitle(), EntryType.Screen, simple1);

@@ -35,7 +35,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         }
         #endregion
 
-        private BodyContainer _farseerBody;
+        private BodyContainer _body;
         private Border _border;
         private Body _heartBody;
         private Body _clubBody;
@@ -53,18 +53,18 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             World.Gravity = new Vector2(0f, 10f);
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            _farseerBody = Framework.Content.Load<BodyContainer>("Pipeline/FarseerBody");
+            _body = Framework.Content.Load<BodyContainer>("Pipeline/Body");
 
-            _heartBody = _farseerBody["Heart"].Create(World);
+            _heartBody = _body["Heart"].Create(World);
             _heart = new Sprite(ContentWrapper.GetTexture("Heart"), ContentWrapper.CalculateOrigin(_heartBody));
 
-            _clubBody = _farseerBody["Club"].Create(World);
+            _clubBody = _body["Club"].Create(World);
             _club = new Sprite(ContentWrapper.GetTexture("Club"), ContentWrapper.CalculateOrigin(_clubBody));
 
-            _spadeBody = _farseerBody["Spade"].Create(World);
+            _spadeBody = _body["Spade"].Create(World);
             _spade = new Sprite(ContentWrapper.GetTexture("Spade"), ContentWrapper.CalculateOrigin(_spadeBody));
 
-            _diamondBody = _farseerBody["Diamond"].Create(World);
+            _diamondBody = _body["Diamond"].Create(World);
             _diamond = new Sprite(ContentWrapper.GetTexture("Diamond"), ContentWrapper.CalculateOrigin(_diamondBody));
         }
 
