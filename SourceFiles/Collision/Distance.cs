@@ -294,7 +294,7 @@ namespace VelcroPhysics.Collision
         internal void WriteCache(ref SimplexCache cache)
         {
             cache.Metric = GetMetric();
-            cache.Count = (UInt16)Count;
+            cache.Count = (ushort)Count;
             for (int i = 0; i < Count; ++i)
             {
                 cache.IndexA[i] = (byte)(V[i].IndexA);

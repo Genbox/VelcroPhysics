@@ -253,7 +253,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         private void RotateCW()
         {
-            var t = Points[2];
+            TriangulationPoint t = Points[2];
             Points[2] = Points[1];
             Points[1] = Points[0];
             Points[0] = t;

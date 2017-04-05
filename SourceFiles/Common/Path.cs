@@ -130,7 +130,7 @@ namespace VelcroPhysics.Common
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < ControlPoints.Count; i++)
             {
-                builder.Append(ControlPoints[i].ToString());
+                builder.Append(ControlPoints[i]);
                 if (i < ControlPoints.Count - 1)
                 {
                     builder.Append(" ");

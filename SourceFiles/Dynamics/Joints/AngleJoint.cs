@@ -6,7 +6,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
 
 namespace VelcroPhysics.Dynamics.Joints
 {

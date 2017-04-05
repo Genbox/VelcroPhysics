@@ -45,7 +45,7 @@ namespace VelcroPhysics.Collision
         Failed,
         Overlapped,
         Touching,
-        Seperated,
+        Seperated
     }
 
     public struct TOIOutput

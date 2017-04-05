@@ -18,7 +18,6 @@
 */
 
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
 
 namespace VelcroPhysics.Dynamics
 {

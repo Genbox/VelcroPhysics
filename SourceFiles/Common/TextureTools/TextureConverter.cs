@@ -31,7 +31,7 @@ namespace VelcroPhysics.Common.TextureTools
         /// This array is ment to be readonly.
         /// It's not because it is accessed very frequently.
         /// </summary>
-        private static int[,] _closePixels = new[,] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+        private static int[,] _closePixels = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
 
         private uint _alphaTolerance;
 

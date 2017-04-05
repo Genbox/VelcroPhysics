@@ -169,7 +169,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT
             {
                 return Orientation.Collinear;
             }
-            else if (val > 0)
+            if (val > 0)
             {
                 return Orientation.CCW;
             }

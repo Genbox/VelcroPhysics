@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.Controllers

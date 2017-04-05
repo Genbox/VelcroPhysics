@@ -570,7 +570,7 @@ namespace VelcroPhysics.Common
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < Count; i++)
             {
-                builder.Append(this[i].ToString());
+                builder.Append(this[i]);
                 if (i < Count - 1)
                 {
                     builder.Append(" ");

@@ -10,7 +10,7 @@ namespace VelcroPhysics.Controllers
         GravityController = (1 << 0),
         VelocityLimitController = (1 << 1),
         AbstractForceController = (1 << 2),
-        BuoyancyController = (1 << 3),
+        BuoyancyController = (1 << 3)
     }
 
     public struct ControllerFilter

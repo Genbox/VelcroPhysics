@@ -53,7 +53,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Positive mass, non-zero velocity determined by forces, moved by solver
         /// </summary>
-        Dynamic,
+        Dynamic
     }
 
     public class Body : IDisposable

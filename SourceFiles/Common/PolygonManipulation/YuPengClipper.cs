@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
@@ -495,7 +494,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
                 return new Edge(e.EdgeEnd, e.EdgeStart);
             }
 
-            public override bool Equals(Object obj)
+            public override bool Equals(object obj)
             {
                 // If parameter is null return false.
                 if (obj == null)

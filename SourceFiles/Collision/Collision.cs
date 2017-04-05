@@ -33,7 +33,7 @@ namespace VelcroPhysics.Collision
     internal enum ContactFeatureType : byte
     {
         Vertex = 0,
-        Face = 1,
+        Face = 1
     }
 
     /// <summary>
@@ -190,7 +190,7 @@ namespace VelcroPhysics.Collision
         /// <summary>
         /// Point was removed in the update
         /// </summary>
-        Remove,
+        Remove
     }
 
     /// <summary>
@@ -580,7 +580,7 @@ namespace VelcroPhysics.Collision
     {
         Unknown,
         EdgeA,
-        EdgeB,
+        EdgeB
     }
 
     /// <summary>
@@ -1370,16 +1370,16 @@ namespace VelcroPhysics.Collision
 
         private class EPCollider
         {
-            Vector2 _centroidB;
-            bool _front;
-            Vector2 _lowerLimit, _upperLimit;
-            Vector2 _normal;
-            Vector2 _normal0, _normal1, _normal2;
+            private Vector2 _centroidB;
+            private bool _front;
+            private Vector2 _lowerLimit, _upperLimit;
+            private Vector2 _normal;
+            private Vector2 _normal0, _normal1, _normal2;
             private TempPolygon _polygonB = new TempPolygon();
-            float _radius;
-            Vector2 _v0, _v1, _v2, _v3;
+            private float _radius;
+            private Vector2 _v0, _v1, _v2, _v3;
 
-            Transform _xf;
+            private Transform _xf;
 
             public void Collide(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
             {

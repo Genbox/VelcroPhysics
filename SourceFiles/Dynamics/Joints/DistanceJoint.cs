@@ -117,13 +117,13 @@ namespace VelcroPhysics.Dynamics.Joints
         /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
-        public override sealed Vector2 WorldAnchorA
+        public sealed override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
         }
 
-        public override sealed Vector2 WorldAnchorB
+        public sealed override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }

@@ -23,7 +23,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
 
 namespace VelcroPhysics.Dynamics.Joints
 {
@@ -51,7 +50,7 @@ namespace VelcroPhysics.Dynamics.Joints
         FixedLine,
         FixedPrismatic,
         FixedAngle,
-        FixedFriction,
+        FixedFriction
     }
 
     public enum LimitState
@@ -59,7 +58,7 @@ namespace VelcroPhysics.Dynamics.Joints
         Inactive,
         AtLower,
         AtUpper,
-        Equal,
+        Equal
     }
 
     /// <summary>

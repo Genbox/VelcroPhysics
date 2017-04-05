@@ -110,7 +110,7 @@ namespace VelcroPhysics.Collision.Shapes
         Edge = 1,
         Polygon = 2,
         Chain = 3,
-        TypeCount = 4,
+        TypeCount = 4
     }
 
     /// <summary>

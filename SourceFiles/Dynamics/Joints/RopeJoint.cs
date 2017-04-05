@@ -105,13 +105,13 @@ namespace VelcroPhysics.Dynamics.Joints
         /// </summary>
         public Vector2 LocalAnchorB { get; set; }
 
-        public override sealed Vector2 WorldAnchorA
+        public sealed override Vector2 WorldAnchorA
         {
             get { return BodyA.GetWorldPoint(LocalAnchorA); }
             set { LocalAnchorA = BodyA.GetLocalPoint(value); }
         }
 
-        public override sealed Vector2 WorldAnchorB
+        public sealed override Vector2 WorldAnchorB
         {
             get { return BodyB.GetWorldPoint(LocalAnchorB); }
             set { LocalAnchorB = BodyB.GetLocalPoint(value); }

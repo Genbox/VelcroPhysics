@@ -136,13 +136,13 @@ namespace VelcroPhysics.Dynamics.Joints
         /// Get the first world anchor.
         /// </summary>
         /// <value></value>
-        public override sealed Vector2 WorldAnchorA { get; set; }
+        public sealed override Vector2 WorldAnchorA { get; set; }
 
         /// <summary>
         /// Get the second world anchor.
         /// </summary>
         /// <value></value>
-        public override sealed Vector2 WorldAnchorB { get; set; }
+        public sealed override Vector2 WorldAnchorB { get; set; }
 
         /// <summary>
         /// Get the current length of the segment attached to body1.

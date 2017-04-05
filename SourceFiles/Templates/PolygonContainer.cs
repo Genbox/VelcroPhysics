@@ -38,7 +38,7 @@ namespace VelcroPhysics.Templates
                         Remove(key);
                         for (int i = 0; i < partition.Count; i++)
                         {
-                            this[key + "_" + i.ToString()] = new Polygon(partition[i], true);
+                            this[key + "_" + i] = new Polygon(partition[i], true);
                         }
                     }
                     _decomposed = true;
