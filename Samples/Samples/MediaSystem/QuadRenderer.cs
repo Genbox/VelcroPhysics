@@ -6,12 +6,12 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {
     public class QuadRenderer : IDisposable
     {
-        private BasicEffect _basicEffect;
+        private readonly BasicEffect _basicEffect;
 
-        private VertexPositionColorTexture[] _verticesQuad;
-        private short[] _lineBuffer = new short[] { 0, 1, 3, 2, 0 };
+        private readonly VertexPositionColorTexture[] _verticesQuad;
+        private readonly short[] _lineBuffer = { 0, 1, 3, 2, 0 };
 
-        private GraphicsDevice _device;
+        private readonly GraphicsDevice _device;
         private bool _isDisposed;
         private bool _hasBegun;
 
@@ -23,11 +23,12 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             _device = graphicsDevice;
             _isDisposed = false;
 
-            _verticesQuad = new[] { 
+            _verticesQuad = new[]
+            {
                 new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 1f)),
                 new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 1f)),
                 new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(0f, 0f)),
-                new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 0f)) 
+                new VertexPositionColorTexture(new Vector3(0f, 0f, 0f), Color.White, new Vector2(1f, 0f))
             };
 
             _basicEffect = new BasicEffect(graphicsDevice);

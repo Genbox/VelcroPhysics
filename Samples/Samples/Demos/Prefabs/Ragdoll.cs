@@ -16,23 +16,22 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
         private const float DampingRatio = 1f;
         private const float Frequency = 25f;
 
-        private Body _head;
-        private Body _upperBody;
-        private Body _middleBody;
-        private Body _lowerBody;
-        private Body _upperLeftArm;
-        private Body _lowerLeftArm;
-        private Body _upperRightArm;
-        private Body _lowerRightArm;
-        private Body _upperLeftLeg;
-        private Body _lowerLeftLeg;
-        private Body _upperRightLeg;
-        private Body _lowerRightLeg;
+        private readonly Body _head;
+        private readonly Body _middleBody;
+        private readonly Body _lowerBody;
+        private readonly Body _upperLeftArm;
+        private readonly Body _lowerLeftArm;
+        private readonly Body _upperRightArm;
+        private readonly Body _lowerRightArm;
+        private readonly Body _upperLeftLeg;
+        private readonly Body _lowerLeftLeg;
+        private readonly Body _upperRightLeg;
+        private readonly Body _lowerRightLeg;
 
-        private Sprite _face;
-        private Sprite _torso;
-        private Sprite _upperLimb;
-        private Sprite _lowerLimb;
+        private readonly Sprite _face;
+        private readonly Sprite _torso;
+        private readonly Sprite _upperLimb;
+        private readonly Sprite _lowerLimb;
 
         public Ragdoll(World world, Vector2 position)
         {
@@ -45,10 +44,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             _head.Position = position;
 
             // Torso
-            _upperBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
-            _upperBody.BodyType = BodyType.Dynamic;
-            _upperBody.Mass = 1f;
-            _upperBody.SetTransform(position + new Vector2(0f, 1.75f), MathHelper.Pi / 2f);
+            Body = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
+            Body.BodyType = BodyType.Dynamic;
+            Body.Mass = 1f;
+            Body.SetTransform(position + new Vector2(0f, 1.75f), MathHelper.Pi / 2f);
             _middleBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
             _middleBody.BodyType = BodyType.Dynamic;
             _middleBody.Mass = 1f;
@@ -115,7 +114,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
 
             // head -> upper body
-            DistanceJoint jointHeadBody = new DistanceJoint(_head, _upperBody, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
+            DistanceJoint jointHeadBody = new DistanceJoint(_head, Body, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
             jointHeadBody.CollideConnected = true;
             jointHeadBody.DampingRatio = DampingRatio;
             jointHeadBody.Frequency = Frequency;
@@ -131,7 +130,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             world.AddJoint(jointLeftArm);
 
             // upperLeftArm -> upper body
-            DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, 1f));
+            DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, Body, new Vector2(0f, -1f), new Vector2(-0.15f, 1f));
             jointLeftArmBody.DampingRatio = DampingRatio;
             jointLeftArmBody.Frequency = Frequency;
             jointLeftArmBody.Length = 0.02f;
@@ -146,7 +145,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             world.AddJoint(jointRightArm);
 
             // upperRightArm -> upper body
-            DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, _upperBody, new Vector2(0f, -1f), new Vector2(-0.15f, -1f));
+            DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, Body, new Vector2(0f, -1f), new Vector2(-0.15f, -1f));
             jointRightArmBody.DampingRatio = DampingRatio;
             jointRightArmBody.Frequency = 25;
             jointRightArmBody.Length = 0.02f;
@@ -185,7 +184,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             world.AddJoint(jointRightLegBody);
 
             // upper body -> middle body
-            RevoluteJoint jointUpperTorso = new RevoluteJoint(_upperBody, _middleBody, _upperBody.Position + new Vector2(0f, 0.625f), true);
+            RevoluteJoint jointUpperTorso = new RevoluteJoint(Body, _middleBody, Body.Position + new Vector2(0f, 0.625f), true);
             jointUpperTorso.LimitEnabled = true;
             jointUpperTorso.SetLimits(-MathHelper.Pi / 16f, MathHelper.Pi / 16f);
             world.AddJoint(jointUpperTorso);
@@ -203,10 +202,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
         }
 
-        public Body Body
-        {
-            get { return _upperBody; }
-        }
+        public Body Body { get; }
 
         public void Draw(SpriteBatch batch)
         {
@@ -224,7 +220,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
             batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_lowerBody.Position), null, Color.White, _lowerBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
             batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_middleBody.Position), null, Color.White, _middleBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
-            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(_upperBody.Position), null, Color.White, _upperBody.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
+            batch.Draw(_torso.Image, ConvertUnits.ToDisplayUnits(Body.Position), null, Color.White, Body.Rotation, _torso.Origin, 1f, SpriteEffects.None, 0f);
 
             batch.Draw(_face.Image, ConvertUnits.ToDisplayUnits(_head.Position), null, Color.White, _head.Rotation, _face.Origin, 1f, SpriteEffects.None, 0f);
         }

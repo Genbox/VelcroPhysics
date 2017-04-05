@@ -13,29 +13,29 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {
     public class TheoJansenWalker
     {
-        private Body _chassis;
-        private Body _wheel;
-        private Body[] _leftShoulders;
-        private Body[] _leftLegs;
-        private Body[] _rightShoulders;
-        private Body[] _rightLegs;
+        private readonly Body _chassis;
+        private readonly Body _wheel;
+        private readonly Body[] _leftShoulders;
+        private readonly Body[] _leftLegs;
+        private readonly Body[] _rightShoulders;
+        private readonly Body[] _rightLegs;
 
-        private Sprite _body;
-        private Sprite _engine;
-        private Sprite _leftShoulder;
-        private Sprite _leftLeg;
-        private Sprite _rightShoulder;
-        private Sprite _rightLeg;
+        private readonly Sprite _body;
+        private readonly Sprite _engine;
+        private readonly Sprite _leftShoulder;
+        private readonly Sprite _leftLeg;
+        private readonly Sprite _rightShoulder;
+        private readonly Sprite _rightLeg;
 
-        private RevoluteJoint _motorJoint;
-        private List<DistanceJoint> _walkerJoints = new List<DistanceJoint>();
+        private readonly RevoluteJoint _motorJoint;
+        private readonly List<DistanceJoint> _walkerJoints = new List<DistanceJoint>();
 
-        private bool _motorOn;
+        private readonly bool _motorOn;
         private float _motorSpeed;
 
-        private Vector2 _position;
+        private readonly Vector2 _position;
 
-        private Color[] _walkerColors = { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
+        private readonly Color[] _walkerColors = { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
 
         public TheoJansenWalker(World world, Vector2 position)
         {
@@ -96,13 +96,14 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             CreateLeg(world, 1f, wheelAnchor, 2);
 
             // GFX
-            Vector2[] points = { 
-                                new Vector2(-5.4f, 6.1f),
-                                new Vector2(-7.2f, 1.2f),
-                                new Vector2(-4.3f, 1.9f),
-                                new Vector2(-2.9f, -0.7f),
-                                new Vector2(0.6f, -2.9f)
-                               };
+            Vector2[] points =
+            {
+                new Vector2(-5.4f, 6.1f),
+                new Vector2(-7.2f, 1.2f),
+                new Vector2(-4.3f, 1.9f),
+                new Vector2(-2.9f, -0.7f),
+                new Vector2(0.6f, -2.9f)
+            };
 
             _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, ContentWrapper.Black));
             _leftShoulder.Origin = ContentWrapper.CalculateOrigin(_leftShoulders[0]);
@@ -124,14 +125,15 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
         private void CreateLeg(World world, float direction, Vector2 wheelAnchor, int index)
         {
-            Vector2[] points = {
-                                new Vector2(5.4f * direction, 6.1f),
-                                new Vector2(7.2f * direction, 1.2f),
-                                new Vector2(4.3f * direction, 1.9f),
-                                new Vector2(3.1f * direction, -0.8f),
-                                new Vector2(6.0f * direction, -1.5f),
-                                new Vector2(2.5f * direction, -3.7f)
-                               };
+            Vector2[] points =
+            {
+                new Vector2(5.4f * direction, 6.1f),
+                new Vector2(7.2f * direction, 1.2f),
+                new Vector2(4.3f * direction, 1.9f),
+                new Vector2(3.1f * direction, -0.8f),
+                new Vector2(6.0f * direction, -1.5f),
+                new Vector2(2.5f * direction, -3.7f)
+            };
 
             PolygonShape legPolygon = new PolygonShape(1f);
             PolygonShape shoulderPolygon = new PolygonShape(1f);

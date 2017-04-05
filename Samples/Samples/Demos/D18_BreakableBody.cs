@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
 using VelcroPhysics.Common;
-using VelcroPhysics.ContentPipeline.SVGImport;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
@@ -19,9 +18,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Border _border;
         private List<Sprite> _breakableSprite;
         private Sprite _completeSprite;
-        private BreakableBody[] _breakableCookie = new BreakableBody[3];
+        private readonly BreakableBody[] _breakableCookie = new BreakableBody[3];
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Breakable body and explosions";
@@ -51,6 +51,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -94,13 +95,13 @@ namespace VelcroPhysics.Samples.Samples2.Demos
                 AABB aabb = new AABB(ref min, ref max);
 
                 World.QueryAABB(fixture =>
-                                {
-                                    Vector2 fv = fixture.Body.Position - cursorPos;
-                                    fv.Normalize();
-                                    fv *= 80;
-                                    fixture.Body.ApplyLinearImpulse(ref fv);
-                                    return true;
-                                }, ref aabb);
+                {
+                    Vector2 fv = fixture.Body.Position - cursorPos;
+                    fv.Normalize();
+                    fv *= 80;
+                    fixture.Body.ApplyLinearImpulse(ref fv);
+                    return true;
+                }, ref aabb);
             }
 
             base.HandleInput(input, gameTime);

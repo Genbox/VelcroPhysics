@@ -16,6 +16,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Objects _stars;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Collision categories";
@@ -52,6 +53,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

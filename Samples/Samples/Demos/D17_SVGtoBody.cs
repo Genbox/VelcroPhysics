@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.ContentPipeline.SVGImport;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
@@ -13,6 +12,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     internal class D17_SVGtoBody : PhysicsDemoScreen
     {
         #region Demo description
+
         public override string GetTitle()
         {
             return "SVG Importer to bodies";
@@ -33,6 +33,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         private BodyContainer _body;

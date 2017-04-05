@@ -14,9 +14,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Agent _agent;
         private Border _border;
         private Sprite _obstacle;
-        private Body[] _obstacles = new Body[5];
+        private readonly Body[] _obstacles = new Body[5];
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Multiple fixtures and static bodies";
@@ -50,6 +51,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

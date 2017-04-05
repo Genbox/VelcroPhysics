@@ -12,6 +12,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private JumpySpider[] _spiders;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Revolute & dynamic angle joints";
@@ -44,6 +45,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -82,7 +84,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw(Sprites);
-            
+
             for (int i = 0; i < _spiders.Length; i++)
             {
                 _spiders[i].Draw(Sprites);

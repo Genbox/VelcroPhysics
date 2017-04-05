@@ -18,10 +18,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
     public class Objects
     {
-        private List<Body> _bodies;
+        private readonly List<Body> _bodies;
         private Category _collidesWith;
         private Category _collisionCategories;
-        private Sprite _object;
+        private readonly Sprite _object;
 
         public Objects(World world, Vector2 startPosition, Vector2 endPosition, int count, float radius, ObjectType type)
         {

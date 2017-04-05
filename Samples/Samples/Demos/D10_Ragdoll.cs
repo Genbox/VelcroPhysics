@@ -17,6 +17,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Ragdoll _ragdoll;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Ragdoll";
@@ -48,6 +49,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -79,7 +81,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            
+
             for (int i = 0; i < 9; i++)
             {
                 Sprites.Draw(_obstacle.Image, ConvertUnits.ToDisplayUnits(_obstacles[i].Position), null, Color.White, _obstacles[i].Rotation, _obstacle.Origin, 1f, SpriteEffects.None, 0f);

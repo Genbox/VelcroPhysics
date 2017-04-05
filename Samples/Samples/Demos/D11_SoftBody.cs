@@ -24,6 +24,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Sprite _softBodyCircle;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Soft body & path generator";
@@ -52,6 +53,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -112,7 +114,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            
+
             foreach (Body body in _softBodies)
             {
                 Sprites.Draw(_softBodyBox.Image, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, _softBodyBox.Origin, 1f, SpriteEffects.None, 0f);

@@ -41,10 +41,10 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
         private static ContentWrapper _contentWrapper;
         private static BasicEffect _effect;
 
-        private static Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
-        private static Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
+        private static readonly Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
+        private static readonly Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
 
-        private static Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
+        private static readonly Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
 
         public static int SoundVolume
         {
@@ -130,21 +130,17 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             {
                 return _textureList[textureName];
             }
-            else
-            {
 #if WINDOWS
-                Console.WriteLine("Texture \"" + textureName + "\" not found!");
+            Console.WriteLine("Texture \"" + textureName + "\" not found!");
 #endif
-                return null;
-            }
+            return null;
         }
 
         public static SpriteFont GetFont(string fontName)
         {
             if (_contentWrapper != null && _fontList.ContainsKey(fontName))
                 return _fontList[fontName];
-            else
-                throw new FileNotFoundException();
+            throw new FileNotFoundException();
         }
 
         public static Vector2 CalculateOrigin(Body body)
@@ -162,6 +158,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                     Vector2.Min(ref lowerBound, ref bounds.LowerBound, out lowerBound);
                 }
             }
+
             // calculate body offset from its center and add a 1 pixel border
             // because we generate the textures a little bigger than the actual body's fixtures
             return ConvertUnits.ToDisplayUnits(body.Position - lowerBound) + new Vector2(1f);
@@ -179,7 +176,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                 switch (shape.ShapeType)
                 {
                     case ShapeType.Circle:
-                        return CircleTexture((shape).Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
+                        return CircleTexture(shape.Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
                     case ShapeType.Polygon:
                         return PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale);
                     default:
@@ -216,6 +213,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                 {
                     Vector2 p1 = new Vector2(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta));
                     Vector2 p2 = new Vector2(radius * (float)Math.Cos(theta + segmentSize), radius * (float)Math.Sin(theta + segmentSize));
+
                     // fill vertices
                     verticesFill[3 * i].Position = new Vector3(start, 0f);
                     verticesFill[3 * i + 1].Position = new Vector3(p1, 0f);
@@ -224,6 +222,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                     verticesFill[3 * i + 1].TextureCoordinate = p1 * materialScale;
                     verticesFill[3 * i + 2].TextureCoordinate = p2 * materialScale;
                     verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = mainColor;
+
                     // outline vertices
                     if (i == 0)
                     {

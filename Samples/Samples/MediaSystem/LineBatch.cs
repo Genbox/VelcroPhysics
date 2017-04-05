@@ -12,23 +12,21 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
 
         // a basic effect, which contains the shaders that we will use to draw our
         // primitives.
-        private BasicEffect _basicEffect;
+        private readonly BasicEffect _basicEffect;
 
         // the device that we will issue draw calls to.
-        private GraphicsDevice _device;
+        private readonly GraphicsDevice _device;
 
         // hasBegun is flipped to true once Begin is called, and is used to make
         // sure users don't call End before Begin is called.
         private bool _hasBegun;
 
         private bool _isDisposed;
-        private VertexPositionColor[] _lineVertices;
+        private readonly VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
 
         public LineBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize)
-        {
-        }
+            : this(graphicsDevice, DefaultBufferSize) { }
 
         public LineBatch(GraphicsDevice graphicsDevice, int bufferSize)
         {
@@ -74,6 +72,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
+
             //tell our basic effect to begin.
             _basicEffect.Projection = projection;
             _basicEffect.View = view;
@@ -192,6 +191,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
+
                 // submit the draw call to the graphics card
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
                 _lineVertsCount -= primitiveCount * 2;

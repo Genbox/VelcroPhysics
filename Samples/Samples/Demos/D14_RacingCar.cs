@@ -39,6 +39,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private float _zeta;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Racing car";
@@ -67,6 +68,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -290,21 +292,21 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            
+
             // draw car
             Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelBack.Position), null, Color.White, _wheelBack.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_wheel.Image, ConvertUnits.ToDisplayUnits(_wheelFront.Position), null, Color.White, _wheelFront.Rotation, _wheel.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_carBody.Image, ConvertUnits.ToDisplayUnits(_car.Position), null, Color.White, _car.Rotation, _carBody.Origin, 1f, SpriteEffects.None, 0f);
-            
+
             // draw teeter
             Sprites.Draw(_teeter.Image, ConvertUnits.ToDisplayUnits(_board.Position), null, Color.White, _board.Rotation, _teeter.Origin, 1f, SpriteEffects.None, 0f);
-            
+
             // draw bridge
             for (int i = 0; i < _bridgeSegments.Count; ++i)
             {
                 Sprites.Draw(_bridge.Image, ConvertUnits.ToDisplayUnits(_bridgeSegments[i].Position), null, Color.White, _bridgeSegments[i].Rotation, _bridge.Origin, 1f, SpriteEffects.None, 0f);
             }
-            
+
             // draw boxes
             for (int i = 0; i < _boxes.Count; ++i)
             {
@@ -313,7 +315,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             Sprites.End();
 
             Lines.Begin(Camera.SimProjection, Camera.SimView);
-            
+
             // draw ground
             for (int i = 0; i < _ground.FixtureList.Count; ++i)
             {

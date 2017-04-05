@@ -11,6 +11,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private WebOfGoo _webOfGoo;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Advanced dynamics";
@@ -39,6 +40,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

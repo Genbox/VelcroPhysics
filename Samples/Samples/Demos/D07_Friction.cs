@@ -13,10 +13,11 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     {
         private Border _border;
         private Body _ramps;
-        private Body[] _rectangle = new Body[5];
+        private readonly Body[] _rectangle = new Body[5];
         private Sprite _rectangleSprite;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Friction";
@@ -44,6 +45,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -83,7 +85,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             for (int i = 0; i < 5; ++i)
             {
                 Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle[i].Position), null,
-                             Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+                    Color.White, _rectangle[i].Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
 
             Sprites.End();

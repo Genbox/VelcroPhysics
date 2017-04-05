@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.ContentPipeline.SVGImport;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
 using VelcroPhysics.Templates;
 
@@ -9,6 +8,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     internal class D16_SVGtoPolygon : PhysicsDemoScreen
     {
         #region Demo description
+
         public override string GetTitle()
         {
             return "SVG Importer to polygons";
@@ -29,6 +29,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         private PolygonContainer _poly;

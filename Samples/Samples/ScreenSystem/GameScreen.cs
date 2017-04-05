@@ -13,7 +13,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         TransitionOn,
         Active,
         TransitionOff,
-        Hidden,
+        Hidden
     }
 
     /// <summary>
@@ -96,10 +96,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// </summary>
         public bool IsActive
         {
-            get
-            {
-                return !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active);
-            }
+            get { return !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active); }
         }
 
         /// <summary>
@@ -114,16 +111,12 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// <summary>
         /// Load graphics content for the screen.
         /// </summary>
-        public virtual void LoadContent()
-        {
-        }
+        public virtual void LoadContent() { }
 
         /// <summary>
         /// Unload content for the screen.
         /// </summary>
-        public virtual void UnloadContent()
-        {
-        }
+        public virtual void UnloadContent() { }
 
         /// <summary>
         /// Allows the screen to run logic, such as updating the transition position.
@@ -197,7 +190,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             TransitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (TransitionPosition <= 0)) || ((direction > 0) && (TransitionPosition >= 1)))
+            if (direction < 0 && TransitionPosition <= 0 || direction > 0 && TransitionPosition >= 1)
             {
                 TransitionPosition = MathHelper.Clamp(TransitionPosition, 0, 1);
                 return false;
@@ -212,16 +205,12 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// is only called when the screen is active, and not when some other
         /// screen has taken the focus.
         /// </summary>
-        public virtual void HandleInput(InputHelper input, GameTime gameTime)
-        {
-        }
+        public virtual void HandleInput(InputHelper input, GameTime gameTime) { }
 
         /// <summary>
         /// This is called when the screen should draw itself.
         /// </summary>
-        public virtual void Draw(GameTime gameTime)
-        {
-        }
+        public virtual void Draw(GameTime gameTime) { }
 
         /// <summary>
         /// Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which

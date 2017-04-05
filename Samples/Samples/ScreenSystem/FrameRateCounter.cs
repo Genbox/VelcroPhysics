@@ -12,10 +12,10 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
     public class FrameRateCounter
     {
         private TimeSpan _elapsedTime = TimeSpan.Zero;
-        private NumberFormatInfo _format;
+        private readonly NumberFormatInfo _format;
         private int _frameCounter;
         private int _frameRate;
-        private Vector2 _position;
+        private readonly Vector2 _position;
         private SpriteFont _font;
 
         public FrameRateCounter()

@@ -19,34 +19,27 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         private float _targetY;
         private Vector2 _currentPosition;
-        private Vector2 _size;
-        private Color _color;
-        private Color _textColor;
 
-        private PhysicsDemoScreen _screen;
-        private Texture2D _preview;
-        private bool _visible;
+        private readonly PhysicsDemoScreen _screen;
 
         private double _hoverFade;
         private double _selectionFade;
         private double _visibleFade;
-
-        private string _text;
 
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
         public MenuEntry(string text, PhysicsDemoScreen screen, Texture2D preview)
         {
-            _text = text;
+            Text = text;
             _screen = screen;
-            _preview = preview;
+            Preview = preview;
 
             _hoverFade = 0.0;
             _selectionFade = 0.0;
 
             SpriteFont font = ContentWrapper.GetFont("MenuFont");
-            _size = font.MeasureString(text);
+            Size = font.MeasureString(text);
         }
 
         public static void InitializeEntries(float hiddenX, float visibleX)
@@ -57,16 +50,13 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         public void InitializePosition(float target, bool visible)
         {
-            _visible = visible;
+            Visible = visible;
             _visibleFade = visible ? 1.0 : 0.0;
             _currentPosition.X = visible ? _targetVisibleX : _targetHiddenX;
             _currentPosition.Y = _targetY = target;
         }
 
-        public string Text
-        {
-            get { return _text; }
-        }
+        public string Text { get; }
 
         public Vector2 Position
         {
@@ -80,13 +70,10 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         public Vector2 Origin
         {
-            get { return _size / 2f; }
+            get { return Size / 2f; }
         }
 
-        public Vector2 Size
-        {
-            get { return _size; }
-        }
+        public Vector2 Size { get; }
 
         public float Fade
         {
@@ -98,31 +85,18 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             get { return _screen; }
         }
 
-        public Texture2D Preview
-        {
-            get { return _preview; }
-        }
+        public Texture2D Preview { get; }
 
-        public Color TextColor
-        {
-            get { return _textColor; }
-        }
+        public Color TextColor { get; private set; }
 
-        public Color TileColor
-        {
-            get { return _color; }
-        }
+        public Color TileColor { get; private set; }
 
         public float Scale
         {
             get { return 0.9f + 0.1f * (float)_hoverFade; }
         }
 
-        public bool Visible
-        {
-            get { return _visible; }
-            set { _visible = value; }
-        }
+        public bool Visible { get; set; }
 
         public float Alpha
         {
@@ -136,31 +110,31 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             if (isHovered)
             {
-                _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
             if (isSelected)
             {
-                _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
 
-            _textColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
-            _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
+            TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
+            TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
-            if (_visible)
+            if (Visible)
             {
-                _visibleFade = Math.Min(_visibleFade + (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 1.0);
+                _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 1.0);
             }
             else
             {
-                _visibleFade = Math.Max(_visibleFade - (gameTime.ElapsedGameTime.TotalSeconds / FadeTime), 0.0);
+                _visibleFade = Math.Max(_visibleFade - gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 0.0);
             }
             _currentPosition.X = MathHelper.SmoothStep(_targetHiddenX, _targetVisibleX, (float)_visibleFade);
 
@@ -176,6 +150,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         #region IComparable Members
+
         public int CompareTo(object obj)
         {
             MenuEntry entry = obj as MenuEntry;
@@ -183,11 +158,9 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             {
                 return 0;
             }
-            else
-            {
-                return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
-            }
+            return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
         }
+
         #endregion
     }
 }

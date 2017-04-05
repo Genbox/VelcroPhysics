@@ -15,7 +15,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const float HorizontalPadding = 32f;
         private const float VerticalPadding = 16f;
 
-        private string _message;
+        private readonly string _message;
         private Vector2 _topLeft;
         private Vector2 _bottomRight;
         private Vector2 _textPosition;
@@ -78,6 +78,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             Quads.End();
 
             Sprites.Begin();
+
             // Draw the message box text.
             Sprites.DrawString(_font, _message, _textPosition + Vector2.One, ContentWrapper.Black);
             Sprites.DrawString(_font, _message, _textPosition, ContentWrapper.Beige);

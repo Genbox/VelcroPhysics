@@ -14,13 +14,14 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     {
         private Border _border;
         private Body _obstacles;
-        private Body[] _angleBody = new Body[3];
-        private Body[] _distanceBody = new Body[4];
+        private readonly Body[] _angleBody = new Body[3];
+        private readonly Body[] _distanceBody = new Body[4];
 
         private Sprite _angleCube;
         private Sprite _distanceCube;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Distance & angle joints";
@@ -53,6 +54,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -139,7 +141,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             Sprites.End();
             Lines.Begin(Camera.SimProjection, Camera.SimView);
-            
+
             foreach (Fixture f in _obstacles.FixtureList)
             {
                 Lines.DrawLineShape(f.Shape, ContentWrapper.Black);

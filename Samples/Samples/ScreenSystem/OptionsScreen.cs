@@ -25,7 +25,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private Vector2 _topLeft;
         private Vector2 _bottomRight;
 
-        private List<OptionEntry> _optionEntries = new List<OptionEntry>();
+        private readonly List<OptionEntry> _optionEntries = new List<OptionEntry>();
 
         private int _hoverEntry;
 
@@ -189,7 +189,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             // Update each nested MenuEntry object.
             for (int i = 0; i < _optionEntries.Count; i++)
             {
-                bool isHovered = IsActive && (i == _hoverEntry);
+                bool isHovered = IsActive && i == _hoverEntry;
                 _optionEntries[i].Update(isHovered, gameTime);
             }
         }

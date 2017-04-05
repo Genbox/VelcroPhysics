@@ -13,11 +13,9 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         private float _targetY;
         private Vector2 _currentPosition;
-        private Color _color;
 
         private double _hoverFade;
         private double _selectionFade;
-
 
         /// <summary>
         /// Constructs a new menu slider.
@@ -39,10 +37,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             set { _targetY = value; }
         }
 
-        public Color TileColor
-        {
-            get { return _color; }
-        }
+        public Color TileColor { get; private set; }
 
         /// <summary>
         /// Updates the menu slider.
@@ -51,24 +46,24 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             if (isHovered)
             {
-                _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
 
             if (isSelected)
             {
-                _selectionFade = Math.Min(_selectionFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _selectionFade = Math.Max(_selectionFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
 
-            _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)_hoverFade);
-            _color = Color.Lerp(_color, ContentWrapper.Gold, (float)_selectionFade);
+            TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)_hoverFade);
+            TileColor = Color.Lerp(TileColor, ContentWrapper.Gold, (float)_selectionFade);
 
             float deltaY = _targetY - _currentPosition.Y;
             if (Math.Abs(deltaY) > MaxTranslation)

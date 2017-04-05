@@ -21,7 +21,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private float _menuSpacing;
         private float _scrollSpacing;
 
-        private List<MenuEntry> _menuEntries = new List<MenuEntry>();
+        private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
         private MenuSlider _menuSlider;
         private bool _scrollHover;
         private bool _scrollLock;
@@ -34,15 +34,11 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private Vector2 _titleOrigin;
         private Texture2D _samplesLogo;
 
-        private Vector2 _previewPosition;
         private Vector2 _previewOrigin;
 
         private SpriteFont _font;
 
-        public Vector2 PreviewPosition
-        {
-            get { return _previewPosition; }
-        }
+        public Vector2 PreviewPosition { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -82,7 +78,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             float verticalSpacing = (viewport.Height - TitleBarHeight - NumEntries * (_menuEntrySize.Y + EntrySpacer) + EntrySpacer) / 2f;
 
             _previewOrigin = new Vector2(viewport.Width / 4f, viewport.Height / 4f);
-            _previewPosition = new Vector2(viewport.Width - _previewOrigin.X - horizontalSpacing, (viewport.Height - TitleBarHeight) / 2f + TitleBarHeight);
+            PreviewPosition = new Vector2(viewport.Width - _previewOrigin.X - horizontalSpacing, (viewport.Height - TitleBarHeight) / 2f + TitleBarHeight);
 
             _menuStart = _menuEntrySize.Y / 2f + verticalSpacing + TitleBarHeight;
             _menuSpacing = _menuEntrySize.Y + EntrySpacer;
@@ -129,7 +125,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         private bool GetPreviewCollision(Vector2 position)
         {
-            Rectangle boundingBox = new Rectangle((int)(_previewPosition.X - _previewOrigin.X), (int)(_previewPosition.Y - _previewOrigin.Y), 2 * (int)_previewOrigin.X, 2 * (int)_previewOrigin.Y);
+            Rectangle boundingBox = new Rectangle((int)(PreviewPosition.X - _previewOrigin.X), (int)(PreviewPosition.Y - _previewOrigin.Y), 2 * (int)_previewOrigin.X, 2 * (int)_previewOrigin.Y);
             if (boundingBox.Contains((int)position.X, (int)position.Y))
                 return true;
 
@@ -228,7 +224,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         private void UpdateMenuPositions()
         {
-            _menuOffset = (_menuOffset < 0) ? 0 : (_menuOffset > _menuEntries.Count - NumEntries) ? _menuEntries.Count - NumEntries : _menuOffset;
+            _menuOffset = _menuOffset < 0 ? 0 : _menuOffset > _menuEntries.Count - NumEntries ? _menuEntries.Count - NumEntries : _menuOffset;
             if (_selectedEntry < _menuOffset)
             {
                 _selectedEntry = _menuOffset;
@@ -238,6 +234,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
                 _selectedEntry = NumEntries + _menuOffset - 1;
             }
             int targetIndex = -_menuOffset;
+
             // Update each nested MenuEntry position
             for (int i = 0; i < _menuEntries.Count; i++)
             {
@@ -265,8 +262,8 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             // Update each nested MenuEntry object.
             for (int i = 0; i < _menuEntries.Count; i++)
             {
-                bool isHovered = IsActive && (i == _hoverEntry);
-                bool isSelected = (i == _selectedEntry);
+                bool isHovered = IsActive && i == _hoverEntry;
+                bool isSelected = i == _selectedEntry;
 
                 _menuEntries[i].Update(isSelected, isHovered, gameTime);
             }
@@ -286,22 +283,22 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             foreach (MenuEntry entry in _menuEntries)
             {
                 Quads.Render(entry.Position - _menuEntrySize / 2f, entry.Position + _menuEntrySize / 2f, null, true,
-                             ContentWrapper.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
+                    ContentWrapper.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
             }
             Quads.Render(_menuSlider.Position - new Vector2(_menuEntrySize.Y / 2f), _menuSlider.Position + new Vector2(_menuEntrySize.Y / 2f), null, true,
-                         ContentWrapper.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
+                ContentWrapper.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
             Quads.End();
 
             Sprites.Begin();
             foreach (MenuEntry entry in _menuEntries)
             {
                 Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, ContentWrapper.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
-                                   0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                    0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha,
-                                   0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                    0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 if (entry.Fade > 0f)
                 {
-                    Sprites.Draw(entry.Preview, _previewPosition, null, Color.White * Math.Max((TransitionAlpha - 0.8f) / 0.2f, 0f) * entry.Fade, 0f, _previewOrigin, 1f, SpriteEffects.None, 0f);
+                    Sprites.Draw(entry.Preview, PreviewPosition, null, Color.White * Math.Max((TransitionAlpha - 0.8f) / 0.2f, 0f) * entry.Fade, 0f, _previewOrigin, 1f, SpriteEffects.None, 0f);
                 }
             }
             Sprites.End();

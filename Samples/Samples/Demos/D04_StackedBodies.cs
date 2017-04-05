@@ -18,6 +18,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Border _border;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Stacked bodies";
@@ -50,6 +51,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

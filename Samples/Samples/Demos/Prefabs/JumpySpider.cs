@@ -20,24 +20,24 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
         private bool _flexed;
 
-        private Body _circle;
-        private Body _leftUpper;
-        private Body _leftLower;
-        private Body _rightUpper;
-        private Body _rightLower;
+        private readonly Body _circle;
+        private readonly Body _leftUpper;
+        private readonly Body _leftLower;
+        private readonly Body _rightUpper;
+        private readonly Body _rightLower;
 
-        private AngleJoint _leftShoulderAngleJoint;
-        private AngleJoint _leftKneeAngleJoint;
-        private AngleJoint _rightShoulderAngleJoint;
-        private AngleJoint _rightKneeAngleJoint;
+        private readonly AngleJoint _leftShoulderAngleJoint;
+        private readonly AngleJoint _leftKneeAngleJoint;
+        private readonly AngleJoint _rightShoulderAngleJoint;
+        private readonly AngleJoint _rightKneeAngleJoint;
 
-        private Sprite _torso;
-        private Sprite _upperLeg;
-        private Sprite _lowerLeg;
+        private readonly Sprite _torso;
+        private readonly Sprite _upperLeg;
+        private readonly Sprite _lowerLeg;
 
         private const float SpiderBodyRadius = 0.65f;
-        private Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
-        private Vector2 _lowerLegSize = new Vector2(1.8f, 0.3f);
+        private readonly Vector2 _upperLegSize = new Vector2(1.8f, 0.3f);
+        private readonly Vector2 _lowerLegSize = new Vector2(1.8f, 0.3f);
 
         private float _timer;
 

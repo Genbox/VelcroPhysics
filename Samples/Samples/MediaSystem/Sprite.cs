@@ -8,6 +8,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
         public Vector2 Origin { get; set; }
 
         private Texture2D _image;
+
         public Texture2D Image
         {
             get { return _image; }

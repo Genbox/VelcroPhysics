@@ -12,10 +12,11 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     internal class D06_Restitution : PhysicsDemoScreen
     {
         private Border _border;
-        private Body[] _circle = new Body[6];
+        private readonly Body[] _circle = new Body[6];
         private Sprite _circleSprite;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Restitution";
@@ -43,6 +44,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -72,7 +74,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            
+
             for (int i = 0; i < 6; ++i)
             {
                 Sprites.Draw(_circleSprite.Image, ConvertUnits.ToDisplayUnits(_circle[i].Position), null, Color.White, _circle[i].Rotation, _circleSprite.Origin, 1f, SpriteEffects.None, 0f);

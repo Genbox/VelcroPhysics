@@ -16,6 +16,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Sprite _rectangleSprite;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Single body with a single fixture";
@@ -49,6 +50,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

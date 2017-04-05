@@ -9,14 +9,14 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {
     public class Border
     {
-        private Body _anchor;
+        private readonly Body _anchor;
 
-        private BasicEffect _basicEffect;
-        private VertexPositionColorTexture[] _borderVertices;
-        private short[] _indexBuffer;
+        private readonly BasicEffect _basicEffect;
+        private readonly VertexPositionColorTexture[] _borderVertices;
+        private readonly short[] _indexBuffer;
 
-        private GraphicsDevice _graphics;
-        private LineBatch _lines;
+        private readonly GraphicsDevice _graphics;
+        private readonly LineBatch _lines;
 
         public Border(World world, LineBatch lines, GraphicsDevice graphics)
         {
@@ -28,9 +28,9 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             float halfHeight = ConvertUnits.ToSimUnits(graphics.Viewport.Height) / 2f - 0.75f;
 
             Vertices borders = new Vertices(4);
-            borders.Add(new Vector2(-halfWidth, halfHeight));  // Lower left
-            borders.Add(new Vector2(halfWidth, halfHeight));   // Lower right
-            borders.Add(new Vector2(halfWidth, -halfHeight));  // Upper right
+            borders.Add(new Vector2(-halfWidth, halfHeight)); // Lower left
+            borders.Add(new Vector2(halfWidth, halfHeight)); // Lower right
+            borders.Add(new Vector2(halfWidth, -halfHeight)); // Upper right
             borders.Add(new Vector2(-halfWidth, -halfHeight)); // Upper left
 
             _anchor = BodyFactory.CreateLoopShape(world, borders);
@@ -42,16 +42,17 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             _basicEffect.VertexColorEnabled = true;
             _basicEffect.TextureEnabled = true;
 
-            _borderVertices = new[] {
-                new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f),Color.White, new Vector2(-halfWidth, -halfHeight) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f),Color.White, new Vector2(halfWidth, -halfHeight) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f), Color.White,new Vector2(halfWidth, halfHeight) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f),Color.White, new Vector2(-halfWidth, halfHeight) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f),Color.White, new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f),Color.White, new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f), Color.White,new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f),
-                new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f), Color.White,new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f)
-           };
+            _borderVertices = new[]
+            {
+                new VertexPositionColorTexture(new Vector3(-halfWidth, -halfHeight, 0f), Color.White, new Vector2(-halfWidth, -halfHeight) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(halfWidth, -halfHeight, 0f), Color.White, new Vector2(halfWidth, -halfHeight) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(halfWidth, halfHeight, 0f), Color.White, new Vector2(halfWidth, halfHeight) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(-halfWidth, halfHeight, 0f), Color.White, new Vector2(-halfWidth, halfHeight) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, -halfHeight - 2f, 0f), Color.White, new Vector2(-halfWidth - 2f, -halfHeight - 2f) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(halfWidth + 2f, -halfHeight - 2f, 0f), Color.White, new Vector2(halfWidth + 2f, -halfHeight - 2f) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(halfWidth + 2f, halfHeight + 2f, 0f), Color.White, new Vector2(halfWidth + 2f, halfHeight + 2f) / 5.25f),
+                new VertexPositionColorTexture(new Vector3(-halfWidth - 2f, halfHeight + 2f, 0f), Color.White, new Vector2(-halfWidth - 2f, halfHeight + 2f) / 5.25f)
+            };
 
             _indexBuffer = new short[] { 0, 5, 4, 0, 1, 5, 1, 6, 5, 1, 2, 6, 2, 7, 6, 2, 3, 7, 3, 4, 7, 3, 0, 4 };
         }

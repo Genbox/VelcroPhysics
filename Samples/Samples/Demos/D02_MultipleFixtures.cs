@@ -19,6 +19,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Vector2 _offset;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Single body with two fixtures";
@@ -52,6 +53,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
@@ -87,6 +89,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         public override void Draw(GameTime gameTime)
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
+
             // draw first rectangle
             Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin + _offset, 1f, SpriteEffects.None, 0f);
 

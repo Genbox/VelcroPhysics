@@ -11,8 +11,6 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const float _maxZoom = 20f;
         private static GraphicsDevice _graphics;
 
-        private Matrix _batchView;
-
         private Vector2 _currentPosition;
 
         private float _currentRotation;
@@ -23,13 +21,11 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private Vector2 _minPosition;
         private float _minRotation;
         private bool _positionTracking;
-        private Matrix _projection;
         private bool _rotationTracking;
         private Vector2 _targetPosition;
         private float _targetRotation;
         private Body _trackingBody;
-        private Vector2 _translateCenter;
-        private Matrix _view;
+        private readonly Vector2 _translateCenter;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -38,32 +34,23 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _projection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                                                             ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
-                                                             1f);
-            _view = Matrix.Identity;
-            _batchView = Matrix.Identity;
+            SimProjection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
+                ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
+                1f);
+            SimView = Matrix.Identity;
+            View = Matrix.Identity;
 
             _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
-                                           ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
+                ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
         }
 
-        public Matrix View
-        {
-            get { return _batchView; }
-        }
+        public Matrix View { get; private set; }
 
-        public Matrix SimView
-        {
-            get { return _view; }
-        }
+        public Matrix SimView { get; private set; }
 
-        public Matrix SimProjection
-        {
-            get { return _projection; }
-        }
+        public Matrix SimProjection { get; }
 
         /// <summary>
         /// The current position of the camera.
@@ -272,18 +259,18 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             Vector3 translateCenter = new Vector3(_translateCenter, 0f);
             Vector3 translateBody = new Vector3(-_currentPosition, 0f);
 
-            _view = Matrix.CreateTranslation(translateBody) *
-                    matRotation *
-                    matZoom *
-                    Matrix.CreateTranslation(translateCenter);
+            SimView = Matrix.CreateTranslation(translateBody) *
+                      matRotation *
+                      matZoom *
+                      Matrix.CreateTranslation(translateCenter);
 
             translateCenter = ConvertUnits.ToDisplayUnits(translateCenter);
             translateBody = ConvertUnits.ToDisplayUnits(translateBody);
 
-            _batchView = Matrix.CreateTranslation(translateBody) *
-                         matRotation *
-                         matZoom *
-                         Matrix.CreateTranslation(translateCenter);
+            View = Matrix.CreateTranslation(translateBody) *
+                   matRotation *
+                   matZoom *
+                   Matrix.CreateTranslation(translateCenter);
         }
 
         /// <summary>
@@ -352,7 +339,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Unproject(t, _projection, _view, Matrix.Identity);
+            t = _graphics.Viewport.Unproject(t, SimProjection, SimView, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }
@@ -361,7 +348,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             Vector3 t = new Vector3(location, 0);
 
-            t = _graphics.Viewport.Project(t, _projection, _view, Matrix.Identity);
+            t = _graphics.Viewport.Project(t, SimProjection, SimView, Matrix.Identity);
 
             return new Vector2(t.X, t.Y);
         }

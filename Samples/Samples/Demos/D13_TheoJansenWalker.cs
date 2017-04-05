@@ -20,6 +20,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Sprite _grain;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Theo Jansen's Strandbeast";
@@ -46,6 +47,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()

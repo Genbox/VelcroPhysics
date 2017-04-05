@@ -13,77 +13,50 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const double HighlightTime = 0.3;
         private const double FadeTime = 0.1;
 
-        private Vector2 _position;
-        private Vector2 _size;
-        private Color _color;
-        private Color _textColor;
-
-        private bool _isChecked;
-
         private double _hoverFade;
         private double _checkedFade;
-
-        private string _text;
 
         /// <summary>
         /// Constructs a new option entry with the specified text.
         /// </summary>
         public OptionEntry(string text, bool isChecked)
         {
-            _text = text;
-            _isChecked = isChecked;
+            Text = text;
+            IsChecked = isChecked;
 
             _hoverFade = 0.0;
             _checkedFade = 0.0;
 
             SpriteFont font = ContentWrapper.GetFont("MenuFont");
-            _size = font.MeasureString(text);
+            Size = font.MeasureString(text);
         }
 
         public void Switch()
         {
-            _isChecked = !_isChecked;
+            IsChecked = !IsChecked;
         }
 
         public void InitializePosition(Vector2 target)
         {
-            _position = target;
+            Position = target;
         }
 
-        public string Text
-        {
-            get { return _text; }
-        }
+        public string Text { get; }
 
-        public Vector2 Position
-        {
-            get { return _position; }
-        }
+        public Vector2 Position { get; private set; }
 
-        public bool IsChecked
-        {
-            get { return _isChecked; }
-        }
+        public bool IsChecked { get; private set; }
 
         public Vector2 Origin
         {
-            get { return _size / 2f; }
+            get { return Size / 2f; }
         }
 
-        public Vector2 Size
-        {
-            get { return _size; }
-        }
+        public Vector2 Size { get; }
 
-        public Color TextColor
-        {
-            get { return _textColor; }
-        }
+        public Color TextColor { get; private set; }
 
-        public Color TileColor
-        {
-            get { return _color; }
-        }
+        public Color TileColor { get; private set; }
 
         public float CheckedFade
         {
@@ -102,23 +75,23 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             if (isHovered)
             {
-                _hoverFade = Math.Min(_hoverFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _hoverFade = Math.Max(_hoverFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
-            if (_isChecked)
+            if (IsChecked)
             {
-                _checkedFade = Math.Min(_checkedFade + (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 1.0);
+                _checkedFade = Math.Min(_checkedFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
             }
             else
             {
-                _checkedFade = Math.Max(_checkedFade - (gameTime.ElapsedGameTime.TotalSeconds / HighlightTime), 0.0);
+                _checkedFade = Math.Max(_checkedFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
             }
 
-            _textColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_hoverFade);
-            _color = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Cyan * 0.6f, (float)_hoverFade);
+            TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_hoverFade);
+            TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Cyan * 0.6f, (float)_hoverFade);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {
     public class Pyramid
     {
-        private Sprite _box;
-        private List<Body> _boxes;
+        private readonly Sprite _box;
+        private readonly List<Body> _boxes;
 
         public Pyramid(World world, Vector2 position, int count, float density)
         {

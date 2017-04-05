@@ -126,12 +126,12 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// </summary>
         public bool IsNewKeyPress(Keys key)
         {
-            return (KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key));
+            return KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
         }
 
         public bool IsNewKeyRelease(Keys key)
         {
-            return (PreviousKeyboardState.IsKeyDown(key) && KeyboardState.IsKeyUp(key));
+            return PreviousKeyboardState.IsKeyDown(key) && KeyboardState.IsKeyUp(key);
         }
 
         /// <summary>
@@ -139,12 +139,12 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         /// </summary>
         public bool IsNewButtonPress(Buttons button)
         {
-            return (GamePadState.IsButtonDown(button) && PreviousGamePadState.IsButtonUp(button));
+            return GamePadState.IsButtonDown(button) && PreviousGamePadState.IsButtonUp(button);
         }
 
         public bool IsNewButtonRelease(Buttons button)
         {
-            return (PreviousGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button));
+            return PreviousGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button);
         }
 
         /// <summary>
@@ -155,15 +155,15 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             switch (button)
             {
                 case MouseButtons.LeftButton:
-                    return (MouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released);
+                    return MouseState.LeftButton == ButtonState.Pressed && PreviousMouseState.LeftButton == ButtonState.Released;
                 case MouseButtons.RightButton:
-                    return (MouseState.RightButton == ButtonState.Pressed && PreviousMouseState.RightButton == ButtonState.Released);
+                    return MouseState.RightButton == ButtonState.Pressed && PreviousMouseState.RightButton == ButtonState.Released;
                 case MouseButtons.MiddleButton:
-                    return (MouseState.MiddleButton == ButtonState.Pressed && PreviousMouseState.MiddleButton == ButtonState.Released);
+                    return MouseState.MiddleButton == ButtonState.Pressed && PreviousMouseState.MiddleButton == ButtonState.Released;
                 case MouseButtons.ExtraButton1:
-                    return (MouseState.XButton1 == ButtonState.Pressed && PreviousMouseState.XButton1 == ButtonState.Released);
+                    return MouseState.XButton1 == ButtonState.Pressed && PreviousMouseState.XButton1 == ButtonState.Released;
                 case MouseButtons.ExtraButton2:
-                    return (MouseState.XButton2 == ButtonState.Pressed && PreviousMouseState.XButton2 == ButtonState.Released);
+                    return MouseState.XButton2 == ButtonState.Pressed && PreviousMouseState.XButton2 == ButtonState.Released;
                 default:
                     return false;
             }
@@ -178,15 +178,15 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             switch (button)
             {
                 case MouseButtons.LeftButton:
-                    return (PreviousMouseState.LeftButton == ButtonState.Pressed && MouseState.LeftButton == ButtonState.Released);
+                    return PreviousMouseState.LeftButton == ButtonState.Pressed && MouseState.LeftButton == ButtonState.Released;
                 case MouseButtons.RightButton:
-                    return (PreviousMouseState.RightButton == ButtonState.Pressed && MouseState.RightButton == ButtonState.Released);
+                    return PreviousMouseState.RightButton == ButtonState.Pressed && MouseState.RightButton == ButtonState.Released;
                 case MouseButtons.MiddleButton:
-                    return (PreviousMouseState.MiddleButton == ButtonState.Pressed && MouseState.MiddleButton == ButtonState.Released);
+                    return PreviousMouseState.MiddleButton == ButtonState.Pressed && MouseState.MiddleButton == ButtonState.Released;
                 case MouseButtons.ExtraButton1:
-                    return (PreviousMouseState.XButton1 == ButtonState.Pressed && MouseState.XButton1 == ButtonState.Released);
+                    return PreviousMouseState.XButton1 == ButtonState.Pressed && MouseState.XButton1 == ButtonState.Released;
                 case MouseButtons.ExtraButton2:
-                    return (PreviousMouseState.XButton2 == ButtonState.Pressed && MouseState.XButton2 == ButtonState.Released);
+                    return PreviousMouseState.XButton2 == ButtonState.Pressed && MouseState.XButton2 == ButtonState.Released;
                 default:
                     return false;
             }

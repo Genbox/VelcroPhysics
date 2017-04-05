@@ -85,7 +85,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             if (!coveredByOtherScreen && !otherScreenHasFocus)
             {
                 // variable time step but never less then 30 Hz
-                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
+                World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, 1f / 30f));
             }
 
             Camera.Update(gameTime);
@@ -227,6 +227,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         #region Demo description
+
         public virtual string GetTitle()
         {
             return "GetTitle() not implemented, override it for a proper title.";
@@ -236,6 +237,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         {
             return "GetDetails() not implemented, override it for a proper demo description.";
         }
+
         #endregion
     }
 }

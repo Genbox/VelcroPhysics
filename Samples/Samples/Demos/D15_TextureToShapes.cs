@@ -18,6 +18,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Sprite _objectSprite;
 
         #region Demo description
+
         public override string GetTitle()
         {
             return "Texture to collision shapes";
@@ -50,6 +51,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 #endif
             return sb.ToString();
         }
+
         #endregion
 
         public override void LoadContent()
