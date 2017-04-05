@@ -36,8 +36,8 @@ namespace VelcroPhysics.Samples.Samples2
 			Window.Title = "Velcro Physics Samples";
 
 			_graphics = new GraphicsDeviceManager(this);
-			_graphics.PreferMultiSampling = true;
-			_graphics.PreferredBackBufferWidth = 1280;
+            //_graphics.PreferMultiSampling = true; // See https://github.com/MonoGame/MonoGame/issues/5532
+            _graphics.PreferredBackBufferWidth = 1280;
 			_graphics.PreferredBackBufferHeight = 720;
 			ConvertUnits.SetDisplayUnitToSimUnitRatio(24f);
 			IsFixedTimeStep = true;

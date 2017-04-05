@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Testbed
 			ResetView();
 
 			_graphics = new GraphicsDeviceManager(this);
-			_graphics.PreferMultiSampling = true;
+		    //_graphics.PreferMultiSampling = true; // https://github.com/MonoGame/MonoGame/issues/5532
 			_graphics.PreferredBackBufferWidth = 1024;
 			_graphics.PreferredBackBufferHeight = 768;
 
