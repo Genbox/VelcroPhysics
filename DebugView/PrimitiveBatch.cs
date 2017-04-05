@@ -10,19 +10,19 @@ namespace VelcroPhysics.DebugView
 
         // a basic effect, which contains the shaders that we will use to draw our
         // primitives.
-        private BasicEffect _basicEffect;
+        private readonly BasicEffect _basicEffect;
 
         // the device that we will issue draw calls to.
-        private GraphicsDevice _device;
+        private readonly GraphicsDevice _device;
 
         // hasBegun is flipped to true once Begin is called, and is used to make
         // sure users don't call End before Begin is called.
         private bool _hasBegun;
 
         private bool _isDisposed;
-        private VertexPositionColor[] _lineVertices;
+        private readonly VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
-        private VertexPositionColor[] _triangleVertices;
+        private readonly VertexPositionColor[] _triangleVertices;
         private int _triangleVertsCount;
 
         public PrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)
@@ -65,7 +65,6 @@ namespace VelcroPhysics.DebugView
                 _isDisposed = true;
             }
         }
-
 
         /// <summary>
         /// Begin is called to tell the PrimitiveBatch what kind of primitives will be
@@ -150,6 +149,7 @@ namespace VelcroPhysics.DebugView
             if (_triangleVertsCount >= 3)
             {
                 int primitiveCount = _triangleVertsCount / 3;
+
                 // submit the draw call to the graphics card
                 _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.TriangleList, _triangleVertices, 0, primitiveCount);
@@ -166,6 +166,7 @@ namespace VelcroPhysics.DebugView
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
+
                 // submit the draw call to the graphics card
                 _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);

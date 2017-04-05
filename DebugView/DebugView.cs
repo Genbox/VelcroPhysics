@@ -24,10 +24,11 @@ namespace VelcroPhysics.DebugView
     {
         //Drawing
         private PrimitiveBatch _primitiveBatch;
+
         private SpriteBatch _batch;
         private SpriteFont _font;
         private GraphicsDevice _device;
-        private Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
+        private readonly Vector2[] _tempVertices = new Vector2[Settings.MaxPolygonVertices];
         private List<StringData> _stringData;
 
         private Matrix _localProjection;
@@ -35,6 +36,7 @@ namespace VelcroPhysics.DebugView
 
         //Shapes
         public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
+
         public Color InactiveShapeColor = new Color(0.5f, 0.5f, 0.3f);
         public Color KinematicShapeColor = new Color(0.5f, 0.5f, 0.9f);
         public Color SleepingShapeColor = new Color(0.6f, 0.6f, 0.6f);
@@ -43,24 +45,27 @@ namespace VelcroPhysics.DebugView
 
         //Contacts
         private int _pointCount;
+
         private const int MaxContactPoints = 2048;
-        private ContactPoint[] _points = new ContactPoint[MaxContactPoints];
+        private readonly ContactPoint[] _points = new ContactPoint[MaxContactPoints];
 
         //Debug panel
         public Vector2 DebugPanelPosition = new Vector2(55, 100);
+
         private float _max;
         private float _avg;
         private float _min;
-        private StringBuilder _debugPanelSb = new StringBuilder();
+        private readonly StringBuilder _debugPanelSb = new StringBuilder();
 
         //Performance graph
         public bool AdaptiveLimits = true;
+
         public int ValuesToGraph = 500;
         public float MinimumValue;
         public float MaximumValue = 10;
-        private List<float> _graphValues = new List<float>(500);
+        private readonly List<float> _graphValues = new List<float>(500);
         public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
-        private Vector2[] _background = new Vector2[4];
+        private readonly Vector2[] _background = new Vector2[4];
         public bool Enabled = true;
 
 #if XBOX || WINDOWS_PHONE
@@ -285,8 +290,8 @@ namespace VelcroPhysics.DebugView
                 // continue until no values are left
                 for (int i = _graphValues.Count - 1; i > 0; i--)
                 {
-                    float y1 = PerformancePanelBounds.Bottom - ((_graphValues[i] / (MaximumValue - MinimumValue)) * yScale);
-                    float y2 = PerformancePanelBounds.Bottom - ((_graphValues[i - 1] / (MaximumValue - MinimumValue)) * yScale);
+                    float y1 = PerformancePanelBounds.Bottom - _graphValues[i] / (MaximumValue - MinimumValue) * yScale;
+                    float y2 = PerformancePanelBounds.Bottom - _graphValues[i - 1] / (MaximumValue - MinimumValue) * yScale;
 
                     Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
                     Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
@@ -413,6 +418,7 @@ namespace VelcroPhysics.DebugView
                     DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
                     break;
                 case JointType.FixedAngle:
+
                     //Should not draw anything.
                     break;
                 case JointType.FixedRevolute:
@@ -447,53 +453,52 @@ namespace VelcroPhysics.DebugView
             switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                {
+                    CircleShape circle = (CircleShape)fixture.Shape;
 
-                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
-                        float radius = circle.Radius;
-                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
+                    Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                    float radius = circle.Radius;
+                    Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
 
-                        DrawSolidCircle(center, radius, axis, color);
-                    }
+                    DrawSolidCircle(center, radius, axis, color);
+                }
                     break;
 
                 case ShapeType.Polygon:
+                {
+                    PolygonShape poly = (PolygonShape)fixture.Shape;
+                    int vertexCount = poly.Vertices.Count;
+                    Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
+
+                    for (int i = 0; i < vertexCount; ++i)
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
-                        int vertexCount = poly.Vertices.Count;
-                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-
-                        for (int i = 0; i < vertexCount; ++i)
-                        {
-                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
-                        }
-
-                        DrawSolidPolygon(_tempVertices, vertexCount, color);
+                        _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
                     }
+
+                    DrawSolidPolygon(_tempVertices, vertexCount, color);
+                }
                     break;
 
-
                 case ShapeType.Edge:
-                    {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
-                        Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
-                        Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
-                        DrawSegment(v1, v2, color);
-                    }
+                {
+                    EdgeShape edge = (EdgeShape)fixture.Shape;
+                    Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
+                    Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
+                    DrawSegment(v1, v2, color);
+                }
                     break;
 
                 case ShapeType.Chain:
-                    {
-                        ChainShape chain = (ChainShape)fixture.Shape;
+                {
+                    ChainShape chain = (ChainShape)fixture.Shape;
 
-                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
-                        {
-                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
-                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
-                            DrawSegment(v1, v2, color);
-                        }
+                    for (int i = 0; i < chain.Vertices.Count - 1; ++i)
+                    {
+                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                        Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
+                        DrawSegment(v1, v2, color);
                     }
+                }
                     break;
             }
         }
@@ -665,13 +670,15 @@ namespace VelcroPhysics.DebugView
             float halfWidth = width / 2;
 
             // Create directional reference
-            Vector2 rotation = (start - end);
+            Vector2 rotation = start - end;
             rotation.Normalize();
 
             // Calculate angle of directional vector
             float angle = (float)Math.Atan2(rotation.X, -rotation.Y);
+
             // Create matrix for rotation
             Matrix rotMatrix = Matrix.CreateRotationZ(angle);
+
             // Create translation matrix for end-point
             Matrix endMatrix = Matrix.CreateTranslation(end.X, end.Y, 0);
 
@@ -683,6 +690,7 @@ namespace VelcroPhysics.DebugView
 
             // Rotate end shape
             Vector2.Transform(verts, ref rotMatrix, verts);
+
             // Translate end shape
             Vector2.Transform(verts, ref endMatrix, verts);
 
@@ -693,6 +701,7 @@ namespace VelcroPhysics.DebugView
             {
                 // Create translation matrix for start
                 Matrix startMatrix = Matrix.CreateTranslation(start.X, start.Y, 0);
+
                 // Setup arrow start shape
                 Vector2[] baseVerts = new Vector2[4];
                 baseVerts[0] = new Vector2(-halfWidth, length / 4);
@@ -702,8 +711,10 @@ namespace VelcroPhysics.DebugView
 
                 // Rotate start shape
                 Vector2.Transform(baseVerts, ref rotMatrix, baseVerts);
+
                 // Translate start shape
                 Vector2.Transform(baseVerts, ref startMatrix, baseVerts);
+
                 // Draw start shape
                 DrawSolidPolygon(baseVerts, 4, color, false);
             }
@@ -804,9 +815,9 @@ namespace VelcroPhysics.DebugView
 
         private struct StringData
         {
-            public Color Color;
-            public string Text;
-            public Vector2 Position;
+            public readonly Color Color;
+            public readonly string Text;
+            public readonly Vector2 Position;
 
             public StringData(Vector2 position, string text, Color color)
             {
