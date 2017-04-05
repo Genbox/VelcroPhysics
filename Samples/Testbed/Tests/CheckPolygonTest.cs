@@ -35,9 +35,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             PolygonError returnCode = _vertices.CheckPolygon();
 
             if (returnCode == PolygonError.NoError)
-                DrawString("Polygon is supported in Farseer Physics Engine");
+                DrawString("Polygon is supported in Velcro Physics");
             else
-                DrawString("Polygon is NOT supported in Farseer Physics Engine. Reason: " + returnCode);
+                DrawString("Polygon is NOT supported in Velcro Physics. Reason: " + returnCode);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
