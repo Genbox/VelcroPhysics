@@ -16,29 +16,27 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const int TitleBarHeight = 100;
         private const int EntrySpacer = 5;
 
-        private Vector2 _menuEntrySize;
-        private float _menuStart;
-        private float _menuSpacing;
-        private float _scrollSpacing;
-
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
-        private MenuSlider _menuSlider;
-        private bool _scrollHover;
-        private bool _scrollLock;
-
-        private int _selectedEntry;
-        private int _hoverEntry;
-        private int _menuOffset;
-
-        private Vector2 _titlePosition;
-        private Vector2 _titleOrigin;
-        private Texture2D _samplesLogo;
-
-        private Vector2 _previewOrigin;
 
         private SpriteFont _font;
+        private int _hoverEntry;
 
-        public Vector2 PreviewPosition { get; private set; }
+        private Vector2 _menuEntrySize;
+        private int _menuOffset;
+        private MenuSlider _menuSlider;
+        private float _menuSpacing;
+        private float _menuStart;
+
+        private Vector2 _previewOrigin;
+        private Texture2D _samplesLogo;
+        private bool _scrollHover;
+        private bool _scrollLock;
+        private float _scrollSpacing;
+
+        private int _selectedEntry;
+        private Vector2 _titleOrigin;
+
+        private Vector2 _titlePosition;
 
         /// <summary>
         /// Constructor.
@@ -53,6 +51,8 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             _selectedEntry = 0;
             _menuOffset = 0;
         }
+
+        public Vector2 PreviewPosition { get; private set; }
 
         public void AddMenuItem(PhysicsDemoScreen screen, Texture2D preview)
         {

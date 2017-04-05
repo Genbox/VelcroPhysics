@@ -17,12 +17,13 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
         // the device that we will issue draw calls to.
         private readonly GraphicsDevice _device;
 
+        private readonly VertexPositionColor[] _lineVertices;
+
         // hasBegun is flipped to true once Begin is called, and is used to make
         // sure users don't call End before Begin is called.
         private bool _hasBegun;
 
         private bool _isDisposed;
-        private readonly VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
 
         public LineBatch(GraphicsDevice graphicsDevice)

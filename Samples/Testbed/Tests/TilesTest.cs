@@ -39,8 +39,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class TilesTest : Test
     {
         private const int Count = 20;
-        private readonly int _fixtureCount;
         private readonly long _createTime;
+        private readonly int _fixtureCount;
 
         private TilesTest()
         {

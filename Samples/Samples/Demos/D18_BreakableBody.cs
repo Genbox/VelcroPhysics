@@ -15,44 +15,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D18_BreakableBody : PhysicsDemoScreen
     {
+        private readonly BreakableBody[] _breakableCookie = new BreakableBody[3];
         private Border _border;
         private List<Sprite> _breakableSprite;
         private Sprite _completeSprite;
-        private readonly BreakableBody[] _breakableCookie = new BreakableBody[3];
-
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "Breakable body and explosions";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a breakable cookie, imported from a SVG.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Explosion (at cursor): B button");
-            sb.AppendLine("  - Move cursor: Left thumbstick");
-            sb.AppendLine("  - Grab object (beneath cursor): A button");
-            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Explosion (at cursor): Right click");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
 
         public override void LoadContent()
         {
@@ -131,5 +97,39 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "Breakable body and explosions";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows a breakable cookie, imported from a SVG.");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Explosion (at cursor): B button");
+            sb.AppendLine("  - Move cursor: Left thumbstick");
+            sb.AppendLine("  - Grab object (beneath cursor): A button");
+            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  - Explosion (at cursor): Right click");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.Append("  - Drag grabbed object: Move mouse");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

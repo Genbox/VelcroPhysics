@@ -11,26 +11,14 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private static DebugViewFlags _flags = DebugViewFlags.DebugPanel;
         private static bool _flagsChanged;
 
-        protected Camera2D Camera;
-        protected DebugView.DebugView DebugView;
-        protected World World;
-
         private float _agentForce;
         private float _agentTorque;
         private FixedMouseJoint _fixedMouseJoint;
         private Body _userAgent;
 
-        public static DebugViewFlags Flags
-        {
-            get { return _flags; }
-            set
-            {
-                _flags = value;
-                _flagsChanged = true;
-            }
-        }
-
-        public static bool RenderDebug { get; set; }
+        protected Camera2D Camera;
+        protected DebugView.DebugView DebugView;
+        protected World World;
 
         protected PhysicsDemoScreen()
         {
@@ -44,6 +32,18 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             DebugView = null;
             RenderDebug = true;
         }
+
+        public static DebugViewFlags Flags
+        {
+            get { return _flags; }
+            set
+            {
+                _flags = value;
+                _flagsChanged = true;
+            }
+        }
+
+        public static bool RenderDebug { get; set; }
 
         public bool EnableCameraControl { get; set; }
 

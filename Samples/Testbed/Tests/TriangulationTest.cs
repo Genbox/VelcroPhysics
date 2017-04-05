@@ -13,12 +13,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class TriangulationTest : Test
     {
-        private int _fileCounter;
-        private string _nextFileName;
-        private readonly Stopwatch _sw = new Stopwatch();
-        private readonly float[] _timings = new float[6];
         private readonly Body[] _bodies = new Body[6];
         private readonly string[] _names = { "Seidel", "Seidel (trapezoids)", "Delauny", "Earclip", "Flipcode", "Bayazit" };
+        private readonly Stopwatch _sw = new Stopwatch();
+        private readonly float[] _timings = new float[6];
+        private int _fileCounter;
+        private string _nextFileName;
 
         public override void Initialize()
         {

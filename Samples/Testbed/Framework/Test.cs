@@ -34,11 +34,11 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public class Test
     {
+        private FixedMouseJoint _fixedMouseJoint;
         internal DebugView.DebugView DebugView;
         internal int StepCount;
-        internal World World;
-        private FixedMouseJoint _fixedMouseJoint;
         internal int TextLine;
+        internal World World;
 
         protected Test()
         {

@@ -46,16 +46,6 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
 
         private static readonly Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
 
-        public static int SoundVolume
-        {
-            get { return _soundVolume; }
-            set
-            {
-                _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
-                SoundEffect.MasterVolume = _soundVolume / 100f;
-            }
-        }
-
         private ContentWrapper(Game game)
             : base(game)
         {
@@ -112,6 +102,16 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
             catch (NoAudioHardwareException)
             {
                 // silently fall back to silence
+            }
+        }
+
+        public static int SoundVolume
+        {
+            get { return _soundVolume; }
+            set
+            {
+                _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
+                SoundEffect.MasterVolume = _soundVolume / 100f;
             }
         }
 

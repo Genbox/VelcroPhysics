@@ -13,8 +13,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class DestructibleTerrainTest : Test
     {
-        private float _circleRadius = 2.5f;
         private readonly Terrain _terrain;
+        private float _circleRadius = 2.5f;
         private AABB _terrainArea;
 
         private DestructibleTerrainTest()

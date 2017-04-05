@@ -15,14 +15,15 @@ namespace VelcroPhysics.DebugView
         // the device that we will issue draw calls to.
         private readonly GraphicsDevice _device;
 
+        private readonly VertexPositionColor[] _lineVertices;
+        private readonly VertexPositionColor[] _triangleVertices;
+
         // hasBegun is flipped to true once Begin is called, and is used to make
         // sure users don't call End before Begin is called.
         private bool _hasBegun;
 
         private bool _isDisposed;
-        private readonly VertexPositionColor[] _lineVertices;
         private int _lineVertsCount;
-        private readonly VertexPositionColor[] _triangleVertices;
         private int _triangleVertsCount;
 
         public PrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)

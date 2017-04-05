@@ -9,23 +9,23 @@ namespace VelcroPhysics.Samples.Testbed
 {
     public class Game1 : Game
     {
-        private TestEntry _entry;
         private readonly GraphicsDeviceManager _graphics;
         private readonly KeyboardManager _keyboardManager = new KeyboardManager();
+        private readonly GameSettings _settings = new GameSettings();
+        private TestEntry _entry;
         private Vector2 _lower;
         private GamePadState _oldGamePad;
         private MouseState _oldMouseState;
-        public Matrix Projection;
-        private readonly GameSettings _settings = new GameSettings();
         private Test _test;
         private int _testCount;
         private int _testIndex;
         private int _testSelection;
         private Vector2 _upper;
-        public Matrix View;
         private Vector2 _viewCenter;
 
         private float _viewZoom;
+        public Matrix Projection;
+        public Matrix View;
 
         public Game1()
         {

@@ -8,8 +8,8 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
     public class LogoScreen : GameScreen
     {
         private TimeSpan _duration;
-        private Texture2D _logoTexture;
         private Vector2 _logoPosition;
+        private Texture2D _logoTexture;
 
         public LogoScreen(TimeSpan duration)
         {

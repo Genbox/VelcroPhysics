@@ -15,10 +15,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private const int ColumnCount = 5;
         private const int RowCount = 16;
         private readonly Body[] _bodies = new Body[RowCount * ColumnCount];
-        private readonly RealExplosion _realExplosion;
         private readonly int[] _indices = new int[RowCount * ColumnCount];
-        private Vector2 _mousePos;
+        private readonly RealExplosion _realExplosion;
         private float _force;
+        private Vector2 _mousePos;
         private float _radius;
 
         private ExplosionTest()

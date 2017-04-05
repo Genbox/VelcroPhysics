@@ -17,13 +17,13 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private static float _targetHiddenX;
         private static float _targetVisibleX;
 
-        private float _targetY;
-        private Vector2 _currentPosition;
-
         private readonly PhysicsDemoScreen _screen;
+        private Vector2 _currentPosition;
 
         private double _hoverFade;
         private double _selectionFade;
+
+        private float _targetY;
         private double _visibleFade;
 
         /// <summary>
@@ -40,20 +40,6 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
             SpriteFont font = ContentWrapper.GetFont("MenuFont");
             Size = font.MeasureString(text);
-        }
-
-        public static void InitializeEntries(float hiddenX, float visibleX)
-        {
-            _targetHiddenX = hiddenX;
-            _targetVisibleX = visibleX;
-        }
-
-        public void InitializePosition(float target, bool visible)
-        {
-            Visible = visible;
-            _visibleFade = visible ? 1.0 : 0.0;
-            _currentPosition.X = visible ? _targetVisibleX : _targetHiddenX;
-            _currentPosition.Y = _targetY = target;
         }
 
         public string Text { get; }
@@ -103,6 +89,34 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
             get { return (float)_visibleFade; }
         }
 
+        #region IComparable Members
+
+        public int CompareTo(object obj)
+        {
+            MenuEntry entry = obj as MenuEntry;
+            if (entry == null)
+            {
+                return 0;
+            }
+            return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
+        }
+
+        #endregion
+
+        public static void InitializeEntries(float hiddenX, float visibleX)
+        {
+            _targetHiddenX = hiddenX;
+            _targetVisibleX = visibleX;
+        }
+
+        public void InitializePosition(float target, bool visible)
+        {
+            Visible = visible;
+            _visibleFade = visible ? 1.0 : 0.0;
+            _currentPosition.X = visible ? _targetVisibleX : _targetHiddenX;
+            _currentPosition.Y = _targetY = target;
+        }
+
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
@@ -148,19 +162,5 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
                 _currentPosition.Y += deltaY;
             }
         }
-
-        #region IComparable Members
-
-        public int CompareTo(object obj)
-        {
-            MenuEntry entry = obj as MenuEntry;
-            if (entry == null)
-            {
-                return 0;
-            }
-            return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
-        }
-
-        #endregion
     }
 }

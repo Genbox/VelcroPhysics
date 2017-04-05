@@ -8,11 +8,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class SimplificationTest : Test
     {
-        private Vertices _upperLeft;
-        private Vertices _upperRight;
         private Vertices _lowerLeft;
         private Vertices _lowerRight;
         private Vertices _twoShape;
+        private Vertices _upperLeft;
+        private Vertices _upperRight;
 
         public override void Initialize()
         {

@@ -14,41 +14,10 @@ namespace VelcroPhysics.Samples.Samples2.Demos
     internal class D13_TheoJansenWalker : PhysicsDemoScreen
     {
         private Border _border;
-        private TheoJansenWalker _walker;
         private Body[] _circles;
 
         private Sprite _grain;
-
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "Theo Jansen's Strandbeast";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how complex mechanical structures can be realized.");
-            sb.AppendLine("http://www.strandbeest.com/");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Switch walker direction: A button");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Switch walker direction: Space");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse / Touchscreen");
-            sb.Append("  - Switch walker direction: Right click");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
+        private TheoJansenWalker _walker;
 
         public override void LoadContent()
         {
@@ -97,5 +66,36 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "Theo Jansen's Strandbeast";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how complex mechanical structures can be realized.");
+            sb.AppendLine("http://www.strandbeest.com/");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Switch walker direction: A button");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Switch walker direction: Space");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse / Touchscreen");
+            sb.Append("  - Switch walker direction: Right click");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

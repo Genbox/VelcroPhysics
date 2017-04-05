@@ -13,9 +13,9 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
         private readonly BasicEffect _basicEffect;
         private readonly VertexPositionColorTexture[] _borderVertices;
-        private readonly short[] _indexBuffer;
 
         private readonly GraphicsDevice _graphics;
+        private readonly short[] _indexBuffer;
         private readonly LineBatch _lines;
 
         public Border(World world, LineBatch lines, GraphicsDevice graphics)

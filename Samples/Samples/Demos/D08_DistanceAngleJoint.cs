@@ -12,50 +12,13 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D08_DistanceAngleJoint : PhysicsDemoScreen
     {
-        private Border _border;
-        private Body _obstacles;
         private readonly Body[] _angleBody = new Body[3];
         private readonly Body[] _distanceBody = new Body[4];
 
         private Sprite _angleCube;
+        private Border _border;
         private Sprite _distanceCube;
-
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "Distance & angle joints";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows several bodies connected by distance and angle joints.");
-            sb.AppendLine("Orange bodies are forced to have the same angle at all times.");
-            sb.AppendLine();
-            sb.AppendLine("Striped bodies are forced to have the same distance at all times.");
-            sb.AppendLine("Two of them have a rigid distance joint.");
-            sb.AppendLine("The other two have a soft (spring-like) distance joint.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Move cursor: Left thumbstick");
-            sb.AppendLine("  - Grab object (beneath cursor): A button");
-            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
+        private Body _obstacles;
 
         public override void LoadContent()
         {
@@ -153,5 +116,42 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "Distance & angle joints";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows several bodies connected by distance and angle joints.");
+            sb.AppendLine("Orange bodies are forced to have the same angle at all times.");
+            sb.AppendLine();
+            sb.AppendLine("Striped bodies are forced to have the same distance at all times.");
+            sb.AppendLine("Two of them have a rigid distance joint.");
+            sb.AppendLine("The other two have a soft (spring-like) distance joint.");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Move cursor: Left thumbstick");
+            sb.AppendLine("  - Grab object (beneath cursor): A button");
+            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.Append("  - Drag grabbed object: Move mouse");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

@@ -35,13 +35,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class RayCastTest : Test
     {
         private const int MaxBodies = 256;
-        private float _angle;
         private readonly Body[] _bodies = new Body[MaxBodies];
-        private int _bodyIndex;
         private readonly CircleShape _circle;
+        private readonly PolygonShape[] _polygons = new PolygonShape[4];
+        private float _angle;
+        private int _bodyIndex;
 
         private RayCastMode _mode;
-        private readonly PolygonShape[] _polygons = new PolygonShape[4];
 
         private RayCastTest()
         {

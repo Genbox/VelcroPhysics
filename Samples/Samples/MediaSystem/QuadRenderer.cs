@@ -8,12 +8,12 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
     {
         private readonly BasicEffect _basicEffect;
 
-        private readonly VertexPositionColorTexture[] _verticesQuad;
+        private readonly GraphicsDevice _device;
         private readonly short[] _lineBuffer = { 0, 1, 3, 2, 0 };
 
-        private readonly GraphicsDevice _device;
-        private bool _isDisposed;
+        private readonly VertexPositionColorTexture[] _verticesQuad;
         private bool _hasBegun;
+        private bool _isDisposed;
 
         public QuadRenderer(GraphicsDevice graphicsDevice)
         {

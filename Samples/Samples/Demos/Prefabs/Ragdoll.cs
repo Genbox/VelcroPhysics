@@ -16,22 +16,22 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
         private const float DampingRatio = 1f;
         private const float Frequency = 25f;
 
-        private readonly Body _head;
-        private readonly Body _middleBody;
-        private readonly Body _lowerBody;
-        private readonly Body _upperLeftArm;
-        private readonly Body _lowerLeftArm;
-        private readonly Body _upperRightArm;
-        private readonly Body _lowerRightArm;
-        private readonly Body _upperLeftLeg;
-        private readonly Body _lowerLeftLeg;
-        private readonly Body _upperRightLeg;
-        private readonly Body _lowerRightLeg;
-
         private readonly Sprite _face;
-        private readonly Sprite _torso;
-        private readonly Sprite _upperLimb;
+
+        private readonly Body _head;
+        private readonly Body _lowerBody;
+        private readonly Body _lowerLeftArm;
+        private readonly Body _lowerLeftLeg;
         private readonly Sprite _lowerLimb;
+        private readonly Body _lowerRightArm;
+        private readonly Body _lowerRightLeg;
+        private readonly Body _middleBody;
+        private readonly Sprite _torso;
+        private readonly Body _upperLeftArm;
+        private readonly Body _upperLeftLeg;
+        private readonly Sprite _upperLimb;
+        private readonly Body _upperRightArm;
+        private readonly Body _upperRightLeg;
 
         public Ragdoll(World world, Vector2 position)
         {

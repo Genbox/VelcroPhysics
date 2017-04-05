@@ -17,44 +17,11 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Border _border;
 
         private List<Body> _bridgeBodies;
-        private List<Body> _softBodies;
 
         private Sprite _bridgeBox;
+        private List<Body> _softBodies;
         private Sprite _softBodyBox;
         private Sprite _softBodyCircle;
-
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "Soft body & path generator";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how a soft body and a bridge can be created, using");
-            sb.AppendLine("the path generator and bodies connected with revolute joints.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Move cursor: Left thumbstick");
-            sb.AppendLine("  - Grab object (beneath cursor): A button");
-            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
 
         public override void LoadContent()
         {
@@ -136,5 +103,38 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "Soft body & path generator";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how a soft body and a bridge can be created, using");
+            sb.AppendLine("the path generator and bodies connected with revolute joints.");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Move cursor: Left thumbstick");
+            sb.AppendLine("  - Grab object (beneath cursor): A button");
+            sb.AppendLine("  - Drag grabbed object: Left thumbstick");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.Append("  - Drag grabbed object: Move mouse");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

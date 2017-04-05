@@ -35,13 +35,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class CarTest : Test
     {
         private readonly Body _car;
-        private float _hz;
         private readonly float _speed;
         private readonly WheelJoint _spring1;
         private readonly WheelJoint _spring2;
         private readonly Body _wheel1;
         private readonly Body _wheel2;
         private readonly float _zeta;
+        private float _hz;
 
         private CarTest()
         {

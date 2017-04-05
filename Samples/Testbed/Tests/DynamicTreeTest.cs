@@ -33,14 +33,14 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int ActorCount = 128;
         private readonly Actor[] _actors = new Actor[ActorCount];
-        private bool _automated;
         private readonly float _proxyExtent;
+        private readonly DynamicTree<Actor> _tree = new DynamicTree<Actor>();
+        private readonly float _worldExtent;
+        private bool _automated;
         private AABB _queryAABB;
         private Actor _rayActor = new Actor();
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
-        private readonly DynamicTree<Actor> _tree = new DynamicTree<Actor>();
-        private readonly float _worldExtent;
 
         private DynamicTreeTest()
         {
@@ -338,6 +338,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
         }
 
+        internal static Test Create()
+        {
+            return new DynamicTreeTest();
+        }
+
         #region Nested type: Actor
 
         private sealed class Actor
@@ -349,10 +354,5 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         }
 
         #endregion
-
-        internal static Test Create()
-        {
-            return new DynamicTreeTest();
-        }
     }
 }

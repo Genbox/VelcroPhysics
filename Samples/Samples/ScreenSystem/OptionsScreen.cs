@@ -16,21 +16,21 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const float VerticalPadding = 24f;
         private const int EntrySpacer = 5;
 
-        private Vector2 _optionEntrySize;
-        private Vector2 _optionTextOffset;
-        private Vector2 _optionCheckOffset;
-        private float _optionStart;
-        private float _optionSpacing;
-
-        private Vector2 _topLeft;
-        private Vector2 _bottomRight;
-
         private readonly List<OptionEntry> _optionEntries = new List<OptionEntry>();
-
-        private int _hoverEntry;
+        private Vector2 _bottomRight;
+        private Texture2D _checkmark;
 
         private SpriteFont _font;
-        private Texture2D _checkmark;
+
+        private int _hoverEntry;
+        private Vector2 _optionCheckOffset;
+
+        private Vector2 _optionEntrySize;
+        private float _optionSpacing;
+        private float _optionStart;
+        private Vector2 _optionTextOffset;
+
+        private Vector2 _topLeft;
 
         /// <summary>
         /// Constructor.

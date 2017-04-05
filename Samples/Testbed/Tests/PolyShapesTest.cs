@@ -36,7 +36,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     /// <summary>
     /// This tests stacking. It also shows how to use World.Query()
     /// and AABB.TestOverlap().
-    /// 
     /// This callback is called by World.QueryAABB(). We find all the fixtures
     /// that overlap an AABB. Of those, we use AABB.TestOverlap() to determine which fixtures
     /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
@@ -44,11 +43,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class PolyShapesCallback
     {
         private const int MaxCount = 4;
+        private int _count;
 
         internal CircleShape Circle = new CircleShape(0, 0);
         internal DebugView.DebugView DebugDraw;
         internal Transform Transform;
-        private int _count;
 
         private void DrawFixture(Fixture fixture)
         {
@@ -121,9 +120,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int MaxBodies = 256;
         private readonly Body[] _bodies = new Body[MaxBodies];
-        private int _bodyIndex;
         private readonly CircleShape _circle = new CircleShape(0, 0);
         private readonly PolygonShape[] _polygons = new PolygonShape[4];
+        private int _bodyIndex;
 
         private PolyShapesTest()
         {

@@ -32,9 +32,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class PolyCollisionTest : Test
     {
-        private float _angleB;
         private readonly PolygonShape _polygonA = new PolygonShape(1);
         private readonly PolygonShape _polygonB = new PolygonShape(1);
+        private float _angleB;
         private Vector2 _positionB;
 
         private Transform _transformA;

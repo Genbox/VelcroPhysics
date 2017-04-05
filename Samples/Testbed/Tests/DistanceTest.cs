@@ -31,9 +31,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class DistanceTest : Test
     {
-        private float _angleB;
         private readonly PolygonShape _polygonA;
         private readonly PolygonShape _polygonB;
+        private float _angleB;
         private Vector2 _positionB = Vector2.Zero;
         private Transform _transformA;
         private Transform _transformB;

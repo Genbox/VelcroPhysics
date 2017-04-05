@@ -8,14 +8,14 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
     {
         private const float MaxTranslation = 15f;
         private const double HighlightTime = 0.3;
-
-        private float _positionX;
-
-        private float _targetY;
         private Vector2 _currentPosition;
 
         private double _hoverFade;
+
+        private float _positionX;
         private double _selectionFade;
+
+        private float _targetY;
 
         /// <summary>
         /// Constructs a new menu slider.

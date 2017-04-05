@@ -13,29 +13,28 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {
     public class TheoJansenWalker
     {
-        private readonly Body _chassis;
-        private readonly Body _wheel;
-        private readonly Body[] _leftShoulders;
-        private readonly Body[] _leftLegs;
-        private readonly Body[] _rightShoulders;
-        private readonly Body[] _rightLegs;
-
         private readonly Sprite _body;
+        private readonly Body _chassis;
         private readonly Sprite _engine;
-        private readonly Sprite _leftShoulder;
         private readonly Sprite _leftLeg;
-        private readonly Sprite _rightShoulder;
-        private readonly Sprite _rightLeg;
+        private readonly Body[] _leftLegs;
+        private readonly Sprite _leftShoulder;
+        private readonly Body[] _leftShoulders;
 
         private readonly RevoluteJoint _motorJoint;
-        private readonly List<DistanceJoint> _walkerJoints = new List<DistanceJoint>();
 
         private readonly bool _motorOn;
-        private float _motorSpeed;
 
         private readonly Vector2 _position;
+        private readonly Sprite _rightLeg;
+        private readonly Body[] _rightLegs;
+        private readonly Sprite _rightShoulder;
+        private readonly Body[] _rightShoulders;
 
         private readonly Color[] _walkerColors = { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
+        private readonly List<DistanceJoint> _walkerJoints = new List<DistanceJoint>();
+        private readonly Body _wheel;
+        private float _motorSpeed;
 
         public TheoJansenWalker(World world, Vector2 position)
         {

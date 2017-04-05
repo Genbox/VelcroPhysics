@@ -15,6 +15,34 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Body _rectangle;
         private Sprite _rectangleSprite;
 
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            World.Gravity = Vector2.Zero;
+
+            _border = new Border(World, Lines, Framework.GraphicsDevice);
+
+            _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
+            _rectangle.BodyType = BodyType.Dynamic;
+
+            SetUserAgent(_rectangle, 100f, 100f);
+
+            // create sprite based on body
+            _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle.FixtureList[0].Shape, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Sprites.Begin(0, null, null, null, null, null, Camera.View);
+            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
+            Sprites.End();
+
+            _border.Draw(Camera.SimProjection, Camera.SimView);
+
+            base.Draw(gameTime);
+        }
+
         #region Demo description
 
         public override string GetTitle()
@@ -52,33 +80,5 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         }
 
         #endregion
-
-        public override void LoadContent()
-        {
-            base.LoadContent();
-
-            World.Gravity = Vector2.Zero;
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
-
-            _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
-            _rectangle.BodyType = BodyType.Dynamic;
-
-            SetUserAgent(_rectangle, 100f, 100f);
-
-            // create sprite based on body
-            _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle.FixtureList[0].Shape, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
-            Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
-
-            base.Draw(gameTime);
-        }
     }
 }

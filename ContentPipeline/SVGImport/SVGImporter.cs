@@ -14,10 +14,10 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
     {
         private const string IsNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
         private const string IsCommaWhitespace = @"\A[\s,]*";
+        private RawBodyTemplate? _currentBody;
+        private List<RawBodyTemplate> _parsedSVG;
 
         private Stack<Matrix> _transformations;
-        private List<RawBodyTemplate> _parsedSVG;
-        private RawBodyTemplate? _currentBody;
 
         public override List<RawBodyTemplate> Import(string filename, ContentImporterContext context)
         {

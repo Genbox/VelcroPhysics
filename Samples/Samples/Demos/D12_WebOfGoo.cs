@@ -10,6 +10,28 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Border _border;
         private WebOfGoo _webOfGoo;
 
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            World.Gravity = new Vector2(0, 9.82f);
+
+            _border = new Border(World, Lines, Framework.GraphicsDevice);
+
+            _webOfGoo = new WebOfGoo(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            Sprites.Begin(0, null, null, null, null, null, Camera.View);
+            _webOfGoo.Draw(Sprites);
+            Sprites.End();
+
+            _border.Draw(Camera.SimProjection, Camera.SimView);
+
+            base.Draw(gameTime);
+        }
+
         #region Demo description
 
         public override string GetTitle()
@@ -42,27 +64,5 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         }
 
         #endregion
-
-        public override void LoadContent()
-        {
-            base.LoadContent();
-
-            World.Gravity = new Vector2(0, 9.82f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
-
-            _webOfGoo = new WebOfGoo(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            Sprites.Begin(0, null, null, null, null, null, Camera.View);
-            _webOfGoo.Draw(Sprites);
-            Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
-
-            base.Draw(gameTime);
-        }
     }
 }

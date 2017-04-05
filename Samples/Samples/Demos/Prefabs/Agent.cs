@@ -11,9 +11,9 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
     {
         private readonly Sprite _box;
         private readonly Sprite _knob;
+        private readonly float _offset;
         private Category _collidesWith;
         private Category _collisionCategories;
-        private readonly float _offset;
 
         public Agent(World world, Vector2 position)
         {

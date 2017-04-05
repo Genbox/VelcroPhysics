@@ -7,6 +7,29 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D16_SVGtoPolygon : PhysicsDemoScreen
     {
+        private PolygonContainer _poly;
+
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            World.Gravity = Vector2.Zero;
+
+            _poly = Framework.Content.Load<PolygonContainer>("Pipeline/Polygon");
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            DebugView.BeginCustomDraw(Camera.SimProjection, Camera.SimView);
+            foreach (Polygon p in _poly.Values)
+            {
+                DebugView.DrawPolygon(p.Vertices.ToArray(), p.Vertices.Count, Color.Black, p.Closed);
+            }
+            DebugView.EndCustomDraw();
+
+            base.Draw(gameTime);
+        }
+
         #region Demo description
 
         public override string GetTitle()
@@ -31,28 +54,5 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         }
 
         #endregion
-
-        private PolygonContainer _poly;
-
-        public override void LoadContent()
-        {
-            base.LoadContent();
-
-            World.Gravity = Vector2.Zero;
-
-            _poly = Framework.Content.Load<PolygonContainer>("Pipeline/Polygon");
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            DebugView.BeginCustomDraw(Camera.SimProjection, Camera.SimView);
-            foreach (Polygon p in _poly.Values)
-            {
-                DebugView.DrawPolygon(p.Vertices.ToArray(), p.Vertices.Count, Color.Black, p.Closed);
-            }
-            DebugView.EndCustomDraw();
-
-            base.Draw(gameTime);
-        }
     }
 }

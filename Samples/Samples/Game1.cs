@@ -14,22 +14,17 @@ namespace VelcroPhysics.Samples.Samples2
     /// </summary>
     public class Game1 : Game
     {
-        private SpriteBatch _spriteBatch;
-        private LineBatch _lineBatch;
-        private QuadRenderer _quadRenderer;
-        private InputHelper _input;
+        private readonly GraphicsDeviceManager _graphics;
         private readonly List<GameScreen> _screens = new List<GameScreen>();
         private readonly List<GameScreen> _screensToUpdate = new List<GameScreen>();
         private readonly List<RenderTarget2D> _transitions = new List<RenderTarget2D>();
-        private MenuScreen _menuScreen;
-        private readonly GraphicsDeviceManager _graphics;
+        private InputHelper _input;
 
         private bool _isExiting;
-
-#if WINDOWS
-        private FrameRateCounter _counter;
-        private bool _showFPS;
-#endif
+        private LineBatch _lineBatch;
+        private MenuScreen _menuScreen;
+        private QuadRenderer _quadRenderer;
+        private SpriteBatch _spriteBatch;
 
         public Game1()
         {
@@ -339,5 +334,10 @@ namespace VelcroPhysics.Samples.Samples2
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
         }
+
+#if WINDOWS
+        private FrameRateCounter _counter;
+        private bool _showFPS;
+#endif
     }
 }

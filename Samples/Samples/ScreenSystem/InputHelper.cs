@@ -6,7 +6,7 @@ using VelcroPhysics.Samples.Samples2.MediaSystem;
 namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
     /// <summary>
-    ///   an enum of all available mouse buttons.
+    /// an enum of all available mouse buttons.
     /// </summary>
     public enum MouseButtons
     {
@@ -24,8 +24,10 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         private Viewport _viewport;
 
+        public Vector2 Cursor;
+
         /// <summary>
-        ///   Constructs a new input state.
+        /// Constructs a new input state.
         /// </summary>
         public InputHelper()
         {
@@ -63,8 +65,6 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         public bool IsCursorValid { get; private set; }
 
-        public Vector2 Cursor;
-
         public void LoadContent(Viewport viewport)
         {
             Texture2D cursorTexture;
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Reads the latest state of the keyboard and gamepad and mouse/touchpad.
+        /// Reads the latest state of the keyboard and gamepad and mouse/touchpad.
         /// </summary>
         public void Update(GameTime gameTime)
         {
@@ -122,7 +122,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Helper for checking if a key was newly pressed during this update.
+        /// Helper for checking if a key was newly pressed during this update.
         /// </summary>
         public bool IsNewKeyPress(Keys key)
         {
@@ -135,7 +135,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Helper for checking if a button was newly pressed during this update.
+        /// Helper for checking if a button was newly pressed during this update.
         /// </summary>
         public bool IsNewButtonPress(Buttons button)
         {
@@ -148,7 +148,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Helper for checking if a mouse button was newly pressed during this update.
+        /// Helper for checking if a mouse button was newly pressed during this update.
         /// </summary>
         public bool IsNewMouseButtonPress(MouseButtons button)
         {
@@ -209,7 +209,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Checks for a "menu select" input action.
+        /// Checks for a "menu select" input action.
         /// </summary>
         public bool IsMenuSelect()
         {
@@ -232,7 +232,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        ///   Checks for a "menu cancel" input action.
+        /// Checks for a "menu cancel" input action.
         /// </summary>
         public bool IsMenuCancel()
         {

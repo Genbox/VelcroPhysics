@@ -11,41 +11,16 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 {
     internal class D17_SVGtoBody : PhysicsDemoScreen
     {
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "SVG Importer to bodies";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows how to load bodies from a SVG.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
-
         private BodyContainer _body;
         private Border _border;
-        private Body _heartBody;
+        private Sprite _club;
         private Body _clubBody;
-        private Body _spadeBody;
+        private Sprite _diamond;
         private Body _diamondBody;
         private Sprite _heart;
-        private Sprite _club;
+        private Body _heartBody;
         private Sprite _spade;
-        private Sprite _diamond;
+        private Body _spadeBody;
 
         public override void LoadContent()
         {
@@ -81,5 +56,30 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             _border.Draw(Camera.SimProjection, Camera.SimView);
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "SVG Importer to bodies";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows how to load bodies from a SVG.");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

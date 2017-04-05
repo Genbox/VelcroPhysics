@@ -12,9 +12,9 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
     {
         private const double HighlightTime = 0.3;
         private const double FadeTime = 0.1;
+        private double _checkedFade;
 
         private double _hoverFade;
-        private double _checkedFade;
 
         /// <summary>
         /// Constructs a new option entry with the specified text.
@@ -29,16 +29,6 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
             SpriteFont font = ContentWrapper.GetFont("MenuFont");
             Size = font.MeasureString(text);
-        }
-
-        public void Switch()
-        {
-            IsChecked = !IsChecked;
-        }
-
-        public void InitializePosition(Vector2 target)
-        {
-            Position = target;
         }
 
         public string Text { get; }
@@ -66,6 +56,16 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         public float Scale
         {
             get { return 0.9f + 0.1f * (float)_hoverFade; }
+        }
+
+        public void Switch()
+        {
+            IsChecked = !IsChecked;
+        }
+
+        public void InitializePosition(Vector2 target)
+        {
+            Position = target;
         }
 
         /// <summary>

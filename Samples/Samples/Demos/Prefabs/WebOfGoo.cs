@@ -13,11 +13,11 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
     {
         private const float Breakpoint = 100f;
 
-        private readonly List<List<Body>> _ringBodys;
-        private readonly List<DistanceJoint> _ringJoints;
-
         private readonly Sprite _goo;
         private readonly Sprite _link;
+
+        private readonly List<List<Body>> _ringBodys;
+        private readonly List<DistanceJoint> _ringJoints;
 
         public WebOfGoo(World world, Vector2 position, float radius, int rings, int sides)
         {

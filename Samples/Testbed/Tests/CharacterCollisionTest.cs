@@ -33,8 +33,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class CharacterCollisionTest : Test
     {
-        private bool _collision;
         private readonly Body _character;
+        private bool _collision;
 
         private CharacterCollisionTest()
         {

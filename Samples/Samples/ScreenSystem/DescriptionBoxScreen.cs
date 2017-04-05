@@ -16,10 +16,10 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const float VerticalPadding = 16f;
 
         private readonly string _message;
-        private Vector2 _topLeft;
         private Vector2 _bottomRight;
-        private Vector2 _textPosition;
         private SpriteFont _font;
+        private Vector2 _textPosition;
+        private Vector2 _topLeft;
 
         public DescriptionBoxScreen(string message)
         {

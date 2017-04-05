@@ -36,8 +36,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private const int ColumnCount = 5;
         private const int RowCount = 16;
         private readonly Body[] _bodies = new Body[RowCount * ColumnCount];
-        private Body _bullet;
         private readonly int[] _indices = new int[RowCount * ColumnCount];
+        private Body _bullet;
 
         private VerticalStackTest()
         {

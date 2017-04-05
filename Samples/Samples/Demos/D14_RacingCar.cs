@@ -38,39 +38,6 @@ namespace VelcroPhysics.Samples.Samples2.Demos
         private Body _wheelFront;
         private float _zeta;
 
-        #region Demo description
-
-        public override string GetTitle()
-        {
-            return "Racing car";
-        }
-
-        public override string GetDetails()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("This demo shows a side scrolling car on a race track.");
-            sb.AppendLine("The car uses two wheel joints, which combine a revolute and");
-            sb.AppendLine("a (soft) distance joint for the tire suspension.");
-            sb.AppendLine("The track is composed of several edge shapes and different");
-            sb.AppendLine("obstacles are attached to the track.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
-            sb.AppendLine("  - Break: A button");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Accelerate / reverse: D / A");
-            sb.AppendLine("  - Break: S");
-            sb.Append("  - Exit to demo selection: Escape");
-#endif
-            return sb.ToString();
-        }
-
-        #endregion
-
         public override void LoadContent()
         {
             base.LoadContent();
@@ -324,5 +291,38 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             Lines.End();
             base.Draw(gameTime);
         }
+
+        #region Demo description
+
+        public override string GetTitle()
+        {
+            return "Racing car";
+        }
+
+        public override string GetDetails()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("This demo shows a side scrolling car on a race track.");
+            sb.AppendLine("The car uses two wheel joints, which combine a revolute and");
+            sb.AppendLine("a (soft) distance joint for the tire suspension.");
+            sb.AppendLine("The track is composed of several edge shapes and different");
+            sb.AppendLine("obstacles are attached to the track.");
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
+            sb.AppendLine("  - Break: A button");
+            sb.Append("  - Exit to demo selection: Back button");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Accelerate / reverse: D / A");
+            sb.AppendLine("  - Break: S");
+            sb.Append("  - Exit to demo selection: Escape");
+#endif
+            return sb.ToString();
+        }
+
+        #endregion
     }
 }

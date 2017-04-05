@@ -10,6 +10,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private const float _minZoom = 0.02f;
         private const float _maxZoom = 20f;
         private static GraphicsDevice _graphics;
+        private readonly Vector2 _translateCenter;
 
         private Vector2 _currentPosition;
 
@@ -25,7 +26,6 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private Vector2 _targetPosition;
         private float _targetRotation;
         private Body _trackingBody;
-        private readonly Vector2 _translateCenter;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         /// <summary>
         /// The furthest up, and the furthest left the camera can go.
-        /// if this value equals maxPosition, then no clamping will be 
+        /// if this value equals maxPosition, then no clamping will be
         /// applied (unless you override that function).
         /// </summary>
         public Vector2 MinPosition
@@ -81,7 +81,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
         /// <summary>
         /// the furthest down, and the furthest right the camera will go.
-        /// if this value equals minPosition, then no clamping will be 
+        /// if this value equals minPosition, then no clamping will be
         /// applied (unless you override that function).
         /// </summary>
         public Vector2 MaxPosition
@@ -140,7 +140,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         }
 
         /// <summary>
-        /// the body that this camera is currently tracking. 
+        /// the body that this camera is currently tracking.
         /// Null if not tracking any.
         /// </summary>
         public Body TrackingBody

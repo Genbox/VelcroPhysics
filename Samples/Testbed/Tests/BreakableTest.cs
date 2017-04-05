@@ -35,13 +35,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class BreakableTest : Test
     {
-        private float _angularVelocity;
         private readonly Body _body1;
+        private readonly Fixture _piece1;
+        private readonly PolygonShape _shape2;
+        private float _angularVelocity;
         private bool _break;
         private bool _broke;
-        private readonly Fixture _piece1;
         private Fixture _piece2;
-        private readonly PolygonShape _shape2;
         private Vector2 _velocity;
 
         private BreakableTest()

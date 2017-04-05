@@ -32,11 +32,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class PulleysTest : Test
     {
-        private readonly PulleyJoint _joint1;
         private const float Y = 16.0f;
         private const float L = 12.0f;
         private const float A = 1.0f;
         private const float B = 2.0f;
+        private readonly PulleyJoint _joint1;
 
         private PulleysTest()
         {

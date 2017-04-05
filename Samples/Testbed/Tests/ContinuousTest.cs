@@ -33,9 +33,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ContinuousTest : Test
     {
-        private float _angularVelocity;
         private readonly Body _box;
         private readonly Body _ground;
+        private float _angularVelocity;
 
         private ContinuousTest()
         {

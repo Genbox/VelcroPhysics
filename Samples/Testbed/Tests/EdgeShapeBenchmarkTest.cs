@@ -10,8 +10,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class EdgeShapeBenchmarkTest : Test
     {
-        private int _count;
         private readonly PolygonShape _polyShape;
+        private int _count;
 
         private EdgeShapeBenchmarkTest()
         {
