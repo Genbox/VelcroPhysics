@@ -52,11 +52,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Press A,S,W,D move endpoint");
-            
+
             DrawString("Press Enter to cut");
-            
+
             DrawString("Press TAB to change endpoint");
-            
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawSegment(_start, _end, Color.Red);
@@ -68,18 +67,18 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             //Get the entry points
             World.RayCast((f, p, n, fr) =>
-                              {
-                                  fixtures.Add(f);
-                                  entryPoints.Add(p);
-                                  return 1;
-                              }, _start, _end);
+            {
+                fixtures.Add(f);
+                entryPoints.Add(p);
+                return 1;
+            }, _start, _end);
 
             //Reverse the ray to get the exitpoints
             World.RayCast((f, p, n, fr) =>
-                              {
-                                  exitPoints.Add(p);
-                                  return 1;
-                              }, _end, _start);
+            {
+                exitPoints.Add(p);
+                return 1;
+            }, _end, _start);
 
             DrawString("Fixtures: " + fixtures.Count);
 

@@ -59,30 +59,30 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                {
+                    CircleShape circle = (CircleShape)fixture.Shape;
 
-                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
-                        float radius = circle.Radius;
+                    Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                    float radius = circle.Radius;
 
-                        DebugDraw.DrawSolidCircle(center, radius, Vector2.Zero, color);
-                    }
+                    DebugDraw.DrawSolidCircle(center, radius, Vector2.Zero, color);
+                }
                     break;
 
                 case ShapeType.Polygon:
+                {
+                    PolygonShape poly = (PolygonShape)fixture.Shape;
+                    int vertexCount = poly.Vertices.Count;
+                    Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
+                    Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
+
+                    for (int i = 0; i < vertexCount; ++i)
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
-                        int vertexCount = poly.Vertices.Count;
-                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-                        Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
-
-                        for (int i = 0; i < vertexCount; ++i)
-                        {
-                            vertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
-                        }
-
-                        DebugDraw.DrawSolidPolygon(vertices, vertexCount, color);
+                        vertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
                     }
+
+                    DebugDraw.DrawSolidPolygon(vertices, vertexCount, color);
+                }
                     break;
             }
         }
@@ -120,16 +120,16 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class PolyShapesTest : Test
     {
         private const int MaxBodies = 256;
-        private Body[] _bodies = new Body[MaxBodies];
+        private readonly Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
-        private CircleShape _circle = new CircleShape(0, 0);
-        private PolygonShape[] _polygons = new PolygonShape[4];
+        private readonly CircleShape _circle = new CircleShape(0, 0);
+        private readonly PolygonShape[] _polygons = new PolygonShape[4];
 
         private PolyShapesTest()
         {
             // Ground body
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            
+
             {
                 Vertices vertices = new Vertices(3);
                 vertices.Add(new Vector2(-0.5f, 0.0f));
@@ -196,7 +196,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
             }
-
 
             if (index < 4)
             {

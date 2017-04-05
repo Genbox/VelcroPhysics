@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class SphereStackTest : Test
     {
         private const int Count = 10;
-        private Body[] _bodies = new Body[Count];
+        private readonly Body[] _bodies = new Body[Count];
 
         private SphereStackTest()
         {

@@ -43,7 +43,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     /// </summary>
     public class RopeTest : Test
     {
-        private RopeJoint _rj;
+        private readonly RopeJoint _rj;
         private bool _useRopeJoint = true;
 
         private RopeTest()
@@ -82,7 +82,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, true); 
+                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, true);
                     jd.CollideConnected = false;
 
                     World.AddJoint(jd);
@@ -123,7 +123,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             DrawString("Press (j) to toggle the rope joint.");
             DrawString(_useRopeJoint ? "Rope ON" : "Rope OFF");
-            
+
             base.Update(settings, gameTime);
         }
 

@@ -32,15 +32,15 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class DynamicTreeTest : Test
     {
         private const int ActorCount = 128;
-        private Actor[] _actors = new Actor[ActorCount];
+        private readonly Actor[] _actors = new Actor[ActorCount];
         private bool _automated;
-        private float _proxyExtent;
+        private readonly float _proxyExtent;
         private AABB _queryAABB;
         private Actor _rayActor = new Actor();
         private RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
-        private DynamicTree<Actor> _tree = new DynamicTree<Actor>();
-        private float _worldExtent;
+        private readonly DynamicTree<Actor> _tree = new DynamicTree<Actor>();
+        private readonly float _worldExtent;
 
         private DynamicTreeTest()
         {
@@ -64,6 +64,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             _rayCastInput.Point1 = new Vector2(-5.0f, 5.0f + h);
             _rayCastInput.Point2 = new Vector2(7.0f, -4.0f + h);
+
             //_rayCastInput.p1 = new Vector2(0.0f, 2.0f + h);
             //_rayCastInput.p2 = new Vector2(0.0f, -2.0f + h);
             _rayCastInput.MaxFraction = 1.0f;
@@ -189,6 +190,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             aabb = new AABB();
 
             Vector2 w = new Vector2(2.0f * _proxyExtent, 2.0f * _proxyExtent);
+
             //aabb.LowerBound.x = -_proxyExtent;
             //aabb.LowerBound.y = -_proxyExtent + _worldExtent;
             aabb.LowerBound.X = Rand.RandomFloat(-_worldExtent, _worldExtent);
@@ -201,6 +203,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             Vector2 d = Vector2.Zero;
             d.X = Rand.RandomFloat(-0.5f, 0.5f);
             d.Y = Rand.RandomFloat(-0.5f, 0.5f);
+
             //d.x = 2.0f;
             //d.y = 0.0f;
             aabb.LowerBound += d;

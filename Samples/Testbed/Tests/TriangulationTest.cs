@@ -1,5 +1,4 @@
-﻿
-#if WINDOWS
+﻿#if WINDOWS
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -16,10 +15,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private int _fileCounter;
         private string _nextFileName;
-        private Stopwatch _sw = new Stopwatch();
-        private float[] _timings = new float[6];
-        private Body[] _bodies = new Body[6];
-        private string[] _names = new[] { "Seidel", "Seidel (trapezoids)", "Delauny", "Earclip", "Flipcode", "Bayazit" };
+        private readonly Stopwatch _sw = new Stopwatch();
+        private readonly float[] _timings = new float[6];
+        private readonly Body[] _bodies = new Body[6];
+        private readonly string[] _names = { "Seidel", "Seidel (trapezoids)", "Delauny", "Earclip", "Flipcode", "Bayazit" };
 
         public override void Initialize()
         {
@@ -117,4 +116,5 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         }
     }
 }
+
 #endif

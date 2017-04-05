@@ -14,7 +14,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class DestructibleTerrainTest : Test
     {
         private float _circleRadius = 2.5f;
-        private Terrain _terrain;
+        private readonly Terrain _terrain;
         private AABB _terrainArea;
 
         private DestructibleTerrainTest()
@@ -23,13 +23,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             _terrainArea = new AABB(new Vector2(0, 0), 100, 100);
             _terrain = new Terrain(World, _terrainArea)
-                           {
-                               PointsPerUnit = 10,
-                               CellSize = 50,
-                               SubCellSize = 5,
-                               Decomposer = TriangulationAlgorithm.Earclip,
-                               Iterations = 2,
-                           };
+            {
+                PointsPerUnit = 10,
+                CellSize = 50,
+                SubCellSize = 5,
+                Decomposer = TriangulationAlgorithm.Earclip,
+                Iterations = 2
+            };
 
             _terrain.Initialize();
         }
@@ -48,7 +48,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 for (int x = 0; x < texture.Width; x++)
                 {
                     //If the color on the coordinate is black, we include it in the terrain.
-                    bool inside = colorData[(y * texture.Width) + x] == Color.Black;
+                    bool inside = colorData[y * texture.Width + x] == Color.Black;
 
                     if (!inside)
                         data[x, y] = 1;
@@ -155,4 +155,5 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         }
     }
 }
+
 #endif

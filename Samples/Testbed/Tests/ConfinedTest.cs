@@ -67,7 +67,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
-                                                (2.0f * i + 1.0f) * radius);
+                        (2.0f * i + 1.0f) * radius);
 
                     Fixture fixture = body.CreateFixture(shape2);
                     fixture.Friction = 0.1f;
@@ -110,9 +110,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     continue;
                 }
 
-                if (b.Awake)
-                {
-                }
+                if (b.Awake) { }
             }
 
             if (StepCount == 180)
@@ -142,7 +140,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             DrawString("Press 'c' to create a circle.");
-            
         }
 
         internal static Test Create()

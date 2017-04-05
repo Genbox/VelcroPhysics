@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
-            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, (1f / 30f));
+            float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, 1f / 30f);
 
             if (settings.Pause)
             {
@@ -104,9 +104,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
             }
         }
 
-        public virtual void Gamepad(GamePadState state, GamePadState oldState)
-        {
-        }
+        public virtual void Gamepad(GamePadState state, GamePadState oldState) { }
 
         public virtual void Mouse(MouseState state, MouseState oldState)
         {
@@ -152,15 +150,12 @@ namespace VelcroPhysics.Samples.Testbed.Framework
                 _fixedMouseJoint.WorldAnchorB = p;
         }
 
-        protected virtual void PreSolve(Contact contact, ref Manifold oldManifold)
-        {
-        }
+        protected virtual void PreSolve(Contact contact, ref Manifold oldManifold) { }
 
-        protected virtual void PostSolve(Contact contact, ContactVelocityConstraint impulse)
-        {
-        }
+        protected virtual void PostSolve(Contact contact, ContactVelocityConstraint impulse) { }
 
 #if WINDOWS
+
         protected Vertices LoadDataFile(string filename)
         {
             string[] lines = File.ReadAllLines(filename);
@@ -175,6 +170,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
             return vertices;
         }
+
 #endif
 
         protected void DrawString(string text)

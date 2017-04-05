@@ -34,7 +34,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            float[] restitution = new[] { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
+            float[] restitution = { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
 
             for (int i = 0; i < 7; ++i)
             {

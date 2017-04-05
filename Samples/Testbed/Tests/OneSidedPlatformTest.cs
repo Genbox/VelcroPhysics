@@ -33,9 +33,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class OneSidedPlatformTest : Test
     {
-        private Fixture _character;
-        private Fixture _platform;
-        private float _radius, _top;
+        private readonly Fixture _character;
+        private readonly Fixture _platform;
+        private readonly float _radius;
+        private readonly float _top;
 
         private OneSidedPlatformTest()
         {

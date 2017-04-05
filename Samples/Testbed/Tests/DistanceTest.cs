@@ -32,8 +32,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class DistanceTest : Test
     {
         private float _angleB;
-        private PolygonShape _polygonA;
-        private PolygonShape _polygonB;
+        private readonly PolygonShape _polygonA;
+        private readonly PolygonShape _polygonB;
         private Vector2 _positionB = Vector2.Zero;
         private Transform _transformA;
         private Transform _transformB;
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             DrawString("Distance = " + output.Distance);
             DrawString("Iterations = " + output.Iterations);
-            
+
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             {
                 Color color = new Color(0.9f, 0.9f, 0.9f);

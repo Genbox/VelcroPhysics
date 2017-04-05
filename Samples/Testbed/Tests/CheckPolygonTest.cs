@@ -8,11 +8,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class CheckPolygonTest : Test
     {
-        private Vertices _vertices = new Vertices();
+        private readonly Vertices _vertices = new Vertices();
 
-        private CheckPolygonTest()
-        {
-        }
+        private CheckPolygonTest() { }
 
         public override void Mouse(MouseState state, MouseState oldState)
         {

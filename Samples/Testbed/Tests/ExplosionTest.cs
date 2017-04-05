@@ -14,9 +14,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int ColumnCount = 5;
         private const int RowCount = 16;
-        private Body[] _bodies = new Body[RowCount * ColumnCount];
-        private RealExplosion _realExplosion;
-        private int[] _indices = new int[RowCount * ColumnCount];
+        private readonly Body[] _bodies = new Body[RowCount * ColumnCount];
+        private readonly RealExplosion _realExplosion;
+        private readonly int[] _indices = new int[RowCount * ColumnCount];
         private Vector2 _mousePos;
         private float _force;
         private float _radius;
@@ -26,7 +26,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            float[] xs = new[] { -10.0f, -5.0f, 0.0f, 5.0f, 10.0f };
+            float[] xs = { -10.0f, -5.0f, 0.0f, 5.0f, 10.0f };
 
             for (int j = 0; j < ColumnCount; ++j)
             {
@@ -99,13 +99,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             base.Update(settings, gameTime);
 
             DrawString("Press: (,) to explode at mouse position.");
-            
+
             DrawString("Press: (A) to decrease the explosion radius, (S) to increase it.");
-            
+
             DrawString("Press: (D) to decrease the explosion power, (F) to increase it.");
-            
+
             // Fighting against float decimals
-            float powernumber = (float)((int)(_force * 10)) / 10;
+            float powernumber = (float)(int)(_force * 10) / 10;
             DrawString("Power: " + powernumber);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);

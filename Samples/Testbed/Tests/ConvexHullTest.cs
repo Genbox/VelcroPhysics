@@ -8,8 +8,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ConvexHullTest : Test
     {
-        private int _count = Settings.MaxPolygonVertices;
-        private Vector2[] _points = new Vector2[Settings.MaxPolygonVertices];
+        private readonly int _count = Settings.MaxPolygonVertices;
+        private readonly Vector2[] _points = new Vector2[Settings.MaxPolygonVertices];
         private bool _auto;
 
         private ConvexHullTest()
@@ -43,7 +43,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             if (keyboardManager.IsNewKeyPress(Keys.G))
                 Generate();
-
 
             base.Keyboard(keyboardManager);
         }

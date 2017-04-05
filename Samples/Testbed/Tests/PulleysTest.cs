@@ -32,11 +32,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class PulleysTest : Test
     {
-        private PulleyJoint _joint1;
-        const float Y = 16.0f;
-        const float L = 12.0f;
-        const float A = 1.0f;
-        const float B = 2.0f;
+        private readonly PulleyJoint _joint1;
+        private const float Y = 16.0f;
+        private const float L = 12.0f;
+        private const float A = 1.0f;
+        private const float B = 2.0f;
 
         private PulleysTest()
         {
@@ -76,7 +76,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             float ratio = _joint1.Ratio;
             float l = _joint1.LengthA + ratio * _joint1.LengthB;
             DrawString(string.Format("L1 + {0:n} * L2 = {1:n}", ratio, l));
-
         }
 
         internal static Test Create()

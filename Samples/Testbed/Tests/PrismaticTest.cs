@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class PrismaticTest : Test
     {
-        private PrismaticJoint _joint;
+        private readonly PrismaticJoint _joint;
 
         private PrismaticTest()
         {

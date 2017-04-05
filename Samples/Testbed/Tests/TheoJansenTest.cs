@@ -33,12 +33,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class TheoJansenTest : Test
     {
-        private Body _chassis;
-        private RevoluteJoint _motorJoint;
-        private bool _motorOn;
-        private float _motorSpeed;
-        private Vector2 _offset;
-        private Body _wheel;
+        private readonly Body _chassis;
+        private readonly RevoluteJoint _motorJoint;
+        private readonly bool _motorOn;
+        private readonly float _motorSpeed;
+        private readonly Vector2 _offset;
+        private readonly Body _wheel;
 
         private TheoJansenTest()
         {
@@ -203,7 +203,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Keys: left = a, brake = s, right = d, toggle motor = m");
-
 
             base.Update(settings, gameTime);
         }

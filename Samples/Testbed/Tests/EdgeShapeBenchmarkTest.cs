@@ -11,7 +11,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class EdgeShapeBenchmarkTest : Test
     {
         private int _count;
-        private PolygonShape _polyShape;
+        private readonly PolygonShape _polyShape;
 
         private EdgeShapeBenchmarkTest()
         {
@@ -49,7 +49,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             vertices.Add(new Vector2(-0.5f * w, b));
             vertices.Add(new Vector2(-0.5f * s, 0.0f));
 
-            _polyShape = new PolygonShape(vertices,20);
+            _polyShape = new PolygonShape(vertices, 20);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

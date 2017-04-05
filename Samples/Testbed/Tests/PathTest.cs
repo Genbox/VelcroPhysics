@@ -10,8 +10,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class PathTest : Test
     {
-        private Body _movingBody;
-        private Path _path;
+        private readonly Body _movingBody;
+        private readonly Path _path;
 
         private float _time;
 

@@ -36,13 +36,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int MaxBodies = 256;
         private float _angle;
-        private Body[] _bodies = new Body[MaxBodies];
+        private readonly Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
-        private CircleShape _circle;
+        private readonly CircleShape _circle;
 
         private RayCastMode _mode;
-        private PolygonShape[] _polygons = new PolygonShape[4];
-
+        private readonly PolygonShape[] _polygons = new PolygonShape[4];
 
         private RayCastTest()
         {
@@ -173,23 +172,23 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 case RayCastMode.Closest:
                     bool hitClosest = false;
                     World.RayCast((f, p, n, fr) =>
-                                      {
-                                          Body body = f.Body;
-                                          if (body.UserData != null)
-                                          {
-                                              int index = (int)body.UserData;
-                                              if (index == 0)
-                                              {
-                                                  // filter
-                                                  return -1.0f;
-                                              }
-                                          }
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int)body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
 
-                                          hitClosest = true;
-                                          point = p;
-                                          normal = n;
-                                          return fr;
-                                      }, point1, point2);
+                        hitClosest = true;
+                        point = p;
+                        normal = n;
+                        return fr;
+                    }, point1, point2);
 
                     if (hitClosest)
                     {
@@ -213,23 +212,23 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 case RayCastMode.Any:
                     bool hitAny = false;
                     World.RayCast((f, p, n, fr) =>
-                                      {
-                                          Body body = f.Body;
-                                          if (body.UserData != null)
-                                          {
-                                              int index = (int)body.UserData;
-                                              if (index == 0)
-                                              {
-                                                  // filter
-                                                  return -1.0f;
-                                              }
-                                          }
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int)body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
 
-                                          hitAny = true;
-                                          point = p;
-                                          normal = n;
-                                          return 0;
-                                      }, point1, point2);
+                        hitAny = true;
+                        point = p;
+                        normal = n;
+                        return 0;
+                    }, point1, point2);
 
                     if (hitAny)
                     {
@@ -253,22 +252,22 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     List<Vector2> points = new List<Vector2>();
                     List<Vector2> normals = new List<Vector2>();
                     World.RayCast((f, p, n, fr) =>
-                                      {
-                                          Body body = f.Body;
-                                          if (body.UserData != null)
-                                          {
-                                              int index = (int)body.UserData;
-                                              if (index == 0)
-                                              {
-                                                  // filter
-                                                  return -1.0f;
-                                              }
-                                          }
+                    {
+                        Body body = f.Body;
+                        if (body.UserData != null)
+                        {
+                            int index = (int)body.UserData;
+                            if (index == 0)
+                            {
+                                // filter
+                                return -1.0f;
+                            }
+                        }
 
-                                          points.Add(p);
-                                          normals.Add(n);
-                                          return 1.0f;
-                                      }, point1, point2);
+                        points.Add(p);
+                        normals.Add(n);
+                        return 1.0f;
+                    }, point1, point2);
 
                     DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                     DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
@@ -340,7 +339,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             Closest,
             Any,
-            Multiple,
+            Multiple
         }
 
         #endregion

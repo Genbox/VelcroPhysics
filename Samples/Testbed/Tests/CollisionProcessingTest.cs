@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class CollisionProcessingTest : Test
     {
-        private List<Body> _removeBodies = new List<Body>();
+        private readonly List<Body> _removeBodies = new List<Body>();
 
         private CollisionProcessingTest()
         {

@@ -31,10 +31,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class MotorJointTest : Test
     {
-        private MotorJoint _joint;
+        private readonly MotorJoint _joint;
         private float _time;
 
-        MotorJointTest()
+        private MotorJointTest()
         {
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-20, 0), new Vector2(20, 0));
 

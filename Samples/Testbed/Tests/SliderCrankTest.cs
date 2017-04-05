@@ -36,8 +36,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     /// </summary>
     public class SliderCrankTest : Test
     {
-        private RevoluteJoint _joint1;
-        private PrismaticJoint _joint2;
+        private readonly RevoluteJoint _joint1;
+        private readonly PrismaticJoint _joint2;
 
         private SliderCrankTest()
         {

@@ -32,11 +32,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class GearsTest : Test
     {
-        private GearJoint _joint5;
-        private GearJoint _joint4;
-        private PrismaticJoint _joint3;
-        private RevoluteJoint _joint2;
-        private RevoluteJoint _joint1;
+        private readonly GearJoint _joint5;
+        private readonly GearJoint _joint4;
+        private readonly PrismaticJoint _joint3;
+        private readonly RevoluteJoint _joint2;
+        private readonly RevoluteJoint _joint1;
 
         private GearsTest()
         {

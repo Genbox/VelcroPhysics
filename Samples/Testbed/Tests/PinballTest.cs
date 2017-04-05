@@ -36,9 +36,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     /// </summary>
     public class PinballTest : Test
     {
-        private Body _ball;
-        private RevoluteJoint _leftJoint;
-        private RevoluteJoint _rightJoint;
+        private readonly Body _ball;
+        private readonly RevoluteJoint _leftJoint;
+        private readonly RevoluteJoint _rightJoint;
 
         private PinballTest()
         {

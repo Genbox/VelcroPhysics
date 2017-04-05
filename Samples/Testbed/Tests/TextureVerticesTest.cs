@@ -11,7 +11,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class TextureVerticesTest : Test
     {
-        private Stopwatch _sw = new Stopwatch();
+        private readonly Stopwatch _sw = new Stopwatch();
 
         public override void Initialize()
         {
@@ -41,6 +41,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             verts.Translate(ref centroid);
 
             _sw.Start();
+
             //Create a single body with multiple fixtures
             Body compund = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Earclip), 1);
             compund.BodyType = BodyType.Dynamic;
@@ -51,7 +52,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Triangulation took " + _sw.ElapsedMilliseconds + " ms");
-            
 
             base.Update(settings, gameTime);
         }

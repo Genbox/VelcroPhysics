@@ -32,7 +32,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class RevoluteTest : Test
     {
-        private RevoluteJoint _joint;
+        private readonly RevoluteJoint _joint;
 
         private RevoluteTest()
         {

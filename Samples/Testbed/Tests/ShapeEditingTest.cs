@@ -29,7 +29,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ShapeEditingTest : Test
     {
-        private Body _body;
+        private readonly Body _body;
         private Fixture _fixture2;
 
         private ShapeEditingTest()
@@ -72,7 +72,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             base.Update(settings, gameTime);
             DrawString("Press: (c) create a shape, (d) destroy a shape.");
-            
         }
 
         internal static Test Create()

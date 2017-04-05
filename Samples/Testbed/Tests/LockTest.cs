@@ -8,7 +8,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class LockTest : Test
     {
-        private Body _rectangle;
+        private readonly Body _rectangle;
 
         private LockTest()
         {

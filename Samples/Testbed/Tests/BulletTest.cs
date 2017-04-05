@@ -30,8 +30,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class BulletTest : Test
     {
-        private Body _body;
-        private Body _bullet;
+        private readonly Body _body;
+        private readonly Body _bullet;
         private float _x;
 
         private BulletTest()
@@ -61,16 +61,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             if (Distance.GJKCalls > 0)
             {
                 DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls, Distance.GJKMaxIters));
-                
             }
 
             if (TimeOfImpact.TOICalls > 0)
             {
                 DrawString(string.Format("TOI calls = {0:n}, Ave TOI iters = {1:n}, Max TOI iters = {2:n}", TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
-                
 
                 DrawString(string.Format("Ave TOI root iters = {0:n}, Max TOI root iters = {1:n}", TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
-                
             }
 
             if (StepCount % 60 == 0)

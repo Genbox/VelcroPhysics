@@ -32,9 +32,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class SensorTest : Test
     {
         private const int Count = 7;
-        private Body[] _bodies = new Body[Count];
-        private Fixture _sensor;
-        private bool[] _touching = new bool[Count];
+        private readonly Body[] _bodies = new Body[Count];
+        private readonly Fixture _sensor;
+        private readonly bool[] _touching = new bool[Count];
 
         private SensorTest()
         {
@@ -82,12 +82,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = true;
+                _touching[(int)fixtureB.Body.UserData] = true;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = true;
+                _touching[(int)fixtureA.Body.UserData] = true;
             }
 
             return true;
@@ -101,12 +101,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
             {
-                _touching[(int)(fixtureB.Body.UserData)] = false;
+                _touching[(int)fixtureB.Body.UserData] = false;
             }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
             {
-                _touching[(int)(fixtureA.Body.UserData)] = false;
+                _touching[(int)fixtureA.Body.UserData] = false;
             }
         }
 

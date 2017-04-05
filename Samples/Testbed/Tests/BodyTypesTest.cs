@@ -32,9 +32,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class BodyTypesTest : Test
     {
-        private Body _attachment;
-        private Body _platform;
-        private float _speed;
+        private readonly Body _attachment;
+        private readonly Body _platform;
+        private readonly float _speed;
 
         private BodyTypesTest()
         {

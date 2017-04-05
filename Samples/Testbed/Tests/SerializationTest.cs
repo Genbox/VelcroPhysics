@@ -189,7 +189,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 else
                 {
                     World = WorldSerializer.Deserialize("out.xml");
-                    base.Initialize(); //To initialize the debug view
+                    Initialize(); //To initialize the debug view
                 }
 
                 _save = !_save;

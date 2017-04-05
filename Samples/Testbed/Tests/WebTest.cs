@@ -34,8 +34,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     /// </summary>
     public class WebTest : Test
     {
-        private Body[] _bodies = new Body[4];
-        private Joint[] _joints = new Joint[8];
+        private readonly Body[] _bodies = new Body[4];
+        private readonly Joint[] _joints = new Joint[8];
 
         private int _removedBodies;
         private int _removedJoints;

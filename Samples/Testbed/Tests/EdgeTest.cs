@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class EdgeTest : Test
     {
-        private Fixture _circleFixture;
+        private readonly Fixture _circleFixture;
 
         private EdgeTest()
         {
@@ -109,7 +109,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Rotation: " + _circleFixture.Body.Rotation);
-            
+
             DrawString("Revolutions: " + _circleFixture.Body.Revolutions);
 
             base.Update(settings, gameTime);

@@ -62,7 +62,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     rounded.BodyType = BodyType.Dynamic;
                     break;
                 case 1:
-                    Body capsule = BodyFactory.CreateCapsule(World, 10, 2, (int)MathHelper.Max(_segments, 1), 3, (int)MathHelper.Max(_segments, 1), 10, position);
+                    Body capsule = BodyFactory.CreateCapsule(World, 10, 2, MathHelper.Max(_segments, 1), 3, MathHelper.Max(_segments, 1), 10, position);
                     capsule.BodyType = BodyType.Dynamic;
                     break;
             }

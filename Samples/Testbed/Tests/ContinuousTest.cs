@@ -34,8 +34,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class ContinuousTest : Test
     {
         private float _angularVelocity;
-        private Body _box;
-        private Body _ground;
+        private readonly Body _box;
+        private readonly Body _ground;
 
         private ContinuousTest()
         {
@@ -48,6 +48,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _box = BodyFactory.CreateRectangle(World, 4, 0.2f, 1);
             _box.Position = new Vector2(0, 20);
             _box.BodyType = BodyType.Dynamic;
+
             //_box.Body.Rotation = 0.1f;
 
             //_angularVelocity = 46.661274f;
@@ -55,9 +56,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _box.LinearVelocity = new Vector2(0.0f, -100.0f);
             _box.AngularVelocity = _angularVelocity;
 
-            Distance.GJKCalls = 0; Distance.GJKIters = 0; Distance.GJKMaxIters = 0;
-            TimeOfImpact.TOICalls = 0; TimeOfImpact.TOIIters = 0;
-            TimeOfImpact.TOIRootIters = 0; TimeOfImpact.TOIMaxRootIters = 0;
+            Distance.GJKCalls = 0;
+            Distance.GJKIters = 0;
+            Distance.GJKMaxIters = 0;
+            TimeOfImpact.TOICalls = 0;
+            TimeOfImpact.TOIIters = 0;
+            TimeOfImpact.TOIRootIters = 0;
+            TimeOfImpact.TOIMaxRootIters = 0;
         }
 
         private void Launch()

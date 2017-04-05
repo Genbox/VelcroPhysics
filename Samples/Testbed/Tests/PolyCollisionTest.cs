@@ -33,8 +33,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     public class PolyCollisionTest : Test
     {
         private float _angleB;
-        private PolygonShape _polygonA = new PolygonShape(1);
-        private PolygonShape _polygonB = new PolygonShape(1);
+        private readonly PolygonShape _polygonA = new PolygonShape(1);
+        private readonly PolygonShape _polygonB = new PolygonShape(1);
         private Vector2 _positionB;
 
         private Transform _transformA;
@@ -49,6 +49,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 _polygonB.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+
                 //_positionB = new Vector2(19.345284f, 1.5632932f);
                 _positionB = new Vector2(0.345284f, 0.5632932f);
 

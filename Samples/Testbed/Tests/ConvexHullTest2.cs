@@ -9,12 +9,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int PointCount = 32;
 
-        private Vertices _chainHull;
-        private Vertices _giftWrap;
-        private Vertices _melkman;
-        private Vertices _pointCloud1;
-        private Vertices _pointCloud2;
-        private Vertices _pointCloud3;
+        private readonly Vertices _chainHull;
+        private readonly Vertices _giftWrap;
+        private readonly Vertices _melkman;
+        private readonly Vertices _pointCloud1;
+        private readonly Vertices _pointCloud2;
+        private readonly Vertices _pointCloud3;
 
         private ConvexHullTest2()
         {
@@ -49,7 +49,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             DrawString("Melkman: Red");
             DrawString("Giftwrap: Green");
             DrawString("ChainHull: Blue");
-            
+
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             for (int i = 0; i < PointCount; i++)
             {

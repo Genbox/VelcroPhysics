@@ -34,14 +34,14 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class CarTest : Test
     {
-        private Body _car;
+        private readonly Body _car;
         private float _hz;
-        private float _speed;
-        private WheelJoint _spring1;
-        private WheelJoint _spring2;
-        private Body _wheel1;
-        private Body _wheel2;
-        private float _zeta;
+        private readonly float _speed;
+        private readonly WheelJoint _spring1;
+        private readonly WheelJoint _spring2;
+        private readonly Body _wheel1;
+        private readonly Body _wheel2;
+        private readonly float _zeta;
 
         private CarTest()
         {
@@ -51,7 +51,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
             {
-                float[] hs = new[] { 0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f };
+                float[] hs = { 0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f };
 
                 float x = 20.0f, y1 = 0.0f;
                 const float dx = 5.0f;
@@ -246,7 +246,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             DrawString(string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
 
             DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
-
 
             GameInstance.ViewCenter = _car.Position;
 

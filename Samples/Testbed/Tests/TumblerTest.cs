@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private const int Count = 800;
         private int _count;
 
-        TumblerTest()
+        private TumblerTest()
         {
             Body ground = BodyFactory.CreateBody(World);
 

@@ -34,7 +34,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ApplyForceTest : Test
     {
-        private Body _body;
+        private readonly Body _body;
 
         private ApplyForceTest()
         {
@@ -133,7 +133,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Note: The left side of the ship has a different density than the right side of the ship");
-            
 
             base.Update(settings, gameTime);
         }

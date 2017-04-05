@@ -9,7 +9,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     internal class SimpleWindForceTest : Test
     {
-        private SimpleWindForce _simpleWind;
+        private readonly SimpleWindForce _simpleWind;
 
         private float _strength;
 
@@ -38,11 +38,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 for (int y = 0; y < countY; y++)
                 {
                     Body currentFixture = BodyFactory.CreateRectangle(World, 1f, 1f, 5f,
-                                                                      new Vector2(x * 2 - countX, y * 2 + 5));
+                        new Vector2(x * 2 - countX, y * 2 + 5));
+
                     //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
                     currentFixture.BodyType = BodyType.Dynamic;
                     currentFixture.Friction = 0.5f;
                     currentFixture.SetTransform(currentFixture.Position, 0.6f);
+
                     //currentFixture.CollidesWith = Category.Cat10;
                 }
             }
@@ -86,6 +88,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             DrawString("Variation:" + _simpleWind.Variation);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
+
             //DebugView.DrawSegment(SimpleWind.Position, SimpleWind.Direction-SimpleWind.Position, Color.Red);
             DrawPointForce();
             DebugView.EndCustomDraw();

@@ -35,13 +35,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
     {
         private const int MaxBodies = 256;
         private float _angle;
-        private Body[] _bodies = new Body[MaxBodies];
+        private readonly Body[] _bodies = new Body[MaxBodies];
         private int _bodyIndex;
-        private CircleShape _circle;
+        private readonly CircleShape _circle;
         private Fixture _fixture;
         private Vector2 _normal;
         private Vector2 _point;
-        private PolygonShape[] _polygons = new PolygonShape[4];
+        private readonly PolygonShape[] _polygons = new PolygonShape[4];
 
         private EdgeShapesTest()
         {
@@ -69,7 +69,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 vertices.Add(new Vector2(-0.5f, 0.0f));
                 vertices.Add(new Vector2(0.5f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[0] = new PolygonShape(vertices,20);
+                _polygons[0] = new PolygonShape(vertices, 20);
             }
 
             {
@@ -77,7 +77,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 vertices.Add(new Vector2(-0.1f, 0.0f));
                 vertices.Add(new Vector2(0.1f, 0.0f));
                 vertices.Add(new Vector2(0.0f, 1.5f));
-                _polygons[1] = new PolygonShape(vertices,20);
+                _polygons[1] = new PolygonShape(vertices, 20);
             }
 
             {
@@ -94,7 +94,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 vertices.Add(new Vector2(-0.5f * w, b + s));
                 vertices.Add(new Vector2(-0.5f * w, b));
                 vertices.Add(new Vector2(-0.5f * s, 0.0f));
-                _polygons[2] = new PolygonShape(vertices,20);
+                _polygons[2] = new PolygonShape(vertices, 20);
             }
 
             {
@@ -193,7 +193,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             base.Update(settings, gameTime);
             DrawString("Press 1-5 to drop stuff");
-            
 
             const float l = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
@@ -203,13 +202,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _fixture = null;
 
             World.RayCast((fixture, point, normal, fraction) =>
-                              {
-                                  _fixture = fixture;
-                                  _point = point;
-                                  _normal = normal;
+            {
+                _fixture = fixture;
+                _point = point;
+                _normal = normal;
 
-                                  return fraction;
-                              }, point1, point2);
+                return fraction;
+            }, point1, point2);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             if (_fixture != null)

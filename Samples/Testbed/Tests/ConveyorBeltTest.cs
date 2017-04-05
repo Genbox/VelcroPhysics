@@ -31,9 +31,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 {
     public class ConveyorBeltTest : Test
     {
-        private Fixture _platform;
+        private readonly Fixture _platform;
 
-        ConveyorBeltTest()
+        private ConveyorBeltTest()
         {
             // Ground
             {
