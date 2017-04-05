@@ -57,19 +57,18 @@ namespace VelcroPhysics.Collision
     /// with an AABB. In the tree we expand the proxy AABB by Settings.b2_fatAABBFactor
     /// so that the proxy AABB is bigger than the client object. This allows the client
     /// object to move by small amounts without triggering a tree update.
-    ///
     /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
     /// </summary>
     public class DynamicTree<T>
     {
-        private Stack<int> _raycastStack = new Stack<int>(256);
-        private Stack<int> _queryStack = new Stack<int>(256);
+        internal const int NullNode = -1;
         private int _freeList;
         private int _nodeCapacity;
         private int _nodeCount;
         private TreeNode<T>[] _nodes;
+        private Stack<int> _queryStack = new Stack<int>(256);
+        private Stack<int> _raycastStack = new Stack<int>(256);
         private int _root;
-        internal const int NullNode = -1;
 
         /// <summary>
         /// Constructing the tree initializes the node pool.
@@ -175,8 +174,8 @@ namespace VelcroPhysics.Collision
         /// <summary>
         /// Create a proxy in the tree as a leaf node. We return the index
         /// of the node instead of a pointer so that we can grow
-        /// the node pool.        
-        /// /// </summary>
+        /// the node pool.
+        /// </summary>
         /// <param name="aabb">The aabb.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
@@ -790,7 +789,7 @@ namespace VelcroPhysics.Collision
                     B.Child2 = iD;
                     A.Child1 = iE;
                     E.ParentOrNext = iA;
-                    A.AABB.Combine(ref C.AABB, ref  E.AABB);
+                    A.AABB.Combine(ref C.AABB, ref E.AABB);
                     B.AABB.Combine(ref A.AABB, ref D.AABB);
 
                     A.Height = 1 + Math.Max(C.Height, E.Height);

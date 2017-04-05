@@ -9,9 +9,17 @@ namespace VelcroPhysics.Controllers
 {
     public sealed class BuoyancyController : Controller
     {
+        private AABB _container;
+
+        private Vector2 _gravity;
+        private Vector2 _normal;
+        private float _offset;
+        private Dictionary<int, Body> _uniqueBodies = new Dictionary<int, Body>();
+
         /// <summary>
-        /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate thick fluid, like honey, lower values to
-        /// simulate water-like fluids. 
+        /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate thick
+        /// fluid, like honey, lower values to
+        /// simulate water-like fluids.
         /// </summary>
         public float AngularDragCoefficient;
 
@@ -21,7 +29,8 @@ namespace VelcroPhysics.Controllers
         public float Density;
 
         /// <summary>
-        /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick fluid, like honey, lower values to
+        /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick fluid,
+        /// like honey, lower values to
         /// simulate water-like fluids.
         /// </summary>
         public float LinearDragCoefficient;
@@ -31,15 +40,8 @@ namespace VelcroPhysics.Controllers
         /// </summary>
         public Vector2 Velocity;
 
-        private AABB _container;
-
-        private Vector2 _gravity;
-        private Vector2 _normal;
-        private float _offset;
-        private Dictionary<int, Body> _uniqueBodies = new Dictionary<int, Body>();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="BuoyancyController"/> class.
+        /// Initializes a new instance of the <see cref="BuoyancyController" /> class.
         /// </summary>
         /// <param name="container">Only bodies inside this AABB will be influenced by the controller</param>
         /// <param name="density">Density of the fluid</param>
@@ -71,15 +73,15 @@ namespace VelcroPhysics.Controllers
         {
             _uniqueBodies.Clear();
             World.QueryAABB(fixture =>
-                                {
-                                    if (fixture.Body.IsStatic || !fixture.Body.Awake)
-                                        return true;
+            {
+                if (fixture.Body.IsStatic || !fixture.Body.Awake)
+                    return true;
 
-                                    if (!_uniqueBodies.ContainsKey(fixture.Body.BodyId))
-                                        _uniqueBodies.Add(fixture.Body.BodyId, fixture.Body);
+                if (!_uniqueBodies.ContainsKey(fixture.Body.BodyId))
+                    _uniqueBodies.Add(fixture.Body.BodyId, fixture.Body);
 
-                                    return true;
-                                }, ref _container);
+                return true;
+            }, ref _container);
 
             foreach (KeyValuePair<int, Body> kv in _uniqueBodies)
             {

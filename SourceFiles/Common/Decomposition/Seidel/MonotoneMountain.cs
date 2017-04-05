@@ -9,8 +9,6 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
         // Almost Pi!
         private const float PiSlop = 3.1f;
 
-        // Triangles that constitute the mountain
-        public List<List<Point>> Triangles;
         private HashSet<Point> _convexPoints;
         private Point _head;
 
@@ -19,8 +17,12 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
 
         // Used to track which side of the line we are on
         private bool _positive;
+
         private int _size;
         private Point _tail;
+
+        // Triangles that constitute the mountain
+        public List<List<Point>> Triangles;
 
         public MonotoneMountain()
         {
@@ -75,6 +77,7 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
         {
             // Establish the proper sign
             _positive = AngleSign();
+
             // create monotone polygon - for dubug purposes
             GenMonoPoly();
 
@@ -84,6 +87,7 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
             while (p.Neq(_tail))
             {
                 float a = Angle(p);
+
                 // If the point is almost colinear with it's neighbor, remove it!
                 if (a >= PiSlop || a <= -PiSlop || a == 0.0f)
                     Remove(p);

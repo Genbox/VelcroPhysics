@@ -6,13 +6,11 @@ namespace VelcroPhysics.Common.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm created by unknown
-    /// 
     /// Properties:
     /// - No support for holes
     /// - Very fast
     /// - Only works on simple polygons
     /// - Only works on counter clockwise polygons
-    /// 
     /// More information: http://www.flipcode.com/archives/Efficient_Polygon_Triangulation.shtml
     /// </summary>
     internal static class FlipcodeDecomposer
@@ -23,10 +21,8 @@ namespace VelcroPhysics.Common.Decomposition
 
         /// <summary>
         /// Decompose the polygon into triangles.
-        /// 
         /// Properties:
         /// - Only works on counter clockwise polygons
-        /// 
         /// </summary>
         /// <param name="vertices">The list of points describing the polygon</param>
         public static List<Vertices> ConvexPartition(Vertices vertices)
@@ -46,7 +42,7 @@ namespace VelcroPhysics.Common.Decomposition
 
             List<Vertices> result = new List<Vertices>();
 
-            for (int v = nv - 1; nv > 2; )
+            for (int v = nv - 1; nv > 2;)
             {
                 // If we loop, it is probably a non-simple polygon 
                 if (0 >= (count--))
@@ -120,7 +116,7 @@ namespace VelcroPhysics.Common.Decomposition
         }
 
         /// <summary>
-        /// Cut a the contour and add a triangle into V to describe the 
+        /// Cut a the contour and add a triangle into V to describe the
         /// location of the cut
         /// </summary>
         /// <param name="contour">The list of points defining the polygon</param>

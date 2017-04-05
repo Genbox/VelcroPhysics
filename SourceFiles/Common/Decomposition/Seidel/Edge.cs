@@ -6,17 +6,18 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
     {
         // Pointers used for building trapezoidal map
         public Trapezoid Above;
+
         public float B;
         public Trapezoid Below;
 
         // Montone mountain points
         public HashSet<Point> MPoints;
+
         public Point P;
         public Point Q;
 
         // Slope of the line (m)
         public float Slope;
-
 
         public Edge(Point p, Point q)
         {

@@ -33,132 +33,27 @@ namespace VelcroPhysics.Common.TextureTools
         /// </summary>
         private static int[,] _closePixels = new[,] { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
 
+        private uint _alphaTolerance;
+
         private uint[] _data;
         private int _dataLength;
-        private int _width;
         private int _height;
 
-        private VerticesDetectionType _polygonDetectionType;
-
-        private uint _alphaTolerance;
-        private float _hullTolerance;
-
         private bool _holeDetection;
+        private float _hullTolerance;
         private bool _multipartDetection;
         private bool _pixelOffsetOptimization;
 
+        private VerticesDetectionType _polygonDetectionType;
+
         private Matrix _transform = Matrix.Identity;
-
-        #region Properties
-        /// <summary>
-        /// Get or set the polygon detection type.
-        /// </summary>
-        public VerticesDetectionType PolygonDetectionType
-        {
-            get { return _polygonDetectionType; }
-            set { _polygonDetectionType = value; }
-        }
-
-        /// <summary>
-        /// Will detect texture 'holes' if set to true. Slows down the detection. Default is false.
-        /// </summary>
-        public bool HoleDetection
-        {
-            get { return _holeDetection; }
-            set { _holeDetection = value; }
-        }
-
-        /// <summary>
-        /// Will detect texture multiple 'solid' isles if set to true. Slows down the detection. Default is false.
-        /// </summary>
-        public bool MultipartDetection
-        {
-            get { return _multipartDetection; }
-            set { _multipartDetection = value; }
-        }
-
-        /// <summary>
-        /// Will optimize the vertex positions along the interpolated normal between two edges about a half pixel (post processing). Default is false.
-        /// </summary>
-        public bool PixelOffsetOptimization
-        {
-            get { return _pixelOffsetOptimization; }
-            set { _pixelOffsetOptimization = value; }
-        }
-
-        /// <summary>
-        /// Can be used for scaling.
-        /// </summary>
-        public Matrix Transform
-        {
-            get { return _transform; }
-            set { _transform = value; }
-        }
-
-        /// <summary>
-        /// Alpha (coverage) tolerance. Default is 20: Every pixel with a coverage value equal or greater to 20 will be counts as solid.
-        /// </summary>
-        public byte AlphaTolerance
-        {
-            get { return (byte)(_alphaTolerance >> 24); }
-            set { _alphaTolerance = (uint)value << 24; }
-        }
-
-        /// <summary>
-        /// Default is 1.5f.
-        /// </summary>
-        public float HullTolerance
-        {
-            get { return _hullTolerance; }
-            set
-            {
-                if (value > 4f)
-                {
-                    _hullTolerance = 4f;
-                }
-                else if (value < 0.9f)
-                {
-                    _hullTolerance = 0.9f;
-                }
-                else
-                {
-                    _hullTolerance = value;
-                }
-            }
-        }
-        #endregion
-
-        #region Constructors
-        public TextureConverter()
-        {
-            Initialize(null, null, null, null, null, null, null, null);
-        }
-
-        public TextureConverter(byte? alphaTolerance, float? hullTolerance,
-            bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, Matrix? transform)
-        {
-            Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
-                multipartDetection, pixelOffsetOptimization, transform);
-        }
-
-        public TextureConverter(uint[] data, int width)
-        {
-            Initialize(data, width, null, null, null, null, null, null);
-        }
-
-        public TextureConverter(uint[] data, int width, byte? alphaTolerance,
-            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
-            bool? pixelOffsetOptimization, Matrix? transform)
-        {
-            Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
-                multipartDetection, pixelOffsetOptimization, transform);
-        }
-        #endregion
+        private int _width;
 
         #region Initialization
+
         private void Initialize(uint[] data, int? width, byte? alphaTolerance,
-            float? hullTolerance, bool? holeDetection, bool? multipartDetection,
-            bool? pixelOffsetOptimization, Matrix? transform)
+                                float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+                                bool? pixelOffsetOptimization, Matrix? transform)
         {
             if (data != null && !width.HasValue)
                 throw new ArgumentNullException("width", "'width' can't be null if 'data' is set.");
@@ -199,6 +94,7 @@ namespace VelcroPhysics.Common.TextureTools
             else
                 Transform = Matrix.Identity;
         }
+
         #endregion
 
         private void SetTextureData(uint[] data, int width)
@@ -297,11 +193,11 @@ namespace VelcroPhysics.Common.TextureTools
 
             if (_data.Length < 4)
                 throw new Exception("'_data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size. " +
-                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
+                                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
 
             if (_width < 2)
                 throw new Exception("'_width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size. " +
-                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
+                                    "You have to use SetTextureData(uint[] data, int width) before calling this method.");
 
             if (_data.Length % _width != 0)
                 throw new Exception("'_width' has an invalid value. You have to use SetTextureData(uint[] data, int width) before calling this method.");
@@ -337,7 +233,6 @@ namespace VelcroPhysics.Common.TextureTools
 
                 searchOn = false;
 
-
                 if (polygon.Count > 2)
                 {
                     if (_holeDetection)
@@ -352,7 +247,7 @@ namespace VelcroPhysics.Common.TextureTools
                                 {
                                     blackList.Add(holeEntrance.Value);
                                     Vertices holePolygon = CreateSimplePolygon(holeEntrance.Value,
-                                                                               new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
+                                        new Vector2(holeEntrance.Value.X + 1, holeEntrance.Value.Y));
 
                                     if (holePolygon != null && holePolygon.Count > 2)
                                     {
@@ -383,8 +278,7 @@ namespace VelcroPhysics.Common.TextureTools
                             }
                             else
                                 break;
-                        }
-                        while (true);
+                        } while (true);
                     }
 
                     detectedPolygons.Add(polygon);
@@ -395,8 +289,7 @@ namespace VelcroPhysics.Common.TextureTools
                     if (SearchNextHullEntrance(detectedPolygons, polygonEntrance.Value, out polygonEntrance))
                         searchOn = true;
                 }
-            }
-            while (searchOn);
+            } while (searchOn);
 
             if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
                 throw new Exception("Couldn't detect any vertices.");
@@ -431,47 +324,9 @@ namespace VelcroPhysics.Common.TextureTools
                 detectedPolygons[i].Transform(ref _transform);
         }
 
-        #region Data[] functions
-        private int _tempIsSolidX;
-        private int _tempIsSolidY;
-        public bool IsSolid(ref Vector2 v)
-        {
-            _tempIsSolidX = (int)v.X;
-            _tempIsSolidY = (int)v.Y;
-
-            if (_tempIsSolidX >= 0 && _tempIsSolidX < _width && _tempIsSolidY >= 0 && _tempIsSolidY < _height)
-                return (_data[_tempIsSolidX + _tempIsSolidY * _width] >= _alphaTolerance);
-            //return ((_data[_tempIsSolidX + _tempIsSolidY * _width] & 0xFF000000) >= _alphaTolerance);
-
-            return false;
-        }
-
-        public bool IsSolid(ref int x, ref int y)
-        {
-            if (x >= 0 && x < _width && y >= 0 && y < _height)
-                return (_data[x + y * _width] >= _alphaTolerance);
-            //return ((_data[x + y * _width] & 0xFF000000) >= _alphaTolerance);
-
-            return false;
-        }
-
-        public bool IsSolid(ref int index)
-        {
-            if (index >= 0 && index < _dataLength)
-                return (_data[index] >= _alphaTolerance);
-            //return ((_data[index] & 0xFF000000) >= _alphaTolerance);
-
-            return false;
-        }
-
-        public bool InBounds(ref Vector2 coord)
-        {
-            return (coord.X >= 0f && coord.X < _width && coord.Y >= 0f && coord.Y < _height);
-        }
-        #endregion
-
         /// <summary>
-        /// Function to search for an entrance point of a hole in a polygon. It searches the polygon from top to bottom between the polygon edges.
+        /// Function to search for an entrance point of a hole in a polygon. It searches the polygon from top to bottom between the
+        /// polygon edges.
         /// </summary>
         /// <param name="polygon">The polygon to search in.</param>
         /// <param name="lastHoleEntrance">The last entrance point.</param>
@@ -483,7 +338,6 @@ namespace VelcroPhysics.Common.TextureTools
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
-
 
             List<float> xCoords;
             Vector2? entrance;
@@ -621,7 +475,6 @@ namespace VelcroPhysics.Common.TextureTools
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.Count' can't be less then 3.");
-
 
             Vector2 edgeVertex2 = polygon[polygon.Count - 1];
             Vector2 edgeVertex1;
@@ -764,8 +617,8 @@ namespace VelcroPhysics.Common.TextureTools
 
             // current edge
             Vector2 slope;
-            Vector2 vertex1;    // i
-            Vector2 vertex2;    // i - 1
+            Vector2 vertex1; // i
+            Vector2 vertex2; // i - 1
 
             // next edge
             Vector2 nextSlope;
@@ -875,7 +728,7 @@ namespace VelcroPhysics.Common.TextureTools
                         Vector2 tempVector1 = polygon[edgeVertex1Index];
                         Vector2 tempVector2 = polygon[edgeVertex2Index];
                         distance = LineTools.DistanceBetweenPointAndLineSegment(ref foundEdgeCoord,
-                                                                                ref tempVector1, ref tempVector2);
+                            ref tempVector1, ref tempVector2);
                         if (distance < shortestDistance)
                         {
                             shortestDistance = distance;
@@ -912,7 +765,6 @@ namespace VelcroPhysics.Common.TextureTools
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="entrance"></param>
         /// <param name="last"></param>
@@ -1025,7 +877,6 @@ namespace VelcroPhysics.Common.TextureTools
                         if (endOfHullArea.Contains(entrance))
                             endOfHullArea.Remove(entrance);
                     }
-
                 } while (true);
             }
 
@@ -1254,5 +1105,162 @@ namespace VelcroPhysics.Common.TextureTools
 
             return 0;
         }
+
+        #region Properties
+
+        /// <summary>
+        /// Get or set the polygon detection type.
+        /// </summary>
+        public VerticesDetectionType PolygonDetectionType
+        {
+            get { return _polygonDetectionType; }
+            set { _polygonDetectionType = value; }
+        }
+
+        /// <summary>
+        /// Will detect texture 'holes' if set to true. Slows down the detection. Default is false.
+        /// </summary>
+        public bool HoleDetection
+        {
+            get { return _holeDetection; }
+            set { _holeDetection = value; }
+        }
+
+        /// <summary>
+        /// Will detect texture multiple 'solid' isles if set to true. Slows down the detection. Default is false.
+        /// </summary>
+        public bool MultipartDetection
+        {
+            get { return _multipartDetection; }
+            set { _multipartDetection = value; }
+        }
+
+        /// <summary>
+        /// Will optimize the vertex positions along the interpolated normal between two edges about a half pixel (post
+        /// processing). Default is false.
+        /// </summary>
+        public bool PixelOffsetOptimization
+        {
+            get { return _pixelOffsetOptimization; }
+            set { _pixelOffsetOptimization = value; }
+        }
+
+        /// <summary>
+        /// Can be used for scaling.
+        /// </summary>
+        public Matrix Transform
+        {
+            get { return _transform; }
+            set { _transform = value; }
+        }
+
+        /// <summary>
+        /// Alpha (coverage) tolerance. Default is 20: Every pixel with a coverage value equal or greater to 20 will be counts as
+        /// solid.
+        /// </summary>
+        public byte AlphaTolerance
+        {
+            get { return (byte)(_alphaTolerance >> 24); }
+            set { _alphaTolerance = (uint)value << 24; }
+        }
+
+        /// <summary>
+        /// Default is 1.5f.
+        /// </summary>
+        public float HullTolerance
+        {
+            get { return _hullTolerance; }
+            set
+            {
+                if (value > 4f)
+                {
+                    _hullTolerance = 4f;
+                }
+                else if (value < 0.9f)
+                {
+                    _hullTolerance = 0.9f;
+                }
+                else
+                {
+                    _hullTolerance = value;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public TextureConverter()
+        {
+            Initialize(null, null, null, null, null, null, null, null);
+        }
+
+        public TextureConverter(byte? alphaTolerance, float? hullTolerance,
+                                bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, Matrix? transform)
+        {
+            Initialize(null, null, alphaTolerance, hullTolerance, holeDetection,
+                multipartDetection, pixelOffsetOptimization, transform);
+        }
+
+        public TextureConverter(uint[] data, int width)
+        {
+            Initialize(data, width, null, null, null, null, null, null);
+        }
+
+        public TextureConverter(uint[] data, int width, byte? alphaTolerance,
+                                float? hullTolerance, bool? holeDetection, bool? multipartDetection,
+                                bool? pixelOffsetOptimization, Matrix? transform)
+        {
+            Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
+                multipartDetection, pixelOffsetOptimization, transform);
+        }
+
+        #endregion
+
+        #region Data[] functions
+
+        private int _tempIsSolidX;
+        private int _tempIsSolidY;
+
+        public bool IsSolid(ref Vector2 v)
+        {
+            _tempIsSolidX = (int)v.X;
+            _tempIsSolidY = (int)v.Y;
+
+            if (_tempIsSolidX >= 0 && _tempIsSolidX < _width && _tempIsSolidY >= 0 && _tempIsSolidY < _height)
+                return (_data[_tempIsSolidX + _tempIsSolidY * _width] >= _alphaTolerance);
+
+            //return ((_data[_tempIsSolidX + _tempIsSolidY * _width] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool IsSolid(ref int x, ref int y)
+        {
+            if (x >= 0 && x < _width && y >= 0 && y < _height)
+                return (_data[x + y * _width] >= _alphaTolerance);
+
+            //return ((_data[x + y * _width] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool IsSolid(ref int index)
+        {
+            if (index >= 0 && index < _dataLength)
+                return (_data[index] >= _alphaTolerance);
+
+            //return ((_data[index] & 0xFF000000) >= _alphaTolerance);
+
+            return false;
+        }
+
+        public bool InBounds(ref Vector2 coord)
+        {
+            return (coord.X >= 0f && coord.X < _width && coord.Y >= 0f && coord.Y < _height);
+        }
+
+        #endregion
     }
 }

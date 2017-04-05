@@ -35,13 +35,14 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public class ChainShape : Shape
     {
+        private static EdgeShape _edgeShape = new EdgeShape();
+        private bool _hasPrevVertex, _hasNextVertex;
+        private Vector2 _prevVertex, _nextVertex;
+
         /// <summary>
         /// The vertices. These are not owned/freed by the chain Shape.
         /// </summary>
         public Vertices Vertices;
-        private Vector2 _prevVertex, _nextVertex;
-        private bool _hasPrevVertex, _hasNextVertex;
-        private static EdgeShape _edgeShape = new EdgeShape();
 
         /// <summary>
         /// Constructor for ChainShape. By default have 0 in density.
@@ -57,7 +58,10 @@ namespace VelcroPhysics.Collision.Shapes
         /// Create a new chainshape from the vertices.
         /// </summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
-        /// <param name="createLoop">Set to true to create a closed loop. It connects the first vertice to the last, and automatically adjusts connectivity to create smooth collisions along the chain.</param>
+        /// <param name="createLoop">
+        /// Set to true to create a closed loop. It connects the first vertice to the last, and
+        /// automatically adjusts connectivity to create smooth collisions along the chain.
+        /// </param>
         public ChainShape(Vertices vertices, bool createLoop = false)
             : base(0)
         {

@@ -90,13 +90,17 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Util
 
         public bool Contains(bool value)
         {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return true;
+            for (int i = 0; i < 3; ++i)
+                if (this[i] == value)
+                    return true;
             return false;
         }
 
         public int IndexOf(bool value)
         {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) return i;
+            for (int i = 0; i < 3; ++i)
+                if (this[i] == value)
+                    return i;
             return -1;
         }
 
@@ -107,12 +111,15 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Util
 
         public void Clear(bool value)
         {
-            for (int i = 0; i < 3; ++i) if (this[i] == value) this[i] = false;
+            for (int i = 0; i < 3; ++i)
+                if (this[i] == value)
+                    this[i] = false;
         }
 
         private IEnumerable<bool> Enumerate()
         {
-            for (int i = 0; i < 3; ++i) yield return this[i];
+            for (int i = 0; i < 3; ++i)
+                yield return this[i];
         }
     }
 }

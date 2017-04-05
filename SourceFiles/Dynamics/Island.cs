@@ -34,26 +34,25 @@ namespace VelcroPhysics.Dynamics
     /// </summary>
     public class Island
     {
-        private ContactManager _contactManager;
-        private ContactSolver _contactSolver = new ContactSolver();
-        private Contact[] _contacts;
-        private Joint[] _joints;
-
         private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
         private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private ContactManager _contactManager;
+        private Contact[] _contacts;
+        private ContactSolver _contactSolver = new ContactSolver();
+        private Joint[] _joints;
+        public Position[] _positions;
+
+        public Velocity[] _velocities;
         private Stopwatch _watch = new Stopwatch();
 
         public Body[] Bodies;
-        public int BodyCount;
-        public int ContactCount;
-        public int JointCount;
-
-        public Velocity[] _velocities;
-        public Position[] _positions;
 
         public int BodyCapacity;
+        public int BodyCount;
         public int ContactCapacity;
+        public int ContactCount;
         public int JointCapacity;
+        public int JointCount;
         public float JointUpdateTime;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
@@ -223,7 +222,6 @@ namespace VelcroPhysics.Dynamics
                 _velocities[i].v = v;
                 _velocities[i].w = w;
             }
-
 
             // Solve position constraints
             bool positionSolved = false;

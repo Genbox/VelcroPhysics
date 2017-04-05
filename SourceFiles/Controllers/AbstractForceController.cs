@@ -10,7 +10,7 @@ namespace VelcroPhysics.Controllers
         #region DecayModes enum
 
         /// <summary>
-        /// Modes for Decay. Actual Decay must be implemented in inheriting 
+        /// Modes for Decay. Actual Decay must be implemented in inheriting
         /// classes
         /// </summary>
         public enum DecayModes
@@ -44,9 +44,9 @@ namespace VelcroPhysics.Controllers
         /// <summary>
         /// Timing Modes
         /// Switched: Standard on/off mode using the baseclass enabled property
-        /// Triggered: When the Trigger() method is called the force is active 
+        /// Triggered: When the Trigger() method is called the force is active
         /// for a specified Impulse Length
-        /// Curve: Still to be defined. The basic idea is having a Trigger 
+        /// Curve: Still to be defined. The basic idea is having a Trigger
         /// combined with a curve for the strength
         /// </summary>
         public enum TimingModes
@@ -69,15 +69,15 @@ namespace VelcroPhysics.Controllers
         public ForceTypes ForceType;
 
         /// <summary>
-        /// Provided for reuse to provide Variation functionality in 
+        /// Provided for reuse to provide Variation functionality in
         /// inheriting classes
         /// </summary>
         protected Random Randomize;
 
         /// <summary>
-        /// Curve used by Curve Mode as an animated multiplier for the force 
+        /// Curve used by Curve Mode as an animated multiplier for the force
         /// strength.
-        /// Only positions between 0 and 1 are considered as that range is 
+        /// Only positions between 0 and 1 are considered as that range is
         /// stretched to have ImpulseLength.
         /// </summary>
         public Curve StrengthCurve;
@@ -151,7 +151,7 @@ namespace VelcroPhysics.Controllers
         public float MaximumSpeed { get; set; }
 
         /// <summary>
-        /// Maximum Force to be applied. As opposed to Maximum Speed this is 
+        /// Maximum Force to be applied. As opposed to Maximum Speed this is
         /// independent of the velocity of
         /// the affected body
         /// </summary>
@@ -163,7 +163,7 @@ namespace VelcroPhysics.Controllers
         public TimingModes TimingMode { get; set; }
 
         /// <summary>
-        /// Time of the current impulse. Incremented in update till 
+        /// Time of the current impulse. Incremented in update till
         /// ImpulseLength is reached
         /// </summary>
         public float ImpulseTime { get; private set; }
@@ -174,7 +174,7 @@ namespace VelcroPhysics.Controllers
         public float ImpulseLength { get; set; }
 
         /// <summary>
-        /// Indicating if we are currently during an Impulse 
+        /// Indicating if we are currently during an Impulse
         /// (Triggered and Curve Mode)
         /// </summary>
         public bool Triggered { get; private set; }
@@ -201,13 +201,15 @@ namespace VelcroPhysics.Controllers
         public float DecayEnd { get; set; }
 
         /// <summary>
-        /// Calculate the Decay for a given body. Meant to ease force 
-        /// development and stick to the DRY principle and provide unified and 
+        /// Calculate the Decay for a given body. Meant to ease force
+        /// development and stick to the DRY principle and provide unified and
         /// predictable decay math.
         /// </summary>
         /// <param name="body">The body to calculate decay for</param>
-        /// <returns>A multiplier to multiply the force with to add decay 
-        /// support in inheriting classes</returns>
+        /// <returns>
+        /// A multiplier to multiply the force with to add decay
+        /// support in inheriting classes
+        /// </returns>
         protected float GetDecayMultiplier(Body body)
         {
             //TODO: Consider ForceType in distance calculation!
@@ -215,38 +217,38 @@ namespace VelcroPhysics.Controllers
             switch (DecayMode)
             {
                 case DecayModes.None:
-                    {
-                        return 1.0f;
-                    }
+                {
+                    return 1.0f;
+                }
                 case DecayModes.Step:
-                    {
-                        if (distance < DecayEnd)
-                            return 1.0f;
-                        else
-                            return 0.0f;
-                    }
+                {
+                    if (distance < DecayEnd)
+                        return 1.0f;
+                    else
+                        return 0.0f;
+                }
                 case DecayModes.Linear:
-                    {
-                        if (distance < DecayStart)
-                            return 1.0f;
-                        if (distance > DecayEnd)
-                            return 0.0f;
-                        return (DecayEnd - DecayStart / distance - DecayStart);
-                    }
+                {
+                    if (distance < DecayStart)
+                        return 1.0f;
+                    if (distance > DecayEnd)
+                        return 0.0f;
+                    return (DecayEnd - DecayStart / distance - DecayStart);
+                }
                 case DecayModes.InverseSquare:
-                    {
-                        if (distance < DecayStart)
-                            return 1.0f;
-                        else
-                            return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
-                    }
+                {
+                    if (distance < DecayStart)
+                        return 1.0f;
+                    else
+                        return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
+                }
                 case DecayModes.Curve:
-                    {
-                        if (distance < DecayStart)
-                            return 1.0f;
-                        else
-                            return DecayCurve.Evaluate(distance - DecayStart);
-                    }
+                {
+                    if (distance < DecayStart)
+                        return 1.0f;
+                    else
+                        return DecayCurve.Evaluate(distance - DecayStart);
+                }
                 default:
                     return 1.0f;
             }
@@ -271,50 +273,50 @@ namespace VelcroPhysics.Controllers
             switch (TimingMode)
             {
                 case TimingModes.Switched:
+                {
+                    if (Enabled)
                     {
-                        if (Enabled)
+                        ApplyForce(dt, Strength);
+                    }
+                    break;
+                }
+                case TimingModes.Triggered:
+                {
+                    if (Enabled && Triggered)
+                    {
+                        if (ImpulseTime < ImpulseLength)
                         {
                             ApplyForce(dt, Strength);
+                            ImpulseTime += dt;
                         }
-                        break;
-                    }
-                case TimingModes.Triggered:
-                    {
-                        if (Enabled && Triggered)
+                        else
                         {
-                            if (ImpulseTime < ImpulseLength)
-                            {
-                                ApplyForce(dt, Strength);
-                                ImpulseTime += dt;
-                            }
-                            else
-                            {
-                                Triggered = false;
-                            }
+                            Triggered = false;
                         }
-                        break;
                     }
+                    break;
+                }
                 case TimingModes.Curve:
+                {
+                    if (Enabled && Triggered)
                     {
-                        if (Enabled && Triggered)
+                        if (ImpulseTime < ImpulseLength)
                         {
-                            if (ImpulseTime < ImpulseLength)
-                            {
-                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
-                                ImpulseTime += dt;
-                            }
-                            else
-                            {
-                                Triggered = false;
-                            }
+                            ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
+                            ImpulseTime += dt;
                         }
-                        break;
+                        else
+                        {
+                            Triggered = false;
+                        }
                     }
+                    break;
+                }
             }
         }
 
         /// <summary>
-        /// Apply the force supplying strength (wich is modified in Update() 
+        /// Apply the force supplying strength (wich is modified in Update()
         /// according to the TimingMode
         /// </summary>
         /// <param name="dt"></param>

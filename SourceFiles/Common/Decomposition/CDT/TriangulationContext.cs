@@ -68,9 +68,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT
 
         public abstract TriangulationConstraint NewConstraint(TriangulationPoint a, TriangulationPoint b);
 
-        public void Update(string message)
-        {
-        }
+        public void Update(string message) { }
 
         public virtual void Clear()
         {

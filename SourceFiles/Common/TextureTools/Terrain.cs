@@ -14,29 +14,23 @@ namespace VelcroPhysics.Common.TextureTools
     public class Terrain
     {
         /// <summary>
-        /// World to manage terrain in.
+        /// Generated bodies.
         /// </summary>
-        public World World;
+        private List<Body>[,] _bodyMap;
+
+        private AABB _dirtyArea;
+        private float _localHeight;
+
+        private float _localWidth;
 
         /// <summary>
-        /// Center of terrain in world units.
+        /// Point cloud defining the terrain.
         /// </summary>
-        public Vector2 Center;
+        private sbyte[,] _terrainMap;
 
-        /// <summary>
-        /// Width of terrain in world units.
-        /// </summary>
-        public float Width;
-
-        /// <summary>
-        /// Height of terrain in world units.
-        /// </summary>
-        public float Height;
-
-        /// <summary>
-        /// Points per each world unit used to define the terrain in the point cloud.
-        /// </summary>
-        public int PointsPerUnit;
+        private Vector2 _topLeft;
+        private int _xnum;
+        private int _ynum;
 
         /// <summary>
         /// Points per cell.
@@ -44,15 +38,9 @@ namespace VelcroPhysics.Common.TextureTools
         public int CellSize;
 
         /// <summary>
-        /// Points per sub cell.
+        /// Center of terrain in world units.
         /// </summary>
-        public int SubCellSize;
-
-        /// <summary>
-        /// Number of iterations to perform in the Marching Squares algorithm.
-        /// Note: More then 3 has almost no effect on quality.
-        /// </summary>
-        public int Iterations = 2;
+        public Vector2 Center;
 
         /// <summary>
         /// Decomposer to use when regenerating terrain. Can be changed on the fly without consequence.
@@ -61,21 +49,35 @@ namespace VelcroPhysics.Common.TextureTools
         public TriangulationAlgorithm Decomposer;
 
         /// <summary>
-        /// Point cloud defining the terrain.
+        /// Height of terrain in world units.
         /// </summary>
-        private sbyte[,] _terrainMap;
+        public float Height;
 
         /// <summary>
-        /// Generated bodies.
+        /// Number of iterations to perform in the Marching Squares algorithm.
+        /// Note: More then 3 has almost no effect on quality.
         /// </summary>
-        private List<Body>[,] _bodyMap;
+        public int Iterations = 2;
 
-        private float _localWidth;
-        private float _localHeight;
-        private int _xnum;
-        private int _ynum;
-        private AABB _dirtyArea;
-        private Vector2 _topLeft;
+        /// <summary>
+        /// Points per each world unit used to define the terrain in the point cloud.
+        /// </summary>
+        public int PointsPerUnit;
+
+        /// <summary>
+        /// Points per sub cell.
+        /// </summary>
+        public int SubCellSize;
+
+        /// <summary>
+        /// Width of terrain in world units.
+        /// </summary>
+        public float Width;
+
+        /// <summary>
+        /// World to manage terrain in.
+        /// </summary>
+        public World World;
 
         /// <summary>
         /// Creates a new terrain.
@@ -176,11 +178,15 @@ namespace VelcroPhysics.Common.TextureTools
                 _terrainMap[(int)p.X, (int)p.Y] = value;
 
                 // expand dirty area
-                if (p.X < _dirtyArea.LowerBound.X) _dirtyArea.LowerBound.X = p.X;
-                if (p.X > _dirtyArea.UpperBound.X) _dirtyArea.UpperBound.X = p.X;
+                if (p.X < _dirtyArea.LowerBound.X)
+                    _dirtyArea.LowerBound.X = p.X;
+                if (p.X > _dirtyArea.UpperBound.X)
+                    _dirtyArea.UpperBound.X = p.X;
 
-                if (p.Y < _dirtyArea.LowerBound.Y) _dirtyArea.LowerBound.Y = p.Y;
-                if (p.Y > _dirtyArea.UpperBound.Y) _dirtyArea.UpperBound.Y = p.Y;
+                if (p.Y < _dirtyArea.LowerBound.Y)
+                    _dirtyArea.LowerBound.Y = p.Y;
+                if (p.Y > _dirtyArea.UpperBound.Y)
+                    _dirtyArea.UpperBound.Y = p.Y;
             }
         }
 
@@ -191,16 +197,20 @@ namespace VelcroPhysics.Common.TextureTools
         {
             //iterate effected cells
             int xStart = (int)(_dirtyArea.LowerBound.X / CellSize);
-            if (xStart < 0) xStart = 0;
+            if (xStart < 0)
+                xStart = 0;
 
             int xEnd = (int)(_dirtyArea.UpperBound.X / CellSize) + 1;
-            if (xEnd > _xnum) xEnd = _xnum;
+            if (xEnd > _xnum)
+                xEnd = _xnum;
 
             int yStart = (int)(_dirtyArea.LowerBound.Y / CellSize);
-            if (yStart < 0) yStart = 0;
+            if (yStart < 0)
+                yStart = 0;
 
             int yEnd = (int)(_dirtyArea.UpperBound.Y / CellSize) + 1;
-            if (yEnd > _ynum) yEnd = _ynum;
+            if (yEnd > _ynum)
+                yEnd = _ynum;
 
             RemoveOldData(xStart, xEnd, yStart, yEnd);
 
@@ -236,7 +246,8 @@ namespace VelcroPhysics.Common.TextureTools
             float ay = gy * CellSize;
 
             List<Vertices> polys = MarchingSquares.DetectSquares(new AABB(new Vector2(ax, ay), new Vector2(ax + CellSize, ay + CellSize)), SubCellSize, SubCellSize, _terrainMap, Iterations, true);
-            if (polys.Count == 0) return;
+            if (polys.Count == 0)
+                return;
 
             _bodyMap[gx, gy] = new List<Body>();
 

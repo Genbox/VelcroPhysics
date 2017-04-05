@@ -28,7 +28,6 @@ namespace VelcroPhysics.Controllers
         /// </summary>
         public bool IgnorePosition { get; set; }
 
-
         public override void ApplyForce(float dt, float strength)
         {
             foreach (Body body in World.BodyList)

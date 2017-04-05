@@ -53,44 +53,44 @@ namespace VelcroPhysics.Dynamics.Joints
     /// The ratio can be negative or positive. If one joint is a revolute joint
     /// and the other joint is a prismatic joint, then the ratio will have units
     /// of length or units of 1/length.
-    ///
     /// Warning: You have to manually destroy the gear joint if jointA or jointB is destroyed.
     /// </summary>
     public class GearJoint : Joint
     {
-        private JointType _typeA;
-        private JointType _typeB;
-
         private Body _bodyA;
         private Body _bodyB;
         private Body _bodyC;
         private Body _bodyD;
 
+        private float _constant;
+        private float _iA, _iB, _iC, _iD;
+
+        private float _impulse;
+
+        // Solver temp
+        private int _indexA, _indexB, _indexC, _indexD;
+
+        private Vector2 _JvAC, _JvBD;
+        private float _JwA, _JwB, _JwC, _JwD;
+        private Vector2 _lcA, _lcB, _lcC, _lcD;
+
         // Solver shared
         private Vector2 _localAnchorA;
+
         private Vector2 _localAnchorB;
         private Vector2 _localAnchorC;
         private Vector2 _localAnchorD;
 
         private Vector2 _localAxisC;
         private Vector2 _localAxisD;
+        private float _mA, _mB, _mC, _mD;
+        private float _mass;
+        private float _ratio;
 
         private float _referenceAngleA;
         private float _referenceAngleB;
-
-        private float _constant;
-        private float _ratio;
-
-        private float _impulse;
-
-        // Solver temp
-        private int _indexA, _indexB, _indexC, _indexD;
-        private Vector2 _lcA, _lcB, _lcC, _lcD;
-        private float _mA, _mB, _mC, _mD;
-        private float _iA, _iB, _iC, _iD;
-        private Vector2 _JvAC, _JvBD;
-        private float _JwA, _JwB, _JwC, _JwD;
-        private float _mass;
+        private JointType _typeA;
+        private JointType _typeB;
 
         /// <summary>
         /// Requires two existing revolute or prismatic joints (any combination will work).

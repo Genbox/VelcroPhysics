@@ -43,23 +43,27 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class FrictionJoint : Joint
     {
-        // Solver shared
-        private Vector2 _linearImpulse;
         private float _angularImpulse;
+        private float _angularMass;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
-        private float _angularMass;
+        private float _invMassA;
+
+        private float _invMassB;
+
+        // Solver shared
+        private Vector2 _linearImpulse;
+
         private Mat22 _linearMass;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private Vector2 _rA;
+        private Vector2 _rB;
 
         internal FrictionJoint()
         {

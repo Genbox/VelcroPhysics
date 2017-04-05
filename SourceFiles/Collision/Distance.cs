@@ -50,46 +50,46 @@ namespace VelcroPhysics.Collision
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    {
-                        CircleShape circle = (CircleShape)shape;
-                        Vertices.Clear();
-                        Vertices.Add(circle.Position);
-                        Radius = circle.Radius;
-                    }
+                {
+                    CircleShape circle = (CircleShape)shape;
+                    Vertices.Clear();
+                    Vertices.Add(circle.Position);
+                    Radius = circle.Radius;
+                }
                     break;
 
                 case ShapeType.Polygon:
+                {
+                    PolygonShape polygon = (PolygonShape)shape;
+                    Vertices.Clear();
+                    for (int i = 0; i < polygon.Vertices.Count; i++)
                     {
-                        PolygonShape polygon = (PolygonShape)shape;
-                        Vertices.Clear();
-                        for (int i = 0; i < polygon.Vertices.Count; i++)
-                        {
-                            Vertices.Add(polygon.Vertices[i]);
-                        }
-                        Radius = polygon.Radius;
+                        Vertices.Add(polygon.Vertices[i]);
                     }
+                    Radius = polygon.Radius;
+                }
                     break;
 
                 case ShapeType.Chain:
-                    {
-                        ChainShape chain = (ChainShape)shape;
-                        Debug.Assert(0 <= index && index < chain.Vertices.Count);
-                        Vertices.Clear();
-                        Vertices.Add(chain.Vertices[index]);
-                        Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
+                {
+                    ChainShape chain = (ChainShape)shape;
+                    Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                    Vertices.Clear();
+                    Vertices.Add(chain.Vertices[index]);
+                    Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
 
-                        Radius = chain.Radius;
-                    }
+                    Radius = chain.Radius;
+                }
                     break;
 
                 case ShapeType.Edge:
-                    {
-                        EdgeShape edge = (EdgeShape)shape;
-                        Vertices.Clear();
-                        Vertices.Add(edge.Vertex1);
-                        Vertices.Add(edge.Vertex2);
-                        Radius = edge.Radius;
-                    }
+                {
+                    EdgeShape edge = (EdgeShape)shape;
+                    Vertices.Clear();
+                    Vertices.Add(edge.Vertex1);
+                    Vertices.Add(edge.Vertex2);
+                    Radius = edge.Radius;
+                }
                     break;
 
                 default:
@@ -169,7 +169,7 @@ namespace VelcroPhysics.Collision
 
     /// <summary>
     /// Input for Distance.ComputeDistance().
-    /// You have to option to use the shape radii in the computation. 
+    /// You have to option to use the shape radii in the computation.
     /// </summary>
     public class DistanceInput
     {
@@ -206,7 +206,7 @@ namespace VelcroPhysics.Collision
     internal struct SimplexVertex
     {
         /// <summary>
-        /// Barycentric coordinate for closest point 
+        /// Barycentric coordinate for closest point
         /// </summary>
         public float A;
 
@@ -310,20 +310,20 @@ namespace VelcroPhysics.Collision
                     return -V[0].W;
 
                 case 2:
+                {
+                    Vector2 e12 = V[1].W - V[0].W;
+                    float sgn = MathUtils.Cross(e12, -V[0].W);
+                    if (sgn > 0.0f)
                     {
-                        Vector2 e12 = V[1].W - V[0].W;
-                        float sgn = MathUtils.Cross(e12, -V[0].W);
-                        if (sgn > 0.0f)
-                        {
-                            // Origin is left of e12.
-                            return new Vector2(-e12.Y, e12.X);
-                        }
-                        else
-                        {
-                            // Origin is right of e12.
-                            return new Vector2(e12.Y, -e12.X);
-                        }
+                        // Origin is left of e12.
+                        return new Vector2(-e12.Y, e12.X);
                     }
+                    else
+                    {
+                        // Origin is right of e12.
+                        return new Vector2(e12.Y, -e12.X);
+                    }
+                }
 
                 default:
                     Debug.Assert(false);

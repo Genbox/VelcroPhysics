@@ -51,6 +51,7 @@ namespace VelcroPhysics.Common
     }
 
 #if !(XBOX360)
+
     [DebuggerDisplay("Count = {Count} Vertices = {ToString()}")]
 #endif
     public class Vertices : List<Vector2>
@@ -275,7 +276,6 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// Rotate the vertices with the defined value in radians.
-        /// 
         /// Warning: Using this method on an active set of vertices of a Body,
         /// will cause problems with collisions. Use Body.Rotation instead.
         /// </summary>
@@ -305,13 +305,12 @@ namespace VelcroPhysics.Common
         /// <summary>
         /// Determines whether the polygon is convex.
         /// O(n^2) running time.
-        /// 
         /// Assumptions:
         /// - The polygon is in counter clockwise order
         /// - The polygon has no overlapping edges
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if it is convex; otherwise, <c>false</c>.
+        /// <c>true</c> if it is convex; otherwise, <c>false</c>.
         /// </returns>
         public bool IsConvex()
         {
@@ -401,10 +400,8 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// Checks if the polygon is valid for use in the engine.
-        ///
         /// Performs a full check, for simplicity, convexity,
         /// orientation, minimum angle, and volume.
-        /// 
         /// From Eric Jordan's convex decomposition library
         /// </summary>
         /// <returns>PolygonError.NoError if there were no error.</returns>
@@ -427,7 +424,7 @@ namespace VelcroPhysics.Common
             {
                 int next = i + 1 < Count ? i + 1 : 0;
                 Vector2 edge = this[next] - this[i];
-                if (edge.LengthSquared() <= Settings.Epsilon*Settings.Epsilon)
+                if (edge.LengthSquared() <= Settings.Epsilon * Settings.Epsilon)
                 {
                     return PolygonError.SideTooSmall;
                 }
@@ -474,9 +471,11 @@ namespace VelcroPhysics.Common
         /// </summary>
         /// See more info about the algorithm here: http://softsurfer.com/Archive/algorithm_0103/algorithm_0103.htm
         /// <param name="point">The point to be tested.</param>
-        /// <returns>-1 if the winding number is zero and the point is outside
+        /// <returns>
+        /// -1 if the winding number is zero and the point is outside
         /// the polygon, 1 if the point is inside the polygon, and 0 if the point
-        /// is on the polygons edge.</returns>
+        /// is on the polygons edge.
+        /// </returns>
         public int PointInPolygon(ref Vector2 point)
         {
             // Winding number
@@ -496,6 +495,7 @@ namespace VelcroPhysics.Common
                 {
                     return 0;
                 }
+
                 // Test edge for intersection with ray from point
                 if (p1.Y <= point.Y)
                 {
@@ -516,9 +516,9 @@ namespace VelcroPhysics.Common
         }
 
         /// <summary>
-        /// Compute the sum of the angles made between the test point and each pair of points making up the polygon. 
-        /// If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. 
-        /// ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2 
+        /// Compute the sum of the angles made between the test point and each pair of points making up the polygon.
+        /// If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point.
+        /// ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2
         /// </summary>
         public bool PointInPolygonAngle(ref Vector2 point)
         {

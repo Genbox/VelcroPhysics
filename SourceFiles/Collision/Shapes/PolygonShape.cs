@@ -33,11 +33,11 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public class PolygonShape : Shape
     {
-        private Vertices _vertices;
         private Vertices _normals;
+        private Vertices _vertices;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonShape"/> class.
+        /// Initializes a new instance of the <see cref="PolygonShape" /> class.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="density">The density.</param>
@@ -119,9 +119,15 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        public Vertices Normals { get { return _normals; } }
+        public Vertices Normals
+        {
+            get { return _normals; }
+        }
 
-        public override int ChildCount { get { return 1; } }
+        public override int ChildCount
+        {
+            get { return 1; }
+        }
 
         protected override void ComputeProperties()
         {
@@ -416,6 +422,7 @@ namespace VelcroPhysics.Collision.Shapes
                     p3 = outoVec;
                 else
                     p3 = Vertices[i];
+
                 //Add the triangle formed by intoVec,p2,p3
                 {
                     Vector2 e1 = p2 - intoVec;

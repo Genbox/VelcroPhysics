@@ -5,17 +5,20 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
 {
     internal class Triangulator
     {
-        // Trapezoid decomposition list
-        public List<Trapezoid> Trapezoids;
-        public List<List<Point>> Triangles;
-
         // Initialize trapezoidal map and query structure
         private Trapezoid _boundingBox;
+
         private List<Edge> _edgeList;
         private QueryGraph _queryGraph;
         private float _sheer = 0.001f;
         private TrapezoidalMap _trapezoidalMap;
+
         private List<MonotoneMountain> _xMonoPoly;
+
+        // Trapezoid decomposition list
+        public List<Trapezoid> Trapezoids;
+
+        public List<List<Point>> Triangles;
 
         public Triangulator(List<Point> polyLine, float sheer)
         {
@@ -67,6 +70,7 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
                         tList = _trapezoidalMap.Case4(t, edge);
                         _queryGraph.Case4(t.Sink, edge, tList);
                     }
+
                     // Add new trapezoids to map
                     foreach (Trapezoid y in tList)
                     {

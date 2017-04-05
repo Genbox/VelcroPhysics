@@ -10,16 +10,16 @@ namespace VelcroPhysics.Controllers
     /// </summary>
     public class VelocityLimitController : Controller
     {
-        public bool LimitAngularVelocity = true;
-        public bool LimitLinearVelocity = true;
         private List<Body> _bodies = new List<Body>();
         private float _maxAngularSqared;
         private float _maxAngularVelocity;
         private float _maxLinearSqared;
         private float _maxLinearVelocity;
+        public bool LimitAngularVelocity = true;
+        public bool LimitLinearVelocity = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VelocityLimitController"/> class.
+        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
         /// Sets the max linear velocity to Settings.MaxTranslation
         /// Sets the max angular velocity to Settings.MaxRotation
         /// </summary>
@@ -31,7 +31,7 @@ namespace VelcroPhysics.Controllers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VelocityLimitController"/> class.
+        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
         /// Pass in 0 or float.MaxValue to disable the limit.
         /// maxAngularVelocity = 0 will disable the angular velocity limit.
         /// </summary>

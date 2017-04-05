@@ -226,7 +226,7 @@ namespace VelcroPhysics.Common
         /// </summary>
         /// <param name="x">The x.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified x is valid; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified x is valid; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsValid(float x)
         {
@@ -312,8 +312,10 @@ namespace VelcroPhysics.Common
         /// <summary>
         /// Returns a positive number if c is to the left of the line going from a to b.
         /// </summary>
-        /// <returns>Positive number if point is left, negative if point is right, 
-        /// and 0 if points are collinear.</returns>
+        /// <returns>
+        /// Positive number if point is left, negative if point is right,
+        /// and 0 if points are collinear.
+        /// </returns>
         public static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(ref a, ref b, ref c);
@@ -322,8 +324,10 @@ namespace VelcroPhysics.Common
         /// <summary>
         /// Returns a positive number if c is to the left of the line going from a to b.
         /// </summary>
-        /// <returns>Positive number if point is left, negative if point is right, 
-        /// and 0 if points are collinear.</returns>
+        /// <returns>
+        /// Positive number if point is left, negative if point is right,
+        /// and 0 if points are collinear.
+        /// </returns>
         public static float Area(ref Vector2 a, ref Vector2 b, ref Vector2 c)
         {
             return a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y);
@@ -372,25 +376,14 @@ namespace VelcroPhysics.Common
         /// <param name="value">The Value to check.</param>
         /// <param name="min">The minimum Value.</param>
         /// <param name="max">The maximum Value.</param>
-        /// <returns>True if the Value is within the range specified,
-        /// false otherwise.</returns>
+        /// <returns>
+        /// True if the Value is within the range specified,
+        /// false otherwise.
+        /// </returns>
         public static bool FloatInRange(float value, float min, float max)
         {
             return (value >= min && value <= max);
         }
-
-        #region Nested type: FloatConverter
-
-        [StructLayout(LayoutKind.Explicit)]
-        private struct FloatConverter
-        {
-            [FieldOffset(0)]
-            public float x;
-            [FieldOffset(0)]
-            public int i;
-        }
-
-        #endregion
 
         public static Vector2 Mul(ref Rot rot, Vector2 axis)
         {
@@ -401,6 +394,20 @@ namespace VelcroPhysics.Common
         {
             return MulT(rot, axis);
         }
+
+        #region Nested type: FloatConverter
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct FloatConverter
+        {
+            [FieldOffset(0)]
+            public float x;
+
+            [FieldOffset(0)]
+            public int i;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -592,9 +599,15 @@ namespace VelcroPhysics.Common
                 det = 1.0f / det;
             }
 
-            M.ex.X = det * d; M.ey.X = -det * b; M.ex.Z = 0.0f;
-            M.ex.Y = -det * c; M.ey.Y = det * a; M.ey.Z = 0.0f;
-            M.ez.X = 0.0f; M.ez.Y = 0.0f; M.ez.Z = 0.0f;
+            M.ex.X = det * d;
+            M.ey.X = -det * b;
+            M.ex.Z = 0.0f;
+            M.ex.Y = -det * c;
+            M.ey.Y = det * a;
+            M.ey.Z = 0.0f;
+            M.ez.X = 0.0f;
+            M.ez.Y = 0.0f;
+            M.ez.Z = 0.0f;
         }
 
         /// Get the symmetric inverse of this matrix as a 3-by-3.

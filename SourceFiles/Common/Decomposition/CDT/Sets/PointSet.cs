@@ -58,7 +58,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Sets
 
         public void AddTriangles(IEnumerable<DelaunayTriangle> list)
         {
-            foreach (DelaunayTriangle tri in list) Triangles.Add(tri);
+            foreach (DelaunayTriangle tri in list)
+                Triangles.Add(tri);
         }
 
         public void ClearTriangles()

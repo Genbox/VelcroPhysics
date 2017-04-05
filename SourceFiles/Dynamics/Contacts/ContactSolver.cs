@@ -31,45 +31,45 @@ namespace VelcroPhysics.Dynamics.Contacts
 {
     public sealed class ContactPositionConstraint
     {
-        public Vector2[] localPoints = new Vector2[Settings.MaxManifoldPoints];
-        public Vector2 localNormal;
-        public Vector2 localPoint;
         public int indexA;
         public int indexB;
+        public float invIA, invIB;
         public float invMassA, invMassB;
         public Vector2 localCenterA, localCenterB;
-        public float invIA, invIB;
-        public ManifoldType type;
-        public float radiusA, radiusB;
+        public Vector2 localNormal;
+        public Vector2 localPoint;
+        public Vector2[] localPoints = new Vector2[Settings.MaxManifoldPoints];
         public int pointCount;
+        public float radiusA, radiusB;
+        public ManifoldType type;
     }
 
     public sealed class VelocityConstraintPoint
     {
+        public float normalImpulse;
+        public float normalMass;
         public Vector2 rA;
         public Vector2 rB;
-        public float normalImpulse;
         public float tangentImpulse;
-        public float normalMass;
         public float tangentMass;
         public float velocityBias;
     }
 
     public sealed class ContactVelocityConstraint
     {
-        public VelocityConstraintPoint[] points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
-        public Vector2 normal;
-        public Mat22 normalMass;
-        public Mat22 K;
+        public int contactIndex;
+        public float friction;
         public int indexA;
         public int indexB;
-        public float invMassA, invMassB;
         public float invIA, invIB;
-        public float friction;
+        public float invMassA, invMassB;
+        public Mat22 K;
+        public Vector2 normal;
+        public Mat22 normalMass;
+        public int pointCount;
+        public VelocityConstraintPoint[] points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
         public float restitution;
         public float tangentSpeed;
-        public int pointCount;
-        public int contactIndex;
 
         public ContactVelocityConstraint()
         {
@@ -82,13 +82,13 @@ namespace VelcroPhysics.Dynamics.Contacts
 
     public class ContactSolver
     {
-        public TimeStep _step;
-        public Position[] _positions;
-        public Velocity[] _velocities;
-        public ContactPositionConstraint[] _positionConstraints;
-        public ContactVelocityConstraint[] _velocityConstraints;
         public Contact[] _contacts;
         public int _count;
+        public ContactPositionConstraint[] _positionConstraints;
+        public Position[] _positions;
+        public TimeStep _step;
+        public Velocity[] _velocities;
+        public ContactVelocityConstraint[] _velocityConstraints;
 
         public void Reset(TimeStep step, int count, Contact[] contacts, Position[] positions, Velocity[] velocities, bool warmstarting = Settings.EnableWarmstarting)
         {
@@ -480,9 +480,10 @@ namespace VelcroPhysics.Dynamics.Contacts
                     b -= MathUtils.Mul(ref vc.K, a);
 
                     const float k_errorTol = 1e-3f;
+
                     //B2_NOT_USED(k_errorTol);
 
-                    for (; ; )
+                    for (;;)
                     {
                         //
                         // Case 1: vn = 0
@@ -568,7 +569,6 @@ namespace VelcroPhysics.Dynamics.Contacts
 #endif
                             break;
                         }
-
 
                         //
                         // Case 3: vn2 = 0 and x1 = 0
@@ -870,53 +870,53 @@ namespace VelcroPhysics.Dynamics.Contacts
                 switch (manifold.Type)
                 {
                     case ManifoldType.Circles:
+                    {
+                        normal = new Vector2(1.0f, 0.0f);
+                        Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+                        Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
+                        if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
-                            normal = new Vector2(1.0f, 0.0f);
-                            Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
-                            Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
-                            if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
-                            {
-                                normal = pointB - pointA;
-                                normal.Normalize();
-                            }
-
-                            Vector2 cA = pointA + radiusA * normal;
-                            Vector2 cB = pointB - radiusB * normal;
-                            points[0] = 0.5f * (cA + cB);
+                            normal = pointB - pointA;
+                            normal.Normalize();
                         }
+
+                        Vector2 cA = pointA + radiusA * normal;
+                        Vector2 cB = pointB - radiusB * normal;
+                        points[0] = 0.5f * (cA + cB);
+                    }
                         break;
 
                     case ManifoldType.FaceA:
-                        {
-                            normal = MathUtils.Mul(xfA.q, manifold.LocalNormal);
-                            Vector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
+                    {
+                        normal = MathUtils.Mul(xfA.q, manifold.LocalNormal);
+                        Vector2 planePoint = MathUtils.Mul(ref xfA, manifold.LocalPoint);
 
-                            for (int i = 0; i < manifold.PointCount; ++i)
-                            {
-                                Vector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
-                                Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                Vector2 cB = clipPoint - radiusB * normal;
-                                points[i] = 0.5f * (cA + cB);
-                            }
+                        for (int i = 0; i < manifold.PointCount; ++i)
+                        {
+                            Vector2 clipPoint = MathUtils.Mul(ref xfB, manifold.Points[i].LocalPoint);
+                            Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                            Vector2 cB = clipPoint - radiusB * normal;
+                            points[i] = 0.5f * (cA + cB);
                         }
+                    }
                         break;
 
                     case ManifoldType.FaceB:
+                    {
+                        normal = MathUtils.Mul(xfB.q, manifold.LocalNormal);
+                        Vector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
+
+                        for (int i = 0; i < manifold.PointCount; ++i)
                         {
-                            normal = MathUtils.Mul(xfB.q, manifold.LocalNormal);
-                            Vector2 planePoint = MathUtils.Mul(ref xfB, manifold.LocalPoint);
-
-                            for (int i = 0; i < manifold.PointCount; ++i)
-                            {
-                                Vector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
-                                Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
-                                Vector2 cA = clipPoint - radiusA * normal;
-                                points[i] = 0.5f * (cA + cB);
-                            }
-
-                            // Ensure normal points from A to B.
-                            normal = -normal;
+                            Vector2 clipPoint = MathUtils.Mul(ref xfA, manifold.Points[i].LocalPoint);
+                            Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
+                            Vector2 cA = clipPoint - radiusA * normal;
+                            points[i] = 0.5f * (cA + cB);
                         }
+
+                        // Ensure normal points from A to B.
+                        normal = -normal;
+                    }
                         break;
                 }
             }
@@ -931,50 +931,49 @@ namespace VelcroPhysics.Dynamics.Contacts
                 switch (pc.type)
                 {
                     case ManifoldType.Circles:
-                        {
-                            Vector2 pointA = MathUtils.Mul(ref xfA, pc.localPoint);
-                            Vector2 pointB = MathUtils.Mul(ref xfB, pc.localPoints[0]);
-                            normal = pointB - pointA;
+                    {
+                        Vector2 pointA = MathUtils.Mul(ref xfA, pc.localPoint);
+                        Vector2 pointB = MathUtils.Mul(ref xfB, pc.localPoints[0]);
+                        normal = pointB - pointA;
 
-                            //FPE: Fix to handle zero normalization
-                            if (normal != Vector2.Zero)
-                                normal.Normalize();
+                        //FPE: Fix to handle zero normalization
+                        if (normal != Vector2.Zero)
+                            normal.Normalize();
 
-                            point = 0.5f * (pointA + pointB);
-                            separation = Vector2.Dot(pointB - pointA, normal) - pc.radiusA - pc.radiusB;
-                        }
+                        point = 0.5f * (pointA + pointB);
+                        separation = Vector2.Dot(pointB - pointA, normal) - pc.radiusA - pc.radiusB;
+                    }
                         break;
 
                     case ManifoldType.FaceA:
-                        {
-                            normal = MathUtils.Mul(xfA.q, pc.localNormal);
-                            Vector2 planePoint = MathUtils.Mul(ref xfA, pc.localPoint);
+                    {
+                        normal = MathUtils.Mul(xfA.q, pc.localNormal);
+                        Vector2 planePoint = MathUtils.Mul(ref xfA, pc.localPoint);
 
-                            Vector2 clipPoint = MathUtils.Mul(ref xfB, pc.localPoints[index]);
-                            separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
-                            point = clipPoint;
-                        }
+                        Vector2 clipPoint = MathUtils.Mul(ref xfB, pc.localPoints[index]);
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
+                        point = clipPoint;
+                    }
                         break;
 
                     case ManifoldType.FaceB:
-                        {
-                            normal = MathUtils.Mul(xfB.q, pc.localNormal);
-                            Vector2 planePoint = MathUtils.Mul(ref xfB, pc.localPoint);
+                    {
+                        normal = MathUtils.Mul(xfB.q, pc.localNormal);
+                        Vector2 planePoint = MathUtils.Mul(ref xfB, pc.localPoint);
 
-                            Vector2 clipPoint = MathUtils.Mul(ref xfA, pc.localPoints[index]);
-                            separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
-                            point = clipPoint;
+                        Vector2 clipPoint = MathUtils.Mul(ref xfA, pc.localPoints[index]);
+                        separation = Vector2.Dot(clipPoint - planePoint, normal) - pc.radiusA - pc.radiusB;
+                        point = clipPoint;
 
-                            // Ensure normal points from A to B
-                            normal = -normal;
-                        }
+                        // Ensure normal points from A to B
+                        normal = -normal;
+                    }
                         break;
                     default:
                         normal = Vector2.Zero;
                         point = Vector2.Zero;
                         separation = 0;
                         break;
-
                 }
             }
         }

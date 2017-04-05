@@ -40,7 +40,7 @@ namespace VelcroPhysics.Controllers
         /// </summary>
         /// <param name="controller">The controller type.</param>
         /// <returns>
-        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
+        /// <c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
         /// </returns>
         public bool IsControllerIgnored(ControllerType controller)
         {
@@ -50,9 +50,9 @@ namespace VelcroPhysics.Controllers
 
     public abstract class Controller : FilterData
     {
+        private ControllerType _type;
         public bool Enabled;
         public World World;
-        private ControllerType _type;
 
         public Controller(ControllerType controllerType)
         {

@@ -96,6 +96,30 @@ namespace VelcroPhysics.Collision
         }
 
         /// <summary>
+        /// Get the tree quality based on the area of the tree.
+        /// </summary>
+        public float TreeQuality
+        {
+            get { return _tree.AreaRatio; }
+        }
+
+        /// <summary>
+        /// Gets the balance of the tree.
+        /// </summary>
+        public int TreeBalance
+        {
+            get { return _tree.MaxBalance; }
+        }
+
+        /// <summary>
+        /// Gets the height of the tree.
+        /// </summary>
+        public int TreeHeight
+        {
+            get { return _tree.Height; }
+        }
+
+        /// <summary>
         /// Get the number of proxies.
         /// </summary>
         /// <value>The proxy count.</value>
@@ -141,60 +165,6 @@ namespace VelcroPhysics.Collision
         public void TouchProxy(int proxyId)
         {
             BufferMove(proxyId);
-        }
-
-        private void BufferMove(int proxyId)
-        {
-            if (_moveCount == _moveCapacity)
-            {
-                int[] oldBuffer = _moveBuffer;
-                _moveCapacity *= 2;
-                _moveBuffer = new int[_moveCapacity];
-                Array.Copy(oldBuffer, _moveBuffer, _moveCount);
-            }
-
-            _moveBuffer[_moveCount] = proxyId;
-            ++_moveCount;
-        }
-
-        private void UnBufferMove(int proxyId)
-        {
-            for (int i = 0; i < _moveCount; ++i)
-            {
-                if (_moveBuffer[i] == proxyId)
-                {
-                    _moveBuffer[i] = NullProxy;
-                }
-            }
-        }
-
-        /// <summary>
-        /// This is called from DynamicTree.Query when we are gathering pairs.
-        /// </summary>
-        /// <param name="proxyId"></param>
-        /// <returns></returns>
-        private bool QueryCallback(int proxyId)
-        {
-            // A proxy cannot form a pair with itself.
-            if (proxyId == _queryProxyId)
-            {
-                return true;
-            }
-
-            // Grow the pair buffer as needed.
-            if (_pairCount == _pairCapacity)
-            {
-                Pair[] oldBuffer = _pairBuffer;
-                _pairCapacity *= 2;
-                _pairBuffer = new Pair[_pairCapacity];
-                Array.Copy(oldBuffer, _pairBuffer, _pairCount);
-            }
-
-            _pairBuffer[_pairCount].ProxyIdA = Math.Min(proxyId, _queryProxyId);
-            _pairBuffer[_pairCount].ProxyIdB = Math.Max(proxyId, _queryProxyId);
-            ++_pairCount;
-
-            return true;
         }
 
         /// <summary>
@@ -321,28 +291,58 @@ namespace VelcroPhysics.Collision
             _tree.ShiftOrigin(newOrigin);
         }
 
-        /// <summary>
-        /// Get the tree quality based on the area of the tree.
-        /// </summary>
-        public float TreeQuality
+        private void BufferMove(int proxyId)
         {
-            get { return _tree.AreaRatio; }
+            if (_moveCount == _moveCapacity)
+            {
+                int[] oldBuffer = _moveBuffer;
+                _moveCapacity *= 2;
+                _moveBuffer = new int[_moveCapacity];
+                Array.Copy(oldBuffer, _moveBuffer, _moveCount);
+            }
+
+            _moveBuffer[_moveCount] = proxyId;
+            ++_moveCount;
+        }
+
+        private void UnBufferMove(int proxyId)
+        {
+            for (int i = 0; i < _moveCount; ++i)
+            {
+                if (_moveBuffer[i] == proxyId)
+                {
+                    _moveBuffer[i] = NullProxy;
+                }
+            }
         }
 
         /// <summary>
-        /// Gets the balance of the tree.
+        /// This is called from DynamicTree.Query when we are gathering pairs.
         /// </summary>
-        public int TreeBalance
+        /// <param name="proxyId"></param>
+        /// <returns></returns>
+        private bool QueryCallback(int proxyId)
         {
-            get { return _tree.MaxBalance; }
-        }
+            // A proxy cannot form a pair with itself.
+            if (proxyId == _queryProxyId)
+            {
+                return true;
+            }
 
-        /// <summary>
-        /// Gets the height of the tree.
-        /// </summary>
-        public int TreeHeight
-        {
-            get { return _tree.Height; }
+            // Grow the pair buffer as needed.
+            if (_pairCount == _pairCapacity)
+            {
+                Pair[] oldBuffer = _pairBuffer;
+                _pairCapacity *= 2;
+                _pairBuffer = new Pair[_pairCapacity];
+                Array.Copy(oldBuffer, _pairBuffer, _pairCount);
+            }
+
+            _pairBuffer[_pairCount].ProxyIdA = Math.Min(proxyId, _queryProxyId);
+            _pairBuffer[_pairCount].ProxyIdB = Math.Max(proxyId, _queryProxyId);
+            ++_pairCount;
+
+            return true;
         }
     }
 }

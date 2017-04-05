@@ -43,30 +43,32 @@ namespace VelcroPhysics.Dynamics.Joints
     /// <summary>
     /// A weld joint essentially glues two bodies together. A weld joint may
     /// distort somewhat because the island constraint solver is approximate.
-    /// 
     /// The joint is soft constraint based, which means the two bodies will move
     /// relative to each other, when a force is applied. To combine two bodies
     /// in a rigid fashion, combine the fixtures to a single body instead.
     /// </summary>
     public class WeldJoint : Joint
     {
+        private float _bias;
+
+        private float _gamma;
+
         // Solver shared
         private Vector3 _impulse;
-        private float _gamma;
-        private float _bias;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
         private Mat33 _mass;
+        private Vector2 _rA;
+        private Vector2 _rB;
 
         internal WeldJoint()
         {

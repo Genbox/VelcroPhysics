@@ -13,24 +13,19 @@ namespace VelcroPhysics.Common.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm created by Raimund Seidel
-    /// 
     /// Properties:
     /// - Decompose the polygon into trapezoids, then triangulate.
     /// - To use the trapezoid data, use ConvexPartitionTrapezoid()
     /// - Generate a lot of garbage due to incapsulation of the Poly2Tri library.
     /// - Running time is O(n log n), n = number of vertices.
     /// - Running time is almost linear for most simple polygons.
-    /// - Does not care about winding order. 
-    /// 
+    /// - Does not care about winding order.
     /// For more information, see Raimund Seidel's paper "A simple and fast incremental randomized
     /// algorithm for computing trapezoidal decompositions and for triangulating polygons"
-    /// 
     /// See also: "Computational Geometry", 3rd edition, by Mark de Berg et al, Chapter 6.2
-    ///           "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
-    /// 
+    /// "Computational Geometry in C", 2nd edition, by Joseph O'Rourke
     /// Original code from the Poly2Tri project by Mason Green.
     /// http://code.google.com/p/poly2tri/source/browse?repo=archive#hg/scala/src/org/poly2tri/seidel
-    /// 
     /// This implementation is from Dec 14, 2010
     /// </summary>
     internal static class SeidelDecomposer

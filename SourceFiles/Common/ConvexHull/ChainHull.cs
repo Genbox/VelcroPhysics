@@ -6,7 +6,6 @@ namespace VelcroPhysics.Common.ConvexHull
     /// <summary>
     /// Andrew's Monotone Chain Convex Hull algorithm.
     /// Used to get the convex hull of a point cloud.
-    /// 
     /// Source: http://www.softsurfer.com/Archive/algorithm_0109/algorithm_0109.htm
     /// </summary>
     public static class ChainHull

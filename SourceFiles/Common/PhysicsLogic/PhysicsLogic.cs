@@ -36,7 +36,7 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         /// <param name="type">The logic type.</param>
         /// <returns>
-        /// 	<c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
+        /// <c>true</c> if the body has the specified flag; otherwise, <c>false</c>.
         /// </returns>
         public bool IsPhysicsLogicIgnored(PhysicsLogicType type)
         {
@@ -49,18 +49,18 @@ namespace VelcroPhysics.Common.PhysicsLogic
         private PhysicsLogicType _type;
         public World World;
 
+        public PhysicsLogic(World world, PhysicsLogicType type)
+        {
+            _type = type;
+            World = world;
+        }
+
         public override bool IsActiveOn(Body body)
         {
             if (body.PhysicsLogicFilter.IsPhysicsLogicIgnored(_type))
                 return false;
 
             return base.IsActiveOn(body);
-        }
-
-        public PhysicsLogic(World world, PhysicsLogicType type)
-        {
-            _type = type;
-            World = world;
         }
     }
 }

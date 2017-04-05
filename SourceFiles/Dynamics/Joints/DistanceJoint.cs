@@ -51,22 +51,24 @@ namespace VelcroPhysics.Dynamics.Joints
     {
         // Solver shared
         private float _bias;
+
         private float _gamma;
         private float _impulse;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _u;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
         private float _mass;
+        private Vector2 _rA;
+        private Vector2 _rB;
+        private Vector2 _u;
 
         internal DistanceJoint()
         {
@@ -286,7 +288,6 @@ namespace VelcroPhysics.Dynamics.Joints
             data.velocities[_indexA].w = wA;
             data.velocities[_indexB].v = vB;
             data.velocities[_indexB].w = wB;
-
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)
@@ -308,7 +309,8 @@ namespace VelcroPhysics.Dynamics.Joints
             Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
             Vector2 u = cB + rB - cA - rA;
 
-            float length = u.Length(); u.Normalize();
+            float length = u.Length();
+            u.Normalize();
             float C = length - Length;
             C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
 

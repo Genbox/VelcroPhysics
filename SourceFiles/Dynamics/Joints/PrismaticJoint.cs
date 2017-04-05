@@ -98,31 +98,32 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class PrismaticJoint : Joint
     {
-        private Vector2 _localYAxisA;
-        private Vector3 _impulse;
-        private float _lowerTranslation;
-        private float _upperTranslation;
-        private float _maxMotorForce;
-        private float _motorSpeed;
+        private float _a1, _a2;
+        private Vector2 _axis, _perp;
+        private Vector2 _axis1;
         private bool _enableLimit;
         private bool _enableMotor;
-        private LimitState _limitState;
+        private Vector3 _impulse;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
-        private Vector2 _axis, _perp;
-        private float _s1, _s2;
-        private float _a1, _a2;
+        private float _invMassA;
+        private float _invMassB;
         private Mat33 _K;
+        private LimitState _limitState;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private Vector2 _localYAxisA;
+        private float _lowerTranslation;
+        private float _maxMotorForce;
         private float _motorMass;
-        private Vector2 _axis1;
+        private float _motorSpeed;
+        private float _s1, _s2;
+        private float _upperTranslation;
 
         internal PrismaticJoint()
         {
@@ -153,27 +154,6 @@ namespace VelcroPhysics.Dynamics.Joints
             : base(bodyA, bodyB)
         {
             Initialize(anchor, anchor, axis, useWorldCoordinates);
-        }
-
-        private void Initialize(Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis, bool useWorldCoordinates)
-        {
-            JointType = JointType.Prismatic;
-
-            if (useWorldCoordinates)
-            {
-                LocalAnchorA = BodyA.GetLocalPoint(localAnchorA);
-                LocalAnchorB = BodyB.GetLocalPoint(localAnchorB);
-            }
-            else
-            {
-                LocalAnchorA = localAnchorA;
-                LocalAnchorB = localAnchorB;
-            }
-
-            Axis = axis; //FPE only: store the orignal value for use in Serialization
-            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
-
-            _limitState = LimitState.Inactive;
         }
 
         /// <summary>
@@ -299,22 +279,6 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Set the joint limits, usually in meters.
-        /// </summary>
-        /// <param name="lower">The lower limit</param>
-        /// <param name="upper">The upper limit</param>
-        public void SetLimits(float lower, float upper)
-        {
-            if (upper != _upperTranslation || lower != _lowerTranslation)
-            {
-                WakeBodies();
-                _upperTranslation = upper;
-                _lowerTranslation = lower;
-                _impulse.Z = 0.0f;
-            }
-        }
-
-        /// <summary>
         /// Is the joint motor enabled?
         /// </summary>
         /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
@@ -363,15 +327,6 @@ namespace VelcroPhysics.Dynamics.Joints
         public float MotorImpulse { get; set; }
 
         /// <summary>
-        /// Gets the motor force.
-        /// </summary>
-        /// <param name="invDt">The inverse delta time</param>
-        public float GetMotorForce(float invDt)
-        {
-            return invDt * MotorImpulse;
-        }
-
-        /// <summary>
         /// The axis at which the joint moves.
         /// </summary>
         public Vector2 Axis
@@ -395,6 +350,52 @@ namespace VelcroPhysics.Dynamics.Joints
         /// The reference angle.
         /// </summary>
         public float ReferenceAngle { get; set; }
+
+        private void Initialize(Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis, bool useWorldCoordinates)
+        {
+            JointType = JointType.Prismatic;
+
+            if (useWorldCoordinates)
+            {
+                LocalAnchorA = BodyA.GetLocalPoint(localAnchorA);
+                LocalAnchorB = BodyB.GetLocalPoint(localAnchorB);
+            }
+            else
+            {
+                LocalAnchorA = localAnchorA;
+                LocalAnchorB = localAnchorB;
+            }
+
+            Axis = axis; //FPE only: store the orignal value for use in Serialization
+            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
+
+            _limitState = LimitState.Inactive;
+        }
+
+        /// <summary>
+        /// Set the joint limits, usually in meters.
+        /// </summary>
+        /// <param name="lower">The lower limit</param>
+        /// <param name="upper">The upper limit</param>
+        public void SetLimits(float lower, float upper)
+        {
+            if (upper != _upperTranslation || lower != _lowerTranslation)
+            {
+                WakeBodies();
+                _upperTranslation = upper;
+                _lowerTranslation = lower;
+                _impulse.Z = 0.0f;
+            }
+        }
+
+        /// <summary>
+        /// Gets the motor force.
+        /// </summary>
+        /// <param name="invDt">The inverse delta time</param>
+        public float GetMotorForce(float invDt)
+        {
+            return invDt * MotorImpulse;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {

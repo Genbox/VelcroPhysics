@@ -35,11 +35,10 @@ namespace VelcroPhysics.Common.TextureTools
     {
         /// <summary>
         /// Marching squares over the given domain using the mesh defined via the dimensions
-        ///    (wid,hei) to build a set of polygons such that f(x,y) less than 0, using the given number
-        ///    'bin' for recursive linear inteprolation along cell boundaries.
-        ///
-        ///    if 'comb' is true, then the polygons will also be composited into larger possible concave
-        ///    polygons.
+        /// (wid,hei) to build a set of polygons such that f(x,y) less than 0, using the given number
+        /// 'bin' for recursive linear inteprolation along cell boundaries.
+        /// if 'comb' is true, then the polygons will also be composited into larger possible concave
+        /// polygons.
         /// </summary>
         /// <param name="domain"></param>
         /// <param name="cellWidth"></param>
@@ -63,8 +62,10 @@ namespace VelcroPhysics.Common.TextureTools
             bool xp = xn == (domain.Extents.X * 2 / cellWidth);
             int yn = (int)(domain.Extents.Y * 2 / cellHeight);
             bool yp = yn == (domain.Extents.Y * 2 / cellHeight);
-            if (!xp) xn++;
-            if (!yp) yn++;
+            if (!xp)
+                xn++;
+            if (!yp)
+                yn++;
 
             sbyte[,] fs = new sbyte[xn + 1, yn + 1];
             GeomPolyVal[,] ps = new GeomPolyVal[xn + 1, yn + 1];
@@ -73,13 +74,17 @@ namespace VelcroPhysics.Common.TextureTools
             for (int x = 0; x < xn + 1; x++)
             {
                 int x0;
-                if (x == xn) x0 = (int)domain.UpperBound.X;
-                else x0 = (int)(x * cellWidth + domain.LowerBound.X);
+                if (x == xn)
+                    x0 = (int)domain.UpperBound.X;
+                else
+                    x0 = (int)(x * cellWidth + domain.LowerBound.X);
                 for (int y = 0; y < yn + 1; y++)
                 {
                     int y0;
-                    if (y == yn) y0 = (int)domain.UpperBound.Y;
-                    else y0 = (int)(y * cellHeight + domain.LowerBound.Y);
+                    if (y == yn)
+                        y0 = (int)domain.UpperBound.Y;
+                    else
+                        y0 = (int)(y * cellHeight + domain.LowerBound.Y);
                     fs[x, y] = f[x0, y0];
                 }
             }
@@ -89,15 +94,19 @@ namespace VelcroPhysics.Common.TextureTools
             {
                 float y0 = y * cellHeight + domain.LowerBound.Y;
                 float y1;
-                if (y == yn - 1) y1 = domain.UpperBound.Y;
-                else y1 = y0 + cellHeight;
+                if (y == yn - 1)
+                    y1 = domain.UpperBound.Y;
+                else
+                    y1 = y0 + cellHeight;
                 GeomPoly pre = null;
                 for (int x = 0; x < xn; x++)
                 {
                     float x0 = x * cellWidth + domain.LowerBound.X;
                     float x1;
-                    if (x == xn - 1) x1 = domain.UpperBound.X;
-                    else x1 = x0 + cellWidth;
+                    if (x == xn - 1)
+                        x1 = domain.UpperBound.X;
+                    else
+                        x1 = x0 + cellWidth;
 
                     gp = new GeomPoly();
 
@@ -182,7 +191,8 @@ namespace VelcroPhysics.Common.TextureTools
 
                     //combine above (but disallow the hole thingies
                     CxFastListNode<Vector2> bi = bp.Begin();
-                    while (Square(bi.Elem().Y - ay) > Settings.Epsilon || bi.Elem().X < ax) bi = bi.Next();
+                    while (Square(bi.Elem().Y - ay) > Settings.Epsilon || bi.Elem().X < ax)
+                        bi = bi.Next();
 
                     //NOTE: Unused
                     //Vector2 b0 = bi.elem();
@@ -211,14 +221,17 @@ namespace VelcroPhysics.Common.TextureTools
                     }
 
                     CxFastListNode<Vector2> bj = bi.Next().Next();
-                    if (bj == bp.End()) bj = bp.Begin();
+                    if (bj == bp.End())
+                        bj = bp.Begin();
                     while (bj != bi)
                     {
                         ai = ap.Insert(ai, bj.Elem()); // .clone()
                         bj = bj.Next();
-                        if (bj == bp.End()) bj = bp.Begin();
+                        if (bj == bp.End())
+                            bj = bp.Begin();
                         u.GeomP.Length++;
                     }
+
                     //u.p.simplify(float.Epsilon,float.Epsilon);
                     //
                     ax = x + 1;
@@ -249,6 +262,7 @@ namespace VelcroPhysics.Common.TextureTools
                     p.GeomP = u.GeomP;
 
                     x = (int)((bi.Next().Elem().X - domain.LowerBound.X) / cellWidth) + 1;
+
                     //x++; this was already commented out!
                 }
             }
@@ -271,10 +285,11 @@ namespace VelcroPhysics.Common.TextureTools
             such as to approximate value(return) = 0
         **/
 
-        private static int[] _lookMarch = {
-                                              0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D,
-                                              0x6D, 0xB5, 0x55
-                                          };
+        private static int[] _lookMarch =
+        {
+            0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D,
+            0x6D, 0xB5, 0x55
+        };
 
         private static float Lerp(float x0, float x1, float v0, float v1)
         {
@@ -282,7 +297,8 @@ namespace VelcroPhysics.Common.TextureTools
             float t;
             if (dv * dv < Settings.Epsilon)
                 t = 0.5f;
-            else t = v0 / dv;
+            else
+                t = v0 / dv;
             return x0 + t * (x1 - x0);
         }
 
@@ -354,13 +370,17 @@ namespace VelcroPhysics.Common.TextureTools
             //key lookup
             int key = 0;
             sbyte v0 = fs[ax, ay];
-            if (v0 < 0) key |= 8;
+            if (v0 < 0)
+                key |= 8;
             sbyte v1 = fs[ax + 1, ay];
-            if (v1 < 0) key |= 4;
+            if (v1 < 0)
+                key |= 4;
             sbyte v2 = fs[ax + 1, ay + 1];
-            if (v2 < 0) key |= 2;
+            if (v2 < 0)
+                key |= 2;
             sbyte v3 = fs[ax, ay + 1];
-            if (v3 < 0) key |= 1;
+            if (v3 < 0)
+                key |= 1;
 
             int val = _lookMarch[key];
             if (val != 0)
@@ -375,22 +395,31 @@ namespace VelcroPhysics.Common.TextureTools
                             poly.Points.Add(p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin)));
                         else
                         {
-                            if (i == 0) p = new Vector2(x0, y0);
-                            else if (i == 2) p = new Vector2(x1, y0);
-                            else if (i == 4) p = new Vector2(x1, y1);
-                            else if (i == 6) p = new Vector2(x0, y1);
+                            if (i == 0)
+                                p = new Vector2(x0, y0);
+                            else if (i == 2)
+                                p = new Vector2(x1, y0);
+                            else if (i == 4)
+                                p = new Vector2(x1, y1);
+                            else if (i == 6)
+                                p = new Vector2(x0, y1);
 
-                            else if (i == 1) p = new Vector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
-                            else if (i == 5) p = new Vector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
+                            else if (i == 1)
+                                p = new Vector2(Xlerp(x0, x1, y0, v0, v1, f, bin), y0);
+                            else if (i == 5)
+                                p = new Vector2(Xlerp(x0, x1, y1, v3, v2, f, bin), y1);
 
-                            else if (i == 3) p = new Vector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
-                            else p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
+                            else if (i == 3)
+                                p = new Vector2(x1, Ylerp(y0, y1, x1, v1, v2, f, bin));
+                            else
+                                p = new Vector2(x0, Ylerp(y0, y1, x0, v0, v3, f, bin));
 
                             pi = poly.Points.Insert(pi, p);
                         }
                         poly.Length++;
                     }
                 }
+
                 //poly.simplify(float.Epsilon,float.Epsilon);
             }
             return key;
@@ -421,8 +450,10 @@ namespace VelcroPhysics.Common.TextureTools
                         b = bi.Next().Elem();
 
                         Vector2 u = a - a0;
+
                         //vec_new(u); vec_sub(a.p.p, a0.p.p, u);
                         Vector2 v = b - a;
+
                         //vec_new(v); vec_sub(b.p.p, a.p.p, v);
                         float dot = VecCross(u, v);
                         if (dot * dot < Settings.Epsilon)
@@ -453,12 +484,15 @@ namespace VelcroPhysics.Common.TextureTools
                     ai = ai.Next();
                     Vector2 a1 = ai.Elem();
                     ai = ai.Next();
-                    if (ai == ap.End()) ai = ap.Begin();
+                    if (ai == ap.End())
+                        ai = ap.Begin();
                     Vector2 a2 = ai.Elem();
                     Vector2 a00 = preb.Elem();
                     Vector2 uu = a1 - a00;
+
                     //vec_new(u); vec_sub(a1.p, a0.p, u);
                     Vector2 vv = a2 - a1;
+
                     //vec_new(v); vec_sub(a2.p, a1.p, v);
                     float dot1 = VecCross(uu, vv);
                     if (dot1 * dot1 < Settings.Epsilon)
@@ -485,9 +519,10 @@ namespace VelcroPhysics.Common.TextureTools
         /// </summary>
         internal class CxFastList<T>
         {
+            private int _count;
+
             // first node in the list
             private CxFastListNode<T> _head;
-            private int _count;
 
             /// <summary>
             /// Iterator to start of list (O(1))
@@ -569,6 +604,7 @@ namespace VelcroPhysics.Common.TextureTools
                                     return true;
                                 }
                             }
+
                             // cache the current as the previous for the next go around
                             prev = head;
                             head = head._next;
@@ -579,10 +615,10 @@ namespace VelcroPhysics.Common.TextureTools
             }
 
             /// <summary>
-            /// pop element from head of list (O(1)) Note: this does not return the object popped! 
-            /// There is good reason to this, and it regards the Alloc list variants which guarantee 
-            /// objects are released to the object pool. You do not want to retrieve an element 
-            /// through pop or else that object may suddenly be used by another piece of code which 
+            /// pop element from head of list (O(1)) Note: this does not return the object popped!
+            /// There is good reason to this, and it regards the Alloc list variants which guarantee
+            /// objects are released to the object pool. You do not want to retrieve an element
+            /// through pop or else that object may suddenly be used by another piece of code which
             /// retrieves it from the object pool.
             /// </summary>
             public CxFastListNode<T> Pop()
@@ -610,7 +646,7 @@ namespace VelcroPhysics.Common.TextureTools
             }
 
             /// <summary>
-            /// removes the element pointed to by 'node' with 'prev' being the previous iterator, 
+            /// removes the element pointed to by 'node' with 'prev' being the previous iterator,
             /// returning an iterator to the element following that of 'node' (O(1))
             /// </summary>
             public CxFastListNode<T> Erase(CxFastListNode<T> prev, CxFastListNode<T> node)
@@ -781,10 +817,11 @@ namespace VelcroPhysics.Common.TextureTools
 
         private class GeomPolyVal
         {
+            public GeomPoly GeomP;
+
             /** Associated polygon at coordinate **/
             /** Key of original sub-polygon **/
             public int Key;
-            public GeomPoly GeomP;
 
             public GeomPolyVal(GeomPoly geomP, int K)
             {

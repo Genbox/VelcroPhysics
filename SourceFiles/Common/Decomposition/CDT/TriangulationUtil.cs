@@ -40,7 +40,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT
         public static double EPSILON = 1e-12;
 
         /// <summary>
-        ///   Requirements:
+        /// Requirements:
         /// 1. a,b and c form a triangle.
         /// 2. a and d is know to be on opposite side of bc
         /// <code>
@@ -53,10 +53,10 @@ namespace VelcroPhysics.Common.Decomposition.CDT
         ///           /    B    \  
         ///          /           \ 
         /// </code>
-        ///    Facts:
-        ///  d has to be in area B to have a chance to be inside the circle formed by a,b and c
-        ///  d is outside B if orient2d(a,b,d) or orient2d(c,a,d) is CW
-        ///  This preknowledge gives us a way to optimize the incircle test
+        /// Facts:
+        /// d has to be in area B to have a chance to be inside the circle formed by a,b and c
+        /// d is outside B if orient2d(a,b,d) or orient2d(c,a,d) is CW
+        /// This preknowledge gives us a way to optimize the incircle test
         /// </summary>
         /// <param name="pa">triangle point, opposite d</param>
         /// <param name="pb">triangle point</param>
@@ -76,8 +76,10 @@ namespace VelcroPhysics.Common.Decomposition.CDT
             double adxbdy = adx * bdy;
             double bdxady = bdx * ady;
             double oabd = adxbdy - bdxady;
+
             //        oabd = orient2d(pa,pb,pd);
-            if (oabd <= 0) return false;
+            if (oabd <= 0)
+                return false;
 
             double cdx = pc.X - pdx;
             double cdy = pc.Y - pdy;
@@ -85,8 +87,10 @@ namespace VelcroPhysics.Common.Decomposition.CDT
             double cdxady = cdx * ady;
             double adxcdy = adx * cdy;
             double ocad = cdxady - adxcdy;
+
             //      ocad = orient2d(pc,pa,pd);
-            if (ocad <= 0) return false;
+            if (ocad <= 0)
+                return false;
 
             double bdxcdy = bdx * cdy;
             double cdxbdy = cdx * bdy;
@@ -155,7 +159,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT
         /// Negative if CW
         /// 0 if collinear
         /// A[P1,P2,P3]  =  (x1*y2 - y1*x2) + (x2*y3 - y2*x3) + (x3*y1 - y3*x1)
-        ///              =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
+        /// =  (x1-x3)*(y2-y3) - (y1-y3)*(x2-x3)
         public static Orientation Orient2d(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc)
         {
             double detleft = (pa.X - pc.X) * (pb.Y - pc.Y);

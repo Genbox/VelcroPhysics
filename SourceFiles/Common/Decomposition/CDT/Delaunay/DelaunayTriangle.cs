@@ -55,6 +55,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         /** Flags to determine if an edge is a Constrained edge */
         public FixedBitArray3 EdgeIsDelaunay;
+
         public Util.FixedArray3<DelaunayTriangle> Neighbors;
 
         /** Has this triangle been marked as an interior triangle? */
@@ -73,7 +74,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
         public int IndexOf(TriangulationPoint p)
         {
             int i = Points.IndexOf(p);
-            if (i == -1) throw new Exception("Calling index with a point that doesn't exist in triangle");
+            if (i == -1)
+                throw new Exception("Calling index with a point that doesn't exist in triangle");
             return i;
         }
 
@@ -145,6 +147,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
             else
             {
                 Debug.WriteLine("Neighbor error, please report!");
+
                 // throw new Exception("Neighbor error, please report!");
             }
         }
@@ -225,12 +228,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public DelaunayTriangle NeighborCW(TriangulationPoint point)
         {
-            return Neighbors[(Points.IndexOf(point) + 1)%3];
+            return Neighbors[(Points.IndexOf(point) + 1) % 3];
         }
 
         public DelaunayTriangle NeighborCCW(TriangulationPoint point)
         {
-            return Neighbors[(Points.IndexOf(point) + 2)%3];
+            return Neighbors[(Points.IndexOf(point) + 2) % 3];
         }
 
         public DelaunayTriangle NeighborAcross(TriangulationPoint point)
@@ -240,12 +243,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public TriangulationPoint PointCCW(TriangulationPoint point)
         {
-            return Points[(IndexOf(point) + 1)%3];
+            return Points[(IndexOf(point) + 1) % 3];
         }
 
         public TriangulationPoint PointCW(TriangulationPoint point)
         {
-            return Points[(IndexOf(point) + 2)%3];
+            return Points[(IndexOf(point) + 2) % 3];
         }
 
         private void RotateCW()
@@ -280,7 +283,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
             for (int i = 0; i < 3; i++)
                 if (EdgeIsConstrained[i] && Neighbors[i] != null)
                 {
-                    Neighbors[i].MarkConstrainedEdge(Points[(i + 1)%3], Points[(i + 2)%3]);
+                    Neighbors[i].MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
                 }
         }
 
@@ -289,7 +292,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
             for (int i = 0; i < 3; i++)
                 if (EdgeIsConstrained[i])
                 {
-                    triangle.MarkConstrainedEdge(Points[(i + 1)%3], Points[(i + 2)%3]);
+                    triangle.MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
                 }
         }
 
@@ -299,7 +302,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
                 for (int i = 0; i < 3; i++)
                     if (t.EdgeIsConstrained[i])
                     {
-                        MarkConstrainedEdge(t.Points[(i + 1)%3], t.Points[(i + 2)%3]);
+                        MarkConstrainedEdge(t.Points[(i + 1) % 3], t.Points[(i + 2) % 3]);
                     }
         }
 
@@ -319,7 +322,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
         public void MarkConstrainedEdge(TriangulationPoint p, TriangulationPoint q)
         {
             int i = EdgeIndex(p, q);
-            if (i != -1) EdgeIsConstrained[i] = true;
+            if (i != -1)
+                EdgeIsConstrained[i] = true;
         }
 
         public double Area()
@@ -327,13 +331,13 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
             double b = Points[0].X - Points[1].X;
             double h = Points[2].Y - Points[1].Y;
 
-            return Math.Abs((b*h*0.5f));
+            return Math.Abs((b * h * 0.5f));
         }
 
         public TriangulationPoint Centroid()
         {
-            double cx = (Points[0].X + Points[1].X + Points[2].X)/3f;
-            double cy = (Points[0].Y + Points[1].Y + Points[2].Y)/3f;
+            double cx = (Points[0].X + Points[1].X + Points[2].X) / 3f;
+            double cy = (Points[0].Y + Points[1].Y + Points[2].Y) / 3f;
             return new TriangulationPoint(cx, cy);
         }
 
@@ -359,12 +363,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public bool GetConstrainedEdgeCCW(TriangulationPoint p)
         {
-            return EdgeIsConstrained[(IndexOf(p) + 2)%3];
+            return EdgeIsConstrained[(IndexOf(p) + 2) % 3];
         }
 
         public bool GetConstrainedEdgeCW(TriangulationPoint p)
         {
-            return EdgeIsConstrained[(IndexOf(p) + 1)%3];
+            return EdgeIsConstrained[(IndexOf(p) + 1) % 3];
         }
 
         public bool GetConstrainedEdgeAcross(TriangulationPoint p)
@@ -374,12 +378,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public void SetConstrainedEdgeCCW(TriangulationPoint p, bool ce)
         {
-            EdgeIsConstrained[(IndexOf(p) + 2)%3] = ce;
+            EdgeIsConstrained[(IndexOf(p) + 2) % 3] = ce;
         }
 
         public void SetConstrainedEdgeCW(TriangulationPoint p, bool ce)
         {
-            EdgeIsConstrained[(IndexOf(p) + 1)%3] = ce;
+            EdgeIsConstrained[(IndexOf(p) + 1) % 3] = ce;
         }
 
         public void SetConstrainedEdgeAcross(TriangulationPoint p, bool ce)
@@ -389,12 +393,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public bool GetDelaunayEdgeCCW(TriangulationPoint p)
         {
-            return EdgeIsDelaunay[(IndexOf(p) + 2)%3];
+            return EdgeIsDelaunay[(IndexOf(p) + 2) % 3];
         }
 
         public bool GetDelaunayEdgeCW(TriangulationPoint p)
         {
-            return EdgeIsDelaunay[(IndexOf(p) + 1)%3];
+            return EdgeIsDelaunay[(IndexOf(p) + 1) % 3];
         }
 
         public bool GetDelaunayEdgeAcross(TriangulationPoint p)
@@ -404,12 +408,12 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
 
         public void SetDelaunayEdgeCCW(TriangulationPoint p, bool ce)
         {
-            EdgeIsDelaunay[(IndexOf(p) + 2)%3] = ce;
+            EdgeIsDelaunay[(IndexOf(p) + 2) % 3] = ce;
         }
 
         public void SetDelaunayEdgeCW(TriangulationPoint p, bool ce)
         {
-            EdgeIsDelaunay[(IndexOf(p) + 1)%3] = ce;
+            EdgeIsDelaunay[(IndexOf(p) + 1) % 3] = ce;
         }
 
         public void SetDelaunayEdgeAcross(TriangulationPoint p, bool ce)

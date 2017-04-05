@@ -45,24 +45,25 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class FixedMouseJoint : Joint
     {
-        private Vector2 _worldAnchor;
-        private float _frequency;
-        private float _dampingRatio;
         private float _beta;
+        private Vector2 _C;
+        private float _dampingRatio;
+        private float _frequency;
+        private float _gamma;
 
         // Solver shared
         private Vector2 _impulse;
-        private float _maxForce;
-        private float _gamma;
 
         // Solver temp
         private int _indexA;
-        private Vector2 _rA;
-        private Vector2 _localCenterA;
-        private float _invMassA;
+
         private float _invIA;
+        private float _invMassA;
+        private Vector2 _localCenterA;
         private Mat22 _mass;
-        private Vector2 _C;
+        private float _maxForce;
+        private Vector2 _rA;
+        private Vector2 _worldAnchor;
 
         /// <summary>
         /// This requires a world target point,
@@ -196,6 +197,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             // Compute the effective mass matrix.
             _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
             //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
             //        [    0     1/m1+1/m2]           [-r1.X*r1.Y r1.X*r1.X]           [-r1.X*r1.Y r1.X*r1.X]

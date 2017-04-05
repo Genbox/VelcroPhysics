@@ -42,7 +42,6 @@ namespace VelcroPhysics.Common.PolygonManipulation
         /// <summary>
         /// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
         /// speed-up technique by using the Melkman convex hull.
-        /// 
         /// If you pass in 0, it will remove all collinear points.
         /// </summary>
         /// <returns>The simplified polygon</returns>
@@ -254,7 +253,6 @@ namespace VelcroPhysics.Common.PolygonManipulation
 
         /// <summary>
         /// Simplify the polygon by removing all points that in pairs of 3 have an area less than the tolerance.
-        /// 
         /// Pass in 0 as tolerance, and it will only remove collinear points.
         /// </summary>
         /// <param name="vertices"></param>

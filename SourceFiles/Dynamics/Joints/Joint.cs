@@ -34,6 +34,7 @@ namespace VelcroPhysics.Dynamics.Joints
         Prismatic,
         Distance,
         Pulley,
+
         //Mouse, <- We have fixed mouse
         Gear,
         Wheel,
@@ -96,14 +97,15 @@ namespace VelcroPhysics.Dynamics.Joints
         private float _breakpoint;
         private double _breakpointSquared;
 
+        internal JointEdge EdgeA = new JointEdge();
+        internal JointEdge EdgeB = new JointEdge();
+
         /// <summary>
         /// Indicate if this join is enabled or not. Disabling a joint
         /// means it is still in the simulation, but inactive.
         /// </summary>
         public bool Enabled = true;
 
-        internal JointEdge EdgeA = new JointEdge();
-        internal JointEdge EdgeB = new JointEdge();
         internal bool IslandFlag;
 
         protected Joint()

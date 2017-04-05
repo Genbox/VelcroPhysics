@@ -27,12 +27,10 @@ namespace VelcroPhysics.Common.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm using ear clipping
-    /// 
     /// Properties:
     /// - Only works on simple polygons.
     /// - Does not support holes.
     /// - Running time is O(n^2), n = number of vertices.
-    /// 
     /// Source: http://www.ewjordan.com/earClip/
     /// </summary>
     internal static class EarclipDecomposer
@@ -61,10 +59,8 @@ namespace VelcroPhysics.Common.Decomposition
         /// caller's responsibility to check for self-intersection, and if it
         /// doesn't, it should at least check that the return value is non-null
         /// before using. You're warned!
-        ///
         /// Triangles may be degenerate, especially if you have identical points
         /// in the input to the algorithm.  Check this before you use them.
-        ///
         /// This is totally unoptimized, so for large polygons it should not be part
         /// of the simulation loop.
         /// </summary>
@@ -177,7 +173,8 @@ namespace VelcroPhysics.Common.Decomposition
                 int currDest = 0;
                 for (int i = 0; i < vNum; ++i)
                 {
-                    if (currDest == earIndex) ++currDest;
+                    if (currDest == earIndex)
+                        ++currDest;
                     newx[i] = xrem[currDest];
                     newy[i] = yrem[currDest];
                     ++currDest;
@@ -187,7 +184,7 @@ namespace VelcroPhysics.Common.Decomposition
                 int under = (earIndex == 0) ? (vNum) : (earIndex - 1);
                 int over = (earIndex == vNum) ? 0 : (earIndex + 1);
                 Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under],
-                                              yrem[under]);
+                    yrem[under]);
                 buffer[bufferSize] = toAdd;
                 ++bufferSize;
 
@@ -211,12 +208,9 @@ namespace VelcroPhysics.Common.Decomposition
         /// <summary>
         /// Finds and fixes "pinch points," points where two polygon
         /// vertices are at the same point.
-        /// 
         /// If a pinch point is found, pin is broken up into poutA and poutB
         /// and true is returned; otherwise, returns false.
-        /// 
         /// Mostly for internal use.
-        /// 
         /// O(N^2) time, which sucks...
         /// </summary>
         /// <param name="pin">The pin.</param>
@@ -248,12 +242,14 @@ namespace VelcroPhysics.Common.Decomposition
                         break;
                     }
                 }
-                if (hasPinchPoint) break;
+                if (hasPinchPoint)
+                    break;
             }
             if (hasPinchPoint)
             {
                 int sizeA = pinchIndexB - pinchIndexA;
-                if (sizeA == pin.Count) return false; //has dupe points at wraparound, not a problem here
+                if (sizeA == pin.Count)
+                    return false; //has dupe points at wraparound, not a problem here
                 for (int i = 0; i < sizeA; ++i)
                 {
                     int ind = Remainder(pinchIndexA + i, pin.Count); // is this right
@@ -297,7 +293,7 @@ namespace VelcroPhysics.Common.Decomposition
         /// Assumes clockwise orientation of polygon.
         /// </remarks>
         /// <returns>
-        /// 	<c>true</c> if the specified i is ear; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified i is ear; otherwise, <c>false</c>.
         /// </returns>
         private static bool IsEar(int i, float[] xv, float[] yv, int xvLength)
         {

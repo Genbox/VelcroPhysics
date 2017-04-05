@@ -120,15 +120,9 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
+        internal float _2radius;
         internal float _density;
         internal float _radius;
-        internal float _2radius;
-
-        protected Shape(float density)
-        {
-            _density = density;
-            ShapeType = ShapeType.Unknown;
-        }
 
         /// <summary>
         /// Contains the properties of the shape such as:
@@ -138,6 +132,12 @@ namespace VelcroPhysics.Collision.Shapes
         /// - Mass
         /// </summary>
         public MassData MassData;
+
+        protected Shape(float density)
+        {
+            _density = density;
+            ShapeType = ShapeType.Unknown;
+        }
 
         /// <summary>
         /// Get the type of this shape.

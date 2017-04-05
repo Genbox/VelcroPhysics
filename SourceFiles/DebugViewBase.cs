@@ -32,7 +32,6 @@ namespace VelcroPhysics
         /// Draw broad-phase pairs.
         /// </summary>
         //Pair = (1 << 3),
-
         /// <summary>
         /// Draw center of mass frame.
         /// </summary>

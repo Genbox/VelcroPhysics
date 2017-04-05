@@ -36,33 +36,34 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class RevoluteJoint : Joint
     {
-        // Solver shared
-        private Vector3 _impulse;
-        private float _motorImpulse;
+        private bool _enableLimit;
 
         private bool _enableMotor;
-        private float _maxMotorTorque;
-        private float _motorSpeed;
 
-        private bool _enableLimit;
-        private float _referenceAngle;
-        private float _lowerAngle;
-        private float _upperAngle;
+        // Solver shared
+        private Vector3 _impulse;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
-        private Mat33 _mass;			// effective mass for point-to-point constraint.
-        private float _motorMass;	    // effective mass for motor/limit angular constraint.
+        private float _invMassA;
+        private float _invMassB;
         private LimitState _limitState;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _lowerAngle;
+        private Mat33 _mass; // effective mass for point-to-point constraint.
+        private float _maxMotorTorque;
+        private float _motorImpulse;
+        private float _motorMass; // effective mass for motor/limit angular constraint.
+        private float _motorSpeed;
+        private Vector2 _rA;
+        private Vector2 _rB;
+        private float _referenceAngle;
+        private float _upperAngle;
 
         internal RevoluteJoint()
         {
@@ -70,7 +71,7 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Constructor of RevoluteJoint. 
+        /// Constructor of RevoluteJoint.
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
@@ -100,16 +101,14 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Constructor of RevoluteJoint. 
+        /// Constructor of RevoluteJoint.
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchor">The shared anchor.</param>
         /// <param name="useWorldCoordinates"></param>
         public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
-            : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates)
-        {
-        }
+            : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates) { }
 
         /// <summary>
         /// The local anchor point on BodyA
@@ -215,22 +214,6 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// Set the joint limits, usually in meters.
-        /// </summary>
-        /// <param name="lower">The lower limit</param>
-        /// <param name="upper">The upper limit</param>
-        public void SetLimits(float lower, float upper)
-        {
-            if (lower != _lowerAngle || upper != _upperAngle)
-            {
-                WakeBodies();
-                _upperAngle = upper;
-                _lowerAngle = lower;
-                _impulse.Z = 0.0f;
-            }
-        }
-
-        /// <summary>
         /// Is the joint motor enabled?
         /// </summary>
         /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
@@ -280,6 +263,22 @@ namespace VelcroPhysics.Dynamics.Joints
             {
                 WakeBodies();
                 _motorImpulse = value;
+            }
+        }
+
+        /// <summary>
+        /// Set the joint limits, usually in meters.
+        /// </summary>
+        /// <param name="lower">The lower limit</param>
+        /// <param name="upper">The upper limit</param>
+        public void SetLimits(float lower, float upper)
+        {
+            if (lower != _lowerAngle || upper != _upperAngle)
+            {
+                WakeBodies();
+                _upperAngle = upper;
+                _lowerAngle = lower;
+                _impulse.Z = 0.0f;
             }
         }
 

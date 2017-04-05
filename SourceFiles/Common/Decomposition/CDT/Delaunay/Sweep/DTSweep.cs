@@ -103,7 +103,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         }
 
         /// <summary>
-        /// If this is a Delaunay Triangulation of a pointset we need to fill so the triangle mesh gets a ConvexHull 
+        /// If this is a Delaunay Triangulation of a pointset we need to fill so the triangle mesh gets a ConvexHull
         /// </summary>
         private static void FinalizationConvexHull(DTSweepContext tcx)
         {
@@ -150,7 +150,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
             {
                 tcx.RemoveFromList(t1);
                 p1 = t1.PointCCW(p1);
-                if (p1 == first) break;
+                if (p1 == first)
+                    break;
                 t2 = t1.NeighborCCW(p1);
                 t1.Clear();
                 t1 = t2;
@@ -374,6 +375,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 {
                     // Convex
                     FillRightConvexEdgeEvent(tcx, edge, node);
+
                     // Retry this one
                     FillRightBelowEdgeEvent(tcx, edge, node);
                 }
@@ -457,6 +459,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 {
                     // Convex
                     FillLeftConvexEdgeEvent(tcx, edge, node);
+
                     // Retry this one
                     FillLeftBelowEdgeEvent(tcx, edge, node);
                 }
@@ -508,6 +511,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 if (triangle.Contains(eq, p1))
                 {
                     triangle.MarkConstrainedEdge(eq, p1);
+
                     // We are modifying the constraint maybe it would be better to 
                     // not change the given constraint and just keep a variable for the new constraint
                     tcx.EdgeEvent.ConstrainedEdge.Q = p1;
@@ -532,6 +536,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 if (triangle.Contains(eq, p2))
                 {
                     triangle.MarkConstrainedEdge(eq, p2);
+
                     // We are modifying the constraint maybe it would be better to 
                     // not change the given constraint and just keep a variable for the new constraint
                     tcx.EdgeEvent.ConstrainedEdge.Q = p2;
@@ -600,7 +605,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     if (eq == tcx.EdgeEvent.ConstrainedEdge.Q
                         && ep == tcx.EdgeEvent.ConstrainedEdge.P)
                     {
-                        if (tcx.IsDebugEnabled) Console.WriteLine("[FLIP] - constrained edge done"); // TODO: remove
+                        if (tcx.IsDebugEnabled)
+                            Console.WriteLine("[FLIP] - constrained edge done"); // TODO: remove
                         t.MarkConstrainedEdge(ep, eq);
                         ot.MarkConstrainedEdge(ep, eq);
                         Legalize(tcx, t);
@@ -608,7 +614,9 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     }
                     else
                     {
-                        if (tcx.IsDebugEnabled) Console.WriteLine("[FLIP] - subedge done"); // TODO: remove
+                        if (tcx.IsDebugEnabled)
+                            Console.WriteLine("[FLIP] - subedge done"); // TODO: remove
+
                         // XXX: I think one of the triangles should be legalized here?
                     }
                 }
@@ -616,6 +624,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 {
                     if (tcx.IsDebugEnabled)
                         Console.WriteLine("[FLIP] - flipping and continuing with triangle still crossing edge");
+
                     // TODO: remove
                     Orientation o = TriangulationUtil.Orient2d(eq, op, ep);
                     t = NextFlipTriangle(tcx, o, t, ot, p, op);
@@ -631,9 +640,9 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         }
 
         /// <summary>
-        /// When we need to traverse from one triangle to the next we need 
+        /// When we need to traverse from one triangle to the next we need
         /// the point in current triangle that is the opposite point to the next
-        /// triangle. 
+        /// triangle.
         /// </summary>
         private static TriangulationPoint NextFlipPoint(TriangulationPoint ep, TriangulationPoint eq, DelaunayTriangle ot, TriangulationPoint op)
         {
@@ -678,6 +687,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                 ot.EdgeIsDelaunay.Clear();
                 return t;
             }
+
             // t is not crossing edge after flip
             edgeIndex = t.EdgeIndex(p, op);
             t.EdgeIsDelaunay[edgeIndex] = true;
@@ -687,9 +697,9 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         }
 
         /// <summary>
-        /// Scan part of the FlipScan algorithm<br>
-        /// When a triangle pair isn't flippable we will scan for the next 
-        /// point that is inside the flip triangle scan area. When found 
+        /// Scan part of the FlipScan algorithm
+        /// When a triangle pair isn't flippable we will scan for the next
+        /// point that is inside the flip triangle scan area. When found
         /// we generate a new flipEdgeEvent
         /// </summary>
         /// <param name="tcx"></param>
@@ -715,6 +725,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
             {
                 // flip with new edge op->eq
                 FlipEdgeEvent(tcx, eq, op, ot, op);
+
                 // TODO: Actually I just figured out that it should be possible to 
                 //       improve this by getting the next ot and op before the the above 
                 //       flip and continue the flipScanEdgeEvent here
@@ -787,11 +798,13 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 
             // Check additional points on front.
             AdvancingFrontNode next2Node = nextNode.Next;
+
             // "..Plus.." because only want angles on same side as point being added.
             if ((next2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, next2Node.Point, prevNode.Point))
                 return false;
 
             AdvancingFrontNode prev2Node = prevNode.Prev;
+
             // "..Plus.." because only want angles on same side as point being added.
             if ((prev2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, nextNode.Point, prev2Node.Point))
                 return false;
@@ -838,7 +851,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         /// <summary>
         /// Fills a basin that has formed on the Advancing Front to the right
         /// of given node.
-        /// First we decide a left,bottom and right node that forms the 
+        /// First we decide a left,bottom and right node that forms the
         /// boundaries of the basin. Then we do a reqursive fill.
         /// </summary>
         /// <param name="tcx"></param>
@@ -998,6 +1011,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         private static void Fill(DTSweepContext tcx, AdvancingFrontNode node)
         {
             DelaunayTriangle triangle = new DelaunayTriangle(node.Prev.Point, node.Point, node.Next.Point);
+
             // TODO: should copy the cEdge value from neighbor triangles
             //       for now cEdge values are copied during the legalize 
             triangle.MarkNeighbor(node.Prev.Triangle);
@@ -1038,11 +1052,13 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     TriangulationPoint p = t.Points[i];
                     TriangulationPoint op = ot.OppositePoint(t, p);
                     int oi = ot.IndexOf(op);
+
                     // If this is a Constrained Edge or a Delaunay Edge(only during recursive legalization)
                     // then we should not try to legalize
                     if (ot.EdgeIsConstrained[oi] || ot.EdgeIsDelaunay[oi])
                     {
                         t.EdgeIsConstrained[i] = ot.EdgeIsConstrained[oi];
+
                         // XXX: have no good way of setting this property when creating new triangles so lets set it here
                         continue;
                     }
@@ -1092,15 +1108,15 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 
         /// <summary>
         /// Rotates a triangle pair one vertex CW
-        ///       n2                    n2
-        ///  P +-----+             P +-----+
-        ///    | t  /|               |\  t |  
-        ///    |   / |               | \   |
-        ///  n1|  /  |n3           n1|  \  |n3
-        ///    | /   |    after CW   |   \ |
-        ///    |/ oT |               | oT \|
-        ///    +-----+ oP            +-----+
-        ///       n4                    n4
+        /// n2                    n2
+        /// P +-----+             P +-----+
+        /// | t  /|               |\  t |
+        /// |   / |               | \   |
+        /// n1|  /  |n3           n1|  \  |n3
+        /// | /   |    after CW   |   \ |
+        /// |/ oT |               | oT \|
+        /// +-----+ oP            +-----+
+        /// n4                    n4
         /// </summary>
         private static void RotateTrianglePair(DelaunayTriangle t, TriangulationPoint p, DelaunayTriangle ot, TriangulationPoint op)
         {

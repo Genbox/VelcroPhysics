@@ -44,7 +44,6 @@ namespace VelcroPhysics.Dynamics.Joints
     /// The pulley supports a ratio such that:
     /// <![CDATA[length1 + ratio * length2 <= constant]]>
     /// Yes, the force transmitted is scaled by the ratio.
-    /// 
     /// Warning: the pulley joint can get a bit squirrelly by itself. They often
     /// work better when combined with prismatic joints. You should also cover the
     /// the anchor points with static shapes to prevent one side from going to zero length.
@@ -56,18 +55,19 @@ namespace VelcroPhysics.Dynamics.Joints
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _uA;
-        private Vector2 _uB;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
         private float _mass;
+        private Vector2 _rA;
+        private Vector2 _rB;
+        private Vector2 _uA;
+        private Vector2 _uB;
 
         internal PulleyJoint()
         {

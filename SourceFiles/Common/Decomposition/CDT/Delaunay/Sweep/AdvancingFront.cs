@@ -84,7 +84,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
 
         /// <summary>
         /// MM:  This seems to be used by LocateNode to guess a position in the implicit linked list of AdvancingFrontNodes near x
-        ///      Removed an overload that depended on this being exact
+        /// Removed an overload that depended on this being exact
         /// </summary>
         private AdvancingFrontNode FindSearchNode(double x)
         {
@@ -149,6 +149,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     else
                     {
                         throw new Exception("Failed to find Node for given afront point");
+
                         //node = null;
                     }
                 }

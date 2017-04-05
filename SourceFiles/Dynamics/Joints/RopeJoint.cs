@@ -38,7 +38,6 @@ namespace VelcroPhysics.Dynamics.Joints
     /// A rope joint enforces a maximum distance between two points on two bodies. It has no other effect.
     /// It can be used on ropes that are made up of several connected bodies, and if there is a need to support a heavy body.
     /// This joint is used for stabiliation of heavy objects on soft constraint joints.
-    /// 
     /// Warning: if you attempt to change the maximum length during the simulation you will get some non-physical behavior.
     /// Use the DistanceJoint instead if you want to dynamically control the length.
     /// </summary>
@@ -46,17 +45,18 @@ namespace VelcroPhysics.Dynamics.Joints
     {
         // Solver shared
         private float _impulse;
-        private float _length;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _length;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
         private float _mass;
         private Vector2 _rA, _rB;
         private Vector2 _u;
@@ -267,7 +267,8 @@ namespace VelcroPhysics.Dynamics.Joints
             Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
             Vector2 u = cB + rB - cA - rA;
 
-            float length = u.Length(); u.Normalize();
+            float length = u.Length();
+            u.Normalize();
             float C = length - MaxLength;
 
             C = MathUtils.Clamp(C, 0.0f, Settings.MaxLinearCorrection);

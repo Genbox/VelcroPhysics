@@ -10,6 +10,7 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
 
         // Neighbor pointers
         public Trapezoid LowerLeft;
+
         public Trapezoid LowerRight;
 
         public Point RightPoint;

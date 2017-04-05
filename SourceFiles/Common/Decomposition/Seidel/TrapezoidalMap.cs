@@ -4,9 +4,6 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
 {
     internal class TrapezoidalMap
     {
-        // Trapezoid container
-        public HashSet<Trapezoid> Map;
-
         // Bottom segment that spans multiple trapezoids
         private Edge _bCross;
 
@@ -15,6 +12,9 @@ namespace VelcroPhysics.Common.Decomposition.Seidel
 
         // AABB margin
         private float _margin;
+
+        // Trapezoid container
+        public HashSet<Trapezoid> Map;
 
         public TrapezoidalMap()
         {

@@ -109,7 +109,6 @@ namespace VelcroPhysics.Common
             return bodyList;
         }
 
-
         /// <summary>
         /// Duplicates the given Body along the given path for approximatly the given copies.
         /// </summary>

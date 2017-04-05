@@ -36,6 +36,7 @@
  * 
  * @author Thomas Åhlén, thahlen@gmail.com
  */
+
 namespace VelcroPhysics.Common.Decomposition.CDT
 {
     internal class TriangulationConstraint

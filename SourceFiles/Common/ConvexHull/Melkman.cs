@@ -47,7 +47,8 @@ namespace VelcroPhysics.Common.ConvexHull
                     Vector2 tmp = vertices[startIndex];
                     if (MathUtils.Area(ref deque[0], ref deque[1], ref tmp) == 0) //This point is also collinear
                         deque[1] = vertices[startIndex];
-                    else break;
+                    else
+                        break;
                 }
             }
             else
@@ -99,6 +100,7 @@ namespace VelcroPhysics.Common.ConvexHull
                     qb = qbm1; //qb++;
                     qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;
                 }
+
                 //Add vertex to the back of the queue
                 qb = qb == 0 ? deque.Length - 1 : qb - 1; //qb--;
                 qbm1 = qb == deque.Length - 1 ? 0 : qb + 1; //qbm1 = qb + 1;

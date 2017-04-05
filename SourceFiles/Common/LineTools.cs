@@ -19,10 +19,12 @@ namespace VelcroPhysics.Common
             Vector2 w = Vector2.Subtract(point, start);
 
             float c1 = Vector2.Dot(w, v);
-            if (c1 <= 0) return Vector2.Distance(point, start);
+            if (c1 <= 0)
+                return Vector2.Distance(point, start);
 
             float c2 = Vector2.Dot(v, v);
-            if (c2 <= c1) return Vector2.Distance(point, end);
+            if (c2 <= c1)
+                return Vector2.Distance(point, end);
 
             float b = c1 / c2;
             Vector2 pointOnLine = Vector2.Add(start, Vector2.Multiply(v, b));
@@ -31,14 +33,12 @@ namespace VelcroPhysics.Common
 
         // From Eric Jordan's convex decomposition library
         /// <summary>
-        ///Check if the lines a0->a1 and b0->b1 cross.
-        ///If they do, intersectionPoint will be filled
-        ///with the point of crossing.
-        ///
-        ///Grazing lines should not return true.
-        /// 
+        /// Check if the lines a0->a1 and b0->b1 cross.
+        /// If they do, intersectionPoint will be filled
+        /// with the point of crossing.
+        /// Grazing lines should not return true.
         /// </summary>
-        public static bool LineIntersect2(ref Vector2 a0, ref Vector2 a1, ref Vector2 b0, ref  Vector2 b1, out Vector2 intersectionPoint)
+        public static bool LineIntersect2(ref Vector2 a0, ref Vector2 a1, ref Vector2 b0, ref Vector2 b1, out Vector2 intersectionPoint)
         {
             intersectionPoint = Vector2.Zero;
 
@@ -105,13 +105,13 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// This method detects if two line segments (or lines) intersect,
-        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment"/> and
-        /// <paramref name="secondIsSegment"/> parameters to set whether the intersection point
+        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment" /> and
+        /// <paramref name="secondIsSegment" /> parameters to set whether the intersection point
         /// must be on the first and second line segments. Setting these
         /// both to true means you are doing a line-segment to line-segment
         /// intersection. Setting one of them to true means you are doing a
         /// line to line-segment intersection test, and so on.
-        /// Note: If two line segments are coincident, then 
+        /// Note: If two line segments are coincident, then
         /// no intersection is detected (there are actually
         /// infinite intersection points).
         /// Author: Jeremy Bell
@@ -120,12 +120,18 @@ namespace VelcroPhysics.Common
         /// <param name="point2">The second point of the first line segment.</param>
         /// <param name="point3">The first point of the second line segment.</param>
         /// <param name="point4">The second point of the second line segment.</param>
-        /// <param name="point">This is set to the intersection
-        /// point if an intersection is detected.</param>
-        /// <param name="firstIsSegment">Set this to true to require that the 
-        /// intersection point be on the first line segment.</param>
-        /// <param name="secondIsSegment">Set this to true to require that the
-        /// intersection point be on the second line segment.</param>
+        /// <param name="point">
+        /// This is set to the intersection
+        /// point if an intersection is detected.
+        /// </param>
+        /// <param name="firstIsSegment">
+        /// Set this to true to require that the
+        /// intersection point be on the first line segment.
+        /// </param>
+        /// <param name="secondIsSegment">
+        /// Set this to true to require that the
+        /// intersection point be on the second line segment.
+        /// </param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4, bool firstIsSegment, bool secondIsSegment, out Vector2 point)
         {
@@ -182,13 +188,13 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// This method detects if two line segments (or lines) intersect,
-        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment"/> and
-        /// <paramref name="secondIsSegment"/> parameters to set whether the intersection point
+        /// and, if so, the point of intersection. Use the <paramref name="firstIsSegment" /> and
+        /// <paramref name="secondIsSegment" /> parameters to set whether the intersection point
         /// must be on the first and second line segments. Setting these
         /// both to true means you are doing a line-segment to line-segment
         /// intersection. Setting one of them to true means you are doing a
         /// line to line-segment intersection test, and so on.
-        /// Note: If two line segments are coincident, then 
+        /// Note: If two line segments are coincident, then
         /// no intersection is detected (there are actually
         /// infinite intersection points).
         /// Author: Jeremy Bell
@@ -197,12 +203,18 @@ namespace VelcroPhysics.Common
         /// <param name="point2">The second point of the first line segment.</param>
         /// <param name="point3">The first point of the second line segment.</param>
         /// <param name="point4">The second point of the second line segment.</param>
-        /// <param name="intersectionPoint">This is set to the intersection
-        /// point if an intersection is detected.</param>
-        /// <param name="firstIsSegment">Set this to true to require that the 
-        /// intersection point be on the first line segment.</param>
-        /// <param name="secondIsSegment">Set this to true to require that the
-        /// intersection point be on the second line segment.</param>
+        /// <param name="intersectionPoint">
+        /// This is set to the intersection
+        /// point if an intersection is detected.
+        /// </param>
+        /// <param name="firstIsSegment">
+        /// Set this to true to require that the
+        /// intersection point be on the first line segment.
+        /// </param>
+        /// <param name="secondIsSegment">
+        /// Set this to true to require that the
+        /// intersection point be on the second line segment.
+        /// </param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, bool firstIsSegment, bool secondIsSegment, out Vector2 intersectionPoint)
         {
@@ -211,8 +223,8 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// This method detects if two line segments intersect,
-        /// and, if so, the point of intersection. 
-        /// Note: If two line segments are coincident, then 
+        /// and, if so, the point of intersection.
+        /// Note: If two line segments are coincident, then
         /// no intersection is detected (there are actually
         /// infinite intersection points).
         /// </summary>
@@ -220,8 +232,10 @@ namespace VelcroPhysics.Common
         /// <param name="point2">The second point of the first line segment.</param>
         /// <param name="point3">The first point of the second line segment.</param>
         /// <param name="point4">The second point of the second line segment.</param>
-        /// <param name="intersectionPoint">This is set to the intersection
-        /// point if an intersection is detected.</param>
+        /// <param name="intersectionPoint">
+        /// This is set to the intersection
+        /// point if an intersection is detected.
+        /// </param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(ref Vector2 point1, ref Vector2 point2, ref Vector2 point3, ref Vector2 point4, out Vector2 intersectionPoint)
         {
@@ -230,8 +244,8 @@ namespace VelcroPhysics.Common
 
         /// <summary>
         /// This method detects if two line segments intersect,
-        /// and, if so, the point of intersection. 
-        /// Note: If two line segments are coincident, then 
+        /// and, if so, the point of intersection.
+        /// Note: If two line segments are coincident, then
         /// no intersection is detected (there are actually
         /// infinite intersection points).
         /// </summary>
@@ -239,8 +253,10 @@ namespace VelcroPhysics.Common
         /// <param name="point2">The second point of the first line segment.</param>
         /// <param name="point3">The first point of the second line segment.</param>
         /// <param name="point4">The second point of the second line segment.</param>
-        /// <param name="intersectionPoint">This is set to the intersection
-        /// point if an intersection is detected.</param>
+        /// <param name="intersectionPoint">
+        /// This is set to the intersection
+        /// point if an intersection is detected.
+        /// </param>
         /// <returns>True if an intersection is detected, false otherwise.</returns>
         public static bool LineIntersect(Vector2 point1, Vector2 point2, Vector2 point3, Vector2 point4, out Vector2 intersectionPoint)
         {
@@ -274,7 +290,7 @@ namespace VelcroPhysics.Common
         }
 
         /// <summary>
-        /// Get all intersections between a line segment and an AABB. 
+        /// Get all intersections between a line segment and an AABB.
         /// </summary>
         /// <param name="point1">The first point of the line segment to test</param>
         /// <param name="point2">The second point of the line segment to test.</param>

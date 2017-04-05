@@ -51,38 +51,40 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class WheelJoint : Joint
     {
-        // Solver shared
-        private Vector2 _localYAxis;
+        private Vector2 _ax, _ay;
+        private Vector2 _axis;
+
+        private float _bias;
+        private bool _enableMotor;
+        private float _gamma;
 
         private float _impulse;
-        private float _motorImpulse;
-        private float _springImpulse;
-
-        private float _maxMotorTorque;
-        private float _motorSpeed;
-        private bool _enableMotor;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private Vector2 _localCenterA;
 
-        private Vector2 _ax, _ay;
-        private float _sAx, _sBx;
-        private float _sAy, _sBy;
+        private Vector2 _localCenterB;
+
+        // Solver shared
+        private Vector2 _localYAxis;
 
         private float _mass;
-        private float _motorMass;
-        private float _springMass;
 
-        private float _bias;
-        private float _gamma;
-        private Vector2 _axis;
+        private float _maxMotorTorque;
+        private float _motorImpulse;
+        private float _motorMass;
+        private float _motorSpeed;
+        private float _sAx, _sBx;
+        private float _sAy, _sBy;
+        private float _springImpulse;
+        private float _springMass;
 
         internal WheelJoint()
         {

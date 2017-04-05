@@ -65,14 +65,20 @@ namespace VelcroPhysics.Collision
     {
         [ThreadStatic]
         private static Vector2 _axis;
+
         [ThreadStatic]
         private static Vector2 _localPoint;
+
         [ThreadStatic]
         private static DistanceProxy _proxyA;
+
         [ThreadStatic]
         private static DistanceProxy _proxyB;
+
         [ThreadStatic]
-        private static Sweep _sweepA, _sweepB;
+        private static Sweep _sweepA,
+                             _sweepB;
+
         [ThreadStatic]
         private static SeparationFunctionType _type;
 
@@ -162,56 +168,56 @@ namespace VelcroPhysics.Collision
             switch (_type)
             {
                 case SeparationFunctionType.Points:
-                    {
-                        Vector2 axisA = MathUtils.MulT(ref xfA.q, _axis);
-                        Vector2 axisB = MathUtils.MulT(ref xfB.q, -_axis);
+                {
+                    Vector2 axisA = MathUtils.MulT(ref xfA.q, _axis);
+                    Vector2 axisB = MathUtils.MulT(ref xfB.q, -_axis);
 
-                        indexA = _proxyA.GetSupport(axisA);
-                        indexB = _proxyB.GetSupport(axisB);
+                    indexA = _proxyA.GetSupport(axisA);
+                    indexB = _proxyB.GetSupport(axisB);
 
-                        Vector2 localPointA = _proxyA.Vertices[indexA];
-                        Vector2 localPointB = _proxyB.Vertices[indexB];
+                    Vector2 localPointA = _proxyA.Vertices[indexA];
+                    Vector2 localPointB = _proxyB.Vertices[indexB];
 
-                        Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
-                        Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                    Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                    Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        float separation = Vector2.Dot(pointB - pointA, _axis);
-                        return separation;
-                    }
+                    float separation = Vector2.Dot(pointB - pointA, _axis);
+                    return separation;
+                }
 
                 case SeparationFunctionType.FaceA:
-                    {
-                        Vector2 normal = MathUtils.Mul(ref xfA.q, _axis);
-                        Vector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
+                {
+                    Vector2 normal = MathUtils.Mul(ref xfA.q, _axis);
+                    Vector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
 
-                        Vector2 axisB = MathUtils.MulT(ref xfB.q, -normal);
+                    Vector2 axisB = MathUtils.MulT(ref xfB.q, -normal);
 
-                        indexA = -1;
-                        indexB = _proxyB.GetSupport(axisB);
+                    indexA = -1;
+                    indexB = _proxyB.GetSupport(axisB);
 
-                        Vector2 localPointB = _proxyB.Vertices[indexB];
-                        Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                    Vector2 localPointB = _proxyB.Vertices[indexB];
+                    Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        float separation = Vector2.Dot(pointB - pointA, normal);
-                        return separation;
-                    }
+                    float separation = Vector2.Dot(pointB - pointA, normal);
+                    return separation;
+                }
 
                 case SeparationFunctionType.FaceB:
-                    {
-                        Vector2 normal = MathUtils.Mul(ref xfB.q, _axis);
-                        Vector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
+                {
+                    Vector2 normal = MathUtils.Mul(ref xfB.q, _axis);
+                    Vector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
 
-                        Vector2 axisA = MathUtils.MulT(ref xfA.q, -normal);
+                    Vector2 axisA = MathUtils.MulT(ref xfA.q, -normal);
 
-                        indexB = -1;
-                        indexA = _proxyA.GetSupport(axisA);
+                    indexB = -1;
+                    indexA = _proxyA.GetSupport(axisA);
 
-                        Vector2 localPointA = _proxyA.Vertices[indexA];
-                        Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                    Vector2 localPointA = _proxyA.Vertices[indexA];
+                    Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                        float separation = Vector2.Dot(pointA - pointB, normal);
-                        return separation;
-                    }
+                    float separation = Vector2.Dot(pointA - pointB, normal);
+                    return separation;
+                }
 
                 default:
                     Debug.Assert(false);
@@ -230,38 +236,38 @@ namespace VelcroPhysics.Collision
             switch (_type)
             {
                 case SeparationFunctionType.Points:
-                    {
-                        Vector2 localPointA = _proxyA.Vertices[indexA];
-                        Vector2 localPointB = _proxyB.Vertices[indexB];
+                {
+                    Vector2 localPointA = _proxyA.Vertices[indexA];
+                    Vector2 localPointB = _proxyB.Vertices[indexB];
 
-                        Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
-                        Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
-                        float separation = Vector2.Dot(pointB - pointA, _axis);
+                    Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                    Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                    float separation = Vector2.Dot(pointB - pointA, _axis);
 
-                        return separation;
-                    }
+                    return separation;
+                }
                 case SeparationFunctionType.FaceA:
-                    {
-                        Vector2 normal = MathUtils.Mul(ref xfA.q, _axis);
-                        Vector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
+                {
+                    Vector2 normal = MathUtils.Mul(ref xfA.q, _axis);
+                    Vector2 pointA = MathUtils.Mul(ref xfA, _localPoint);
 
-                        Vector2 localPointB = _proxyB.Vertices[indexB];
-                        Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
+                    Vector2 localPointB = _proxyB.Vertices[indexB];
+                    Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
-                        float separation = Vector2.Dot(pointB - pointA, normal);
-                        return separation;
-                    }
+                    float separation = Vector2.Dot(pointB - pointA, normal);
+                    return separation;
+                }
                 case SeparationFunctionType.FaceB:
-                    {
-                        Vector2 normal = MathUtils.Mul(ref xfB.q, _axis);
-                        Vector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
+                {
+                    Vector2 normal = MathUtils.Mul(ref xfB.q, _axis);
+                    Vector2 pointB = MathUtils.Mul(ref xfB, _localPoint);
 
-                        Vector2 localPointA = _proxyA.Vertices[indexA];
-                        Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
+                    Vector2 localPointA = _proxyA.Vertices[indexA];
+                    Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
-                        float separation = Vector2.Dot(pointA - pointB, normal);
-                        return separation;
-                    }
+                    float separation = Vector2.Dot(pointA - pointB, normal);
+                    return separation;
+                }
                 default:
                     Debug.Assert(false);
                     return 0.0f;
@@ -275,9 +281,14 @@ namespace VelcroPhysics.Collision
         // by computing the largest time at which separation is maintained.
 
         [ThreadStatic]
-        public static int TOICalls, TOIIters, TOIMaxIters;
+        public static int TOICalls,
+                          TOIIters,
+                          TOIMaxIters;
+
         [ThreadStatic]
-        public static int TOIRootIters, TOIMaxRootIters;
+        public static int TOIRootIters,
+                          TOIMaxRootIters;
+
         [ThreadStatic]
         private static DistanceInput _distanceInput;
 
@@ -326,7 +337,7 @@ namespace VelcroPhysics.Collision
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
-            for (; ; )
+            for (;;)
             {
                 Transform xfA, xfB;
                 sweepA.GetTransform(out xfA, t1);
@@ -364,7 +375,7 @@ namespace VelcroPhysics.Collision
                 bool done = false;
                 float t2 = tMax;
                 int pushBackIter = 0;
-                for (; ; )
+                for (;;)
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
@@ -414,7 +425,7 @@ namespace VelcroPhysics.Collision
                     // Compute 1D root of: f(x) - target = 0
                     int rootIterCount = 0;
                     float a1 = t1, a2 = t2;
-                    for (; ; )
+                    for (;;)
                     {
                         // Use a mix of the secant rule and bisection.
                         float t;

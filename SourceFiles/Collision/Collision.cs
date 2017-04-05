@@ -226,7 +226,7 @@ namespace VelcroPhysics.Collision
     }
 
     /// <summary>
-    /// Ray-cast output data. 
+    /// Ray-cast output data.
     /// </summary>
     public struct RayCastOutput
     {
@@ -258,9 +258,7 @@ namespace VelcroPhysics.Collision
         public Vector2 UpperBound;
 
         public AABB(Vector2 min, Vector2 max)
-            : this(ref min, ref max)
-        {
-        }
+            : this(ref min, ref max) { }
 
         public AABB(ref Vector2 min, ref Vector2 max)
         {
@@ -366,7 +364,7 @@ namespace VelcroPhysics.Collision
         /// Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is valid; otherwise, <c>false</c>.
         /// </returns>
         public bool IsValid()
         {
@@ -402,7 +400,7 @@ namespace VelcroPhysics.Collision
         /// </summary>
         /// <param name="aabb">The aabb.</param>
         /// <returns>
-        /// 	<c>true</c> if it contains the specified aabb; otherwise, <c>false</c>.
+        /// <c>true</c> if it contains the specified aabb; otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(ref AABB aabb)
         {
@@ -419,13 +417,13 @@ namespace VelcroPhysics.Collision
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>
-        /// 	<c>true</c> if it contains the specified point; otherwise, <c>false</c>.
+        /// <c>true</c> if it contains the specified point; otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(ref Vector2 point)
         {
             //using epsilon to try and gaurd against float rounding errors.
             return (point.X > (LowerBound.X + Settings.Epsilon) && point.X < (UpperBound.X - Settings.Epsilon) &&
-                   (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon)));
+                    (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon)));
         }
 
         /// <summary>
@@ -545,9 +543,9 @@ namespace VelcroPhysics.Collision
     /// </summary>
     public class TempPolygon
     {
-        public Vector2[] Vertices = new Vector2[Settings.MaxPolygonVertices];
-        public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
         public int Count;
+        public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
+        public Vector2[] Vertices = new Vector2[Settings.MaxPolygonVertices];
     }
 
     /// <summary>
@@ -1133,18 +1131,255 @@ namespace VelcroPhysics.Collision
             collider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
         }
 
+        /// <summary>
+        /// Clipping for contact manifolds.
+        /// </summary>
+        /// <param name="vOut">The v out.</param>
+        /// <param name="vIn">The v in.</param>
+        /// <param name="normal">The normal.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="vertexIndexA">The vertex index A.</param>
+        /// <returns></returns>
+        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, Vector2 normal, float offset, int vertexIndexA)
+        {
+            vOut = new FixedArray2<ClipVertex>();
+
+            ClipVertex v0 = vIn[0];
+            ClipVertex v1 = vIn[1];
+
+            // Start with no output points
+            int numOut = 0;
+
+            // Calculate the distance of end points to the line
+            float distance0 = normal.X * v0.V.X + normal.Y * v0.V.Y - offset;
+            float distance1 = normal.X * v1.V.X + normal.Y * v1.V.Y - offset;
+
+            // If the points are behind the plane
+            if (distance0 <= 0.0f)
+                vOut[numOut++] = v0;
+            if (distance1 <= 0.0f)
+                vOut[numOut++] = v1;
+
+            // If the points are on different sides of the plane
+            if (distance0 * distance1 < 0.0f)
+            {
+                // Find intersection point of edge and plane
+                float interp = distance0 / (distance0 - distance1);
+
+                ClipVertex cv = vOut[numOut];
+
+                cv.V.X = v0.V.X + interp * (v1.V.X - v0.V.X);
+                cv.V.Y = v0.V.Y + interp * (v1.V.Y - v0.V.Y);
+
+                // VertexA is hitting edgeB.
+                cv.ID.Features.IndexA = (byte)vertexIndexA;
+                cv.ID.Features.IndexB = v0.ID.Features.IndexB;
+                cv.ID.Features.TypeA = (byte)ContactFeatureType.Vertex;
+                cv.ID.Features.TypeB = (byte)ContactFeatureType.Face;
+
+                vOut[numOut] = cv;
+
+                ++numOut;
+            }
+
+            return numOut;
+        }
+
+        /// <summary>
+        /// Find the separation between poly1 and poly2 for a give edge normal on poly1.
+        /// </summary>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="xf1">The XF1.</param>
+        /// <param name="edge1">The edge1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="xf2">The XF2.</param>
+        /// <returns></returns>
+        private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
+        {
+            List<Vector2> vertices1 = poly1.Vertices;
+            List<Vector2> normals1 = poly1.Normals;
+
+            int count2 = poly2.Vertices.Count;
+            List<Vector2> vertices2 = poly2.Vertices;
+
+            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+
+            // Convert normal from poly1's frame into poly2's frame.
+            Vector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
+            Vector2 normal1 = MathUtils.MulT(xf2.q, normal1World);
+
+            // Find support vertex on poly2 for -normal.
+            int index = 0;
+            float minDot = Settings.MaxFloat;
+
+            for (int i = 0; i < count2; ++i)
+            {
+                float dot = Vector2.Dot(vertices2[i], normal1);
+                if (dot < minDot)
+                {
+                    minDot = dot;
+                    index = i;
+                }
+            }
+
+            Vector2 v1 = MathUtils.Mul(ref xf1, vertices1[edge1]);
+            Vector2 v2 = MathUtils.Mul(ref xf2, vertices2[index]);
+            float separation = Vector2.Dot(v2 - v1, normal1World);
+            return separation;
+        }
+
+        /// <summary>
+        /// Find the max separation between poly1 and poly2 using edge normals from poly1.
+        /// </summary>
+        /// <param name="edgeIndex">Index of the edge.</param>
+        /// <param name="poly1">The poly1.</param>
+        /// <param name="xf1">The XF1.</param>
+        /// <param name="poly2">The poly2.</param>
+        /// <param name="xf2">The XF2.</param>
+        /// <returns></returns>
+        private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
+        {
+            int count1 = poly1.Vertices.Count;
+            List<Vector2> normals1 = poly1.Normals;
+
+            // Vector pointing from the centroid of poly1 to the centroid of poly2.
+            Vector2 d = MathUtils.Mul(ref xf2, poly2.MassData.Centroid) - MathUtils.Mul(ref xf1, poly1.MassData.Centroid);
+            Vector2 dLocal1 = MathUtils.MulT(xf1.q, d);
+
+            // Find edge normal on poly1 that has the largest projection onto d.
+            int edge = 0;
+            float maxDot = -Settings.MaxFloat;
+            for (int i = 0; i < count1; ++i)
+            {
+                float dot = Vector2.Dot(normals1[i], dLocal1);
+                if (dot > maxDot)
+                {
+                    maxDot = dot;
+                    edge = i;
+                }
+            }
+
+            // Get the separation for the edge normal.
+            float s = EdgeSeparation(poly1, ref xf1, edge, poly2, ref xf2);
+
+            // Check the separation for the previous edge normal.
+            int prevEdge = edge - 1 >= 0 ? edge - 1 : count1 - 1;
+            float sPrev = EdgeSeparation(poly1, ref xf1, prevEdge, poly2, ref xf2);
+
+            // Check the separation for the next edge normal.
+            int nextEdge = edge + 1 < count1 ? edge + 1 : 0;
+            float sNext = EdgeSeparation(poly1, ref xf1, nextEdge, poly2, ref xf2);
+
+            // Find the best edge and the search direction.
+            int bestEdge;
+            float bestSeparation;
+            int increment;
+            if (sPrev > s && sPrev > sNext)
+            {
+                increment = -1;
+                bestEdge = prevEdge;
+                bestSeparation = sPrev;
+            }
+            else if (sNext > s)
+            {
+                increment = 1;
+                bestEdge = nextEdge;
+                bestSeparation = sNext;
+            }
+            else
+            {
+                edgeIndex = edge;
+                return s;
+            }
+
+            // Perform a local search for the best edge normal.
+            for (;;)
+            {
+                if (increment == -1)
+                    edge = bestEdge - 1 >= 0 ? bestEdge - 1 : count1 - 1;
+                else
+                    edge = bestEdge + 1 < count1 ? bestEdge + 1 : 0;
+
+                s = EdgeSeparation(poly1, ref xf1, edge, poly2, ref xf2);
+
+                if (s > bestSeparation)
+                {
+                    bestEdge = edge;
+                    bestSeparation = s;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            edgeIndex = bestEdge;
+            return bestSeparation;
+        }
+
+        private static void FindIncidentEdge(out FixedArray2<ClipVertex> c, PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
+        {
+            c = new FixedArray2<ClipVertex>();
+            Vertices normals1 = poly1.Normals;
+
+            int count2 = poly2.Vertices.Count;
+            Vertices vertices2 = poly2.Vertices;
+            Vertices normals2 = poly2.Normals;
+
+            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+
+            // Get the normal of the reference edge in poly2's frame.
+            Vector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));
+
+            // Find the incident edge on poly2.
+            int index = 0;
+            float minDot = Settings.MaxFloat;
+            for (int i = 0; i < count2; ++i)
+            {
+                float dot = Vector2.Dot(normal1, normals2[i]);
+                if (dot < minDot)
+                {
+                    minDot = dot;
+                    index = i;
+                }
+            }
+
+            // Build the clip vertices for the incident edge.
+            int i1 = index;
+            int i2 = i1 + 1 < count2 ? i1 + 1 : 0;
+
+            ClipVertex cv0 = c[0];
+
+            cv0.V = MathUtils.Mul(ref xf2, vertices2[i1]);
+            cv0.ID.Features.IndexA = (byte)edge1;
+            cv0.ID.Features.IndexB = (byte)i1;
+            cv0.ID.Features.TypeA = (byte)ContactFeatureType.Face;
+            cv0.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
+
+            c[0] = cv0;
+
+            ClipVertex cv1 = c[1];
+            cv1.V = MathUtils.Mul(ref xf2, vertices2[i2]);
+            cv1.ID.Features.IndexA = (byte)edge1;
+            cv1.ID.Features.IndexB = (byte)i2;
+            cv1.ID.Features.TypeA = (byte)ContactFeatureType.Face;
+            cv1.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
+
+            c[1] = cv1;
+        }
+
         private class EPCollider
         {
+            Vector2 _centroidB;
+            bool _front;
+            Vector2 _lowerLimit, _upperLimit;
+            Vector2 _normal;
+            Vector2 _normal0, _normal1, _normal2;
             private TempPolygon _polygonB = new TempPolygon();
+            float _radius;
+            Vector2 _v0, _v1, _v2, _v3;
 
             Transform _xf;
-            Vector2 _centroidB;
-            Vector2 _v0, _v1, _v2, _v3;
-            Vector2 _normal0, _normal1, _normal2;
-            Vector2 _normal;
-            Vector2 _lowerLimit, _upperLimit;
-            float _radius;
-            bool _front;
 
             public void Collide(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
             {
@@ -1622,242 +1857,6 @@ namespace VelcroPhysics.Collision
 
                 return axis;
             }
-        }
-
-        /// <summary>
-        /// Clipping for contact manifolds.
-        /// </summary>
-        /// <param name="vOut">The v out.</param>
-        /// <param name="vIn">The v in.</param>
-        /// <param name="normal">The normal.</param>
-        /// <param name="offset">The offset.</param>
-        /// <param name="vertexIndexA">The vertex index A.</param>
-        /// <returns></returns>
-        private static int ClipSegmentToLine(out FixedArray2<ClipVertex> vOut, ref FixedArray2<ClipVertex> vIn, Vector2 normal, float offset, int vertexIndexA)
-        {
-            vOut = new FixedArray2<ClipVertex>();
-
-            ClipVertex v0 = vIn[0];
-            ClipVertex v1 = vIn[1];
-
-            // Start with no output points
-            int numOut = 0;
-
-            // Calculate the distance of end points to the line
-            float distance0 = normal.X * v0.V.X + normal.Y * v0.V.Y - offset;
-            float distance1 = normal.X * v1.V.X + normal.Y * v1.V.Y - offset;
-
-            // If the points are behind the plane
-            if (distance0 <= 0.0f) vOut[numOut++] = v0;
-            if (distance1 <= 0.0f) vOut[numOut++] = v1;
-
-            // If the points are on different sides of the plane
-            if (distance0 * distance1 < 0.0f)
-            {
-                // Find intersection point of edge and plane
-                float interp = distance0 / (distance0 - distance1);
-
-                ClipVertex cv = vOut[numOut];
-
-                cv.V.X = v0.V.X + interp * (v1.V.X - v0.V.X);
-                cv.V.Y = v0.V.Y + interp * (v1.V.Y - v0.V.Y);
-
-                // VertexA is hitting edgeB.
-                cv.ID.Features.IndexA = (byte)vertexIndexA;
-                cv.ID.Features.IndexB = v0.ID.Features.IndexB;
-                cv.ID.Features.TypeA = (byte)ContactFeatureType.Vertex;
-                cv.ID.Features.TypeB = (byte)ContactFeatureType.Face;
-
-                vOut[numOut] = cv;
-
-                ++numOut;
-            }
-
-            return numOut;
-        }
-
-        /// <summary>
-        /// Find the separation between poly1 and poly2 for a give edge normal on poly1.
-        /// </summary>
-        /// <param name="poly1">The poly1.</param>
-        /// <param name="xf1">The XF1.</param>
-        /// <param name="edge1">The edge1.</param>
-        /// <param name="poly2">The poly2.</param>
-        /// <param name="xf2">The XF2.</param>
-        /// <returns></returns>
-        private static float EdgeSeparation(PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
-        {
-            List<Vector2> vertices1 = poly1.Vertices;
-            List<Vector2> normals1 = poly1.Normals;
-
-            int count2 = poly2.Vertices.Count;
-            List<Vector2> vertices2 = poly2.Vertices;
-
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
-
-            // Convert normal from poly1's frame into poly2's frame.
-            Vector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
-            Vector2 normal1 = MathUtils.MulT(xf2.q, normal1World);
-
-            // Find support vertex on poly2 for -normal.
-            int index = 0;
-            float minDot = Settings.MaxFloat;
-
-            for (int i = 0; i < count2; ++i)
-            {
-                float dot = Vector2.Dot(vertices2[i], normal1);
-                if (dot < minDot)
-                {
-                    minDot = dot;
-                    index = i;
-                }
-            }
-
-            Vector2 v1 = MathUtils.Mul(ref xf1, vertices1[edge1]);
-            Vector2 v2 = MathUtils.Mul(ref xf2, vertices2[index]);
-            float separation = Vector2.Dot(v2 - v1, normal1World);
-            return separation;
-        }
-
-        /// <summary>
-        /// Find the max separation between poly1 and poly2 using edge normals from poly1.
-        /// </summary>
-        /// <param name="edgeIndex">Index of the edge.</param>
-        /// <param name="poly1">The poly1.</param>
-        /// <param name="xf1">The XF1.</param>
-        /// <param name="poly2">The poly2.</param>
-        /// <param name="xf2">The XF2.</param>
-        /// <returns></returns>
-        private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
-        {
-            int count1 = poly1.Vertices.Count;
-            List<Vector2> normals1 = poly1.Normals;
-
-            // Vector pointing from the centroid of poly1 to the centroid of poly2.
-            Vector2 d = MathUtils.Mul(ref xf2, poly2.MassData.Centroid) - MathUtils.Mul(ref xf1, poly1.MassData.Centroid);
-            Vector2 dLocal1 = MathUtils.MulT(xf1.q, d);
-
-            // Find edge normal on poly1 that has the largest projection onto d.
-            int edge = 0;
-            float maxDot = -Settings.MaxFloat;
-            for (int i = 0; i < count1; ++i)
-            {
-                float dot = Vector2.Dot(normals1[i], dLocal1);
-                if (dot > maxDot)
-                {
-                    maxDot = dot;
-                    edge = i;
-                }
-            }
-
-            // Get the separation for the edge normal.
-            float s = EdgeSeparation(poly1, ref  xf1, edge, poly2, ref xf2);
-
-            // Check the separation for the previous edge normal.
-            int prevEdge = edge - 1 >= 0 ? edge - 1 : count1 - 1;
-            float sPrev = EdgeSeparation(poly1, ref  xf1, prevEdge, poly2, ref xf2);
-
-            // Check the separation for the next edge normal.
-            int nextEdge = edge + 1 < count1 ? edge + 1 : 0;
-            float sNext = EdgeSeparation(poly1, ref xf1, nextEdge, poly2, ref xf2);
-
-            // Find the best edge and the search direction.
-            int bestEdge;
-            float bestSeparation;
-            int increment;
-            if (sPrev > s && sPrev > sNext)
-            {
-                increment = -1;
-                bestEdge = prevEdge;
-                bestSeparation = sPrev;
-            }
-            else if (sNext > s)
-            {
-                increment = 1;
-                bestEdge = nextEdge;
-                bestSeparation = sNext;
-            }
-            else
-            {
-                edgeIndex = edge;
-                return s;
-            }
-
-            // Perform a local search for the best edge normal.
-            for (; ; )
-            {
-                if (increment == -1)
-                    edge = bestEdge - 1 >= 0 ? bestEdge - 1 : count1 - 1;
-                else
-                    edge = bestEdge + 1 < count1 ? bestEdge + 1 : 0;
-
-                s = EdgeSeparation(poly1, ref xf1, edge, poly2, ref xf2);
-
-                if (s > bestSeparation)
-                {
-                    bestEdge = edge;
-                    bestSeparation = s;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            edgeIndex = bestEdge;
-            return bestSeparation;
-        }
-
-        private static void FindIncidentEdge(out FixedArray2<ClipVertex> c, PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
-        {
-            c = new FixedArray2<ClipVertex>();
-            Vertices normals1 = poly1.Normals;
-
-            int count2 = poly2.Vertices.Count;
-            Vertices vertices2 = poly2.Vertices;
-            Vertices normals2 = poly2.Normals;
-
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
-
-            // Get the normal of the reference edge in poly2's frame.
-            Vector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));
-
-
-            // Find the incident edge on poly2.
-            int index = 0;
-            float minDot = Settings.MaxFloat;
-            for (int i = 0; i < count2; ++i)
-            {
-                float dot = Vector2.Dot(normal1, normals2[i]);
-                if (dot < minDot)
-                {
-                    minDot = dot;
-                    index = i;
-                }
-            }
-
-            // Build the clip vertices for the incident edge.
-            int i1 = index;
-            int i2 = i1 + 1 < count2 ? i1 + 1 : 0;
-
-            ClipVertex cv0 = c[0];
-
-            cv0.V = MathUtils.Mul(ref xf2, vertices2[i1]);
-            cv0.ID.Features.IndexA = (byte)edge1;
-            cv0.ID.Features.IndexB = (byte)i1;
-            cv0.ID.Features.TypeA = (byte)ContactFeatureType.Face;
-            cv0.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
-
-            c[0] = cv0;
-
-            ClipVertex cv1 = c[1];
-            cv1.V = MathUtils.Mul(ref xf2, vertices2[i2]);
-            cv1.ID.Features.IndexA = (byte)edge1;
-            cv1.ID.Features.IndexB = (byte)i2;
-            cv1.ID.Features.TypeA = (byte)ContactFeatureType.Face;
-            cv1.ID.Features.TypeB = (byte)ContactFeatureType.Vertex;
-
-            c[1] = cv1;
         }
     }
 }

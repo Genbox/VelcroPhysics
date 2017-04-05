@@ -43,11 +43,11 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         // PointSet width to both left and right.
         private const float ALPHA = 0.3f;
 
-        public DTSweepBasin Basin = new DTSweepBasin();
-        public DTSweepEdgeEvent EdgeEvent = new DTSweepEdgeEvent();
-
         private DTSweepPointComparator _comparator = new DTSweepPointComparator();
         public AdvancingFront aFront;
+
+        public DTSweepBasin Basin = new DTSweepBasin();
+        public DTSweepEdgeEvent EdgeEvent = new DTSweepEdgeEvent();
 
         public DTSweepContext()
         {
@@ -60,6 +60,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         public void RemoveFromList(DelaunayTriangle triangle)
         {
             Triangles.Remove(triangle);
+
             // TODO: remove all neighbor pointers to this triangle
             //        for( int i=0; i<3; i++ )
             //        {
@@ -120,6 +121,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         public void CreateAdvancingFront()
         {
             AdvancingFrontNode head, tail, middle;
+
             // Initial triangle
             DelaunayTriangle iTriangle = new DelaunayTriangle(Points[0], Tail, Head);
             Triangles.Add(iTriangle);
@@ -142,7 +144,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
         }
 
         /// <summary>
-        /// Try to map a node to all sides of this triangle that don't have 
+        /// Try to map a node to all sides of this triangle that don't have
         /// a neighbor.
         /// </summary>
         public void MapTriangleToNodes(DelaunayTriangle t)
@@ -184,8 +186,8 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
                     ymin = p.Y;
             }
 
-            double deltaX = ALPHA*(xmax - xmin);
-            double deltaY = ALPHA*(ymax - ymin);
+            double deltaX = ALPHA * (xmax - xmin);
+            double deltaY = ALPHA * (ymax - ymin);
             TriangulationPoint p1 = new TriangulationPoint(xmax + deltaX, ymin - deltaY);
             TriangulationPoint p2 = new TriangulationPoint(xmin - deltaX, ymin - deltaY);
 
@@ -195,9 +197,9 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
             //        long time = System.nanoTime();
             // Sort the points along y-axis
             Points.Sort(_comparator);
+
             //        logger.info( "Triangulation setup [{}ms]", ( System.nanoTime() - time ) / 1e6 );
         }
-
 
         public void FinalizeTriangulation()
         {

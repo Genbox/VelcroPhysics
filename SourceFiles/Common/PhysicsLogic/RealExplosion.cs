@@ -19,7 +19,7 @@ namespace VelcroPhysics.Common.PhysicsLogic
     }
 
     /// <summary>
-    /// This is a comprarer used for 
+    /// This is a comprarer used for
     /// detecting angle difference between rays
     /// </summary>
     internal class RayDataComparer : IComparer<float>
@@ -65,6 +65,9 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         private const float MaxEdgeOffset = MathHelper.Pi / 90;
 
+        private List<ShapeData> _data = new List<ShapeData>();
+        private RayDataComparer _rdc;
+
         /// <summary>
         /// Ratio of arc length to angle from edges to first ray tested.
         /// Defaults to 1/40.
@@ -95,9 +98,6 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         public int MinRays = 5;
 
-        private List<ShapeData> _data = new List<ShapeData>();
-        private RayDataComparer _rdc;
-
         public RealExplosion(World world)
             : base(world, PhysicsLogicType.Explosion)
         {
@@ -110,7 +110,10 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         /// <param name="pos">The position where the explosion happens </param>
         /// <param name="radius">The explosion radius </param>
-        /// <param name="maxForce">The explosion force at the explosion point (then is inversely proportional to the square of the distance)</param>
+        /// <param name="maxForce">
+        /// The explosion force at the explosion point (then is inversely proportional to the square of the
+        /// distance)
+        /// </param>
         /// <returns>A list of bodies and the amount of force that was applied to them.</returns>
         public Dictionary<Fixture, Vector2> Activate(Vector2 pos, float radius, float maxForce)
         {
@@ -194,6 +197,7 @@ namespace VelcroPhysics.Common.PhysicsLogic
                         float diff = (newAngle - angleToCentroid);
 
                         diff = (diff - MathHelper.Pi) % (2 * MathHelper.Pi);
+
                         // the minus pi is important. It means cutoff for going other direction is at 180 deg where it needs to be
 
                         if (diff < 0.0f)
@@ -254,16 +258,16 @@ namespace VelcroPhysics.Common.PhysicsLogic
                 // RaycastOne
                 bool hitClosest = false;
                 World.RayCast((f, p, n, fr) =>
-                                  {
-                                      Body body = f.Body;
+                {
+                    Body body = f.Body;
 
-                                      if (!IsActiveOn(body))
-                                          return 0;
+                    if (!IsActiveOn(body))
+                        return 0;
 
-                                      hitClosest = true;
-                                      fixture = f;
-                                      return fr;
-                                  }, p1, p2);
+                    hitClosest = true;
+                    fixture = f;
+                    return fr;
+                }, p1, p2);
 
                 //draws radius points
                 if ((hitClosest) && (fixture.Body.BodyType == BodyType.Dynamic))

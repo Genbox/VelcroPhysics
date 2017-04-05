@@ -105,7 +105,7 @@ namespace VelcroPhysics.Dynamics
         public ControllerDelegate ControllerRemoved;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="World"/> class.
+        /// Initializes a new instance of the <see cref="World" /> class.
         /// </summary>
         public World(Vector2 gravity)
         {
@@ -314,6 +314,7 @@ namespace VelcroPhysics.Dynamics
                             AwakeBodySet.Remove(body);
                     }
 #endif
+
                     // Add to world list.
                     BodyList.Add(body);
 
@@ -340,6 +341,7 @@ namespace VelcroPhysics.Dynamics
 #if USE_AWAKE_BODY_SET
                     Debug.Assert(!AwakeBodySet.Contains(body));
 #endif
+
                     // Delete the attached joints.
                     JointEdge je = body.JointList;
                     while (je != null)
@@ -413,9 +415,9 @@ namespace VelcroPhysics.Dynamics
         {
             // Size the island for the worst case.
             Island.Reset(BodyList.Count,
-                         ContactManager.ContactList.Count,
-                         JointList.Count,
-                         ContactManager);
+                ContactManager.ContactList.Count,
+                JointList.Count,
+                ContactManager);
 
             // Clear all the island flags.
 #if USE_ISLAND_SET
@@ -688,6 +690,7 @@ namespace VelcroPhysics.Dynamics
                 {
                     Contact c = ContactManager.ContactList[i];
 #endif
+
                     // Invalidate TOI
                     c.IslandFlag = false;
                     c.TOIFlag = false;
@@ -697,7 +700,7 @@ namespace VelcroPhysics.Dynamics
             }
 
             // Find TOI events and solve them.
-            for (; ; )
+            for (;;)
             {
                 // Find the first TOI.
                 Contact minContact = null;
@@ -783,6 +786,7 @@ namespace VelcroPhysics.Dynamics
                             }
                         }
 #endif
+
                         // Compute the TOI for this contact.
                         // Put the sweeps onto the same time interval.
                         float alpha0 = bA._sweep.Alpha0;
@@ -1083,7 +1087,7 @@ namespace VelcroPhysics.Dynamics
 #endif
 
         /// <summary>
-        /// Get the world joint list. 
+        /// Get the world joint list.
         /// </summary>
         /// <value>The joint list.</value>
         public List<Joint> JointList { get; private set; }
@@ -1154,7 +1158,7 @@ namespace VelcroPhysics.Dynamics
             if (doCheck)
             {
                 Debug.Assert(!_jointRemoveList.Contains(joint),
-                             "The joint is already marked for removal. You are removing the joint more than once.");
+                    "The joint is already marked for removal. You are removing the joint more than once.");
             }
 
             if (!_jointRemoveList.Contains(joint))
@@ -1288,7 +1292,6 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>
         /// Query the world for all fixtures that potentially overlap the provided AABB.
-        /// 
         /// Inside the callback:
         /// Return true: Continues the query
         /// Return false: Terminate the query
@@ -1313,10 +1316,10 @@ namespace VelcroPhysics.Dynamics
             List<Fixture> affected = new List<Fixture>();
 
             QueryAABB(fixture =>
-                {
-                    affected.Add(fixture);
-                    return true;
-                }, ref aabb);
+            {
+                affected.Add(fixture);
+                return true;
+            }, ref aabb);
 
             return affected;
         }
@@ -1325,7 +1328,6 @@ namespace VelcroPhysics.Dynamics
         /// Ray-cast the world for all fixtures in the path of the ray. Your callback
         /// controls whether you get the closest point, any point, or n-points.
         /// The ray-cast ignores shapes that contain the starting point.
-        /// 
         /// Inside the callback:
         /// return -1: ignore this fixture and continue
         /// return 0: terminate the ray cast
@@ -1374,7 +1376,7 @@ namespace VelcroPhysics.Dynamics
         public void RemoveController(Controller controller)
         {
             Debug.Assert(ControllerList.Contains(controller),
-                         "You are removing a controller that is not in the simulation.");
+                "You are removing a controller that is not in the simulation.");
 
             if (ControllerList.Contains(controller))
             {

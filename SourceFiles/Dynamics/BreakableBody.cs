@@ -18,6 +18,16 @@ namespace VelcroPhysics.Dynamics
         private Vector2[] _velocitiesCache = new Vector2[8];
         private World _world;
 
+        public bool Broken;
+        public Body MainBody;
+        public List<Fixture> Parts = new List<Fixture>(8);
+
+        /// <summary>
+        /// The force needed to break the body apart.
+        /// Default: 500
+        /// </summary>
+        public float Strength = 500.0f;
+
         public BreakableBody(World world, IEnumerable<Vertices> vertices, float density, Vector2 position = new Vector2(), float rotation = 0)
         {
             _world = world;
@@ -44,16 +54,6 @@ namespace VelcroPhysics.Dynamics
                 Parts.Add(fixture);
             }
         }
-
-        public bool Broken;
-        public Body MainBody;
-        public List<Fixture> Parts = new List<Fixture>(8);
-
-        /// <summary>
-        /// The force needed to break the body apart.
-        /// Default: 500
-        /// </summary>
-        public float Strength = 500.0f;
 
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
@@ -120,8 +120,8 @@ namespace VelcroPhysics.Dynamics
 
                 MainBody.DestroyFixture(oldFixture);
 
-                Body body = BodyFactory.CreateBody(_world,MainBody.Position,MainBody.Rotation,BodyType.Dynamic,MainBody.UserData);
-                
+                Body body = BodyFactory.CreateBody(_world, MainBody.Position, MainBody.Rotation, BodyType.Dynamic, MainBody.UserData);
+
                 Fixture newFixture = body.CreateFixture(shape);
                 newFixture.UserData = userData;
                 Parts[i] = newFixture;

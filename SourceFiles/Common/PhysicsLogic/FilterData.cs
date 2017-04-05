@@ -30,7 +30,6 @@ namespace VelcroPhysics.Common.PhysicsLogic
         public int EnabledOnGroup;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="body"></param>
         /// <returns></returns>
@@ -93,7 +92,7 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns>
-        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
+        /// <c>true</c> if the object has the specified category; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInDisabledCategory(Category category)
         {
@@ -123,7 +122,7 @@ namespace VelcroPhysics.Common.PhysicsLogic
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns>
-        /// 	<c>true</c> if the object has the specified category; otherwise, <c>false</c>.
+        /// <c>true</c> if the object has the specified category; otherwise, <c>false</c>.
         /// </returns>
         public bool IsInEnabledInCategory(Category category)
         {

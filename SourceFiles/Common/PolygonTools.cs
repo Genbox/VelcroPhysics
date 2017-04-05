@@ -109,7 +109,7 @@ namespace VelcroPhysics.Common
                     }
 
                     vertices.Add(posOffset + new Vector2(xRadius * (float)Math.Cos(stepSize * -(i + phase)),
-                                                         -yRadius * (float)Math.Sin(stepSize * -(i + phase))));
+                                     -yRadius * (float)Math.Sin(stepSize * -(i + phase))));
                 }
             }
 
@@ -157,7 +157,7 @@ namespace VelcroPhysics.Common
             vertices.Add(new Vector2(xRadius, 0));
             for (int i = numberOfEdges - 1; i > 0; --i)
                 vertices.Add(new Vector2(xRadius * (float)Math.Cos(stepSize * i),
-                                         -yRadius * (float)Math.Sin(stepSize * i)));
+                    -yRadius * (float)Math.Sin(stepSize * i)));
 
             return vertices;
         }
@@ -174,7 +174,7 @@ namespace VelcroPhysics.Common
             for (int i = sides - 1; i > 0; i--)
             {
                 vertices.Add(new Vector2(radius * (float)Math.Cos(stepSize * i),
-                                         radius * (float)Math.Sin(stepSize * i)));
+                    radius * (float)Math.Sin(stepSize * i)));
             }
 
             return vertices;
@@ -249,7 +249,7 @@ namespace VelcroPhysics.Common
             for (int i = 1; i < topEdges; i++)
             {
                 vertices.Add(new Vector2(topRadius * (float)Math.Cos(stepSize * i),
-                                         topRadius * (float)Math.Sin(stepSize * i) + newHeight));
+                    topRadius * (float)Math.Sin(stepSize * i) + newHeight));
             }
 
             vertices.Add(new Vector2(-topRadius, newHeight));
@@ -261,7 +261,7 @@ namespace VelcroPhysics.Common
             for (int i = 1; i < bottomEdges; i++)
             {
                 vertices.Add(new Vector2(-bottomRadius * (float)Math.Cos(stepSize * i),
-                                         -bottomRadius * (float)Math.Sin(stepSize * i) - newHeight));
+                    -bottomRadius * (float)Math.Sin(stepSize * i) - newHeight));
             }
 
             vertices.Add(new Vector2(bottomRadius, -newHeight));
@@ -295,23 +295,23 @@ namespace VelcroPhysics.Common
                     vertices.Add(
                         new Vector2(radius *
                                     (float)Math.Cos(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize),
-                                    -radius *
-                                    (float)Math.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
+                            -radius *
+                            (float)Math.Sin(stepSize * i + toothAngleStepSize * 2f + toothTipStepSize)));
 
                     vertices.Add(
                         new Vector2((radius + toothHeight) *
                                     (float)Math.Cos(stepSize * i + toothAngleStepSize + toothTipStepSize),
-                                    -(radius + toothHeight) *
-                                    (float)Math.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
+                            -(radius + toothHeight) *
+                            (float)Math.Sin(stepSize * i + toothAngleStepSize + toothTipStepSize)));
                 }
 
                 vertices.Add(new Vector2((radius + toothHeight) *
                                          (float)Math.Cos(stepSize * i + toothAngleStepSize),
-                                         -(radius + toothHeight) *
-                                         (float)Math.Sin(stepSize * i + toothAngleStepSize)));
+                    -(radius + toothHeight) *
+                    (float)Math.Sin(stepSize * i + toothAngleStepSize)));
 
                 vertices.Add(new Vector2(radius * (float)Math.Cos(stepSize * i),
-                                         -radius * (float)Math.Sin(stepSize * i)));
+                    -radius * (float)Math.Sin(stepSize * i)));
             }
 
             return vertices;
@@ -354,7 +354,7 @@ namespace VelcroPhysics.Common
                                                    byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
             return TextureConverter.DetectVertices(data, width, hullTolerance, alphaTolerance,
-                                                   multiPartDetection, holeDetection);
+                multiPartDetection, holeDetection);
         }
     }
 }

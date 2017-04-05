@@ -21,26 +21,6 @@ namespace VelcroPhysics.Factories
 
         #endregion
 
-        #region Revolute Joint
-
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
-        {
-            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
-            world.AddJoint(joint);
-            return joint;
-        }
-
-        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
-        {
-            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
-            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, anchor);
-            world.AddJoint(joint);
-            return joint;
-        }
-
-
-        #endregion
-
         #region Rope Joint
 
         public static RopeJoint CreateRopeJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
@@ -74,22 +54,6 @@ namespace VelcroPhysics.Factories
 
         #endregion
 
-        #region Wheel Joint
-
-        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
-        {
-            WheelJoint joint = new WheelJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
-            world.AddJoint(joint);
-            return joint;
-        }
-
-        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, Vector2 axis)
-        {
-            return CreateWheelJoint(world, bodyA, bodyB, Vector2.Zero, axis);
-        }
-
-        #endregion
-
         #region Angle Joint
 
         public static AngleJoint CreateAngleJoint(World world, Body bodyA, Body bodyB)
@@ -97,38 +61,6 @@ namespace VelcroPhysics.Factories
             AngleJoint angleJoint = new AngleJoint(bodyA, bodyB);
             world.AddJoint(angleJoint);
             return angleJoint;
-        }
-
-        #endregion
-
-        #region Distance Joint
-
-        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
-        {
-            DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
-            world.AddJoint(distanceJoint);
-            return distanceJoint;
-        }
-
-        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB)
-        {
-            return CreateDistanceJoint(world, bodyA, bodyB, Vector2.Zero, Vector2.Zero);
-        }
-
-        #endregion
-
-        #region Friction Joint
-
-        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
-        {
-            FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchor, useWorldCoordinates);
-            world.AddJoint(frictionJoint);
-            return frictionJoint;
-        }
-
-        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB)
-        {
-            return CreateFrictionJoint(world, bodyA, bodyB, Vector2.Zero);
         }
 
         #endregion
@@ -162,6 +94,73 @@ namespace VelcroPhysics.Factories
             FixedMouseJoint joint = new FixedMouseJoint(body, worldAnchor);
             world.AddJoint(joint);
             return joint;
+        }
+
+        #endregion
+
+        #region Revolute Joint
+
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
+        {
+            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
+            world.AddJoint(joint);
+            return joint;
+        }
+
+        public static RevoluteJoint CreateRevoluteJoint(World world, Body bodyA, Body bodyB, Vector2 anchor)
+        {
+            Vector2 localanchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
+            RevoluteJoint joint = new RevoluteJoint(bodyA, bodyB, localanchorA, anchor);
+            world.AddJoint(joint);
+            return joint;
+        }
+
+        #endregion
+
+        #region Wheel Joint
+
+        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
+        {
+            WheelJoint joint = new WheelJoint(bodyA, bodyB, anchor, axis, useWorldCoordinates);
+            world.AddJoint(joint);
+            return joint;
+        }
+
+        public static WheelJoint CreateWheelJoint(World world, Body bodyA, Body bodyB, Vector2 axis)
+        {
+            return CreateWheelJoint(world, bodyA, bodyB, Vector2.Zero, axis);
+        }
+
+        #endregion
+
+        #region Distance Joint
+
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
+        {
+            DistanceJoint distanceJoint = new DistanceJoint(bodyA, bodyB, anchorA, anchorB, useWorldCoordinates);
+            world.AddJoint(distanceJoint);
+            return distanceJoint;
+        }
+
+        public static DistanceJoint CreateDistanceJoint(World world, Body bodyA, Body bodyB)
+        {
+            return CreateDistanceJoint(world, bodyA, bodyB, Vector2.Zero, Vector2.Zero);
+        }
+
+        #endregion
+
+        #region Friction Joint
+
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
+        {
+            FrictionJoint frictionJoint = new FrictionJoint(bodyA, bodyB, anchor, useWorldCoordinates);
+            world.AddJoint(frictionJoint);
+            return frictionJoint;
+        }
+
+        public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB)
+        {
+            return CreateFrictionJoint(world, bodyA, bodyB, Vector2.Zero);
         }
 
         #endregion

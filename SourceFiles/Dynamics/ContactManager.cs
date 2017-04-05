@@ -44,6 +44,7 @@ namespace VelcroPhysics.Dynamics
         public List<Contact> ContactList = new List<Contact>(128);
 
 #if USE_ACTIVE_CONTACT_SET
+
         /// <summary>
         /// The set of active contacts.
         /// </summary>
@@ -165,6 +166,7 @@ namespace VelcroPhysics.Dynamics
 #if USE_ACTIVE_CONTACT_SET
 			ActiveContacts.Add(c);
 #endif
+
             // Connect to island graph.
 
             // Connect to body A

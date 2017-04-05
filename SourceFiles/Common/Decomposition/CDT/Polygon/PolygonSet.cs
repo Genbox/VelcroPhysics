@@ -43,9 +43,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Polygon
     {
         protected List<Polygon> _polygons = new List<Polygon>();
 
-        public PolygonSet()
-        {
-        }
+        public PolygonSet() { }
 
         public PolygonSet(Polygon poly)
         {

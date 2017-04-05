@@ -4,6 +4,7 @@
     {
         // Pointers to next and previous points in Monontone Mountain
         public Point Next, Prev;
+
         public float X, Y;
 
         public Point(float x, float y)

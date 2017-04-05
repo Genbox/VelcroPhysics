@@ -50,13 +50,13 @@ namespace VelcroPhysics.Common.Decomposition.CDT
 
         public float Xf
         {
-            get { return (float) X; }
+            get { return (float)X; }
             set { X = value; }
         }
 
         public float Yf
         {
-            get { return (float) Y; }
+            get { return (float)Y; }
             set { Y = value; }
         }
 

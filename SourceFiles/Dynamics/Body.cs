@@ -44,10 +44,12 @@ namespace VelcroPhysics.Dynamics
         /// Zero velocity, may be manually moved. Note: even static bodies have mass.
         /// </summary>
         Static,
+
         /// <summary>
         /// Zero mass, non-zero velocity set by user, moved by solver
         /// </summary>
         Kinematic,
+
         /// <summary>
         /// Positive mass, non-zero velocity determined by forces, moved by solver
         /// </summary>
@@ -60,29 +62,29 @@ namespace VelcroPhysics.Dynamics
         private static int _bodyIdCounter;
 
         private float _angularDamping;
-        private BodyType _bodyType;
-        private float _inertia;
-        private float _linearDamping;
-        private float _mass;
-        private bool _sleepingAllowed;
+        internal float _angularVelocity;
         private bool _awake;
-        private bool _fixedRotation;
+        private BodyType _bodyType;
 
         internal bool _enabled;
-        internal float _angularVelocity;
-        internal Vector2 _linearVelocity;
+        private bool _fixedRotation;
         internal Vector2 _force;
+        private float _inertia;
         internal float _invI;
         internal float _invMass;
+        internal bool _island;
+        private float _linearDamping;
+        internal Vector2 _linearVelocity;
+        private float _mass;
+        private bool _sleepingAllowed;
         internal float _sleepTime;
         internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
         internal World _world;
         internal Transform _xf; // the body origin transform
-        internal bool _island;
+        public ControllerFilter ControllerFilter;
 
         public PhysicsLogicFilter PhysicsLogicFilter;
-        public ControllerFilter ControllerFilter;
 
         public Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
         {
@@ -322,8 +324,9 @@ namespace VelcroPhysics.Dynamics
                 else
                 {
 #if USE_AWAKE_BODY_SET
-					// Check even for BodyType.Static because if this body had just been changed to Static it will have
-					// set Awake = false in the process.
+
+// Check even for BodyType.Static because if this body had just been changed to Static it will have
+// set Awake = false in the process.
 					if (InWorld && World.AwakeBodySet.Contains(this))
 					{
 						World.AwakeBodySet.Remove(this);
@@ -646,7 +649,7 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// Body objects can define which categories of bodies they wish to ignore CCD with. 
+        /// Body objects can define which categories of bodies they wish to ignore CCD with.
         /// This allows certain bodies to be configured to ignore CCD with objects that
         /// aren't a penetration problem due to the way content has been prepared.
         /// This is compared against the other Body's fixture CollisionCategories within World.SolveTOI().
@@ -1163,7 +1166,7 @@ namespace VelcroPhysics.Dynamics
         {
             return _linearVelocity +
                    new Vector2(-_angularVelocity * (worldPoint.Y - _sweep.C.Y),
-                               _angularVelocity * (worldPoint.X - _sweep.C.X));
+                       _angularVelocity * (worldPoint.X - _sweep.C.X));
         }
 
         /// <summary>
@@ -1302,22 +1305,6 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                _world.RemoveBody(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Makes a clone of the body. Fixtures and therefore shapes are not included.
         /// Use DeepClone() to clone the body, as well as fixtures and shapes.
@@ -1363,5 +1350,21 @@ namespace VelcroPhysics.Dynamics
 
             return body;
         }
+
+        #region IDisposable Members
+
+        public bool IsDisposed { get; set; }
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                _world.RemoveBody(this);
+                IsDisposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        #endregion
     }
 }

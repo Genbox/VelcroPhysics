@@ -92,18 +92,14 @@ namespace VelcroPhysics.Dynamics
     {
         [ThreadStatic]
         private static int _fixtureIdCounter;
-        private bool _isSensor;
-        private float _friction;
-        private float _restitution;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
         internal HashSet<int> _collisionIgnores;
-
-        public FixtureProxy[] Proxies;
-        public int ProxyCount;
-        public Category IgnoreCCDWith;
+        private float _friction;
+        private bool _isSensor;
+        private float _restitution;
 
         /// <summary>
         /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
@@ -115,6 +111,8 @@ namespace VelcroPhysics.Dynamics
         /// Due to how the broadphase works, this can be quite inaccurate as shapes are approximated using AABBs.
         /// </summary>
         public BeforeCollisionEventHandler BeforeCollision;
+
+        public Category IgnoreCCDWith;
 
         /// <summary>
         /// Fires when two shapes collide and a contact is created between them.
@@ -128,6 +126,9 @@ namespace VelcroPhysics.Dynamics
         /// Note The first fixture argument is always the fixture that the delegate is subscribed to.
         /// </summary>
         public OnSeparationEventHandler OnSeparation;
+
+        public FixtureProxy[] Proxies;
+        public int ProxyCount;
 
         internal Fixture()
         {
@@ -162,12 +163,10 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>
         /// Defaults to 0
-        /// 
         /// If Settings.UseFPECollisionCategories is set to false:
         /// Collision groups allow a certain group of objects to never collide (negative)
         /// or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits.
-        /// 
         /// If Settings.UseFPECollisionCategories is set to true:
         /// If 2 fixtures are in the same collision group, they will not collide.
         /// </summary>
@@ -186,7 +185,6 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>
         /// Defaults to Category.All
-        /// 
         /// The collision mask bits. This states the categories that this
         /// fixture would accept for collision.
         /// Use Settings.UseFPECollisionCategories to change the behavior.
@@ -207,10 +205,8 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>
         /// The collision categories this fixture is a part of.
-        /// 
         /// If Settings.UseFPECollisionCategories is set to false:
         /// Defaults to Category.Cat1
-        /// 
         /// If Settings.UseFPECollisionCategories is set to true:
         /// Defaults to Category.All
         /// </summary>
@@ -301,22 +297,6 @@ namespace VelcroPhysics.Dynamics
         /// <value>The fixture id.</value>
         public int FixtureId { get; internal set; }
 
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                Body.DestroyFixture(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Restores collisions between this fixture and the provided fixture.
         /// </summary>
@@ -348,7 +328,7 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="fixture">The fixture.</param>
         /// <returns>
-        /// 	<c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
+        /// <c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
         /// </returns>
         public bool IsFixtureIgnored(Fixture fixture)
         {
@@ -614,5 +594,21 @@ namespace VelcroPhysics.Dynamics
             fixture.RegisterFixture();
             return fixture;
         }
+
+        #region IDisposable Members
+
+        public bool IsDisposed { get; set; }
+
+        public void Dispose()
+        {
+            if (!IsDisposed)
+            {
+                Body.DestroyFixture(this);
+                IsDisposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        #endregion
     }
 }

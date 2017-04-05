@@ -16,15 +16,15 @@ namespace VelcroPhysics.Common
     /// </summary>
     public class Path
     {
+        private float _deltaT;
+
         /// <summary>
         /// All the points that makes up the curve
         /// </summary>
         public List<Vector2> ControlPoints;
 
-        private float _deltaT;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="Path"/> class.
+        /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         public Path()
         {
@@ -32,7 +32,7 @@ namespace VelcroPhysics.Common
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Path"/> class.
+        /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
         public Path(Vector2[] vertices)
@@ -46,7 +46,7 @@ namespace VelcroPhysics.Common
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Path"/> class.
+        /// Initializes a new instance of the <see cref="Path" /> class.
         /// </summary>
         /// <param name="vertices">The vertices to created the path from.</param>
         public Path(IList<Vector2> vertices)

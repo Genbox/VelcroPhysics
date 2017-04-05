@@ -33,29 +33,33 @@ namespace VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class MotorJoint : Joint
     {
-        // Solver shared
-        private Vector2 _linearOffset;
-        private float _angularOffset;
-        private Vector2 _linearImpulse;
+        private float _angularError;
         private float _angularImpulse;
-        private float _maxForce;
-        private float _maxTorque;
+        private float _angularMass;
+        private float _angularOffset;
 
         // Solver temp
         private int _indexA;
+
         private int _indexB;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private Vector2 _linearError;
-        private float _angularError;
-        private float _invMassA;
-        private float _invMassB;
         private float _invIA;
         private float _invIB;
+        private float _invMassA;
+        private float _invMassB;
+        private Vector2 _linearError;
+        private Vector2 _linearImpulse;
+
         private Mat22 _linearMass;
-        private float _angularMass;
+
+        // Solver shared
+        private Vector2 _linearOffset;
+
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _maxForce;
+        private float _maxTorque;
+        private Vector2 _rA;
+        private Vector2 _rB;
 
         internal MotorJoint()
         {

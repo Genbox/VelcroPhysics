@@ -35,7 +35,7 @@ namespace VelcroPhysics
 
         /// <summary>
         /// If true, all collision callbacks have to return the same value, and agree
-        /// if there was a collision or not. Swtich this to false to revert to the 
+        /// if there was a collision or not. Swtich this to false to revert to the
         /// collision agreement used in FPE 3.3.x
         /// </summary>
         public const bool AllCollisionCallbacksAgree = true;
@@ -57,39 +57,6 @@ namespace VelcroPhysics
         public const bool SkipSanityChecks = false;
 
         /// <summary>
-        /// The number of velocity iterations used in the solver.
-        /// </summary>
-        public static int VelocityIterations = 8;
-
-        /// <summary>
-        /// The number of position iterations used in the solver.
-        /// </summary>
-        public static int PositionIterations = 3;
-
-        /// <summary>
-        /// Enable/Disable Continuous Collision Detection (CCD)
-        /// </summary>
-        public static bool ContinuousPhysics = true;
-
-        /// <summary>
-        /// If true, it will run a GiftWrap convex hull on all polygon inputs.
-        /// This makes for a more stable engine when given random input,
-        /// but if speed of the creation of polygons are more important,
-        /// you might want to set this to false.
-        /// </summary>
-        public static bool UseConvexHullPolygons = true;
-
-        /// <summary>
-        /// The number of velocity iterations in the TOI solver
-        /// </summary>
-        public static int TOIVelocityIterations = VelocityIterations;
-
-        /// <summary>
-        /// The number of position iterations in the TOI solver
-        /// </summary>
-        public static int TOIPositionIterations = 20;
-
-        /// <summary>
         /// Maximum number of sub-steps per contact in continuous physics simulation.
         /// </summary>
         public const int MaxSubSteps = 8;
@@ -98,44 +65,6 @@ namespace VelcroPhysics
         /// Enable/Disable warmstarting
         /// </summary>
         public const bool EnableWarmstarting = true;
-
-        /// <summary>
-        /// Enable/Disable sleeping
-        /// </summary>
-        public static bool AllowSleep = true;
-
-        /// <summary>
-        /// The maximum number of vertices on a convex polygon.
-        /// </summary>
-        public static int MaxPolygonVertices = 8;
-
-        /// <summary>
-        /// Velcro Physics has a different way of filtering fixtures than Box2d.
-        /// We have both FPE and Box2D filtering in the engine. If you are upgrading
-        /// from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
-        /// to Category.All.
-        /// </summary>
-        public static bool UseFPECollisionCategories;
-
-        /// <summary>
-        /// This is used by the Fixture constructor as the default value 
-        /// for Fixture.CollisionCategories member. Note that you may need to change this depending
-        /// on the setting of UseFPECollisionCategories, above.
-        /// </summary>
-        public static Category DefaultFixtureCollisionCategories = Category.Cat1;
-
-        /// <summary>
-        /// This is used by the Fixture constructor as the default value 
-        /// for Fixture.CollidesWith member.
-        /// </summary>
-        public static Category DefaultFixtureCollidesWith = Category.All;
-
-
-        /// <summary>
-        /// This is used by the Fixture constructor as the default value 
-        /// for Fixture.IgnoreCCDWith member.
-        /// </summary>
-        public static Category DefaultFixtureIgnoreCCDWith = Category.None;
 
         /// <summary>
         /// The maximum number of contact points between two convex shapes.
@@ -259,6 +188,76 @@ namespace VelcroPhysics
         /// ClearForces after all sub-steps are complete in one pass of your game loop.
         /// </summary>
         public const bool AutoClearForces = true;
+
+        /// <summary>
+        /// The number of velocity iterations used in the solver.
+        /// </summary>
+        public static int VelocityIterations = 8;
+
+        /// <summary>
+        /// The number of position iterations used in the solver.
+        /// </summary>
+        public static int PositionIterations = 3;
+
+        /// <summary>
+        /// Enable/Disable Continuous Collision Detection (CCD)
+        /// </summary>
+        public static bool ContinuousPhysics = true;
+
+        /// <summary>
+        /// If true, it will run a GiftWrap convex hull on all polygon inputs.
+        /// This makes for a more stable engine when given random input,
+        /// but if speed of the creation of polygons are more important,
+        /// you might want to set this to false.
+        /// </summary>
+        public static bool UseConvexHullPolygons = true;
+
+        /// <summary>
+        /// The number of velocity iterations in the TOI solver
+        /// </summary>
+        public static int TOIVelocityIterations = VelocityIterations;
+
+        /// <summary>
+        /// The number of position iterations in the TOI solver
+        /// </summary>
+        public static int TOIPositionIterations = 20;
+
+        /// <summary>
+        /// Enable/Disable sleeping
+        /// </summary>
+        public static bool AllowSleep = true;
+
+        /// <summary>
+        /// The maximum number of vertices on a convex polygon.
+        /// </summary>
+        public static int MaxPolygonVertices = 8;
+
+        /// <summary>
+        /// Velcro Physics has a different way of filtering fixtures than Box2d.
+        /// We have both FPE and Box2D filtering in the engine. If you are upgrading
+        /// from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
+        /// to Category.All.
+        /// </summary>
+        public static bool UseFPECollisionCategories;
+
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value
+        /// for Fixture.CollisionCategories member. Note that you may need to change this depending
+        /// on the setting of UseFPECollisionCategories, above.
+        /// </summary>
+        public static Category DefaultFixtureCollisionCategories = Category.Cat1;
+
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value
+        /// for Fixture.CollidesWith member.
+        /// </summary>
+        public static Category DefaultFixtureCollidesWith = Category.All;
+
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value
+        /// for Fixture.IgnoreCCDWith member.
+        /// </summary>
+        public static Category DefaultFixtureIgnoreCCDWith = Category.None;
 
         /// <summary>
         /// Friction mixing law. Feel free to customize this.

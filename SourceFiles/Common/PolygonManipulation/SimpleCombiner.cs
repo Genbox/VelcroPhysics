@@ -26,18 +26,18 @@ namespace VelcroPhysics.Common.PolygonManipulation
 {
     /// <summary>
     /// Combines a list of triangles into a list of convex polygons.
-    /// Starts with a seed triangle, keep adding triangles to it until you can't add any more without making the polygon non-convex.
+    /// Starts with a seed triangle, keep adding triangles to it until you can't add any more without making the polygon
+    /// non-convex.
     /// </summary>
     public static class SimpleCombiner
     {
         /// <summary>
         /// Combine a list of triangles into a list of convex polygons.
-        /// 
         /// Note: This only works on triangles.
         /// </summary>
-        ///<param name="triangles">The triangles.</param>
-        ///<param name="maxPolys">The maximun number of polygons to return.</param>
-        ///<param name="tolerance">The tolerance</param>
+        /// <param name="triangles">The triangles.</param>
+        /// <param name="maxPolys">The maximun number of polygons to return.</param>
+        /// <param name="tolerance">The tolerance</param>
         public static List<Vertices> PolygonizeTriangles(List<Vertices> triangles, int maxPolys = int.MaxValue, float tolerance = 0.001f)
         {
             if (triangles.Count <= 0)
@@ -92,7 +92,8 @@ namespace VelcroPhysics.Common.PolygonManipulation
                     int index = 0;
                     for (int i = 0; i < 2 * triangles.Count; ++i, ++index)
                     {
-                        while (index >= triangles.Count) index -= triangles.Count;
+                        while (index >= triangles.Count)
+                            index -= triangles.Count;
                         if (covered[index])
                         {
                             continue;
@@ -191,6 +192,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
                     }
                 }
             }
+
             // Fix ordering if first should be last vertex of poly
             if (firstP == 0 && secondP == vertices.Count - 1)
             {

@@ -67,57 +67,68 @@ namespace VelcroPhysics.Dynamics.Contacts
     /// </summary>
     public class Contact
     {
-        private ContactType _type;
-
         private static EdgeShape _edge = new EdgeShape();
 
         private static ContactType[,] _registers = new[,]
-                                                       {
-                                                           {
-                                                               ContactType.Circle,
-                                                               ContactType.EdgeAndCircle,
-                                                               ContactType.PolygonAndCircle,
-                                                               ContactType.ChainAndCircle,
-                                                           },
-                                                           {
-                                                               ContactType.EdgeAndCircle,
-                                                               ContactType.NotSupported,
-                                                               // 1,1 is invalid (no ContactType.Edge)
-                                                               ContactType.EdgeAndPolygon,
-                                                               ContactType.NotSupported,
-                                                               // 1,3 is invalid (no ContactType.EdgeAndLoop)
-                                                           },
-                                                           {
-                                                               ContactType.PolygonAndCircle,
-                                                               ContactType.EdgeAndPolygon,
-                                                               ContactType.Polygon,
-                                                               ContactType.ChainAndPolygon,
-                                                           },
-                                                           {
-                                                               ContactType.ChainAndCircle,
-                                                               ContactType.NotSupported,
-                                                               // 3,1 is invalid (no ContactType.EdgeAndLoop)
-                                                               ContactType.ChainAndPolygon,
-                                                               ContactType.NotSupported,
-                                                               // 3,3 is invalid (no ContactType.Loop)
-                                                           },
-                                                       };
+        {
+            {
+                ContactType.Circle,
+                ContactType.EdgeAndCircle,
+                ContactType.PolygonAndCircle,
+                ContactType.ChainAndCircle,
+            },
+            {
+                ContactType.EdgeAndCircle,
+                ContactType.NotSupported,
+
+                // 1,1 is invalid (no ContactType.Edge)
+                ContactType.EdgeAndPolygon,
+                ContactType.NotSupported,
+
+                // 1,3 is invalid (no ContactType.EdgeAndLoop)
+            },
+            {
+                ContactType.PolygonAndCircle,
+                ContactType.EdgeAndPolygon,
+                ContactType.Polygon,
+                ContactType.ChainAndPolygon,
+            },
+            {
+                ContactType.ChainAndCircle,
+                ContactType.NotSupported,
+
+                // 3,1 is invalid (no ContactType.EdgeAndLoop)
+                ContactType.ChainAndPolygon,
+                ContactType.NotSupported,
+
+                // 3,3 is invalid (no ContactType.Loop)
+            },
+        };
+
         // Nodes for connecting bodies.
         internal ContactEdge _nodeA = new ContactEdge();
+
         internal ContactEdge _nodeB = new ContactEdge();
-        internal int _toiCount;
         internal float _toi;
+        internal int _toiCount;
+        private ContactType _type;
 
         public Fixture FixtureA;
         public Fixture FixtureB;
-        public float Friction { get; set; }
-        public float Restitution { get; set; }
 
         /// <summary>
         /// Get the contact manifold. Do not modify the manifold unless you understand the
         /// internals of Box2D.
         /// </summary>
         public Manifold Manifold;
+
+        private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
+        {
+            Reset(fA, indexA, fB, indexB);
+        }
+
+        public float Friction { get; set; }
+        public float Restitution { get; set; }
 
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
         public float TangentSpeed { get; set; }
@@ -146,7 +157,7 @@ namespace VelcroPhysics.Dynamics.Contacts
         /// Determines whether this contact is touching.
         /// </summary>
         /// <returns>
-        /// 	<c>true</c> if this instance is touching; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is touching; otherwise, <c>false</c>.
         /// </returns>
         public bool IsTouching { get; set; }
 
@@ -162,11 +173,6 @@ namespace VelcroPhysics.Dynamics.Contacts
         public void ResetFriction()
         {
             Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
-        }
-
-        private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
-        {
-            Reset(fA, indexA, fB, indexB);
         }
 
         /// <summary>
@@ -368,7 +374,7 @@ namespace VelcroPhysics.Dynamics.Contacts
         }
 
         /// <summary>
-        /// Evaluate this contact with your own manifold and transforms.   
+        /// Evaluate this contact with your own manifold and transforms.
         /// </summary>
         /// <param name="manifold">The manifold.</param>
         /// <param name="transformA">The first transform.</param>

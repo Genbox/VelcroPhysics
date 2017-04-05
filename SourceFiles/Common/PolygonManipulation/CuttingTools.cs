@@ -57,6 +57,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
             for (int i = 0; i < vertices.Count; i++)
             {
                 int n;
+
                 //Find out if this vertex is on the old or new shape.
                 if (Vector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) > Settings.Epsilon)
                     n = 0;
@@ -158,18 +159,18 @@ namespace VelcroPhysics.Common.PolygonManipulation
 
             //Get the entry points
             world.RayCast((f, p, n, fr) =>
-                              {
-                                  fixtures.Add(f);
-                                  entryPoints.Add(p);
-                                  return 1;
-                              }, start, end);
+            {
+                fixtures.Add(f);
+                entryPoints.Add(p);
+                return 1;
+            }, start, end);
 
             //Reverse the ray to get the exitpoints
             world.RayCast((f, p, n, fr) =>
-                              {
-                                  exitPoints.Add(p);
-                                  return 1;
-                              }, end, start);
+            {
+                exitPoints.Add(p);
+                return 1;
+            }, end, start);
 
             //We only have a single point. We need at least 2
             if (entryPoints.Count + exitPoints.Count < 2)
