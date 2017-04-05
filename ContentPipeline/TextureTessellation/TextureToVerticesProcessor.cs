@@ -11,10 +11,9 @@ using VelcroPhysics.Common.PolygonManipulation;
 namespace VelcroPhysics.ContentPipeline.TextureTesselation
 {
     [ContentProcessor(DisplayName = "Texture to Vertices")]
-    class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, List<Vertices>>
+    public class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, List<Vertices>>
     {
         private float _scaleFactor = 1f;
-        private bool _holeDetection;
 
         [DisplayName("Pixel to meter ratio")]
         [Description("The length of one physics simulation unit in pixels.")]
@@ -28,11 +27,7 @@ namespace VelcroPhysics.ContentPipeline.TextureTesselation
         [DisplayName("Hole detection")]
         [Description("Detect holes in the traced texture.")]
         [DefaultValue(false)]
-        public bool HoleDetection
-        {
-            get { return _holeDetection; }
-            set { _holeDetection = value; }
-        }
+        public bool HoleDetection { get; set; }
 
         public override List<Vertices> Process(Texture2DContent input, ContentProcessorContext context)
         {
@@ -53,7 +48,7 @@ namespace VelcroPhysics.ContentPipeline.TextureTesselation
                 }
             }
 
-            Vertices outline = PolygonTools.CreatePolygon(colorData, bitmapContent.Width, _holeDetection);
+            Vertices outline = PolygonTools.CreatePolygon(colorData, bitmapContent.Width, HoleDetection);
             Vector2 centroid = -outline.GetCentroid();
             outline.Translate(ref centroid);
             outline = SimplifyTools.DouglasPeuckerSimplify(outline, 0.1f);

@@ -25,7 +25,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
             _transformations.Push(Matrix.Identity);
 
             _parsedSVG = new List<RawBodyTemplate>();
-            _parsedSVG.Add(new RawBodyTemplate()
+            _parsedSVG.Add(new RawBodyTemplate
             {
                 Name = "importer_default_path_container",
                 Fixtures = new List<RawFixtureTemplate>(),
@@ -56,7 +56,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                 if (currentElement.HasAttribute("fp_body") && _currentBody == null)
                 {
                     BodyType type;
-                    if (!Enum.TryParse<BodyType>(currentElement.Attributes["fp_body"].Value, true, out type))
+                    if (!Enum.TryParse(currentElement.Attributes["fp_body"].Value, true, out type))
                     {
                         type = BodyType.Static;
                     }
@@ -70,7 +70,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                     {
                         float.TryParse(currentElement.Attributes["fp_mass"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out bodyMass);
                     }
-                    _currentBody = new RawBodyTemplate()
+                    _currentBody = new RawBodyTemplate
                     {
                         Fixtures = new List<RawFixtureTemplate>(),
                         Mass = bodyMass,

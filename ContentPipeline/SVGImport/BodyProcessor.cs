@@ -14,7 +14,6 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
     public class BodyProcessor : ContentProcessor<List<RawBodyTemplate>, BodyContainer>
     {
         private float _scaleFactor = 1f;
-        private int _bezierIterations = 3;
 
         [DisplayName("Pixel to meter ratio")]
         [Description("The length of one physics simulation unit in pixels.")]
@@ -28,11 +27,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
         [DisplayName("Cubic bézier iterations")]
         [Description("Amount of subdivisions for decomposing cubic bézier curves into line segments.")]
         [DefaultValue(3)]
-        public int BezierIterations
-        {
-            get { return _bezierIterations; }
-            set { _bezierIterations = value; }
-        }
+        public int BezierIterations { get; set; } = 3;
 
         public override BodyContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
         {
@@ -43,7 +38,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                 throw new Exception("Cubic bézier iterations must be greater than zero.");
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
-            SVGPathParser parser = new SVGPathParser(_bezierIterations);
+            SVGPathParser parser = new SVGPathParser(BezierIterations);
             BodyContainer bodies = new BodyContainer();
 
             foreach (RawBodyTemplate rawBody in input)
@@ -64,7 +59,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                             List<Vertices> partition = Triangulate.ConvexPartition(paths[i].Vertices, TriangulationAlgorithm.Bayazit);
                             foreach (Vertices v in partition)
                             {
-                                currentBody.Fixtures.Add(new FixtureTemplate()
+                                currentBody.Fixtures.Add(new FixtureTemplate
                                 {
                                     Shape = new PolygonShape(v, rawFixture.Density),
                                     Restitution = rawFixture.Restitution,
@@ -84,7 +79,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                             {
                                 shape = new EdgeShape(paths[i].Vertices[0], paths[i].Vertices[1]);
                             }
-                            currentBody.Fixtures.Add(new FixtureTemplate()
+                            currentBody.Fixtures.Add(new FixtureTemplate
                             {
                                 Shape = shape,
                                 Restitution = rawFixture.Restitution,

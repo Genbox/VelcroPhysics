@@ -29,48 +29,52 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                     switch (f.Shape.ShapeType)
                     {
                         case ShapeType.Circle:
-                            {
-                                CircleShape circle = (CircleShape)f.Shape;
-                                output.Write(circle.Density);
-                                output.Write(circle.Radius);
-                                output.Write(circle.Position);
-                            } break;
+                        {
+                            CircleShape circle = (CircleShape)f.Shape;
+                            output.Write(circle.Density);
+                            output.Write(circle.Radius);
+                            output.Write(circle.Position);
+                        }
+                            break;
                         case ShapeType.Polygon:
+                        {
+                            PolygonShape poly = (PolygonShape)f.Shape;
+                            output.Write(poly.Density);
+                            output.Write(poly.Vertices.Count);
+                            foreach (Vector2 v in poly.Vertices)
                             {
-                                PolygonShape poly = (PolygonShape)f.Shape;
-                                output.Write(poly.Density);
-                                output.Write(poly.Vertices.Count);
-                                foreach (Vector2 v in poly.Vertices)
-                                {
-                                    output.Write(v);
-                                }
-                                output.Write(poly.MassData.Centroid);
-                            } break;
+                                output.Write(v);
+                            }
+                            output.Write(poly.MassData.Centroid);
+                        }
+                            break;
                         case ShapeType.Edge:
+                        {
+                            EdgeShape edge = (EdgeShape)f.Shape;
+                            output.Write(edge.Vertex1);
+                            output.Write(edge.Vertex2);
+                            output.Write(edge.HasVertex0);
+                            if (edge.HasVertex0)
                             {
-                                EdgeShape edge = (EdgeShape)f.Shape;
-                                output.Write(edge.Vertex1);
-                                output.Write(edge.Vertex2);
-                                output.Write(edge.HasVertex0);
-                                if (edge.HasVertex0)
-                                {
-                                    output.Write(edge.Vertex0);
-                                }
-                                output.Write(edge.HasVertex3);
-                                if (edge.HasVertex3)
-                                {
-                                    output.Write(edge.Vertex3);
-                                }
-                            } break;
+                                output.Write(edge.Vertex0);
+                            }
+                            output.Write(edge.HasVertex3);
+                            if (edge.HasVertex3)
+                            {
+                                output.Write(edge.Vertex3);
+                            }
+                        }
+                            break;
                         case ShapeType.Chain:
+                        {
+                            ChainShape chain = (ChainShape)f.Shape;
+                            output.Write(chain.Vertices.Count);
+                            foreach (Vector2 v in chain.Vertices)
                             {
-                                ChainShape chain = (ChainShape)f.Shape;
-                                output.Write(chain.Vertices.Count);
-                                foreach (Vector2 v in chain.Vertices)
-                                {
-                                    output.Write(v);
-                                }
-                            } break;
+                                output.Write(v);
+                            }
+                        }
+                            break;
                         default:
                             throw new Exception("Shape type not supported!");
                     }

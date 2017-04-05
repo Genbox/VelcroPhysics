@@ -35,7 +35,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
         private const string isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
         private const string isCommaWhitespace = @"\A[\s,]*";
 
-        private int _iterations;
+        private readonly int _iterations;
 
         public SVGPathParser(int bezierIterations)
         {
@@ -76,61 +76,63 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                         {
                             case 'm':
                             case 'l':
-                                {
-                                    currentPosition.X += arguments[0];
-                                    currentPosition.Y += arguments[1];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.X += arguments[0];
+                                currentPosition.Y += arguments[1];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'M':
                             case 'L':
-                                {
-                                    currentPosition.X = arguments[0];
-                                    currentPosition.Y = arguments[1];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.X = arguments[0];
+                                currentPosition.Y = arguments[1];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'h':
-                                {
-                                    currentPosition.X += arguments[0];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.X += arguments[0];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'H':
-                                {
-                                    currentPosition.X = arguments[0];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.X = arguments[0];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'v':
-                                {
-                                    currentPosition.Y += arguments[0];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.Y += arguments[0];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'V':
-                                {
-                                    currentPosition.Y = arguments[0];
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                currentPosition.Y = arguments[0];
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'c':
-                                {
-                                    Vector2 end = currentPosition + new Vector2(arguments[4], arguments[5]);
-                                    cubicBezierRecursive(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]));
-                                    //cubicBezier(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
-                                    currentPosition = end;
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                Vector2 end = currentPosition + new Vector2(arguments[4], arguments[5]);
+                                cubicBezierRecursive(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]));
+
+                                //cubicBezier(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
+                                currentPosition = end;
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 'C':
-                                {
-                                    Vector2 end = new Vector2(arguments[4], arguments[5]);
-                                    cubicBezierRecursive(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]));
-                                    //cubicBezier(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
-                                    currentPosition = end;
-                                    currentPath.Add(currentPosition);
-                                }
+                            {
+                                Vector2 end = new Vector2(arguments[4], arguments[5]);
+                                cubicBezierRecursive(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]));
+
+                                //cubicBezier(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
+                                currentPosition = end;
+                                currentPath.Add(currentPosition);
+                            }
                                 break;
                             case 's':
                             case 'S':
@@ -140,9 +142,9 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                             case 'Q':
                             case 'a':
                             case 'A':
-                                {
-                                    throw new Exception("Path command '" + command + "' is not supported.");
-                                }
+                            {
+                                throw new Exception("Path command '" + command + "' is not supported.");
+                            }
                         }
                         argumentCount = 0;
                     }
@@ -259,7 +261,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
 
             for (int i = 0; i < steps; i++)
             {
-                float t = (float)i / (float)steps;
+                float t = i / (float)steps;
                 s_cS = Vector2.Lerp(start, controlStart, t);
                 cS_cE = Vector2.Lerp(controlStart, controlEnd, t);
                 e_cE = Vector2.Lerp(controlEnd, end, t);

@@ -11,8 +11,6 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
     public class PolygonProcessor : ContentProcessor<List<RawBodyTemplate>, PolygonContainer>
     {
         private float _scaleFactor = 1f;
-        private int _bezierIterations = 3;
-        private bool _decompose = false;
 
         [DisplayName("Pixel to meter ratio")]
         [Description("The length of one physics simulation unit in pixels.")]
@@ -26,20 +24,12 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
         [DisplayName("Cubic bézier iterations")]
         [Description("Amount of subdivisions for decomposing cubic bézier curves into line segments.")]
         [DefaultValue(3)]
-        public int BezierIterations
-        {
-            get { return _bezierIterations; }
-            set { _bezierIterations = value; }
-        }
+        public int BezierIterations { get; set; } = 3;
 
         [DisplayName("Decompose paths")]
         [Description("Decompose paths into convex polygons.")]
         [DefaultValue(false)]
-        public bool DecomposePaths
-        {
-            get { return _decompose; }
-            set { _decompose = value; }
-        }
+        public bool DecomposePaths { get; set; } = false;
 
         public override PolygonContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
         {
@@ -53,7 +43,7 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
             }
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
-            SVGPathParser parser = new SVGPathParser(_bezierIterations);
+            SVGPathParser parser = new SVGPathParser(BezierIterations);
             PolygonContainer polygons = new PolygonContainer();
 
             foreach (RawBodyTemplate body in input)
@@ -69,12 +59,12 @@ namespace VelcroPhysics.ContentPipeline.SVGImport
                     {
                         for (int i = 0; i < paths.Count; i++)
                         {
-                            polygons.Add(fixture.Name + i.ToString(), paths[i]);
+                            polygons.Add(fixture.Name + i, paths[i]);
                         }
                     }
                 }
             }
-            if (_decompose)
+            if (DecomposePaths)
             {
                 polygons.Decompose();
             }
