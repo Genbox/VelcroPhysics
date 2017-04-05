@@ -147,7 +147,6 @@ namespace VelcroPhysics.Samples.Samples2
 
             AddScreen(new BackgroundScreen());
             AddScreen(_menuScreen);
-            AddScreen(new LogoScreen(new TimeSpan(0, 0, 0, 3)));
 
             //TODO: This can't be called at this point in time in MonoGame
             //ResetElapsedTime();

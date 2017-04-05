@@ -57,7 +57,6 @@
     <Compile Include="Demos\D13_TheoJansenWalker.cs" />
     <Compile Include="Demos\D14_RacingCar.cs" />
     <Compile Include="Demos\D15_TextureToShapes.cs" />
-    <Compile Include="Demos\D16_SVGtoPolygon.cs" />
     <Compile Include="Demos\D17_SVGtoBody.cs" />
     <Compile Include="Demos\D18_BreakableBody.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
@@ -81,7 +80,6 @@
     <Compile Include="ScreenSystem\FrameRateCounter.cs" />
     <Compile Include="ScreenSystem\GameScreen.cs" />
     <Compile Include="ScreenSystem\InputHelper.cs" />
-    <Compile Include="ScreenSystem\LogoScreen.cs" />
     <Compile Include="ScreenSystem\MenuEntry.cs" />
     <Compile Include="ScreenSystem\MenuScreen.cs" />
     <Compile Include="ScreenSystem\MenuSlider.cs" />
@@ -109,7 +107,6 @@
     <Content Include="Content\Common\Buttons.png" />
     <Content Include="Content\Common\Checkmark.png" />
     <Content Include="Content\Common\Cursor.png" />
-    <Content Include="Content\Common\Logo.png" />
     <Content Include="Content\Common\SamplesLogo.png" />
     <Content Include="Content\DemoGFX\Car.png" />
     <Content Include="Content\DemoGFX\Club.png" />
@@ -129,7 +126,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Pipeline\BreakableBody.svg" />
-    <Content Include="Content\Pipeline\Polygon.svg" />
     <Content Include="Content\Pipeline\Object.png" />
   </ItemGroup>
   <ItemGroup>

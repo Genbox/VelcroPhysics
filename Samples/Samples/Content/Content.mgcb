@@ -73,14 +73,6 @@
 /processorParam:BezierIterations=3
 /build:Pipeline/BreakableBody.svg
 
-#begin Pipeline/Polygon.svg
-/importer:SVGImporter
-/processor:PolygonProcessor
-/processorParam:ScaleFactor=24
-/processorParam:BezierIterations=3
-/processorParam:DecomposePaths=False
-/build:Pipeline/Polygon.svg
-
 #begin Pipeline/Object.png
 /importer:TextureImporter
 /processor:TextureToVerticesProcessor
@@ -123,18 +115,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Common/Cursor.png
-
-#begin Common/Logo.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Common/Logo.png
 
 #begin Common/SamplesLogo.png
 /importer:TextureImporter
