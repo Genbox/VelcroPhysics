@@ -167,7 +167,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
 
             for (int i = 0; i < vertices.Count; ++i)
             {
-                if (mergeMe[i] || newNVertices == 0 || currIndex == newNVertices)
+                if (mergeMe[i] || currIndex == newNVertices)
                     continue;
 
                 Debug.Assert(currIndex < newNVertices);
