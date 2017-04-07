@@ -208,25 +208,29 @@ namespace VelcroPhysics.Dynamics
 
         internal void Destroy(Contact contact)
         {
+            if (contact.FixtureA == null || contact.FixtureB == null)
+                return;
+
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
-            Body bodyA = fixtureA.Body;
-            Body bodyB = fixtureB.Body;
 
             if (contact.IsTouching)
             {
                 //Report the separation to both participants:
-                if (fixtureA != null && fixtureA.OnSeparation != null)
+                if (fixtureA.OnSeparation != null)
                     fixtureA.OnSeparation(fixtureA, fixtureB);
 
                 //Reverse the order of the reported fixtures. The first fixture is always the one that the
                 //user subscribed to.
-                if (fixtureB != null && fixtureB.OnSeparation != null)
+                if (fixtureB.OnSeparation != null)
                     fixtureB.OnSeparation(fixtureB, fixtureA);
 
                 if (EndContact != null)
                     EndContact(contact);
             }
+
+            Body bodyA = fixtureA.Body;
+            Body bodyB = fixtureB.Body;
 
             // Remove from the world.
             ContactList.Remove(contact);
