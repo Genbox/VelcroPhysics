@@ -362,16 +362,14 @@ namespace VelcroPhysics.Dynamics.Contacts
                     if (FixtureB != null && FixtureB.OnSeparation != null)
                         FixtureB.OnSeparation(FixtureB, FixtureA);
 
-                    if (contactManager.EndContact != null)
-                        contactManager.EndContact(this);
+                    contactManager.EndContact?.Invoke(this);
                 }
             }
 
             if (sensor)
                 return;
 
-            if (contactManager.PreSolve != null)
-                contactManager.PreSolve(this, ref oldManifold);
+            contactManager.PreSolve?.Invoke(this, ref oldManifold);
         }
 
         /// <summary>

@@ -239,8 +239,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             Enabled = false;
 
-            if (Broke != null)
-                Broke(this, (float)Math.Sqrt(jointErrorSquared));
+            Broke?.Invoke(this, (float)Math.Sqrt(jointErrorSquared));
         }
 
         internal abstract void SolveVelocityConstraints(ref SolverData data);

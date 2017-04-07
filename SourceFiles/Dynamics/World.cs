@@ -221,10 +221,7 @@ namespace VelcroPhysics.Dynamics
                         }
                     }
 
-                    if (JointRemoved != null)
-                    {
-                        JointRemoved(joint);
-                    }
+                    JointRemoved?.Invoke(joint);
                 }
 
                 _jointRemoveList.Clear();
@@ -285,8 +282,7 @@ namespace VelcroPhysics.Dynamics
                         }
                     }
 
-                    if (JointAdded != null)
-                        JointAdded(joint);
+                    JointAdded?.Invoke(joint);
 
                     // Note: creating a joint doesn't wake the bodies.
                 }
@@ -318,8 +314,7 @@ namespace VelcroPhysics.Dynamics
                     // Add to world list.
                     BodyList.Add(body);
 
-                    if (BodyAdded != null)
-                        BodyAdded(body);
+                    BodyAdded?.Invoke(body);
                 }
 
                 _bodyAddList.Clear();
@@ -375,8 +370,7 @@ namespace VelcroPhysics.Dynamics
                     // Remove world body list.
                     BodyList.Remove(body);
 
-                    if (BodyRemoved != null)
-                        BodyRemoved(body);
+                    BodyRemoved?.Invoke(body);
 
 #if USE_AWAKE_BODY_SET
                     Debug.Assert(!AwakeBodySet.Contains(body));
@@ -1369,8 +1363,7 @@ namespace VelcroPhysics.Dynamics
             controller.World = this;
             ControllerList.Add(controller);
 
-            if (ControllerAdded != null)
-                ControllerAdded(controller);
+            ControllerAdded?.Invoke(controller);
         }
 
         public void RemoveController(Controller controller)
@@ -1382,8 +1375,7 @@ namespace VelcroPhysics.Dynamics
             {
                 ControllerList.Remove(controller);
 
-                if (ControllerRemoved != null)
-                    ControllerRemoved(controller);
+                ControllerRemoved?.Invoke(controller);
             }
         }
 

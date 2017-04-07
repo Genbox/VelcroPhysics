@@ -397,8 +397,7 @@ namespace VelcroPhysics.Dynamics
             Body._world._worldHasNewFixture = true;
 
             //FPE: Added event
-            if (Body._world.FixtureAdded != null)
-                Body._world.FixtureAdded(this);
+            Body._world.FixtureAdded?.Invoke(this);
         }
 
         /// <summary>
@@ -458,10 +457,7 @@ namespace VelcroPhysics.Dynamics
             OnSeparation = null;
             AfterCollision = null;
 
-            if (Body._world.FixtureRemoved != null)
-            {
-                Body._world.FixtureRemoved(this);
-            }
+            Body._world.FixtureRemoved?.Invoke(this);
 
             Body._world.FixtureAdded = null;
             Body._world.FixtureRemoved = null;

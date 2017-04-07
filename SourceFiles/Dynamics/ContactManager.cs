@@ -217,16 +217,13 @@ namespace VelcroPhysics.Dynamics
             if (contact.IsTouching)
             {
                 //Report the separation to both participants:
-                if (fixtureA.OnSeparation != null)
-                    fixtureA.OnSeparation(fixtureA, fixtureB);
+                fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB);
 
                 //Reverse the order of the reported fixtures. The first fixture is always the one that the
                 //user subscribed to.
-                if (fixtureB.OnSeparation != null)
-                    fixtureB.OnSeparation(fixtureB, fixtureA);
+                fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA);
 
-                if (EndContact != null)
-                    EndContact(contact);
+                EndContact?.Invoke(contact);
             }
 
             Body bodyA = fixtureA.Body;
