@@ -198,11 +198,7 @@ namespace VelcroPhysics.Dynamics
 
                         joint.EdgeB.Prev = null;
                         joint.EdgeB.Next = null;
-                    }
 
-                    // WIP David
-                    if (!joint.IsFixedType())
-                    {
                         // If the joint prevents collisions, then flag any contacts for filtering.
                         if (collideConnected == false)
                         {
