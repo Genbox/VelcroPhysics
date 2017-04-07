@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.12
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame", "SourceFiles\VelcroPhysics.MonoGame.csproj", "{9ACED9B4-08B5-4541-AB69-7E0DA798F489}"
 EndProject
@@ -21,6 +21,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextureTessellation", "ContentPipeline\TextureTessellation\TextureTessellation.csproj", "{6EE8349B-EA85-414D-B79D-B4B7B39B16A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples\Samples.csproj", "{D4856F74-C825-412D-87FB-3C4A74D1B619}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EE8349B-EA85-414D-B79D-B4B7B39B16A7} = {6EE8349B-EA85-414D-B79D-B4B7B39B16A7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
