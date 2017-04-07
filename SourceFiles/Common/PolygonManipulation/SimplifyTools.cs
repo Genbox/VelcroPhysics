@@ -129,7 +129,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
 
                 float dx0 = vertices[middle].X - vertices[lower].X;
                 float dy0 = vertices[middle].Y - vertices[lower].Y;
-                float dx1 = vertices[upper].Y - vertices[middle].X;
+                float dx1 = vertices[upper].X - vertices[middle].X;
                 float dy1 = vertices[upper].Y - vertices[middle].Y;
                 float norm0 = (float)Math.Sqrt(dx0 * dx0 + dy0 * dy0);
                 float norm1 = (float)Math.Sqrt(dx1 * dx1 + dy1 * dy1);
