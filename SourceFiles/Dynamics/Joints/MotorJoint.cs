@@ -85,7 +85,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 _linearOffset = xB;
 
             //Defaults
-            _angularOffset = 0.0f;
+            //_angularOffset = 0.0f;
             _maxForce = 1.0f;
             _maxTorque = 1.0f;
             CorrectionFactor = 0.3f;
