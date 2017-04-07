@@ -45,10 +45,10 @@ namespace VelcroPhysics.Factories
         public static Body CreateRectangle(World world, float width, float height, float density, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
             if (width <= 0)
-                throw new ArgumentOutOfRangeException("width", "Width must be more than 0 meters");
+                throw new ArgumentOutOfRangeException(nameof(width), "Width must be more than 0 meters");
 
             if (height <= 0)
-                throw new ArgumentOutOfRangeException("height", "Height must be more than 0 meters");
+                throw new ArgumentOutOfRangeException(nameof(height), "Height must be more than 0 meters");
 
             Body body = CreateBody(world, position, rotation, bodyType, userData);
 

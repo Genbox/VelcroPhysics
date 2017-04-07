@@ -29,7 +29,7 @@ namespace VelcroPhysics.DebugView
         public PrimitiveBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)
         {
             if (graphicsDevice == null)
-                throw new ArgumentNullException("graphicsDevice");
+                throw new ArgumentNullException(nameof(graphicsDevice));
 
             _device = graphicsDevice;
 

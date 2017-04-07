@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Samples2.MediaSystem
         {
             if (graphicsDevice == null)
             {
-                throw new ArgumentNullException("graphicsDevice");
+                throw new ArgumentNullException(nameof(graphicsDevice));
             }
             _device = graphicsDevice;
 

@@ -266,7 +266,7 @@ namespace VelcroPhysics.Common.PolygonManipulation
                 return vertices;
 
             if (areaTolerance < 0)
-                throw new ArgumentOutOfRangeException("areaTolerance", "must be equal to or greater than zero.");
+                throw new ArgumentOutOfRangeException(nameof(areaTolerance), "must be equal to or greater than zero.");
 
             Vertices simplified = new Vertices(vertices.Count);
             Vector2 v3;

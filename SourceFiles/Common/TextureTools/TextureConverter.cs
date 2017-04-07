@@ -56,10 +56,10 @@ namespace VelcroPhysics.Common.TextureTools
                                 bool? pixelOffsetOptimization, Matrix? transform)
         {
             if (data != null && !width.HasValue)
-                throw new ArgumentNullException("width", "'width' can't be null if 'data' is set.");
+                throw new ArgumentNullException(nameof(width), "'width' can't be null if 'data' is set.");
 
             if (data == null && width.HasValue)
-                throw new ArgumentNullException("data", "'data' can't be null if 'width' is set.");
+                throw new ArgumentNullException(nameof(data), "'data' can't be null if 'width' is set.");
 
             if (data != null && width.HasValue)
                 SetTextureData(data, width.Value);
@@ -100,13 +100,13 @@ namespace VelcroPhysics.Common.TextureTools
         private void SetTextureData(uint[] data, int width)
         {
             if (data == null)
-                throw new ArgumentNullException("data", "'data' can't be null.");
+                throw new ArgumentNullException(nameof(data), "'data' can't be null.");
 
             if (data.Length < 4)
-                throw new ArgumentOutOfRangeException("data", "'data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size.");
+                throw new ArgumentOutOfRangeException(nameof(data), "'data' length can't be less then 4. Your texture must be at least 2 x 2 pixels in size.");
 
             if (width < 2)
-                throw new ArgumentOutOfRangeException("width", "'width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size.");
+                throw new ArgumentOutOfRangeException(nameof(width), "'width' can't be less then 2. Your texture must be at least 2 x 2 pixels in size.");
 
             if (data.Length % width != 0)
                 throw new ArgumentException("'width' has an invalid value.");
@@ -442,7 +442,7 @@ namespace VelcroPhysics.Common.TextureTools
         private bool DistanceToHullAcceptableHoles(Vertices polygon, Vector2 point, bool higherDetail)
         {
             if (polygon == null)
-                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
+                throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");
@@ -471,7 +471,7 @@ namespace VelcroPhysics.Common.TextureTools
         private bool DistanceToHullAcceptable(Vertices polygon, Vector2 point, bool higherDetail)
         {
             if (polygon == null)
-                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
+                throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.Count' can't be less then 3.");
@@ -582,7 +582,7 @@ namespace VelcroPhysics.Common.TextureTools
         private List<float> SearchCrossingEdgesHoles(Vertices polygon, int y)
         {
             if (polygon == null)
-                throw new ArgumentNullException("polygon", "'polygon' can't be null.");
+                throw new ArgumentNullException(nameof(polygon), "'polygon' can't be null.");
 
             if (polygon.Count < 3)
                 throw new ArgumentException("'polygon.MainPolygon.Count' can't be less then 3.");

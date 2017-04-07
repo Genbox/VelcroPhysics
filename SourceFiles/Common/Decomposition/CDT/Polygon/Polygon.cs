@@ -60,7 +60,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Polygon
         public Polygon(IList<PolygonPoint> points)
         {
             if (points.Count < 3)
-                throw new ArgumentException("List has fewer than 3 points", "points");
+                throw new ArgumentException("List has fewer than 3 points", nameof(points));
 
             // Lets do one sanity check that first and last point hasn't got same position
             // Its something that often happen when importing polygon data from other formats
@@ -134,7 +134,7 @@ namespace VelcroPhysics.Common.Decomposition.CDT.Polygon
             int index = _points.IndexOf(point);
             if (index == -1)
                 throw new ArgumentException(
-                    "Tried to insert a point into a Polygon after a point not belonging to the Polygon", "point");
+                    "Tried to insert a point into a Polygon after a point not belonging to the Polygon", nameof(point));
             newPoint.Next = point.Next;
             newPoint.Previous = point;
             point.Next.Previous = newPoint;

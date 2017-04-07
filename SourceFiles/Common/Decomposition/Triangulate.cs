@@ -128,7 +128,7 @@ namespace VelcroPhysics.Common.Decomposition
                     results = CDTDecomposer.ConvexPartition(vertices);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("algorithm");
+                    throw new ArgumentOutOfRangeException(nameof(algorithm));
             }
 
             if (discardAndFixInvalid)

@@ -195,7 +195,7 @@ namespace VelcroPhysics.Common
             if (endRadius >= height / 2)
                 throw new ArgumentException(
                     "The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.",
-                    "endRadius");
+                    nameof(endRadius));
 
             return CreateCapsule(height, endRadius, edges, endRadius, edges);
         }
@@ -214,29 +214,29 @@ namespace VelcroPhysics.Common
                                              int bottomEdges)
         {
             if (height <= 0)
-                throw new ArgumentException("Height must be longer than 0", "height");
+                throw new ArgumentException("Height must be longer than 0", nameof(height));
 
             if (topRadius <= 0)
-                throw new ArgumentException("The top radius must be more than 0", "topRadius");
+                throw new ArgumentException("The top radius must be more than 0", nameof(topRadius));
 
             if (topEdges <= 0)
-                throw new ArgumentException("Top edges must be more than 0", "topEdges");
+                throw new ArgumentException("Top edges must be more than 0", nameof(topEdges));
 
             if (bottomRadius <= 0)
-                throw new ArgumentException("The bottom radius must be more than 0", "bottomRadius");
+                throw new ArgumentException("The bottom radius must be more than 0", nameof(bottomRadius));
 
             if (bottomEdges <= 0)
-                throw new ArgumentException("Bottom edges must be more than 0", "bottomEdges");
+                throw new ArgumentException("Bottom edges must be more than 0", nameof(bottomEdges));
 
             if (topRadius >= height / 2)
                 throw new ArgumentException(
                     "The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.",
-                    "topRadius");
+                    nameof(topRadius));
 
             if (bottomRadius >= height / 2)
                 throw new ArgumentException(
                     "The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.",
-                    "bottomRadius");
+                    nameof(bottomRadius));
 
             Vertices vertices = new Vertices();
 
