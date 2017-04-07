@@ -404,8 +404,7 @@ namespace VelcroPhysics.Collision
         /// </returns>
         public bool Contains(ref AABB aabb)
         {
-            bool result = true;
-            result = result && LowerBound.X <= aabb.LowerBound.X;
+            bool result = LowerBound.X <= aabb.LowerBound.X;
             result = result && LowerBound.Y <= aabb.LowerBound.Y;
             result = result && aabb.UpperBound.X <= UpperBound.X;
             result = result && aabb.UpperBound.Y <= UpperBound.Y;
