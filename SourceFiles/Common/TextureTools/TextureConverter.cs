@@ -291,7 +291,7 @@ namespace VelcroPhysics.Common.TextureTools
                 }
             } while (searchOn);
 
-            if (detectedPolygons == null || (detectedPolygons != null && detectedPolygons.Count == 0))
+            if (detectedPolygons.Count == 0)
                 throw new Exception("Couldn't detect any vertices.");
 
             // Post processing.
