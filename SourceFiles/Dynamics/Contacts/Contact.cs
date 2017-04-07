@@ -21,6 +21,7 @@
 */
 //#define USE_ACTIVE_CONTACT_SET
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -408,6 +409,8 @@ namespace VelcroPhysics.Dynamics.Contacts
                 case ContactType.Circle:
                     Collision.Collision.CollideCircles(ref manifold, (CircleShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
+                default:
+                    throw new ArgumentException("You are using an unsupported contact type.");
             }
         }
 
