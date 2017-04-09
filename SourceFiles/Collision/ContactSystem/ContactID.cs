@@ -12,7 +12,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// The features that intersect to form the contact point
         /// </summary>
         [FieldOffset(0)]
-        public ContactFeature Features;
+        public ContactFeature ContactFeature;
 
         /// <summary>
         /// Used to quickly compare contact ids.

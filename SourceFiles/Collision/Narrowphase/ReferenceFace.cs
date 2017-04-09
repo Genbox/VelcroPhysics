@@ -11,12 +11,12 @@ namespace VelcroPhysics.Collision.Narrowphase
 
         public Vector2 v1, v2;
 
-        public Vector2 normal;
+        public Vector2 Normal;
 
-        public Vector2 sideNormal1;
-        public float sideOffset1;
+        public Vector2 SideNormal1;
+        public float SideOffset1;
 
-        public Vector2 sideNormal2;
-        public float sideOffset2;
+        public Vector2 SideNormal2;
+        public float SideOffset2;
     }
 }

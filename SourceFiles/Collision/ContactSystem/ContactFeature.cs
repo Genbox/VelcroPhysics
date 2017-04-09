@@ -19,11 +19,11 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// <summary>
         /// The feature type on ShapeA
         /// </summary>
-        public byte TypeA;
+        public ContactFeatureType TypeA;
 
         /// <summary>
         /// The feature type on ShapeB
         /// </summary>
-        public byte TypeB;
+        public ContactFeatureType TypeB;
     }
 }

@@ -5,7 +5,7 @@ namespace VelcroPhysics.Collision.ContactSystem
     /// <summary>
     /// Used for computing contact manifolds.
     /// </summary>
-    public struct ClipVertex
+    internal struct ClipVertex
     {
         public ContactID ID;
         public Vector2 V;

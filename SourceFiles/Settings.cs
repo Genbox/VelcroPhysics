@@ -27,7 +27,7 @@ namespace VelcroPhysics
 {
     public static class Settings
     {
-        public const float MaxFloat = 3.402823466e+38f;
+        public const float MaxFloat = float.MaxValue;
         public const float Epsilon = 1.192092896e-07f;
         public const float Pi = 3.14159265359f;
 
