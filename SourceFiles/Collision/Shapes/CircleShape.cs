@@ -58,10 +58,7 @@ namespace VelcroPhysics.Collision.Shapes
             _position = Vector2.Zero;
         }
 
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
+        public override int ChildCount => 1;
 
         /// <summary>
         /// Get or set the position of the circle
@@ -72,7 +69,7 @@ namespace VelcroPhysics.Collision.Shapes
             set
             {
                 _position = value;
-                ComputeProperties(); //TODO: Optimize here
+                ComputeInertia();
             }
         }
 
@@ -116,8 +113,6 @@ namespace VelcroPhysics.Collision.Shapes
             {
                 a /= rr;
                 output.Fraction = a;
-
-                //TODO: Check results here
                 output.Normal = s + a * r;
                 output.Normal.Normalize();
                 return true;
@@ -135,9 +130,20 @@ namespace VelcroPhysics.Collision.Shapes
 
         protected sealed override void ComputeProperties()
         {
+            ComputeMass();
+            ComputeInertia();
+        }
+
+        private void ComputeMass()
+        {
+            //Velcro: We calculate area for later consumption
             float area = Settings.Pi * _2radius;
             MassData.Area = area;
             MassData.Mass = Density * area;
+        }
+
+        private void ComputeInertia()
+        {
             MassData.Centroid = Position;
 
             // inertia about the local origin
@@ -180,7 +186,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// <returns>True if the two circles are the same size and have the same position</returns>
         public bool CompareTo(CircleShape shape)
         {
-            return (Radius == shape.Radius && Position == shape.Position);
+            return Radius == shape.Radius && Position == shape.Position;
         }
 
         public override Shape Clone()
