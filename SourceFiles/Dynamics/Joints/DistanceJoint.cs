@@ -181,15 +181,15 @@ namespace VelcroPhysics.Dynamics.Joints
             _invIA = BodyA._invI;
             _invIB = BodyB._invI;
 
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
-            Vector2 cB = data.positions[_indexB].c;
-            float aB = data.positions[_indexB].a;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            Vector2 cB = data.Positions[_indexB].C;
+            float aB = data.Positions[_indexB].A;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
@@ -229,7 +229,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float k = _mass * omega * omega;
 
                 // magic formulas
-                float h = data.step.dt;
+                float h = data.Step.dt;
                 _gamma = h * (d + h * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
                 _bias = C * h * k * _gamma;
@@ -246,7 +246,7 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= data.step.dtRatio;
+                _impulse *= data.Step.dtRatio;
 
                 Vector2 P = _impulse * _u;
                 vA -= _invMassA * P;
@@ -259,18 +259,18 @@ namespace VelcroPhysics.Dynamics.Joints
                 _impulse = 0.0f;
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             // Cdot = dot(u, v + cross(w, r))
             Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
@@ -286,10 +286,10 @@ namespace VelcroPhysics.Dynamics.Joints
             vB += _invMassB * P;
             wB += _invIB * MathUtils.Cross(_rB, P);
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)
@@ -300,10 +300,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 return true;
             }
 
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 cB = data.positions[_indexB].c;
-            float aB = data.positions[_indexB].a;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 cB = data.Positions[_indexB].C;
+            float aB = data.Positions[_indexB].A;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
@@ -324,10 +324,10 @@ namespace VelcroPhysics.Dynamics.Joints
             cB += _invMassB * P;
             aB += _invIB * MathUtils.Cross(rB, P);
 
-            data.positions[_indexA].c = cA;
-            data.positions[_indexA].a = aA;
-            data.positions[_indexB].c = cB;
-            data.positions[_indexB].a = aB;
+            data.Positions[_indexA].C = cA;
+            data.Positions[_indexA].A = aA;
+            data.Positions[_indexB].C = cB;
+            data.Positions[_indexB].A = aB;
 
             return Math.Abs(C) < Settings.LinearSlop;
         }

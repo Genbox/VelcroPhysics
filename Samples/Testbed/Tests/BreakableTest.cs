@@ -105,7 +105,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             for (int i = 0; i < manifold.PointCount; ++i)
             {
-                maxImpulse = Math.Max(maxImpulse, impulse.points[i].normalImpulse);
+                maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
             }
 
             if (maxImpulse > 40.0f)

@@ -189,15 +189,15 @@ namespace VelcroPhysics.Dynamics.Joints
             _invIA = BodyA._invI;
             _invIB = BodyB._invI;
 
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
-            Vector2 cB = data.positions[_indexB].c;
-            float aB = data.positions[_indexB].a;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            Vector2 cB = data.Positions[_indexB].C;
+            float aB = data.Positions[_indexB].A;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             Rot qA = new Rot(aA);
             Rot qB = new Rot(aB);
@@ -238,8 +238,8 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
-                _linearImpulse *= data.step.dtRatio;
-                _angularImpulse *= data.step.dtRatio;
+                _linearImpulse *= data.Step.dtRatio;
+                _angularImpulse *= data.Step.dtRatio;
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
 
@@ -254,24 +254,24 @@ namespace VelcroPhysics.Dynamics.Joints
                 _angularImpulse = 0.0f;
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            float h = data.step.dt;
-            float inv_h = data.step.inv_dt;
+            float h = data.Step.dt;
+            float inv_h = data.Step.inv_dt;
 
             // Solve angular friction
             {
@@ -312,10 +312,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 wB += iB * MathUtils.Cross(_rB, impulse);
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

@@ -5,25 +5,25 @@ namespace VelcroPhysics.Dynamics.Solver
 {
     public sealed class ContactVelocityConstraint
     {
-        public int contactIndex;
-        public float friction;
-        public int indexA;
-        public int indexB;
-        public float invIA, invIB;
-        public float invMassA, invMassB;
+        public int ContactIndex;
+        public float Friction;
+        public int IndexA;
+        public int IndexB;
+        public float InvIA, InvIB;
+        public float InvMassA, InvMassB;
         public Mat22 K;
-        public Vector2 normal;
-        public Mat22 normalMass;
-        public int pointCount;
-        public VelocityConstraintPoint[] points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
-        public float restitution;
-        public float tangentSpeed;
+        public Vector2 Normal;
+        public Mat22 NormalMass;
+        public int PointCount;
+        public VelocityConstraintPoint[] Points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
+        public float Restitution;
+        public float TangentSpeed;
 
         public ContactVelocityConstraint()
         {
             for (int i = 0; i < Settings.MaxManifoldPoints; i++)
             {
-                points[i] = new VelocityConstraintPoint();
+                Points[i] = new VelocityConstraintPoint();
             }
         }
     }

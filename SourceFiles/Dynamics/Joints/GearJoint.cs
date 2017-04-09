@@ -257,21 +257,21 @@ namespace VelcroPhysics.Dynamics.Joints
             _iC = _bodyC._invI;
             _iD = _bodyD._invI;
 
-            float aA = data.positions[_indexA].a;
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            float aA = data.Positions[_indexA].A;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
-            float aB = data.positions[_indexB].a;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            float aB = data.Positions[_indexB].A;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
-            float aC = data.positions[_indexC].a;
-            Vector2 vC = data.velocities[_indexC].v;
-            float wC = data.velocities[_indexC].w;
+            float aC = data.Positions[_indexC].A;
+            Vector2 vC = data.Velocities[_indexC].V;
+            float wC = data.Velocities[_indexC].W;
 
-            float aD = data.positions[_indexD].a;
-            Vector2 vD = data.velocities[_indexD].v;
-            float wD = data.velocities[_indexD].w;
+            float aD = data.Positions[_indexD].A;
+            Vector2 vD = data.Velocities[_indexD].V;
+            float wD = data.Velocities[_indexD].W;
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
 
@@ -332,26 +332,26 @@ namespace VelcroPhysics.Dynamics.Joints
                 _impulse = 0.0f;
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
-            data.velocities[_indexC].v = vC;
-            data.velocities[_indexC].w = wC;
-            data.velocities[_indexD].v = vD;
-            data.velocities[_indexD].w = wD;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
+            data.Velocities[_indexC].V = vC;
+            data.Velocities[_indexC].W = wC;
+            data.Velocities[_indexD].V = vD;
+            data.Velocities[_indexD].W = wD;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
-            Vector2 vC = data.velocities[_indexC].v;
-            float wC = data.velocities[_indexC].w;
-            Vector2 vD = data.velocities[_indexD].v;
-            float wD = data.velocities[_indexD].w;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
+            Vector2 vC = data.Velocities[_indexC].V;
+            float wC = data.Velocities[_indexC].W;
+            Vector2 vD = data.Velocities[_indexD].V;
+            float wD = data.Velocities[_indexD].W;
 
             float Cdot = Vector2.Dot(_JvAC, vA - vC) + Vector2.Dot(_JvBD, vB - vD);
             Cdot += (_JwA * wA - _JwC * wC) + (_JwB * wB - _JwD * wD);
@@ -368,26 +368,26 @@ namespace VelcroPhysics.Dynamics.Joints
             vD -= (_mD * impulse) * _JvBD;
             wD -= _iD * impulse * _JwD;
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
-            data.velocities[_indexC].v = vC;
-            data.velocities[_indexC].w = wC;
-            data.velocities[_indexD].v = vD;
-            data.velocities[_indexD].w = wD;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
+            data.Velocities[_indexC].V = vC;
+            data.Velocities[_indexC].W = wC;
+            data.Velocities[_indexD].V = vD;
+            data.Velocities[_indexD].W = wD;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 cB = data.positions[_indexB].c;
-            float aB = data.positions[_indexB].a;
-            Vector2 cC = data.positions[_indexC].c;
-            float aC = data.positions[_indexC].a;
-            Vector2 cD = data.positions[_indexD].c;
-            float aD = data.positions[_indexD].a;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 cB = data.Positions[_indexB].C;
+            float aB = data.Positions[_indexB].A;
+            Vector2 cC = data.Positions[_indexC].C;
+            float aC = data.Positions[_indexC].A;
+            Vector2 cD = data.Positions[_indexD].C;
+            float aD = data.Positions[_indexD].A;
 
             Rot qA = new Rot(aA), qB = new Rot(aB), qC = new Rot(aC), qD = new Rot(aD);
 
@@ -464,14 +464,14 @@ namespace VelcroPhysics.Dynamics.Joints
             cD -= _mD * impulse * JvBD;
             aD -= _iD * impulse * JwD;
 
-            data.positions[_indexA].c = cA;
-            data.positions[_indexA].a = aA;
-            data.positions[_indexB].c = cB;
-            data.positions[_indexB].a = aB;
-            data.positions[_indexC].c = cC;
-            data.positions[_indexC].a = aC;
-            data.positions[_indexD].c = cD;
-            data.positions[_indexD].a = aD;
+            data.Positions[_indexA].C = cA;
+            data.Positions[_indexA].A = aA;
+            data.Positions[_indexB].C = cB;
+            data.Positions[_indexB].A = aB;
+            data.Positions[_indexC].C = cC;
+            data.Positions[_indexC].A = aC;
+            data.Positions[_indexD].C = cD;
+            data.Positions[_indexD].A = aD;
 
             // TODO_ERIN not implemented
             return linearError < Settings.LinearSlop;

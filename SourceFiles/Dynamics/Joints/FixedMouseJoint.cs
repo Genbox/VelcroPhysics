@@ -166,10 +166,10 @@ namespace VelcroPhysics.Dynamics.Joints
             _invMassA = BodyA._invMass;
             _invIA = BodyA._invI;
 
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
             Rot qA = new Rot(aA);
 
@@ -187,7 +187,7 @@ namespace VelcroPhysics.Dynamics.Joints
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            float h = data.step.dt;
+            float h = data.Step.dt;
             Debug.Assert(d + h * k > Settings.Epsilon);
             _gamma = h * (d + h * k);
             if (_gamma != 0.0f)
@@ -219,7 +219,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             if (Settings.EnableWarmstarting)
             {
-                _impulse *= data.step.dtRatio;
+                _impulse *= data.Step.dtRatio;
                 vA += _invMassA * _impulse;
                 wA += _invIA * MathUtils.Cross(_rA, _impulse);
             }
@@ -228,14 +228,14 @@ namespace VelcroPhysics.Dynamics.Joints
                 _impulse = Vector2.Zero;
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
             // Cdot = v + cross(w, r)
             Vector2 Cdot = vA + MathUtils.Cross(wA, _rA);
@@ -243,7 +243,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = data.step.dt * MaxForce;
+            float maxImpulse = data.Step.dt * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
             {
                 _impulse *= maxImpulse / _impulse.Length();
@@ -253,8 +253,8 @@ namespace VelcroPhysics.Dynamics.Joints
             vA += _invMassA * impulse;
             wA += _invIA * MathUtils.Cross(_rA, impulse);
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

@@ -315,13 +315,13 @@ namespace VelcroPhysics.Dynamics.Joints
             _invIA = BodyA._invI;
             _invIB = BodyB._invI;
 
-            float aA = data.positions[_indexA].a;
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
+            float aA = data.Positions[_indexA].A;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
 
-            float aB = data.positions[_indexB].a;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            float aB = data.Positions[_indexB].A;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
@@ -400,8 +400,8 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
-                _impulse *= data.step.dtRatio;
-                _motorImpulse *= data.step.dtRatio;
+                _impulse *= data.Step.dtRatio;
+                _motorImpulse *= data.Step.dtRatio;
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
@@ -417,18 +417,18 @@ namespace VelcroPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            Vector2 vA = data.velocities[_indexA].v;
-            float wA = data.velocities[_indexA].w;
-            Vector2 vB = data.velocities[_indexB].v;
-            float wB = data.velocities[_indexB].w;
+            Vector2 vA = data.Velocities[_indexA].V;
+            float wA = data.Velocities[_indexA].W;
+            Vector2 vB = data.Velocities[_indexB].V;
+            float wB = data.Velocities[_indexB].W;
 
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
@@ -441,7 +441,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float Cdot = wB - wA - _motorSpeed;
                 float impulse = _motorMass * (-Cdot);
                 float oldImpulse = _motorImpulse;
-                float maxImpulse = data.step.dt * _maxMotorTorque;
+                float maxImpulse = data.Step.dt * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 
@@ -525,18 +525,18 @@ namespace VelcroPhysics.Dynamics.Joints
                 wB += iB * MathUtils.Cross(_rB, impulse);
             }
 
-            data.velocities[_indexA].v = vA;
-            data.velocities[_indexA].w = wA;
-            data.velocities[_indexB].v = vB;
-            data.velocities[_indexB].w = wB;
+            data.Velocities[_indexA].V = vA;
+            data.Velocities[_indexA].W = wA;
+            data.Velocities[_indexB].V = vB;
+            data.Velocities[_indexB].W = wB;
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            Vector2 cA = data.positions[_indexA].c;
-            float aA = data.positions[_indexA].a;
-            Vector2 cB = data.positions[_indexB].c;
-            float aB = data.positions[_indexB].a;
+            Vector2 cA = data.Positions[_indexA].C;
+            float aA = data.Positions[_indexA].A;
+            Vector2 cB = data.Positions[_indexB].C;
+            float aB = data.Positions[_indexB].A;
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
@@ -609,10 +609,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 aB += iB * MathUtils.Cross(rB, impulse);
             }
 
-            data.positions[_indexA].c = cA;
-            data.positions[_indexA].a = aA;
-            data.positions[_indexB].c = cB;
-            data.positions[_indexB].a = aB;
+            data.Positions[_indexA].C = cA;
+            data.Positions[_indexA].A = aA;
+            data.Positions[_indexB].C = cB;
+            data.Positions[_indexB].A = aB;
 
             return positionError <= Settings.LinearSlop && angularError <= Settings.AngularSlop;
         }

@@ -101,11 +101,11 @@ namespace VelcroPhysics.Dynamics.Joints
             int indexA = BodyA.IslandIndex;
             int indexB = BodyB.IslandIndex;
 
-            float aW = data.positions[indexA].a;
-            float bW = data.positions[indexB].a;
+            float aW = data.Positions[indexA].A;
+            float bW = data.Positions[indexB].A;
 
             _jointError = (bW - aW - TargetAngle);
-            _bias = -BiasFactor * data.step.inv_dt * _jointError;
+            _bias = -BiasFactor * data.Step.inv_dt * _jointError;
             _massFactor = (1 - Softness) / (BodyA._invI + BodyB._invI);
         }
 
@@ -114,10 +114,10 @@ namespace VelcroPhysics.Dynamics.Joints
             int indexA = BodyA.IslandIndex;
             int indexB = BodyB.IslandIndex;
 
-            float p = (_bias - data.velocities[indexB].w + data.velocities[indexA].w) * _massFactor;
+            float p = (_bias - data.Velocities[indexB].W + data.Velocities[indexA].W) * _massFactor;
 
-            data.velocities[indexA].w -= BodyA._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
-            data.velocities[indexB].w += BodyB._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
+            data.Velocities[indexA].W -= BodyA._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
+            data.Velocities[indexB].W += BodyB._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

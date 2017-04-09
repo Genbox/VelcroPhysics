@@ -5,16 +5,16 @@ namespace VelcroPhysics.Dynamics.Solver
 {
     public sealed class ContactPositionConstraint
     {
-        public int indexA;
-        public int indexB;
-        public float invIA, invIB;
-        public float invMassA, invMassB;
-        public Vector2 localCenterA, localCenterB;
-        public Vector2 localNormal;
-        public Vector2 localPoint;
-        public Vector2[] localPoints = new Vector2[Settings.MaxManifoldPoints];
-        public int pointCount;
-        public float radiusA, radiusB;
-        public ManifoldType type;
+        public int IndexA;
+        public int IndexB;
+        public float InvIA, InvIB;
+        public float InvMassA, InvMassB;
+        public Vector2 LocalCenterA, LocalCenterB;
+        public Vector2 LocalNormal;
+        public Vector2 LocalPoint;
+        public Vector2[] LocalPoints = new Vector2[Settings.MaxManifoldPoints];
+        public int PointCount;
+        public float RadiusA, RadiusB;
+        public ManifoldType Type;
     }
 }
