@@ -73,11 +73,8 @@ namespace VelcroPhysics.Collision.Shapes
 
             for (int i = 1; i < vertices.Count; ++i)
             {
-                Vector2 v1 = vertices[i - 1];
-                Vector2 v2 = vertices[i];
-
                 // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Vector2.DistanceSquared(v1, v2) > Settings.LinearSlop * Settings.LinearSlop);
+                Debug.Assert(Vector2.DistanceSquared(vertices[i - 1], vertices[i]) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
             Vertices = new Vertices(vertices);
