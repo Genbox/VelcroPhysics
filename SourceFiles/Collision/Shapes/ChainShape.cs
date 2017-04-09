@@ -50,11 +50,6 @@ namespace VelcroPhysics.Collision.Shapes
         }
 
         /// <summary>
-        /// The vertices. These are not owned/freed by the chain Shape.
-        /// </summary>
-        public Vertices Vertices { get; set; }
-
-        /// <summary>
         /// Create a new chainshape from the vertices.
         /// </summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
@@ -87,6 +82,11 @@ namespace VelcroPhysics.Collision.Shapes
                 NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here here to set _hasNextVertex
             }
         }
+
+        /// <summary>
+        /// The vertices. These are not owned/freed by the chain Shape.
+        /// </summary>
+        public Vertices Vertices { get; set; }
 
         /// <summary>
         /// Edge count = vertex count - 1

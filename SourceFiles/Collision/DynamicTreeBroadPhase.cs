@@ -26,37 +26,6 @@ using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.Collision
 {
-    internal struct Pair : IComparable<Pair>
-    {
-        public int ProxyIdA;
-        public int ProxyIdB;
-
-        #region IComparable<Pair> Members
-
-        public int CompareTo(Pair other)
-        {
-            if (ProxyIdA < other.ProxyIdA)
-            {
-                return -1;
-            }
-            if (ProxyIdA == other.ProxyIdA)
-            {
-                if (ProxyIdB < other.ProxyIdB)
-                {
-                    return -1;
-                }
-                if (ProxyIdB == other.ProxyIdB)
-                {
-                    return 0;
-                }
-            }
-
-            return 1;
-        }
-
-        #endregion
-    }
-
     /// <summary>
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
     /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.

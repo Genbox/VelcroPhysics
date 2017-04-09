@@ -29,57 +29,6 @@ using VelcroPhysics.Common;
 
 namespace VelcroPhysics.Dynamics.Contacts
 {
-    public sealed class ContactPositionConstraint
-    {
-        public int indexA;
-        public int indexB;
-        public float invIA, invIB;
-        public float invMassA, invMassB;
-        public Vector2 localCenterA, localCenterB;
-        public Vector2 localNormal;
-        public Vector2 localPoint;
-        public Vector2[] localPoints = new Vector2[Settings.MaxManifoldPoints];
-        public int pointCount;
-        public float radiusA, radiusB;
-        public ManifoldType type;
-    }
-
-    public sealed class VelocityConstraintPoint
-    {
-        public float normalImpulse;
-        public float normalMass;
-        public Vector2 rA;
-        public Vector2 rB;
-        public float tangentImpulse;
-        public float tangentMass;
-        public float velocityBias;
-    }
-
-    public sealed class ContactVelocityConstraint
-    {
-        public int contactIndex;
-        public float friction;
-        public int indexA;
-        public int indexB;
-        public float invIA, invIB;
-        public float invMassA, invMassB;
-        public Mat22 K;
-        public Vector2 normal;
-        public Mat22 normalMass;
-        public int pointCount;
-        public VelocityConstraintPoint[] points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
-        public float restitution;
-        public float tangentSpeed;
-
-        public ContactVelocityConstraint()
-        {
-            for (int i = 0; i < Settings.MaxManifoldPoints; i++)
-            {
-                points[i] = new VelocityConstraintPoint();
-            }
-        }
-    }
-
     public class ContactSolver
     {
         public Contact[] _contacts;
@@ -514,8 +463,9 @@ namespace VelcroPhysics.Dynamics.Contacts
                             cp1.normalImpulse = x.X;
                             cp2.normalImpulse = x.Y;
 
-#if B2_DEBUG_SOLVER 
-					// Postconditions
+#if B2_DEBUG_SOLVER
+
+// Postconditions
 					dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 					dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
@@ -559,7 +509,8 @@ namespace VelcroPhysics.Dynamics.Contacts
                             cp2.normalImpulse = x.Y;
 
 #if B2_DEBUG_SOLVER
-					// Postconditions
+
+// Postconditions
 					dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);
 
 					// Compute normal velocity
@@ -600,7 +551,8 @@ namespace VelcroPhysics.Dynamics.Contacts
                             cp2.normalImpulse = x.Y;
 
 #if B2_DEBUG_SOLVER
-					// Postconditions
+
+// Postconditions
 					dv2 = vB + MathUtils.Cross(wB, cp2.rB) - vA - MathUtils.Cross(wA, cp2.rA);
 
 					// Compute normal velocity

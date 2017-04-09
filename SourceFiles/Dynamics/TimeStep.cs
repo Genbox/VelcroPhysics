@@ -17,8 +17,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using Microsoft.Xna.Framework;
-
 namespace VelcroPhysics.Dynamics
 {
     /// <summary>
@@ -40,27 +38,5 @@ namespace VelcroPhysics.Dynamics
         /// Inverse time step (0 if dt == 0).
         /// </summary>
         public float inv_dt;
-    }
-
-    /// This is an internal structure.
-    public struct Position
-    {
-        public Vector2 c;
-        public float a;
-    }
-
-    /// This is an internal structure.
-    public struct Velocity
-    {
-        public Vector2 v;
-        public float w;
-    }
-
-    /// Solver Data
-    public struct SolverData
-    {
-        public TimeStep step;
-        public Position[] positions;
-        public Velocity[] velocities;
     }
 }

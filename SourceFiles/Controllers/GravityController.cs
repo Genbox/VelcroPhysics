@@ -5,12 +5,6 @@ using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.Controllers
 {
-    public enum GravityType
-    {
-        Linear,
-        DistanceSquared
-    }
-
     public class GravityController : Controller
     {
         public GravityController(float strength)

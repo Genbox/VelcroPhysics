@@ -29,29 +29,6 @@ using VelcroPhysics.Common;
 namespace VelcroPhysics.Collision
 {
     /// <summary>
-    /// A node in the dynamic tree. The client does not interact with this directly.
-    /// </summary>
-    internal class TreeNode<T>
-    {
-        /// <summary>
-        /// Enlarged AABB
-        /// </summary>
-        internal AABB AABB;
-
-        internal int Child1;
-        internal int Child2;
-
-        internal int Height;
-        internal int ParentOrNext;
-        internal T UserData;
-
-        internal bool IsLeaf()
-        {
-            return Child1 == DynamicTree<T>.NullNode;
-        }
-    }
-
-    /// <summary>
     /// A dynamic tree arranges data in a binary tree to accelerate
     /// queries such as volume queries and ray casts. Leafs are proxies
     /// with an AABB. In the tree we expand the proxy AABB by Settings.b2_fatAABBFactor

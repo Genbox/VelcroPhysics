@@ -11,34 +11,6 @@ namespace VelcroPhysics.Common.PhysicsLogic
     // Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
     // Ported by Nicolás Hormazábal
 
-    internal struct ShapeData
-    {
-        public Body Body;
-        public float Max;
-        public float Min; // absolute angles
-    }
-
-    /// <summary>
-    /// This is a comprarer used for
-    /// detecting angle difference between rays
-    /// </summary>
-    internal class RayDataComparer : IComparer<float>
-    {
-        #region IComparer<float> Members
-
-        int IComparer<float>.Compare(float a, float b)
-        {
-            float diff = (a - b);
-            if (diff > 0)
-                return 1;
-            if (diff < 0)
-                return -1;
-            return 0;
-        }
-
-        #endregion
-    }
-
     /* Methodology:
      * Force applied at a ray is inversely proportional to the square of distance from source
      * AABB is used to query for shapes that may be affected

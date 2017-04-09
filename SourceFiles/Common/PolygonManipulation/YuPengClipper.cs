@@ -4,21 +4,6 @@ using Microsoft.Xna.Framework;
 
 namespace VelcroPhysics.Common.PolygonManipulation
 {
-    internal enum PolyClipType
-    {
-        Intersect,
-        Union,
-        Difference
-    }
-
-    public enum PolyClipError
-    {
-        None,
-        DegeneratedOutput,
-        NonSimpleInput,
-        BrokenResult
-    }
-
     //Clipper contributed by Helge Backhaus
 
     public static class YuPengClipper
