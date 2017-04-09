@@ -141,7 +141,7 @@ namespace VelcroPhysics.Dynamics
             if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                 return;
 
-            //FPE feature: BeforeCollision delegate
+            //Velcro feature: BeforeCollision delegate
             if (fixtureA.BeforeCollision != null && fixtureA.BeforeCollision(fixtureA, fixtureB) == false)
                 return;
 

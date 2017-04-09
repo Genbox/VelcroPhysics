@@ -396,7 +396,7 @@ namespace VelcroPhysics.Dynamics
             // to be created at the beginning of the next time step.
             Body._world._worldHasNewFixture = true;
 
-            //FPE: Added event
+            //Velcro: Added event
             Body._world.FixtureAdded?.Invoke(this);
         }
 
@@ -449,7 +449,7 @@ namespace VelcroPhysics.Dynamics
             Proxies = null;
             Shape = null;
 
-            //FPE: We set the userdata to null here to help prevent bugs related to stale references in GC
+            //Velcro: We set the userdata to null here to help prevent bugs related to stale references in GC
             UserData = null;
 
             BeforeCollision = null;
@@ -480,7 +480,7 @@ namespace VelcroPhysics.Dynamics
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
 
-                //FPE note: This line needs to be after the previous two because FixtureProxy is a struct
+                //Velcro note: This line needs to be after the previous two because FixtureProxy is a struct
                 proxy.ProxyId = broadPhase.AddProxy(ref proxy);
 
                 Proxies[i] = proxy;

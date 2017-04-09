@@ -217,7 +217,7 @@ namespace VelcroPhysics.Dynamics.Contacts
 
             _toiCount = 0;
 
-            //FPE: We only set the friction and restitution if we are not destroying the contact
+            //Velcro: We only set the friction and restitution if we are not destroying the contact
             if (FixtureA != null && FixtureB != null)
             {
                 Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);

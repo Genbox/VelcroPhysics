@@ -91,7 +91,7 @@ namespace VelcroPhysics.Collision.Shapes
 
                 if (Settings.UseConvexHullPolygons)
                 {
-                    //FPE note: This check is required as the GiftWrap algorithm early exits on triangles
+                    //Velcro note: This check is required as the GiftWrap algorithm early exits on triangles
                     //So instead of giftwrapping a triangle, we just force it to be clock wise.
                     if (_vertices.Count <= 3)
                         _vertices.ForceCounterClockWise();
@@ -108,7 +108,7 @@ namespace VelcroPhysics.Collision.Shapes
                     Vector2 edge = _vertices[next] - _vertices[i];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                    //FPE optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
+                    //Velcro optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
                     Vector2 temp = new Vector2(edge.Y, -edge.X);
                     temp.Normalize();
                     _normals.Add(temp);
@@ -157,11 +157,11 @@ namespace VelcroPhysics.Collision.Shapes
 
             Debug.Assert(Vertices.Count >= 3);
 
-            //FPE optimization: Early exit as polygons with 0 density does not have any properties.
+            //Velcro optimization: Early exit as polygons with 0 density does not have any properties.
             if (_density <= 0)
                 return;
 
-            //FPE optimization: Consolidated the calculate centroid and mass code to a single method.
+            //Velcro optimization: Consolidated the calculate centroid and mass code to a single method.
             Vector2 center = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;

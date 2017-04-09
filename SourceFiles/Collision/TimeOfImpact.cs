@@ -156,7 +156,7 @@ namespace VelcroPhysics.Collision
                 }
             }
 
-            //FPE note: the returned value that used to be here has been removed, as it was not used.
+            //Velcro note: the returned value that used to be here has been removed, as it was not used.
         }
 
         public static float FindMinSeparation(out int indexA, out int indexB, float t)
@@ -303,7 +303,7 @@ namespace VelcroPhysics.Collision
         /// <param name="input">The input.</param>
         public static void CalculateTimeOfImpact(out TOIOutput output, TOIInput input)
         {
-            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                 ++TOICalls;
 
             output = new TOIOutput();
@@ -442,7 +442,7 @@ namespace VelcroPhysics.Collision
 
                         ++rootIterCount;
 
-                        if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                        if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                             ++TOIRootIters;
 
                         float s = SeparationFunction.Evaluate(indexA, indexB, t);
@@ -472,7 +472,7 @@ namespace VelcroPhysics.Collision
                         }
                     }
 
-                    if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                    if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                         TOIMaxRootIters = Math.Max(TOIMaxRootIters, rootIterCount);
 
                     ++pushBackIter;
@@ -485,7 +485,7 @@ namespace VelcroPhysics.Collision
 
                 ++iter;
 
-                if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                     ++TOIIters;
 
                 if (done)
@@ -502,7 +502,7 @@ namespace VelcroPhysics.Collision
                 }
             }
 
-            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                 TOIMaxIters = Math.Max(TOIMaxIters, iter);
         }
     }

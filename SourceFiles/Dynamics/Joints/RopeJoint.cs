@@ -90,7 +90,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 LocalAnchorB = anchorB;
             }
 
-            //FPE feature: Setting default MaxLength
+            //Velcro feature: Setting default MaxLength
             Vector2 d = WorldAnchorB - WorldAnchorA;
             MaxLength = d.Length();
         }

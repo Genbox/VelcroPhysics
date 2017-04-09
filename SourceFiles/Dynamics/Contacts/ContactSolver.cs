@@ -936,7 +936,7 @@ namespace VelcroPhysics.Dynamics.Contacts
                         Vector2 pointB = MathUtils.Mul(ref xfB, pc.localPoints[0]);
                         normal = pointB - pointA;
 
-                        //FPE: Fix to handle zero normalization
+                        //Velcro: Fix to handle zero normalization
                         if (normal != Vector2.Zero)
                             normal.Normalize();
 

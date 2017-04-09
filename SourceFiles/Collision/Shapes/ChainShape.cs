@@ -82,8 +82,8 @@ namespace VelcroPhysics.Collision.Shapes
             if (createLoop)
             {
                 Vertices.Add(vertices[0]);
-                PrevVertex = Vertices[Vertices.Count - 2]; //FPE: We use the properties instead of the private fields here.
-                NextVertex = Vertices[1]; //FPE: We use the properties instead of the private fields here.
+                PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here.
+                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here.
             }
         }
 

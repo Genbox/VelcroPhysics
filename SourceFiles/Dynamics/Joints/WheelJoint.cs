@@ -115,7 +115,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 LocalAnchorB = anchor;
             }
 
-            Axis = axis; //FPE only: We maintain the original value as it is supposed to.
+            Axis = axis; //Velcro only: We maintain the original value as it is supposed to.
         }
 
         /// <summary>

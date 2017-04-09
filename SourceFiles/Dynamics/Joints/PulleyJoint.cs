@@ -190,7 +190,7 @@ namespace VelcroPhysics.Dynamics.Joints
         /// <value></value>
         public float Ratio { get; set; }
 
-        //FPE note: Only used for serialization.
+        //Velcro note: Only used for serialization.
         internal float Constant { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)

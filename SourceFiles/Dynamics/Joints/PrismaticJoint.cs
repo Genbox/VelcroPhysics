@@ -366,7 +366,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 LocalAnchorB = localAnchorB;
             }
 
-            Axis = axis; //FPE only: store the orignal value for use in Serialization
+            Axis = axis; //Velcro only: store the orignal value for use in Serialization
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
 
             _limitState = LimitState.Inactive;

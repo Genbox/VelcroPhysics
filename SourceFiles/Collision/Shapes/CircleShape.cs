@@ -188,7 +188,7 @@ namespace VelcroPhysics.Collision.Shapes
             CircleShape clone = new CircleShape();
             clone.ShapeType = ShapeType;
             clone._radius = Radius;
-            clone._2radius = _2radius; //FPE note: We also copy the cache
+            clone._2radius = _2radius; //Velcro note: We also copy the cache
             clone._density = _density;
             clone._position = _position;
             clone.MassData = MassData;

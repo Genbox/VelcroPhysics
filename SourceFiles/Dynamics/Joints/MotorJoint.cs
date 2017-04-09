@@ -163,7 +163,7 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _angularOffset; }
         }
 
-        //FPE note: Used for serialization.
+        //Velcro note: Used for serialization.
         internal float CorrectionFactor { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)

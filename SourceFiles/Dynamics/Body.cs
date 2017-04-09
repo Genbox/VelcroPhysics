@@ -102,7 +102,7 @@ namespace VelcroPhysics.Dynamics
 
             _xf.q.Set(rotation);
 
-            //FPE: optimization
+            //Velcro: optimization
             if (position != Vector2.Zero)
             {
                 _xf.p = position;
@@ -110,14 +110,14 @@ namespace VelcroPhysics.Dynamics
                 _sweep.C = _xf.p;
             }
 
-            //FPE: optimization
+            //Velcro: optimization
             if (rotation != 0)
             {
                 _sweep.A0 = rotation;
                 _sweep.A = rotation;
             }
 
-            world.AddBody(this); //FPE note: bodies can't live without a World
+            world.AddBody(this); //Velcro note: bodies can't live without a World
         }
 
         /// <summary>
@@ -1019,7 +1019,7 @@ namespace VelcroPhysics.Dynamics
                 _inertia += massData.Inertia;
             }
 
-            //FPE: Static bodies only have mass, they don't have other properties. A little hacky tho...
+            //Velcro: Static bodies only have mass, they don't have other properties. A little hacky tho...
             if (BodyType == BodyType.Static)
             {
                 _sweep.C0 = _sweep.C = _xf.p;

@@ -663,7 +663,7 @@ namespace VelcroPhysics.Common
         /// <param name="angle"></param>
         public void Set(float angle)
         {
-            //FPE: Optimization
+            //Velcro: Optimization
             if (angle == 0)
             {
                 s = 0;

@@ -42,7 +42,7 @@ namespace VelcroPhysics.Dynamics.Joints
         Rope,
         Motor,
 
-        //FPE note: From here on and down, it is only FPE joints
+        //Velcro note: From here on and down, it is only FPE joints
         Angle,
         FixedMouse,
         FixedRevolute,

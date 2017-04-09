@@ -429,8 +429,8 @@ namespace VelcroPhysics.Dynamics
             {
                 Contact c = _contacts[i];
 
-                //FPE optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
-                //FPE feature: added after collision
+                //Velcro optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
+                //Velcro feature: added after collision
                 c.FixtureA.AfterCollision?.Invoke(c.FixtureA, c.FixtureB, c, constraints[i]);
 
                 c.FixtureB.AfterCollision?.Invoke(c.FixtureB, c.FixtureA, c, constraints[i]);

@@ -641,7 +641,7 @@ namespace VelcroPhysics.Collision
         {
             cache = new SimplexCache();
 
-            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                 ++GJKCalls;
 
             // Initialize the simplex.
@@ -688,7 +688,7 @@ namespace VelcroPhysics.Collision
                     break;
                 }
 
-                //FPE: This code was not used anyway.
+                //Velcro: This code was not used anyway.
                 // Compute closest point.
                 //Vector2 p = simplex.GetClosestPoint();
                 //float distanceSqr2 = p.LengthSquared();
@@ -728,7 +728,7 @@ namespace VelcroPhysics.Collision
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
 
-                if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+                if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                     ++GJKIters;
 
                 // Check for duplicate support points. This is the main termination criteria.
@@ -752,7 +752,7 @@ namespace VelcroPhysics.Collision
                 ++simplex.Count;
             }
 
-            if (Settings.EnableDiagnostics) //FPE: We only gather diagnostics when enabled
+            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                 GJKMaxIters = Math.Max(GJKMaxIters, iter);
 
             // Prepare output.

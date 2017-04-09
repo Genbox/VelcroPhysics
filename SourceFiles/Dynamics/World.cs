@@ -1211,7 +1211,7 @@ namespace VelcroPhysics.Dynamics
             if (Settings.EnableDiagnostics)
                 NewContactsTime = _watch.ElapsedTicks - AddRemoveTime;
 
-            //FPE only: moved position and velocity iterations into Settings.cs
+            //Velcro only: moved position and velocity iterations into Settings.cs
             TimeStep step;
             step.inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
             step.dt = dt;
