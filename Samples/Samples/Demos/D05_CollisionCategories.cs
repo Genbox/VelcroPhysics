@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
 

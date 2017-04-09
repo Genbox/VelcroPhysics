@@ -23,7 +23,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics;

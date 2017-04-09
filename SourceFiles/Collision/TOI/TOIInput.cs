@@ -1,5 +1,4 @@
 using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Collision.TOI
 {
