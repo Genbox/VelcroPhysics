@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Dynamics
+namespace VelcroPhysics.Dynamics.Solver
 {
     /// This is an internal structure.
     public struct Position

@@ -21,6 +21,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;

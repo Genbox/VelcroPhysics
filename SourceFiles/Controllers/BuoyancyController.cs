@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 

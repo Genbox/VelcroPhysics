@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives
 {
     /// <summary>
     /// Rotation

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     /// <summary>
     /// Serialize the world into an XML file

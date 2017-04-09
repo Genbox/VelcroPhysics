@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives
 {
     /// <summary>
     /// A 3-by-3 matrix. Stored in column-major order.

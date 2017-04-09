@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Samples2
 {

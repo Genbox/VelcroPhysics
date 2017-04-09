@@ -1,4 +1,5 @@
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 
 namespace VelcroPhysics.Dynamics
 {

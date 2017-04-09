@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives
 {
     /// <summary>
     /// A transform contains translation and rotation. It is used to represent

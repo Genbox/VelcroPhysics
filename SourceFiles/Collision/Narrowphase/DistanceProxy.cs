@@ -1,9 +1,8 @@
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// A distance proxy is used by the GJK algorithm.
@@ -50,7 +49,7 @@ namespace VelcroPhysics.Collision
                 case ShapeType.Chain:
                 {
                     ChainShape chain = (ChainShape)shape;
-                    Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                    System.Diagnostics.Debug.Assert(0 <= index && index < chain.Vertices.Count);
                     Vertices.Clear();
                     Vertices.Add(chain.Vertices[index]);
                     Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
@@ -70,7 +69,7 @@ namespace VelcroPhysics.Collision
                     break;
 
                 default:
-                    Debug.Assert(false);
+                    System.Diagnostics.Debug.Assert(false);
                     break;
             }
         }

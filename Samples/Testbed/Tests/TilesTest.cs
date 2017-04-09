@@ -24,10 +24,13 @@ using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
 
 namespace VelcroPhysics.Samples.Testbed.Tests

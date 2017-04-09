@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal class FileBuffer
     {

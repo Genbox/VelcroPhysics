@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Common.PolygonManipulation
 {

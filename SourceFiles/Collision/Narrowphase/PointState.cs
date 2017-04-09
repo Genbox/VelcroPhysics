@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// This is used for determining the state of contact points.

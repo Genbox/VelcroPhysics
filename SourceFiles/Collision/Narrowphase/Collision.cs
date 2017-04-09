@@ -22,12 +22,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Primitives.Optimization;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// Collision methods
@@ -533,7 +535,7 @@ namespace VelcroPhysics.Collision
             // Region AB
             float den;
             Vector2.Dot(ref e, ref e, out den);
-            Debug.Assert(den > 0.0f);
+            System.Diagnostics.Debug.Assert(den > 0.0f);
             P = (1.0f / den) * (u * A + v * B);
             d = Q - P;
             float dd2;
@@ -648,7 +650,7 @@ namespace VelcroPhysics.Collision
             int count2 = poly2.Vertices.Count;
             List<Vector2> vertices2 = poly2.Vertices;
 
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+            System.Diagnostics.Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Convert normal from poly1's frame into poly2's frame.
             Vector2 normal1World = MathUtils.Mul(xf1.q, normals1[edge1]);
@@ -772,7 +774,7 @@ namespace VelcroPhysics.Collision
             Vertices vertices2 = poly2.Vertices;
             Vertices normals2 = poly2.Normals;
 
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+            System.Diagnostics.Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
 
             // Get the normal of the reference edge in poly2's frame.
             Vector2 normal1 = MathUtils.MulT(xf2.q, MathUtils.Mul(xf1.q, normals1[edge1]));

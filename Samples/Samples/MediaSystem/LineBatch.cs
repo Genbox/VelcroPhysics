@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {

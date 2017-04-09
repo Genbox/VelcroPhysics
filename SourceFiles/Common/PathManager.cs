@@ -5,6 +5,7 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Common
 {

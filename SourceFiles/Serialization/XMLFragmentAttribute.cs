@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal class XMLFragmentAttribute
     {

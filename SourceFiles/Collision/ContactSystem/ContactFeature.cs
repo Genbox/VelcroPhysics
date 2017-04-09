@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// The features that intersect to form the contact point

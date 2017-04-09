@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives.Optimization
 {
     public struct FixedArray8<T>
     {

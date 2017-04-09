@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
 using VelcroPhysics.Templates;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

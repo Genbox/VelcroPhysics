@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.TOI
 {
     public enum SeparationFunctionType
     {

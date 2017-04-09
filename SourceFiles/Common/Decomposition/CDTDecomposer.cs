@@ -10,6 +10,7 @@ using VelcroPhysics.Common.Decomposition.CDT;
 using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
 using VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
 using VelcroPhysics.Common.Decomposition.CDT.Polygon;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Common.Decomposition
 {

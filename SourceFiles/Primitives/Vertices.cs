@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Common;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives
 {
 #if !(XBOX360)
 
@@ -193,7 +195,7 @@ namespace VelcroPhysics.Common
         /// <param name="value">The vector.</param>
         public void Translate(ref Vector2 value)
         {
-            Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
+            System.Diagnostics.Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
 
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Add(this[i], value);
@@ -222,7 +224,7 @@ namespace VelcroPhysics.Common
         /// <param name="value">The Value.</param>
         public void Scale(ref Vector2 value)
         {
-            Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
+            System.Diagnostics.Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
 
             for (int i = 0; i < Count; i++)
                 this[i] = Vector2.Multiply(this[i], value);
@@ -244,7 +246,7 @@ namespace VelcroPhysics.Common
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(float value)
         {
-            Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
+            System.Diagnostics.Debug.Assert(!AttachedToBody, "Rotating vertices that are used by a Body can result in unstable behavior.");
 
             float num1 = (float)Math.Cos(value);
             float num2 = (float)Math.Sin(value);

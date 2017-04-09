@@ -26,9 +26,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
-using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Dynamics
 {

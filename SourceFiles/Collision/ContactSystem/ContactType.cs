@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Collision.ContactSystem
 {
     public enum ContactType
     {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal class XMLFragmentParser
     {

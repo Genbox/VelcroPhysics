@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Broadphase
 {
     public interface IBroadPhase
     {

@@ -23,9 +23,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

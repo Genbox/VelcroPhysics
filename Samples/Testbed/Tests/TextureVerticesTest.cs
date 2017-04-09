@@ -5,6 +5,7 @@ using VelcroPhysics.Common;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
 
 namespace VelcroPhysics.Samples.Testbed.Tests

@@ -1,4 +1,6 @@
-namespace VelcroPhysics.Dynamics.Contacts
+using VelcroPhysics.Dynamics;
+
+namespace VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// A contact edge is used to connect bodies and contacts together

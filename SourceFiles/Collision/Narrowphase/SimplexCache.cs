@@ -1,6 +1,6 @@
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives.Optimization;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// Used to warm start ComputeDistance.

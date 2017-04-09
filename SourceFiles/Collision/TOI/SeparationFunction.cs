@@ -1,9 +1,10 @@
 using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.TOI
 {
     public static class SeparationFunction
     {
@@ -32,7 +33,7 @@ namespace VelcroPhysics.Collision
             _proxyA = proxyA;
             _proxyB = proxyB;
             int count = cache.Count;
-            Debug.Assert(0 < count && count < 3);
+            System.Diagnostics.Debug.Assert(0 < count && count < 3);
 
             _sweepA = sweepA;
             _sweepB = sweepB;
@@ -164,7 +165,7 @@ namespace VelcroPhysics.Collision
                 }
 
                 default:
-                    Debug.Assert(false);
+                    System.Diagnostics.Debug.Assert(false);
                     indexA = -1;
                     indexB = -1;
                     return 0.0f;
@@ -213,7 +214,7 @@ namespace VelcroPhysics.Collision
                     return separation;
                 }
                 default:
-                    Debug.Assert(false);
+                    System.Diagnostics.Debug.Assert(false);
                     return 0.0f;
             }
         }

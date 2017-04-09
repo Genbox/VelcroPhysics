@@ -22,10 +22,11 @@
 //#define USE_ACTIVE_CONTACT_SET
 
 using System.Collections.Generic;
-using VelcroPhysics.Collision;
-using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Dynamics
+namespace VelcroPhysics.Collision.ContactSystem
 {
     public class ContactManager
     {

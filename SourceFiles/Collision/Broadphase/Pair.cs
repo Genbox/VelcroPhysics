@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Broadphase
 {
     internal struct Pair : IComparable<Pair>
     {

@@ -1,6 +1,7 @@
-using VelcroPhysics.Common;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.TOI
 {
     /// <summary>
     /// Input parameters for CalculateTimeOfImpact

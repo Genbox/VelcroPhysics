@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Dynamics
+namespace VelcroPhysics.Dynamics.Solver
 {
     /// Solver Data
     public struct SolverData

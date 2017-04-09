@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Common.ConvexHull
 {

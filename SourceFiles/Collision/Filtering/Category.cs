@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Dynamics
+namespace VelcroPhysics.Collision.Filtering
 {
     [Flags]
     public enum Category

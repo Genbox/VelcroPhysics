@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// Contact ids to facilitate warm starting.

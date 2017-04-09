@@ -21,9 +21,11 @@
 */
 
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Controllers;
-using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Dynamics.Solver;
 
 namespace VelcroPhysics.Dynamics
 {

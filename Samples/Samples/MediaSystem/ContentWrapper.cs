@@ -5,10 +5,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 using Path = System.IO.Path;
 
 namespace VelcroPhysics.Samples.Samples2.MediaSystem

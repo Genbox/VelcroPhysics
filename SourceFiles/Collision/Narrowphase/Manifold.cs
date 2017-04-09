@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives.Optimization;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// A manifold for two touching convex Shapes.

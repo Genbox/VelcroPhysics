@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using VelcroPhysics.Common;
 using VelcroPhysics.Common.Decomposition;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Templates
 {

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;

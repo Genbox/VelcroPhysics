@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.ContactSystem
 {
     internal enum ContactFeatureType : byte
     {

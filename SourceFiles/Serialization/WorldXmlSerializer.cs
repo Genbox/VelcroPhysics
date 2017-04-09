@@ -10,7 +10,7 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal static class WorldXmlSerializer
     {

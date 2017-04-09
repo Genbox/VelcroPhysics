@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Common.TextureTools;
 using VelcroPhysics.Dynamics;

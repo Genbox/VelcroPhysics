@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// This holds polygon B expressed in frame A.

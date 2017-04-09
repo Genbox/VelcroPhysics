@@ -23,13 +23,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
+using VelcroPhysics.Dynamics;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Primitives.Optimization;
 
-namespace VelcroPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// The class manages contact between two shapes. A contact exists for each overlapping
@@ -225,7 +226,7 @@ namespace VelcroPhysics.Dynamics.Contacts
             {
                 Shape shapeA = FixtureA.Shape;
                 Shape shapeB = FixtureB.Shape;
-                touching = Collision.Collision.TestOverlap(shapeA, ChildIndexA, shapeB, ChildIndexB, ref bodyA._xf, ref bodyB._xf);
+                touching = Narrowphase.Collision.TestOverlap(shapeA, ChildIndexA, shapeB, ChildIndexB, ref bodyA._xf, ref bodyB._xf);
 
                 // Sensors don't generate manifolds.
                 Manifold.PointCount = 0;
@@ -353,29 +354,29 @@ namespace VelcroPhysics.Dynamics.Contacts
             switch (_type)
             {
                 case ContactType.Polygon:
-                    Collision.Collision.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.PolygonAndCircle:
-                    Collision.Collision.CollidePolygonAndCircle(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollidePolygonAndCircle(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndCircle:
-                    Collision.Collision.CollideEdgeAndCircle(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollideEdgeAndCircle(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.EdgeAndPolygon:
-                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollideEdgeAndPolygon(ref manifold, (EdgeShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.ChainAndCircle:
                     ChainShape chain = (ChainShape)FixtureA.Shape;
                     chain.GetChildEdge(_edge, ChildIndexA);
-                    Collision.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollideEdgeAndCircle(ref manifold, _edge, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.ChainAndPolygon:
                     ChainShape loop2 = (ChainShape)FixtureA.Shape;
                     loop2.GetChildEdge(_edge, ChildIndexA);
-                    Collision.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollideEdgeAndPolygon(ref manifold, _edge, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.Circle:
-                    Collision.Collision.CollideCircles(ref manifold, (CircleShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
+                    Narrowphase.Collision.CollideCircles(ref manifold, (CircleShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
                     break;
                 default:
                     throw new ArgumentException("You are using an unsupported contact type.");
@@ -387,8 +388,8 @@ namespace VelcroPhysics.Dynamics.Contacts
             ShapeType type1 = fixtureA.Shape.ShapeType;
             ShapeType type2 = fixtureB.Shape.ShapeType;
 
-            Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
-            Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
+            System.Diagnostics.Debug.Assert(ShapeType.Unknown < type1 && type1 < ShapeType.TypeCount);
+            System.Diagnostics.Debug.Assert(ShapeType.Unknown < type2 && type2 < ShapeType.TypeCount);
 
             Contact c;
             Queue<Contact> pool = fixtureA.Body._world._contactPool;

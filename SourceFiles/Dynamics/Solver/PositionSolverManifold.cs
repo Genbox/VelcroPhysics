@@ -1,15 +1,15 @@
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
-using VelcroPhysics.Common;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Dynamics.Solver
 {
     public static class PositionSolverManifold
     {
         public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out Vector2 normal, out Vector2 point, out float separation)
         {
-            Debug.Assert(pc.pointCount > 0);
+            System.Diagnostics.Debug.Assert(pc.pointCount > 0);
 
             switch (pc.type)
             {

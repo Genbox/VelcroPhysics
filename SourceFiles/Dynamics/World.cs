@@ -30,10 +30,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Collision.RayCast;
+using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Common;
 using VelcroPhysics.Controllers;
-using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Dynamics.Solver;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Dynamics
 {

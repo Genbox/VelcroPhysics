@@ -22,9 +22,11 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Broadphase
 {
     /// <summary>
     /// The broad-phase is used for computing pairs and performing volume queries and ray casts.

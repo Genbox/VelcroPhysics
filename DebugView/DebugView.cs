@@ -7,12 +7,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Primitives.Optimization;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.DebugView
 {
@@ -106,7 +112,7 @@ namespace VelcroPhysics.DebugView
                 Fixture fixtureA = contact.FixtureA;
 
                 FixedArray2<PointState> state1, state2;
-                Collision.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+                Collision.Narrowphase.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
 
                 FixedArray2<Vector2> points;
                 Vector2 normal;

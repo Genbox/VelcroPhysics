@@ -25,6 +25,9 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Samples.Testbed.Framework;
 
 namespace VelcroPhysics.Samples.Testbed.Tests

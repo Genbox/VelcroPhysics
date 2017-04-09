@@ -22,6 +22,8 @@
 
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;

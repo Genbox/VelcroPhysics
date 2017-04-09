@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
-using VelcroPhysics.Common;
+using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Primitives.Optimization;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Collision.ContactSystem
 {
     public static class WorldManifold
     {

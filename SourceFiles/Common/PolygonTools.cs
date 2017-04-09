@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Common.TextureTools;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Common
 {

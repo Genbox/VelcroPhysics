@@ -23,11 +23,11 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
-using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Dynamics
+namespace VelcroPhysics.Dynamics.Solver
 {
     /// <summary>
     /// This is an internal class.
@@ -311,8 +311,8 @@ namespace VelcroPhysics.Dynamics
 
         internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB, bool warmstarting)
         {
-            Debug.Assert(toiIndexA < BodyCount);
-            Debug.Assert(toiIndexB < BodyCount);
+            System.Diagnostics.Debug.Assert(toiIndexA < BodyCount);
+            System.Diagnostics.Debug.Assert(toiIndexB < BodyCount);
 
             // Initialize the body state.
             for (int i = 0; i < BodyCount; ++i)
@@ -403,20 +403,20 @@ namespace VelcroPhysics.Dynamics
 
         public void Add(Body body)
         {
-            Debug.Assert(BodyCount < BodyCapacity);
+            System.Diagnostics.Debug.Assert(BodyCount < BodyCapacity);
             body.IslandIndex = BodyCount;
             Bodies[BodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(ContactCount < ContactCapacity);
+            System.Diagnostics.Debug.Assert(ContactCount < ContactCapacity);
             _contacts[ContactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Debug.Assert(JointCount < JointCapacity);
+            System.Diagnostics.Debug.Assert(JointCount < JointCapacity);
             _joints[JointCount++] = joint;
         }
 

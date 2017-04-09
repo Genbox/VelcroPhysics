@@ -22,8 +22,9 @@
 
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
 

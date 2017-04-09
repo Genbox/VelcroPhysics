@@ -1,4 +1,5 @@
 using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Templates
 {

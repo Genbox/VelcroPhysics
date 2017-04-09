@@ -28,7 +28,9 @@ using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

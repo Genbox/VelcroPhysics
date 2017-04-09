@@ -25,10 +25,14 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Contacts;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Dynamics.Solver;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Serialization;
 
 namespace VelcroPhysics.Samples.Testbed.Framework
 {

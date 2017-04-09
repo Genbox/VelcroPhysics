@@ -21,13 +21,15 @@
 */
 
 using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
+using VelcroPhysics.Primitives.Optimization;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Dynamics.Contacts
+namespace VelcroPhysics.Dynamics.Solver
 {
     public class ContactSolver
     {
@@ -80,7 +82,7 @@ namespace VelcroPhysics.Dynamics.Contacts
                 Manifold manifold = contact.Manifold;
 
                 int pointCount = manifold.PointCount;
-                Debug.Assert(pointCount > 0);
+                System.Diagnostics.Debug.Assert(pointCount > 0);
 
                 ContactVelocityConstraint vc = _velocityConstraints[i];
                 vc.friction = contact.Friction;
@@ -171,7 +173,7 @@ namespace VelcroPhysics.Dynamics.Contacts
                 Vector2 vB = _velocities[indexB].v;
                 float wB = _velocities[indexB].w;
 
-                Debug.Assert(manifold.PointCount > 0);
+                System.Diagnostics.Debug.Assert(manifold.PointCount > 0);
 
                 Transform xfA = new Transform();
                 Transform xfB = new Transform();
@@ -316,7 +318,7 @@ namespace VelcroPhysics.Dynamics.Contacts
                 Vector2 tangent = MathUtils.Cross(normal, 1.0f);
                 float friction = vc.friction;
 
-                Debug.Assert(pointCount == 1 || pointCount == 2);
+                System.Diagnostics.Debug.Assert(pointCount == 1 || pointCount == 2);
 
                 // Solve tangent constraints first because non-penetration is more important
                 // than friction.
@@ -411,7 +413,7 @@ namespace VelcroPhysics.Dynamics.Contacts
                     VelocityConstraintPoint cp2 = vc.points[1];
 
                     Vector2 a = new Vector2(cp1.normalImpulse, cp2.normalImpulse);
-                    Debug.Assert(a.X >= 0.0f && a.Y >= 0.0f);
+                    System.Diagnostics.Debug.Assert(a.X >= 0.0f && a.Y >= 0.0f);
 
                     // Relative velocity at contact
                     Vector2 dv1 = vB + MathUtils.Cross(wB, cp1.rB) - vA - MathUtils.Cross(wA, cp1.rA);

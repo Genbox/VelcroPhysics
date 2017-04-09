@@ -1,4 +1,5 @@
-﻿using VelcroPhysics.Dynamics;
+﻿using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.Common.PhysicsLogic
 {

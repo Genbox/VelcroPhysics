@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal class XMLFragmentException : Exception
     {

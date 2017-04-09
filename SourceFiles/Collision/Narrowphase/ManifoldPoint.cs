@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.ContactSystem;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// A manifold point is a contact point belonging to a contact

@@ -1,6 +1,6 @@
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// Input for Distance.ComputeDistance().

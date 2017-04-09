@@ -21,11 +21,11 @@
 */
 
 using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
+using VelcroPhysics.Primitives.Optimization;
+using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes.
@@ -94,7 +94,7 @@ namespace VelcroPhysics.Collision
                         simplex.Solve3();
                         break;
                     default:
-                        Debug.Assert(false);
+                        System.Diagnostics.Debug.Assert(false);
                         break;
                 }
 

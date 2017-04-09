@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal class XMLFragmentElement
     {

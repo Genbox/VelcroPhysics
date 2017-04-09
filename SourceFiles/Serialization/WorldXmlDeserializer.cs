@@ -4,11 +4,13 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Serialization
 {
     internal static class WorldXmlDeserializer
     {

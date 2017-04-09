@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using VelcroPhysics.Common.ConvexHull;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Common.Decomposition
 {

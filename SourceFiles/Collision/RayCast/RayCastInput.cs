@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision
+namespace VelcroPhysics.Collision.RayCast
 {
     /// <summary>
     /// Ray-cast input data.

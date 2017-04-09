@@ -24,12 +24,16 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision;
+using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Contacts;
+using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

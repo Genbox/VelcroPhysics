@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using VelcroPhysics.Common;
 using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Common.PolygonManipulation;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.ContentPipeline.TextureTesselation
 {

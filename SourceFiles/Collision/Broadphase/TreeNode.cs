@@ -1,4 +1,6 @@
-namespace VelcroPhysics.Collision
+using VelcroPhysics.Collision.Primitives;
+
+namespace VelcroPhysics.Collision.Broadphase
 {
     /// <summary>
     /// A node in the dynamic tree. The client does not interact with this directly.

@@ -22,7 +22,7 @@
 
 using System;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Primitives.Optimization
 {
     public struct FixedArray2<T>
     {

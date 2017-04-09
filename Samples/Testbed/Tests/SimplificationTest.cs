@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Common;
 using VelcroPhysics.Common.PolygonManipulation;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
