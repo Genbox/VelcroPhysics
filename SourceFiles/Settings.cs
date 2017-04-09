@@ -259,6 +259,8 @@ namespace VelcroPhysics
         /// </summary>
         public static Category DefaultFixtureIgnoreCCDWith = Category.None;
 
+        public const bool BlockSolve = true;
+
         /// <summary>
         /// Friction mixing law. Feel free to customize this.
         /// </summary>
