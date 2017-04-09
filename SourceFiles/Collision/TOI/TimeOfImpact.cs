@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Primitives;
 
@@ -120,7 +121,7 @@ namespace VelcroPhysics.Collision.TOI
                     break;
                 }
 
-                SeparationFunction.Set(ref cache, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, t1);
+                SeparationFunction.Initialize(ref cache, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, t1, out Vector2 axis, out Vector2 localPoint, out SeparationFunctionType type);
 
                 // Compute the TOI on the separating axis. We do this by successively
                 // resolving the deepest point. This loop is bounded by the number of vertices.
@@ -131,7 +132,7 @@ namespace VelcroPhysics.Collision.TOI
                 {
                     // Find the deepest point at t2. Store the witness point indices.
                     int indexA, indexB;
-                    float s2 = SeparationFunction.FindMinSeparation(out indexA, out indexB, t2);
+                    float s2 = SeparationFunction.FindMinSeparation(out indexA, out indexB, t2, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, ref axis, ref localPoint, type);
 
                     // Is the final configuration separated?
                     if (s2 > target + tolerance)
@@ -152,7 +153,7 @@ namespace VelcroPhysics.Collision.TOI
                     }
 
                     // Compute the initial separation of the witness points.
-                    float s1 = SeparationFunction.Evaluate(indexA, indexB, t1);
+                    float s1 = SeparationFunction.Evaluate(indexA, indexB, t1, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, ref axis, ref localPoint, type);
 
                     // Check for initial overlap. This might happen if the root finder
                     // runs out of iterations.
@@ -197,7 +198,7 @@ namespace VelcroPhysics.Collision.TOI
                         if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                             ++TOIRootIters;
 
-                        float s = SeparationFunction.Evaluate(indexA, indexB, t);
+                        float s = SeparationFunction.Evaluate(indexA, indexB, t, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, ref axis, ref localPoint, type);
 
                         if (Math.Abs(s - target) < tolerance)
                         {
