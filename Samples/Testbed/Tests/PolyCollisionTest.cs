@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Vector2 normal;
             FixedArray2<Vector2> points;
-            ContactSolver.WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out normal, out points);
+            WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out normal, out points);
 
             DrawString("Point count = " + manifold.PointCount);
 
