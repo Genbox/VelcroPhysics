@@ -60,7 +60,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// <returns></returns>
         public static bool operator ==(MassData left, MassData right)
         {
-            return (left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia);
+            return left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia;
         }
 
         /// <summary>
