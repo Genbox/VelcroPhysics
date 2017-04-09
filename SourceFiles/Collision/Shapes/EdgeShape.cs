@@ -26,8 +26,7 @@ using VelcroPhysics.Common;
 namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A line segment (edge) shape. These can be connected in chains or loops
-    /// to other edge shapes.
+    /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes.
     /// The connectivity information is used to ensure correct contact normals.
     /// </summary>
     public class EdgeShape : Shape
@@ -62,10 +61,7 @@ namespace VelcroPhysics.Collision.Shapes
             Set(start, end);
         }
 
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
+        public override int ChildCount => 1;
 
         /// <summary>
         /// Is true if the edge is connected to an adjacent vertex before vertex 1.
@@ -190,11 +186,11 @@ namespace VelcroPhysics.Collision.Shapes
             output.Fraction = t;
             if (numerator > 0.0f)
             {
-                output.Normal = -normal;
+                output.Normal = -MathUtils.MulT(transform.q, normal);
             }
             else
             {
-                output.Normal = normal;
+                output.Normal = MathUtils.MulT(transform.q, normal);
             }
             return true;
         }
@@ -225,12 +221,12 @@ namespace VelcroPhysics.Collision.Shapes
 
         public bool CompareTo(EdgeShape shape)
         {
-            return (HasVertex0 == shape.HasVertex0 &&
-                    HasVertex3 == shape.HasVertex3 &&
-                    Vertex0 == shape.Vertex0 &&
-                    Vertex1 == shape.Vertex1 &&
-                    Vertex2 == shape.Vertex2 &&
-                    Vertex3 == shape.Vertex3);
+            return HasVertex0 == shape.HasVertex0 &&
+                   HasVertex3 == shape.HasVertex3 &&
+                   Vertex0 == shape.Vertex0 &&
+                   Vertex1 == shape.Vertex1 &&
+                   Vertex2 == shape.Vertex2 &&
+                   Vertex3 == shape.Vertex3;
         }
 
         public override Shape Clone()
