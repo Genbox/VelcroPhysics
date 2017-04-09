@@ -43,8 +43,6 @@ namespace VelcroPhysics.Primitives.Optimization
             }
         }
 
-        #region IEnumerable<T> Members
-
         public IEnumerator<T> GetEnumerator()
         {
             return Enumerate().GetEnumerator();
@@ -55,20 +53,10 @@ namespace VelcroPhysics.Primitives.Optimization
             return GetEnumerator();
         }
 
-        #endregion
-
-        public bool Contains(T value)
-        {
-            for (int i = 0; i < 3; ++i)
-                if (Equals(this[i], value))
-                    return true;
-            return false;
-        }
-
         public int IndexOf(T value)
         {
             for (int i = 0; i < 3; ++i)
-                if (Equals(this[i], value))
+                if (this[i].Equals(value))
                     return i;
             return -1;
         }
@@ -76,13 +64,6 @@ namespace VelcroPhysics.Primitives.Optimization
         public void Clear()
         {
             Value0 = Value1 = Value2 = default(T);
-        }
-
-        public void Clear(T value)
-        {
-            for (int i = 0; i < 3; ++i)
-                if (Equals(this[i], value))
-                    this[i] = default(T);
         }
 
         private IEnumerable<T> Enumerate()
