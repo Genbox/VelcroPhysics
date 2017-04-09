@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
-using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;

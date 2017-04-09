@@ -11,7 +11,6 @@ using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;

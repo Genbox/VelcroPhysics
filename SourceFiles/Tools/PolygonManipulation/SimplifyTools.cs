@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Tools.PolygonManipulation
 {
     /// <summary>
     /// Provides a set of tools to simplify polygons in various ways.

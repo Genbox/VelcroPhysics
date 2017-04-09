@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Templates;
 

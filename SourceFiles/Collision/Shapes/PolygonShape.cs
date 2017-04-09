@@ -23,9 +23,8 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.ConvexHull;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.ConvexHull;
 using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Collision.Shapes

@@ -1,4 +1,4 @@
-﻿namespace VelcroPhysics.Common.Decomposition.Seidel
+﻿namespace VelcroPhysics.Tools.Decomposition.Seidel
 {
     internal class Sink : Node
     {

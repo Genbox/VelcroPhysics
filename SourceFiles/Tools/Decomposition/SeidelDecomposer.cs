@@ -6,11 +6,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common.Decomposition.Seidel;
 using VelcroPhysics.Primitives;
-using Point = VelcroPhysics.Common.Decomposition.Seidel.Point;
+using VelcroPhysics.Tools.Decomposition.Seidel;
+using Point = VelcroPhysics.Tools.Decomposition.Seidel.Point;
 
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm created by Raimund Seidel

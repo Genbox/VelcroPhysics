@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Common;
 using VelcroPhysics.DebugView;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Samples.Testbed.Tests;

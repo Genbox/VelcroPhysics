@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
+using VelcroPhysics.Tools;
 using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Primitives

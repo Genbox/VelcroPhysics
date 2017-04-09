@@ -1,6 +1,6 @@
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     public abstract class PhysicsLogic : FilterData
     {

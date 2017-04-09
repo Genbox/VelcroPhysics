@@ -31,7 +31,7 @@
 
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Sets
+namespace VelcroPhysics.Tools.Decomposition.CDT.Sets
 {
     /*
      * Extends the PointSet by adding some Constraints on how it will be triangulated<br>

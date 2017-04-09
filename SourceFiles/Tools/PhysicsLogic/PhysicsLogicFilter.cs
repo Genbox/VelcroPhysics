@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     public struct PhysicsLogicFilter
     {

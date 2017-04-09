@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Tools.PolygonManipulation
 {
     public enum PolyClipError
     {

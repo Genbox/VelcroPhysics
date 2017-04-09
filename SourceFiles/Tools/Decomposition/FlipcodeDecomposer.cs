@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     /// <summary>
     /// Convex decomposition algorithm created by unknown

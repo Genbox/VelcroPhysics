@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     public enum TriangulationAlgorithm
     {

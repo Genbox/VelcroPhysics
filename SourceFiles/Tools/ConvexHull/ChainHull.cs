@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.ConvexHull
+namespace VelcroPhysics.Tools.ConvexHull
 {
     /// <summary>
     /// Andrew's Monotone Chain Convex Hull algorithm.

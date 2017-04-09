@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VelcroPhysics.Common.Decomposition.Seidel
+namespace VelcroPhysics.Tools.Decomposition.Seidel
 {
     internal class MonotoneMountain
     {

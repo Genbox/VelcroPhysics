@@ -23,7 +23,6 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Common;
 using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Collision.Shapes

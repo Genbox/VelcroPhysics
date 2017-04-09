@@ -2,7 +2,7 @@
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.ConvexHull
+namespace VelcroPhysics.Tools.ConvexHull
 {
     /// <summary>
     /// Creates a convex hull.

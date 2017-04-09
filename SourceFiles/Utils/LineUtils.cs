@@ -1,10 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
 using VelcroPhysics.Primitives;
-using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Utils
 {
     /// <summary>
     /// Collection of helper methods for misc collisions.

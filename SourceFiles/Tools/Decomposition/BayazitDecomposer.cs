@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     //From phed rev 36: http://code.google.com/p/phed/source/browse/trunk/Polygon.cpp
 

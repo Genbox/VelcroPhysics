@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Factories
 {

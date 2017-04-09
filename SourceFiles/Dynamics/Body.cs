@@ -30,11 +30,10 @@ using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.PhysicsLogic;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.PhysicsLogic;
 using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Dynamics

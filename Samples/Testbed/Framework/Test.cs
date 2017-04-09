@@ -27,7 +27,6 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Common;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Tools.PolygonManipulation
 {
     //Clipper contributed by Helge Backhaus
 

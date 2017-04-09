@@ -3,12 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Tools.Decomposition;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

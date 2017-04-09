@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.Decomposition.Seidel
+namespace VelcroPhysics.Tools.Decomposition.Seidel
 {
     internal class Triangulator
     {

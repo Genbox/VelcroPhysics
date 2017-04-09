@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     [Flags]
     public enum PhysicsLogicType

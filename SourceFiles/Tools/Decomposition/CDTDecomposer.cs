@@ -6,13 +6,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common.Decomposition.CDT;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
-using VelcroPhysics.Common.Decomposition.CDT.Polygon;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.Decomposition.CDT;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep;
+using VelcroPhysics.Tools.Decomposition.CDT.Polygon;
 
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     /// <summary>
     /// 2D constrained Delaunay triangulation algorithm.

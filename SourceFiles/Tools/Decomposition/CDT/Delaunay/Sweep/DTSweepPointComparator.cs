@@ -31,7 +31,7 @@
 
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep
 {
     internal class DTSweepPointComparator : IComparer<TriangulationPoint>
     {

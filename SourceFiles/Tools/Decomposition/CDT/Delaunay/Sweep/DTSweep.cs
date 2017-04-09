@@ -49,7 +49,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep
 {
     internal static class DTSweep
     {

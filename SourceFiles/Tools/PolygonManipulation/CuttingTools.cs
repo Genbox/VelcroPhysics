@@ -7,7 +7,7 @@ using VelcroPhysics.Factories;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Tools.PolygonManipulation
 {
     public static class CuttingTools
     {

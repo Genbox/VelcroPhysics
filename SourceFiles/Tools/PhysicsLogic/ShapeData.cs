@@ -1,6 +1,6 @@
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     internal struct ShapeData
     {

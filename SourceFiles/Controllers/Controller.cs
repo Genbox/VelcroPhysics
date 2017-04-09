@@ -1,5 +1,5 @@
-﻿using VelcroPhysics.Common.PhysicsLogic;
-using VelcroPhysics.Dynamics;
+﻿using VelcroPhysics.Dynamics;
+using VelcroPhysics.Tools.PhysicsLogic;
 
 namespace VelcroPhysics.Controllers
 {

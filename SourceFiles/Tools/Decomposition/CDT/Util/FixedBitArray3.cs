@@ -33,7 +33,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Util
+namespace VelcroPhysics.Tools.Decomposition.CDT.Util
 {
     internal struct FixedBitArray3 : IEnumerable<bool>
     {

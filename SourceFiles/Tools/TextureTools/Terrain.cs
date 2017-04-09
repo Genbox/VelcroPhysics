@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
-using VelcroPhysics.Common.Decomposition;
-using VelcroPhysics.Common.PolygonManipulation;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Tools.PolygonManipulation;
 
-namespace VelcroPhysics.Common.TextureTools
+namespace VelcroPhysics.Tools.TextureTools
 {
     /// <summary>
     /// Simple class to maintain a terrain. It can keep track

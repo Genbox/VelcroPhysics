@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision;
 using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Common.TextureTools
+namespace VelcroPhysics.Tools.TextureTools
 {
     // Ported by Matthew Bettcher - Feb 2011
 

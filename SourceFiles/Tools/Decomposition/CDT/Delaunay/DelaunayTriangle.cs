@@ -41,10 +41,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
-using VelcroPhysics.Common.Decomposition.CDT.Util;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep;
+using VelcroPhysics.Tools.Decomposition.CDT.Util;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay
+namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay
 {
     internal class DelaunayTriangle
     {

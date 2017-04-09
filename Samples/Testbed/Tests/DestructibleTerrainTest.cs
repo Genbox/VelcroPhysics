@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision;
-using VelcroPhysics.Common.Decomposition;
-using VelcroPhysics.Common.TextureTools;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Tools.TextureTools;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

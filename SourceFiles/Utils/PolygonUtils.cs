@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common.TextureTools;
 using VelcroPhysics.Primitives;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Tools.TextureTools;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Utils
 {
     public static class PolygonUtils
     {

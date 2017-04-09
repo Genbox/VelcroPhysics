@@ -34,7 +34,6 @@ using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Common;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;

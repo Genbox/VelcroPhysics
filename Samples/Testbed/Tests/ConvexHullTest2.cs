@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.ConvexHull;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Tools.ConvexHull;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

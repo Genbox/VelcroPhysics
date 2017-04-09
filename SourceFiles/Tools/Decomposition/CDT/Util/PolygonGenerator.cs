@@ -30,9 +30,9 @@
  */
 
 using System;
-using VelcroPhysics.Common.Decomposition.CDT.Polygon;
+using VelcroPhysics.Tools.Decomposition.CDT.Polygon;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Util
+namespace VelcroPhysics.Tools.Decomposition.CDT.Util
 {
     internal class PolygonGenerator
     {

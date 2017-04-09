@@ -1,7 +1,7 @@
 ﻿using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     /// <summary>
     /// Contains filter data that can determine whether an object should be processed or not.

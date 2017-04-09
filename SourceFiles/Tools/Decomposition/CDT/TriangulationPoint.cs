@@ -30,9 +30,9 @@
  */
 
 using System.Collections.Generic;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep;
 
-namespace VelcroPhysics.Common.Decomposition.CDT
+namespace VelcroPhysics.Tools.Decomposition.CDT
 {
     internal class TriangulationPoint
     {

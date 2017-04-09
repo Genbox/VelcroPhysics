@@ -6,10 +6,9 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.Decomposition;
 using VelcroPhysics.Utils;
 using Path = System.IO.Path;
 

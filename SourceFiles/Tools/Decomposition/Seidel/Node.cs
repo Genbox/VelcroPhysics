@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.Decomposition.Seidel
+namespace VelcroPhysics.Tools.Decomposition.Seidel
 {
     // Node for a Directed Acyclic graph (DAG)
     internal abstract class Node

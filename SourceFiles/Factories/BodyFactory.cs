@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Factories
 {

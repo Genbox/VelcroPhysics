@@ -23,7 +23,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 
-namespace VelcroPhysics.Common.PolygonManipulation
+namespace VelcroPhysics.Tools.PolygonManipulation
 {
     /// <summary>
     /// Combines a list of triangles into a list of convex polygons.

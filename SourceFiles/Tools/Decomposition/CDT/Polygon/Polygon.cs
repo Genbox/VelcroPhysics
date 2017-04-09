@@ -41,9 +41,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Polygon
+namespace VelcroPhysics.Tools.Decomposition.CDT.Polygon
 {
     internal class Polygon : Triangulatable
     {

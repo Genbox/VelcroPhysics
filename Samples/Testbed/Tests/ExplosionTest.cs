@@ -2,11 +2,11 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.PhysicsLogic;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Tools.PhysicsLogic;
+using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

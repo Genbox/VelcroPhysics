@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Common.PhysicsLogic
+namespace VelcroPhysics.Tools.PhysicsLogic
 {
     /// <summary>
     /// This is a comprarer used for

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Common.ConvexHull;
 using VelcroPhysics.Primitives;
+using VelcroPhysics.Tools.ConvexHull;
 
-namespace VelcroPhysics.Common.Decomposition
+namespace VelcroPhysics.Tools.Decomposition
 {
     public static class Triangulate
     {

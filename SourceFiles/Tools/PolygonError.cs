@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Tools
 {
     public enum PolygonError
     {

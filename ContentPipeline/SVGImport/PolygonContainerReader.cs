@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework.Content;
-using VelcroPhysics.Common;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Templates;
 

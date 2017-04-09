@@ -30,9 +30,9 @@
  */
 
 using System.Collections.Generic;
-using VelcroPhysics.Common.Decomposition.CDT.Delaunay;
+using VelcroPhysics.Tools.Decomposition.CDT.Delaunay;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Sets
+namespace VelcroPhysics.Tools.Decomposition.CDT.Sets
 {
     internal class PointSet : Triangulatable
     {

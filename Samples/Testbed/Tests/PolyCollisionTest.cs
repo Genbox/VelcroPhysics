@@ -26,7 +26,6 @@ using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Primitives.Optimization;
 using VelcroPhysics.Samples.Testbed.Framework;

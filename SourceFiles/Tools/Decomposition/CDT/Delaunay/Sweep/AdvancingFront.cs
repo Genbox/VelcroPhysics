@@ -38,7 +38,7 @@
 using System;
 using System.Text;
 
-namespace VelcroPhysics.Common.Decomposition.CDT.Delaunay.Sweep
+namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep
 {
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)

@@ -4,10 +4,9 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Common;
-using VelcroPhysics.Common.Decomposition;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Templates;
+using VelcroPhysics.Tools.Decomposition;
 
 namespace VelcroPhysics.ContentPipeline.SVGImport
 {
