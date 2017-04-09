@@ -68,8 +68,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             cache.Count = (ushort)Count;
             for (int i = 0; i < Count; ++i)
             {
-                cache.IndexA[i] = (byte)(V[i].IndexA);
-                cache.IndexB[i] = (byte)(V[i].IndexB);
+                cache.IndexA[i] = (byte)V[i].IndexA;
+                cache.IndexB[i] = (byte)V[i].IndexB;
             }
         }
 
@@ -81,20 +81,20 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return -V[0].W;
 
                 case 2:
-                {
-                    Vector2 e12 = V[1].W - V[0].W;
-                    float sgn = MathUtils.Cross(e12, (Vector2)(-V[0].W));
-                    if (sgn > 0.0f)
                     {
-                        // Origin is left of e12.
-                        return new Vector2(-e12.Y, e12.X);
+                        Vector2 e12 = V[1].W - V[0].W;
+                        float sgn = MathUtils.Cross(e12, -V[0].W);
+                        if (sgn > 0.0f)
+                        {
+                            // Origin is left of e12.
+                            return MathUtils.Cross(1.0f, e12);
+                        }
+                        else
+                        {
+                            // Origin is right of e12.
+                            return MathUtils.Cross(e12, 1.0f);
+                        }
                     }
-                    else
-                    {
-                        // Origin is right of e12.
-                        return new Vector2(e12.Y, -e12.X);
-                    }
-                }
 
                 default:
                     Debug.Assert(false);
@@ -169,7 +169,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return (V[0].W - V[1].W).Length();
 
                 case 3:
-                    return MathUtils.Cross((Vector2)(V[1].W - V[0].W), (Vector2)(V[2].W - V[0].W));
+                    return MathUtils.Cross(V[1].W - V[0].W, V[2].W - V[0].W);
 
                 default:
                     Debug.Assert(false);
@@ -212,9 +212,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (d12_2 <= 0.0f)
             {
                 // a2 <= 0, so we clamp it to 0
-                SimplexVertex v0 = V[0];
-                v0.A = 1.0f;
-                V[0] = v0;
+                V.Value0.A = 1.0f;
                 Count = 1;
                 return;
             }
@@ -224,22 +222,16 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (d12_1 <= 0.0f)
             {
                 // a1 <= 0, so we clamp it to 0
-                SimplexVertex v1 = V[1];
-                v1.A = 1.0f;
-                V[1] = v1;
+                V.Value1.A = 1.0f;
                 Count = 1;
-                V[0] = V[1];
+                V.Value0 = V.Value1;
                 return;
             }
 
             // Must be in e12 region.
             float inv_d12 = 1.0f / (d12_1 + d12_2);
-            SimplexVertex v0_2 = V[0];
-            SimplexVertex v1_2 = V[1];
-            v0_2.A = d12_1 * inv_d12;
-            v1_2.A = d12_2 * inv_d12;
-            V[0] = v0_2;
-            V[1] = v1_2;
+            V.Value0.A = d12_1 * inv_d12;
+            V.Value1.A = d12_2 * inv_d12;
             Count = 2;
         }
 
@@ -294,9 +286,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             // w1 region
             if (d12_2 <= 0.0f && d13_2 <= 0.0f)
             {
-                SimplexVertex v0_1 = V[0];
-                v0_1.A = 1.0f;
-                V[0] = v0_1;
+                V.Value0.A = 1.0f;
                 Count = 1;
                 return;
             }
@@ -305,12 +295,8 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (d12_1 > 0.0f && d12_2 > 0.0f && d123_3 <= 0.0f)
             {
                 float inv_d12 = 1.0f / (d12_1 + d12_2);
-                SimplexVertex v0_2 = V[0];
-                SimplexVertex v1_2 = V[1];
-                v0_2.A = d12_1 * inv_d12;
-                v1_2.A = d12_2 * inv_d12;
-                V[0] = v0_2;
-                V[1] = v1_2;
+                V.Value0.A = d12_1 * inv_d12;
+                V.Value1.A = d12_2 * inv_d12;
                 Count = 2;
                 return;
             }
@@ -319,36 +305,28 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (d13_1 > 0.0f && d13_2 > 0.0f && d123_2 <= 0.0f)
             {
                 float inv_d13 = 1.0f / (d13_1 + d13_2);
-                SimplexVertex v0_3 = V[0];
-                SimplexVertex v2_3 = V[2];
-                v0_3.A = d13_1 * inv_d13;
-                v2_3.A = d13_2 * inv_d13;
-                V[0] = v0_3;
-                V[2] = v2_3;
+                V.Value0.A = d13_1 * inv_d13;
+                V.Value2.A = d13_2 * inv_d13;
                 Count = 2;
-                V[1] = V[2];
+                V.Value1 = V.Value2;
                 return;
             }
 
             // w2 region
             if (d12_1 <= 0.0f && d23_2 <= 0.0f)
             {
-                SimplexVertex v1_4 = V[1];
-                v1_4.A = 1.0f;
-                V[1] = v1_4;
+                V.Value1.A = 1.0f;
                 Count = 1;
-                V[0] = V[1];
+                V.Value0 = V.Value1;
                 return;
             }
 
             // w3 region
             if (d13_1 <= 0.0f && d23_1 <= 0.0f)
             {
-                SimplexVertex v2_5 = V[2];
-                v2_5.A = 1.0f;
-                V[2] = v2_5;
+                V.Value2.A = 1.0f;
                 Count = 1;
-                V[0] = V[2];
+                V.Value1 = V.Value2;
                 return;
             }
 
@@ -356,28 +334,18 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (d23_1 > 0.0f && d23_2 > 0.0f && d123_1 <= 0.0f)
             {
                 float inv_d23 = 1.0f / (d23_1 + d23_2);
-                SimplexVertex v1_6 = V[1];
-                SimplexVertex v2_6 = V[2];
-                v1_6.A = d23_1 * inv_d23;
-                v2_6.A = d23_2 * inv_d23;
-                V[1] = v1_6;
-                V[2] = v2_6;
+                V.Value1.A = d23_1 * inv_d23;
+                V.Value2.A = d23_2 * inv_d23;
                 Count = 2;
-                V[0] = V[2];
+                V.Value0 = V.Value2;
                 return;
             }
 
             // Must be in triangle123
             float inv_d123 = 1.0f / (d123_1 + d123_2 + d123_3);
-            SimplexVertex v0_7 = V[0];
-            SimplexVertex v1_7 = V[1];
-            SimplexVertex v2_7 = V[2];
-            v0_7.A = d123_1 * inv_d123;
-            v1_7.A = d123_2 * inv_d123;
-            v2_7.A = d123_3 * inv_d123;
-            V[0] = v0_7;
-            V[1] = v1_7;
-            V[2] = v2_7;
+            V.Value0.A = d123_1 * inv_d123;
+            V.Value1.A = d123_2 * inv_d123;
+            V.Value2.A = d123_3 * inv_d123;
             Count = 3;
         }
     }

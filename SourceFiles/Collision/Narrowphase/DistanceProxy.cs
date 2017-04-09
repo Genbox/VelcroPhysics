@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Primitives;
@@ -45,7 +46,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 case ShapeType.Chain:
                     {
                         ChainShape chain = (ChainShape)shape;
-                        System.Diagnostics.Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                        Debug.Assert(0 <= index && index < chain.Vertices.Count);
                         Vertices.Clear();
                         Vertices.Add(chain.Vertices[index]);
                         Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
@@ -65,7 +66,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     break;
 
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     break;
             }
         }
