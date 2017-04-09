@@ -311,8 +311,8 @@ namespace VelcroPhysics.Dynamics.Solver
 
         internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB, bool warmstarting)
         {
-            System.Diagnostics.Debug.Assert(toiIndexA < BodyCount);
-            System.Diagnostics.Debug.Assert(toiIndexB < BodyCount);
+            Debug.Assert(toiIndexA < BodyCount);
+            Debug.Assert(toiIndexB < BodyCount);
 
             // Initialize the body state.
             for (int i = 0; i < BodyCount; ++i)
@@ -403,20 +403,20 @@ namespace VelcroPhysics.Dynamics.Solver
 
         public void Add(Body body)
         {
-            System.Diagnostics.Debug.Assert(BodyCount < BodyCapacity);
+            Debug.Assert(BodyCount < BodyCapacity);
             body.IslandIndex = BodyCount;
             Bodies[BodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            System.Diagnostics.Debug.Assert(ContactCount < ContactCapacity);
+            Debug.Assert(ContactCount < ContactCapacity);
             _contacts[ContactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            System.Diagnostics.Debug.Assert(JointCount < JointCapacity);
+            Debug.Assert(JointCount < JointCapacity);
             _joints[JointCount++] = joint;
         }
 

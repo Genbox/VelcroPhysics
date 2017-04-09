@@ -57,7 +57,7 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override bool Equals(object obj)
         {
-            if (Object.ReferenceEquals(null, obj))
+            if (ReferenceEquals(null, obj))
                 return false;
 
             if (obj.GetType() != typeof(MassData))
