@@ -29,7 +29,6 @@ using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;

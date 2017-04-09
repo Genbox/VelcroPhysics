@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
 
 namespace VelcroPhysics.Samples.Testbed.Tests

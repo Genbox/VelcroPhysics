@@ -1,4 +1,4 @@
-using VelcroPhysics.Collision.Primitives;
+using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Collision.Broadphase
 {

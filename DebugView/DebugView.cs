@@ -10,7 +10,6 @@ using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Common;
 using VelcroPhysics.Controllers;

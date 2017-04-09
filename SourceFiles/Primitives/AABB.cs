@@ -1,10 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Collision.Primitives
+namespace VelcroPhysics.Primitives
 {
     /// <summary>
     /// An axis aligned bounding box.

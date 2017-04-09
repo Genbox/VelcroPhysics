@@ -23,8 +23,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.RayCast;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Collision.Broadphase

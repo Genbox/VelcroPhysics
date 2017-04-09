@@ -21,7 +21,6 @@
 */
 
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Common;
 using VelcroPhysics.Primitives;

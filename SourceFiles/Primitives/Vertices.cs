@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Common;
 using VelcroPhysics.Utils;
 

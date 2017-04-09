@@ -32,7 +32,6 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Primitives;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Common;
