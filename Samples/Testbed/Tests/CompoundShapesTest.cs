@@ -59,10 +59,10 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.25f, 0.5f);
+                Vertices box = PolygonUtils.CreateRectangle(0.25f, 0.5f);
                 PolygonShape polygon1 = new PolygonShape(box, 2);
 
-                box = PolygonTools.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
+                box = PolygonUtils.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * Settings.Pi);
                 PolygonShape polygon2 = new PolygonShape(box, 2);
 
                 for (int i = 0; i < 10; ++i)
@@ -116,13 +116,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(1.5f, 0.15f);
+                Vertices box = PolygonUtils.CreateRectangle(1.5f, 0.15f);
                 PolygonShape bottom = new PolygonShape(box, 4);
 
-                box = PolygonTools.CreateRectangle(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
+                box = PolygonUtils.CreateRectangle(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
                 PolygonShape left = new PolygonShape(box, 4);
 
-                box = PolygonTools.CreateRectangle(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
+                box = PolygonUtils.CreateRectangle(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
                 PolygonShape right = new PolygonShape(box, 4);
 
                 Body body = BodyFactory.CreateBody(World);

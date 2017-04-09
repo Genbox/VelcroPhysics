@@ -21,7 +21,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _movingBody = BodyFactory.CreateBody(World);
             _movingBody.Position = new Vector2(-25, 25);
             _movingBody.BodyType = BodyType.Dynamic;
-            _movingBody.CreateFixture(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f), 1));
+            _movingBody.CreateFixture(new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.5f), 1));
 
             //Static shape made up of bodies
             _path = new Path();
@@ -43,7 +43,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _path.Translate(ref xform);
 
             List<Shape> shapes = new List<Shape>(2);
-            shapes.Add(new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0), 1));
+            shapes.Add(new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0), 0), 1));
             shapes.Add(new CircleShape(0.5f, 1));
 
             List<Body> bodies = PathManager.EvenlyDistributeShapesAlongPath(World, _path, shapes, BodyType.Dynamic, 20);

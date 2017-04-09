@@ -59,12 +59,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _body1.Position = new Vector2(0.0f, 40.0f);
             _body1.Rotation = 0.25f * Settings.Pi;
 
-            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
+            Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
             PolygonShape shape1 = new PolygonShape(box, 1);
             _piece1 = _body1.CreateFixture(shape1);
 
-            box = PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
+            box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
             _shape2 = new PolygonShape(box, 1);
 
             _piece2 = _body1.CreateFixture(_shape2);
@@ -84,7 +84,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //Transfer the texture data to the array
             polygonTexture.GetData(data);
 
-            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width);
+            Vertices verts = PolygonUtils.CreatePolygon(data, polygonTexture.Width);
             Vector2 scale = new Vector2(0.07f, 0.07f);
             verts.Scale(ref scale);
 

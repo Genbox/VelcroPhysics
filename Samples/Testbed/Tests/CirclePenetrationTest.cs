@@ -21,16 +21,16 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             const float height = 25f;
 
             //Bottom
-            borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, height), 0));
+            borders.Add(PolygonUtils.CreateRectangle(width, borderWidth, new Vector2(0, height), 0));
 
             //Left
-            borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2(-width, 0), 0));
+            borders.Add(PolygonUtils.CreateRectangle(borderWidth, height, new Vector2(-width, 0), 0));
 
             //Top
-            borders.Add(PolygonTools.CreateRectangle(width, borderWidth, new Vector2(0, -height), 0));
+            borders.Add(PolygonUtils.CreateRectangle(width, borderWidth, new Vector2(0, -height), 0));
 
             //Right
-            borders.Add(PolygonTools.CreateRectangle(borderWidth, height, new Vector2(width, 0), 0));
+            borders.Add(PolygonUtils.CreateRectangle(borderWidth, height, new Vector2(width, 0), 0));
 
             Body body = BodyFactory.CreateCompoundPolygon(World, borders, 1, new Vector2(0, 20));
 

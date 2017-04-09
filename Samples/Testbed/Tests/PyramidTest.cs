@@ -39,7 +39,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //Create ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 5);
 
             Vector2 x = new Vector2(-7.0f, 0.75f);

@@ -18,7 +18,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
         public Pyramid(World world, Vector2 position, int count, float density)
         {
-            Vertices rect = PolygonTools.CreateRectangle(0.5f, 0.5f);
+            Vertices rect = PolygonUtils.CreateRectangle(0.5f, 0.5f);
             PolygonShape shape = new PolygonShape(rect, density);
 
             Vector2 rowStart = position;

@@ -45,7 +45,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 ground.CreateFixture(shape);
             }
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 20);
 
                 Body prevBody = ground;

@@ -34,7 +34,7 @@ namespace VelcroPhysics.Factories
             path.Add(end);
 
             //A single chainlink
-            PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(linkWidth, linkHeight), linkDensity);
+            PolygonShape shape = new PolygonShape(PolygonUtils.CreateRectangle(linkWidth, linkHeight), linkDensity);
 
             //Use PathManager to create all the chainlinks based on the chainlink created before.
             List<Body> chainLinks = PathManager.EvenlyDistributeShapesAlongPath(world, path, shape, BodyType.Dynamic, numberOfLinks);

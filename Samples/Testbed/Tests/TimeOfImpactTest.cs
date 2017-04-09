@@ -38,8 +38,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
         private TimeOfImpactTest()
         {
-            _shapeA.Vertices = PolygonTools.CreateRectangle(25.0f, 5.0f);
-            _shapeB.Vertices = PolygonTools.CreateRectangle(2.5f, 2.5f);
+            _shapeA.Vertices = PolygonUtils.CreateRectangle(25.0f, 5.0f);
+            _shapeB.Vertices = PolygonUtils.CreateRectangle(2.5f, 2.5f);
         }
 
         internal static Test Create()

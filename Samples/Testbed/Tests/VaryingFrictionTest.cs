@@ -38,7 +38,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
-                Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
+                Vertices box = PolygonUtils.CreateRectangle(13.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -49,7 +49,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
+                Vertices box = PolygonUtils.CreateRectangle(0.25f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -59,7 +59,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(13.0f, 0.25f);
+                Vertices box = PolygonUtils.CreateRectangle(13.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.25f, 1.0f);
+                Vertices box = PolygonUtils.CreateRectangle(0.25f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -80,7 +80,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(13f, 0.25f);
+                Vertices box = PolygonUtils.CreateRectangle(13f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -91,7 +91,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 25);
 
                 float[] friction = { 0.75f, 0.5f, 0.35f, 0.1f, 0.0f };

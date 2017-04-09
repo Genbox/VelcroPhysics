@@ -39,7 +39,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             Body b1 = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
-                Vertices box = PolygonTools.CreateRectangle(6.0f, 0.25f);
+                Vertices box = PolygonUtils.CreateRectangle(6.0f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -48,7 +48,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.1f, 1.0f);
+                Vertices box = PolygonUtils.CreateRectangle(0.1f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 20);
 
                 for (int i = 0; i < 10; ++i)
@@ -63,7 +63,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(7.0f, 0.25f, Vector2.Zero, 0.3f);
+                Vertices box = PolygonUtils.CreateRectangle(7.0f, 0.25f, Vector2.Zero, 0.3f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 Body ground = BodyFactory.CreateBody(World);
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body b2;
             {
-                Vertices box = PolygonTools.CreateRectangle(0.25f, 1.5f);
+                Vertices box = PolygonUtils.CreateRectangle(0.25f, 1.5f);
                 PolygonShape shape = new PolygonShape(box, 0);
 
                 b2 = BodyFactory.CreateBody(World);
@@ -85,7 +85,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body b3;
             {
-                Vertices box = PolygonTools.CreateRectangle(6.0f, 0.125f);
+                Vertices box = PolygonUtils.CreateRectangle(6.0f, 0.125f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
                 b3 = BodyFactory.CreateBody(World);
@@ -103,7 +103,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body b4;
             {
-                Vertices box = PolygonTools.CreateRectangle(0.25f, 0.25f);
+                Vertices box = PolygonUtils.CreateRectangle(0.25f, 0.25f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
                 b4 = BodyFactory.CreateBody(World);
@@ -123,19 +123,19 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 b5.BodyType = BodyType.Dynamic;
                 b5.Position = new Vector2(6.5f, 3.0f);
 
-                Vertices vertices = PolygonTools.CreateRectangle(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
+                Vertices vertices = PolygonUtils.CreateRectangle(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
                 PolygonShape shape = new PolygonShape(vertices, 10);
 
                 Fixture fix = b5.CreateFixture(shape);
                 fix.Friction = 0.1f;
 
-                vertices = PolygonTools.CreateRectangle(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
+                vertices = PolygonUtils.CreateRectangle(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
 
                 shape.Vertices = vertices;
                 fix = b5.CreateFixture(shape);
                 fix.Friction = 0.1f;
 
-                vertices = PolygonTools.CreateRectangle(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
+                vertices = PolygonUtils.CreateRectangle(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
 
                 shape.Vertices = vertices;
                 fix = b5.CreateFixture(shape);
@@ -148,7 +148,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body b6;
             {
-                Vertices box = PolygonTools.CreateRectangle(1.0f, 0.1f);
+                Vertices box = PolygonUtils.CreateRectangle(1.0f, 0.1f);
                 PolygonShape shape = new PolygonShape(box, 30);
 
                 b6 = BodyFactory.CreateBody(World);
@@ -165,7 +165,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             Body b7;
             {
-                Vertices box = PolygonTools.CreateRectangle(0.1f, 1.0f);
+                Vertices box = PolygonUtils.CreateRectangle(0.1f, 1.0f);
                 PolygonShape shape = new PolygonShape(box, 10);
 
                 b7 = BodyFactory.CreateBody(World);

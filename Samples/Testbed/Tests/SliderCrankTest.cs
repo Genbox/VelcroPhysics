@@ -55,7 +55,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 // Define crank.
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.Vertices = PolygonTools.CreateRectangle(0.5f, 2.0f);
+                    shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 2.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -75,7 +75,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 // Define follower.
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.Vertices = PolygonTools.CreateRectangle(0.5f, 4.0f);
+                    shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 4.0f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -93,7 +93,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 // Define piston
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.Vertices = PolygonTools.CreateRectangle(1.5f, 1.5f);
+                    shape.Vertices = PolygonUtils.CreateRectangle(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
@@ -114,7 +114,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 // Create a payload
                 {
                     PolygonShape shape = new PolygonShape(2);
-                    shape.Vertices = PolygonTools.CreateRectangle(1.5f, 1.5f);
+                    shape.Vertices = PolygonUtils.CreateRectangle(1.5f, 1.5f);
 
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;

@@ -53,7 +53,7 @@ namespace VelcroPhysics.Factories
 
             Body body = CreateBody(world, position, rotation, bodyType, userData);
 
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+            Vertices rectangleVertices = PolygonUtils.CreateRectangle(width / 2, height / 2);
             FixtureFactory.AttachPolygon(rectangleVertices, density, body);
 
             return body;
@@ -90,7 +90,7 @@ namespace VelcroPhysics.Factories
 
         public static Body CreateGear(World world, float radius, int numberOfTeeth, float tipPercentage, float toothHeight, float density, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
-            Vertices gearPolygon = PolygonTools.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
+            Vertices gearPolygon = PolygonUtils.CreateGear(radius, numberOfTeeth, tipPercentage, toothHeight);
 
             //Gears can in some cases be convex
             if (!gearPolygon.IsConvex())
@@ -106,7 +106,7 @@ namespace VelcroPhysics.Factories
 
         public static Body CreateCapsule(World world, float height, float topRadius, int topEdges, float bottomRadius, int bottomEdges, float density, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
-            Vertices verts = PolygonTools.CreateCapsule(height, topRadius, topEdges, bottomRadius, bottomEdges);
+            Vertices verts = PolygonUtils.CreateCapsule(height, topRadius, topEdges, bottomRadius, bottomEdges);
 
             //There are too many vertices in the capsule. We decompose it.
             if (verts.Count >= Settings.MaxPolygonVertices)
@@ -121,7 +121,7 @@ namespace VelcroPhysics.Factories
         public static Body CreateCapsule(World world, float height, float endRadius, float density, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
             //Create the middle rectangle
-            Vertices rectangle = PolygonTools.CreateRectangle(endRadius, height / 2);
+            Vertices rectangle = PolygonUtils.CreateRectangle(endRadius, height / 2);
 
             List<Vertices> list = new List<Vertices>();
             list.Add(rectangle);
@@ -143,7 +143,7 @@ namespace VelcroPhysics.Factories
 
         public static Body CreateRoundedRectangle(World world, float width, float height, float xRadius, float yRadius, int segments, float density, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
-            Vertices verts = PolygonTools.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
+            Vertices verts = PolygonUtils.CreateRoundedRectangle(width, height, xRadius, yRadius, segments);
 
             //There are too many vertices in the capsule. We decompose it.
             if (verts.Count >= Settings.MaxPolygonVertices)

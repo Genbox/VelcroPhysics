@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             // Chassis
             {
                 PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
+                shape.Vertices = PolygonUtils.CreateRectangle(2.5f, 1.0f);
 
                 _chassis = BodyFactory.CreateBody(World);
                 _chassis.BodyType = BodyType.Dynamic;

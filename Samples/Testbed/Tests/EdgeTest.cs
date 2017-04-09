@@ -100,7 +100,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 body.SleepingAllowed = false;
 
                 PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
 
                 body.CreateFixture(shape);
             }

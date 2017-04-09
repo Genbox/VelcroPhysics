@@ -26,15 +26,15 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             Vector2 trans = new Vector2();
             _polygons = new List<Vertices>();
 
-            _polygons.Add(PolygonTools.CreateGear(5f, 10, 0f, 6f));
-            _polygons.Add(PolygonTools.CreateGear(4f, 15, 100f, 3f));
+            _polygons.Add(PolygonUtils.CreateGear(5f, 10, 0f, 6f));
+            _polygons.Add(PolygonUtils.CreateGear(4f, 15, 100f, 3f));
 
             trans.X = 0f;
             trans.Y = 8f;
             _polygons[0].Translate(ref trans);
             _polygons[1].Translate(ref trans);
 
-            _polygons.Add(PolygonTools.CreateGear(5f, 10, 50f, 5f));
+            _polygons.Add(PolygonUtils.CreateGear(5f, 10, 50f, 5f));
 
             trans.X = 22f;
             trans.Y = 17f;
@@ -49,22 +49,22 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             trans.Y = 20f;
             _polygons[4].Translate(ref trans);
 
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
             trans.X = 0f;
             trans.Y = 27f;
             _polygons[5].Translate(ref trans);
             _polygons[6].Translate(ref trans);
 
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
             trans.Y = 40f;
             _polygons[7].Translate(ref trans);
             trans.X = 5f;
             _polygons[8].Translate(ref trans);
 
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
-            _polygons.Add(PolygonTools.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
+            _polygons.Add(PolygonUtils.CreateRectangle(5f, 5f));
             trans.Y = 35f;
             trans.X = 20f;
             _polygons[9].Translate(ref trans);
@@ -253,13 +253,13 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
         private void AddCircle(int radius, int numSides)
         {
-            Vertices verts = PolygonTools.CreateCircle(radius, numSides);
+            Vertices verts = PolygonUtils.CreateCircle(radius, numSides);
             _polygons.Add(verts);
         }
 
         private void AddRectangle(int width, int height)
         {
-            Vertices verts = PolygonTools.CreateRectangle(width, height);
+            Vertices verts = PolygonUtils.CreateRectangle(width, height);
             _polygons.Add(verts);
         }
 

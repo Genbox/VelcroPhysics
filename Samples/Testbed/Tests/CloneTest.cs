@@ -45,7 +45,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
             polygonTexture.GetData(data);
 
-            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width);
+            Vertices verts = PolygonUtils.CreatePolygon(data, polygonTexture.Width);
 
             Vector2 scale = new Vector2(0.07f, -0.07f);
             verts.Scale(ref scale);

@@ -108,7 +108,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
                 _board.Position = new Vector2(140.0f, -1.0f);
 
                 PolygonShape box = new PolygonShape(1f);
-                box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
+                box.Vertices = PolygonUtils.CreateRectangle(10.0f, 0.25f);
                 _teeter = new Sprite(ContentWrapper.TextureFromShape(box, "Stripe", ContentWrapper.Gold, ContentWrapper.Black, ContentWrapper.Black, 1f));
 
                 _board.CreateFixture(box);
@@ -127,7 +127,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
                 const int segmentCount = 20;
                 PolygonShape shape = new PolygonShape(1f);
-                shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(1.0f, 0.125f);
 
                 _bridge = new Sprite(ContentWrapper.TextureFromShape(shape, ContentWrapper.Gold, ContentWrapper.Black));
 
@@ -151,7 +151,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             {
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
-                box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                box.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
                 _box = new Sprite(ContentWrapper.TextureFromShape(box, "Square", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 1f));
 
                 Body body = new Body(World);

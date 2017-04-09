@@ -28,8 +28,8 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            Vertices rectangle1 = PolygonTools.CreateRectangle(2f, 2f);
-            Vertices rectangle2 = PolygonTools.CreateRectangle(2f, 2f);
+            Vertices rectangle1 = PolygonUtils.CreateRectangle(2f, 2f);
+            Vertices rectangle2 = PolygonUtils.CreateRectangle(2f, 2f);
 
             Vector2 translation = new Vector2(-2f, 0f);
             rectangle1.Translate(ref translation);

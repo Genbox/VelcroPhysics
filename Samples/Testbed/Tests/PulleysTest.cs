@@ -47,7 +47,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(5);
-                shape.Vertices = PolygonTools.CreateRectangle(A, B);
+                shape.Vertices = PolygonUtils.CreateRectangle(A, B);
 
                 Body body1 = BodyFactory.CreateBody(World);
                 body1.BodyType = BodyType.Dynamic;

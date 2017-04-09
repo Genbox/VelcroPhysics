@@ -68,11 +68,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             // have non-smooth collision. There is no solution
             // to this problem.
             PolygonShape tile = new PolygonShape(1);
-            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonUtils.CreateRectangle(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
-            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonUtils.CreateRectangle(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
-            tile.Vertices = PolygonTools.CreateRectangle(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
+            tile.Vertices = PolygonUtils.CreateRectangle(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
             ground.CreateFixture(tile);
 
             // Square made from an edge loop. Collision should be smooth.

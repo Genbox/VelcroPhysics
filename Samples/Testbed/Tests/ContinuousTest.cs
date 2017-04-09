@@ -43,8 +43,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private ContinuousTest()
         {
             List<Vertices> list = new List<Vertices>();
-            list.Add(PolygonTools.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
-            list.Add(PolygonTools.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
+            list.Add(PolygonUtils.CreateLine(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f)));
+            list.Add(PolygonUtils.CreateRectangle(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0));
 
             _ground = BodyFactory.CreateCompoundPolygon(World, list, 0);
 

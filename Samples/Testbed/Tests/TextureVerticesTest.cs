@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             polygonTexture.GetData(data);
 
             //Find the vertices that makes up the outline of the shape in the texture
-            Vertices verts = PolygonTools.CreatePolygon(data, polygonTexture.Width);
+            Vertices verts = PolygonUtils.CreatePolygon(data, polygonTexture.Width);
 
             //For now we need to scale the vertices (result is in pixels, we use meters)
             Vector2 scale = new Vector2(0.07f, -0.07f);

@@ -46,7 +46,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 CircleShape circle1 = new CircleShape(1.0f, 5f);
 
                 PolygonShape box = new PolygonShape(5f);
-                box.Vertices = PolygonTools.CreateRectangle(0.5f, 5.0f);
+                box.Vertices = PolygonUtils.CreateRectangle(0.5f, 5.0f);
 
                 CircleShape circle2 = new CircleShape(2.0f, 5f);
 
@@ -77,7 +77,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 CircleShape circle2 = new CircleShape(2.0f, 5.0f);
 
                 PolygonShape box = new PolygonShape(5f);
-                box.Vertices = PolygonTools.CreateRectangle(0.5f, 5.0f);
+                box.Vertices = PolygonUtils.CreateRectangle(0.5f, 5.0f);
 
                 Body body1 = BodyFactory.CreateBody(World, new Vector2(-3.0f, 12.0f));
                 body1.BodyType = BodyType.Dynamic;

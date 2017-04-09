@@ -166,7 +166,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f);
                 _polygons[3] = new PolygonShape(box, 1);
             }
 

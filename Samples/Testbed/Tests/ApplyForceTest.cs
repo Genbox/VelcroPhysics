@@ -103,7 +103,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
 
             {
-                Vertices box = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f);
                 PolygonShape shape = new PolygonShape(box, 1);
 
                 for (int i = 0; i < 10; ++i)

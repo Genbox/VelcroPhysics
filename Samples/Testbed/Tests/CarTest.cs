@@ -93,7 +93,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 body.Position = new Vector2(140.0f, 1.0f);
 
                 PolygonShape box = new PolygonShape(1);
-                box.Vertices = PolygonTools.CreateRectangle(10.0f, 0.25f);
+                box.Vertices = PolygonUtils.CreateRectangle(10.0f, 0.25f);
                 body.CreateFixture(box);
 
                 RevoluteJoint jd = JointFactory.CreateRevoluteJoint(World, ground, body, Vector2.Zero);
@@ -108,7 +108,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             {
                 const int N = 20;
                 PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonTools.CreateRectangle(1.0f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(1.0f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < N; ++i)
@@ -132,7 +132,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             // Boxes
             {
                 PolygonShape box = new PolygonShape(0.5f);
-                box.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                box.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
 
                 Body body = new Body(World);
                 body.BodyType = BodyType.Dynamic;

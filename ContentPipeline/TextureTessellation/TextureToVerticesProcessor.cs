@@ -49,7 +49,7 @@ namespace VelcroPhysics.ContentPipeline.TextureTesselation
                 }
             }
 
-            Vertices outline = PolygonTools.CreatePolygon(colorData, bitmapContent.Width, HoleDetection);
+            Vertices outline = PolygonUtils.CreatePolygon(colorData, bitmapContent.Width, HoleDetection);
             Vector2 centroid = -outline.GetCentroid();
             outline.Translate(ref centroid);
             outline = SimplifyTools.DouglasPeuckerSimplify(outline, 0.1f);

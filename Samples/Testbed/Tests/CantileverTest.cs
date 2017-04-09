@@ -41,7 +41,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(20);
-                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -61,7 +61,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonTools.CreateRectangle(1f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(1f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < 3; ++i)
@@ -83,7 +83,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
@@ -107,7 +107,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.125f);
+                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
 
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)

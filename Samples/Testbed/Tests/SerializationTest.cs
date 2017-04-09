@@ -124,7 +124,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             //Weld joint
             {
-                PolygonShape shape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
+                PolygonShape shape = new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.125f), 20);
 
                 Body prevBody = ground;
                 for (int i = 0; i < 10; ++i)

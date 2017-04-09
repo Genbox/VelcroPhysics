@@ -354,7 +354,7 @@ namespace VelcroPhysics.Primitives
 
                     Vector2 temp;
 
-                    if (LineTools.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out temp))
+                    if (LineUtils.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out temp))
                         return false;
                 }
             }

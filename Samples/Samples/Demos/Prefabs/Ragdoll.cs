@@ -198,9 +198,9 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
             // GFX
             _face = new Sprite(ContentWrapper.CircleTexture(0.75f, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
-            _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "Stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
-            _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(1.9f, 0.45f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
-            _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonTools.CreateCapsule(2f, 0.5f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
+            _torso = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateRoundedRectangle(1.5f, 2f, 0.75f, 0.75f, 2), "Stripe", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 2.0f));
+            _upperLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateCapsule(1.9f, 0.45f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
+            _lowerLimb = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateCapsule(2f, 0.5f, 16), "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Black, 1f));
         }
 
         public Body Body { get; }

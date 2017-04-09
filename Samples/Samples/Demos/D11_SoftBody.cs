@@ -40,7 +40,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             bridgePath.Add(new Vector2(15, 5));
             bridgePath.Closed = false;
 
-            Vertices box = PolygonTools.CreateRectangle(0.125f, 0.5f);
+            Vertices box = PolygonUtils.CreateRectangle(0.125f, 0.5f);
             PolygonShape shape = new PolygonShape(box, 20);
 
             _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29);
@@ -64,7 +64,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
 
             // Creating two shapes. A circle to form the circle and a rectangle to stabilize the soft body.
             Shape[] shapes = new Shape[2];
-            shapes[0] = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0f), 0f), 1f);
+            shapes[0] = new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(-0.1f, 0f), 0f), 1f);
             shapes[1] = new CircleShape(0.5f, 1f);
 
             // We distribute the shapes in the rectangular path.

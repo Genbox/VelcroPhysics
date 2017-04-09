@@ -28,7 +28,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
             for (int i = 1; i < rings; i++)
             {
-                Vertices vertices = PolygonTools.CreateCircle(i * 2.9f, sides);
+                Vertices vertices = PolygonUtils.CreateCircle(i * 2.9f, sides);
                 vertices.Translate(ref position);
                 List<Body> bodies = new List<Body>(sides);
 
@@ -67,7 +67,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
             }
 
             //Create an outer ring
-            Vertices frame = PolygonTools.CreateCircle(rings * 2.9f - 0.9f, sides);
+            Vertices frame = PolygonUtils.CreateCircle(rings * 2.9f - 0.9f, sides);
             frame.Translate(ref position);
 
             Body anchor = new Body(world, position);

@@ -34,7 +34,7 @@ namespace VelcroPhysics.Factories
 
         public static Fixture AttachRectangle(float width, float height, float density, Vector2 offset, Body body, object userData = null)
         {
-            Vertices rectangleVertices = PolygonTools.CreateRectangle(width / 2, height / 2);
+            Vertices rectangleVertices = PolygonUtils.CreateRectangle(width / 2, height / 2);
             rectangleVertices.Translate(ref offset);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
             return body.CreateFixture(rectangleShape, userData);
@@ -76,7 +76,7 @@ namespace VelcroPhysics.Factories
             if (yRadius <= 0)
                 throw new ArgumentOutOfRangeException(nameof(yRadius), "Y-radius must be more than 0");
 
-            Vertices ellipseVertices = PolygonTools.CreateEllipse(xRadius, yRadius, edges);
+            Vertices ellipseVertices = PolygonUtils.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
             return body.CreateFixture(polygonShape, userData);
         }
@@ -105,14 +105,14 @@ namespace VelcroPhysics.Factories
 
         public static Fixture AttachLineArc(float radians, int sides, float radius, bool closed, Body body)
         {
-            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
+            Vertices arc = PolygonUtils.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2);
             return closed ? AttachLoopShape(arc, body) : AttachChainShape(arc, body);
         }
 
         public static List<Fixture> AttachSolidArc(float density, float radians, int sides, float radius, Body body)
         {
-            Vertices arc = PolygonTools.CreateArc(radians, sides, radius);
+            Vertices arc = PolygonUtils.CreateArc(radians, sides, radius);
             arc.Rotate((MathHelper.Pi - radians) / 2);
 
             //Close the arc

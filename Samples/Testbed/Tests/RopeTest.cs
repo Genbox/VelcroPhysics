@@ -53,8 +53,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 Body prevBody = ground;
-                PolygonShape largeShape = new PolygonShape(PolygonTools.CreateRectangle(1.5f, 1.5f), 100);
-                PolygonShape smallShape = new PolygonShape(PolygonTools.CreateRectangle(0.5f, 0.125f), 20);
+                PolygonShape largeShape = new PolygonShape(PolygonUtils.CreateRectangle(1.5f, 1.5f), 100);
+                PolygonShape smallShape = new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.125f), 20);
 
                 const int N = 10;
                 const float y = 15;

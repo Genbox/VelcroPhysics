@@ -66,7 +66,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 ball.BodyType = BodyType.Dynamic;
                 ball.CollisionCategories = Category.Cat1;
 
-                Vertices polygonVertices = PolygonTools.CreateRectangle(10.0f, 0.2f, new Vector2(-10.0f, 0.0f), 0.0f);
+                Vertices polygonVertices = PolygonUtils.CreateRectangle(10.0f, 0.2f, new Vector2(-10.0f, 0.0f), 0.0f);
 
                 Body polygonBody = BodyFactory.CreatePolygon(World, polygonVertices, 2, new Vector2(20, 10));
                 polygonBody.BodyType = BodyType.Dynamic;

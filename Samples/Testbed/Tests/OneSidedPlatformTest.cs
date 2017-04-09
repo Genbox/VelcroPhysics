@@ -50,7 +50,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 body.Position = new Vector2(0.0f, 10.0f);
 
                 PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonTools.CreateRectangle(3.0f, 0.5f);
+                shape.Vertices = PolygonUtils.CreateRectangle(3.0f, 0.5f);
                 _platform = body.CreateFixture(shape);
 
                 _top = 10.0f + 0.5f;

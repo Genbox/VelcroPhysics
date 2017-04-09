@@ -96,7 +96,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-5.0f, 10.0f);
 
-                    Vertices box = PolygonTools.CreateRectangle(0.5f, 1.0f);
+                    Vertices box = PolygonUtils.CreateRectangle(0.5f, 1.0f);
                     PolygonShape p = new PolygonShape(box, 1);
                     body.CreateFixture(p);
 
@@ -109,7 +109,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 }
 
                 // Small box
-                polygon.Vertices = PolygonTools.CreateRectangle(1.0f, 0.5f);
+                polygon.Vertices = PolygonUtils.CreateRectangle(1.0f, 0.5f);
 
                 Body boxBody = BodyFactory.CreateBody(World);
                 boxBody.BodyType = BodyType.Dynamic;
@@ -123,7 +123,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 boxFixture.CollidesWith = BoxMask;
 
                 // Large box (recycle definitions)
-                polygon.Vertices = PolygonTools.CreateRectangle(2, 1);
+                polygon.Vertices = PolygonUtils.CreateRectangle(2, 1);
 
                 Body boxBody2 = BodyFactory.CreateBody(World);
                 boxBody2.BodyType = BodyType.Dynamic;

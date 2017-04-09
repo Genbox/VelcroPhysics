@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             fixture.OnCollision += OnCollision;
 
             // Small box
-            Vertices smallBox = PolygonTools.CreateRectangle(1.0f, 0.5f);
+            Vertices smallBox = PolygonUtils.CreateRectangle(1.0f, 0.5f);
             polygon.Vertices = smallBox;
 
             Body body3 = BodyFactory.CreateBody(World);
@@ -84,7 +84,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             fixture.OnCollision += OnCollision;
 
             // Large box (recycle definitions)
-            Vertices largeBox = PolygonTools.CreateRectangle(2.0f, 1.0f);
+            Vertices largeBox = PolygonUtils.CreateRectangle(2.0f, 1.0f);
             polygon.Vertices = largeBox;
 
             Body body4 = BodyFactory.CreateBody(World);

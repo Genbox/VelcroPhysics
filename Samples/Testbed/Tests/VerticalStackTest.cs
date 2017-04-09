@@ -50,7 +50,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             for (int j = 0; j < ColumnCount; ++j)
             {
                 PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
 
                 for (int i = 0; i < RowCount; ++i)
                 {

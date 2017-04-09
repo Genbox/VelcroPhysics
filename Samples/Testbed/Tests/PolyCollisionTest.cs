@@ -47,12 +47,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private PolyCollisionTest()
         {
             {
-                _polygonA.Vertices = PolygonTools.CreateRectangle(0.2f, 0.4f);
+                _polygonA.Vertices = PolygonUtils.CreateRectangle(0.2f, 0.4f);
                 _transformA.Set(Vector2.Zero, 0.0f);
             }
 
             {
-                _polygonB.Vertices = PolygonTools.CreateRectangle(0.5f, 0.5f);
+                _polygonB.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
 
                 //_positionB = new Vector2(19.345284f, 1.5632932f);
                 _positionB = new Vector2(0.345284f, 0.5632932f);

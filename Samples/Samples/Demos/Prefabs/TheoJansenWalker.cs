@@ -54,7 +54,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 
             // Chassis
             PolygonShape box = new PolygonShape(1f);
-            box.Vertices = PolygonTools.CreateRectangle(2.5f, 1.0f);
+            box.Vertices = PolygonUtils.CreateRectangle(2.5f, 1.0f);
             _body = new Sprite(ContentWrapper.TextureFromShape(box, _walkerColors[0], ContentWrapper.Black));
 
             _chassis = BodyFactory.CreateBody(world);

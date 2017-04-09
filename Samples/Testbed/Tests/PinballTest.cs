@@ -70,7 +70,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 rightFlipper.BodyType = BodyType.Dynamic;
 
                 PolygonShape box = new PolygonShape(1);
-                box.Vertices = PolygonTools.CreateRectangle(1.75f, 0.1f);
+                box.Vertices = PolygonUtils.CreateRectangle(1.75f, 0.1f);
 
                 leftFlipper.CreateFixture(box);
                 rightFlipper.CreateFixture(box);

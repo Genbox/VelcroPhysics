@@ -63,7 +63,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                     for (int i = 0; i < N; ++i)
                     {
                         PolygonShape shape = new PolygonShape(0);
-                        shape.Vertices = PolygonTools.CreateRectangle(a, a, position, 0.0f);
+                        shape.Vertices = PolygonUtils.CreateRectangle(a, a, position, 0.0f);
                         ground.CreateFixture(shape);
                         ++_fixtureCount;
                         position.X += 2.0f * a;
@@ -74,7 +74,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             {
                 const float a = 0.5f;
-                Vertices box = PolygonTools.CreateRectangle(a, a);
+                Vertices box = PolygonUtils.CreateRectangle(a, a);
                 PolygonShape shape = new PolygonShape(box, 5);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
