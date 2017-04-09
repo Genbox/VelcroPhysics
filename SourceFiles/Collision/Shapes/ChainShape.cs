@@ -40,11 +40,6 @@ namespace VelcroPhysics.Collision.Shapes
         private Vector2 _prevVertex, _nextVertex;
 
         /// <summary>
-        /// The vertices. These are not owned/freed by the chain Shape.
-        /// </summary>
-        public Vertices Vertices;
-
-        /// <summary>
         /// Constructor for ChainShape. By default have 0 in density.
         /// </summary>
         public ChainShape()
@@ -53,6 +48,11 @@ namespace VelcroPhysics.Collision.Shapes
             ShapeType = ShapeType.Chain;
             _radius = Settings.PolygonRadius;
         }
+
+        /// <summary>
+        /// The vertices. These are not owned/freed by the chain Shape.
+        /// </summary>
+        public Vertices Vertices { get; set; }
 
         /// <summary>
         /// Create a new chainshape from the vertices.
