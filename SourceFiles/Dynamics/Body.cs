@@ -30,6 +30,7 @@ using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Primitives;

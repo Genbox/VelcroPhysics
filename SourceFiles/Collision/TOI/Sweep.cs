@@ -1,8 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Primitives
+namespace VelcroPhysics.Collision.TOI
 {
     /// <summary>
     /// This describes the motion of a body/shape for TOI computation.
@@ -51,7 +52,7 @@ namespace VelcroPhysics.Primitives
             xfb.q.Set(angle);
 
             // Shift to origin
-            xfb.p -= MathUtils.Mul((Rot)xfb.q, (Vector2)LocalCenter);
+            xfb.p -= MathUtils.Mul(xfb.q, LocalCenter);
         }
 
         /// <summary>
