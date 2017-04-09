@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Utils;
@@ -61,7 +62,7 @@ namespace VelcroPhysics.Collision.TOI
         /// <param name="alpha">new initial time..</param>
         public void Advance(float alpha)
         {
-            System.Diagnostics.Debug.Assert(Alpha0 < 1.0f);
+            Debug.Assert(Alpha0 < 1.0f);
             float beta = (alpha - Alpha0) / (1.0f - Alpha0);
             C0 += beta * (C - C0);
             A0 += beta * (A - A0);

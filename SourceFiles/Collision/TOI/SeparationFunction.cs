@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Primitives;
@@ -33,7 +34,7 @@ namespace VelcroPhysics.Collision.TOI
             _proxyA = proxyA;
             _proxyB = proxyB;
             int count = cache.Count;
-            System.Diagnostics.Debug.Assert(0 < count && count < 3);
+            Debug.Assert(0 < count && count < 3);
 
             _sweepA = sweepA;
             _sweepB = sweepB;
@@ -165,7 +166,7 @@ namespace VelcroPhysics.Collision.TOI
                 }
 
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     indexA = -1;
                     indexB = -1;
                     return 0.0f;
@@ -214,7 +215,7 @@ namespace VelcroPhysics.Collision.TOI
                     return separation;
                 }
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return 0.0f;
             }
         }

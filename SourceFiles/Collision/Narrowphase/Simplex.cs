@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Primitives.Optimization;
@@ -13,7 +14,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
         internal void ReadCache(ref SimplexCache cache, DistanceProxy proxyA, ref Transform transformA, DistanceProxy proxyB, ref Transform transformB)
         {
-            System.Diagnostics.Debug.Assert(cache.Count <= 3);
+            Debug.Assert(cache.Count <= 3);
 
             // Copy data from cache.
             Count = cache.Count;
@@ -96,7 +97,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 }
 
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return Vector2.Zero;
             }
         }
@@ -106,7 +107,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             switch (Count)
             {
                 case 0:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return Vector2.Zero;
 
                 case 1:
@@ -119,7 +120,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return Vector2.Zero;
 
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return Vector2.Zero;
             }
         }
@@ -131,7 +132,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 case 0:
                     pA = Vector2.Zero;
                     pB = Vector2.Zero;
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     break;
 
                 case 1:
@@ -159,7 +160,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             switch (Count)
             {
                 case 0:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return 0.0f;
                 case 1:
                     return 0.0f;
@@ -171,7 +172,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return MathUtils.Cross((Vector2)(V[1].W - V[0].W), (Vector2)(V[2].W - V[0].W));
 
                 default:
-                    System.Diagnostics.Debug.Assert(false);
+                    Debug.Assert(false);
                     return 0.0f;
             }
         }

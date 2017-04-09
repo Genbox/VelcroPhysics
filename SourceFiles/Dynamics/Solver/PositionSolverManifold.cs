@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Primitives;
@@ -9,7 +10,7 @@ namespace VelcroPhysics.Dynamics.Solver
     {
         public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out Vector2 normal, out Vector2 point, out float separation)
         {
-            System.Diagnostics.Debug.Assert(pc.pointCount > 0);
+            Debug.Assert(pc.pointCount > 0);
 
             switch (pc.type)
             {

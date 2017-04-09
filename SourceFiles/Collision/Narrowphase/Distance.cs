@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Primitives.Optimization;
 using VelcroPhysics.Utils;
@@ -29,6 +30,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes.
+    /// Using Voronoi regions (Christer Ericson) and Barycentric coordinates.
     /// </summary>
     public static class Distance
     {
@@ -94,7 +96,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                         simplex.Solve3();
                         break;
                     default:
-                        System.Diagnostics.Debug.Assert(false);
+                        Debug.Assert(false);
                         break;
                 }
 

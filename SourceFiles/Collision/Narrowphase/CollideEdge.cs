@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Primitives;
@@ -115,7 +116,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             // Region AB
             float den = Vector2.Dot(e, e);
-            System.Diagnostics.Debug.Assert(den > 0.0f);
+            Debug.Assert(den > 0.0f);
             Vector2 P = (1.0f / den) * (u * A + v * B);
             Vector2 d = Q - P;
             float dd = Vector2.Dot(d, d);
