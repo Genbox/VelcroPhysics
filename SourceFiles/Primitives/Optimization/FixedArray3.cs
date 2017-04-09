@@ -1,12 +1,12 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace VelcroPhysics.Primitives.Optimization
 {
-    public struct FixedArray3<T>
+    public struct FixedArray3<T> : IEnumerable<T>
     {
-        private T _value0;
-        private T _value1;
-        private T _value2;
+        public T Value0, Value1, Value2;
 
         public T this[int index]
         {
@@ -15,11 +15,11 @@ namespace VelcroPhysics.Primitives.Optimization
                 switch (index)
                 {
                     case 0:
-                        return _value0;
+                        return Value0;
                     case 1:
-                        return _value1;
+                        return Value1;
                     case 2:
-                        return _value2;
+                        return Value2;
                     default:
                         throw new IndexOutOfRangeException();
                 }
@@ -29,18 +29,66 @@ namespace VelcroPhysics.Primitives.Optimization
                 switch (index)
                 {
                     case 0:
-                        _value0 = value;
+                        Value0 = value;
                         break;
                     case 1:
-                        _value1 = value;
+                        Value1 = value;
                         break;
                     case 2:
-                        _value2 = value;
+                        Value2 = value;
                         break;
                     default:
                         throw new IndexOutOfRangeException();
                 }
             }
+        }
+
+        #region IEnumerable<T> Members
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Enumerate().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion
+
+        public bool Contains(T value)
+        {
+            for (int i = 0; i < 3; ++i)
+                if (Equals(this[i], value))
+                    return true;
+            return false;
+        }
+
+        public int IndexOf(T value)
+        {
+            for (int i = 0; i < 3; ++i)
+                if (Equals(this[i], value))
+                    return i;
+            return -1;
+        }
+
+        public void Clear()
+        {
+            Value0 = Value1 = Value2 = default(T);
+        }
+
+        public void Clear(T value)
+        {
+            for (int i = 0; i < 3; ++i)
+                if (Equals(this[i], value))
+                    this[i] = default(T);
+        }
+
+        private IEnumerable<T> Enumerate()
+        {
+            for (int i = 0; i < 3; ++i)
+                yield return this[i];
         }
     }
 }

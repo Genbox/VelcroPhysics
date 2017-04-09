@@ -29,20 +29,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Changes from the Java version
-//   attributification
-// Future possibilities
-//   Flattening out the number of indirections
-//     Replacing arrays of 3 with fixed-length arrays?
-//     Replacing bool[3] with a bit array of some sort?
-//     Bundling everything into an AoS mess?
-//     Hardcode them all as ABC ?
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using VelcroPhysics.Primitives.Optimization;
 using VelcroPhysics.Tools.Decomposition.CDT.Delaunay.Sweep;
-using VelcroPhysics.Tools.Decomposition.CDT.Util;
 
 namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay
 {
@@ -51,16 +42,16 @@ namespace VelcroPhysics.Tools.Decomposition.CDT.Delaunay
         /** Neighbor pointers */
 
         /** Flags to determine if an edge is a Delauney edge */
-        public FixedBitArray3 EdgeIsConstrained;
+        public FixedArray3<bool> EdgeIsConstrained;
 
         /** Flags to determine if an edge is a Constrained edge */
-        public FixedBitArray3 EdgeIsDelaunay;
+        public FixedArray3<bool> EdgeIsDelaunay;
 
-        public Util.FixedArray3<DelaunayTriangle> Neighbors;
+        public FixedArray3<DelaunayTriangle> Neighbors;
 
         /** Has this triangle been marked as an interior triangle? */
 
-        public Util.FixedArray3<TriangulationPoint> Points;
+        public FixedArray3<TriangulationPoint> Points;
 
         public DelaunayTriangle(TriangulationPoint p1, TriangulationPoint p2, TriangulationPoint p3)
         {
