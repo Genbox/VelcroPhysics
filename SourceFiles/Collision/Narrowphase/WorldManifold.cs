@@ -13,10 +13,11 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// point count, impulses, etc. The radii must come from the Shapes
         /// that generated the manifold.
         /// </summary>
-        public static void Initialize(ref Manifold manifold, ref Transform xfA, float radiusA, ref Transform xfB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points)
+        public static void Initialize(ref Manifold manifold, ref Transform xfA, float radiusA, ref Transform xfB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points, out FixedArray2<float> separations)
         {
             normal = Vector2.Zero;
             points = new FixedArray2<Vector2>();
+            separations = new FixedArray2<float>();
 
             if (manifold.PointCount == 0)
             {
@@ -29,7 +30,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                     {
                         normal = new Vector2(1.0f, 0.0f);
                         Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
-                        Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points[0].LocalPoint);
+                        Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points.Value0.LocalPoint);
                         if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
                         {
                             normal = pointB - pointA;
@@ -38,7 +39,8 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                         Vector2 cA = pointA + radiusA * normal;
                         Vector2 cB = pointB - radiusB * normal;
-                        points[0] = 0.5f * (cA + cB);
+                        points.Value0 = 0.5f * (cA + cB);
+                        separations.Value0 = Vector2.Dot(cB - cA, normal);
                     }
                     break;
 
@@ -53,6 +55,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                             Vector2 cA = clipPoint + (radiusA - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
                             Vector2 cB = clipPoint - radiusB * normal;
                             points[i] = 0.5f * (cA + cB);
+                            separations[i] = Vector2.Dot(cB - cA, normal);
                         }
                     }
                     break;
@@ -68,6 +71,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                             Vector2 cB = clipPoint + (radiusB - Vector2.Dot(clipPoint - planePoint, normal)) * normal;
                             Vector2 cA = clipPoint - radiusA * normal;
                             points[i] = 0.5f * (cA + cB);
+                            separations[i] = Vector2.Dot(cA - cB, normal);
                         }
 
                         // Ensure normal points from A to B.

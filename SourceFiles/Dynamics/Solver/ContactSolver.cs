@@ -184,7 +184,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
                 Vector2 normal;
                 FixedArray2<Vector2> points;
-                WorldManifold.Initialize(ref manifold, ref xfA, radiusA, ref xfB, radiusB, out normal, out points);
+                WorldManifold.Initialize(ref manifold, ref xfA, radiusA, ref xfB, radiusB, out normal, out points, out _);
 
                 vc.normal = normal;
 

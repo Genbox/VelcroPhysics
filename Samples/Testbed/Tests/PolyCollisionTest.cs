@@ -69,10 +69,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             Manifold manifold = new Manifold();
             CollidePolygon.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
-
-            Vector2 normal;
-            FixedArray2<Vector2> points;
-            WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out normal, out points);
+            WorldManifold.Initialize(ref manifold, ref _transformA, _polygonA.Radius, ref _transformB, _polygonB.Radius, out _, out FixedArray2<Vector2> points, out _);
 
             DrawString("Point count = " + manifold.PointCount);
 

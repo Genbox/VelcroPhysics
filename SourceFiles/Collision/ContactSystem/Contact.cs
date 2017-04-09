@@ -157,7 +157,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             Shape shapeA = FixtureA.Shape;
             Shape shapeB = FixtureB.Shape;
 
-            WorldManifold.Initialize(ref Manifold, ref bodyA._xf, shapeA.Radius, ref bodyB._xf, shapeB.Radius, out normal, out points);
+            WorldManifold.Initialize(ref Manifold, ref bodyA._xf, shapeA.Radius, ref bodyB._xf, shapeB.Radius, out normal, out points, out _);
         }
 
         private void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
