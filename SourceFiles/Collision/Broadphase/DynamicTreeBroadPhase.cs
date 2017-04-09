@@ -68,35 +68,18 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <summary>
         /// Get the tree quality based on the area of the tree.
         /// </summary>
-        public float TreeQuality
-        {
-            get { return _tree.AreaRatio; }
-        }
-
-        /// <summary>
-        /// Gets the balance of the tree.
-        /// </summary>
-        public int TreeBalance
-        {
-            get { return _tree.MaxBalance; }
-        }
+        public float TreeQuality => _tree.AreaRatio;
 
         /// <summary>
         /// Gets the height of the tree.
         /// </summary>
-        public int TreeHeight
-        {
-            get { return _tree.Height; }
-        }
+        public int TreeHeight => _tree.Height;
 
         /// <summary>
         /// Get the number of proxies.
         /// </summary>
         /// <value>The proxy count.</value>
-        public int ProxyCount
-        {
-            get { return _proxyCount; }
-        }
+        public int ProxyCount => _proxyCount;
 
         /// <summary>
         /// Create a proxy with an initial AABB. Pairs are not reported until
@@ -123,15 +106,20 @@ namespace VelcroPhysics.Collision.Broadphase
             _tree.RemoveProxy(proxyId);
         }
 
+        /// <summary>
+        /// Call MoveProxy as many times as you like, then when you are done
+        /// call UpdatePairs to finalized the proxy pairs (for your time step).
+        /// </summary>
         public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
             bool buffer = _tree.MoveProxy(proxyId, ref aabb, displacement);
             if (buffer)
-            {
                 BufferMove(proxyId);
-            }
         }
 
+        /// <summary>
+        /// Call to trigger a re-processing of it's pairs on the next call to UpdatePairs.
+        /// </summary>
         public void TouchProxy(int proxyId)
         {
             BufferMove(proxyId);
@@ -165,9 +153,8 @@ namespace VelcroPhysics.Collision.Broadphase
         /// <returns></returns>
         public bool TestOverlap(int proxyIdA, int proxyIdB)
         {
-            AABB aabbA, aabbB;
-            _tree.GetFatAABB(proxyIdA, out aabbA);
-            _tree.GetFatAABB(proxyIdB, out aabbB);
+            _tree.GetFatAABB(proxyIdA, out AABB aabbA);
+            _tree.GetFatAABB(proxyIdB, out AABB aabbB);
             return AABB.TestOverlap(ref aabbA, ref aabbB);
         }
 
@@ -185,14 +172,11 @@ namespace VelcroPhysics.Collision.Broadphase
             {
                 _queryProxyId = _moveBuffer[j];
                 if (_queryProxyId == NullProxy)
-                {
                     continue;
-                }
 
                 // We have to query the tree with the fat AABB so that
                 // we don't fail to create a pair that may touch later.
-                AABB fatAABB;
-                _tree.GetFatAABB(_queryProxyId, out fatAABB);
+                _tree.GetFatAABB(_queryProxyId, out AABB fatAABB);
 
                 // Query tree, create pairs and add them pair buffer.
                 _tree.Query(_queryCallback, ref fatAABB);
@@ -220,9 +204,8 @@ namespace VelcroPhysics.Collision.Broadphase
                 {
                     Pair pair = _pairBuffer[i];
                     if (pair.ProxyIdA != primaryPair.ProxyIdA || pair.ProxyIdB != primaryPair.ProxyIdB)
-                    {
                         break;
-                    }
+
                     ++i;
                 }
             }
@@ -256,6 +239,9 @@ namespace VelcroPhysics.Collision.Broadphase
             _tree.RayCast(callback, ref input);
         }
 
+        /// <summary>
+        /// Shift the world origin. Useful for large worlds.
+        /// </summary>
         public void ShiftOrigin(Vector2 newOrigin)
         {
             _tree.ShiftOrigin(newOrigin);
@@ -280,24 +266,18 @@ namespace VelcroPhysics.Collision.Broadphase
             for (int i = 0; i < _moveCount; ++i)
             {
                 if (_moveBuffer[i] == proxyId)
-                {
                     _moveBuffer[i] = NullProxy;
-                }
             }
         }
 
         /// <summary>
         /// This is called from DynamicTree.Query when we are gathering pairs.
         /// </summary>
-        /// <param name="proxyId"></param>
-        /// <returns></returns>
         private bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.
             if (proxyId == _queryProxyId)
-            {
                 return true;
-            }
 
             // Grow the pair buffer as needed.
             if (_pairCount == _pairCapacity)
