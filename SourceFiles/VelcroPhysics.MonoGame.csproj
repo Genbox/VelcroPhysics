@@ -14,15 +14,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Common\Curve.cs" />
-    <Compile Remove="Common\CurveKey.cs" />
-    <Compile Remove="Common\CurveKeyCollection.cs" />
-    <Compile Remove="Common\HashSet.cs" />
-    <Compile Remove="Common\MathHelper.cs" />
-    <Compile Remove="Common\Matrix.cs" />
-    <Compile Remove="Common\Stopwatch.cs" />
-    <Compile Remove="Common\Vector2.cs" />
-    <Compile Remove="Common\Vector3.cs" />
+    <Compile Remove="Tools\Curve.cs" />
+    <Compile Remove="Tools\CurveKey.cs" />
+    <Compile Remove="Tools\CurveKeyCollection.cs" />
+    <Compile Remove="Tools\HashSet.cs" />
+    <Compile Remove="Tools\MathHelper.cs" />
+    <Compile Remove="Tools\Matrix.cs" />
+    <Compile Remove="Tools\Stopwatch.cs" />
+    <Compile Remove="Tools\Vector2.cs" />
+    <Compile Remove="Tools\Vector3.cs" />
   </ItemGroup>
 
   <ItemGroup>
