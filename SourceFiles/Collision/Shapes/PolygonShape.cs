@@ -108,7 +108,7 @@ namespace VelcroPhysics.Collision.Shapes
                     Vector2 edge = _vertices[next] - _vertices[i];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
 
-                    //Velcro optimization: Normals.Add(MathHelper.Cross(edge, 1.0f));
+                    //Velcro: Optimized Normals.Add(MathHelper.Cross(edge, 1.0f));
                     Vector2 temp = new Vector2(edge.Y, -edge.X);
                     temp.Normalize();
                     _normals.Add(temp);
@@ -119,15 +119,9 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        public Vertices Normals
-        {
-            get { return _normals; }
-        }
+        public Vertices Normals => _normals;
 
-        public override int ChildCount
-        {
-            get { return 1; }
-        }
+        public override int ChildCount => 1;
 
         protected override void ComputeProperties()
         {
@@ -135,8 +129,8 @@ namespace VelcroPhysics.Collision.Shapes
             // Let rho be the polygon density in mass per unit area.
             // Then:
             // mass = rho * int(dA)
-            // centroid.X = (1/mass) * rho * int(x * dA)
-            // centroid.Y = (1/mass) * rho * int(y * dA)
+            // centroid.x = (1/mass) * rho * int(x * dA)
+            // centroid.y = (1/mass) * rho * int(y * dA)
             // I = rho * int((x*x + y*y) * dA)
             //
             // We can compute these integrals by summing all the integrals
@@ -165,6 +159,8 @@ namespace VelcroPhysics.Collision.Shapes
             Vector2 center = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;
+
+            //Velcro: We change the reference point to be inside the polygon
 
             // pRef is the reference point for forming triangles.
             // It's location doesn't change the result (except for rounding error).
@@ -460,7 +456,7 @@ namespace VelcroPhysics.Collision.Shapes
                     return false;
             }
 
-            return (Radius == shape.Radius && MassData == shape.MassData);
+            return Radius == shape.Radius && MassData == shape.MassData;
         }
 
         public override Shape Clone()
