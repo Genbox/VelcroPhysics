@@ -68,7 +68,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             Manifold manifold = new Manifold();
-            Collision.Narrowphase.Collision.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
+            CollidePolygon.CollidePolygons(ref manifold, _polygonA, ref _transformA, _polygonB, ref _transformB);
 
             Vector2 normal;
             FixedArray2<Vector2> points;

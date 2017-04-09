@@ -354,7 +354,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             switch (_type)
             {
                 case ContactType.Polygon:
-                    Narrowphase.Collision.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
+                    CollidePolygon.CollidePolygons(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (PolygonShape)FixtureB.Shape, ref transformB);
                     break;
                 case ContactType.PolygonAndCircle:
                     CollideCircle.CollidePolygonAndCircle(ref manifold, (PolygonShape)FixtureA.Shape, ref transformA, (CircleShape)FixtureB.Shape, ref transformB);
