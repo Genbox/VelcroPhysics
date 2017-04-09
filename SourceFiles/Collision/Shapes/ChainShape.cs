@@ -79,19 +79,19 @@ namespace VelcroPhysics.Collision.Shapes
 
             Vertices = new Vertices(vertices);
 
+            //Velcro: I merged CreateLoop() and CreateChain() to this
             if (createLoop)
             {
                 Vertices.Add(vertices[0]);
-                PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here.
-                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here.
+                PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
+                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here here to set _hasNextVertex
             }
         }
 
-        public override int ChildCount
-        {
-            // edge count = vertex count - 1
-            get { return Vertices.Count - 1; }
-        }
+        /// <summary>
+        /// Edge count = vertex count - 1
+        /// </summary>
+        public override int ChildCount => Vertices.Count - 1;
 
         /// <summary>
         /// Establish connectivity to a vertex that precedes the first vertex.
@@ -102,8 +102,6 @@ namespace VelcroPhysics.Collision.Shapes
             get { return _prevVertex; }
             set
             {
-                Debug.Assert(value != null);
-
                 _prevVertex = value;
                 _hasPrevVertex = true;
             }
@@ -118,18 +116,11 @@ namespace VelcroPhysics.Collision.Shapes
             get { return _nextVertex; }
             set
             {
-                Debug.Assert(value != null);
-
                 _nextVertex = value;
                 _hasNextVertex = true;
             }
         }
 
-        /// <summary>
-        /// This method has been optimized to reduce garbage.
-        /// </summary>
-        /// <param name="edge">The cached edge to set properties on.</param>
-        /// <param name="index">The index.</param>
         internal void GetChildEdge(EdgeShape edge, int index)
         {
             Debug.Assert(0 <= index && index < Vertices.Count - 1);
@@ -164,10 +155,6 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// Get a child edge.
-        /// </summary>
-        /// <param name="index">The index.</param>
         public EdgeShape GetChildEdge(int index)
         {
             EdgeShape edgeShape = new EdgeShape();
@@ -220,6 +207,7 @@ namespace VelcroPhysics.Collision.Shapes
             //Does nothing. Chain shapes don't have properties.
         }
 
+        //Velcro: This is for the BuoyancyController
         public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
         {
             sc = Vector2.Zero;
@@ -256,7 +244,6 @@ namespace VelcroPhysics.Collision.Shapes
             clone._hasNextVertex = _hasNextVertex;
             clone._hasPrevVertex = _hasPrevVertex;
             clone.Vertices = new Vertices(Vertices);
-            clone.MassData = MassData;
             return clone;
         }
     }
