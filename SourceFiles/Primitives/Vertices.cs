@@ -1,9 +1,4 @@
-﻿/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -13,10 +8,7 @@ using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Primitives
 {
-#if !(XBOX360)
-
     [DebuggerDisplay("Count = {Count} Vertices = {ToString()}")]
-#endif
     public class Vertices : List<Vector2>
     {
         public Vertices() { }
