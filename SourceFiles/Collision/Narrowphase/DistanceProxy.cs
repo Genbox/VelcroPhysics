@@ -13,59 +13,55 @@ namespace VelcroPhysics.Collision.Narrowphase
         internal float Radius;
         internal Vertices Vertices = new Vertices();
 
-        // GJK using Voronoi regions (Christer Ericson) and Barycentric coordinates.
-
         /// <summary>
         /// Initialize the proxy using the given shape. The shape
         /// must remain in scope while the proxy is in use.
         /// </summary>
-        /// <param name="shape">The shape.</param>
-        /// <param name="index">The index.</param>
         public void Set(Shape shape, int index)
         {
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
-                {
-                    CircleShape circle = (CircleShape)shape;
-                    Vertices.Clear();
-                    Vertices.Add(circle.Position);
-                    Radius = circle.Radius;
-                }
+                    {
+                        CircleShape circle = (CircleShape)shape;
+                        Vertices.Clear();
+                        Vertices.Add(circle.Position);
+                        Radius = circle.Radius;
+                    }
                     break;
 
                 case ShapeType.Polygon:
-                {
-                    PolygonShape polygon = (PolygonShape)shape;
-                    Vertices.Clear();
-                    for (int i = 0; i < polygon.Vertices.Count; i++)
                     {
-                        Vertices.Add(polygon.Vertices[i]);
+                        PolygonShape polygon = (PolygonShape)shape;
+                        Vertices.Clear();
+                        for (int i = 0; i < polygon.Vertices.Count; i++)
+                        {
+                            Vertices.Add(polygon.Vertices[i]);
+                        }
+                        Radius = polygon.Radius;
                     }
-                    Radius = polygon.Radius;
-                }
                     break;
 
                 case ShapeType.Chain:
-                {
-                    ChainShape chain = (ChainShape)shape;
-                    System.Diagnostics.Debug.Assert(0 <= index && index < chain.Vertices.Count);
-                    Vertices.Clear();
-                    Vertices.Add(chain.Vertices[index]);
-                    Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
+                    {
+                        ChainShape chain = (ChainShape)shape;
+                        System.Diagnostics.Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                        Vertices.Clear();
+                        Vertices.Add(chain.Vertices[index]);
+                        Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
 
-                    Radius = chain.Radius;
-                }
+                        Radius = chain.Radius;
+                    }
                     break;
 
                 case ShapeType.Edge:
-                {
-                    EdgeShape edge = (EdgeShape)shape;
-                    Vertices.Clear();
-                    Vertices.Add(edge.Vertex1);
-                    Vertices.Add(edge.Vertex2);
-                    Radius = edge.Radius;
-                }
+                    {
+                        EdgeShape edge = (EdgeShape)shape;
+                        Vertices.Clear();
+                        Vertices.Add(edge.Vertex1);
+                        Vertices.Add(edge.Vertex2);
+                        Radius = edge.Radius;
+                    }
                     break;
 
                 default:
