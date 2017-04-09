@@ -13,7 +13,7 @@ using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {
-    internal class D18_BreakableBody : PhysicsDemoScreen
+    internal class D16_BreakableBody : PhysicsDemoScreen
     {
         private readonly BreakableBody[] _breakableCookie = new BreakableBody[3];
         private Border _border;

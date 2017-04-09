@@ -10,7 +10,7 @@ using VelcroPhysics.Utils;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {
-    internal class D17_SVGtoBody : PhysicsDemoScreen
+    internal class D15_SVGtoBody : PhysicsDemoScreen
     {
         private BodyContainer _body;
         private Border _border;

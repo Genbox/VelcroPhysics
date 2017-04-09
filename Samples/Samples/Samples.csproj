@@ -56,9 +56,8 @@
     <Compile Include="Demos\D12_WebOfGoo.cs" />
     <Compile Include="Demos\D13_TheoJansenWalker.cs" />
     <Compile Include="Demos\D14_RacingCar.cs" />
-    <Compile Include="Demos\D15_TextureToShapes.cs" />
-    <Compile Include="Demos\D17_SVGtoBody.cs" />
-    <Compile Include="Demos\D18_BreakableBody.cs" />
+    <Compile Include="Demos\D15_SVGtoBody.cs" />
+    <Compile Include="Demos\D16_BreakableBody.cs" />
     <Compile Include="Demos\Prefabs\Agent.cs" />
     <Compile Include="Demos\Prefabs\Border.cs" />
     <Compile Include="Demos\Prefabs\JumpySpider.cs" />
