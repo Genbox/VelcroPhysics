@@ -1,10 +1,9 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Primitives.Optimization;
 using VelcroPhysics.Utils;
 
-namespace VelcroPhysics.Collision.ContactSystem
+namespace VelcroPhysics.Collision.Narrowphase
 {
     public static class WorldManifold
     {
@@ -14,13 +13,6 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// point count, impulses, etc. The radii must come from the Shapes
         /// that generated the manifold.
         /// </summary>
-        /// <param name="manifold">The manifold.</param>
-        /// <param name="xfA">The transform for A.</param>
-        /// <param name="radiusA">The radius for A.</param>
-        /// <param name="xfB">The transform for B.</param>
-        /// <param name="radiusB">The radius for B.</param>
-        /// <param name="normal">World vector pointing from A to B</param>
-        /// <param name="points">Torld contact point (point of intersection).</param>
         public static void Initialize(ref Manifold manifold, ref Transform xfA, float radiusA, ref Transform xfB, float radiusB, out Vector2 normal, out FixedArray2<Vector2> points)
         {
             normal = Vector2.Zero;

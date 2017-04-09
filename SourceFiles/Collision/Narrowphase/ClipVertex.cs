@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.ContactSystem;
 
-namespace VelcroPhysics.Collision.ContactSystem
+namespace VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>
     /// Used for computing contact manifolds.
