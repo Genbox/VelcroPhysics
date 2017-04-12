@@ -246,7 +246,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             DrawString(string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
 
-            DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointSpeed));
+            DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointAngularSpeed));
 
             GameInstance.ViewCenter = _car.Position;
 

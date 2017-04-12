@@ -217,10 +217,50 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
+        public float JointLinearSpeed
+        {
+            get
+            {
+                Body bA = BodyA;
+                Body bB = BodyB;
+
+                Transform xfA;
+                bA.GetTransform(out xfA);
+
+                Transform xfB;
+                bB.GetTransform(out xfB);
+
+                Vector2 rA = MathUtils.Mul(xfA.q, LocalAnchorA - bA._sweep.LocalCenter);
+                Vector2 rB = MathUtils.Mul(xfB.q, LocalAnchorB - bB._sweep.LocalCenter);
+                Vector2 p1 = bA._sweep.C + rA;
+                Vector2 p2 = bB._sweep.C + rB;
+                Vector2 d = p2 - p1;
+                Vector2 axis = MathUtils.Mul(xfA.q, LocalXAxis);
+
+                Vector2 vA = bA.LinearVelocity;
+                Vector2 vB = bB.LinearVelocity;
+                float wA = bA.AngularVelocity;
+                float wB = bB.AngularVelocity;
+
+                float speed = Vector2.Dot(d, MathUtils.Cross(wA, axis)) + Vector2.Dot(axis, vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA));
+                return speed;
+            }
+        }
+
+        public float JointAngle
+        {
+            get
+            {
+                Body bA = BodyA;
+                Body bB = BodyB;
+                return bB._sweep.A - bA._sweep.A;
+            }
+        }
+
         /// <summary>
         /// Gets the angular velocity of the joint
         /// </summary>
-        public float JointSpeed
+        public float JointAngularSpeed
         {
             get
             {
