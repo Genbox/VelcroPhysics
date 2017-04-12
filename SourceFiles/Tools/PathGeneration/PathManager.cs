@@ -7,7 +7,7 @@ using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Primitives;
 using VelcroPhysics.Tools.Decomposition;
 
-namespace VelcroPhysics.Common
+namespace VelcroPhysics.Tools.PathGeneration
 {
     /// <summary>
     /// An easy to use manager for creating paths.
