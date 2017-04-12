@@ -17,23 +17,21 @@ namespace VelcroPhysics.Dynamics
         private float[] _angularVelocitiesCache = new float[8];
         private bool _break;
         private Vector2[] _velocitiesCache = new Vector2[8];
-        private World _world;
-
-        public bool Broken;
-        public Body MainBody;
-        public List<Fixture> Parts = new List<Fixture>(8);
+        private readonly World _world;
 
         /// <summary>
         /// The force needed to break the body apart.
         /// Default: 500
         /// </summary>
-        public float Strength = 500.0f;
+        public float Strength { get; set; }
 
         public BreakableBody(World world, IEnumerable<Vertices> vertices, float density, Vector2 position = new Vector2(), float rotation = 0)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
+            Parts = new List<Fixture>(8);
             MainBody = new Body(_world, position, rotation, BodyType.Dynamic);
+            Strength = 500.0f;
 
             foreach (Vertices part in vertices)
             {
@@ -55,6 +53,10 @@ namespace VelcroPhysics.Dynamics
                 Parts.Add(fixture);
             }
         }
+
+        public bool Broken { get; private set; }
+        public Body MainBody { get; }
+        public List<Fixture> Parts { get; }
 
         private void PostSolve(Contact contact, ContactVelocityConstraint impulse)
         {
