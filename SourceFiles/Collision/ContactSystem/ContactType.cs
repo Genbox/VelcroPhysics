@@ -1,6 +1,6 @@
 namespace VelcroPhysics.Collision.ContactSystem
 {
-    public enum ContactType
+    public enum ContactType : byte
     {
         NotSupported,
         Polygon,
