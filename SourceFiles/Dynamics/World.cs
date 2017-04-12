@@ -19,11 +19,6 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-//#define USE_ACTIVE_CONTACT_SET
-//#define USE_AWAKE_BODY_SET
-//#define USE_ISLAND_SET
-//#define OPTIMIZE_TOI
-//#define USE_IGNORE_CCD_CATEGORIES
 
 using System;
 using System.Collections.Generic;
@@ -118,17 +113,6 @@ namespace VelcroPhysics.Dynamics
             BreakableBodyList = new List<BreakableBody>();
             BodyList = new List<Body>(32);
             JointList = new List<Joint>(32);
-
-#if USE_AWAKE_BODY_SET
-            AwakeBodySet = new HashSet<Body>();
-            AwakeBodyList = new List<Body>(32);
-#endif
-#if USE_ISLAND_SET
-            IslandSet = new HashSet<Body>();
-#endif
-#if OPTIMIZE_TOI
-            TOISet = new HashSet<Body>();
-#endif
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
@@ -296,20 +280,6 @@ namespace VelcroPhysics.Dynamics
             {
                 foreach (Body body in _bodyAddList)
                 {
-#if USE_AWAKE_BODY_SET
-                    Debug.Assert(!body.IsDisposed);
-                    if (body.Awake)
-                    {
-                        if (!AwakeBodySet.Contains(body))
-                            AwakeBodySet.Add(body);
-                    }
-                    else
-                    {
-                        if (AwakeBodySet.Contains(body))
-                            AwakeBodySet.Remove(body);
-                    }
-#endif
-
                     // Add to world list.
                     BodyList.Add(body);
 
@@ -331,10 +301,6 @@ namespace VelcroPhysics.Dynamics
                     // You tried to remove a body that is not contained in the BodyList.
                     // Are you removing the body more than once?
                     Debug.Assert(BodyList.Contains(body));
-
-#if USE_AWAKE_BODY_SET
-                    Debug.Assert(!AwakeBodySet.Contains(body));
-#endif
 
                     // Delete the attached joints.
                     JointEdge je = body.JointList;
@@ -370,10 +336,6 @@ namespace VelcroPhysics.Dynamics
                     BodyList.Remove(body);
 
                     BodyRemoved?.Invoke(body);
-
-#if USE_AWAKE_BODY_SET
-                    Debug.Assert(!AwakeBodySet.Contains(body));
-#endif
                 }
 
                 _bodyRemoveList.Clear();
@@ -413,26 +375,16 @@ namespace VelcroPhysics.Dynamics
                 ContactManager);
 
             // Clear all the island flags.
-#if USE_ISLAND_SET
-            Debug.Assert(IslandSet.Count == 0);
-#else
             foreach (Body b in BodyList)
             {
-                b._island = false;
+                b._flags &= ~BodyFlags.IslandFlag;
             }
-#endif
 
-#if USE_ACTIVE_CONTACT_SET
-            foreach (var c in ContactManager.ActiveContacts)
-            {
-                c.Flags &= ~ContactFlags.Island;
-            }
-#else
             foreach (Contact c in ContactManager.ContactList)
             {
                 c.IslandFlag = false;
             }
-#endif
+
             foreach (Joint j in JointList)
             {
                 j.IslandFlag = false;
@@ -443,23 +395,10 @@ namespace VelcroPhysics.Dynamics
             if (stackSize > _stack.Length)
                 _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
-#if USE_AWAKE_BODY_SET
-
-            // If AwakeBodyList is empty, the Island code will not have a chance
-            // to update the diagnostics timer so reset the timer here. 
-            Island.JointUpdateTime = 0;
-      
-            Debug.Assert(AwakeBodyList.Count == 0);
-            AwakeBodyList.AddRange(AwakeBodySet);
-
-            foreach (var seed in AwakeBodyList)
-            {
-#else
             for (int index = BodyList.Count - 1; index >= 0; index--)
             {
                 Body seed = BodyList[index];
-#endif
-                if (seed._island)
+                if ((seed._flags & BodyFlags.IslandFlag) == BodyFlags.IslandFlag)
                 {
                     continue;
                 }
@@ -480,11 +419,7 @@ namespace VelcroPhysics.Dynamics
                 int stackCount = 0;
                 _stack[stackCount++] = seed;
 
-#if USE_ISLAND_SET
-            if (!IslandSet.Contains(body))
-                IslandSet.Add(body);
-#endif
-                seed._island = true;
+                seed._flags |= BodyFlags.IslandFlag;
 
                 // Perform a depth first search (DFS) on the constraint graph.
                 while (stackCount > 0)
@@ -535,7 +470,7 @@ namespace VelcroPhysics.Dynamics
                         Body other = ce.Other;
 
                         // Was the other body already added to this island?
-                        if (other._island)
+                        if (other.IsIsland)
                         {
                             continue;
                         }
@@ -543,11 +478,7 @@ namespace VelcroPhysics.Dynamics
                         Debug.Assert(stackCount < stackSize);
                         _stack[stackCount++] = other;
 
-#if USE_ISLAND_SET
-                        if (!IslandSet.Contains(body))
-                            IslandSet.Add(body);
-#endif
-                        other._island = true;
+                        other._flags |= BodyFlags.IslandFlag;
                     }
 
                     // Search all joints connect to this body.
@@ -573,18 +504,15 @@ namespace VelcroPhysics.Dynamics
                             Island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
 
-                            if (other._island)
+                            if (other.IsIsland)
                             {
                                 continue;
                             }
 
                             Debug.Assert(stackCount < stackSize);
                             _stack[stackCount++] = other;
-#if USE_ISLAND_SET
-                            if (!IslandSet.Contains(body))
-                                IslandSet.Add(body);
-#endif
-                            other._island = true;
+
+                            other._flags |= BodyFlags.IslandFlag;
                         }
                         else
                         {
@@ -603,86 +531,49 @@ namespace VelcroPhysics.Dynamics
                     Body b = Island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                     {
-                        b._island = false;
+                        b._flags &= ~BodyFlags.IslandFlag;
                     }
                 }
             }
 
             // Synchronize fixtures, check for out of range bodies.
-#if USE_ISLAND_SET
-            foreach (var b in IslandSet)
-#else
+
             foreach (Body b in BodyList)
-#endif
             {
                 // If a body was not in an island then it did not move.
-                if (!b._island)
+                if (!b.IsIsland)
                 {
                     continue;
                 }
-#if USE_ISLAND_SET
-                Debug.Assert(b.BodyType != BodyType.Static);
-#else
+
                 if (b.BodyType == BodyType.Static)
                 {
                     continue;
                 }
-#endif
 
                 // Update fixtures (for broad-phase).
                 b.SynchronizeFixtures();
             }
-#if OPTIMIZE_TOI
-            foreach (var b in IslandSet)
-            {
-                if (!TOISet.Contains(b))
-                {
-                    TOISet.Add(b);
-                }
-            }
-#endif
-#if USE_ISLAND_SET
-            IslandSet.Clear();
-#endif
 
             // Look for new contacts.
             ContactManager.FindNewContacts();
-
-#if USE_AWAKE_BODY_SET
-            AwakeBodyList.Clear();
-#endif
         }
 
         private void SolveTOI(ref TimeStep step)
         {
             Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
-#if OPTIMIZE_TOI
-            bool wasStepComplete = _stepComplete;
-#endif
             if (_stepComplete)
             {
-#if OPTIMIZE_TOI
-                foreach (var b in TOISet)
-                {
-                    b.Flags &= ~BodyFlags.Island;
-                    b.Sweep.Alpha0 = 0.0f;
-                }
-#else
                 for (int i = 0; i < BodyList.Count; i++)
                 {
-                    BodyList[i]._island = false;
+                    BodyList[i]._flags &= ~BodyFlags.IslandFlag;
                     BodyList[i]._sweep.Alpha0 = 0.0f;
                 }
-#endif
-#if USE_ACTIVE_CONTACT_SET
-                foreach (var c in ContactManager.ActiveContacts)
-                {
-#else
+
                 for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
                     Contact c = ContactManager.ContactList[i];
-#endif
 
                     // Invalidate TOI
                     c.IslandFlag = false;
@@ -699,14 +590,10 @@ namespace VelcroPhysics.Dynamics
                 Contact minContact = null;
                 float minAlpha = 1.0f;
 
-#if USE_ACTIVE_CONTACT_SET
-                foreach (var c in ContactManager.ActiveContacts)
-                {
-#else
+
                 for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
                     Contact c = ContactManager.ContactList[i];
-#endif
 
                     // Is this contact disabled?
                     if (c.Enabled == false)
@@ -753,32 +640,14 @@ namespace VelcroPhysics.Dynamics
                             continue;
                         }
 
-                        bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && ((fA.IgnoreCCDWith & fB.CollisionCategories) == 0) && !bA.IgnoreCCD;
-                        bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && ((fB.IgnoreCCDWith & fA.CollisionCategories) == 0) && !bB.IgnoreCCD;
+                        bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && (fA.IgnoreCCDWith & fB.CollisionCategories) == 0 && !bA.IgnoreCCD;
+                        bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && (fB.IgnoreCCDWith & fA.CollisionCategories) == 0 && !bB.IgnoreCCD;
 
                         // Are these two non-bullet dynamic bodies?
                         if (collideA == false && collideB == false)
                         {
                             continue;
                         }
-
-#if OPTIMIZE_TOI
-                        if (_stepComplete)
-                        {
-                            if (!TOISet.Contains(bA))
-                            {
-                                TOISet.Add(bA);
-                                bA.Flags &= ~BodyFlags.Island;
-                                bA.Sweep.Alpha0 = 0.0f;
-                            }
-                            if (!TOISet.Contains(bB))
-                            {
-                                TOISet.Add(bB);
-                                bB.Flags &= ~BodyFlags.Island;
-                                bB.Sweep.Alpha0 = 0.0f;
-                            }
-                        }
-#endif
 
                         // Compute the TOI for this contact.
                         // Put the sweeps onto the same time interval.
@@ -875,8 +744,8 @@ namespace VelcroPhysics.Dynamics
                 Island.Add(bB0);
                 Island.Add(minContact);
 
-                bA0._island = true;
-                bB0._island = true;
+                bA0._flags |= BodyFlags.IslandFlag;
+                bB0._flags |= BodyFlags.IslandFlag;
                 minContact.IslandFlag = true;
 
                 // Get contacts on bodyA and bodyB.
@@ -922,7 +791,7 @@ namespace VelcroPhysics.Dynamics
 
                             // Tentatively advance the body to the TOI.
                             Sweep backup = other._sweep;
-                            if (!other._island)
+                            if (!other.IsIsland)
                             {
                                 other.Advance(minAlpha);
                             }
@@ -951,28 +820,19 @@ namespace VelcroPhysics.Dynamics
                             Island.Add(contact);
 
                             // Has the other body already been added to the island?
-                            if (other._island)
+                            if (other.IsIsland)
                             {
                                 continue;
                             }
 
                             // Add the other body to the island.
-                            other._island = true;
+                            other._flags |= BodyFlags.IslandFlag;
 
                             if (other.BodyType != BodyType.Static)
                             {
                                 other.Awake = true;
                             }
-#if OPTIMIZE_TOI
-                            if (_stepComplete)
-                            {
-                                if (!TOISet.Contains(other))
-                                {
-                                    TOISet.Add(other);
-                                    other.Sweep.Alpha0 = 0.0f;
-                                }
-                            }
-#endif
+
                             Island.Add(other);
                         }
                     }
@@ -988,7 +848,7 @@ namespace VelcroPhysics.Dynamics
                 for (int i = 0; i < Island.BodyCount; ++i)
                 {
                     Body body = Island.Bodies[i];
-                    body._island = false;
+                    body._flags &= ~BodyFlags.IslandFlag;
 
                     if (body.BodyType != BodyType.Dynamic)
                     {
@@ -1015,12 +875,6 @@ namespace VelcroPhysics.Dynamics
                     break;
                 }
             }
-#if OPTIMIZE_TOI
-            if (wasStepComplete)
-            {
-                TOISet.Clear();
-            }
-#endif
         }
 
         public List<Controller> ControllerList { get; private set; }
@@ -1068,17 +922,6 @@ namespace VelcroPhysics.Dynamics
         /// <value>Thehead of the world body list.</value>
         public List<Body> BodyList { get; private set; }
 
-#if USE_AWAKE_BODY_SET
-        public HashSet<Body> AwakeBodySet { get; private set; }
-        List<Body> AwakeBodyList;
-#endif
-#if USE_ISLAND_SET
-        HashSet<Body> IslandSet;
-#endif
-#if OPTIMIZE_TOI
-        HashSet<Body> TOISet;
-#endif
-
         /// <summary>
         /// Get the world joint list.
         /// </summary>
@@ -1125,13 +968,6 @@ namespace VelcroPhysics.Dynamics
 
             if (!_bodyRemoveList.Contains(body))
                 _bodyRemoveList.Add(body);
-
-#if USE_AWAKE_BODY_SET
-            if (AwakeBodySet.Contains(body))
-            {
-                AwakeBodySet.Remove(body);
-            }
-#endif
         }
 
         /// <summary>
@@ -1178,12 +1014,6 @@ namespace VelcroPhysics.Dynamics
 
             ProcessRemovedBodies();
             ProcessRemovedJoints();
-#if DEBUG && USE_AWAKE_BODY_SET
-            foreach (var b in AwakeBodySet)
-            {
-                Debug.Assert(BodyList.Contains(b));
-            }
-#endif
         }
 
         /// <summary>

@@ -286,13 +286,13 @@ namespace VelcroPhysics.Dynamics.Solver
 
                     if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr || Vector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
                     {
-                        b._sleepTime = 0.0f;
+                        b.SleepTime = 0.0f;
                         minSleepTime = 0.0f;
                     }
                     else
                     {
-                        b._sleepTime += h;
-                        minSleepTime = Math.Min(minSleepTime, b._sleepTime);
+                        b.SleepTime += h;
+                        minSleepTime = Math.Min(minSleepTime, b.SleepTime);
                     }
                 }
 

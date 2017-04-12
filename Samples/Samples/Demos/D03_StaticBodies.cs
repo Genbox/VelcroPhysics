@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             for (int i = 0; i < 5; i++)
             {
                 _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1f, 1f);
-                _obstacles[i].IsStatic = true;
+                _obstacles[i].BodyType = BodyType.Static;
                 _obstacles[i].Restitution = 0.2f;
                 _obstacles[i].Friction = 0.2f;
             }

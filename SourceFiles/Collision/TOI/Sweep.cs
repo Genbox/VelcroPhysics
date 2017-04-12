@@ -59,7 +59,7 @@ namespace VelcroPhysics.Collision.TOI
         /// <summary>
         /// Advance the sweep forward, yielding a new initial state.
         /// </summary>
-        /// <param name="alpha">new initial time..</param>
+        /// <param name="alpha">new initial time</param>
         public void Advance(float alpha)
         {
             Debug.Assert(Alpha0 < 1.0f);

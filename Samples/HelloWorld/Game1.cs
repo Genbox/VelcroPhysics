@@ -93,7 +93,7 @@ namespace VelcroPhysics.Samples.HelloWorld
 
             // Create the ground fixture
             _groundBody = BodyFactory.CreateRectangle(_world, ConvertUnits.ToSimUnits(512f), ConvertUnits.ToSimUnits(64f), 1f, groundPosition);
-            _groundBody.IsStatic = true;
+            _groundBody.BodyType = BodyType.Static;
             _groundBody.Restitution = 0.3f;
             _groundBody.Friction = 0.5f;
         }

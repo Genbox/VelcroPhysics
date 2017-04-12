@@ -34,7 +34,7 @@ namespace VelcroPhysics.Samples.Samples2.Demos
             for (int i = 0; i < 9; i++)
             {
                 _obstacles[i] = BodyFactory.CreateRectangle(World, 5f, 1.5f, 1f, stairStart + stairDelta * i);
-                _obstacles[i].IsStatic = true;
+                _obstacles[i].BodyType = BodyType.Static;
             }
 
             // create sprite based on body

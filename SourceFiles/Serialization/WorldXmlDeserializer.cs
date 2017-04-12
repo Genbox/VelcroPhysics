@@ -59,122 +59,122 @@ namespace VelcroPhysics.Serialization
                         switch (type)
                         {
                             case ShapeType.Circle:
-                            {
-                                CircleShape shape = new CircleShape();
-                                shape._density = density;
-
-                                foreach (XMLFragmentElement sn in element.Elements)
                                 {
-                                    switch (sn.Name.ToLower())
-                                    {
-                                        case "radius":
-                                            shape.Radius = float.Parse(sn.Value);
-                                            break;
-                                        case "position":
-                                            shape.Position = ReadVector(sn);
-                                            break;
-                                        default:
-                                            throw new Exception();
-                                    }
-                                }
+                                    CircleShape shape = new CircleShape();
+                                    shape._density = density;
 
-                                shapes.Add(shape);
-                            }
+                                    foreach (XMLFragmentElement sn in element.Elements)
+                                    {
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "radius":
+                                                shape.Radius = float.Parse(sn.Value);
+                                                break;
+                                            case "position":
+                                                shape.Position = ReadVector(sn);
+                                                break;
+                                            default:
+                                                throw new Exception();
+                                        }
+                                    }
+
+                                    shapes.Add(shape);
+                                }
                                 break;
                             case ShapeType.Polygon:
-                            {
-                                PolygonShape shape = new PolygonShape();
-                                shape._density = density;
-
-                                foreach (XMLFragmentElement sn in element.Elements)
                                 {
-                                    switch (sn.Name.ToLower())
+                                    PolygonShape shape = new PolygonShape();
+                                    shape._density = density;
+
+                                    foreach (XMLFragmentElement sn in element.Elements)
                                     {
-                                        case "vertices":
+                                        switch (sn.Name.ToLower())
                                         {
-                                            List<Vector2> verts = new List<Vector2>(sn.Elements.Count);
+                                            case "vertices":
+                                                {
+                                                    List<Vector2> verts = new List<Vector2>(sn.Elements.Count);
 
-                                            foreach (XMLFragmentElement vert in sn.Elements)
-                                                verts.Add(ReadVector(vert));
+                                                    foreach (XMLFragmentElement vert in sn.Elements)
+                                                        verts.Add(ReadVector(vert));
 
-                                            shape.Vertices = new Vertices(verts);
+                                                    shape.Vertices = new Vertices(verts);
+                                                }
+                                                break;
+                                            case "centroid":
+                                                shape.MassData.Centroid = ReadVector(sn);
+                                                break;
                                         }
-                                            break;
-                                        case "centroid":
-                                            shape.MassData.Centroid = ReadVector(sn);
-                                            break;
                                     }
-                                }
 
-                                shapes.Add(shape);
-                            }
+                                    shapes.Add(shape);
+                                }
                                 break;
                             case ShapeType.Edge:
-                            {
-                                EdgeShape shape = new EdgeShape();
-                                shape._density = density;
-
-                                foreach (XMLFragmentElement sn in element.Elements)
                                 {
-                                    switch (sn.Name.ToLower())
+                                    EdgeShape shape = new EdgeShape();
+                                    shape._density = density;
+
+                                    foreach (XMLFragmentElement sn in element.Elements)
                                     {
-                                        case "hasvertex0":
-                                            shape.HasVertex0 = bool.Parse(sn.Value);
-                                            break;
-                                        case "hasvertex3":
-                                            shape.HasVertex0 = bool.Parse(sn.Value);
-                                            break;
-                                        case "vertex0":
-                                            shape.Vertex0 = ReadVector(sn);
-                                            break;
-                                        case "vertex1":
-                                            shape.Vertex1 = ReadVector(sn);
-                                            break;
-                                        case "vertex2":
-                                            shape.Vertex2 = ReadVector(sn);
-                                            break;
-                                        case "vertex3":
-                                            shape.Vertex3 = ReadVector(sn);
-                                            break;
-                                        default:
-                                            throw new Exception();
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "hasvertex0":
+                                                shape.HasVertex0 = bool.Parse(sn.Value);
+                                                break;
+                                            case "hasvertex3":
+                                                shape.HasVertex0 = bool.Parse(sn.Value);
+                                                break;
+                                            case "vertex0":
+                                                shape.Vertex0 = ReadVector(sn);
+                                                break;
+                                            case "vertex1":
+                                                shape.Vertex1 = ReadVector(sn);
+                                                break;
+                                            case "vertex2":
+                                                shape.Vertex2 = ReadVector(sn);
+                                                break;
+                                            case "vertex3":
+                                                shape.Vertex3 = ReadVector(sn);
+                                                break;
+                                            default:
+                                                throw new Exception();
+                                        }
                                     }
+                                    shapes.Add(shape);
                                 }
-                                shapes.Add(shape);
-                            }
                                 break;
                             case ShapeType.Chain:
-                            {
-                                ChainShape shape = new ChainShape();
-                                shape._density = density;
-
-                                foreach (XMLFragmentElement sn in element.Elements)
                                 {
-                                    switch (sn.Name.ToLower())
+                                    ChainShape shape = new ChainShape();
+                                    shape._density = density;
+
+                                    foreach (XMLFragmentElement sn in element.Elements)
                                     {
-                                        case "vertices":
+                                        switch (sn.Name.ToLower())
                                         {
-                                            List<Vector2> verts = new List<Vector2>(sn.Elements.Count);
+                                            case "vertices":
+                                                {
+                                                    List<Vector2> verts = new List<Vector2>(sn.Elements.Count);
 
-                                            foreach (XMLFragmentElement vert in sn.Elements)
-                                                verts.Add(ReadVector(vert));
+                                                    foreach (XMLFragmentElement vert in sn.Elements)
+                                                        verts.Add(ReadVector(vert));
 
-                                            shape.Vertices = new Vertices(verts);
+                                                    shape.Vertices = new Vertices(verts);
+                                                }
+                                                break;
+                                            case "nextvertex":
+                                                shape.NextVertex = ReadVector(sn);
+                                                break;
+                                            case "prevvertex":
+                                                shape.PrevVertex = ReadVector(sn);
+                                                break;
+
+                                            default:
+                                                throw new Exception();
                                         }
-                                            break;
-                                        case "nextvertex":
-                                            shape.NextVertex = ReadVector(sn);
-                                            break;
-                                        case "prevvertex":
-                                            shape.PrevVertex = ReadVector(sn);
-                                            break;
-
-                                        default:
-                                            throw new Exception();
                                     }
+                                    shapes.Add(shape);
                                 }
-                                shapes.Add(shape);
-                            }
                                 break;
                         }
                     }
@@ -263,16 +263,20 @@ namespace VelcroPhysics.Serialization
                             switch (sn.Name.ToLower())
                             {
                                 case "active":
-                                    body._enabled = bool.Parse(sn.Value);
+                                    bool enabled = bool.Parse(sn.Value);
+                                    if (enabled)
+                                        body._flags |= BodyFlags.Enabled;
+                                    else
+                                        body._flags &= ~BodyFlags.Enabled;
                                     break;
                                 case "allowsleep":
                                     body.SleepingAllowed = bool.Parse(sn.Value);
                                     break;
                                 case "angle":
-                                {
-                                    Vector2 position = body.Position;
-                                    body.SetTransformIgnoreContacts(ref position, float.Parse(sn.Value));
-                                }
+                                    {
+                                        Vector2 position = body.Position;
+                                        body.SetTransformIgnoreContacts(ref position, float.Parse(sn.Value));
+                                    }
                                     break;
                                 case "angulardamping":
                                     body.AngularDamping = float.Parse(sn.Value);
@@ -296,25 +300,25 @@ namespace VelcroPhysics.Serialization
                                     body.LinearVelocity = ReadVector(sn);
                                     break;
                                 case "position":
-                                {
-                                    float rotation = body.Rotation;
-                                    Vector2 position = ReadVector(sn);
-                                    body.SetTransformIgnoreContacts(ref position, rotation);
-                                }
+                                    {
+                                        float rotation = body.Rotation;
+                                        Vector2 position = ReadVector(sn);
+                                        body.SetTransformIgnoreContacts(ref position, rotation);
+                                    }
                                     break;
                                 case "userdata":
                                     body.UserData = ReadSimpleType(sn, null, false);
                                     break;
                                 case "bindings":
-                                {
-                                    foreach (XMLFragmentElement pair in sn.Elements)
                                     {
-                                        Fixture fix = fixtures[int.Parse(pair.Attributes[0].Value)];
-                                        fix.Shape = shapes[int.Parse(pair.Attributes[1].Value)].Clone();
-                                        fix.CloneOnto(body);
+                                        foreach (XMLFragmentElement pair in sn.Elements)
+                                        {
+                                            Fixture fix = fixtures[int.Parse(pair.Attributes[0].Value)];
+                                            fix.Shape = shapes[int.Parse(pair.Attributes[1].Value)].Clone();
+                                            fix.CloneOnto(body);
+                                        }
+                                        break;
                                     }
-                                    break;
-                                }
                             }
                         }
 
@@ -429,228 +433,228 @@ namespace VelcroPhysics.Serialization
                             switch (type)
                             {
                                 case JointType.Distance:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "dampingratio":
-                                            ((DistanceJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                            break;
-                                        case "frequencyhz":
-                                            ((DistanceJoint)joint).Frequency = float.Parse(sn.Value);
-                                            break;
-                                        case "length":
-                                            ((DistanceJoint)joint).Length = float.Parse(sn.Value);
-                                            break;
-                                        case "localanchora":
-                                            ((DistanceJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((DistanceJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "dampingratio":
+                                                ((DistanceJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((DistanceJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "length":
+                                                ((DistanceJoint)joint).Length = float.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((DistanceJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((DistanceJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Friction:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "localanchora":
-                                            ((FrictionJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((FrictionJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "maxforce":
-                                            ((FrictionJoint)joint).MaxForce = float.Parse(sn.Value);
-                                            break;
-                                        case "maxtorque":
-                                            ((FrictionJoint)joint).MaxTorque = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "localanchora":
+                                                ((FrictionJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((FrictionJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "maxforce":
+                                                ((FrictionJoint)joint).MaxForce = float.Parse(sn.Value);
+                                                break;
+                                            case "maxtorque":
+                                                ((FrictionJoint)joint).MaxTorque = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Wheel:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "enablemotor":
-                                            ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                            break;
-                                        case "localanchora":
-                                            ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "motorspeed":
-                                            ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                            break;
-                                        case "dampingratio":
-                                            ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
-                                            break;
-                                        case "maxmotortorque":
-                                            ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
-                                            break;
-                                        case "frequencyhz":
-                                            ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
-                                            break;
-                                        case "axis":
-                                            ((WheelJoint)joint).Axis = ReadVector(sn);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "enablemotor":
+                                                ((WheelJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((WheelJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((WheelJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "motorspeed":
+                                                ((WheelJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                break;
+                                            case "dampingratio":
+                                                ((WheelJoint)joint).DampingRatio = float.Parse(sn.Value);
+                                                break;
+                                            case "maxmotortorque":
+                                                ((WheelJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                                break;
+                                            case "frequencyhz":
+                                                ((WheelJoint)joint).Frequency = float.Parse(sn.Value);
+                                                break;
+                                            case "axis":
+                                                ((WheelJoint)joint).Axis = ReadVector(sn);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Prismatic:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "enablelimit":
-                                            ((PrismaticJoint)joint).LimitEnabled = bool.Parse(sn.Value);
-                                            break;
-                                        case "enablemotor":
-                                            ((PrismaticJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                            break;
-                                        case "localanchora":
-                                            ((PrismaticJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((PrismaticJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "axis":
-                                            ((PrismaticJoint)joint).Axis = ReadVector(sn);
-                                            break;
-                                        case "maxmotorforce":
-                                            ((PrismaticJoint)joint).MaxMotorForce = float.Parse(sn.Value);
-                                            break;
-                                        case "motorspeed":
-                                            ((PrismaticJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                            break;
-                                        case "lowertranslation":
-                                            ((PrismaticJoint)joint).LowerLimit = float.Parse(sn.Value);
-                                            break;
-                                        case "uppertranslation":
-                                            ((PrismaticJoint)joint).UpperLimit = float.Parse(sn.Value);
-                                            break;
-                                        case "referenceangle":
-                                            ((PrismaticJoint)joint).ReferenceAngle = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "enablelimit":
+                                                ((PrismaticJoint)joint).LimitEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "enablemotor":
+                                                ((PrismaticJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((PrismaticJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((PrismaticJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "axis":
+                                                ((PrismaticJoint)joint).Axis = ReadVector(sn);
+                                                break;
+                                            case "maxmotorforce":
+                                                ((PrismaticJoint)joint).MaxMotorForce = float.Parse(sn.Value);
+                                                break;
+                                            case "motorspeed":
+                                                ((PrismaticJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                break;
+                                            case "lowertranslation":
+                                                ((PrismaticJoint)joint).LowerLimit = float.Parse(sn.Value);
+                                                break;
+                                            case "uppertranslation":
+                                                ((PrismaticJoint)joint).UpperLimit = float.Parse(sn.Value);
+                                                break;
+                                            case "referenceangle":
+                                                ((PrismaticJoint)joint).ReferenceAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Pulley:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "worldanchora":
-                                            ((PulleyJoint)joint).WorldAnchorA = ReadVector(sn);
-                                            break;
-                                        case "worldanchorb":
-                                            ((PulleyJoint)joint).WorldAnchorB = ReadVector(sn);
-                                            break;
-                                        case "lengtha":
-                                            ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
-                                            break;
-                                        case "lengthb":
-                                            ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
-                                            break;
-                                        case "localanchora":
-                                            ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "ratio":
-                                            ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
-                                            break;
-                                        case "constant":
-                                            ((PulleyJoint)joint).Constant = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "worldanchora":
+                                                ((PulleyJoint)joint).WorldAnchorA = ReadVector(sn);
+                                                break;
+                                            case "worldanchorb":
+                                                ((PulleyJoint)joint).WorldAnchorB = ReadVector(sn);
+                                                break;
+                                            case "lengtha":
+                                                ((PulleyJoint)joint).LengthA = float.Parse(sn.Value);
+                                                break;
+                                            case "lengthb":
+                                                ((PulleyJoint)joint).LengthB = float.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((PulleyJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((PulleyJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "ratio":
+                                                ((PulleyJoint)joint).Ratio = float.Parse(sn.Value);
+                                                break;
+                                            case "constant":
+                                                ((PulleyJoint)joint).Constant = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Revolute:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "enablelimit":
-                                            ((RevoluteJoint)joint).LimitEnabled = bool.Parse(sn.Value);
-                                            break;
-                                        case "enablemotor":
-                                            ((RevoluteJoint)joint).MotorEnabled = bool.Parse(sn.Value);
-                                            break;
-                                        case "localanchora":
-                                            ((RevoluteJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((RevoluteJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "maxmotortorque":
-                                            ((RevoluteJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
-                                            break;
-                                        case "motorspeed":
-                                            ((RevoluteJoint)joint).MotorSpeed = float.Parse(sn.Value);
-                                            break;
-                                        case "lowerangle":
-                                            ((RevoluteJoint)joint).LowerLimit = float.Parse(sn.Value);
-                                            break;
-                                        case "upperangle":
-                                            ((RevoluteJoint)joint).UpperLimit = float.Parse(sn.Value);
-                                            break;
-                                        case "referenceangle":
-                                            ((RevoluteJoint)joint).ReferenceAngle = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "enablelimit":
+                                                ((RevoluteJoint)joint).LimitEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "enablemotor":
+                                                ((RevoluteJoint)joint).MotorEnabled = bool.Parse(sn.Value);
+                                                break;
+                                            case "localanchora":
+                                                ((RevoluteJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((RevoluteJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "maxmotortorque":
+                                                ((RevoluteJoint)joint).MaxMotorTorque = float.Parse(sn.Value);
+                                                break;
+                                            case "motorspeed":
+                                                ((RevoluteJoint)joint).MotorSpeed = float.Parse(sn.Value);
+                                                break;
+                                            case "lowerangle":
+                                                ((RevoluteJoint)joint).LowerLimit = float.Parse(sn.Value);
+                                                break;
+                                            case "upperangle":
+                                                ((RevoluteJoint)joint).UpperLimit = float.Parse(sn.Value);
+                                                break;
+                                            case "referenceangle":
+                                                ((RevoluteJoint)joint).ReferenceAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Weld:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "localanchora":
-                                            ((WeldJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((WeldJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "localanchora":
+                                                ((WeldJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((WeldJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Rope:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "localanchora":
-                                            ((RopeJoint)joint).LocalAnchorA = ReadVector(sn);
-                                            break;
-                                        case "localanchorb":
-                                            ((RopeJoint)joint).LocalAnchorB = ReadVector(sn);
-                                            break;
-                                        case "maxlength":
-                                            ((RopeJoint)joint).MaxLength = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "localanchora":
+                                                ((RopeJoint)joint).LocalAnchorA = ReadVector(sn);
+                                                break;
+                                            case "localanchorb":
+                                                ((RopeJoint)joint).LocalAnchorB = ReadVector(sn);
+                                                break;
+                                            case "maxlength":
+                                                ((RopeJoint)joint).MaxLength = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Gear:
                                     throw new Exception("Gear joint is unsupported");
                                 case JointType.Angle:
-                                {
-                                    switch (sn.Name.ToLower())
                                     {
-                                        case "biasfactor":
-                                            ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
-                                            break;
-                                        case "maximpulse":
-                                            ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
-                                            break;
-                                        case "softness":
-                                            ((AngleJoint)joint).Softness = float.Parse(sn.Value);
-                                            break;
-                                        case "targetangle":
-                                            ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
-                                            break;
+                                        switch (sn.Name.ToLower())
+                                        {
+                                            case "biasfactor":
+                                                ((AngleJoint)joint).BiasFactor = float.Parse(sn.Value);
+                                                break;
+                                            case "maximpulse":
+                                                ((AngleJoint)joint).MaxImpulse = float.Parse(sn.Value);
+                                                break;
+                                            case "softness":
+                                                ((AngleJoint)joint).Softness = float.Parse(sn.Value);
+                                                break;
+                                            case "targetangle":
+                                                ((AngleJoint)joint).TargetAngle = float.Parse(sn.Value);
+                                                break;
+                                        }
                                     }
-                                }
                                     break;
                                 case JointType.Motor:
                                     switch (sn.Name.ToLower())

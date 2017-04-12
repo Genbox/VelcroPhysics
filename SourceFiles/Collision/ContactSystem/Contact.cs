@@ -19,7 +19,6 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-//#define USE_ACTIVE_CONTACT_SET
 
 using System;
 using System.Collections.Generic;
@@ -426,9 +425,6 @@ namespace VelcroPhysics.Collision.ContactSystem
 
         internal void Destroy()
         {
-#if USE_ACTIVE_CONTACT_SET
-            FixtureA.Body.World.ContactManager.RemoveActiveContact(this);
-#endif
             FixtureA.Body._world._contactPool.Enqueue(this);
 
             if (Manifold.PointCount > 0 && FixtureA.IsSensor == false && FixtureB.IsSensor == false)

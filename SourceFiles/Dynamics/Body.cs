@@ -19,7 +19,6 @@
 * misrepresented as being the original software. 
 * 3. This notice may not be removed or altered from any source distribution. 
 */
-//#define USE_AWAKE_BODY_SET
 
 using System;
 using System.Collections.Generic;
@@ -43,69 +42,59 @@ namespace VelcroPhysics.Dynamics
         [ThreadStatic]
         private static int _bodyIdCounter;
 
-        private float _angularDamping;
-        internal float _angularVelocity;
-        private bool _awake;
-        private BodyType _bodyType;
-
-        internal bool _enabled;
-        private bool _fixedRotation;
-        internal Vector2 _force;
+        private BodyType _type;
         private float _inertia;
+        private float _mass;
+
+        internal BodyFlags _flags;
         internal float _invI;
         internal float _invMass;
-        internal bool _island;
-        private float _linearDamping;
+        internal Vector2 _force;
         internal Vector2 _linearVelocity;
-        private float _mass;
-        private bool _sleepingAllowed;
-        internal float _sleepTime;
+        internal float _angularVelocity;
         internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
         internal World _world;
         internal Transform _xf; // the body origin transform
-        public ControllerFilter ControllerFilter;
-
-        public PhysicsLogicFilter PhysicsLogicFilter;
 
         public Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
         {
-            FixtureList = new List<Fixture>();
+            Debug.Assert(!float.IsNaN(position.X));
+            Debug.Assert(!float.IsNaN(position.Y));
+            Debug.Assert(!float.IsNaN(rotation));
+
+            FixtureList = new List<Fixture>(1);
             BodyId = _bodyIdCounter++;
 
             _world = world;
-            _enabled = true;
-            _awake = true;
-            _sleepingAllowed = true;
+            _flags = BodyFlags.Enabled | BodyFlags.AwakeFlag | BodyFlags.AutoSleepFlag;
 
             UserData = userdata;
             GravityScale = 1.0f;
-            BodyType = bodyType;
+            _type = bodyType;
 
             _xf.q.Set(rotation);
+            _xf.p = position;
 
-            //Velcro: optimization
-            if (position != Vector2.Zero)
-            {
-                _xf.p = position;
-                _sweep.C0 = _xf.p;
-                _sweep.C = _xf.p;
-            }
+            _sweep.C0 = _xf.p;
+            _sweep.C = _xf.p;
 
-            //Velcro: optimization
-            if (rotation != 0)
-            {
-                _sweep.A0 = rotation;
-                _sweep.A = rotation;
-            }
+            _sweep.A0 = rotation;
+            _sweep.A = rotation;
 
             world.AddBody(this); //Velcro note: bodies can't live without a World
         }
 
+        public ControllerFilter ControllerFilter { get; set; }
+
+        public PhysicsLogicFilter PhysicsLogicFilter { get; set; }
+
         /// <summary>
         /// A unique id for this body.
         /// </summary>
-        public int BodyId { get; private set; }
+        public int BodyId { get; }
+
+        public float SleepTime { get; set; }
 
         public int IslandIndex { get; set; }
 
@@ -125,10 +114,7 @@ namespace VelcroPhysics.Dynamics
         /// Gets the total number revolutions the body has made.
         /// </summary>
         /// <value>The revolutions.</value>
-        public float Revolutions
-        {
-            get { return Rotation / (float)Math.PI; }
-        }
+        public float Revolutions => Rotation / (float)Math.PI;
 
         /// <summary>
         /// Gets or sets the body type.
@@ -137,17 +123,17 @@ namespace VelcroPhysics.Dynamics
         /// <value>The type of body.</value>
         public BodyType BodyType
         {
-            get { return _bodyType; }
+            get { return _type; }
             set
             {
-                if (_bodyType == value)
+                if (value == _type)
                     return;
 
-                _bodyType = value;
+                _type = value;
 
                 ResetMassData();
 
-                if (_bodyType == BodyType.Static)
+                if (_type == BodyType.Static)
                 {
                     _linearVelocity = Vector2.Zero;
                     _angularVelocity = 0.0f;
@@ -191,11 +177,12 @@ namespace VelcroPhysics.Dynamics
         /// <value>The linear velocity.</value>
         public Vector2 LinearVelocity
         {
+            get { return _linearVelocity; }
             set
             {
                 Debug.Assert(!float.IsNaN(value.X) && !float.IsNaN(value.Y));
 
-                if (_bodyType == BodyType.Static)
+                if (_type == BodyType.Static)
                     return;
 
                 if (Vector2.Dot(value, value) > 0.0f)
@@ -203,7 +190,6 @@ namespace VelcroPhysics.Dynamics
 
                 _linearVelocity = value;
             }
-            get { return _linearVelocity; }
         }
 
         /// <summary>
@@ -212,11 +198,12 @@ namespace VelcroPhysics.Dynamics
         /// <value>The angular velocity.</value>
         public float AngularVelocity
         {
+            get { return _angularVelocity; }
             set
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                if (_bodyType == BodyType.Static)
+                if (_type == BodyType.Static)
                     return;
 
                 if (value * value > 0.0f)
@@ -224,44 +211,35 @@ namespace VelcroPhysics.Dynamics
 
                 _angularVelocity = value;
             }
-            get { return _angularVelocity; }
         }
 
         /// <summary>
         /// Gets or sets the linear damping.
         /// </summary>
         /// <value>The linear damping.</value>
-        public float LinearDamping
-        {
-            get { return _linearDamping; }
-            set
-            {
-                Debug.Assert(!float.IsNaN(value));
-
-                _linearDamping = value;
-            }
-        }
+        public float LinearDamping { get; set; }
 
         /// <summary>
         /// Gets or sets the angular damping.
         /// </summary>
         /// <value>The angular damping.</value>
-        public float AngularDamping
-        {
-            get { return _angularDamping; }
-            set
-            {
-                Debug.Assert(!float.IsNaN(value));
-
-                _angularDamping = value;
-            }
-        }
+        public float AngularDamping { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this body should be included in the CCD solver.
         /// </summary>
         /// <value><c>true</c> if this instance is included in CCD; otherwise, <c>false</c>.</value>
-        public bool IsBullet { get; set; }
+        public bool IsBullet
+        {
+            get { return (_flags & BodyFlags.BulletFlag) == BodyFlags.BulletFlag; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.BulletFlag;
+                else
+                    _flags &= ~BodyFlags.BulletFlag;
+            }
+        }
 
         /// <summary>
         /// You can disable sleeping on this body. If you disable sleeping, the
@@ -270,14 +248,17 @@ namespace VelcroPhysics.Dynamics
         /// <value><c>true</c> if sleeping is allowed; otherwise, <c>false</c>.</value>
         public bool SleepingAllowed
         {
+            get { return (_flags & BodyFlags.AutoSleepFlag) == BodyFlags.AutoSleepFlag; }
             set
             {
-                if (!value)
+                if (value)
+                    _flags |= BodyFlags.AutoSleepFlag;
+                else
+                {
+                    _flags &= ~BodyFlags.AutoSleepFlag;
                     Awake = true;
-
-                _sleepingAllowed = value;
+                }
             }
-            get { return _sleepingAllowed; }
         }
 
         /// <summary>
@@ -287,41 +268,25 @@ namespace VelcroPhysics.Dynamics
         /// <value><c>true</c> if awake; otherwise, <c>false</c>.</value>
         public bool Awake
         {
+            get { return (_flags & BodyFlags.AwakeFlag) == BodyFlags.AwakeFlag; }
             set
             {
+                //Velcro: We ignore it if you set it to the same value
+                if (value == Awake)
+                    return;
+
                 if (value)
                 {
-                    if (!_awake)
-                    {
-                        _sleepTime = 0.0f;
-                        _world.ContactManager.UpdateContacts(ContactList, true);
-#if USE_AWAKE_BODY_SET
-						if (InWorld && !World.AwakeBodySet.Contains(this))
-						{
-							World.AwakeBodySet.Add(this);
-						}
-#endif
-                    }
+                    _flags |= BodyFlags.AwakeFlag;
+                    SleepTime = 0.0f;
                 }
                 else
                 {
-#if USE_AWAKE_BODY_SET
-
-// Check even for BodyType.Static because if this body had just been changed to Static it will have
-// set Awake = false in the process.
-					if (InWorld && World.AwakeBodySet.Contains(this))
-					{
-						World.AwakeBodySet.Remove(this);
-					}
-#endif
+                    _flags &= ~BodyFlags.AwakeFlag;
                     ResetDynamics();
-                    _sleepTime = 0.0f;
-                    _world.ContactManager.UpdateContacts(ContactList, false);
+                    SleepTime = 0.0f;
                 }
-
-                _awake = value;
             }
-            get { return _awake; }
         }
 
         /// <summary>
@@ -342,13 +307,17 @@ namespace VelcroPhysics.Dynamics
         /// <value><c>true</c> if active; otherwise, <c>false</c>.</value>
         public bool Enabled
         {
+            get { return (_flags & BodyFlags.Enabled) == BodyFlags.Enabled; }
+
             set
             {
-                if (value == _enabled)
+                if (value == Enabled)
                     return;
 
                 if (value)
                 {
+                    _flags |= BodyFlags.Enabled;
+
                     // Create all proxies.
                     IBroadPhase broadPhase = _world.ContactManager.BroadPhase;
                     for (int i = 0; i < FixtureList.Count; i++)
@@ -360,6 +329,8 @@ namespace VelcroPhysics.Dynamics
                 }
                 else
                 {
+                    _flags &= ~BodyFlags.Enabled;
+
                     // Destroy all proxies.
                     IBroadPhase broadPhase = _world.ContactManager.BroadPhase;
 
@@ -378,10 +349,7 @@ namespace VelcroPhysics.Dynamics
                     }
                     ContactList = null;
                 }
-
-                _enabled = value;
             }
-            get { return _enabled; }
         }
 
         /// <summary>
@@ -391,17 +359,20 @@ namespace VelcroPhysics.Dynamics
         /// <value><c>true</c> if it has fixed rotation; otherwise, <c>false</c>.</value>
         public bool FixedRotation
         {
+            get { return (_flags & BodyFlags.FixedRotationFlag) == BodyFlags.FixedRotationFlag; }
             set
             {
-                if (_fixedRotation == value)
+                if (value == FixedRotation)
                     return;
 
-                _fixedRotation = value;
+                if (value)
+                    _flags |= BodyFlags.FixedRotationFlag;
+                else
+                    _flags &= ~BodyFlags.FixedRotationFlag;
 
                 _angularVelocity = 0f;
                 ResetMassData();
             }
-            get { return _fixedRotation; }
         }
 
         /// <summary>
@@ -454,40 +425,36 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this body is static.
-        /// </summary>
-        /// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
-        public bool IsStatic
-        {
-            get { return _bodyType == BodyType.Static; }
-            set { BodyType = value ? BodyType.Static : BodyType.Dynamic; }
-        }
+        //Velcro: We don't add a setter here since it requires a branch, and we only use it internally
+        internal bool IsIsland => (_flags & BodyFlags.IslandFlag) == BodyFlags.IslandFlag;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this body is kinematic.
-        /// </summary>
-        /// <value><c>true</c> if this instance is kinematic; otherwise, <c>false</c>.</value>
-        public bool IsKinematic
-        {
-            get { return _bodyType == BodyType.Kinematic; }
-            set { BodyType = value ? BodyType.Kinematic : BodyType.Dynamic; }
-        }
+        public bool IsStatic => _type == BodyType.Static;
+
+        public bool IsKinematic => _type == BodyType.Kinematic;
+
+        public bool IsDynamic => _type == BodyType.Dynamic;
 
         /// <summary>
         /// Gets or sets a value indicating whether this body ignores gravity.
         /// </summary>
-        /// <value><c>true</c> if  it ignores gravity; otherwise, <c>false</c>.</value>
-        public bool IgnoreGravity { get; set; }
+        /// <value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</value>
+        public bool IgnoreGravity
+        {
+            get { return (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.IgnoreGravity;
+                else
+                    _flags &= ~BodyFlags.IgnoreGravity;
+            }
+        }
 
         /// <summary>
         /// Get the world position of the center of mass.
         /// </summary>
         /// <value>The world position.</value>
-        public Vector2 WorldCenter
-        {
-            get { return _sweep.C; }
-        }
+        public Vector2 WorldCenter => _sweep.C;
 
         /// <summary>
         /// Get the local position of the center of mass.
@@ -498,8 +465,10 @@ namespace VelcroPhysics.Dynamics
             get { return _sweep.LocalCenter; }
             set
             {
-                if (_bodyType != BodyType.Dynamic)
+                if (_type != BodyType.Dynamic)
                     return;
+
+                //Velcro: We support setting the mass independenly
 
                 // Move center of mass.
                 Vector2 oldCenter = _sweep.C;
@@ -523,9 +492,10 @@ namespace VelcroPhysics.Dynamics
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                if (_bodyType != BodyType.Dynamic) //Make an assert
+                if (_type != BodyType.Dynamic)
                     return;
 
+                //Velcro: We support setting the mass independenly
                 _mass = value;
 
                 if (_mass <= 0.0f)
@@ -541,17 +511,18 @@ namespace VelcroPhysics.Dynamics
         /// <value>The inertia.</value>
         public float Inertia
         {
-            get { return _inertia + Mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter); }
+            get { return _inertia + _mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter); }
             set
             {
                 Debug.Assert(!float.IsNaN(value));
 
-                if (_bodyType != BodyType.Dynamic) //Make an assert
+                if (_type != BodyType.Dynamic)
                     return;
 
-                if (value > 0.0f && !_fixedRotation) //Make an assert
+                //Velcro: We support setting the inertia independenly
+                if (value > 0.0f && !FixedRotation)
                 {
-                    _inertia = value - Mass * Vector2.Dot(LocalCenter, LocalCenter);
+                    _inertia = value - _mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
                     Debug.Assert(_inertia > 0.0f);
                     _invI = 1.0f / _inertia;
                 }
@@ -659,7 +630,7 @@ namespace VelcroPhysics.Dynamics
                 }
             }
         }
-
+    
         public bool IsSensor
         {
             set
@@ -672,7 +643,17 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        public bool IgnoreCCD { get; set; }
+        public bool IgnoreCCD
+        {
+            get { return (_flags & BodyFlags.IgnoreCCD) == BodyFlags.IgnoreCCD; }
+            set
+            {
+                if (value)
+                    _flags |= BodyFlags.IgnoreCCD;
+                else
+                    _flags &= ~BodyFlags.IgnoreCCD;
+            }
+        }
 
         /// <summary>
         /// Resets the dynamics of this body.
@@ -711,6 +692,9 @@ namespace VelcroPhysics.Dynamics
         /// <param name="fixture">The fixture to be removed.</param>
         public void DestroyFixture(Fixture fixture)
         {
+            if (fixture == null)
+                return;
+
             Debug.Assert(fixture.Body == this);
 
             // Remove the fixture from this body's singly linked list.
@@ -737,7 +721,7 @@ namespace VelcroPhysics.Dynamics
                 }
             }
 
-            if (_enabled)
+            if (Enabled)
             {
                 IBroadPhase broadPhase = _world.ContactManager.BroadPhase;
                 fixture.DestroyProxies(broadPhase);
@@ -761,6 +745,7 @@ namespace VelcroPhysics.Dynamics
         {
             SetTransformIgnoreContacts(ref position, rotation);
 
+            //Velcro: We check for new contacts after a body has been moved.
             _world.ContactManager.FindNewContacts();
         }
 
@@ -852,33 +837,34 @@ namespace VelcroPhysics.Dynamics
             Debug.Assert(!float.IsNaN(point.X));
             Debug.Assert(!float.IsNaN(point.Y));
 
-            if (_bodyType == BodyType.Dynamic)
-            {
-                if (Awake == false)
-                    Awake = true;
+            if (_type != BodyType.Dynamic)
+                return;
 
-                _force += force;
-                _torque += (point.X - _sweep.C.X) * force.Y - (point.Y - _sweep.C.Y) * force.X;
-            }
+            //Velcro: We always wake the body. You told it to move.
+            if (Awake == false)
+                Awake = true;
+
+            _force += force;
+            _torque += MathUtils.Cross(point - _sweep.C, force);
         }
 
         /// <summary>
         /// Apply a torque. This affects the angular velocity
         /// without affecting the linear velocity of the center of mass.
-        /// This wakes up the body.
         /// </summary>
         /// <param name="torque">The torque about the z-axis (out of the screen), usually in N-m.</param>
         public void ApplyTorque(float torque)
         {
             Debug.Assert(!float.IsNaN(torque));
 
-            if (_bodyType == BodyType.Dynamic)
-            {
-                if (Awake == false)
-                    Awake = true;
+            if (BodyType != BodyType.Dynamic)
+                return;
 
-                _torque += torque;
-            }
+            //Velcro: We always wake the body. You told it to move.
+            if (Awake == false)
+                Awake = true;
+
+            _torque += torque;
         }
 
         /// <summary>
@@ -911,14 +897,13 @@ namespace VelcroPhysics.Dynamics
         /// <param name="impulse">The world impulse vector, usually in N-seconds or kg-m/s.</param>
         public void ApplyLinearImpulse(ref Vector2 impulse)
         {
-            if (_bodyType != BodyType.Dynamic)
-            {
+            if (_type != BodyType.Dynamic)
                 return;
-            }
+
+            //Velcro: We always wake the body. You told it to move.
             if (Awake == false)
-            {
                 Awake = true;
-            }
+
             _linearVelocity += _invMass * impulse;
         }
 
@@ -932,14 +917,15 @@ namespace VelcroPhysics.Dynamics
         /// <param name="point">The world position of the point of application.</param>
         public void ApplyLinearImpulse(ref Vector2 impulse, ref Vector2 point)
         {
-            if (_bodyType != BodyType.Dynamic)
+            if (_type != BodyType.Dynamic)
                 return;
 
+            //Velcro: We always wake the body. You told it to move.
             if (Awake == false)
                 Awake = true;
 
             _linearVelocity += _invMass * impulse;
-            _angularVelocity += _invI * ((point.X - _sweep.C.X) * impulse.Y - (point.Y - _sweep.C.Y) * impulse.X);
+            _angularVelocity += _invI * MathUtils.Cross(point - _sweep.C, impulse);
         }
 
         /// <summary>
@@ -948,15 +934,12 @@ namespace VelcroPhysics.Dynamics
         /// <param name="impulse">The angular impulse in units of kg*m*m/s.</param>
         public void ApplyAngularImpulse(float impulse)
         {
-            if (_bodyType != BodyType.Dynamic)
-            {
+            if (_type != BodyType.Dynamic)
                 return;
-            }
 
+            //Velcro: We always wake the body. You told it to move.
             if (Awake == false)
-            {
                 Awake = true;
-            }
 
             _angularVelocity += _invI * impulse;
         }
@@ -975,6 +958,7 @@ namespace VelcroPhysics.Dynamics
             _invI = 0.0f;
             _sweep.LocalCenter = Vector2.Zero;
 
+            //Velcro: We have mass on static bodies to support attaching joints to them
             // Kinematic bodies have zero mass.
             if (BodyType == BodyType.Kinematic)
             {
@@ -990,10 +974,8 @@ namespace VelcroPhysics.Dynamics
             Vector2 localCenter = Vector2.Zero;
             foreach (Fixture f in FixtureList)
             {
-                if (f.Shape._density == 0)
-                {
+                if (f.Shape._density == 0.0f)
                     continue;
-                }
 
                 MassData massData = f.Shape.MassData;
                 _mass += massData.Mass;
@@ -1016,12 +998,12 @@ namespace VelcroPhysics.Dynamics
             }
             else
             {
-                // Force all dynamic bodies to have a positive mass.
+                // Force all bodies to have a positive mass.
                 _mass = 1.0f;
                 _invMass = 1.0f;
             }
 
-            if (_inertia > 0.0f && !_fixedRotation)
+            if (_inertia > 0.0f && (_flags & BodyFlags.FixedRotationFlag) == 0)
             {
                 // Center the inertia about the center of mass.
                 _inertia -= _mass * Vector2.Dot(localCenter, localCenter);
@@ -1073,7 +1055,7 @@ namespace VelcroPhysics.Dynamics
         /// <returns>The same vector expressed in world coordinates.</returns>
         public Vector2 GetWorldVector(ref Vector2 localVector)
         {
-            return MathUtils.Mul(_xf.q, localVector);
+            return MathUtils.Mul(ref _xf.q, localVector);
         }
 
         /// <summary>
@@ -1146,9 +1128,7 @@ namespace VelcroPhysics.Dynamics
         /// <returns>The world velocity of a point.</returns>
         public Vector2 GetLinearVelocityFromWorldPoint(ref Vector2 worldPoint)
         {
-            return _linearVelocity +
-                   new Vector2(-_angularVelocity * (worldPoint.Y - _sweep.C.Y),
-                       _angularVelocity * (worldPoint.X - _sweep.C.X));
+            return _linearVelocity + MathUtils.Cross(_angularVelocity, worldPoint - _sweep.C);
         }
 
         /// <summary>
@@ -1195,11 +1175,10 @@ namespace VelcroPhysics.Dynamics
         /// It may lie, depending on the collideConnected flag.
         /// </summary>
         /// <param name="other">The other body.</param>
-        /// <returns></returns>
         internal bool ShouldCollide(Body other)
         {
             // At least one body should be dynamic.
-            if (_bodyType != BodyType.Dynamic && other._bodyType != BodyType.Dynamic)
+            if (_type != BodyType.Dynamic && other._type != BodyType.Dynamic)
             {
                 return false;
             }
@@ -1233,16 +1212,16 @@ namespace VelcroPhysics.Dynamics
         {
             add
             {
-                for (int i = 0; i < FixtureList.Count; i++)
+                foreach (Fixture f in FixtureList)
                 {
-                    FixtureList[i].OnCollision += value;
+                    f.OnCollision += value;
                 }
             }
             remove
             {
-                for (int i = 0; i < FixtureList.Count; i++)
+                foreach (Fixture f in FixtureList)
                 {
-                    FixtureList[i].OnCollision -= value;
+                    f.OnCollision -= value;
                 }
             }
         }
@@ -1251,16 +1230,16 @@ namespace VelcroPhysics.Dynamics
         {
             add
             {
-                for (int i = 0; i < FixtureList.Count; i++)
+                foreach (Fixture f in FixtureList)
                 {
-                    FixtureList[i].OnSeparation += value;
+                    f.OnSeparation += value;
                 }
             }
             remove
             {
-                for (int i = 0; i < FixtureList.Count; i++)
+                foreach (Fixture f in FixtureList)
                 {
-                    FixtureList[i].OnSeparation -= value;
+                    f.OnSeparation -= value;
                 }
             }
         }
@@ -1296,20 +1275,14 @@ namespace VelcroPhysics.Dynamics
         public Body Clone(World world = null)
         {
             Body body = new Body(world ?? _world, Position, Rotation);
-            body._bodyType = _bodyType;
+            body._type = _type;
             body._linearVelocity = _linearVelocity;
             body._angularVelocity = _angularVelocity;
             body.GravityScale = GravityScale;
             body.UserData = UserData;
-            body._enabled = _enabled;
-            body._fixedRotation = _fixedRotation;
-            body._sleepingAllowed = _sleepingAllowed;
-            body._linearDamping = _linearDamping;
-            body._angularDamping = _angularDamping;
-            body._awake = _awake;
-            body.IsBullet = IsBullet;
-            body.IgnoreCCD = IgnoreCCD;
-            body.IgnoreGravity = IgnoreGravity;
+            body._flags = _flags;
+            body.LinearDamping = LinearDamping;
+            body.AngularDamping = AngularDamping;
             body._torque = _torque;
 
             return body;
