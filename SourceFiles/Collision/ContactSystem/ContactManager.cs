@@ -34,14 +34,10 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// </summary>
         public BeginContactDelegate BeginContact;
 
-        public IBroadPhase BroadPhase;
-
         /// <summary>
         /// The filter used by the contact manager.
         /// </summary>
         public CollisionFilterDelegate ContactFilter;
-
-        public List<Contact> ContactList = new List<Contact>(128);
 
         /// <summary>
         /// Fires when a contact is deleted
@@ -67,7 +63,11 @@ namespace VelcroPhysics.Collision.ContactSystem
         {
             BroadPhase = broadPhase;
             OnBroadphaseCollision = AddPair;
+            ContactList = new List<Contact>(128);
         }
+
+        public List<Contact> ContactList { get; }
+        public IBroadPhase BroadPhase { get; }
 
         // Broad-phase callback.
         private void AddPair(ref FixtureProxy proxyA, ref FixtureProxy proxyB)
@@ -126,7 +126,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
                 return;
 
-            //Velcro feature: BeforeCollision delegate
+            //Velcro: BeforeCollision delegate
             if (fixtureA.BeforeCollision != null && fixtureA.BeforeCollision(fixtureA, fixtureB) == false)
                 return;
 
@@ -195,15 +195,16 @@ namespace VelcroPhysics.Collision.ContactSystem
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
 
+            //Velcro: When contacts are removed, we invoke OnSeparation
             if (contact.IsTouching)
             {
                 //Report the separation to both participants:
                 fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB);
 
-                //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                //user subscribed to.
+                //Reverse the order of the reported fixtures. The first fixture is always the one that the user subscribed to.
                 fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA);
 
+                //The generic handler
                 EndContact?.Invoke(contact);
             }
 
@@ -215,35 +216,23 @@ namespace VelcroPhysics.Collision.ContactSystem
 
             // Remove from body 1
             if (contact._nodeA.Prev != null)
-            {
                 contact._nodeA.Prev.Next = contact._nodeA.Next;
-            }
 
             if (contact._nodeA.Next != null)
-            {
                 contact._nodeA.Next.Prev = contact._nodeA.Prev;
-            }
 
             if (contact._nodeA == bodyA.ContactList)
-            {
                 bodyA.ContactList = contact._nodeA.Next;
-            }
 
             // Remove from body 2
             if (contact._nodeB.Prev != null)
-            {
                 contact._nodeB.Prev.Next = contact._nodeB.Next;
-            }
 
             if (contact._nodeB.Next != null)
-            {
                 contact._nodeB.Next.Prev = contact._nodeB.Prev;
-            }
 
             if (contact._nodeB == bodyB.ContactList)
-            {
                 bodyB.ContactList = contact._nodeB.Next;
-            }
 
             contact.Destroy();
         }
@@ -261,7 +250,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
 
-                //Do no try to collide disabled bodies
+                //Velcro: Do no try to collide disabled bodies
                 if (!bodyA.Enabled || !bodyB.Enabled)
                     continue;
 
@@ -307,7 +296,6 @@ namespace VelcroPhysics.Collision.ContactSystem
 
                 int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
                 int proxyIdB = fixtureB.Proxies[indexB].ProxyId;
-
                 bool overlap = BroadPhase.TestOverlap(proxyIdA, proxyIdB);
 
                 // Here we destroy contacts that cease to overlap in the broad-phase.
