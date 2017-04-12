@@ -29,7 +29,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //Fixture()
         }
 
-        private bool OnCollision(Fixture fixturea, Fixture fixtureb, Contact manifold)
+        private void OnCollision(Fixture fixturea, Fixture fixtureb, Contact manifold)
         {
             //_rectangle.CreateFixture(_rectangle.Shape); //Calls the constructor in Fixture
             //_rectangle.DestroyFixture(_rectangle);
@@ -37,7 +37,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //_rectangle.LocalCenter = new Vector2(-1, -1);
             //_rectangle.Mass = 10;
             _rectangle.Enabled = false;
-            return false;
         }
 
         internal static Test Create()

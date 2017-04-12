@@ -195,7 +195,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             }
         }
 
-        private bool BallCollision(Fixture fixturea, Fixture fixtureb, Contact contact)
+        private void BallCollision(Fixture fixturea, Fixture fixtureb, Contact contact)
         {
             if (fixtureb.Shape.ShapeType == ShapeType.Edge)
             {
@@ -205,8 +205,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 //Add a rectangle
                 BodyFactory.CreateRectangle(World, 5, 5, 1);
             }
-
-            return true;
         }
 
         internal static Test Create()

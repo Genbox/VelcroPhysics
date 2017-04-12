@@ -141,13 +141,12 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _character.SleepingAllowed = false;
         }
 
-        private bool CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        private void CharacterOnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             _collision = true;
-            return true;
         }
 
-        private void CharacterOnSeparation(Fixture fixtureA, Fixture fixtureB)
+        private void CharacterOnSeparation(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             _collision = false;
         }

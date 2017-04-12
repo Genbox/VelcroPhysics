@@ -196,7 +196,7 @@ namespace VelcroPhysics.Dynamics
                                 {
                                     // Flag the contact for filtering at the next time step (where either
                                     // body is awake).
-                                    edge.Contact.FilterFlag = true;
+                                    edge.Contact._flags |= ContactFlags.FilterFlag;
                                 }
 
                                 edge = edge.Next;
@@ -257,7 +257,7 @@ namespace VelcroPhysics.Dynamics
                                 {
                                     // Flag the contact for filtering at the next time step (where either
                                     // body is awake).
-                                    edge.Contact.FilterFlag = true;
+                                    edge.Contact._flags |= ContactFlags.FilterFlag;
                                 }
 
                                 edge = edge.Next;
@@ -382,7 +382,7 @@ namespace VelcroPhysics.Dynamics
 
             foreach (Contact c in ContactManager.ContactList)
             {
-                c.IslandFlag = false;
+                c._flags &= ~ContactFlags.IslandFlag;
             }
 
             foreach (Joint j in JointList)
@@ -465,7 +465,7 @@ namespace VelcroPhysics.Dynamics
                         }
 
                         Island.Add(contact);
-                        contact.IslandFlag = true;
+                        contact._flags |= ContactFlags.IslandFlag;
 
                         Body other = ce.Other;
 
@@ -576,8 +576,8 @@ namespace VelcroPhysics.Dynamics
                     Contact c = ContactManager.ContactList[i];
 
                     // Invalidate TOI
-                    c.IslandFlag = false;
-                    c.TOIFlag = false;
+                    c._flags &= ~ContactFlags.IslandFlag;
+                    c._flags &= ~ContactFlags.TOIFlag;
                     c._toiCount = 0;
                     c._toi = 1.0f;
                 }
@@ -589,7 +589,6 @@ namespace VelcroPhysics.Dynamics
                 // Find the first TOI.
                 Contact minContact = null;
                 float minAlpha = 1.0f;
-
 
                 for (int i = 0; i < ContactManager.ContactList.Count; i++)
                 {
@@ -688,7 +687,7 @@ namespace VelcroPhysics.Dynamics
                         }
 
                         c._toi = alpha;
-                        c.TOIFlag = true;
+                        c._flags &= ~ContactFlags.TOIFlag;
                     }
 
                     if (alpha < minAlpha)
@@ -720,14 +719,14 @@ namespace VelcroPhysics.Dynamics
 
                 // The TOI contact likely has some new contact points.
                 minContact.Update(ContactManager);
-                minContact.TOIFlag = false;
+                minContact._flags &= ~ContactFlags.TOIFlag;
                 ++minContact._toiCount;
 
                 // Is the contact solid?
                 if (minContact.Enabled == false || minContact.IsTouching == false)
                 {
                     // Restore the sweeps.
-                    minContact.Enabled = false;
+                    minContact._flags &= ~ContactFlags.EnabledFlag;
                     bA0._sweep = backup1;
                     bB0._sweep = backup2;
                     bA0.SynchronizeTransform();
@@ -746,7 +745,7 @@ namespace VelcroPhysics.Dynamics
 
                 bA0._flags |= BodyFlags.IslandFlag;
                 bB0._flags |= BodyFlags.IslandFlag;
-                minContact.IslandFlag = true;
+                minContact._flags &= ~ContactFlags.IslandFlag;
 
                 // Get contacts on bodyA and bodyB.
                 Body[] bodies = { bA0, bB0 };
@@ -816,7 +815,7 @@ namespace VelcroPhysics.Dynamics
                             }
 
                             // Add the contact to the island
-                            contact.IslandFlag = true;
+                            minContact._flags |= ContactFlags.IslandFlag;
                             Island.Add(contact);
 
                             // Has the other body already been added to the island?
@@ -860,8 +859,8 @@ namespace VelcroPhysics.Dynamics
                     // Invalidate all contact TOIs on this displaced body.
                     for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                     {
-                        ce.Contact.TOIFlag = false;
-                        ce.Contact.IslandFlag = false;
+                        ce.Contact._flags &= ~ContactFlags.TOIFlag;
+                        ce.Contact._flags &= ~ContactFlags.IslandFlag;
                     }
                 }
 

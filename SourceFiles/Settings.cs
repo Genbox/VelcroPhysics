@@ -34,13 +34,6 @@ namespace VelcroPhysics
         // Common
 
         /// <summary>
-        /// If true, all collision callbacks have to return the same value, and agree
-        /// if there was a collision or not. Swtich this to false to revert to the
-        /// collision agreement used in FPE 3.3.x
-        /// </summary>
-        public const bool AllCollisionCallbacksAgree = true;
-
-        /// <summary>
         /// Enabling diagnistics causes the engine to gather timing information.
         /// You can see how much time it took to solve the contacts, solve CCD
         /// and update the controllers.

@@ -79,8 +79,8 @@ namespace VelcroPhysics.Collision.ContactSystem
 
         // Nodes for connecting bodies.
         internal ContactEdge _nodeA = new ContactEdge();
-
         internal ContactEdge _nodeB = new ContactEdge();
+
         internal float _toi;
         internal int _toiCount;
         private ContactType _type;
@@ -102,40 +102,46 @@ namespace VelcroPhysics.Collision.ContactSystem
         public float Friction { get; set; }
         public float Restitution { get; set; }
 
+        /// <summary>
         /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
+        /// </summary>
         public float TangentSpeed { get; set; }
 
-        /// Enable/disable this contact. This can be used inside the pre-solve
-        /// contact listener. The contact is only disabled for the current
-        /// time step (or sub-step in continuous collisions).
-        /// NOTE: If you are setting Enabled to a constant true or false,
-        /// use the explicit Enable() or Disable() functions instead to 
-        /// save the CPU from doing a branch operation.
-        public bool Enabled { get; set; }
 
         /// <summary>
         /// Get the child primitive index for fixture A.
         /// </summary>
         /// <value>The child index A.</value>
-        public int ChildIndexA { get; internal set; }
+        public int ChildIndexA { get; private set; }
 
         /// <summary>
         /// Get the child primitive index for fixture B.
         /// </summary>
         /// <value>The child index B.</value>
-        public int ChildIndexB { get; internal set; }
+        public int ChildIndexB { get; private set; }
 
         /// <summary>
-        /// Determines whether this contact is touching.
+        /// Enable/disable this contact.The contact is only disabled for the current
+        /// time step (or sub-step in continuous collisions).
         /// </summary>
-        /// <returns>
-        /// <c>true</c> if this instance is touching; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsTouching { get; set; }
+        public bool Enabled
+        {
+            get => (_flags & ContactFlags.EnabledFlag) == ContactFlags.EnabledFlag;
+            set
+            {
+                if (value)
+                    _flags |= ContactFlags.EnabledFlag;
+                else
+                    _flags &= ~ContactFlags.EnabledFlag;
+            }
+        }
 
-        internal bool IslandFlag { get; set; }
-        internal bool TOIFlag { get; set; }
-        internal bool FilterFlag { get; set; }
+        internal bool IsTouching => (_flags & ContactFlags.TouchingFlag) == ContactFlags.TouchingFlag;
+        internal bool IslandFlag => (_flags & ContactFlags.IslandFlag) == ContactFlags.IslandFlag;
+        internal bool TOIFlag => (_flags & ContactFlags.TOIFlag) == ContactFlags.TOIFlag;
+        internal bool FilterFlag => (_flags & ContactFlags.FilterFlag) == ContactFlags.FilterFlag;
+
+        internal ContactFlags _flags;
 
         public void ResetRestitution()
         {
@@ -162,11 +168,7 @@ namespace VelcroPhysics.Collision.ContactSystem
 
         private void Reset(Fixture fA, int indexA, Fixture fB, int indexB)
         {
-            Enabled = true;
-            IsTouching = false;
-            IslandFlag = false;
-            FilterFlag = false;
-            TOIFlag = false;
+            _flags = ContactFlags.EnabledFlag;
 
             FixtureA = fA;
             FixtureB = fB;
@@ -214,7 +216,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             Manifold oldManifold = Manifold;
 
             // Re-enable this contact.
-            Enabled = true;
+            _flags |= ContactFlags.EnabledFlag;
 
             bool touching;
             bool wasTouching = IsTouching;
@@ -267,74 +269,29 @@ namespace VelcroPhysics.Collision.ContactSystem
                 }
             }
 
-            IsTouching = touching;
-
-            if (wasTouching == false)
-            {
-                if (touching)
-                {
-                    if (Settings.AllCollisionCallbacksAgree)
-                    {
-                        bool enabledA = true, enabledB = true;
-
-                        // Report the collision to both participants. Track which ones returned true so we can
-                        // later call OnSeparation if the contact is disabled for a different reason.
-                        if (FixtureA.OnCollision != null)
-                            foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
-                                enabledA = handler(FixtureA, FixtureB, this) && enabledA;
-
-                        // Reverse the order of the reported fixtures. The first fixture is always the one that the
-                        // user subscribed to.
-                        if (FixtureB.OnCollision != null)
-                            foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
-                                enabledB = handler(FixtureB, FixtureA, this) && enabledB;
-
-                        Enabled = enabledA && enabledB;
-
-                        // BeginContact can also return false and disable the contact
-                        if (enabledA && enabledB && contactManager.BeginContact != null)
-                            Enabled = contactManager.BeginContact(this);
-                    }
-                    else
-                    {
-                        //Report the collision to both participants:
-                        if (FixtureA.OnCollision != null)
-                            foreach (OnCollisionEventHandler handler in FixtureA.OnCollision.GetInvocationList())
-                                Enabled = handler(FixtureA, FixtureB, this);
-
-                        //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                        //user subscribed to.
-                        if (FixtureB.OnCollision != null)
-                            foreach (OnCollisionEventHandler handler in FixtureB.OnCollision.GetInvocationList())
-                                Enabled = handler(FixtureB, FixtureA, this);
-
-                        //BeginContact can also return false and disable the contact
-                        if (contactManager.BeginContact != null)
-                            Enabled = contactManager.BeginContact(this);
-                    }
-
-                    // If the user disabled the contact (needed to exclude it in TOI solver) at any point by
-                    // any of the callbacks, we need to mark it as not touching and call any separation
-                    // callbacks for fixtures that didn't explicitly disable the collision.
-                    if (!Enabled)
-                        IsTouching = false;
-                }
-            }
+            if (touching)
+                _flags |= ContactFlags.TouchingFlag;
             else
+                _flags &= ~ContactFlags.TouchingFlag;
+
+            if (wasTouching == false && touching)
             {
-                if (touching == false)
-                {
-                    //Report the separation to both participants:
-                    if (FixtureA != null && FixtureA.OnSeparation != null)
-                        FixtureA.OnSeparation(FixtureA, FixtureB);
+                FixtureA.OnCollision?.Invoke(FixtureA, FixtureB, this);
+                FixtureB.OnCollision?.Invoke(FixtureB, FixtureA, this);
+                contactManager.BeginContact?.Invoke(this);
 
-                    //Reverse the order of the reported fixtures. The first fixture is always the one that the
-                    //user subscribed to.
-                    if (FixtureB != null && FixtureB.OnSeparation != null)
-                        FixtureB.OnSeparation(FixtureB, FixtureA);
+                // Velcro: If the user disabled the contact (needed to exclude it in TOI solver) at any point by
+                // any of the callbacks, we need to mark it as not touching and call any separation
+                // callbacks for fixtures that didn't explicitly disable the collision.
+                if (!Enabled)
+                    touching = false;
+            }
 
-                    contactManager.EndContact?.Invoke(this);
-                }
+            if (wasTouching == true && touching == false)
+            {
+                FixtureA?.OnSeparation?.Invoke(FixtureA, FixtureB, this);
+                FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
+                contactManager.EndContact?.Invoke(this);
             }
 
             if (sensor)

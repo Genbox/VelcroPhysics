@@ -199,10 +199,10 @@ namespace VelcroPhysics.Collision.ContactSystem
             if (contact.IsTouching)
             {
                 //Report the separation to both participants:
-                fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB);
+                fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB, contact);
 
                 //Reverse the order of the reported fixtures. The first fixture is always the one that the user subscribed to.
-                fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA);
+                fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA, contact);
 
                 //The generic handler
                 EndContact?.Invoke(contact);
@@ -282,7 +282,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     }
 
                     // Clear the filtering flag.
-                    c.FilterFlag = false;
+                    c._flags &= ~ContactFlags.FilterFlag;
                 }
 
                 bool activeA = bodyA.Awake && bodyA.BodyType != BodyType.Static;

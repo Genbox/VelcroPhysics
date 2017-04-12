@@ -303,7 +303,7 @@ namespace VelcroPhysics.Dynamics
                 Fixture fixtureB = contact.FixtureB;
                 if (fixtureA == this || fixtureB == this)
                 {
-                    contact.FilterFlag = true;
+                    contact._flags |= ContactFlags.FilterFlag;
                 }
 
                 edge = edge.Next;

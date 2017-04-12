@@ -112,7 +112,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             fixture.OnCollision += OnCollision;
         }
 
-        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        private void OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             Body body1 = fixtureA.Body;
             Body body2 = fixtureB.Body;
@@ -125,11 +125,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 {
                     if (!_removeBodies.Contains(body1))
                         _removeBodies.Add(body1);
-                    return false;
+                    contact.Enabled = false;
                 }
             }
-
-            return true;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

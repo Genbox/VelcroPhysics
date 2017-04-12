@@ -16,12 +16,11 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             ground.OnSeparation += OnSeparation;
         }
 
-        private bool OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        private void OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            return true;
         }
 
-        private void OnSeparation(Fixture fixtureA, Fixture fixtureB)
+        private void OnSeparation(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
             fixtureB.Body.Dispose();
         }
