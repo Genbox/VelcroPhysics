@@ -3,7 +3,7 @@ using VelcroPhysics.Primitives.Optimization;
 
 namespace VelcroPhysics.Utils
 {
-    public class BenchmarkRun : IPoolable
+    public class BenchmarkRun : IPoolable<BenchmarkRun>
     {
         private string _area;
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -18,7 +18,7 @@ namespace VelcroPhysics.Utils
         public void Dispose()
         {
             RecordResults();
-            Benchmark.ReturnToPool(this);
+            Pool.ReturnToPool(this);
         }
 
         public void RecordResults()
@@ -35,5 +35,7 @@ namespace VelcroPhysics.Utils
         {
             _stopwatch.Reset();
         }
+
+        public Pool<BenchmarkRun> Pool { private get; set; }
     }
 }

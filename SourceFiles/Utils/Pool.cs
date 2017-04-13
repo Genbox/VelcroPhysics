@@ -1,71 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using VelcroPhysics.Primitives.Optimization;
 
 namespace VelcroPhysics.Utils
 {
-    public class Pool<T> where T : class, IPoolable, new()
+    public class Pool<T> where T : IPoolable<T>
     {
         private readonly Queue<T> _queue;
+        private readonly Func<T> _objectCreator;
 
-        public Pool(int capacity, bool createInstances = true)
+        public Pool(Func<T> objectCreator, int capacity = 16, bool preCreateInstances = true)
         {
+            _objectCreator = objectCreator;
             _queue = new Queue<T>(capacity);
 
-            if (createInstances)
+            if (!preCreateInstances)
+                return;
+
+            for (int i = 0; i < capacity; i++)
             {
-                for (int i = 0; i < capacity; i++)
-                {
-                    _queue.Enqueue(new T());
-                }
+                T obj = objectCreator();
+                obj.Pool = this;
+                _queue.Enqueue(obj);
             }
         }
 
+        public int LeftInPool => _queue.Count;
+
         public T GetFromPool()
         {
-            if (_queue.Count <= 0)
-                return new T();
+            if (_queue.Count == 0)
+                return _objectCreator();
 
-            T obj = _queue.Dequeue();
-            obj.Reset();
-            return obj;
+            return _queue.Dequeue();
         }
 
         public IEnumerable<T> GetManyFromPool(int count)
         {
-            int diff = count - _queue.Count;
+            Debug.Assert(count != 0);
 
-            if (diff >= 0)
+            for (int i = 0; i < count; i++)
             {
-                //We have all in queue
-                for (int i = 0; i < diff; i++)
-                {
-                    T obj = _queue.Dequeue();
-                    obj.Reset();
-                    yield return obj;
-                }
-            }
-            else
-            {
-                //We need to return what is in queue and then make more
-                for (int i = 0; i < _queue.Count; i++)
-                {
-                    T obj = _queue.Dequeue();
-                    obj.Reset();
-                    yield return obj;
-                }
-
-                int remaining = Math.Abs(diff);
-
-                for (int i = 0; i < remaining; i++)
-                {
-                    yield return new T();
-                }
+                yield return GetFromPool();
             }
         }
 
         public void ReturnToPool(T obj)
         {
+            obj.Reset();
             _queue.Enqueue(obj);
         }
 
@@ -73,6 +56,7 @@ namespace VelcroPhysics.Utils
         {
             foreach (T obj in objs)
             {
+                obj.Reset();
                 _queue.Enqueue(obj);
             }
         }

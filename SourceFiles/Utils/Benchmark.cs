@@ -5,7 +5,7 @@ namespace VelcroPhysics.Utils
     public static class Benchmark
     {
         private static readonly Dictionary<string, long> _results = new Dictionary<string, long>();
-        private static readonly Pool<BenchmarkRun> _runPool = new Pool<BenchmarkRun>(1);
+        private static readonly Pool<BenchmarkRun> _runPool = new Pool<BenchmarkRun>(() => new BenchmarkRun());
 
         public static BenchmarkRun StartRun(string area)
         {
@@ -41,11 +41,6 @@ namespace VelcroPhysics.Utils
                 return 0;
 
             return _results.TryGetValue(area, out long value) ? value : 0;
-        }
-
-        internal static void ReturnToPool(BenchmarkRun run)
-        {
-            _runPool.ReturnToPool(run);
         }
     }
 }
