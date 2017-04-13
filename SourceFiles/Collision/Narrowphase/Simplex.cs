@@ -326,7 +326,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 V.Value2.A = 1.0f;
                 Count = 1;
-                V.Value1 = V.Value2;
+                V.Value0 = V.Value2;
                 return;
             }
 
