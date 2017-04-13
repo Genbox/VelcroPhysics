@@ -87,18 +87,23 @@ namespace VelcroPhysics.Collision.Shapes
             get { return _vertices; }
             set
             {
-                _vertices = new Vertices(value);
-
-                Debug.Assert(_vertices.Count >= 3 && _vertices.Count <= Settings.MaxPolygonVertices);
+                Debug.Assert(value.Count >= 3 && value.Count <= Settings.MaxPolygonVertices);
 
                 if (Settings.UseConvexHullPolygons)
                 {
                     //Velcro: This check is required as the GiftWrap algorithm early exits on triangles
                     //So instead of giftwrapping a triangle, we just force it to be clock wise.
-                    if (_vertices.Count <= 3)
+                    if (value.Count <= 3)
+                    {
+                        _vertices = new Vertices(value);
                         _vertices.ForceCounterClockWise();
+                    }
                     else
-                        _vertices = GiftWrap.GetConvexHull(_vertices);
+                        _vertices = GiftWrap.GetConvexHull(value);
+                }
+                else
+                {
+                    _vertices = new Vertices(value);
                 }
 
                 _normals = new Vertices(_vertices.Count);
