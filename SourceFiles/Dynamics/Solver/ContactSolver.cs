@@ -43,7 +43,7 @@ namespace VelcroPhysics.Dynamics.Solver
         private Velocity[] _velocities;
         public ContactVelocityConstraint[] VelocityConstraints;
 
-        public void Reset(TimeStep step, int count, Contact[] contacts, Position[] positions, Velocity[] velocities, bool warmstarting = Settings.EnableWarmstarting)
+        public void Reset(TimeStep step, int count, Contact[] contacts, Position[] positions, Velocity[] velocities)
         {
             _step = step;
             _count = count;

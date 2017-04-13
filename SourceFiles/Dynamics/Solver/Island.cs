@@ -322,7 +322,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 Velocities[i].W = b._angularVelocity;
             }
 
-            _contactSolver.Reset(subStep, ContactCount, _contacts, Positions, Velocities, warmstarting);
+            _contactSolver.Reset(subStep, ContactCount, _contacts, Positions, Velocities);
 
             // Solve position constraints.
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
