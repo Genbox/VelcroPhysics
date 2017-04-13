@@ -23,43 +23,30 @@ namespace VelcroPhysics.Primitives
         public AABB(Vector2 min, Vector2 max)
             : this(ref min, ref max) { }
 
+        public AABB(Vector2 center, float width, float height)
+            : this(center - new Vector2(width / 2, height / 2), center + new Vector2(width / 2, height / 2))
+        {
+        }
+
         public AABB(ref Vector2 min, ref Vector2 max)
         {
-            LowerBound = min;
-            UpperBound = max;
+            LowerBound = new Vector2(Math.Min(min.X, max.X), Math.Min(min.Y, max.Y));
+            UpperBound = new Vector2(Math.Max(min.X, max.X), Math.Max(min.Y, max.Y));
         }
 
-        public AABB(Vector2 center, float width, float height)
-        {
-            LowerBound = center - new Vector2(width / 2, height / 2);
-            UpperBound = center + new Vector2(width / 2, height / 2);
-        }
+        public float Width => UpperBound.X - LowerBound.X;
 
-        public float Width
-        {
-            get { return UpperBound.X - LowerBound.X; }
-        }
-
-        public float Height
-        {
-            get { return UpperBound.Y - LowerBound.Y; }
-        }
+        public float Height => UpperBound.Y - LowerBound.Y;
 
         /// <summary>
         /// Get the center of the AABB.
         /// </summary>
-        public Vector2 Center
-        {
-            get { return 0.5f * (LowerBound + UpperBound); }
-        }
+        public Vector2 Center => 0.5f * (LowerBound + UpperBound);
 
         /// <summary>
         /// Get the extents of the AABB (half-widths).
         /// </summary>
-        public Vector2 Extents
-        {
-            get { return 0.5f * (UpperBound - LowerBound); }
-        }
+        public Vector2 Extents => 0.5f * (UpperBound - LowerBound);
 
         /// <summary>
         /// Get the perimeter length
@@ -94,34 +81,22 @@ namespace VelcroPhysics.Primitives
         /// <summary>
         /// First quadrant
         /// </summary>
-        public AABB Q1
-        {
-            get { return new AABB(Center, UpperBound); }
-        }
+        public AABB Q1 => new AABB(Center, UpperBound);
 
         /// <summary>
         /// Second quadrant
         /// </summary>
-        public AABB Q2
-        {
-            get { return new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y)); }
-        }
+        public AABB Q2 => new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y));
 
         /// <summary>
         /// Third quadrant
         /// </summary>
-        public AABB Q3
-        {
-            get { return new AABB(LowerBound, Center); }
-        }
+        public AABB Q3 => new AABB(LowerBound, Center);
 
         /// <summary>
         /// Forth quadrant
         /// </summary>
-        public AABB Q4
-        {
-            get { return new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y)); }
-        }
+        public AABB Q4 => new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y));
 
         /// <summary>
         /// Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).
@@ -133,8 +108,7 @@ namespace VelcroPhysics.Primitives
         {
             Vector2 d = UpperBound - LowerBound;
             bool valid = d.X >= 0.0f && d.Y >= 0.0f;
-            valid = valid && MathUtils.IsValid((Vector2)LowerBound) && MathUtils.IsValid((Vector2)UpperBound);
-            return valid;
+            return valid && LowerBound.IsValid() && UpperBound.IsValid();
         }
 
         /// <summary>
@@ -175,7 +149,7 @@ namespace VelcroPhysics.Primitives
         }
 
         /// <summary>
-        /// Determines whether the AAABB contains the specified point.
+        /// Determines whether the AABB contains the specified point.
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>
@@ -183,7 +157,7 @@ namespace VelcroPhysics.Primitives
         /// </returns>
         public bool Contains(ref Vector2 point)
         {
-            //using epsilon to try and gaurd against float rounding errors.
+            //using epsilon to try and guard against float rounding errors.
             return (point.X > (LowerBound.X + Settings.Epsilon) && point.X < (UpperBound.X - Settings.Epsilon) &&
                     (point.Y > (LowerBound.Y + Settings.Epsilon) && point.Y < (UpperBound.Y - Settings.Epsilon)));
         }
@@ -199,17 +173,11 @@ namespace VelcroPhysics.Primitives
             Vector2 d1 = b.LowerBound - a.UpperBound;
             Vector2 d2 = a.LowerBound - b.UpperBound;
 
-            if (d1.X > 0.0f || d1.Y > 0.0f)
-                return false;
-
-            if (d2.X > 0.0f || d2.Y > 0.0f)
-                return false;
-
-            return true;
+            return (d1.X <= 0) && (d1.Y <= 0) && (d2.X <= 0) && (d2.Y <= 0);
         }
 
         /// <summary>
-        /// Raycast against this AABB using the specificed points and maxfraction (found in input)
+        /// Raycast against this AABB using the specified points and maxfraction (found in input)
         /// </summary>
         /// <param name="output">The results of the raycast.</param>
         /// <param name="input">The parameters for the raycast.</param>
