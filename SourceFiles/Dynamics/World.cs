@@ -841,7 +841,7 @@ namespace VelcroPhysics.Dynamics
                 subStep.dt = (1.0f - minAlpha) * step.dt;
                 subStep.inv_dt = 1.0f / subStep.dt;
                 subStep.dtRatio = 1.0f;
-                Island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex, false);
+                Island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
                 for (int i = 0; i < Island.BodyCount; ++i)

@@ -307,7 +307,7 @@ namespace VelcroPhysics.Dynamics.Solver
             }
         }
 
-        internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB, bool warmstarting)
+        internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB)
         {
             Debug.Assert(toiIndexA < BodyCount);
             Debug.Assert(toiIndexB < BodyCount);
