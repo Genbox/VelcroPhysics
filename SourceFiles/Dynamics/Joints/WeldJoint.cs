@@ -229,6 +229,12 @@ namespace VelcroPhysics.Dynamics.Joints
                 invM += _gamma;
                 _mass.ez.Z = invM != 0.0f ? 1.0f / invM : 0.0f;
             }
+            else if (K.ez.Z == 0.0f)
+            {
+                K.GetInverse22(ref _mass);
+                _gamma = 0.0f;
+                _bias = 0.0f;
+            }
             else
             {
                 K.GetSymInverse33(ref _mass);
@@ -371,7 +377,17 @@ namespace VelcroPhysics.Dynamics.Joints
 
                 Vector3 C = new Vector3(C1.X, C1.Y, C2);
 
-                Vector3 impulse = -K.Solve33(C);
+                Vector3 impulse;
+                if (K.ez.Z > 0.0f)
+                {
+                    impulse = -K.Solve33(C);
+                }
+                else
+                {
+                    Vector2 impulse2 = -K.Solve22(C1);
+                    impulse = new Vector3(impulse2.X, impulse2.Y, 0.0f);
+                }
+
                 Vector2 P = new Vector2(impulse.X, impulse.Y);
 
                 cA -= mA * P;
