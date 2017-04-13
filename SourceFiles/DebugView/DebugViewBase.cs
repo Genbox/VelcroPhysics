@@ -18,7 +18,7 @@ namespace VelcroPhysics.DebugView
             World = world;
         }
 
-        protected World World { get; private set; }
+        protected World World { get; }
 
         /// <summary>
         /// Gets or sets the debug view flags.

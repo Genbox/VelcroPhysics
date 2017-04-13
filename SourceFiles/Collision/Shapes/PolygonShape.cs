@@ -93,7 +93,7 @@ namespace VelcroPhysics.Collision.Shapes
 
                 if (Settings.UseConvexHullPolygons)
                 {
-                    //Velcro note: This check is required as the GiftWrap algorithm early exits on triangles
+                    //Velcro: This check is required as the GiftWrap algorithm early exits on triangles
                     //So instead of giftwrapping a triangle, we just force it to be clock wise.
                     if (_vertices.Count <= 3)
                         _vertices.ForceCounterClockWise();
@@ -106,12 +106,11 @@ namespace VelcroPhysics.Collision.Shapes
                 // Compute normals. Ensure the edges have non-zero length.
                 for (int i = 0; i < _vertices.Count; ++i)
                 {
-                    int next = i + 1 < _vertices.Count ? i + 1 : 0;
-                    Vector2 edge = _vertices[next] - _vertices[i];
+                    int i1 = i;
+                    int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
+                    Vector2 edge = _vertices[i2] - _vertices[i1];
                     Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
-
-                    //Velcro: Optimized Normals.Add(MathHelper.Cross(edge, 1.0f));
-                    Vector2 temp = new Vector2(edge.Y, -edge.X);
+                    Vector2 temp = MathUtils.Cross(edge, 1.0f);
                     temp.Normalize();
                     _normals.Add(temp);
                 }

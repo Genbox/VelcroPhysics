@@ -35,7 +35,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private readonly PolygonShape _polygonA;
         private readonly PolygonShape _polygonB;
         private float _angleB;
-        private Vector2 _positionB = Vector2.Zero;
+        private Vector2 _positionB;
         private Transform _transformA;
         private Transform _transformB;
 
