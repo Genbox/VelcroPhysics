@@ -66,7 +66,7 @@ namespace VelcroPhysics.Collision.Shapes
             _radius = Settings.PolygonRadius;
 
             Debug.Assert(vertices != null && vertices.Count >= 3);
-            Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); // FPE. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
+            Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); //Velcro. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
 
             for (int i = 1; i < vertices.Count; ++i)
             {

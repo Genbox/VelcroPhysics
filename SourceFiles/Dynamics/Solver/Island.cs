@@ -111,7 +111,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 {
                     // Integrate velocities.
 
-                    // FPE: Only apply gravity if the body wants it.
+                    //Velcro: Only apply gravity if the body wants it.
                     if (b.IgnoreGravity)
                         v += h * (b._invMass * b._force);
                     else
