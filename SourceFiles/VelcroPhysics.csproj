@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
     <Authors>Ian Qvist</Authors>
   </PropertyGroup>
 
@@ -9,7 +9,7 @@
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_4</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
+  <ItemGroup>
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
 
