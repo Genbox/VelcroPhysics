@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SourceFiles\VelcroPhysics.csproj" />
+    <ProjectReference Include="..\VelcroPhysics\VelcroPhysics.csproj" />
   </ItemGroup>
 
   <ItemGroup>

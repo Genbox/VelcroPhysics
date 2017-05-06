@@ -6,9 +6,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
-    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SourceFiles\VelcroPhysics.csproj" />
+    <ProjectReference Include="..\VelcroPhysics\VelcroPhysics.csproj" />
   </ItemGroup>
 
 </Project>

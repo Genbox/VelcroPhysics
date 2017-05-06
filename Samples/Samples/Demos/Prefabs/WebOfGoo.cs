@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
 
 namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {

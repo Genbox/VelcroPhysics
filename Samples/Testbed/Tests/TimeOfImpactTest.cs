@@ -23,9 +23,9 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

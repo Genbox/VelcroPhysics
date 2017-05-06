@@ -4,10 +4,10 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using VelcroPhysics.Primitives;
-using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
 using VelcroPhysics.Tools.PolygonManipulation;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
 namespace VelcroPhysics.ContentPipeline.TextureTesselation
 {

@@ -26,10 +26,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Extensions.DebugViewBase;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {
@@ -46,7 +47,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         private int _count;
 
         internal CircleShape Circle = new CircleShape(0, 0);
-        internal DebugView.DebugView DebugDraw;
+        internal DebugView.MonoGame.DebugView DebugDraw;
         internal Transform Transform;
 
         private void DrawFixture(Fixture fixture)

@@ -6,10 +6,11 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Tools.PolygonManipulation;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Tools.Cutting;
+using VelcroPhysics.Tools.Cutting.Simple;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

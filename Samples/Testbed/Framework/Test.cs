@@ -29,15 +29,16 @@ using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Primitives;
-using VelcroPhysics.Serialization;
+using VelcroPhysics.Extensions.DebugViewBase;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.Serialization.XML;
 
 namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public class Test
     {
         private FixedMouseJoint _fixedMouseJoint;
-        internal DebugView.DebugView DebugView;
+        internal DebugView.MonoGame.DebugView DebugView;
         internal int StepCount;
         internal int TextLine;
         internal World World;
@@ -59,7 +60,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
         public virtual void Initialize()
         {
-            DebugView = new DebugView.DebugView(World);
+            DebugView = new DebugView.MonoGame.DebugView(World);
             DebugView.LoadContent(GameInstance.GraphicsDevice, GameInstance.Content);
         }
 

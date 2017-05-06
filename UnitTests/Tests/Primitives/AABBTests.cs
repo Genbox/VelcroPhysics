@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Primitives;
+using VelcroPhysics.Shared;
 using Xunit;
 
 namespace UnitTests.Tests.Primitives

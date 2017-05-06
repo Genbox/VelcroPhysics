@@ -65,8 +65,8 @@
     <None Include="Content\Font.spritefont" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SourceFiles\VelcroPhysics.MonoGame.csproj">
-      <Project>{9aced9b4-08b5-4541-ab69-7e0da798f489}</Project>
+    <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj">
+      <Project>{49e14821-6543-4ab8-bb81-1eb7aab85b04}</Project>
       <Name>VelcroPhysics.MonoGame</Name>
     </ProjectReference>
   </ItemGroup>

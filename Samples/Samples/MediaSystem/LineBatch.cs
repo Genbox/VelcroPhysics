@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Samples2.MediaSystem
 {

@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.DebugView;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Extensions.DebugViewBase;
+using VelcroPhysics.DebugView.MonoGame;
 
 namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {
@@ -18,7 +19,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
         private Body _userAgent;
 
         protected Camera2D Camera;
-        protected DebugView.DebugView DebugView;
+        protected DebugView.MonoGame.DebugView DebugView;
         protected World World;
 
         protected PhysicsDemoScreen()
@@ -64,7 +65,7 @@ namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 
             if (DebugView == null)
             {
-                DebugView = new DebugView.DebugView(World);
+                DebugView = new DebugView.MonoGame.DebugView(World);
                 DebugView.DefaultShapeColor = Color.White;
                 DebugView.SleepingShapeColor = Color.LightGray;
                 DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);

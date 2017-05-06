@@ -6,7 +6,7 @@ using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

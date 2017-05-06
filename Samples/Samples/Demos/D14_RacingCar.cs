@@ -8,10 +8,10 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Utilities;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

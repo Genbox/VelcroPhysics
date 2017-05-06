@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Extensions.Controllers.Wind;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
 

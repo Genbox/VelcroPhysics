@@ -6,9 +6,8 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Primitives;
-using VelcroPhysics.Tools.Decomposition;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using Path = System.IO.Path;
 
 namespace VelcroPhysics.Samples.Samples2.MediaSystem

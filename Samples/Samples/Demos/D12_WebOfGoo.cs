@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnitTests.TestObjects;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
 using Xunit;
 
 namespace UnitTests
