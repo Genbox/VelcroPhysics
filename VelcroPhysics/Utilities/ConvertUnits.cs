@@ -5,7 +5,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Shared
+namespace VelcroPhysics.Utilities
 {
     /// <summary>
     /// Convert units between display and simulation units.

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {

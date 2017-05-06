@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
 using VelcroPhysics.Tools.Cutting.Simple;
 using VelcroPhysics.Tools.PolygonManipulation;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Tools.Cutting
 {

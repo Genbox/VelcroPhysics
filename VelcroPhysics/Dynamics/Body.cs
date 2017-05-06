@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics.Delegates;
@@ -33,7 +34,7 @@ using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics
 {

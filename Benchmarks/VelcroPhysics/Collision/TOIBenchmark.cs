@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace Benchmarks.Benchmarks.Collision
 {

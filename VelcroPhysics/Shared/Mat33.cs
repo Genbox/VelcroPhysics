@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Shared
 {

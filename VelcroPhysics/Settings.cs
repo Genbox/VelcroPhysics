@@ -21,6 +21,7 @@
 */
 
 using System;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics

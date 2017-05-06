@@ -23,8 +23,9 @@
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Shared.Utilities
+namespace VelcroPhysics.Utilities
 {
     public static class MathUtils
     {

@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using VelcroPhysics.Collision.Broadphase;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Delegates;
 using VelcroPhysics.Shared;
