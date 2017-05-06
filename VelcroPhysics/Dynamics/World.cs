@@ -66,32 +66,32 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Fires whenever a body has been added
         /// </summary>
-        public BodyDelegate BodyAdded;
+        public BodyHandler BodyAdded;
 
         /// <summary>
         /// Fires whenever a body has been removed
         /// </summary>
-        public BodyDelegate BodyRemoved;
+        public BodyHandler BodyRemoved;
 
         /// <summary>
         /// Fires whenever a fixture has been added
         /// </summary>
-        public FixtureDelegate FixtureAdded;
+        public FixtureHandler FixtureAdded;
 
         /// <summary>
         /// Fires whenever a fixture has been removed
         /// </summary>
-        public FixtureDelegate FixtureRemoved;
+        public FixtureHandler FixtureRemoved;
 
         /// <summary>
         /// Fires whenever a joint has been added
         /// </summary>
-        public JointDelegate JointAdded;
+        public JointHandler JointAdded;
 
         /// <summary>
         /// Fires whenever a joint has been removed
         /// </summary>
-        public JointDelegate JointRemoved;
+        public JointHandler JointRemoved;
 
         /// <summary>
         /// Fires every time a controller is added to the World.
