@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
 using VelcroPhysics.Tools.PolygonManipulation;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.ContentPipeline.TextureTesselation
 {

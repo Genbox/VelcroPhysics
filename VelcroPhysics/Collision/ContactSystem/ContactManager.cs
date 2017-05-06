@@ -27,7 +27,6 @@ using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Handlers;
 using VelcroPhysics.Handlers;
-using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.ContactSystem
 {

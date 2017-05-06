@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Extensions.DebugViewBase
+namespace VelcroPhysics.Extensions.DebugView
 {
     /// Implement and register this class with a World to provide debug drawing of physics
     /// entities in your game.

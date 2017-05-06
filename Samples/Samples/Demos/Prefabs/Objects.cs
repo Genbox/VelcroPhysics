@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
 {

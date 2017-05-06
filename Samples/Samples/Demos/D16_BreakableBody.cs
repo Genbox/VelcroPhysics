@@ -9,6 +9,7 @@ using VelcroPhysics.Samples.Samples2.MediaSystem;
 using VelcroPhysics.Samples.Samples2.ScreenSystem;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Samples2.Demos
 {

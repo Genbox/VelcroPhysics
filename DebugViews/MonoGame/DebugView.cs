@@ -14,10 +14,10 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.Buoyancy;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Extensions.DebugViewBase;
+using VelcroPhysics.Extensions.DebugView;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.DebugView.MonoGame
 {

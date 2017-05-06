@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Extensions.DebugViewBase;
+using VelcroPhysics.Extensions.DebugView;
 using VelcroPhysics.Samples.Samples2.MediaSystem;
 
 namespace VelcroPhysics.Samples.Samples2.ScreenSystem

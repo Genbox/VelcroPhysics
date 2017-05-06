@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Shared;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.HelloWorld
 {

@@ -22,12 +22,13 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

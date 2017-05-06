@@ -21,13 +21,13 @@
 */
 
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.Controllers.Gravity;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

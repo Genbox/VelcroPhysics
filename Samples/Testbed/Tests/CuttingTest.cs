@@ -6,8 +6,8 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
 using VelcroPhysics.Tools.Cutting.Simple;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

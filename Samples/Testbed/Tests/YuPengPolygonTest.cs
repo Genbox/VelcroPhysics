@@ -8,9 +8,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
 using VelcroPhysics.Tools.Cutting;
 using VelcroPhysics.Tools.Cutting.Simple;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

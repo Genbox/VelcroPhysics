@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Extensions.DebugViewBase;
-using VelcroPhysics.DebugView.MonoGame;
+using VelcroPhysics.Extensions.DebugView;
 
 namespace VelcroPhysics.Samples.Samples2.ScreenSystem
 {

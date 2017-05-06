@@ -8,6 +8,7 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using VelcroPhysics.Utilities;
 using Path = System.IO.Path;
 
 namespace VelcroPhysics.Samples.Samples2.MediaSystem

@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Extensions.DebugViewBase
+namespace VelcroPhysics.Extensions.DebugView
 {
     [Flags]
     public enum DebugViewFlags

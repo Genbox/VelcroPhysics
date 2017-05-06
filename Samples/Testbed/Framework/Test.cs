@@ -29,7 +29,6 @@ using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Extensions.DebugViewBase;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Serialization.XML;
 

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Utilities;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {
