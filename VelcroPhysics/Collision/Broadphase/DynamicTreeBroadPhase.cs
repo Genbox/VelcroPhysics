@@ -24,7 +24,7 @@ using System;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Delegates;
+using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Broadphase
@@ -163,7 +163,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// Update the pairs. This results in pair callbacks. This can only add pairs.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        public void UpdatePairs(BroadphaseDelegate callback)
+        public void UpdatePairs(BroadphaseHandler callback)
         {
             // Reset pair buffer
             _pairCount = 0;

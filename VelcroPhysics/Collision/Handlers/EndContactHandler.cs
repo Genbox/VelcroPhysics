@@ -22,10 +22,10 @@
 
 using VelcroPhysics.Collision.ContactSystem;
 
-namespace VelcroPhysics.Dynamics.Delegates
+namespace VelcroPhysics.Collision.Handlers
 {
     /// <summary>
     /// This delegate is called when a contact is deleted
     /// </summary>
-    public delegate void EndContactDelegate(Contact contact);
+    public delegate void EndContactHandler(Contact contact);
 }

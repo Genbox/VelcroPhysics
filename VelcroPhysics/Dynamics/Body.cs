@@ -27,9 +27,9 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Dynamics.Delegates;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
@@ -1209,7 +1209,7 @@ namespace VelcroPhysics.Dynamics
             _xf.p = _sweep.C - MathUtils.Mul(_xf.q, _sweep.LocalCenter);
         }
 
-        public event OnCollisionEventHandler OnCollision
+        public event OnCollisionHandler OnCollision
         {
             add
             {
@@ -1227,7 +1227,7 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        public event OnSeparationEventHandler OnSeparation
+        public event OnSeparationHandler OnSeparation
         {
             add
             {

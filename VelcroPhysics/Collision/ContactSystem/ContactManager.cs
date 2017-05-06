@@ -23,8 +23,10 @@
 using System.Collections.Generic;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Delegates;
+using VelcroPhysics.Dynamics.Handlers;
+using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.ContactSystem
@@ -34,32 +36,32 @@ namespace VelcroPhysics.Collision.ContactSystem
         /// <summary>
         /// Fires when a contact is created
         /// </summary>
-        public BeginContactDelegate BeginContact;
+        public BeginContactHandler BeginContact;
 
         /// <summary>
         /// The filter used by the contact manager.
         /// </summary>
-        public CollisionFilterDelegate ContactFilter;
+        public CollisionFilterHandler ContactFilter;
 
         /// <summary>
         /// Fires when a contact is deleted
         /// </summary>
-        public EndContactDelegate EndContact;
+        public EndContactHandler EndContact;
 
         /// <summary>
         /// Fires when the broadphase detects that two Fixtures are close to each other.
         /// </summary>
-        public BroadphaseDelegate OnBroadphaseCollision;
+        public BroadphaseHandler OnBroadphaseCollision;
 
         /// <summary>
         /// Fires after the solver has run
         /// </summary>
-        public PostSolveDelegate PostSolve;
+        public PostSolveHandler PostSolve;
 
         /// <summary>
         /// Fires before the solver runs
         /// </summary>
-        public PreSolveDelegate PreSolve;
+        public PreSolveHandler PreSolve;
 
         internal ContactManager(IBroadPhase broadPhase)
         {

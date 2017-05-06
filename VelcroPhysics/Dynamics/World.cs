@@ -28,7 +28,7 @@ using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Dynamics.Delegates;
+using VelcroPhysics.Dynamics.Handlers;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
@@ -96,12 +96,12 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Fires every time a controller is added to the World.
         /// </summary>
-        public ControllerDelegate ControllerAdded;
+        public ControllerHandler ControllerAdded;
 
         /// <summary>
         /// Fires every time a controlelr is removed form the World.
         /// </summary>
-        public ControllerDelegate ControllerRemoved;
+        public ControllerHandler ControllerRemoved;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="World" /> class.

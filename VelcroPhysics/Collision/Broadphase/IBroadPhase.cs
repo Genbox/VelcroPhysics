@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Delegates;
+using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Broadphase
@@ -10,7 +10,7 @@ namespace VelcroPhysics.Collision.Broadphase
     public interface IBroadPhase
     {
         int ProxyCount { get; }
-        void UpdatePairs(BroadphaseDelegate callback);
+        void UpdatePairs(BroadphaseHandler callback);
 
         bool TestOverlap(int proxyIdA, int proxyIdB);
 
