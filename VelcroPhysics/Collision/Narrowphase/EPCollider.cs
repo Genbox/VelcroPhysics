@@ -234,7 +234,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 _polygonB.Normals[i] = MathUtils.Mul(_xf.q, polygonB.Normals[i]);
             }
 
-            _radius = 2.0f * Settings.PolygonRadius;
+            _radius = polygonB.Radius + edgeA.Radius;
 
             manifold.PointCount = 0;
 
