@@ -430,8 +430,8 @@ namespace VelcroPhysics.Dynamics
                     Debug.Assert(b.Enabled);
                     Island.Add(b);
 
-                    // Make sure the body is awake.
-                    b.Awake = true;
+                    // Make sure the body is awake (without resetting sleep timer).
+                    b._flags |= BodyFlags.AwakeFlag;
 
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.

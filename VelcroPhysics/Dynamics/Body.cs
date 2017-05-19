@@ -272,10 +272,6 @@ namespace VelcroPhysics.Dynamics
             get { return (_flags & BodyFlags.AwakeFlag) == BodyFlags.AwakeFlag; }
             set
             {
-                //Velcro: We ignore it if you set it to the same value
-                if (value == Awake)
-                    return;
-
                 if (value)
                 {
                     _flags |= BodyFlags.AwakeFlag;

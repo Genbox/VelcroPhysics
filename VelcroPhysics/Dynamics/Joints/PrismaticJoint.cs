@@ -235,12 +235,12 @@ namespace VelcroPhysics.Dynamics.Joints
             {
                 Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false, "Warning: limits does currently not work with fixed rotation");
 
-                if (value != _enableLimit)
-                {
-                    WakeBodies();
-                    _enableLimit = value;
-                    _impulse.Z = 0;
-                }
+                if (value == _enableLimit)
+                    return;
+
+                WakeBodies();
+                _enableLimit = value;
+                _impulse.Z = 0;
             }
         }
 
@@ -253,12 +253,12 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _lowerTranslation; }
             set
             {
-                if (value != _lowerTranslation)
-                {
-                    WakeBodies();
-                    _lowerTranslation = value;
-                    _impulse.Z = 0.0f;
-                }
+                if (value == _lowerTranslation)
+                    return;
+
+                WakeBodies();
+                _lowerTranslation = value;
+                _impulse.Z = 0.0f;
             }
         }
 
@@ -271,12 +271,12 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _upperTranslation; }
             set
             {
-                if (value != _upperTranslation)
-                {
-                    WakeBodies();
-                    _upperTranslation = value;
-                    _impulse.Z = 0.0f;
-                }
+                if (value == _upperTranslation)
+                    return;
+
+                WakeBodies();
+                _upperTranslation = value;
+                _impulse.Z = 0.0f;
             }
         }
 
@@ -289,6 +289,9 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _enableMotor; }
             set
             {
+                if (value == _enableMotor)
+                    return;
+
                 WakeBodies();
                 _enableMotor = value;
             }
@@ -302,6 +305,9 @@ namespace VelcroPhysics.Dynamics.Joints
         {
             set
             {
+                if (value == _motorSpeed)
+                    return;
+
                 WakeBodies();
                 _motorSpeed = value;
             }
@@ -317,6 +323,9 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _maxMotorForce; }
             set
             {
+                if (value == _maxMotorForce)
+                    return;
+
                 WakeBodies();
                 _maxMotorForce = value;
             }
@@ -381,13 +390,13 @@ namespace VelcroPhysics.Dynamics.Joints
         /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
         {
-            if (upper != _upperTranslation || lower != _lowerTranslation)
-            {
-                WakeBodies();
-                _upperTranslation = upper;
-                _lowerTranslation = lower;
-                _impulse.Z = 0.0f;
-            }
+            if (upper == _upperTranslation && lower == _lowerTranslation)
+                return;
+
+            WakeBodies();
+            _upperTranslation = upper;
+            _lowerTranslation = lower;
+            _impulse.Z = 0.0f;
         }
 
         /// <summary>

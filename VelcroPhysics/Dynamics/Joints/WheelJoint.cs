@@ -169,6 +169,9 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _motorSpeed; }
             set
             {
+                if (value == _motorSpeed)
+                    return;
+
                 WakeBodies();
                 _motorSpeed = value;
             }
@@ -182,6 +185,9 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _maxMotorTorque; }
             set
             {
+                if (value == _maxMotorTorque)
+                    return;
+
                 WakeBodies();
                 _maxMotorTorque = value;
             }
@@ -278,6 +284,9 @@ namespace VelcroPhysics.Dynamics.Joints
             get { return _enableMotor; }
             set
             {
+                if (value == _enableMotor)
+                    return;
+
                 WakeBodies();
                 _enableMotor = value;
             }
