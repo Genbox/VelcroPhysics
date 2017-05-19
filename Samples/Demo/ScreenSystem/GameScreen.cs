@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.Samples.Samples2.ScreenSystem
+namespace VelcroPhysics.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// Enum describes the screen transition state.

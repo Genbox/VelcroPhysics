@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.Demos.Prefabs;
+using VelcroPhysics.Samples.Demo.MediaSystem;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.Demos
+namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D13_TheoJansenWalker : PhysicsDemoScreen
     {

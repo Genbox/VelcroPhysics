@@ -19,7 +19,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.DebugView.MonoGame
+namespace VelcroPhysics.DebugViews.MonoGame
 {
     /// <summary>
     /// A debug view shows you what happens inside the physics engine. You can view

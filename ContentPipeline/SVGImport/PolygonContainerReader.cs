@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Content;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     public class PolygonContainerReader : ContentTypeReader<PolygonContainer>
     {

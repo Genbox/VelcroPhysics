@@ -11,7 +11,7 @@ using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 using Path = System.IO.Path;
 
-namespace VelcroPhysics.Samples.Samples2.MediaSystem
+namespace VelcroPhysics.Samples.Demo.MediaSystem
 {
     public class ContentWrapper : GameComponent
     {

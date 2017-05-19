@@ -4,11 +4,11 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.MediaSystem;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2
+namespace VelcroPhysics.Samples.Demo
 {
     /// <summary>
     /// This is the main type for the samples

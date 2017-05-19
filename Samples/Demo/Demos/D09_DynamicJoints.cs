@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.Demos.Prefabs;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 
-namespace VelcroPhysics.Samples.Samples2.Demos
+namespace VelcroPhysics.Samples.Demo.Demos
 {
     public class D09_DynamicJoints : PhysicsDemoScreen
     {

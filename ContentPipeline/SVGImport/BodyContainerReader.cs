@@ -4,7 +4,7 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     public class BodyContainerReader : ContentTypeReader<BodyContainer>
     {

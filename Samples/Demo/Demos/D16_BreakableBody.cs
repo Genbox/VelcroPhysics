@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.Demos.Prefabs;
+using VelcroPhysics.Samples.Demo.MediaSystem;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.Demos
+namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D16_BreakableBody : PhysicsDemoScreen
     {

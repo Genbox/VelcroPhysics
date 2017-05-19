@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Samples.Samples2.Demos.Prefabs;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.Demos.Prefabs;
+using VelcroPhysics.Samples.Demo.MediaSystem;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.Demos
+namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D08_DistanceAngleJoint : PhysicsDemoScreen
     {

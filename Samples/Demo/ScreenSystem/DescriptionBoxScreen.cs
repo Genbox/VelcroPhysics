@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.Samples.Samples2.ScreenSystem
+namespace VelcroPhysics.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"

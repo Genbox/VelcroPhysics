@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentTypeWriter]
     public class BodyContainerWriter : ContentTypeWriter<BodyContainer>

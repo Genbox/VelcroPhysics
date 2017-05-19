@@ -4,10 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
+using VelcroPhysics.Samples.Demo.MediaSystem;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.Demos.Prefabs
+namespace VelcroPhysics.Samples.Demo.Demos.Prefabs
 {
     public enum ObjectType
     {

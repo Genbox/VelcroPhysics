@@ -9,7 +9,7 @@ using VelcroPhysics.Tools.PolygonManipulation;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.ContentPipeline.TextureTesselation
+namespace VelcroPhysics.ContentPipelines.TextureTesselation
 {
     [ContentProcessor(DisplayName = "Texture to Vertices")]
     public class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, List<Vertices>>

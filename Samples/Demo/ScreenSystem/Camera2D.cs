@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.ScreenSystem
+namespace VelcroPhysics.Samples.Demo.ScreenSystem
 {
     public class Camera2D
     {

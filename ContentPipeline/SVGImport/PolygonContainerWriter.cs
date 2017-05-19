@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentTypeWriter]
     public class PolygonContainerWriter : ContentTypeWriter<PolygonContainer>

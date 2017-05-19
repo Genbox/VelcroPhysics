@@ -8,7 +8,7 @@ using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentProcessor(DisplayName = "Body Processor")]
     public class BodyProcessor : ContentProcessor<List<RawBodyTemplate>, BodyContainer>

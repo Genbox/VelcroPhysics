@@ -28,7 +28,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     public class SVGPathParser
     {

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Samples.Samples2.MediaSystem
+namespace VelcroPhysics.Samples.Demo.MediaSystem
 {
     public class LineBatch : IDisposable
     {

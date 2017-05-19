@@ -8,12 +8,12 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Samples.Samples2.MediaSystem;
-using VelcroPhysics.Samples.Samples2.ScreenSystem;
+using VelcroPhysics.Samples.Demo.MediaSystem;
+using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Samples.Samples2.Demos
+namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D14_RacingCar : PhysicsDemoScreen
     {
