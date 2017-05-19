@@ -2,8 +2,6 @@
 
 namespace VelcroPhysics.Samples.HelloWorld
 {
-#if WINDOWS || LINUX
-
     public static class Program
     {
         [STAThread]
@@ -13,6 +11,4 @@ namespace VelcroPhysics.Samples.HelloWorld
                 game.Run();
         }
     }
-
-#endif
 }
