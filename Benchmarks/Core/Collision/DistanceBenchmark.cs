@@ -5,7 +5,7 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 
-namespace Benchmarks.Benchmarks.Collision
+namespace Benchmarks.Core.Collision
 {
     [MemoryDiagnoser]
     public class DistanceBenchmark

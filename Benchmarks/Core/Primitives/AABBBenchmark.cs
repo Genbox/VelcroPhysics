@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace Benchmarks.Benchmarks.Primitives
+namespace Benchmarks.Core.Primitives
 {
     public class AABBBenchmark
     {

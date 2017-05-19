@@ -2,12 +2,11 @@
 using BenchmarkDotNet.Attributes;
 using Benchmarks.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
 
-namespace Benchmarks.Benchmarks.Collision
+namespace Benchmarks.Core.Collision
 {
     [MemoryDiagnoser]
     public class BroadphaseBenchmark

@@ -4,7 +4,7 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Utilities;
 
-namespace Benchmarks.Benchmarks.Collision
+namespace Benchmarks.Core.Collision
 {
     [MemoryDiagnoser]
     public class TOIBenchmark
