@@ -10,8 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:..\..\..\ContentPipeline\SVGImport\bin\Debug\net45\VelcroPhysics.ContentPipeline.SVGImport.dll
-/reference:..\..\..\ContentPipeline\TextureTessellation\bin\Debug\net45\VelcroPhysics.ContentPipeline.TextureTesselation.dll
+/reference:..\..\..\ContentPipeline\SVGImport\bin\Debug\net45\VelcroPhysics.ContentPipelines.SVGImport.dll
+/reference:..\..\..\ContentPipeline\TextureTessellation\bin\Debug\net45\VelcroPhysics.ContentPipelines.TextureTesselation.dll
 
 #---------------------------------- Content ---------------------------------#
 
