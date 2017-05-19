@@ -107,18 +107,6 @@ namespace VelcroPhysics.Collision.Narrowphase
                     break;
                 }
 
-                //Velcro: This code was not used anyway.
-                // Compute closest point.
-                //Vector2 p = simplex.GetClosestPoint();
-                //float distanceSqr2 = p.LengthSquared();
-
-                // Ensure progress
-                //if (distanceSqr2 >= distanceSqr1)
-                //{
-                //break;
-                //}
-                //distanceSqr1 = distanceSqr2;
-
                 // Get search direction.
                 Vector2 d = simplex.GetSearchDirection();
 
