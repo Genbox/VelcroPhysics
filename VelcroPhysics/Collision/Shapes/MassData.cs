@@ -11,22 +11,22 @@ namespace VelcroPhysics.Collision.Shapes
         /// <summary>
         /// The area of the shape
         /// </summary>
-        public float Area { get; internal set; }
+        public float Area { get; set; }
 
         /// <summary>
         /// The position of the shape's centroid relative to the shape's origin.
         /// </summary>
-        public Vector2 Centroid { get; internal set; }
+        public Vector2 Centroid { get; set; }
 
         /// <summary>
         /// The rotational inertia of the shape about the local origin.
         /// </summary>
-        public float Inertia { get; internal set; }
+        public float Inertia { get; set; }
 
         /// <summary>
         /// The mass of the shape, usually in kilograms.
         /// </summary>
-        public float Mass { get; internal set; }
+        public float Mass { get; set; }
 
         /// <summary>
         /// The equal operator
