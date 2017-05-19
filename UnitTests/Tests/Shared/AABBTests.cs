@@ -2,7 +2,7 @@
 using VelcroPhysics.Shared;
 using Xunit;
 
-namespace UnitTests.Tests.Primitives
+namespace UnitTests.Tests.Shared
 {
     public class AABBTests
     {

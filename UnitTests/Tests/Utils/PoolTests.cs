@@ -4,7 +4,7 @@ using UnitTests.TestObjects;
 using VelcroPhysics.Shared;
 using Xunit;
 
-namespace UnitTests
+namespace UnitTests.Tests.Utils
 {
     public class PoolTests
     {
