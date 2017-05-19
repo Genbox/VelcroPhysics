@@ -46,6 +46,7 @@ namespace VelcroPhysics.Dynamics
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
             MainBody = new Body(_world, position, rotation, BodyType.Dynamic);
+            Parts = new List<Fixture>(8);
 
             foreach (Shape part in shapes)
             {
