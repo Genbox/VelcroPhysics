@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Running;
-using Benchmarks.Benchmarks.Collision;
-using Benchmarks.Benchmarks.Primitives;
-using Benchmarks.Benchmarks.Utils;
+using Benchmarks.Core.Collision;
+using Benchmarks.Core.Primitives;
+using Benchmarks.Core.Utils;
 
 namespace Benchmarks
 {
