@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
-    <AssemblyName>VelcroPhysics.ContentPipeline.TextureTesselation</AssemblyName>
-    <RootNamespace>VelcroPhysics.ContentPipeline.TextureTesselation</RootNamespace>
+    <AssemblyName>VelcroPhysics.ContentPipelines.TextureTesselation</AssemblyName>
+    <RootNamespace>VelcroPhysics.ContentPipelines.TextureTesselation</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
