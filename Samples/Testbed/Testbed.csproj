@@ -174,9 +174,9 @@
     <Content Include="Content\Texture.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DebugViews\MonoGame\DebugViews.MonoGame.csproj">
+    <ProjectReference Include="..\..\DebugViews\MonoGame\MonoGame.csproj">
       <Project>{e15a7aa9-eeb9-411d-9bdd-322b8ad1789f}</Project>
-      <Name>DebugViews.MonoGame</Name>
+      <Name>MonoGame</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj">
       <Project>{49e14821-6543-4ab8-bb81-1eb7aab85b04}</Project>

@@ -9,8 +9,8 @@
     <ProjectGuid>{D4856F74-C825-412D-87FB-3C4A74D1B619}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VelcroPhysics.Samples.Samples2</RootNamespace>
-    <AssemblyName>VelcroPhysics.Samples.Samples2</AssemblyName>
+    <RootNamespace>VelcroPhysics.Samples.Demo</RootNamespace>
+    <AssemblyName>VelcroPhysics.Samples.Demo</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -132,9 +132,9 @@
       <Project>{2e48ca68-bc53-4b93-8a19-a7b738cdb62a}</Project>
       <Name>SVGImport</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DebugViews\MonoGame\DebugViews.MonoGame.csproj">
+    <ProjectReference Include="..\..\DebugViews\MonoGame\MonoGame.csproj">
       <Project>{e15a7aa9-eeb9-411d-9bdd-322b8ad1789f}</Project>
-      <Name>DebugViews.MonoGame</Name>
+      <Name>MonoGame</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj">
       <Project>{49e14821-6543-4ab8-bb81-1eb7aab85b04}</Project>

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
-    <AssemblyName>VelcroPhysics.DebugView.MonoGame</AssemblyName>
-    <RootNamespace>VelcroPhysics.DebugView.MonoGame</RootNamespace>
+    <AssemblyName>VelcroPhysics.DebugViews.MonoGame</AssemblyName>
+    <RootNamespace>VelcroPhysics.DebugViews.MonoGame</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

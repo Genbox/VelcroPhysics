@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "Samples\HelloWorld\HelloWorld.csproj", "{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}"
 EndProject
@@ -16,14 +16,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVGImport", "ContentPipelin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextureTessellation", "ContentPipeline\TextureTessellation\TextureTessellation.csproj", "{6EE8349B-EA85-414D-B79D-B4B7B39B16A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples\Samples.csproj", "{D4856F74-C825-412D-87FB-3C4A74D1B619}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Samples\Samples\Demo.csproj", "{D4856F74-C825-412D-87FB-3C4A74D1B619}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6EE8349B-EA85-414D-B79D-B4B7B39B16A7} = {6EE8349B-EA85-414D-B79D-B4B7B39B16A7}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame", "VelcroPhysics\VelcroPhysics.MonoGame.csproj", "{49E14821-6543-4AB8-BB81-1EB7AAB85B04}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebugViews.MonoGame", "DebugViews\MonoGame\DebugViews.MonoGame.csproj", "{E15A7AA9-EEB9-411D-9BDD-322B8AD1789F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame", "DebugViews\MonoGame\MonoGame.csproj", "{E15A7AA9-EEB9-411D-9BDD-322B8AD1789F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
