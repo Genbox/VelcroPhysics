@@ -168,19 +168,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DebugView\DebugView.csproj">
-      <Project>{c2cf6d08-283b-4621-b147-ed67f05bcdfc}</Project>
-      <Name>DebugView</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SourceFiles\VelcroPhysics.MonoGame.csproj">
-      <Project>{9aced9b4-08b5-4541-ab69-7e0da798f489}</Project>
-      <Name>VelcroPhysics.MonoGame</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\Rock.png" />
     <Content Include="Content\Terrain.png" />
     <Content Include="Content\Texture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DebugViews\MonoGame\MonoGame.csproj">
+      <Project>{e15a7aa9-eeb9-411d-9bdd-322b8ad1789f}</Project>
+      <Name>MonoGame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj">
+      <Project>{49e14821-6543-4ab8-bb81-1eb7aab85b04}</Project>
+      <Name>VelcroPhysics.MonoGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

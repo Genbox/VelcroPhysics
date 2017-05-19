@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     public struct RawFixtureTemplate
     {

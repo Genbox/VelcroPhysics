@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "BodyProcessor")]
     public class SVGImporter : ContentImporter<List<RawBodyTemplate>>

@@ -4,12 +4,12 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using VelcroPhysics.Primitives;
-using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.PolygonManipulation;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.ContentPipeline.TextureTesselation
+namespace VelcroPhysics.ContentPipelines.TextureTesselation
 {
     [ContentProcessor(DisplayName = "Texture to Vertices")]
     public class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, List<Vertices>>

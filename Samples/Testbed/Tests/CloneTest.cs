@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Tools.Decomposition;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

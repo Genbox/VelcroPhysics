@@ -3,10 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Extensions.PhysicsLogics.Explosion;
+using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Tools.PhysicsLogic;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

@@ -1,8 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Tools;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

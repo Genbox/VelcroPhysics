@@ -26,18 +26,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Narrowphase;
+using VelcroPhysics.DebugViews.MonoGame;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Primitives;
-using VelcroPhysics.Serialization;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.Serialization.XML;
 
 namespace VelcroPhysics.Samples.Testbed.Framework
 {
     public class Test
     {
         private FixedMouseJoint _fixedMouseJoint;
-        internal DebugView.DebugView DebugView;
+        internal DebugView DebugView;
         internal int StepCount;
         internal int TextLine;
         internal World World;
@@ -59,7 +60,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
         public virtual void Initialize()
         {
-            DebugView = new DebugView.DebugView(World);
+            DebugView = new DebugView(World);
             DebugView.LoadContent(GameInstance.GraphicsDevice, GameInstance.Content);
         }
 

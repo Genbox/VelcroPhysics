@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentProcessor(DisplayName = "Polygon Processor")]
     public class PolygonProcessor : ContentProcessor<List<RawBodyTemplate>, PolygonContainer>

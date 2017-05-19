@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <AssemblyName>VelcroPhysics.DebugViews.MonoGame</AssemblyName>
+    <RootNamespace>VelcroPhysics.DebugViews.MonoGame</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.6.0.1625" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content\Font.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -4,10 +4,11 @@ using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Serialization;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.PathGenerator;
+using VelcroPhysics.Tools.Serialization.XML;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

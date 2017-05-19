@@ -4,11 +4,11 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
+using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
-using VelcroPhysics.Tools.Decomposition;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.ContentPipeline.SVGImport
+namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentProcessor(DisplayName = "Body Processor")]
     public class BodyProcessor : ContentProcessor<List<RawBodyTemplate>, BodyContainer>

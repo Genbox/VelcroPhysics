@@ -1,5 +1,5 @@
-﻿using VelcroPhysics.Primitives.Optimization;
-using VelcroPhysics.Utils;
+﻿using VelcroPhysics.Shared;
+using VelcroPhysics.Shared.Optimization;
 
 namespace Benchmarks.TestObjects
 {

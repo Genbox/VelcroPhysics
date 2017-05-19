@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.PolygonManipulation;
 
 namespace VelcroPhysics.Samples.Testbed.Tests

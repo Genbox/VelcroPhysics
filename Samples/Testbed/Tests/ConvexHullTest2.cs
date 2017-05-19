@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
-using VelcroPhysics.Tools.ConvexHull;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.ConvexHull.ChainHull;
+using VelcroPhysics.Tools.ConvexHull.GiftWrap;
+using VelcroPhysics.Tools.ConvexHull.Melkman;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {

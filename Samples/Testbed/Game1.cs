@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.DebugView;
+using VelcroPhysics.Extensions.DebugView;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Samples.Testbed.Tests;
-using VelcroPhysics.Utils;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed
 {

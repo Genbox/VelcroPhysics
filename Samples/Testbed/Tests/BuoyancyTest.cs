@@ -1,9 +1,9 @@
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Controllers;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Extensions.Controllers.Buoyancy;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
 {
