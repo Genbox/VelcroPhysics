@@ -46,7 +46,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                 if (rawBody.Name == "importer_default_path_container")
                     continue;
 
-                BodyTemplate currentBody = new BodyTemplate();
+                BodyTemplate2 currentBody = new BodyTemplate2();
                 currentBody.Mass = rawBody.Mass;
                 currentBody.BodyType = rawBody.BodyType;
                 foreach (RawFixtureTemplate rawFixture in rawBody.Fixtures)
@@ -59,7 +59,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                             List<Vertices> partition = Triangulate.ConvexPartition(paths[i].Vertices, TriangulationAlgorithm.Bayazit);
                             foreach (Vertices v in partition)
                             {
-                                currentBody.Fixtures.Add(new FixtureTemplate
+                                currentBody.Fixtures.Add(new FixtureTemplate2
                                 {
                                     Shape = new PolygonShape(v, rawFixture.Density),
                                     Restitution = rawFixture.Restitution,
@@ -79,7 +79,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                             {
                                 shape = new EdgeShape(paths[i].Vertices[0], paths[i].Vertices[1]);
                             }
-                            currentBody.Fixtures.Add(new FixtureTemplate
+                            currentBody.Fixtures.Add(new FixtureTemplate2
                             {
                                 Shape = shape,
                                 Restitution = rawFixture.Restitution,

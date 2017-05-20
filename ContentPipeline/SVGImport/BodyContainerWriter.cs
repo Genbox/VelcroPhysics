@@ -14,13 +14,13 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         protected override void Write(ContentWriter output, BodyContainer container)
         {
             output.Write(container.Count);
-            foreach (KeyValuePair<string, BodyTemplate> p in container)
+            foreach (KeyValuePair<string, BodyTemplate2> p in container)
             {
                 output.Write(p.Key);
                 output.Write(p.Value.Mass);
                 output.Write((int)p.Value.BodyType);
                 output.Write(p.Value.Fixtures.Count);
-                foreach (FixtureTemplate f in p.Value.Fixtures)
+                foreach (FixtureTemplate2 f in p.Value.Fixtures)
                 {
                     output.Write(f.Name);
                     output.Write(f.Restitution);

@@ -16,7 +16,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             for (int i = 0; i < count; i++)
             {
                 string name = input.ReadString();
-                BodyTemplate body = new BodyTemplate
+                BodyTemplate2 body = new BodyTemplate2
                 {
                     Mass = input.ReadSingle(),
                     BodyType = (BodyType)input.ReadInt32()
@@ -24,7 +24,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                 int fixtureCount = input.ReadInt32();
                 for (int j = 0; j < fixtureCount; j++)
                 {
-                    FixtureTemplate fixture = new FixtureTemplate
+                    FixtureTemplate2 fixture = new FixtureTemplate2
                     {
                         Name = input.ReadString(),
                         Restitution = input.ReadSingle(),

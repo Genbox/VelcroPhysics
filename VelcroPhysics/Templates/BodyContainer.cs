@@ -2,5 +2,5 @@
 
 namespace VelcroPhysics.Templates
 {
-    public class BodyContainer : Dictionary<string, BodyTemplate> { }
+    public class BodyContainer : Dictionary<string, BodyTemplate2> { }
 }
