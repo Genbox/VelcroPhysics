@@ -17,7 +17,6 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             foreach (KeyValuePair<string, BodyTemplateExt> p in container)
             {
                 output.Write(p.Key);
-                //output.Write(p.Value.Mass);
                 output.Write((int)p.Value.Type);
                 output.Write(p.Value.Fixtures.Count);
                 foreach (FixtureTemplateExt f in p.Value.Fixtures)
@@ -29,51 +28,51 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     switch (f.Shape.ShapeType)
                     {
                         case ShapeType.Circle:
-                        {
-                            CircleShape circle = (CircleShape)f.Shape;
-                            output.Write(circle.Density);
-                            output.Write(circle.Radius);
-                            output.Write(circle.Position);
-                        }
+                            {
+                                CircleShape circle = (CircleShape)f.Shape;
+                                output.Write(circle.Density);
+                                output.Write(circle.Radius);
+                                output.Write(circle.Position);
+                            }
                             break;
                         case ShapeType.Polygon:
-                        {
-                            PolygonShape poly = (PolygonShape)f.Shape;
-                            output.Write(poly.Density);
-                            output.Write(poly.Vertices.Count);
-                            foreach (Vector2 v in poly.Vertices)
                             {
-                                output.Write(v);
+                                PolygonShape poly = (PolygonShape)f.Shape;
+                                output.Write(poly.Density);
+                                output.Write(poly.Vertices.Count);
+                                foreach (Vector2 v in poly.Vertices)
+                                {
+                                    output.Write(v);
+                                }
+                                output.Write(poly.MassData.Centroid);
                             }
-                            output.Write(poly.MassData.Centroid);
-                        }
                             break;
                         case ShapeType.Edge:
-                        {
-                            EdgeShape edge = (EdgeShape)f.Shape;
-                            output.Write(edge.Vertex1);
-                            output.Write(edge.Vertex2);
-                            output.Write(edge.HasVertex0);
-                            if (edge.HasVertex0)
                             {
-                                output.Write(edge.Vertex0);
+                                EdgeShape edge = (EdgeShape)f.Shape;
+                                output.Write(edge.Vertex1);
+                                output.Write(edge.Vertex2);
+                                output.Write(edge.HasVertex0);
+                                if (edge.HasVertex0)
+                                {
+                                    output.Write(edge.Vertex0);
+                                }
+                                output.Write(edge.HasVertex3);
+                                if (edge.HasVertex3)
+                                {
+                                    output.Write(edge.Vertex3);
+                                }
                             }
-                            output.Write(edge.HasVertex3);
-                            if (edge.HasVertex3)
-                            {
-                                output.Write(edge.Vertex3);
-                            }
-                        }
                             break;
                         case ShapeType.Chain:
-                        {
-                            ChainShape chain = (ChainShape)f.Shape;
-                            output.Write(chain.Vertices.Count);
-                            foreach (Vector2 v in chain.Vertices)
                             {
-                                output.Write(v);
+                                ChainShape chain = (ChainShape)f.Shape;
+                                output.Write(chain.Vertices.Count);
+                                foreach (Vector2 v in chain.Vertices)
+                                {
+                                    output.Write(v);
+                                }
                             }
-                        }
                             break;
                         default:
                             throw new Exception("Shape type not supported!");

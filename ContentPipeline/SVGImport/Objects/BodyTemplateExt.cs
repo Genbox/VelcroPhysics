@@ -10,8 +10,9 @@ namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
         public List<FixtureTemplateExt> Fixtures;
         public string Name { get; set; }
 
-        public BodyTemplateExt()
+        public BodyTemplateExt(string name)
         {
+            Name = name;
             Fixtures = new List<FixtureTemplateExt>();
         }
 

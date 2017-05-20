@@ -47,7 +47,6 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     continue;
 
                 BodyTemplateExt currentBody = new BodyTemplateExt();
-                //currentBody.Mass = rawBody.Mass;
                 currentBody.Type = rawBody.Type;
 
                 foreach (FixtureTemplateExt rawFixture in rawBody.Fixtures)

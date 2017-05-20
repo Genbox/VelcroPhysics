@@ -26,12 +26,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             _transformations.Push(Matrix.Identity);
 
             _parsedSVG = new List<BodyTemplateExt>();
-            _parsedSVG.Add(new BodyTemplateExt
-            {
-                Name = "importer_default_path_container",
-                Fixtures = new List<FixtureTemplateExt>(),
-                //Mass = 0f
-            });
+            _parsedSVG.Add(new BodyTemplateExt("importer_default_path_container"));
 
             XmlDocument input = new XmlDocument();
             input.Load(filename);
@@ -69,15 +64,13 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     if (currentElement.HasAttribute("fp_mass"))
                         float.TryParse(currentElement.Attributes["fp_mass"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out bodyMass);
 
-                    _currentBody = new BodyTemplateExt
+                    _currentBody = new BodyTemplateExt(id)
                     {
-                        Fixtures = new List<FixtureTemplateExt>(),
-                        //Mass = bodyMass,
-                        Name = id,
                         Type = type
                     };
                     killBody = true;
                 }
+
                 if (currentElement.Name == "path")
                 {
                     FixtureTemplateExt fixture = new FixtureTemplateExt();
