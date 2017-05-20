@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Content;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 

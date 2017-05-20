@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport

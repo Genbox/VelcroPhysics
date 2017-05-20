@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
@@ -12,8 +13,8 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
     [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "BodyProcessor")]
     public class SVGImporter : ContentImporter<List<RawBodyTemplate>>
     {
-        private const string IsNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
-        private const string IsCommaWhitespace = @"\A[\s,]*";
+        private const string _isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
+        private const string _isCommaWhitespace = @"\A[\s,]*";
         private RawBodyTemplate? _currentBody;
         private List<RawBodyTemplate> _parsedSVG;
 
@@ -60,10 +61,10 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     {
                         type = BodyType.Static;
                     }
-                    string ID = "empty_id";
+                    string id = "empty_id";
                     if (currentElement.HasAttribute("id"))
                     {
-                        ID = currentElement.Attributes["id"].Value;
+                        id = currentElement.Attributes["id"].Value;
                     }
                     float bodyMass = 0f;
                     if (currentElement.HasAttribute("fp_mass"))
@@ -74,7 +75,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     {
                         Fixtures = new List<RawFixtureTemplate>(),
                         Mass = bodyMass,
-                        Name = ID,
+                        Name = id,
                         BodyType = type
                     };
                     killBody = true;
@@ -149,7 +150,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             {
                 if (transformation.StartsWith("matrix"))
                 {
-                    transformation = parseTransformationArguments(transformation, out arguments, out argumentCount);
+                    transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
                     if (argumentCount == 6)
                     {
                         Matrix m = Matrix.Identity;
@@ -164,7 +165,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                 }
                 else if (transformation.StartsWith("scale"))
                 {
-                    transformation = parseTransformationArguments(transformation, out arguments, out argumentCount);
+                    transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
                     if (argumentCount == 1)
                     {
                         arguments[argumentCount++] = arguments[0];
@@ -176,7 +177,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                 }
                 else if (transformation.StartsWith("translate"))
                 {
-                    transformation = parseTransformationArguments(transformation, out arguments, out argumentCount);
+                    transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
                     if (argumentCount == 1)
                     {
                         arguments[argumentCount++] = arguments[0];
@@ -200,7 +201,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             return result;
         }
 
-        private string parseTransformationArguments(string operation, out float[] arguments, out int argumentCount)
+        private string ParseTransformationArguments(string operation, out float[] arguments, out int argumentCount)
         {
             arguments = new float[6];
             argumentCount = 0;
@@ -212,10 +213,10 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
             while (!string.IsNullOrEmpty(parameters))
             {
-                parameters = Regex.Replace(parameters, IsCommaWhitespace, "");
-                if (Regex.IsMatch(parameters, IsNumber))
+                parameters = Regex.Replace(parameters, _isCommaWhitespace, "");
+                if (Regex.IsMatch(parameters, _isNumber))
                 {
-                    int matchLength = Regex.Match(parameters, IsNumber).Length;
+                    int matchLength = Regex.Match(parameters, _isNumber).Length;
                     arguments[argumentCount++] = float.Parse(parameters.Substring(0, matchLength), CultureInfo.InvariantCulture);
                     parameters = parameters.Remove(0, matchLength);
                 }

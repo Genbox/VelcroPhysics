@@ -1,6 +1,6 @@
 using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Templates
+namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
     public struct Polygon
     {

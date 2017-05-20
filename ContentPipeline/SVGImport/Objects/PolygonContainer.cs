@@ -2,7 +2,7 @@
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.Templates
+namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
     public class PolygonContainer : Dictionary<string, Polygon>
     {

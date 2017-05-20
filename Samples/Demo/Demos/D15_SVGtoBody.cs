@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Demo.Demos.Prefabs;
 using VelcroPhysics.Samples.Demo.MediaSystem;

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;

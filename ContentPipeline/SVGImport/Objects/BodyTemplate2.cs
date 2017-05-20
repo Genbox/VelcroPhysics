@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Templates
+namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
     public class BodyTemplate2
     {

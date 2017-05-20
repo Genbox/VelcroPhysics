@@ -1,6 +1,6 @@
 ﻿using VelcroPhysics.Collision.Shapes;
 
-namespace VelcroPhysics.Templates
+namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
 
     public class FixtureTemplate2

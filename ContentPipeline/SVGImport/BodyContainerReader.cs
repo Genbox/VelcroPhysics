@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework.Content;
 using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
