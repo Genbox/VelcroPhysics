@@ -18,7 +18,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                 bool closed = input.ReadBoolean();
                 int vertsCount = input.ReadInt32();
 
-                Vertices verts = new Vertices(count);
+                Vertices verts = new Vertices(vertsCount);
                 for (int j = 0; j < vertsCount; j++)
                 {
                     verts.Add(input.ReadVector2());
