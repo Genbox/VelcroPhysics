@@ -6,13 +6,12 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentProcessor(DisplayName = "Body Processor")]
-    public class BodyProcessor : ContentProcessor<List<RawBodyTemplate>, BodyContainer>
+    public class BodyProcessor : ContentProcessor<List<BodyTemplateExt>, Dictionary<string, BodyTemplateExt>>
     {
         private float _scaleFactor = 1f;
 
@@ -30,7 +29,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         [DefaultValue(3)]
         public int BezierIterations { get; set; } = 3;
 
-        public override BodyContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
+        public override Dictionary<string, BodyTemplateExt> Process(List<BodyTemplateExt> input, ContentProcessorContext context)
         {
             if (ScaleFactor < 1)
                 throw new Exception("Pixel to meter ratio must be greater than zero.");
@@ -40,27 +39,28 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
             SVGPathParser parser = new SVGPathParser(BezierIterations);
-            BodyContainer bodies = new BodyContainer();
+            Dictionary<string, BodyTemplateExt> bodies = new Dictionary<string, BodyTemplateExt>();
 
-            foreach (RawBodyTemplate rawBody in input)
+            foreach (BodyTemplateExt rawBody in input)
             {
                 if (rawBody.Name == "importer_default_path_container")
                     continue;
 
-                BodyTemplate2 currentBody = new BodyTemplate2();
-                currentBody.Mass = rawBody.Mass;
-                currentBody.BodyType = rawBody.BodyType;
-                foreach (RawFixtureTemplate rawFixture in rawBody.Fixtures)
+                BodyTemplateExt currentBody = new BodyTemplateExt();
+                //currentBody.Mass = rawBody.Mass;
+                currentBody.Type = rawBody.Type;
+
+                foreach (FixtureTemplateExt rawFixture in rawBody.Fixtures)
                 {
-                    List<Polygon> paths = parser.ParseSVGPath(rawFixture.Path, rawFixture.Transformation * matScale);
+                    List<VerticesExt> paths = parser.ParseSVGPath(rawFixture.Path, rawFixture.Transformation * matScale);
                     for (int i = 0; i < paths.Count; i++)
                     {
                         if (paths[i].Closed)
                         {
-                            List<Vertices> partition = Triangulate.ConvexPartition(paths[i].Vertices, TriangulationAlgorithm.Bayazit);
+                            List<Vertices> partition = Triangulate.ConvexPartition(paths[i], TriangulationAlgorithm.Bayazit);
                             foreach (Vertices v in partition)
                             {
-                                currentBody.Fixtures.Add(new FixtureTemplate2
+                                currentBody.Fixtures.Add(new FixtureTemplateExt
                                 {
                                     Shape = new PolygonShape(v, rawFixture.Density),
                                     Restitution = rawFixture.Restitution,
@@ -72,15 +72,12 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                         else
                         {
                             Shape shape;
-                            if (paths[i].Vertices.Count > 2)
-                            {
-                                shape = new ChainShape(paths[i].Vertices);
-                            }
+                            if (paths[i].Count > 2)
+                                shape = new ChainShape(paths[i]);
                             else
-                            {
-                                shape = new EdgeShape(paths[i].Vertices[0], paths[i].Vertices[1]);
-                            }
-                            currentBody.Fixtures.Add(new FixtureTemplate2
+                                shape = new EdgeShape(paths[i][0], paths[i][1]);
+
+                            currentBody.Fixtures.Add(new FixtureTemplateExt
                             {
                                 Shape = shape,
                                 Restitution = rawFixture.Restitution,
@@ -90,11 +87,9 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                         }
                     }
                 }
+
                 if (currentBody.Fixtures.Count > 0)
-                {
                     bodies[rawBody.Name] = currentBody;
-                    currentBody = null;
-                }
             }
             return bodies;
         }

@@ -11,26 +11,26 @@ using VelcroPhysics.Dynamics;
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "BodyProcessor")]
-    public class SVGImporter : ContentImporter<List<RawBodyTemplate>>
+    public class SVGImporter : ContentImporter<List<BodyTemplateExt>>
     {
         private const string _isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
         private const string _isCommaWhitespace = @"\A[\s,]*";
-        private RawBodyTemplate? _currentBody;
-        private List<RawBodyTemplate> _parsedSVG;
+        private BodyTemplateExt _currentBody;
+        private List<BodyTemplateExt> _parsedSVG;
 
         private Stack<Matrix> _transformations;
 
-        public override List<RawBodyTemplate> Import(string filename, ContentImporterContext context)
+        public override List<BodyTemplateExt> Import(string filename, ContentImporterContext context)
         {
             _transformations = new Stack<Matrix>();
             _transformations.Push(Matrix.Identity);
 
-            _parsedSVG = new List<RawBodyTemplate>();
-            _parsedSVG.Add(new RawBodyTemplate
+            _parsedSVG = new List<BodyTemplateExt>();
+            _parsedSVG.Add(new BodyTemplateExt
             {
                 Name = "importer_default_path_container",
-                Fixtures = new List<RawFixtureTemplate>(),
-                Mass = 0f
+                Fixtures = new List<FixtureTemplateExt>(),
+                //Mass = 0f
             });
 
             XmlDocument input = new XmlDocument();
@@ -54,71 +54,63 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     _transformations.Push(ParseSVGTransformation(currentNode.Attributes["transform"].Value));
                     popTransform = true;
                 }
+
                 if (currentElement.HasAttribute("fp_body") && _currentBody == null)
                 {
                     BodyType type;
                     if (!Enum.TryParse(currentElement.Attributes["fp_body"].Value, true, out type))
-                    {
                         type = BodyType.Static;
-                    }
+
                     string id = "empty_id";
                     if (currentElement.HasAttribute("id"))
-                    {
                         id = currentElement.Attributes["id"].Value;
-                    }
+
                     float bodyMass = 0f;
                     if (currentElement.HasAttribute("fp_mass"))
-                    {
                         float.TryParse(currentElement.Attributes["fp_mass"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out bodyMass);
-                    }
-                    _currentBody = new RawBodyTemplate
+
+                    _currentBody = new BodyTemplateExt
                     {
-                        Fixtures = new List<RawFixtureTemplate>(),
-                        Mass = bodyMass,
+                        Fixtures = new List<FixtureTemplateExt>(),
+                        //Mass = bodyMass,
                         Name = id,
-                        BodyType = type
+                        Type = type
                     };
                     killBody = true;
                 }
                 if (currentElement.Name == "path")
                 {
-                    RawFixtureTemplate fixture = new RawFixtureTemplate();
+                    FixtureTemplateExt fixture = new FixtureTemplateExt();
                     fixture.Path = currentElement.Attributes["d"].Value;
                     fixture.Transformation = Matrix.Identity;
+
                     foreach (Matrix m in _transformations)
                     {
                         fixture.Transformation *= m;
                     }
-                    if (currentElement.HasAttribute("id"))
-                    {
-                        fixture.Name = currentElement.Attributes["id"].Value;
-                    }
+
+                    fixture.Name = currentElement.HasAttribute("id") ? currentElement.Attributes["id"].Value : "empty_id";
+
+                    if (currentElement.HasAttribute("fp_density") && float.TryParse(currentElement.Attributes["fp_density"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float density))
+                        fixture.Density = density;
                     else
-                    {
-                        fixture.Name = "empty_id";
-                    }
-                    if (!(currentElement.HasAttribute("fp_density") && float.TryParse(currentElement.Attributes["fp_density"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Density)))
-                    {
                         fixture.Density = 1f;
-                    }
-                    if (!(currentElement.HasAttribute("fp_friction") && float.TryParse(currentElement.Attributes["fp_friction"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Friction)))
-                    {
-                        fixture.Friction = 0.5f;
-                    }
-                    if (!(currentElement.HasAttribute("fp_restitution") && float.TryParse(currentElement.Attributes["fp_restitution"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out fixture.Restitution)))
-                    {
-                        fixture.Restitution = 0f;
-                    }
-                    if (_currentBody.HasValue)
-                    {
-                        _currentBody.Value.Fixtures.Add(fixture);
-                    }
+
+                    if (currentElement.HasAttribute("fp_friction") && float.TryParse(currentElement.Attributes["fp_friction"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float friction))
+                        fixture.Friction = friction;
                     else
-                    {
+                        fixture.Friction = 0.5f;
+
+                    if (currentElement.HasAttribute("fp_restitution") && float.TryParse(currentElement.Attributes["fp_restitution"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float restitution))
+                        fixture.Restitution = restitution;
+
+                    if (_currentBody != null)
+                        _currentBody.Fixtures.Add(fixture);
+                    else
                         _parsedSVG[0].Fixtures.Add(fixture);
-                    }
                 }
             }
+
             if (currentNode.HasChildNodes)
             {
                 foreach (XmlNode child in currentNode.ChildNodes)
@@ -126,15 +118,15 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     ParseSVGNode(child);
                 }
             }
+
             if (popTransform)
-            {
                 _transformations.Pop();
-            }
+
             if (killBody)
             {
-                if (_currentBody.Value.Fixtures.Count > 0)
+                if (_currentBody.Fixtures.Count > 0)
                 {
-                    _parsedSVG.Add(_currentBody.Value);
+                    _parsedSVG.Add(_currentBody);
                 }
                 _currentBody = null;
             }
@@ -143,49 +135,46 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         private Matrix ParseSVGTransformation(string transformation)
         {
             Stack<Matrix> results = new Stack<Matrix>();
-            float[] arguments;
-            int argumentCount;
 
             while (!string.IsNullOrEmpty(transformation))
             {
+                float[] arguments;
+                int argumentCount;
                 if (transformation.StartsWith("matrix"))
                 {
                     transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
-                    if (argumentCount == 6)
-                    {
-                        Matrix m = Matrix.Identity;
-                        m.M11 = arguments[0];
-                        m.M12 = arguments[1];
-                        m.M21 = arguments[2];
-                        m.M22 = arguments[3];
-                        m.M41 = arguments[4];
-                        m.M42 = arguments[5];
-                        results.Push(m);
-                    }
+
+                    if (argumentCount != 6)
+                        continue;
+
+                    Matrix m = Matrix.Identity;
+                    m.M11 = arguments[0];
+                    m.M12 = arguments[1];
+                    m.M21 = arguments[2];
+                    m.M22 = arguments[3];
+                    m.M41 = arguments[4];
+                    m.M42 = arguments[5];
+                    results.Push(m);
                 }
                 else if (transformation.StartsWith("scale"))
                 {
                     transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
+
                     if (argumentCount == 1)
-                    {
                         arguments[argumentCount++] = arguments[0];
-                    }
+
                     if (argumentCount == 2)
-                    {
                         results.Push(Matrix.CreateScale(arguments[0], arguments[1], 1f));
-                    }
                 }
                 else if (transformation.StartsWith("translate"))
                 {
                     transformation = ParseTransformationArguments(transformation, out arguments, out argumentCount);
+
                     if (argumentCount == 1)
-                    {
                         arguments[argumentCount++] = arguments[0];
-                    }
+
                     if (argumentCount == 2)
-                    {
                         results.Push(Matrix.CreateTranslation(arguments[0], arguments[1], 0f));
-                    }
                 }
                 else
                 {

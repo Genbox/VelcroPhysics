@@ -5,23 +5,22 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
-using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentTypeWriter]
-    public class BodyContainerWriter : ContentTypeWriter<BodyContainer>
+    public class BodyContainerWriter : ContentTypeWriter<Dictionary<string, BodyTemplateExt>>
     {
-        protected override void Write(ContentWriter output, BodyContainer container)
+        protected override void Write(ContentWriter output, Dictionary<string, BodyTemplateExt> container)
         {
             output.Write(container.Count);
-            foreach (KeyValuePair<string, BodyTemplate2> p in container)
+            foreach (KeyValuePair<string, BodyTemplateExt> p in container)
             {
                 output.Write(p.Key);
-                output.Write(p.Value.Mass);
-                output.Write((int)p.Value.BodyType);
+                //output.Write(p.Value.Mass);
+                output.Write((int)p.Value.Type);
                 output.Write(p.Value.Fixtures.Count);
-                foreach (FixtureTemplate2 f in p.Value.Fixtures)
+                foreach (FixtureTemplateExt f in p.Value.Fixtures)
                 {
                     output.Write(f.Name);
                     output.Write(f.Restitution);

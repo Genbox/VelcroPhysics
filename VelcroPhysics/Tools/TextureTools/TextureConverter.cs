@@ -127,11 +127,10 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <returns></returns>
         public static Vertices DetectVertices(uint[] data, int width, bool holeDetection)
         {
-            TextureConverter tc =
-                new TextureConverter(data, width)
-                {
-                    HoleDetection = holeDetection
-                };
+            TextureConverter tc = new TextureConverter(data, width)
+            {
+                HoleDetection = holeDetection
+            };
 
             List<Vertices> detectedVerticesList = tc.DetectVertices();
 

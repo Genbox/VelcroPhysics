@@ -4,12 +4,11 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
-using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentProcessor(DisplayName = "Polygon Processor")]
-    public class PolygonProcessor : ContentProcessor<List<RawBodyTemplate>, PolygonContainer>
+    public class PolygonProcessor : ContentProcessor<List<BodyTemplateExt>, Dictionary<string, VerticesExt>>
     {
         private float _scaleFactor = 1f;
 
@@ -27,35 +26,26 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         [DefaultValue(3)]
         public int BezierIterations { get; set; } = 3;
 
-        [DisplayName("Decompose paths")]
-        [Description("Decompose paths into convex polygons.")]
-        [DefaultValue(false)]
-        public bool DecomposePaths { get; set; } = false;
-
-        public override PolygonContainer Process(List<RawBodyTemplate> input, ContentProcessorContext context)
+        public override Dictionary<string, VerticesExt> Process(List<BodyTemplateExt> input, ContentProcessorContext context)
         {
             if (ScaleFactor < 1)
-            {
                 throw new Exception("Pixel to meter ratio must be greater than zero.");
-            }
+
             if (BezierIterations < 1)
-            {
                 throw new Exception("Cubic bézier iterations must be greater than zero.");
-            }
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
             SVGPathParser parser = new SVGPathParser(BezierIterations);
-            PolygonContainer polygons = new PolygonContainer();
+            Dictionary<string, VerticesExt> polygons = new Dictionary<string, VerticesExt>();
 
-            foreach (RawBodyTemplate body in input)
+            foreach (BodyTemplateExt body in input)
             {
-                foreach (RawFixtureTemplate fixture in body.Fixtures)
+                foreach (FixtureTemplateExt fixture in body.Fixtures)
                 {
-                    List<Polygon> paths = parser.ParseSVGPath(fixture.Path, fixture.Transformation * matScale);
+                    List<VerticesExt> paths = parser.ParseSVGPath(fixture.Path, fixture.Transformation * matScale);
+
                     if (paths.Count == 1)
-                    {
                         polygons.Add(fixture.Name, paths[0]);
-                    }
                     else
                     {
                         for (int i = 0; i < paths.Count; i++)
@@ -65,10 +55,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     }
                 }
             }
-            if (DecomposePaths)
-            {
-                polygons.Decompose();
-            }
+
             return polygons;
         }
     }

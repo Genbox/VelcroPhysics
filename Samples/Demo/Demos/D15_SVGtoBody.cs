@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
@@ -13,7 +14,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D15_SVGtoBody : PhysicsDemoScreen
     {
-        private BodyContainer _body;
+        private Dictionary<string, BodyTemplateExt> _body;
         private Border _border;
         private Sprite _club;
         private Body _clubBody;
@@ -31,7 +32,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
             World.Gravity = new Vector2(0f, 10f);
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            _body = Framework.Content.Load<BodyContainer>("Pipeline/Body");
+            _body = Framework.Content.Load<Dictionary<string, BodyTemplateExt>>("Pipeline/Body");
 
             _heartBody = _body["Heart"].Create(World);
             _heart = new Sprite(ContentWrapper.GetTexture("Heart"), ContentWrapper.CalculateOrigin(_heartBody));

@@ -27,7 +27,6 @@ using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
@@ -43,9 +42,9 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             _iterations = bezierIterations;
         }
 
-        public List<Polygon> ParseSVGPath(string path, Matrix transformation)
+        public List<VerticesExt> ParseSVGPath(string path, Matrix transformation)
         {
-            List<Polygon> result = new List<Polygon>();
+            List<VerticesExt> result = new List<VerticesExt>();
             Vertices currentPath = null;
             Vector2 currentPosition = Vector2.Zero;
 
@@ -174,7 +173,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     {
                         if (currentPath != null && currentPath.Count > 1)
                         {
-                            result.Add(new Polygon(currentPath, false));
+                            result.Add(new VerticesExt(currentPath, false));
                         }
                         currentPath = new Vertices();
                         argumentCount = 0;
@@ -187,7 +186,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     {
                         if (currentPath != null && currentPath.Count > 1)
                         {
-                            result.Add(new Polygon(currentPath, true));
+                            result.Add(new VerticesExt(currentPath, true));
                         }
                         currentPath = null;
                         argumentCount = 0;
@@ -196,14 +195,14 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             }
             if (currentPath != null && currentPath.Count > 1)
             {
-                result.Add(new Polygon(currentPath, false));
+                result.Add(new VerticesExt(currentPath, false));
             }
 
-            foreach (Polygon poly in result)
+            foreach (VerticesExt poly in result)
             {
-                for (int i = 0; i < poly.Vertices.Count; i++)
+                for (int i = 0; i < poly.Count; i++)
                 {
-                    poly.Vertices[i] = Vector2.Transform(poly.Vertices[i], transformation);
+                    poly[i] = Vector2.Transform(poly[i], transformation);
                 }
             }
             return result;

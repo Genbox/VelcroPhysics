@@ -2,14 +2,12 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
-    public struct Polygon
+    public class VerticesExt : Vertices
     {
-        public Vertices Vertices;
         public bool Closed;
 
-        public Polygon(Vertices v, bool closed)
+        public VerticesExt(Vertices v, bool closed) : base(v)
         {
-            Vertices = v;
             Closed = closed;
         }
     }

@@ -1,42 +1,39 @@
 using System.Collections.Generic;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
-    public class BodyTemplate2
+    public class BodyTemplateExt : BodyTemplate
     {
-        public BodyType BodyType;
-        public List<FixtureTemplate2> Fixtures;
-        public float Mass;
+        public List<FixtureTemplateExt> Fixtures;
+        public string Name { get; set; }
 
-        public BodyTemplate2()
+        public BodyTemplateExt()
         {
-            Fixtures = new List<FixtureTemplate2>();
+            Fixtures = new List<FixtureTemplateExt>();
         }
 
         public Body Create(World world)
         {
             Body body = new Body(world);
-            body.BodyType = BodyType;
+            body.BodyType = Type;
 
-            foreach (FixtureTemplate2 fixtureTemplate in Fixtures)
+            foreach (FixtureTemplateExt fixtureTemplate in Fixtures)
             {
                 Fixture fixture = body.CreateFixture(fixtureTemplate.Shape, fixtureTemplate.Name);
                 fixture.Restitution = fixtureTemplate.Restitution;
                 fixture.Friction = fixtureTemplate.Friction;
             }
 
-            if (Mass > 0f)
-                body.Mass = Mass;
-
             return body;
         }
 
         public BreakableBody CreateBreakable(World world)
         {
-            List<Shape> shapes = new List<Shape>();
-            foreach (FixtureTemplate2 f in Fixtures)
+            List<Shape> shapes = new List<Shape>(Fixtures.Count);
+            foreach (FixtureTemplateExt f in Fixtures)
             {
                 shapes.Add(f.Shape);
             }

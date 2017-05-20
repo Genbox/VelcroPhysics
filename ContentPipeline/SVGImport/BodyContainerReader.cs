@@ -1,31 +1,32 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-    public class BodyContainerReader : ContentTypeReader<BodyContainer>
+    public class BodyContainerReader : ContentTypeReader<Dictionary<string, BodyTemplateExt>>
     {
-        protected override BodyContainer Read(ContentReader input, BodyContainer existingInstance)
+        protected override Dictionary<string, BodyTemplateExt> Read(ContentReader input, Dictionary<string, BodyTemplateExt> existingInstance)
         {
-            BodyContainer bodies = existingInstance ?? new BodyContainer();
+            Dictionary<string, BodyTemplateExt> bodies = existingInstance ?? new Dictionary<string, BodyTemplateExt>();
 
             int count = input.ReadInt32();
             for (int i = 0; i < count; i++)
             {
                 string name = input.ReadString();
-                BodyTemplate2 body = new BodyTemplate2
+                BodyTemplateExt body = new BodyTemplateExt
                 {
-                    Mass = input.ReadSingle(),
-                    BodyType = (BodyType)input.ReadInt32()
+                    //Mass = input.ReadSingle(),
+                    Type = (BodyType)input.ReadInt32()
                 };
+
                 int fixtureCount = input.ReadInt32();
                 for (int j = 0; j < fixtureCount; j++)
                 {
-                    FixtureTemplate2 fixture = new FixtureTemplate2
+                    FixtureTemplateExt fixture = new FixtureTemplateExt
                     {
                         Name = input.ReadString(),
                         Restitution = input.ReadSingle(),
