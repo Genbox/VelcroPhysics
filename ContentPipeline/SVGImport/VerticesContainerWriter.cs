@@ -7,9 +7,9 @@ using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
     [ContentTypeWriter]
-    public class PolygonContainerWriter : ContentTypeWriter<Dictionary<string, VerticesExt>>
+    public class VerticesContainerWriter : ContentTypeWriter<VerticesContainer>
     {
-        protected override void Write(ContentWriter output, Dictionary<string, VerticesExt> container)
+        protected override void Write(ContentWriter output, VerticesContainer container)
         {
             output.Write(container.Count);
             foreach (KeyValuePair<string, VerticesExt> p in container)
@@ -26,7 +26,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
-            return typeof(PolygonContainerReader).AssemblyQualifiedName;
+            return typeof(VerticesContainerReader).AssemblyQualifiedName;
         }
     }
 }

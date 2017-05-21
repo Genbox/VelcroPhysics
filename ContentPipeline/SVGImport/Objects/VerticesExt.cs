@@ -6,6 +6,11 @@ namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
     {
         public bool Closed;
 
+        public VerticesExt()
+        {
+            
+        }
+
         public VerticesExt(Vertices v, bool closed) : base(v)
         {
             Closed = closed;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -6,32 +5,31 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
-using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-    [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "BodyProcessor")]
-    public class SVGImporter : ContentImporter<List<BodyTemplateExt>>
+
+    [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "PathContainerProcessor")]
+    public class SVGImporter : ContentImporter<List<PathDefinition>>
     {
         private const string _isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
         private const string _isCommaWhitespace = @"\A[\s,]*";
-        private BodyTemplateExt _currentBody;
-        private List<BodyTemplateExt> _parsedSVG;
+        private string _currentId;
+        private List<PathDefinition> _parsedSVG;
 
         private Stack<Matrix> _transformations;
 
-        public override List<BodyTemplateExt> Import(string filename, ContentImporterContext context)
+        public override List<PathDefinition> Import(string filename, ContentImporterContext context)
         {
             _transformations = new Stack<Matrix>();
             _transformations.Push(Matrix.Identity);
 
-            _parsedSVG = new List<BodyTemplateExt>();
-            _parsedSVG.Add(new BodyTemplateExt("importer_default_path_container"));
+            _parsedSVG = new List<PathDefinition>();
 
             XmlDocument input = new XmlDocument();
             input.Load(filename);
 
-            _currentBody = null;
+            _currentId = null;
             ParseSVGNode(input["svg"]);
 
             return _parsedSVG;
@@ -40,67 +38,37 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         private void ParseSVGNode(XmlNode currentNode)
         {
             bool popTransform = false;
-            bool killBody = false;
-            if (currentNode is XmlElement)
+            XmlElement currentElement = currentNode as XmlElement;
+
+            if (currentElement != null)
             {
-                XmlElement currentElement = currentNode as XmlElement;
                 if (currentElement.HasAttribute("transform"))
                 {
                     _transformations.Push(ParseSVGTransformation(currentNode.Attributes["transform"].Value));
                     popTransform = true;
                 }
 
-                if (currentElement.HasAttribute("fp_body") && _currentBody == null)
-                {
-                    BodyType type;
-                    if (!Enum.TryParse(currentElement.Attributes["fp_body"].Value, true, out type))
-                        type = BodyType.Static;
-
-                    string id = "empty_id";
-                    if (currentElement.HasAttribute("id"))
-                        id = currentElement.Attributes["id"].Value;
-
-                    float bodyMass = 0f;
-                    if (currentElement.HasAttribute("fp_mass"))
-                        float.TryParse(currentElement.Attributes["fp_mass"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out bodyMass);
-
-                    _currentBody = new BodyTemplateExt(id)
-                    {
-                        Type = type
-                    };
-                    killBody = true;
-                }
+                if (currentElement.Name == "g" && currentElement.HasAttribute("id"))
+                    _currentId = currentElement.Attributes["id"].Value;
 
                 if (currentElement.Name == "path")
                 {
-                    FixtureTemplateExt fixture = new FixtureTemplateExt();
-                    fixture.Path = currentElement.Attributes["d"].Value;
-                    fixture.Transformation = Matrix.Identity;
+                    PathDefinition path = new PathDefinition();
+
+                    if (_currentId != null)
+                        path.Id = _currentId;
+                    else
+                        path.Id = currentElement.HasAttribute("id") ? currentElement.Attributes["id"].Value : "empty_id";
+
+                    path.Path = currentElement.Attributes["d"].Value;
+                    path.Transformation = Matrix.Identity;
 
                     foreach (Matrix m in _transformations)
                     {
-                        fixture.Transformation *= m;
+                        path.Transformation *= m;
                     }
 
-                    fixture.Name = currentElement.HasAttribute("id") ? currentElement.Attributes["id"].Value : "empty_id";
-
-                    if (currentElement.HasAttribute("fp_density") && float.TryParse(currentElement.Attributes["fp_density"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float density))
-                        fixture.Density = density;
-                    else
-                        fixture.Density = 1f;
-
-                    if (currentElement.HasAttribute("fp_friction") && float.TryParse(currentElement.Attributes["fp_friction"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float friction))
-                        fixture.Friction = friction;
-                    else
-                        fixture.Friction = 0.5f;
-
-                    if (currentElement.HasAttribute("fp_restitution") && float.TryParse(currentElement.Attributes["fp_restitution"].Value, NumberStyles.Float, CultureInfo.InvariantCulture, out float restitution))
-                        fixture.Restitution = restitution;
-
-                    if (_currentBody != null)
-                        _currentBody.Fixtures.Add(fixture);
-                    else
-                        _parsedSVG[0].Fixtures.Add(fixture);
+                    _parsedSVG.Add(path);
                 }
             }
 
@@ -114,15 +82,6 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
             if (popTransform)
                 _transformations.Pop();
-
-            if (killBody)
-            {
-                if (_currentBody.Fixtures.Count > 0)
-                {
-                    _parsedSVG.Add(_currentBody);
-                }
-                _currentBody = null;
-            }
         }
 
         private Matrix ParseSVGTransformation(string transformation)

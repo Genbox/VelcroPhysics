@@ -61,14 +61,14 @@
 
 #begin Pipeline/Body.svg
 /importer:SVGImporter
-/processor:BodyProcessor
+/processor:PathContainerProcessor
 /processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /build:Pipeline/Body.svg
 
 #begin Pipeline/BreakableBody.svg
 /importer:SVGImporter
-/processor:BodyProcessor
+/processor:PathContainerProcessor
 /processorParam:ScaleFactor=24
 /processorParam:BezierIterations=3
 /build:Pipeline/BreakableBody.svg

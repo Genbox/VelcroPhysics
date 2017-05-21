@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport.Objects
 {
-    public class FixtureTemplateExt : FixtureTemplate
+    public class PathDefinition
     {
         public string Path;
-        public string Name;
+        public string Id;
         public Matrix Transformation;
     }
 }

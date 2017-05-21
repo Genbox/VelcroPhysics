@@ -5,7 +5,7 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-    public class PolygonContainerReader : ContentTypeReader<Dictionary<string, VerticesExt>>
+    public class VerticesContainerReader : ContentTypeReader<Dictionary<string, VerticesExt>>
     {
         protected override Dictionary<string, VerticesExt> Read(ContentReader input, Dictionary<string, VerticesExt> existingInstance)
         {

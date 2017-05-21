@@ -7,8 +7,8 @@ using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-    [ContentProcessor(DisplayName = "Polygon Processor")]
-    public class PolygonProcessor : ContentProcessor<List<BodyTemplateExt>, Dictionary<string, VerticesExt>>
+    [ContentProcessor(DisplayName = "PathContainer Processor")]
+    public class PathContainerProcessor : ContentProcessor<List<PathDefinition>, VerticesContainer>
     {
         private float _scaleFactor = 1f;
 
@@ -26,7 +26,7 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         [DefaultValue(3)]
         public int BezierIterations { get; set; } = 3;
 
-        public override Dictionary<string, VerticesExt> Process(List<BodyTemplateExt> input, ContentProcessorContext context)
+        public override VerticesContainer Process(List<PathDefinition> input, ContentProcessorContext context)
         {
             if (ScaleFactor < 1)
                 throw new Exception("Pixel to meter ratio must be greater than zero.");
@@ -36,27 +36,26 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
             SVGPathParser parser = new SVGPathParser(BezierIterations);
-            Dictionary<string, VerticesExt> polygons = new Dictionary<string, VerticesExt>();
+            VerticesContainer vc = new VerticesContainer();
 
-            foreach (BodyTemplateExt body in input)
+            foreach (PathDefinition definition in input)
             {
-                foreach (FixtureTemplateExt fixture in body.Fixtures)
-                {
-                    List<VerticesExt> paths = parser.ParseSVGPath(fixture.Path, fixture.Transformation * matScale);
+                List<VerticesExt> vertices = parser.ParseSVGPath(definition.Path, definition.Transformation * matScale);
 
-                    if (paths.Count == 1)
-                        polygons.Add(fixture.Name, paths[0]);
-                    else
-                    {
-                        for (int i = 0; i < paths.Count; i++)
-                        {
-                            polygons.Add(fixture.Name + i, paths[i]);
-                        }
-                    }
-                }
+                //if (vertices.Count == 1)
+                //    vc.Add(vertices[0]);
+                //else
+                //{
+                //    for (int i = 0; i < vertices.Count; i++)
+                //    {
+                //        list.Add(vertices[i]);
+                //    }
+                //}
+
+                //vc.Add(c.Name, list);
             }
 
-            return polygons;
+            return vc;
         }
     }
 }
