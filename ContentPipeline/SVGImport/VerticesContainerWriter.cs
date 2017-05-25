@@ -12,14 +12,20 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
         protected override void Write(ContentWriter output, VerticesContainer container)
         {
             output.Write(container.Count);
-            foreach (KeyValuePair<string, VerticesExt> p in container)
+            foreach (KeyValuePair<string, List<VerticesExt>> p in container)
             {
                 output.Write(p.Key);
-                output.Write(p.Value.Closed);
                 output.Write(p.Value.Count);
-                foreach (Vector2 vec in p.Value)
+
+                foreach (VerticesExt ext in p.Value)
                 {
-                    output.Write(vec);
+                    output.Write(ext.Closed);
+                    output.Write(ext.Count);
+
+                    foreach (Vector2 vec in ext)
+                    {
+                        output.Write(vec);
+                    }
                 }
             }
         }

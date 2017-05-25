@@ -6,11 +6,11 @@ using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Demo.Demos.Prefabs;
 using VelcroPhysics.Samples.Demo.MediaSystem;
 using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.PolygonManipulation;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
@@ -33,7 +33,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
             for (int i = 0; i < 3; i++)
             {
                 VerticesContainer verticesContainer = Framework.Content.Load<VerticesContainer>("Pipeline/BreakableBody");
-                var def = verticesContainer["Cookie"];
+                List<VerticesExt> def = verticesContainer["Cookie"];
                 _breakableCookie[i] = CreateBreakable(def);
                 _breakableCookie[i].Strength = 120f;
                 _breakableCookie[i].MainBody.Position = new Vector2(-20.33f + 15f * i, -5.33f);
@@ -55,24 +55,25 @@ namespace VelcroPhysics.Samples.Demo.Demos
 
         private BreakableBody CreateBreakable(List<VerticesExt> ext)
         {
+            List<PolygonShape> polygons = new List<PolygonShape>();
+
             foreach (VerticesExt ve in ext)
             {
-                List<Vertices> list = Triangulate.ConvexPartition(ve, TriangulationAlgorithm.Bayazit);
+                Vertices simple = SimplifyTools.DouglasPeuckerSimplify(ve, 0.1f);
 
-                List<PolygonShape> polygons = new List<PolygonShape>(list.Count);
+                List<Vertices> list = Triangulate.ConvexPartition(simple, TriangulationAlgorithm.Bayazit);
+
                 foreach (Vertices v in list)
                 {
                     PolygonShape s = new PolygonShape(v, 1f);
                     polygons.Add(s);
                 }
-
-                BreakableBody body = new BreakableBody(World, polygons);
-                World.AddBreakableBody(body);
-
-                return body;
             }
 
-            return null;
+            BreakableBody body = new BreakableBody(World, polygons);
+            World.AddBreakableBody(body);
+
+            return body;
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)

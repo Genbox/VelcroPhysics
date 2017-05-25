@@ -36,26 +36,25 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
 
             Matrix matScale = Matrix.CreateScale(_scaleFactor, _scaleFactor, 1f);
             SVGPathParser parser = new SVGPathParser(BezierIterations);
-            VerticesContainer vc = new VerticesContainer();
+            VerticesContainer container = new VerticesContainer();
 
-            foreach (PathDefinition definition in input)
+            foreach (PathDefinition d in input)
             {
-                List<VerticesExt> vertices = parser.ParseSVGPath(definition.Path, definition.Transformation * matScale);
+                List<VerticesExt> vertices = parser.ParseSVGPath(d.Path, d.Transformation * matScale);
+                List<VerticesExt> c = container.ContainsKey(d.Id) ? container[d.Id] : (container[d.Id] = new List<VerticesExt>());
 
-                //if (vertices.Count == 1)
-                //    vc.Add(vertices[0]);
-                //else
-                //{
-                //    for (int i = 0; i < vertices.Count; i++)
-                //    {
-                //        list.Add(vertices[i]);
-                //    }
-                //}
-
-                //vc.Add(c.Name, list);
+                if (vertices.Count == 1)
+                    c.Add(vertices[0]);
+                else
+                {
+                    for (int i = 0; i < vertices.Count; i++)
+                    {
+                        c.Add(vertices[i]);
+                    }
+                }
             }
 
-            return vc;
+            return container;
         }
     }
 }

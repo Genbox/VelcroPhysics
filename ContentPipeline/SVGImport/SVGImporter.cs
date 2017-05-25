@@ -8,13 +8,11 @@ using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-
     [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "PathContainerProcessor")]
     public class SVGImporter : ContentImporter<List<PathDefinition>>
     {
         private const string _isNumber = @"\A[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?";
         private const string _isCommaWhitespace = @"\A[\s,]*";
-        private string _currentId;
         private List<PathDefinition> _parsedSVG;
 
         private Stack<Matrix> _transformations;
@@ -29,7 +27,6 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
             XmlDocument input = new XmlDocument();
             input.Load(filename);
 
-            _currentId = null;
             ParseSVGNode(input["svg"]);
 
             return _parsedSVG;
@@ -48,17 +45,18 @@ namespace VelcroPhysics.ContentPipelines.SVGImport
                     popTransform = true;
                 }
 
-                if (currentElement.Name == "g" && currentElement.HasAttribute("id"))
-                    _currentId = currentElement.Attributes["id"].Value;
-
                 if (currentElement.Name == "path")
                 {
                     PathDefinition path = new PathDefinition();
 
-                    if (_currentId != null)
-                        path.Id = _currentId;
+                    string currentId = currentElement.HasAttribute("velcro_id") ? currentElement.Attributes["velcro_id"].Value : null;
+                    XmlElement parent = currentElement.ParentNode as XmlElement;
+
+                    //Take the attribute from the parent if it is a group, otherwise just take it from the current element
+                    if (currentId == null && parent != null  && parent.HasAttribute("velcro_id"))
+                        path.Id = parent.Attributes["velcro_id"].Value;
                     else
-                        path.Id = currentElement.HasAttribute("id") ? currentElement.Attributes["id"].Value : "empty_id";
+                        path.Id = currentElement.HasAttribute("velcro_id") ? currentElement.Attributes["velcro_id"].Value : "empty_id";
 
                     path.Path = currentElement.Attributes["d"].Value;
                     path.Transformation = Matrix.Identity;

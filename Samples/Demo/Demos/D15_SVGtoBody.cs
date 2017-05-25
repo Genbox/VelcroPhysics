@@ -42,13 +42,12 @@ namespace VelcroPhysics.Samples.Demo.Demos
             _clubBody = Create(_loadedVertices["Club"]);
             _club = new Sprite(ContentWrapper.GetTexture("Club"), ContentWrapper.CalculateOrigin(_clubBody));
 
-            //_spadeBody = Create(_loadedVertices["Spade"]);
-            //_spade = new Sprite(ContentWrapper.GetTexture("Spade"), ContentWrapper.CalculateOrigin(_spadeBody));
+            _spadeBody = Create(_loadedVertices["Spade"]);
+            _spade = new Sprite(ContentWrapper.GetTexture("Spade"), ContentWrapper.CalculateOrigin(_spadeBody));
 
             _diamondBody = Create(_loadedVertices["Diamond"]);
             _diamond = new Sprite(ContentWrapper.GetTexture("Diamond"), ContentWrapper.CalculateOrigin(_diamondBody));
         }
-
 
         private Body Create(List<VerticesExt> ext)
         {
@@ -63,7 +62,6 @@ namespace VelcroPhysics.Samples.Demo.Demos
                 {
                     FixtureFactory.AttachPolygon(v, 1, b);
                 }
-
             }
 
             return b;
@@ -74,7 +72,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             Sprites.Draw(_heart.Image, ConvertUnits.ToDisplayUnits(_heartBody.Position), null, Color.White, _heartBody.Rotation, _heart.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_club.Image, ConvertUnits.ToDisplayUnits(_clubBody.Position), null, Color.White, _clubBody.Rotation, _club.Origin, 1f, SpriteEffects.None, 0f);
-            //Sprites.Draw(_spade.Image, ConvertUnits.ToDisplayUnits(_spadeBody.Position), null, Color.White, _spadeBody.Rotation, _spade.Origin, 1f, SpriteEffects.None, 0f);
+            Sprites.Draw(_spade.Image, ConvertUnits.ToDisplayUnits(_spadeBody.Position), null, Color.White, _spadeBody.Rotation, _spade.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.Draw(_diamond.Image, ConvertUnits.ToDisplayUnits(_diamondBody.Position), null, Color.White, _diamondBody.Rotation, _diamond.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 

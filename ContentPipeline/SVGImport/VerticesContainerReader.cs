@@ -5,29 +5,38 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.ContentPipelines.SVGImport
 {
-    public class VerticesContainerReader : ContentTypeReader<Dictionary<string, VerticesExt>>
+    public class VerticesContainerReader : ContentTypeReader<VerticesContainer>
     {
-        protected override Dictionary<string, VerticesExt> Read(ContentReader input, Dictionary<string, VerticesExt> existingInstance)
+        protected override VerticesContainer Read(ContentReader input, VerticesContainer existingInstance)
         {
-            Dictionary<string, VerticesExt> paths = existingInstance ?? new Dictionary<string, VerticesExt>();
+            VerticesContainer container = existingInstance ?? new VerticesContainer();
 
-            int count = input.ReadInt32();
+            int count = input.ReadInt32(); //container.Count
             for (int i = 0; i < count; i++)
             {
                 string name = input.ReadString();
-                bool closed = input.ReadBoolean();
-                int vertsCount = input.ReadInt32();
+                int listCount = input.ReadInt32();
 
-                Vertices verts = new Vertices(vertsCount);
-                for (int j = 0; j < vertsCount; j++)
+                List<VerticesExt> exts = new List<VerticesExt>();
+
+                for (int j = 0; j < listCount; j++)
                 {
-                    verts.Add(input.ReadVector2());
+                    bool closed = input.ReadBoolean();
+                    int vertCount = input.ReadInt32();
+
+                    Vertices verts = new Vertices(vertCount);
+                    for (int x = 0; x < vertCount; x++)
+                    {
+                        verts.Add(input.ReadVector2());
+                    }
+
+                    exts.Add(new VerticesExt(verts, closed));
                 }
 
-                paths[name] = new VerticesExt(verts, closed);
+                container.Add(name, exts);
             }
 
-            return paths;
+            return container;
         }
     }
 }
