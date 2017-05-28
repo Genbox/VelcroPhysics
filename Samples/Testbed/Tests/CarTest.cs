@@ -88,7 +88,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             // Teeter
             {
-                Body body = new Body(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(140.0f, 1.0f);
 
@@ -113,7 +113,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < N; ++i)
                 {
-                    Body body = new Body(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(161.0f + 2.0f * i, -0.125f);
                     Fixture fix = body.CreateFixture(shape);
@@ -134,27 +134,27 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 PolygonShape box = new PolygonShape(0.5f);
                 box.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
 
-                Body body = new Body(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(230.0f, 0.5f);
                 body.CreateFixture(box);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(230.0f, 1.5f);
                 body.CreateFixture(box);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(230.0f, 2.5f);
                 body.CreateFixture(box);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(230.0f, 3.5f);
                 body.CreateFixture(box);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(230.0f, 4.5f);
                 body.CreateFixture(box);
@@ -174,18 +174,18 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
                 CircleShape circle = new CircleShape(0.4f, 1);
 
-                _car = new Body(World);
+                _car = BodyFactory.CreateBody(World);
                 _car.BodyType = BodyType.Dynamic;
                 _car.Position = new Vector2(0.0f, 1.0f);
                 _car.CreateFixture(chassis);
 
-                _wheel1 = new Body(World);
+                _wheel1 = BodyFactory.CreateBody(World);
                 _wheel1.BodyType = BodyType.Dynamic;
                 _wheel1.Position = new Vector2(-1.0f, 0.35f);
                 _wheel1.CreateFixture(circle);
                 _wheel1.Friction = 0.9f;
 
-                _wheel2 = new Body(World);
+                _wheel2 = BodyFactory.CreateBody(World);
                 _wheel2.BodyType = BodyType.Dynamic;
                 _wheel2.Position = new Vector2(1.0f, 0.4f);
                 _wheel2.CreateFixture(circle);

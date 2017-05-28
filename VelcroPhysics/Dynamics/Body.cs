@@ -34,6 +34,7 @@ using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics
@@ -58,7 +59,11 @@ namespace VelcroPhysics.Dynamics
         internal World _world;
         public Transform _xf; // the body origin transform
 
-        public Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
+        internal Body(World world, BodyTemplate template) : this(world, template.Position, template.Angle, template.Type, template.UserData)
+        {
+        }
+
+        internal Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
         {
             Debug.Assert(!float.IsNaN(position.X));
             Debug.Assert(!float.IsNaN(position.Y));
@@ -627,7 +632,7 @@ namespace VelcroPhysics.Dynamics
                 }
             }
         }
-    
+
         public bool IsSensor
         {
             set
@@ -675,7 +680,7 @@ namespace VelcroPhysics.Dynamics
         /// <returns></returns>
         public Fixture CreateFixture(Shape shape, object userData = null)
         {
-            return new Fixture(this, shape, userData);
+            return new Fixture(this, shape, userData: userData);
         }
 
         /// <summary>

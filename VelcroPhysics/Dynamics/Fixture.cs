@@ -32,6 +32,7 @@ using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.Dynamics
 {
@@ -94,18 +95,21 @@ namespace VelcroPhysics.Dynamics
             _collisionIgnores = new HashSet<int>();
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
-
-            //Fixture defaults
-            Friction = 0.2f;
-            Restitution = 0;
         }
 
-        internal Fixture(Body body, Shape shape, object userData = null)
+        internal Fixture(Body body, FixtureTemplate template)
+            : this(body, template.Shape, template.Friction, template.Restitution, template.UserData)
+        {
+        }
+
+        internal Fixture(Body body, Shape shape, float friction = 0.2f, float restitution = 0, object userData = null)
             : this()
         {
             Body = body;
             UserData = userData;
             Shape = shape.Clone();
+            Friction = friction;
+            Restitution = restitution;
 
             RegisterFixture();
         }

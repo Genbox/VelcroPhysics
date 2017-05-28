@@ -39,7 +39,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             Body ground;
             {
-                ground = new Body(World);
+                ground = BodyFactory.CreateBody(World);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape);

@@ -25,7 +25,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            _ramps = new Body(World);
+            _ramps = BodyFactory.CreateBody(World);
             FixtureFactory.AttachEdge(new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f), _ramps);
             FixtureFactory.AttachEdge(new Vector2(12f, -5.6f), new Vector2(12f, -3.2f), _ramps);
 

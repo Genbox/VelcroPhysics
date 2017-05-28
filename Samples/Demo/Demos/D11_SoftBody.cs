@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Demo.Demos.Prefabs;
 using VelcroPhysics.Samples.Demo.MediaSystem;
 using VelcroPhysics.Samples.Demo.ScreenSystem;
@@ -46,7 +47,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
             _bridgeBodies = PathManager.EvenlyDistributeShapesAlongPath(World, bridgePath, shape, BodyType.Dynamic, 29);
 
             // Attach the first and last fixtures to the world
-            Body anchor = new Body(World, Vector2.Zero);
+            Body anchor = BodyFactory.CreateBody(World);
             anchor.BodyType = BodyType.Static;
             World.AddJoint(new RevoluteJoint(_bridgeBodies[0], anchor, _bridgeBodies[0].Position - new Vector2(0.5f, 0f), true));
             World.AddJoint(new RevoluteJoint(_bridgeBodies[_bridgeBodies.Count - 1], anchor, _bridgeBodies[_bridgeBodies.Count - 1].Position + new Vector2(0.5f, 0f), true));
