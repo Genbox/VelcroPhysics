@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -43,9 +42,8 @@ namespace VelcroPhysics.Dynamics
     /// Fixtures are created via Body.CreateFixture.
     /// Warning: You cannot reuse fixtures.
     /// </summary>
-    public class Fixture : IDisposable
+    public class Fixture
     {
-
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
@@ -530,21 +528,5 @@ namespace VelcroPhysics.Dynamics
             fixture.RegisterFixture();
             return fixture;
         }
-
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                Body.DestroyFixture(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }

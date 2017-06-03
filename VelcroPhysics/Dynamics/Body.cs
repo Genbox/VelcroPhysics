@@ -40,7 +40,7 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics
 {
-    public class Body : IDisposable
+    public class Body
     {
         private BodyType _type;
         private float _inertia;
@@ -1329,21 +1329,5 @@ namespace VelcroPhysics.Dynamics
 
             return body;
         }
-
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                _world.RemoveBody(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }
