@@ -7,7 +7,6 @@ using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.PathGenerator;
-using VelcroPhysics.Tools.Serialization.XML;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Testbed.Tests
@@ -185,15 +184,15 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             if (_time >= 300)
             {
                 _time = 0;
-                if (_save)
-                {
-                    WorldSerializer.Serialize(World, "out.xml");
-                }
-                else
-                {
-                    World = WorldSerializer.Deserialize("out.xml");
-                    Initialize(); //To initialize the debug view
-                }
+                //if (_save)
+                //{
+                //    WorldSerializer.Serialize(World, "out.xml");
+                //}
+                //else
+                //{
+                //    World = WorldSerializer.Deserialize("out.xml");
+                //    Initialize(); //To initialize the debug view
+                //}
 
                 _save = !_save;
             }
