@@ -500,33 +500,5 @@ namespace VelcroPhysics.Dynamics
 
             return true;
         }
-
-        /// <summary>
-        /// Clones the fixture and attached shape onto the specified body.
-        /// </summary>
-        /// <param name="body">The body you wish to clone the fixture onto.</param>
-        /// <returns>The cloned fixture.</returns>
-        public Fixture CloneOnto(Body body)
-        {
-            Fixture fixture = new Fixture();
-            fixture.Body = body;
-            fixture.Shape = Shape.Clone();
-            fixture.UserData = UserData;
-            fixture.Restitution = Restitution;
-            fixture.Friction = Friction;
-            fixture.IsSensor = IsSensor;
-            fixture._collisionGroup = _collisionGroup;
-            fixture._collisionCategories = _collisionCategories;
-            fixture._collidesWith = _collidesWith;
-            fixture.IgnoreCCDWith = IgnoreCCDWith;
-
-            foreach (int ignore in _collisionIgnores)
-            {
-                fixture._collisionIgnores.Add(ignore);
-            }
-
-            fixture.RegisterFixture();
-            return fixture;
-        }
     }
 }

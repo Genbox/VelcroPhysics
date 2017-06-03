@@ -316,7 +316,7 @@ namespace VelcroPhysics.Tools.Serialization.XML
                                         {
                                             Fixture fix = fixtures[int.Parse(pair.Attributes[0].Value)];
                                             fix.Shape = shapes[int.Parse(pair.Attributes[1].Value)].Clone();
-                                            fix.CloneOnto(body);
+                                            //fix.CloneOnto(body);
                                         }
                                         break;
                                     }

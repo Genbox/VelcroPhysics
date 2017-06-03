@@ -1289,45 +1289,5 @@ namespace VelcroPhysics.Dynamics
                 }
             }
         }
-
-        /// <summary>
-        /// Makes a clone of the body. Fixtures and therefore shapes are not included.
-        /// Use DeepClone() to clone the body, as well as fixtures and shapes.
-        /// </summary>
-        /// <param name="world"></param>
-        /// <returns></returns>
-        public Body Clone(World world = null)
-        {
-            Body body = BodyFactory.CreateBody(world ?? _world, Position, Rotation);
-            body._type = _type;
-            body._linearVelocity = _linearVelocity;
-            body._angularVelocity = _angularVelocity;
-            body.GravityScale = GravityScale;
-            body.UserData = UserData;
-            body._flags = _flags;
-            body.LinearDamping = LinearDamping;
-            body.AngularDamping = AngularDamping;
-            body._torque = _torque;
-
-            return body;
-        }
-
-        /// <summary>
-        /// Clones the body and all attached fixtures and shapes. Simply said, it makes a complete copy of the body.
-        /// </summary>
-        /// <param name="world"></param>
-        /// <returns></returns>
-        public Body DeepClone(World world = null)
-        {
-            Body body = Clone(world ?? _world);
-
-            int count = FixtureList.Count; //Make a copy of the count. Otherwise it causes an infinite loop.
-            for (int i = 0; i < count; i++)
-            {
-                FixtureList[i].CloneOnto(body);
-            }
-
-            return body;
-        }
     }
 }

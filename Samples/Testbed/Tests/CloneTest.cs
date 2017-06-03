@@ -28,15 +28,15 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             box.LinearVelocity = new Vector2(0, 10);
 
             //This clones the body and all attached fixtures
-            Body boxClone1 = box.DeepClone();
+            //Body boxClone1 = box.DeepClone();
 
             //Swiching the body type to static will reset all forces. This will affect the next clone.
-            boxClone1.BodyType = BodyType.Static;
-            boxClone1.Position += new Vector2(-10, 0);
+            //boxClone1.BodyType = BodyType.Static;
+            //boxClone1.Position += new Vector2(-10, 0);
 
-            Body boxClone2 = boxClone1.DeepClone();
-            boxClone2.BodyType = BodyType.Dynamic;
-            boxClone2.Position += new Vector2(-10, 0);
+            //Body boxClone2 = boxClone1.DeepClone();
+            //boxClone2.BodyType = BodyType.Dynamic;
+            //boxClone2.Position += new Vector2(-10, 0);
         }
 
         public override void Initialize()
@@ -56,9 +56,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             Body compund = BodyFactory.CreateCompoundPolygon(World, Triangulate.ConvexPartition(verts, TriangulationAlgorithm.Bayazit), 1);
             compund.Position = new Vector2(-25, 30);
 
-            Body b = compund.DeepClone();
-            b.Position = new Vector2(20, 30);
-            b.BodyType = BodyType.Dynamic;
+            //Body b = compund.DeepClone();
+            //b.Position = new Vector2(20, 30);
+            //b.BodyType = BodyType.Dynamic;
 
             base.Initialize();
         }
