@@ -29,6 +29,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         public static TestEntry[] TestList =
         {
             //Original tests
+            new TestEntry { Name = "Template Test", CreateTest = TemplatesTest.Create },
+
             new TestEntry { Name = "Continuous Test", CreateTest = ContinuousTest.Create },
             new TestEntry { Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create },
             new TestEntry { Name = "Motor joint", CreateTest = MotorJointTest.Create },

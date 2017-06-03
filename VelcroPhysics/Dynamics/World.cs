@@ -33,6 +33,7 @@ using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.Dynamics
 {
@@ -62,6 +63,9 @@ namespace VelcroPhysics.Dynamics
 
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
         internal bool _worldHasNewFixture;
+
+        internal int _bodyIdCounter;
+        internal int _fixtureIdCounter;
 
         /// <summary>
         /// Fires whenever a body has been added
@@ -1322,6 +1326,15 @@ namespace VelcroPhysics.Dynamics
             }
 
             ProcessChanges();
+        }
+
+        internal Body CreateBody(BodyTemplate template)
+        {
+            Body b = new Body(this, template);
+            b.BodyId = _bodyIdCounter++;
+
+            AddBody(b);
+            return b;
         }
     }
 }

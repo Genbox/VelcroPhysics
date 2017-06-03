@@ -45,8 +45,6 @@ namespace VelcroPhysics.Dynamics
     /// </summary>
     public class Fixture : IDisposable
     {
-        [ThreadStatic]
-        private static int _fixtureIdCounter;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
@@ -87,8 +85,6 @@ namespace VelcroPhysics.Dynamics
 
         internal Fixture()
         {
-            FixtureId = _fixtureIdCounter++;
-
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
@@ -97,19 +93,15 @@ namespace VelcroPhysics.Dynamics
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
         }
 
-        internal Fixture(Body body, FixtureTemplate template)
-            : this(body, template.Shape, template.Friction, template.Restitution, template.UserData)
+        internal Fixture(Body body, FixtureTemplate template) : this()
         {
-        }
+            UserData = template.UserData;
+            Friction = template.Friction;
+            Restitution = template.Restitution;
 
-        internal Fixture(Body body, Shape shape, float friction = 0.2f, float restitution = 0, object userData = null)
-            : this()
-        {
             Body = body;
-            UserData = userData;
-            Shape = shape.Clone();
-            Friction = friction;
-            Restitution = restitution;
+            IsSensor = template.IsSensor;
+            Shape = template.Shape.Clone();
 
             RegisterFixture();
         }

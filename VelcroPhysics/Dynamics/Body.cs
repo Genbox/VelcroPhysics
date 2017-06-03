@@ -33,6 +33,7 @@ using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
+using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
@@ -41,9 +42,6 @@ namespace VelcroPhysics.Dynamics
 {
     public class Body : IDisposable
     {
-        [ThreadStatic]
-        private static int _bodyIdCounter;
-
         private BodyType _type;
         private float _inertia;
         private float _mass;
@@ -59,36 +57,52 @@ namespace VelcroPhysics.Dynamics
         internal World _world;
         public Transform _xf; // the body origin transform
 
-        internal Body(World world, BodyTemplate template) : this(world, template.Position, template.Angle, template.Type, template.UserData)
+        internal Body(World world, BodyTemplate template)
         {
-        }
-
-        internal Body(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userdata = null)
-        {
-            Debug.Assert(!float.IsNaN(position.X));
-            Debug.Assert(!float.IsNaN(position.Y));
-            Debug.Assert(!float.IsNaN(rotation));
-
             FixtureList = new List<Fixture>(1);
-            BodyId = _bodyIdCounter++;
+
+            if (template.AllowCCD)
+                _flags |= BodyFlags.BulletFlag;
+            if (template.AllowRotation)
+                _flags |= BodyFlags.FixedRotationFlag;
+            if (template.AllowSleep)
+                _flags |= BodyFlags.AutoSleepFlag;
+            if (template.Awake)
+                _flags |= BodyFlags.AwakeFlag;
+            if (template.Active)
+                _flags |= BodyFlags.Enabled;
 
             _world = world;
-            _flags = BodyFlags.Enabled | BodyFlags.AwakeFlag | BodyFlags.AutoSleepFlag;
 
-            UserData = userdata;
-            GravityScale = 1.0f;
-            _type = bodyType;
-
-            _xf.q.Set(rotation);
-            _xf.p = position;
+            _xf.p = template.Position;
+            _xf.q.Set(template.Angle);
 
             _sweep.C0 = _xf.p;
             _sweep.C = _xf.p;
+            _sweep.A0 = template.Angle;
+            _sweep.A = template.Angle;
 
-            _sweep.A0 = rotation;
-            _sweep.A = rotation;
+            _linearVelocity = template.LinearVelocity;
+            _angularVelocity = template.AngularVelocity;
 
-            world.AddBody(this); //Velcro note: bodies can't live without a World
+            LinearDamping = template.LinearDamping;
+            AngularDamping = template.AngularDamping;
+            GravityScale = 1.0f;
+
+            _type = template.Type;
+
+            if (_type == BodyType.Dynamic)
+            {
+                _mass = 1.0f;
+                _invMass = 1.0f;
+            }
+            else
+            {
+                _mass = 0.0f;
+                _invMass = 0.0f;
+            }
+
+            UserData = template.UserData;
         }
 
         public ControllerFilter ControllerFilter { get; set; }
@@ -98,7 +112,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// A unique id for this body.
         /// </summary>
-        public int BodyId { get; }
+        public int BodyId { get; internal set; }
 
         public float SleepTime { get; set; }
 
@@ -675,12 +689,20 @@ namespace VelcroPhysics.Dynamics
         /// Contacts are not created until the next time step.
         /// Warning: This function is locked during callbacks.
         /// </summary>
-        /// <param name="shape">The shape.</param>
-        /// <param name="userData">Application specific data</param>
-        /// <returns></returns>
+        public Fixture CreateFixture(FixtureTemplate template)
+        {
+            Fixture f = new Fixture(this, template);
+            f.FixtureId = _world._fixtureIdCounter++;
+            return f;
+        }
+
         public Fixture CreateFixture(Shape shape, object userData = null)
         {
-            return new Fixture(this, shape, userData: userData);
+            FixtureTemplate template = new FixtureTemplate();
+            template.Shape = shape;
+            template.UserData = userData;
+
+            return CreateFixture(template);
         }
 
         /// <summary>
@@ -1276,7 +1298,7 @@ namespace VelcroPhysics.Dynamics
         /// <returns></returns>
         public Body Clone(World world = null)
         {
-            Body body = new Body(world ?? _world, Position, Rotation);
+            Body body = BodyFactory.CreateBody(world ?? _world, Position, Rotation);
             body._type = _type;
             body._linearVelocity = _linearVelocity;
             body._angularVelocity = _angularVelocity;

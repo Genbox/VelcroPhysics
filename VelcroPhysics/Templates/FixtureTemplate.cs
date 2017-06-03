@@ -1,10 +1,16 @@
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.Templates.Shapes;
 
 namespace VelcroPhysics.Templates
 {
     public class FixtureTemplate : IDefaults
     {
+        public FixtureTemplate()
+        {
+            SetDefaults();
+        }
+
         /// <summary>
         /// The density, usually in kg/m^2.
         /// </summary>

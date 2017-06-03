@@ -50,6 +50,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\TemplatesTest.cs" />
     <Compile Include="Tests\AddPairTest.cs" />
     <Compile Include="Tests\AngleJointTest.cs" />
     <Compile Include="Tests\ApplyForceTest.cs" />

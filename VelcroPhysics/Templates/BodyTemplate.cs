@@ -5,6 +5,11 @@ namespace VelcroPhysics.Templates
 {
     public class BodyTemplate : IDefaults
     {
+        public BodyTemplate()
+        {
+            SetDefaults();
+        }
+        
         /// <summary>
         /// Is this body initially awake or sleeping?
         /// </summary>
