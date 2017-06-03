@@ -52,23 +52,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      transform="translate(0,-48)">
-    <g
-       id="g3101">
-      <rect
-         y="-312"
-         x="-640"
-         height="360"
-         width="640"
-         id="rect2988"
-         style="color:#000000;fill:#00ffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-      <rect
-         y="48"
-         x="0"
-         height="360"
-         width="640"
-         id="rect2988-1"
-         style="color:#000000;fill:#00ffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    </g>
+
     <image
        y="-16"
        x="348"
@@ -274,39 +258,32 @@ DVYBZ3mqg0oyhEToWnZ8q4awltAjZGYe8ACyR0/bmXm1BfgzRnsFn1HBaZiDhIT/AbiGDMkMuoBp
     <path
        style="fill:none;stroke:#000000;stroke-width:0.99395597px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m -405.24903,111.50302 c -21.90689,-31.433118 -63.25399,-60.478138 -63.25399,-83.806318 0,-62.500006 62.67961,-49.20759 63.25399,-10.4138 0.80994,-37.18372 63.75205,-48.41078 63.75205,1.48768 0,35.21207 -42.84128,60.19506 -63.75205,92.732438 z"
-       id="Heart"
+       velcro_id="Heart"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cscsc"
-       fp_body="dynamic"
-       fp_friction="0"
-       fp_restitution="1" />
+       sodipodi:nodetypes="cscsc" />
     <path
        style="fill:none;stroke:#ff0000;stroke-width:1.00536191px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m -163.17677,111.49732 c 0,0 25.15196,-3.52676 23.27379,-38.206492 -71.95251,59.962492 -79.35884,-69.85443 -12.6488,-33.96132 -41.56365,-78.476608 81.066201,-67.523403 35.41663,0 66.418767,-33.8611 58.589814,89.583752 -12.14284,33.71161 -3.94701,34.524912 25.29759,38.456202 25.29759,38.456202 z"
-       id="Club"
+       velcro_id="Club"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc"
-       fp_body="static" />
+       sodipodi:nodetypes="ccccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.00894642px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 71.504473,48.713433 39.952237,-22.829853 24.25672,-41.379107 21.403,39.238809 41.3791,25.683584 -39.95224,23.543285 -22.82986,38.525379 -23.54328,-40.665677 z"
-       id="Diamond"
-       inkscape:connector-curvature="0"
-       fp_body="dynamic"
-       fp_mass="30" />
+       velcro_id="Diamond"
+       inkscape:connector-curvature="0" />
     <g
-       id="Spade"
-       fp_body="static">
+       velcro_id="Spade">
       <path
          sodipodi:nodetypes="cccccccccccccccccc"
          inkscape:connector-curvature="0"
-         id="path3115"
+         id="Spade1"
          d="m 403.7678,-15.502868 -17.77887,20.3489852 -23.41177,18.2439168 -14.08228,19.296451 0.70412,21.050673 10.5617,11.928715 17.9549,4.560979 21.1234,-10.876181 10.91377,-0.350844 8.09731,7.367736 13.02609,3.859289 18.30696,-3.508446 L 461.50512,62.03378 460.09689,42.386485 447.7749,24.142568 428.41178,9.7579406 416.08979,-2.5216193 z"
          style="fill:none;stroke:#ff0000;stroke-width:0.99405116px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <path
          sodipodi:nodetypes="ccccccccc"
          inkscape:connector-curvature="0"
-         id="path3117"
+         id="Spade2"
          d="m 399.19107,73.787073 -0.35207,7.894002 -5.63291,18.594765 -19.36312,11.22703 62.31405,-0.70169 -13.7302,-3.8593 -10.56171,-14.735467 -2.11235,-18.594762 z"
          style="fill:none;stroke:#ff0000;stroke-width:0.99405116px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>

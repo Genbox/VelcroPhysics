@@ -1,18 +1,22 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Factories;
 using VelcroPhysics.Samples.Demo.Demos.Prefabs;
 using VelcroPhysics.Samples.Demo.MediaSystem;
 using VelcroPhysics.Samples.Demo.ScreenSystem;
-using VelcroPhysics.Templates;
+using VelcroPhysics.Shared;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Demo.Demos
 {
     internal class D15_SVGtoBody : PhysicsDemoScreen
     {
-        private BodyContainer _body;
+        private VerticesContainer _loadedVertices;
         private Border _border;
         private Sprite _club;
         private Body _clubBody;
@@ -30,19 +34,37 @@ namespace VelcroPhysics.Samples.Demo.Demos
             World.Gravity = new Vector2(0f, 10f);
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            _body = Framework.Content.Load<BodyContainer>("Pipeline/Body");
+            _loadedVertices = Framework.Content.Load<VerticesContainer>("Pipeline/Body");
 
-            _heartBody = _body["Heart"].Create(World);
+            _heartBody = Create(_loadedVertices["Heart"]);
             _heart = new Sprite(ContentWrapper.GetTexture("Heart"), ContentWrapper.CalculateOrigin(_heartBody));
 
-            _clubBody = _body["Club"].Create(World);
+            _clubBody = Create(_loadedVertices["Club"]);
             _club = new Sprite(ContentWrapper.GetTexture("Club"), ContentWrapper.CalculateOrigin(_clubBody));
 
-            _spadeBody = _body["Spade"].Create(World);
+            _spadeBody = Create(_loadedVertices["Spade"]);
             _spade = new Sprite(ContentWrapper.GetTexture("Spade"), ContentWrapper.CalculateOrigin(_spadeBody));
 
-            _diamondBody = _body["Diamond"].Create(World);
+            _diamondBody = Create(_loadedVertices["Diamond"]);
             _diamond = new Sprite(ContentWrapper.GetTexture("Diamond"), ContentWrapper.CalculateOrigin(_diamondBody));
+        }
+
+        private Body Create(List<VerticesExt> ext)
+        {
+            Body b = BodyFactory.CreateBody(World, bodyType: BodyType.Dynamic);
+
+            foreach (VerticesExt ve in ext)
+            {
+
+                List<Vertices> decomposed = Triangulate.ConvexPartition(ve, TriangulationAlgorithm.Bayazit);
+
+                foreach (Vertices v in decomposed)
+                {
+                    FixtureFactory.AttachPolygon(v, 1, b);
+                }
+            }
+
+            return b;
         }
 
         public override void Draw(GameTime gameTime)

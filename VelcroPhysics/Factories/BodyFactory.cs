@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
@@ -13,7 +14,13 @@ namespace VelcroPhysics.Factories
     {
         public static Body CreateBody(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
-            return new Body(world, position, rotation, bodyType, userData);
+            BodyTemplate template = new BodyTemplate();
+            template.Position = position;
+            template.Angle = rotation;
+            template.Type = bodyType;
+            template.UserData = userData;
+
+            return world.CreateBody(template);
         }
 
         public static Body CreateEdge(World world, Vector2 start, Vector2 end, object userData = null)
@@ -187,6 +194,11 @@ namespace VelcroPhysics.Factories
             breakableBody.MainBody.Position = position;
             world.AddBreakableBody(breakableBody);
             return breakableBody;
+        }
+
+        public static Body CreateFromTemplate(World world, BodyTemplate bodyTemplate)
+        {
+            return world.CreateBody(bodyTemplate);
         }
     }
 }

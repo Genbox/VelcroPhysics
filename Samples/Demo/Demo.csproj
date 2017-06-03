@@ -115,7 +115,6 @@
     <Content Include="Content\DemoGFX\Goo.png" />
     <Content Include="Content\DemoGFX\Heart.png" />
     <Content Include="Content\DemoGFX\Link.png" />
-    <Content Include="Content\DemoGFX\Logo.png" />
     <Content Include="Content\DemoGFX\Spade.png" />
     <Content Include="Content\DemoGFX\Wheel.png" />
     <Content Include="Content\DemoSFX\Click.wav" />

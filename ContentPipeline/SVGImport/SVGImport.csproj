@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <AssemblyName>VelcroPhysics.ContentPipelines.SVGImport</AssemblyName>
     <RootNamespace>VelcroPhysics.ContentPipelines.SVGImport</RootNamespace>
+    <ApplicationIcon />
+    <OutputTypeEx>library</OutputTypeEx>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
@@ -91,13 +92,8 @@ namespace VelcroPhysics.Tools.PathGenerator
 
             for (int i = 0; i < centers.Count; i++)
             {
-                Body b = new Body(world);
-
                 // copy the type from original body
-                b.BodyType = type;
-                b.Position = new Vector2(centers[i].X, centers[i].Y);
-                b.Rotation = centers[i].Z;
-                b.UserData = userData;
+                Body b = BodyFactory.CreateBody(world, new Vector2(centers[i].X, centers[i].Y), centers[i].Z, type, userData);
 
                 foreach (Shape shape in shapes)
                 {
@@ -120,8 +116,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="copies">The copies.</param>
         /// <param name="userData">The user data.</param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type,
-                                                                 int copies, object userData)
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type, int copies, object userData)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);

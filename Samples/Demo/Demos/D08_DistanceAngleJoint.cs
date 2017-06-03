@@ -29,7 +29,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
 
             _border = new Border(World, Lines, Framework.GraphicsDevice);
 
-            _obstacles = new Body(World);
+            _obstacles = BodyFactory.CreateBody(World);
             FixtureFactory.AttachEdge(new Vector2(-16f, -1f), new Vector2(-14f, 1f), _obstacles);
             FixtureFactory.AttachEdge(new Vector2(-14f, 1f), new Vector2(-12f, -1f), _obstacles);
 

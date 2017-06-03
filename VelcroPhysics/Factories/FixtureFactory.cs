@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
@@ -121,6 +122,11 @@ namespace VelcroPhysics.Factories
             List<Vertices> triangles = Triangulate.ConvexPartition(arc, TriangulationAlgorithm.Earclip);
 
             return AttachCompoundPolygon(triangles, density, body);
+        }
+
+        public static Fixture CreateFromTemplate(Body body, FixtureTemplate f1)
+        {
+            return body.CreateFixture(f1);
         }
     }
 }

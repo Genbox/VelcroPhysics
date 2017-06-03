@@ -32,6 +32,7 @@ using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Templates;
 
 namespace VelcroPhysics.Dynamics
 {
@@ -44,8 +45,6 @@ namespace VelcroPhysics.Dynamics
     /// </summary>
     public class Fixture : IDisposable
     {
-        [ThreadStatic]
-        private static int _fixtureIdCounter;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
@@ -86,26 +85,23 @@ namespace VelcroPhysics.Dynamics
 
         internal Fixture()
         {
-            FixtureId = _fixtureIdCounter++;
-
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
             _collisionIgnores = new HashSet<int>();
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
-
-            //Fixture defaults
-            Friction = 0.2f;
-            Restitution = 0;
         }
 
-        internal Fixture(Body body, Shape shape, object userData = null)
-            : this()
+        internal Fixture(Body body, FixtureTemplate template) : this()
         {
+            UserData = template.UserData;
+            Friction = template.Friction;
+            Restitution = template.Restitution;
+
             Body = body;
-            UserData = userData;
-            Shape = shape.Clone();
+            IsSensor = template.IsSensor;
+            Shape = template.Shape.Clone();
 
             RegisterFixture();
         }

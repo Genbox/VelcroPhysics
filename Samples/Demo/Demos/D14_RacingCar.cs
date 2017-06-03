@@ -54,7 +54,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
             _maxSpeed = 50.0f;
 
             // terrain
-            _ground = new Body(World);
+            _ground = BodyFactory.CreateBody(World);
             {
                 Vertices terrain = new Vertices();
                 terrain.Add(new Vector2(-20f, -5f));
@@ -102,7 +102,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
 
             // teeter board
             {
-                _board = new Body(World);
+                _board = BodyFactory.CreateBody(World);
                 _board.BodyType = BodyType.Dynamic;
                 _board.Position = new Vector2(140.0f, -1.0f);
 
@@ -133,7 +133,7 @@ namespace VelcroPhysics.Samples.Demo.Demos
                 Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
                 {
-                    Body body = new Body(World);
+                    Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(161f + 2f * i, 0.125f);
                     Fixture fix = body.CreateFixture(shape);
@@ -153,19 +153,19 @@ namespace VelcroPhysics.Samples.Demo.Demos
                 box.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
                 _box = new Sprite(ContentWrapper.TextureFromShape(box, "Square", ContentWrapper.Sky, ContentWrapper.Sunset, ContentWrapper.Black, 1f));
 
-                Body body = new Body(World);
+                Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -0.5f);
                 body.CreateFixture(box);
                 _boxes.Add(body);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -1.5f);
                 body.CreateFixture(box);
                 _boxes.Add(body);
 
-                body = new Body(World);
+                body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -2.5f);
                 body.CreateFixture(box);
@@ -186,18 +186,18 @@ namespace VelcroPhysics.Samples.Demo.Demos
 
                 PolygonShape chassis = new PolygonShape(vertices, 2f);
 
-                _car = new Body(World);
+                _car = BodyFactory.CreateBody(World);
                 _car.BodyType = BodyType.Dynamic;
                 _car.Position = new Vector2(0.0f, -1.0f);
                 _car.CreateFixture(chassis);
 
-                _wheelBack = new Body(World);
+                _wheelBack = BodyFactory.CreateBody(World);
                 _wheelBack.BodyType = BodyType.Dynamic;
                 _wheelBack.Position = new Vector2(-1.709f, -0.78f);
                 Fixture fix = _wheelBack.CreateFixture(new CircleShape(0.5f, 0.8f));
                 fix.Friction = 0.9f;
 
-                _wheelFront = new Body(World);
+                _wheelFront = BodyFactory.CreateBody(World);
                 _wheelFront.BodyType = BodyType.Dynamic;
                 _wheelFront.Position = new Vector2(1.54f, -0.8f);
                 _wheelFront.CreateFixture(new CircleShape(0.5f, 1f));

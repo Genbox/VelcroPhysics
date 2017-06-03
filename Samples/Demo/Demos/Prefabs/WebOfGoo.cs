@@ -69,7 +69,7 @@ namespace VelcroPhysics.Samples.Demo.Demos.Prefabs
             Vertices frame = PolygonUtils.CreateCircle(rings * 2.9f - 0.9f, sides);
             frame.Translate(ref position);
 
-            Body anchor = new Body(world, position);
+            Body anchor = BodyFactory.CreateBody(world, position);
             anchor.BodyType = BodyType.Static;
 
             //Attach the outer ring to the anchor

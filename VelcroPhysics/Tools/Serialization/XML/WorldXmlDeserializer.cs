@@ -8,6 +8,7 @@ using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
+using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Tools.Serialization.XML
@@ -251,7 +252,7 @@ namespace VelcroPhysics.Tools.Serialization.XML
                 {
                     foreach (XMLFragmentElement element in bodyElement.Elements)
                     {
-                        Body body = new Body(world);
+                        Body body = BodyFactory.CreateBody(world);
 
                         if (element.Name.ToLower() != "body")
                             throw new Exception();

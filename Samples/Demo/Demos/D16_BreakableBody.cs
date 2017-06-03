@@ -3,12 +3,15 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision.Shapes;
+using VelcroPhysics.ContentPipelines.SVGImport.Objects;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Samples.Demo.Demos.Prefabs;
 using VelcroPhysics.Samples.Demo.MediaSystem;
 using VelcroPhysics.Samples.Demo.ScreenSystem;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
+using VelcroPhysics.Tools.PolygonManipulation;
+using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Samples.Demo.Demos
@@ -29,7 +32,9 @@ namespace VelcroPhysics.Samples.Demo.Demos
             _border = new Border(World, Lines, Framework.GraphicsDevice);
             for (int i = 0; i < 3; i++)
             {
-                _breakableCookie[i] = Framework.Content.Load<BodyContainer>("Pipeline/BreakableBody")["Cookie"].CreateBreakable(World);
+                VerticesContainer verticesContainer = Framework.Content.Load<VerticesContainer>("Pipeline/BreakableBody");
+                List<VerticesExt> def = verticesContainer["Cookie"];
+                _breakableCookie[i] = CreateBreakable(def);
                 _breakableCookie[i].Strength = 120f;
                 _breakableCookie[i].MainBody.Position = new Vector2(-20.33f + 15f * i, -5.33f);
             }
@@ -46,6 +51,29 @@ namespace VelcroPhysics.Samples.Demo.Demos
                 _breakableSprite.Add(new Sprite(textures[i], origin));
             }
             _completeSprite = new Sprite(ContentWrapper.GetTexture("Cookie"), Vector2.Zero);
+        }
+
+        private BreakableBody CreateBreakable(List<VerticesExt> ext)
+        {
+            List<PolygonShape> polygons = new List<PolygonShape>();
+
+            foreach (VerticesExt ve in ext)
+            {
+                Vertices simple = SimplifyTools.DouglasPeuckerSimplify(ve, 0.1f);
+
+                List<Vertices> list = Triangulate.ConvexPartition(simple, TriangulationAlgorithm.Bayazit);
+
+                foreach (Vertices v in list)
+                {
+                    PolygonShape s = new PolygonShape(v, 1f);
+                    polygons.Add(s);
+                }
+            }
+
+            BreakableBody body = new BreakableBody(World, polygons);
+            World.AddBreakableBody(body);
+
+            return body;
         }
 
         public override void HandleInput(InputHelper input, GameTime gameTime)
