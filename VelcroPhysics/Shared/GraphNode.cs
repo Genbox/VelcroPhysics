@@ -1,6 +1,6 @@
 ﻿namespace VelcroPhysics.Shared
 {
-    public sealed class GraphNode<T>
+    public class GraphNode<T>
     {
         public GraphNode(T item)
         {
