@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -43,13 +42,11 @@ namespace VelcroPhysics.Dynamics
     /// Fixtures are created via Body.CreateFixture.
     /// Warning: You cannot reuse fixtures.
     /// </summary>
-    public class Fixture : IDisposable
+    public class Fixture
     {
-
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
-        internal HashSet<int> _collisionIgnores;
         private float _friction;
         private bool _isSensor;
         private float _restitution;
@@ -88,7 +85,6 @@ namespace VelcroPhysics.Dynamics
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
-            _collisionIgnores = new HashSet<int>();
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
         }
@@ -241,44 +237,6 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <value>The fixture id.</value>
         public int FixtureId { get; internal set; }
-
-        /// <summary>
-        /// Restores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void RestoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.Contains(fixture.FixtureId))
-            {
-                _collisionIgnores.Remove(fixture.FixtureId);
-                Refilter();
-            }
-        }
-
-        /// <summary>
-        /// Ignores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void IgnoreCollisionWith(Fixture fixture)
-        {
-            if (!_collisionIgnores.Contains(fixture.FixtureId))
-            {
-                _collisionIgnores.Add(fixture.FixtureId);
-                Refilter();
-            }
-        }
-
-        /// <summary>
-        /// Determines whether collisions are ignored between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        /// <returns>
-        /// <c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsFixtureIgnored(Fixture fixture)
-        {
-            return _collisionIgnores.Contains(fixture.FixtureId);
-        }
 
         /// <summary>
         /// Contacts are persistent and will keep being persistent unless they are
@@ -462,89 +420,5 @@ namespace VelcroPhysics.Dynamics
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }
         }
-
-        /// <summary>
-        /// Only compares the values of this fixture, and not the attached shape or body.
-        /// This is used for deduplication in serialization only.
-        /// </summary>
-        internal bool CompareTo(Fixture fixture)
-        {
-            return (_collidesWith == fixture._collidesWith &&
-                    _collisionCategories == fixture._collisionCategories &&
-                    _collisionGroup == fixture._collisionGroup &&
-                    Friction == fixture.Friction &&
-                    IsSensor == fixture.IsSensor &&
-                    Restitution == fixture.Restitution &&
-                    UserData == fixture.UserData &&
-                    IgnoreCCDWith == fixture.IgnoreCCDWith &&
-                    SequenceEqual(_collisionIgnores, fixture._collisionIgnores));
-        }
-
-        private bool SequenceEqual<T>(HashSet<T> first, HashSet<T> second)
-        {
-            if (first.Count != second.Count)
-                return false;
-
-            using (IEnumerator<T> enumerator1 = first.GetEnumerator())
-            {
-                using (IEnumerator<T> enumerator2 = second.GetEnumerator())
-                {
-                    while (enumerator1.MoveNext())
-                    {
-                        if (!enumerator2.MoveNext() || !Equals(enumerator1.Current, enumerator2.Current))
-                            return false;
-                    }
-
-                    if (enumerator2.MoveNext())
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Clones the fixture and attached shape onto the specified body.
-        /// </summary>
-        /// <param name="body">The body you wish to clone the fixture onto.</param>
-        /// <returns>The cloned fixture.</returns>
-        public Fixture CloneOnto(Body body)
-        {
-            Fixture fixture = new Fixture();
-            fixture.Body = body;
-            fixture.Shape = Shape.Clone();
-            fixture.UserData = UserData;
-            fixture.Restitution = Restitution;
-            fixture.Friction = Friction;
-            fixture.IsSensor = IsSensor;
-            fixture._collisionGroup = _collisionGroup;
-            fixture._collisionCategories = _collisionCategories;
-            fixture._collidesWith = _collidesWith;
-            fixture.IgnoreCCDWith = IgnoreCCDWith;
-
-            foreach (int ignore in _collisionIgnores)
-            {
-                fixture._collisionIgnores.Add(ignore);
-            }
-
-            fixture.RegisterFixture();
-            return fixture;
-        }
-
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                Body.DestroyFixture(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }

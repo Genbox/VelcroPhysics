@@ -22,7 +22,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
         private void OnSeparation(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            fixtureB.Body.Dispose();
+            //fixtureB.Body.Dispose(); //TODO: issue #4
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

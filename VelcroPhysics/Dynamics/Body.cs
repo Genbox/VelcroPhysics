@@ -33,14 +33,13 @@ using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics
 {
-    public class Body : IDisposable
+    public class Body
     {
         private BodyType _type;
         private float _inertia;
@@ -547,18 +546,6 @@ namespace VelcroPhysics.Dynamics
 
         public float Restitution
         {
-            get
-            {
-                float res = 0;
-
-                for (int i = 0; i < FixtureList.Count; i++)
-                {
-                    Fixture f = FixtureList[i];
-                    res += f.Restitution;
-                }
-
-                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
-            }
             set
             {
                 for (int i = 0; i < FixtureList.Count; i++)
@@ -571,18 +558,6 @@ namespace VelcroPhysics.Dynamics
 
         public float Friction
         {
-            get
-            {
-                float res = 0;
-
-                for (int i = 0; i < FixtureList.Count; i++)
-                {
-                    Fixture f = FixtureList[i];
-                    res += f.Friction;
-                }
-
-                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
-            }
             set
             {
                 for (int i = 0; i < FixtureList.Count; i++)
@@ -1267,83 +1242,5 @@ namespace VelcroPhysics.Dynamics
                 }
             }
         }
-
-        public void IgnoreCollisionWith(Body other)
-        {
-            for (int i = 0; i < FixtureList.Count; i++)
-            {
-                for (int j = 0; j < other.FixtureList.Count; j++)
-                {
-                    FixtureList[i].IgnoreCollisionWith(other.FixtureList[j]);
-                }
-            }
-        }
-
-        public void RestoreCollisionWith(Body other)
-        {
-            for (int i = 0; i < FixtureList.Count; i++)
-            {
-                for (int j = 0; j < other.FixtureList.Count; j++)
-                {
-                    FixtureList[i].RestoreCollisionWith(other.FixtureList[j]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Makes a clone of the body. Fixtures and therefore shapes are not included.
-        /// Use DeepClone() to clone the body, as well as fixtures and shapes.
-        /// </summary>
-        /// <param name="world"></param>
-        /// <returns></returns>
-        public Body Clone(World world = null)
-        {
-            Body body = BodyFactory.CreateBody(world ?? _world, Position, Rotation);
-            body._type = _type;
-            body._linearVelocity = _linearVelocity;
-            body._angularVelocity = _angularVelocity;
-            body.GravityScale = GravityScale;
-            body.UserData = UserData;
-            body._flags = _flags;
-            body.LinearDamping = LinearDamping;
-            body.AngularDamping = AngularDamping;
-            body._torque = _torque;
-
-            return body;
-        }
-
-        /// <summary>
-        /// Clones the body and all attached fixtures and shapes. Simply said, it makes a complete copy of the body.
-        /// </summary>
-        /// <param name="world"></param>
-        /// <returns></returns>
-        public Body DeepClone(World world = null)
-        {
-            Body body = Clone(world ?? _world);
-
-            int count = FixtureList.Count; //Make a copy of the count. Otherwise it causes an infinite loop.
-            for (int i = 0; i < count; i++)
-            {
-                FixtureList[i].CloneOnto(body);
-            }
-
-            return body;
-        }
-
-        #region IDisposable Members
-
-        public bool IsDisposed { get; set; }
-
-        public void Dispose()
-        {
-            if (!IsDisposed)
-            {
-                _world.RemoveBody(this);
-                IsDisposed = true;
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }

@@ -31,7 +31,6 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.Serialization.XML;
 
 namespace VelcroPhysics.Samples.Testbed.Framework
 {
@@ -97,14 +96,15 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
         public virtual void Keyboard(KeyboardManager keyboardManager)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.F11))
-                WorldSerializer.Serialize(World, "out.xml");
+            //TODO:
+            //if (keyboardManager.IsNewKeyPress(Keys.F11))
+            //    WorldSerializer.Serialize(World, "out.xml");
 
-            if (keyboardManager.IsNewKeyPress(Keys.F12))
-            {
-                World = WorldSerializer.Deserialize("out.xml");
-                Initialize();
-            }
+            //if (keyboardManager.IsNewKeyPress(Keys.F12))
+            //{
+            //    World = WorldSerializer.Deserialize("out.xml");
+            //    Initialize();
+            //}
         }
 
         public virtual void Gamepad(GamePadState state, GamePadState oldState) { }
