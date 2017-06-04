@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Running;
 using Benchmarks.Core.Collision;
 using Benchmarks.Core.Primitives;
-using Benchmarks.Core.Utils;
+using Benchmarks.Core.Shared;
 
 namespace Benchmarks
 {
