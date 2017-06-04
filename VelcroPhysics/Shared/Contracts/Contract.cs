@@ -6,14 +6,19 @@ namespace VelcroPhysics.Shared.Contracts
 {
     public static class Contract
     {
-        public static void Requires(bool required, string message = null)
+        public static void Requires(bool condition, string message = null)
         {
-            Debug.Assert(required, message);
+            Debug.Assert(condition, message);
 
 #if !DEBUG
             if (!required)
                 throw new RequiredException(message);
 #endif
+        }
+
+        public static void Warn(bool condition, string message = null)
+        {
+            Debug.WriteLineIf(condition, message);
         }
 
         public static void Ensures(bool ensures, string message = null)
