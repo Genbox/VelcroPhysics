@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 using Benchmarks.TestObjects;
 using VelcroPhysics.Shared;
 
-namespace Benchmarks.Core.Utils
+namespace Benchmarks.Core.Shared
 {
     [MemoryDiagnoser]
     public class PoolBenchmarks
