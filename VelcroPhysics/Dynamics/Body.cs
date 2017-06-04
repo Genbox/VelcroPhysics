@@ -33,7 +33,6 @@ using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Factories;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 using VelcroPhysics.Utilities;
@@ -1264,28 +1263,6 @@ namespace VelcroPhysics.Dynamics
                 foreach (Fixture f in FixtureList)
                 {
                     f.OnSeparation -= value;
-                }
-            }
-        }
-
-        public void IgnoreCollisionWith(Body other)
-        {
-            for (int i = 0; i < FixtureList.Count; i++)
-            {
-                for (int j = 0; j < other.FixtureList.Count; j++)
-                {
-                    FixtureList[i].IgnoreCollisionWith(other.FixtureList[j]);
-                }
-            }
-        }
-
-        public void RestoreCollisionWith(Body other)
-        {
-            for (int i = 0; i < FixtureList.Count; i++)
-            {
-                for (int j = 0; j < other.FixtureList.Count; j++)
-                {
-                    FixtureList[i].RestoreCollisionWith(other.FixtureList[j]);
                 }
             }
         }
