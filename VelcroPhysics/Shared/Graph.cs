@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
+using VelcroPhysics.Shared.Contracts;
 
 namespace VelcroPhysics.Shared
 {
@@ -9,6 +9,20 @@ namespace VelcroPhysics.Shared
     /// </summary>
     public class Graph<T> : IEnumerable<T>
     {
+        private readonly EqualityComparer<T> _comparer;
+
+        public Graph()
+        {
+            _comparer = EqualityComparer<T>.Default;
+        }
+
+        public Graph(EqualityComparer<T> comparer)
+        {
+            Contract.Requires(comparer != null, "You supplied a null comparer");
+
+            _comparer = comparer;
+        }
+
         /// <summary>
         /// The number of items in the graph
         /// </summary>
@@ -37,12 +51,10 @@ namespace VelcroPhysics.Shared
         /// <remarks>Note that this method is O(1) in worst case.</remarks>
         public void Add(GraphNode<T> node)
         {
-            //if (node == null)
-            //    throw new ArgumentNullException("node");
+            Contract.Requires(node != null, nameof(node) + " must not be null");
 
             if (First == null)
             {
-                Debug.Assert(First == null && Count == 0, "LinkedList must be empty when this method is called!");
                 node.Next = node;
                 node.Prev = node;
                 First = node;
@@ -76,31 +88,29 @@ namespace VelcroPhysics.Shared
         public GraphNode<T> Find(T value)
         {
             GraphNode<T> node = First;
-            EqualityComparer<T> c = EqualityComparer<T>.Default;
-            if (node != null)
+
+            if (node == null)
+                return null;
+
+            if (value != null)
             {
-                if (value != null)
+                do
                 {
-                    do
-                    {
-                        if (c.Equals(node.Item, value))
-                        {
-                            return node;
-                        }
-                        node = node.Next;
-                    } while (node != First);
-                }
-                else
+                    if (_comparer.Equals(node.Item, value))
+                        return node;
+
+                    node = node.Next;
+                } while (node != First);
+            }
+            else
+            {
+                do
                 {
-                    do
-                    {
-                        if (node.Item == null)
-                        {
-                            return node;
-                        }
-                        node = node.Next;
-                    } while (node != First);
-                }
+                    if (node.Item == null)
+                        return node;
+
+                    node = node.Next;
+                } while (node != First);
             }
             return null;
         }
@@ -113,12 +123,12 @@ namespace VelcroPhysics.Shared
         public bool Remove(T value)
         {
             GraphNode<T> node = Find(value);
-            if (node != null)
-            {
-                Remove(node);
-                return true;
-            }
-            return false;
+
+            if (node == null)
+                return false;
+
+            Remove(node);
+            return true;
         }
 
         /// <summary>
@@ -127,14 +137,11 @@ namespace VelcroPhysics.Shared
         /// <remarks>Note that this methid is O(1) in worst case.</remarks>
         public void Remove(GraphNode<T> node)
         {
-            //if (node == null)
-            //    throw new ArgumentNullException("node");
+            Contract.Requires(node != null, nameof(node) + " must not be null");
+            Contract.Warn(First != null, "You are trying to remove an item from an empty list.");
 
-            //Debug.Assert(node.Graph == this, "Deleting the node from another list!");
-            Debug.Assert(First != null, "This method shouldn't be called on empty list!");
             if (node.Next == node)
             {
-                Debug.Assert(Count == 1 && First == node, "this should only be true for a list with only one node");
                 First = null;
             }
             else
