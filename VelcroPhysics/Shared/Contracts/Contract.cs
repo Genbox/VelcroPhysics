@@ -1,51 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace VelcroPhysics.Shared.Contracts
 {
     public static class Contract
     {
-        public static void Requires(bool condition, string message = null)
+        [Conditional("DEBUG")]
+        public static void Requires(bool condition, string message)
         {
-            Debug.Assert(condition, message);
+            if (condition)
+                return;
 
-#if !DEBUG
-            if (!required)
-                throw new RequiredException(message);
-#endif
+            message = BuildMessage("REQUIRED", message);
+            throw new RequiredException(message);
         }
 
-        public static void Warn(bool condition, string message = null)
+        [Conditional("DEBUG")]
+        public static void Warn(bool condition, string message)
         {
-            Debug.WriteLineIf(condition, message);
+            message = BuildMessage("WARNING", message);
+            Debug.WriteLineIf(!condition, message);
         }
 
-        public static void Ensures(bool ensures, string message = null)
+        [Conditional("DEBUG")]
+        public static void Ensures(bool condition, string message)
         {
-            Debug.Assert(ensures, message);
+            if (condition)
+                return;
 
-#if !DEBUG
-            if (!ensures)
-                throw new EnsuresException(message);
-#endif
+            message = BuildMessage("ENSURANCE", message);
+            throw new EnsuresException(message);
         }
 
-        public static void ForAll<T>(IEnumerable<T> value, Predicate<T> check)
+        [Conditional("DEBUG")]
+        public static void RequireForAll<T>(IEnumerable<T> value, Predicate<T> check)
         {
             foreach (T item in value)
             {
-                Requires(check(item));
+                Requires(check(item), "Failed on: " + item);
             }
         }
 
-        public static void Fail(string reason)
+        [Conditional("DEBUG")]
+        public static void Fail(string message)
         {
-            Debug.Fail(reason);
+            message = BuildMessage("FAILURE", message);
+            throw new RequiredException(message);
+        }
 
-#if !DEBUG
-            throw new RequiredException(reason);
-#endif
+        private static string BuildMessage(string type, string message)
+        {
+            string stackTrace = string.Join(Environment.NewLine, Environment.StackTrace.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Skip(3));
+            return message == null ? string.Empty : type + ": " + message + Environment.NewLine + stackTrace;
         }
     }
 }
