@@ -47,7 +47,6 @@ namespace VelcroPhysics.Dynamics
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
-        internal HashSet<int> _collisionIgnores;
         private float _friction;
         private bool _isSensor;
         private float _restitution;
@@ -86,7 +85,6 @@ namespace VelcroPhysics.Dynamics
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
-            _collisionIgnores = new HashSet<int>();
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
         }
@@ -239,44 +237,6 @@ namespace VelcroPhysics.Dynamics
         /// </summary>
         /// <value>The fixture id.</value>
         public int FixtureId { get; internal set; }
-
-        /// <summary>
-        /// Restores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void RestoreCollisionWith(Fixture fixture)
-        {
-            if (_collisionIgnores.Contains(fixture.FixtureId))
-            {
-                _collisionIgnores.Remove(fixture.FixtureId);
-                Refilter();
-            }
-        }
-
-        /// <summary>
-        /// Ignores collisions between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        public void IgnoreCollisionWith(Fixture fixture)
-        {
-            if (!_collisionIgnores.Contains(fixture.FixtureId))
-            {
-                _collisionIgnores.Add(fixture.FixtureId);
-                Refilter();
-            }
-        }
-
-        /// <summary>
-        /// Determines whether collisions are ignored between this fixture and the provided fixture.
-        /// </summary>
-        /// <param name="fixture">The fixture.</param>
-        /// <returns>
-        /// <c>true</c> if the fixture is ignored; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsFixtureIgnored(Fixture fixture)
-        {
-            return _collisionIgnores.Contains(fixture.FixtureId);
-        }
 
         /// <summary>
         /// Contacts are persistent and will keep being persistent unless they are
@@ -459,46 +419,6 @@ namespace VelcroPhysics.Dynamics
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }
-        }
-
-        /// <summary>
-        /// Only compares the values of this fixture, and not the attached shape or body.
-        /// This is used for deduplication in serialization only.
-        /// </summary>
-        internal bool CompareTo(Fixture fixture)
-        {
-            return (_collidesWith == fixture._collidesWith &&
-                    _collisionCategories == fixture._collisionCategories &&
-                    _collisionGroup == fixture._collisionGroup &&
-                    Friction == fixture.Friction &&
-                    IsSensor == fixture.IsSensor &&
-                    Restitution == fixture.Restitution &&
-                    UserData == fixture.UserData &&
-                    IgnoreCCDWith == fixture.IgnoreCCDWith &&
-                    SequenceEqual(_collisionIgnores, fixture._collisionIgnores));
-        }
-
-        private bool SequenceEqual<T>(HashSet<T> first, HashSet<T> second)
-        {
-            if (first.Count != second.Count)
-                return false;
-
-            using (IEnumerator<T> enumerator1 = first.GetEnumerator())
-            {
-                using (IEnumerator<T> enumerator2 = second.GetEnumerator())
-                {
-                    while (enumerator1.MoveNext())
-                    {
-                        if (!enumerator2.MoveNext() || !Equals(enumerator1.Current, enumerator2.Current))
-                            return false;
-                    }
-
-                    if (enumerator2.MoveNext())
-                        return false;
-                }
-            }
-
-            return true;
         }
     }
 }

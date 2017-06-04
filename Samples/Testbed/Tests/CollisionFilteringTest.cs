@@ -169,8 +169,6 @@ namespace VelcroPhysics.Samples.Testbed.Tests
                 circleFixture3.CollisionGroup = LargeGroup;
                 circleFixture3.CollisionCategories = CircleCategory;
                 circleFixture3.CollidesWith = CircleMask;
-
-                //circleFixture3.IgnoreCollisionWith(circleFixture2);
             }
         }
 
