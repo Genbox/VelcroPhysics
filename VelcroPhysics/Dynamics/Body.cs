@@ -546,18 +546,6 @@ namespace VelcroPhysics.Dynamics
 
         public float Restitution
         {
-            get
-            {
-                float res = 0;
-
-                for (int i = 0; i < FixtureList.Count; i++)
-                {
-                    Fixture f = FixtureList[i];
-                    res += f.Restitution;
-                }
-
-                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
-            }
             set
             {
                 for (int i = 0; i < FixtureList.Count; i++)
@@ -570,18 +558,6 @@ namespace VelcroPhysics.Dynamics
 
         public float Friction
         {
-            get
-            {
-                float res = 0;
-
-                for (int i = 0; i < FixtureList.Count; i++)
-                {
-                    Fixture f = FixtureList[i];
-                    res += f.Friction;
-                }
-
-                return FixtureList.Count > 0 ? res / FixtureList.Count : 0;
-            }
             set
             {
                 for (int i = 0; i < FixtureList.Count; i++)
