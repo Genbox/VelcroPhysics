@@ -215,12 +215,6 @@ namespace VelcroPhysics.Collision.Shapes
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
 
-        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
-        {
-            sc = Vector2.Zero;
-            return 0;
-        }
-
         public bool CompareTo(EdgeShape shape)
         {
             return HasVertex0 == shape.HasVertex0 &&

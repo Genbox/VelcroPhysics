@@ -152,35 +152,6 @@ namespace VelcroPhysics.Collision.Shapes
             MassData.Inertia = MassData.Mass * (0.5f * _2radius + Vector2.Dot(Position, Position));
         }
 
-        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
-        {
-            sc = Vector2.Zero;
-
-            Vector2 p = MathUtils.Mul(ref xf, Position);
-            float l = -(Vector2.Dot(normal, p) - offset);
-            if (l < -Radius + Settings.Epsilon)
-            {
-                //Completely dry
-                return 0;
-            }
-            if (l > Radius)
-            {
-                //Completely wet
-                sc = p;
-                return Settings.Pi * _2radius;
-            }
-
-            //Magic
-            float l2 = l * l;
-            float area = _2radius * (float)((Math.Asin(l / Radius) + Settings.Pi / 2) + l * Math.Sqrt(_2radius - l2));
-            float com = -2.0f / 3.0f * (float)Math.Pow(_2radius - l2, 1.5f) / area;
-
-            sc.X = p.X + normal.X * com;
-            sc.Y = p.Y + normal.Y * com;
-
-            return area;
-        }
-
         /// <summary>
         /// Compare the circle to another circle
         /// </summary>

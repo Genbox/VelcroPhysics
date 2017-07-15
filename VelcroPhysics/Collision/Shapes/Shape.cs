@@ -160,10 +160,5 @@ namespace VelcroPhysics.Collision.Shapes
 
             return false;
         }
-
-        /// <summary>
-        /// Used for the buoyancy controller
-        /// </summary>
-        public abstract float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc);
     }
 }

@@ -209,13 +209,6 @@ namespace VelcroPhysics.Collision.Shapes
             //Does nothing. Chain shapes don't have properties.
         }
 
-        //Velcro: This is for the BuoyancyController
-        public override float ComputeSubmergedArea(ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
-        {
-            sc = Vector2.Zero;
-            return 0;
-        }
-
         /// <summary>
         /// Compare the chain to another chain
         /// </summary>

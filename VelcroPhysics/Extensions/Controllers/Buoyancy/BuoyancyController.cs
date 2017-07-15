@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
+using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Shared;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Extensions.Controllers.Buoyancy
 {
@@ -102,7 +105,7 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
                     Shape shape = fixture.Shape;
 
                     Vector2 sc;
-                    float sarea = shape.ComputeSubmergedArea(ref _normal, _offset, ref body._xf, out sc);
+                    float sarea = ComputeSubmergedArea(shape, ref _normal, _offset, ref body._xf, out sc);
                     area += sarea;
                     areac.X += sarea * sc.X;
                     areac.Y += sarea * sc.Y;
@@ -131,6 +134,172 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
 
                 //Angular drag
                 body.ApplyTorque(-body.Inertia / body.Mass * area * body.AngularVelocity * AngularDragCoefficient);
+            }
+        }
+
+        private float ComputeSubmergedArea(Shape shape, ref Vector2 normal, float offset, ref Transform xf, out Vector2 sc)
+        {
+            switch (shape.ShapeType)
+            {
+                case ShapeType.Circle:
+                    {
+                        CircleShape circleShape = (CircleShape)shape;
+
+                        sc = Vector2.Zero;
+
+                        Vector2 p = MathUtils.Mul(ref xf, circleShape.Position);
+                        float l = -(Vector2.Dot(normal, p) - offset);
+                        if (l < -circleShape.Radius + Settings.Epsilon)
+                        {
+                            //Completely dry
+                            return 0;
+                        }
+                        if (l > circleShape.Radius)
+                        {
+                            //Completely wet
+                            sc = p;
+                            return Settings.Pi * circleShape._2radius;
+                        }
+
+                        //Magic
+                        float l2 = l * l;
+                        float area = circleShape._2radius * (float)((Math.Asin(l / circleShape.Radius) + Settings.Pi / 2) + l * Math.Sqrt(circleShape._2radius - l2));
+                        float com = -2.0f / 3.0f * (float)Math.Pow(circleShape._2radius - l2, 1.5f) / area;
+
+                        sc.X = p.X + normal.X * com;
+                        sc.Y = p.Y + normal.Y * com;
+
+                        return area;
+                    }
+                case ShapeType.Edge:
+                    sc = Vector2.Zero;
+                    return 0;
+                case ShapeType.Polygon:
+                    {
+                        sc = Vector2.Zero;
+
+                        PolygonShape polygonShape = (PolygonShape)shape;
+
+                        //Transform plane into shape co-ordinates
+                        Vector2 normalL = MathUtils.MulT(xf.q, normal);
+                        float offsetL = offset - Vector2.Dot(normal, xf.p);
+
+                        float[] depths = new float[Settings.MaxPolygonVertices];
+                        int diveCount = 0;
+                        int intoIndex = -1;
+                        int outoIndex = -1;
+
+                        bool lastSubmerged = false;
+                        int i;
+                        for (i = 0; i < polygonShape.Vertices.Count; i++)
+                        {
+                            depths[i] = Vector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
+                            bool isSubmerged = depths[i] < -Settings.Epsilon;
+                            if (i > 0)
+                            {
+                                if (isSubmerged)
+                                {
+                                    if (!lastSubmerged)
+                                    {
+                                        intoIndex = i - 1;
+                                        diveCount++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (lastSubmerged)
+                                    {
+                                        outoIndex = i - 1;
+                                        diveCount++;
+                                    }
+                                }
+                            }
+                            lastSubmerged = isSubmerged;
+                        }
+                        switch (diveCount)
+                        {
+                            case 0:
+                                if (lastSubmerged)
+                                {
+                                    //Completely submerged
+                                    sc = MathUtils.Mul(ref xf, polygonShape.MassData.Centroid);
+                                    return polygonShape.MassData.Mass / Density;
+                                }
+
+                                //Completely dry
+                                return 0;
+                            case 1:
+                                if (intoIndex == -1)
+                                {
+                                    intoIndex = polygonShape.Vertices.Count - 1;
+                                }
+                                else
+                                {
+                                    outoIndex = polygonShape.Vertices.Count - 1;
+                                }
+                                break;
+                        }
+
+                        int intoIndex2 = (intoIndex + 1) % polygonShape.Vertices.Count;
+                        int outoIndex2 = (outoIndex + 1) % polygonShape.Vertices.Count;
+
+                        float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
+                        float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
+
+                        Vector2 intoVec = new Vector2(polygonShape.Vertices[intoIndex].X * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].X * intoLambda, polygonShape.Vertices[intoIndex].Y * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].Y * intoLambda);
+                        Vector2 outoVec = new Vector2(polygonShape.Vertices[outoIndex].X * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].X * outoLambda, polygonShape.Vertices[outoIndex].Y * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].Y * outoLambda);
+
+                        //Initialize accumulator
+                        float area = 0;
+                        Vector2 center = new Vector2(0, 0);
+                        Vector2 p2 = polygonShape.Vertices[intoIndex2];
+
+                        const float k_inv3 = 1.0f / 3.0f;
+
+                        //An awkward loop from intoIndex2+1 to outIndex2
+                        i = intoIndex2;
+                        while (i != outoIndex2)
+                        {
+                            i = (i + 1) % polygonShape.Vertices.Count;
+                            Vector2 p3;
+                            if (i == outoIndex2)
+                                p3 = outoVec;
+                            else
+                                p3 = polygonShape.Vertices[i];
+
+                            //Add the triangle formed by intoVec,p2,p3
+                            {
+                                Vector2 e1 = p2 - intoVec;
+                                Vector2 e2 = p3 - intoVec;
+
+                                float D = MathUtils.Cross(e1, e2);
+
+                                float triangleArea = 0.5f * D;
+
+                                area += triangleArea;
+
+                                // Area weighted centroid
+                                center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+                            }
+
+                            p2 = p3;
+                        }
+
+                        //Normalize and transform centroid
+                        center *= 1.0f / area;
+
+                        sc = MathUtils.Mul(ref xf, center);
+
+                        return area;
+                    }
+                case ShapeType.Chain:
+                    sc = Vector2.Zero;
+                    return 0;
+                case ShapeType.Unknown:
+                case ShapeType.TypeCount:
+                    throw new NotSupportedException();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
