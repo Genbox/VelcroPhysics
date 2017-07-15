@@ -21,6 +21,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Samples.Testbed.Framework;
@@ -67,8 +68,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             //sweepB.a -= 300.0f * b2_pi;
 
             TOIInput input = new TOIInput();
-            input.ProxyA.Set(_shapeA, 0);
-            input.ProxyB.Set(_shapeB, 0);
+            input.ProxyA = new DistanceProxy(_shapeA, 0);
+            input.ProxyB = new DistanceProxy(_shapeB, 0);
             input.SweepA = sweepA;
             input.SweepB = sweepB;
             input.TMax = 1.0f;

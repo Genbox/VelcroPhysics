@@ -1,7 +1,7 @@
+using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
@@ -9,24 +9,20 @@ namespace VelcroPhysics.Collision.Narrowphase
     /// A distance proxy is used by the GJK algorithm.
     /// It encapsulates any shape.
     /// </summary>
-    public class DistanceProxy
+    public struct DistanceProxy
     {
-        internal float Radius;
-        internal Vertices Vertices = new Vertices();
+        internal readonly float Radius;
+        internal readonly Vector2[] Vertices;
 
-        /// <summary>
-        /// Initialize the proxy using the given shape. The shape
-        /// must remain in scope while the proxy is in use.
-        /// </summary>
-        public void Set(Shape shape, int index)
+        public DistanceProxy(Shape shape, int index)
         {
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {
                         CircleShape circle = (CircleShape)shape;
-                        Vertices.Clear();
-                        Vertices.Add(circle.Position);
+                        Vertices = new Vector2[1];
+                        Vertices[0] = circle.Position;
                         Radius = circle.Radius;
                     }
                     break;
@@ -34,22 +30,26 @@ namespace VelcroPhysics.Collision.Narrowphase
                 case ShapeType.Polygon:
                     {
                         PolygonShape polygon = (PolygonShape)shape;
-                        Vertices.Clear();
+                        Vertices = new Vector2[polygon.Vertices.Count];
+
                         for (int i = 0; i < polygon.Vertices.Count; i++)
                         {
-                            Vertices.Add(polygon.Vertices[i]);
+                            Vertices[i] = polygon.Vertices[i];
                         }
+
                         Radius = polygon.Radius;
                     }
                     break;
 
                 case ShapeType.Chain:
                     {
+
                         ChainShape chain = (ChainShape)shape;
                         Debug.Assert(0 <= index && index < chain.Vertices.Count);
-                        Vertices.Clear();
-                        Vertices.Add(chain.Vertices[index]);
-                        Vertices.Add(index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0]);
+
+                        Vertices = new Vector2[2];
+                        Vertices[0] = chain.Vertices[index];
+                        Vertices[1] = index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0];
 
                         Radius = chain.Radius;
                     }
@@ -58,16 +58,15 @@ namespace VelcroPhysics.Collision.Narrowphase
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape)shape;
-                        Vertices.Clear();
-                        Vertices.Add(edge.Vertex1);
-                        Vertices.Add(edge.Vertex2);
+                        Vertices = new Vector2[2];
+                        Vertices[0] = edge.Vertex1;
+                        Vertices[1] = edge.Vertex2;
                         Radius = edge.Radius;
                     }
                     break;
 
                 default:
-                    Debug.Assert(false);
-                    break;
+                    throw new NotSupportedException();
             }
         }
 
@@ -79,7 +78,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         {
             int bestIndex = 0;
             float bestValue = Vector2.Dot(Vertices[0], direction);
-            for (int i = 1; i < Vertices.Count; ++i)
+            for (int i = 1; i < Vertices.Length; ++i)
             {
                 float value = Vector2.Dot(Vertices[i], direction);
                 if (value > bestValue)

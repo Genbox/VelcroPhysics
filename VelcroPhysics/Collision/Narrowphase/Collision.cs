@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
@@ -34,9 +33,6 @@ namespace VelcroPhysics.Collision.Narrowphase
     /// </summary>
     public static class Collision
     {
-        [ThreadStatic]
-        private static DistanceInput _input;
-
         /// <summary>
         /// Test overlap between the two shapes.
         /// </summary>
@@ -49,16 +45,16 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <returns></returns>
         public static bool TestOverlap(Shape shapeA, int indexA, Shape shapeB, int indexB, ref Transform xfA, ref Transform xfB)
         {
-            _input = _input ?? new DistanceInput();
-            _input.ProxyA.Set(shapeA, indexA);
-            _input.ProxyB.Set(shapeB, indexB);
-            _input.TransformA = xfA;
-            _input.TransformB = xfB;
-            _input.UseRadii = true;
+            DistanceInput input = new DistanceInput();
+            input.ProxyA = new DistanceProxy(shapeA, indexA);
+            input.ProxyB = new DistanceProxy(shapeB, indexB);
+            input.TransformA = xfA;
+            input.TransformB = xfB;
+            input.UseRadii = true;
 
             SimplexCache cache;
             DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, _input);
+            Distance.ComputeDistance(out output, out cache, input);
 
             return output.Distance < 10.0f * Settings.Epsilon;
         }

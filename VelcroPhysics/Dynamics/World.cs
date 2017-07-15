@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics.Handlers;
@@ -52,7 +53,6 @@ namespace VelcroPhysics.Dynamics
         private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
-        private TOIInput _input = new TOIInput();
         private Fixture _myFixture;
         private Vector2 _point1;
         private Vector2 _point2;
@@ -671,14 +671,15 @@ namespace VelcroPhysics.Dynamics
                         Debug.Assert(alpha0 < 1.0f);
 
                         // Compute the time of impact in interval [0, minTOI]
-                        _input.ProxyA.Set(fA.Shape, c.ChildIndexA);
-                        _input.ProxyB.Set(fB.Shape, c.ChildIndexB);
-                        _input.SweepA = bA._sweep;
-                        _input.SweepB = bB._sweep;
-                        _input.TMax = 1.0f;
+                        TOIInput input = new TOIInput();
+                        input.ProxyA = new DistanceProxy(fA.Shape, c.ChildIndexA);
+                        input.ProxyB = new DistanceProxy(fB.Shape, c.ChildIndexB);
+                        input.SweepA = bA._sweep;
+                        input.SweepB = bB._sweep;
+                        input.TMax = 1.0f;
 
                         TOIOutput output;
-                        TimeOfImpact.CalculateTimeOfImpact(out output, _input);
+                        TimeOfImpact.CalculateTimeOfImpact(out output, input);
 
                         // Beta is the fraction of the remaining portion of the .
                         float beta = output.T;
