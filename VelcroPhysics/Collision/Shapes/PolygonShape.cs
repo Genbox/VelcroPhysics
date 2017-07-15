@@ -43,38 +43,18 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="density">The density.</param>
-        public PolygonShape(Vertices vertices, float density)
-            : base(density)
+        public PolygonShape(Vertices vertices, float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
         {
-            ShapeType = ShapeType.Polygon;
-            _radius = Settings.PolygonRadius;
-
-            Vertices = vertices;
+            Vertices = vertices; //This assignment will call ComputeProperties()
         }
 
         /// <summary>
         /// Create a new PolygonShape with the specified density.
         /// </summary>
         /// <param name="density">The density.</param>
-        public PolygonShape(float density)
-            : base(density)
-        {
-            Debug.Assert(density >= 0f);
+        public PolygonShape(float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density) { }
 
-            ShapeType = ShapeType.Polygon;
-            _radius = Settings.PolygonRadius;
-            _vertices = new Vertices(Settings.MaxPolygonVertices);
-            _normals = new Vertices(Settings.MaxPolygonVertices);
-        }
-
-        internal PolygonShape()
-            : base(0)
-        {
-            ShapeType = ShapeType.Polygon;
-            _radius = Settings.PolygonRadius;
-            _vertices = new Vertices(Settings.MaxPolygonVertices);
-            _normals = new Vertices(Settings.MaxPolygonVertices);
-        }
+        internal PolygonShape() : base(ShapeType.Polygon, Settings.PolygonRadius) { }
 
         /// <summary>
         /// Create a convex hull from the given array of local points.
@@ -129,7 +109,7 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override int ChildCount => 1;
 
-        protected override void ComputeProperties()
+        protected sealed override void ComputeProperties()
         {
             // Polygon mass, centroid, and inertia.
             // Let rho be the polygon density in mass per unit area.

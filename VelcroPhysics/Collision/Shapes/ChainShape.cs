@@ -42,16 +42,6 @@ namespace VelcroPhysics.Collision.Shapes
         private Vector2 _prevVertex, _nextVertex;
 
         /// <summary>
-        /// Constructor for ChainShape. By default have 0 in density.
-        /// </summary>
-        public ChainShape()
-            : base(0)
-        {
-            ShapeType = ShapeType.Chain;
-            _radius = Settings.PolygonRadius;
-        }
-
-        /// <summary>
         /// Create a new chainshape from the vertices.
         /// </summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
@@ -59,12 +49,8 @@ namespace VelcroPhysics.Collision.Shapes
         /// Set to true to create a closed loop. It connects the first vertice to the last, and
         /// automatically adjusts connectivity to create smooth collisions along the chain.
         /// </param>
-        public ChainShape(Vertices vertices, bool createLoop = false)
-            : base(0)
+        public ChainShape(Vertices vertices, bool createLoop = false) : base(ShapeType.Chain, Settings.PolygonRadius)
         {
-            ShapeType = ShapeType.Chain;
-            _radius = Settings.PolygonRadius;
-
             Debug.Assert(vertices != null && vertices.Count >= 3);
             Debug.Assert(vertices[0] != vertices[vertices.Count - 1]); //Velcro. See http://www.box2d.org/forum/viewtopic.php?f=4&t=7973&p=35363
 
@@ -83,7 +69,11 @@ namespace VelcroPhysics.Collision.Shapes
                 PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
                 NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here here to set _hasNextVertex
             }
+
+            ComputeProperties();
         }
+
+        internal ChainShape() : base(ShapeType.Chain, Settings.PolygonRadius) { }
 
         /// <summary>
         /// The vertices. These are not owned/freed by the chain Shape.
@@ -204,7 +194,7 @@ namespace VelcroPhysics.Collision.Shapes
             aabb.UpperBound = Vector2.Max(v1, v2);
         }
 
-        protected override void ComputeProperties()
+        protected sealed override void ComputeProperties()
         {
             //Does nothing. Chain shapes don't have properties.
         }

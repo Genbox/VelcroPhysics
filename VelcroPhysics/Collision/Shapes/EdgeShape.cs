@@ -33,35 +33,21 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public class EdgeShape : Shape
     {
-        /// <summary>
-        /// Edge start vertex
-        /// </summary>
         internal Vector2 _vertex1;
-
-        /// <summary>
-        /// Edge end vertex
-        /// </summary>
         internal Vector2 _vertex2;
-
-        internal EdgeShape()
-            : base(0)
-        {
-            ShapeType = ShapeType.Edge;
-            _radius = Settings.PolygonRadius;
-        }
 
         /// <summary>
         /// Create a new EdgeShape with the specified start and end.
         /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
-        public EdgeShape(Vector2 start, Vector2 end)
-            : base(0)
+        public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
-            ShapeType = ShapeType.Edge;
-            _radius = Settings.PolygonRadius;
             Set(start, end);
+            ComputeProperties();
         }
+
+        internal EdgeShape() : base(ShapeType.Edge, Settings.PolygonRadius) { }
 
         public override int ChildCount => 1;
 
@@ -210,7 +196,7 @@ namespace VelcroPhysics.Collision.Shapes
             aabb.UpperBound = upper + r;
         }
 
-        protected override void ComputeProperties()
+        protected sealed override void ComputeProperties()
         {
             MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }

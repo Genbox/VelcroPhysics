@@ -47,10 +47,15 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         public MassData MassData;
 
-        protected Shape(float density)
+        protected Shape(ShapeType type, float radius = 0, float density = 0)
         {
+            Debug.Assert(radius >= 0);
+            Debug.Assert(density >= 0);
+
+            ShapeType = type;
+            _radius = radius;
+            _2radius = _radius * _radius;
             _density = density;
-            ShapeType = ShapeType.Unknown;
         }
 
         /// <summary>

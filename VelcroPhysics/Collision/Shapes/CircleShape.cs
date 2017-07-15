@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
@@ -41,24 +40,12 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="density">The density of the circle.</param>
-        public CircleShape(float radius, float density)
-            : base(density)
+        public CircleShape(float radius, float density) : base(ShapeType.Circle, radius, density)
         {
-            Debug.Assert(radius >= 0);
-            Debug.Assert(density >= 0);
-
-            ShapeType = ShapeType.Circle;
-            _position = Vector2.Zero;
-            Radius = radius; // The Radius property cache 2radius and calls ComputeProperties(). So no need to call ComputeProperties() here.
+            ComputeProperties();
         }
 
-        internal CircleShape()
-            : base(0)
-        {
-            ShapeType = ShapeType.Circle;
-            _radius = 0.0f;
-            _position = Vector2.Zero;
-        }
+        internal CircleShape() : base(ShapeType.Circle) { }
 
         public override int ChildCount => 1;
 
