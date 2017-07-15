@@ -91,26 +91,5 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             return bestIndex;
         }
-
-        /// <summary>
-        /// Get the supporting vertex in the given direction.
-        /// </summary>
-        /// <param name="direction">The direction.</param>
-        public Vector2 GetSupportVertex(Vector2 direction)
-        {
-            int bestIndex = 0;
-            float bestValue = Vector2.Dot(Vertices[0], direction);
-            for (int i = 1; i < Vertices.Count; ++i)
-            {
-                float value = Vector2.Dot(Vertices[i], direction);
-                if (value > bestValue)
-                {
-                    bestIndex = i;
-                    bestValue = value;
-                }
-            }
-
-            return Vertices[bestIndex];
-        }
     }
 }

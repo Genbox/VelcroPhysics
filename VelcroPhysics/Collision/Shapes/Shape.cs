@@ -138,27 +138,5 @@ namespace VelcroPhysics.Collision.Shapes
         /// The inertia tensor is computed about the local origin, not the centroid.
         /// </summary>
         protected abstract void ComputeProperties();
-
-        /// <summary>
-        /// Compare this shape to another shape based on type and properties.
-        /// </summary>
-        /// <param name="shape">The other shape</param>
-        /// <returns>True if the two shapes are the same.</returns>
-        public bool CompareTo(Shape shape)
-        {
-            if (shape is PolygonShape && this is PolygonShape)
-                return ((PolygonShape)this).CompareTo((PolygonShape)shape);
-
-            if (shape is CircleShape && this is CircleShape)
-                return ((CircleShape)this).CompareTo((CircleShape)shape);
-
-            if (shape is EdgeShape && this is EdgeShape)
-                return ((EdgeShape)this).CompareTo((EdgeShape)shape);
-
-            if (shape is ChainShape && this is ChainShape)
-                return ((ChainShape)this).CompareTo((ChainShape)shape);
-
-            return false;
-        }
     }
 }
