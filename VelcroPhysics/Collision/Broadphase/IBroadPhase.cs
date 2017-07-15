@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Handlers;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Broadphase

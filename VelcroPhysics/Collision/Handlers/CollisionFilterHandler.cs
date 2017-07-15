@@ -1,6 +1,6 @@
 using VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Handlers
+namespace VelcroPhysics.Collision.Handlers
 {
     public delegate bool CollisionFilterHandler(Fixture fixtureA, Fixture fixtureB);
 }

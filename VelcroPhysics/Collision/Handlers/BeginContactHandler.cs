@@ -1,6 +1,6 @@
 ﻿using VelcroPhysics.Collision.ContactSystem;
 
-namespace VelcroPhysics.Handlers
+namespace VelcroPhysics.Collision.Handlers
 {
     /// <summary>
     /// This delegate is called when a contact is created
