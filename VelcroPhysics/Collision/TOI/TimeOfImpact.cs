@@ -42,9 +42,6 @@ namespace VelcroPhysics.Collision.TOI
         public static int TOIRootIters,
                           TOIMaxRootIters;
 
-        [ThreadStatic]
-        private static DistanceInput _distanceInput;
-
         /// <summary>
         /// Compute the upper bound on time before two shapes penetrate. Time is represented as
         /// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
@@ -83,10 +80,10 @@ namespace VelcroPhysics.Collision.TOI
             int iter = 0;
 
             // Prepare input for distance query.
-            _distanceInput = _distanceInput ?? new DistanceInput();
-            _distanceInput.ProxyA = input.ProxyA;
-            _distanceInput.ProxyB = input.ProxyB;
-            _distanceInput.UseRadii = false;
+            DistanceInput distanceInput = new DistanceInput();
+            distanceInput.ProxyA = input.ProxyA;
+            distanceInput.ProxyB = input.ProxyB;
+            distanceInput.UseRadii = false;
 
             // The outer loop progressively attempts to compute new separating axes.
             // This loop terminates when an axis is repeated (no progress is made).
@@ -98,11 +95,11 @@ namespace VelcroPhysics.Collision.TOI
 
                 // Get the distance between shapes. We can also use the results
                 // to get a separating axis.
-                _distanceInput.TransformA = xfA;
-                _distanceInput.TransformB = xfB;
+                distanceInput.TransformA = xfA;
+                distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
                 SimplexCache cache;
-                Distance.ComputeDistance(out distanceOutput, out cache, _distanceInput);
+                Distance.ComputeDistance(out distanceOutput, out cache, distanceInput);
 
                 // If the shapes are overlapped, we give up on continuous collision.
                 if (distanceOutput.Distance <= 0.0f)
