@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace VelcroPhysics.Collision.Distance
 {
     /// <summary>
     /// Output for Distance.ComputeDistance().

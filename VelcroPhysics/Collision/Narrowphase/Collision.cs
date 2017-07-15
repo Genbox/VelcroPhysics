@@ -22,6 +22,7 @@
 
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
@@ -54,7 +55,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             SimplexCache cache;
             DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, input);
+            DistanceGJK.ComputeDistance(out output, out cache, input);
 
             return output.Distance < 10.0f * Settings.Epsilon;
         }

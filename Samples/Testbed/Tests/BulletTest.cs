@@ -21,6 +21,7 @@
 */
 
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics;
@@ -59,9 +60,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
         {
             base.Update(settings, gameTime);
 
-            if (Distance.GJKCalls > 0)
+            if (DistanceGJK.GJKCalls > 0)
             {
-                DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls, Distance.GJKMaxIters));
+                DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", DistanceGJK.GJKCalls, DistanceGJK.GJKIters / (float)DistanceGJK.GJKCalls, DistanceGJK.GJKMaxIters));
             }
 
             if (TimeOfImpact.TOICalls > 0)
@@ -88,9 +89,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _bullet.LinearVelocity = new Vector2(0.0f, -50.0f);
             _bullet.AngularVelocity = 0;
 
-            Distance.GJKCalls = 0;
-            Distance.GJKIters = 0;
-            Distance.GJKMaxIters = 0;
+            DistanceGJK.GJKCalls = 0;
+            DistanceGJK.GJKIters = 0;
+            DistanceGJK.GJKMaxIters = 0;
 
             TimeOfImpact.TOICalls = 0;
             TimeOfImpact.TOIIters = 0;

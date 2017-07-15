@@ -23,6 +23,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Shared;
 
@@ -99,7 +100,7 @@ namespace VelcroPhysics.Collision.TOI
                 distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
                 SimplexCache cache;
-                Distance.ComputeDistance(out distanceOutput, out cache, distanceInput);
+                DistanceGJK.ComputeDistance(out distanceOutput, out cache, distanceInput);
 
                 // If the shapes are overlapped, we give up on continuous collision.
                 if (distanceOutput.Distance <= 0.0f)

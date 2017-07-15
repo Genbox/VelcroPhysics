@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.TOI;
 using VelcroPhysics.Dynamics;
@@ -58,9 +59,9 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             _box.LinearVelocity = new Vector2(0.0f, -100.0f);
             _box.AngularVelocity = _angularVelocity;
 
-            Distance.GJKCalls = 0;
-            Distance.GJKIters = 0;
-            Distance.GJKMaxIters = 0;
+            DistanceGJK.GJKCalls = 0;
+            DistanceGJK.GJKIters = 0;
+            DistanceGJK.GJKMaxIters = 0;
             TimeOfImpact.TOICalls = 0;
             TimeOfImpact.TOIIters = 0;
             TimeOfImpact.TOIRootIters = 0;
@@ -81,8 +82,8 @@ namespace VelcroPhysics.Samples.Testbed.Tests
 
             DrawString("Press C to toggle CCD. CCD is Currently: " + (_ground.IgnoreCCD ? "Off" : "On"));
 
-            if (Distance.GJKCalls > 0)
-                DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", Distance.GJKCalls, Distance.GJKIters / (float)Distance.GJKCalls, Distance.GJKMaxIters));
+            if (DistanceGJK.GJKCalls > 0)
+                DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", DistanceGJK.GJKCalls, DistanceGJK.GJKIters / (float)DistanceGJK.GJKCalls, DistanceGJK.GJKMaxIters));
 
             if (TimeOfImpact.TOICalls > 0)
             {

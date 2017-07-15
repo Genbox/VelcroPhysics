@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace VelcroPhysics.Collision.Distance
 {
     /// <summary>
     /// A distance proxy is used by the GJK algorithm.

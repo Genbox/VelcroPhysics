@@ -26,6 +26,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.TOI;

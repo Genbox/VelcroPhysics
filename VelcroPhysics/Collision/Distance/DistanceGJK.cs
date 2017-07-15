@@ -23,16 +23,17 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace VelcroPhysics.Collision.Distance
 {
     /// <summary>
     /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes.
     /// Using Voronoi regions (Christer Ericson) and Barycentric coordinates.
     /// </summary>
-    public static class Distance
+    public static class DistanceGJK
     {
         /// <summary>
         /// The number of calls made to the ComputeDistance() function.

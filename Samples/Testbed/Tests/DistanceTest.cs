@@ -22,6 +22,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Samples.Testbed.Framework;
@@ -71,7 +72,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             SimplexCache cache;
             cache.Count = 0;
             DistanceOutput output;
-            Distance.ComputeDistance(out output, out cache, input);
+            DistanceGJK.ComputeDistance(out output, out cache, input);
 
             DrawString("Distance = " + output.Distance);
             DrawString("Iterations = " + output.Iterations);
