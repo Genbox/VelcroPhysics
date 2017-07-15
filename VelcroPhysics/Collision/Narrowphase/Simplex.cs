@@ -13,7 +13,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         internal int Count;
         internal FixedArray3<SimplexVertex> V;
 
-        internal void ReadCache(ref SimplexCache cache, DistanceProxy proxyA, ref Transform transformA, DistanceProxy proxyB, ref Transform transformB)
+        internal void ReadCache(ref SimplexCache cache, ref DistanceProxy proxyA, ref Transform transformA, ref DistanceProxy proxyB, ref Transform transformB)
         {
             Debug.Assert(cache.Count <= 3);
 

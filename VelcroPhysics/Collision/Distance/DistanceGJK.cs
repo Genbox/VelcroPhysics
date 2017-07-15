@@ -65,7 +65,7 @@ namespace VelcroPhysics.Collision.Distance
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
-            simplex.ReadCache(ref cache, input.ProxyA, ref input.TransformA, input.ProxyB, ref input.TransformB);
+            simplex.ReadCache(ref cache, ref input.ProxyA, ref input.TransformA, ref input.ProxyB, ref input.TransformB);
 
             // These store the vertices of the last simplex so that we
             // can check for duplicates and prevent cycling.
