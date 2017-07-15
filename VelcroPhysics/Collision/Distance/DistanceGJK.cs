@@ -56,7 +56,7 @@ namespace VelcroPhysics.Collision.Distance
         [ThreadStatic]
         public static int GJKMaxIters;
 
-        public static void ComputeDistance(out DistanceOutput output, out SimplexCache cache, DistanceInput input)
+        public static void ComputeDistance(ref DistanceInput input, out DistanceOutput output, out SimplexCache cache)
         {
             cache = new SimplexCache();
 

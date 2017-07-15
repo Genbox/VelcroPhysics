@@ -100,7 +100,7 @@ namespace VelcroPhysics.Collision.TOI
                 distanceInput.TransformB = xfB;
                 DistanceOutput distanceOutput;
                 SimplexCache cache;
-                DistanceGJK.ComputeDistance(out distanceOutput, out cache, distanceInput);
+                DistanceGJK.ComputeDistance(ref distanceInput, out distanceOutput, out cache);
 
                 // If the shapes are overlapped, we give up on continuous collision.
                 if (distanceOutput.Distance <= 0.0f)

@@ -72,7 +72,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             SimplexCache cache;
             cache.Count = 0;
             DistanceOutput output;
-            DistanceGJK.ComputeDistance(out output, out cache, input);
+            DistanceGJK.ComputeDistance(ref input, out output, out cache);
 
             DrawString("Distance = " + output.Distance);
             DrawString("Iterations = " + output.Iterations);
