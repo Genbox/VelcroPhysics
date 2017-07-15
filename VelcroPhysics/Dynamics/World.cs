@@ -679,7 +679,7 @@ namespace VelcroPhysics.Dynamics
                         input.TMax = 1.0f;
 
                         TOIOutput output;
-                        TimeOfImpact.CalculateTimeOfImpact(out output, input);
+                        TimeOfImpact.CalculateTimeOfImpact(ref input, out output);
 
                         // Beta is the fraction of the remaining portion of the .
                         float beta = output.T;

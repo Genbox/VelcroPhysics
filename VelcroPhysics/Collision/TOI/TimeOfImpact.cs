@@ -52,9 +52,9 @@ namespace VelcroPhysics.Collision.TOI
         /// again.
         /// Note: use Distance() to compute the contact point and normal at the time of impact.
         /// </summary>
-        /// <param name="output">The output.</param>
         /// <param name="input">The input.</param>
-        public static void CalculateTimeOfImpact(out TOIOutput output, TOIInput input)
+        /// <param name="output">The output.</param>
+        public static void CalculateTimeOfImpact(ref TOIInput input, out TOIOutput output)
         {
             if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                 ++TOICalls;

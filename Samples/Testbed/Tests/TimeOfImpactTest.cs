@@ -75,7 +75,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             input.TMax = 1.0f;
 
             TOIOutput output;
-            TimeOfImpact.CalculateTimeOfImpact(out output, input);
+            TimeOfImpact.CalculateTimeOfImpact(ref input, out output);
 
             DrawString("TOI = " + output.T);
             DrawString(string.Format("Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters, TimeOfImpact.TOIMaxRootIters));
