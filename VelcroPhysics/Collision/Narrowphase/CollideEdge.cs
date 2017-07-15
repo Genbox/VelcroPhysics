@@ -153,8 +153,7 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <param name="xfB">The xf B.</param>
         public static void CollideEdgeAndPolygon(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
         {
-            EPCollider collider = new EPCollider();
-            collider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
+            EPCollider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
         }
     }
 }
