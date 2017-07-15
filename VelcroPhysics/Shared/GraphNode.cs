@@ -1,8 +1,10 @@
-﻿namespace VelcroPhysics.Shared
+﻿using VelcroPhysics.Dynamics;
+
+namespace VelcroPhysics.Shared
 {
-    public class GraphNode<T>
+    public class GraphNode<T, T1>
     {
-        public GraphNode(T item)
+        public GraphNode(T item = default(T))
         {
             Item = item;
         }
@@ -15,12 +17,14 @@
         /// <summary>
         /// The next item in the list.
         /// </summary>
-        public GraphNode<T> Next { get; set; }
+        public GraphNode<T, T1> Next { get; set; }
 
         /// <summary>
         /// The previous item in the list.
         /// </summary>
-        public GraphNode<T> Prev { get; set; }
+        public GraphNode<T, T1> Prev { get; set; }
+
+        public T1 Other { get; set; }
 
         internal void Invalidate()
         {

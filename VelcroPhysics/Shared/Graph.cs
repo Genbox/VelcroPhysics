@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Shared.Contracts;
 
 namespace VelcroPhysics.Shared
@@ -7,7 +8,7 @@ namespace VelcroPhysics.Shared
     /// <summary>
     /// This graph is a doubly linked circular list. It is circular to avoid branches in Add/Remove methods.
     /// </summary>
-    public class Graph<T> : IEnumerable<T>
+    public class Graph<T, T1> : IEnumerable<T>
     {
         private readonly EqualityComparer<T> _comparer;
 
@@ -31,16 +32,16 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// The first node in the graph
         /// </summary>
-        public GraphNode<T> First { get; private set; }
+        public GraphNode<T, T1> First { get; private set; }
 
         /// <summary>
         /// Add a value to the graph
         /// </summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>The node that represents the value</returns>
-        public GraphNode<T> Add(T value)
+        public GraphNode<T,T1> Add(T value)
         {
-            GraphNode<T> result = new GraphNode<T>(value);
+            GraphNode<T, T1> result = new GraphNode<T, T1>(value);
             Add(result);
             return result;
         }
@@ -49,7 +50,7 @@ namespace VelcroPhysics.Shared
         /// Add a node to to the graph
         /// </summary>
         /// <remarks>Note that this method is O(1) in worst case.</remarks>
-        public void Add(GraphNode<T> node)
+        public void Add(GraphNode<T, T1> node)
         {
             Contract.Requires(node != null, nameof(node) + " must not be null");
 
@@ -85,9 +86,9 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>The graph node that was found if any. Otherwise it returns null.</returns>
-        public GraphNode<T> Find(T value)
+        public GraphNode<T, T1> Find(T value)
         {
-            GraphNode<T> node = First;
+            GraphNode<T, T1> node = First;
 
             if (node == null)
                 return null;
@@ -115,6 +116,18 @@ namespace VelcroPhysics.Shared
             return null;
         }
 
+        public void Clear()
+        {
+            GraphNode<T, T1> node = First;
+
+            for (int i = 0; i < Count; i++)
+            {
+                GraphNode<T, T1> node0 = node;
+                node = node.Next;
+                node0.Invalidate();
+            }
+        }
+
         /// <summary>
         /// Remove the specified value
         /// </summary>
@@ -122,7 +135,7 @@ namespace VelcroPhysics.Shared
         /// <returns>True if the value was removed, otherwise false.</returns>
         public bool Remove(T value)
         {
-            GraphNode<T> node = Find(value);
+            GraphNode<T, T1> node = Find(value);
 
             if (node == null)
                 return false;
@@ -135,10 +148,14 @@ namespace VelcroPhysics.Shared
         /// Remove the specified node from the graph.
         /// </summary>
         /// <remarks>Note that this methid is O(1) in worst case.</remarks>
-        public void Remove(GraphNode<T> node)
+        public void Remove(GraphNode<T, T1> node)
         {
             Contract.Requires(node != null, nameof(node) + " must not be null");
             Contract.Warn(First != null, "You are trying to remove an item from an empty list.");
+
+            //Invalid node
+            if (node.Next == null && node.Prev == null)
+                return;
 
             if (node.Next == node)
             {
@@ -159,11 +176,11 @@ namespace VelcroPhysics.Shared
 
         public IEnumerator<T> GetEnumerator()
         {
-            GraphNode<T> node = First;
+            GraphNode<T, T1> node = First;
 
             for (int i = 0; i < Count; i++)
             {
-                GraphNode<T> node0 = node;
+                GraphNode<T, T1> node0 = node;
                 node = node.Next;
                 yield return node0.Item;
             }
@@ -172,6 +189,18 @@ namespace VelcroPhysics.Shared
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public IEnumerable<GraphNode<T, T1>> GetNodes()
+        {
+            GraphNode<T, T1> node = First;
+
+            for (int i = 0; i < Count; i++)
+            {
+                GraphNode<T, T1> node0 = node;
+                node = node.Next;
+                yield return node0;
+            }
         }
     }
 }
