@@ -123,12 +123,12 @@ namespace VelcroPhysics.Collision.Shapes
         /// <summary>
         /// Cast a ray against a child shape.
         /// </summary>
-        /// <param name="output">The ray-cast results.</param>
         /// <param name="input">The ray-cast input parameters.</param>
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
+        /// <param name="output">The ray-cast results.</param>
         /// <returns>True if the ray-cast hits the shape</returns>
-        public abstract bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex);
+        public abstract bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output);
 
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for a child shape.

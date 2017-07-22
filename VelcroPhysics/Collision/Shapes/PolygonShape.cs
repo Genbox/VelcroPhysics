@@ -220,7 +220,7 @@ namespace VelcroPhysics.Collision.Shapes
             return true;
         }
 
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
+        public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
             output = new RayCastOutput();
 

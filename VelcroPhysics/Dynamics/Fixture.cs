@@ -321,7 +321,7 @@ namespace VelcroPhysics.Dynamics
         /// <returns></returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
-            return Shape.RayCast(out output, ref input, ref Body._xf, childIndex);
+            return Shape.RayCast(ref input, ref Body._xf, childIndex, out output);
         }
 
         /// <summary>

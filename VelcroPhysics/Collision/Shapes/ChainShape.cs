@@ -159,7 +159,7 @@ namespace VelcroPhysics.Collision.Shapes
             return false;
         }
 
-        public override bool RayCast(out RayCastOutput output, ref RayCastInput input, ref Transform transform, int childIndex)
+        public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
             Debug.Assert(childIndex < Vertices.Count);
 
@@ -173,7 +173,7 @@ namespace VelcroPhysics.Collision.Shapes
             _edgeShape.Vertex1 = Vertices[i1];
             _edgeShape.Vertex2 = Vertices[i2];
 
-            return _edgeShape.RayCast(out output, ref input, ref transform, 0);
+            return _edgeShape.RayCast(ref input, ref transform, 0, out output);
         }
 
         public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
