@@ -14,7 +14,7 @@ We have tons of features!
 
 * Continuous collision detection (with time of impact solver)
 * Contact callbacks: begin, end, pre-solve, post-solve
-* Convex and concave polyons and circles.
+* Convex and concave polygons and circles.
 * Multiple shapes per body
 * Dynamic tree and quad tree broadphase
 * Fast broadphase AABB queries and raycasts
