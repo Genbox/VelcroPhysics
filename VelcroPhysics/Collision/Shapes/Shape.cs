@@ -133,10 +133,10 @@ namespace VelcroPhysics.Collision.Shapes
         /// <summary>
         /// Given a transform, compute the associated axis aligned bounding box for a child shape.
         /// </summary>
-        /// <param name="aabb">The aabb results.</param>
         /// <param name="transform">The world transform of the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
-        public abstract void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex);
+        /// <param name="aabb">The aabb results.</param>
+        public abstract void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb);
 
         /// <summary>
         /// Compute the mass properties of this shape using its dimensions and density.

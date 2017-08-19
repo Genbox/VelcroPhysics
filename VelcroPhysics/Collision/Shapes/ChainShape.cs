@@ -24,7 +24,6 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -37,7 +36,6 @@ namespace VelcroPhysics.Collision.Shapes
     /// </summary>
     public class ChainShape : Shape
     {
-        private static EdgeShape _edgeShape = new EdgeShape();
         private bool _hasPrevVertex, _hasNextVertex;
         private Vector2 _prevVertex, _nextVertex;
 
@@ -165,33 +163,30 @@ namespace VelcroPhysics.Collision.Shapes
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
+
             if (i2 == Vertices.Count)
-            {
                 i2 = 0;
-            }
 
-            _edgeShape.Vertex1 = Vertices[i1];
-            _edgeShape.Vertex2 = Vertices[i2];
+            Vector2 v1 = Vertices[i1];
+            Vector2 v2 = Vertices[i2];
 
-            return _edgeShape.RayCast(ref input, ref transform, 0, out output);
+            return RayCastHelper.RayCastEdge(ref v1, ref v2, ref input, ref transform, out output);
         }
 
-        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
+        public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
             Debug.Assert(childIndex < Vertices.Count);
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
+
             if (i2 == Vertices.Count)
-            {
                 i2 = 0;
-            }
 
-            Vector2 v1 = MathUtils.Mul(ref transform, Vertices[i1]);
-            Vector2 v2 = MathUtils.Mul(ref transform, Vertices[i2]);
+            Vector2 v1 = Vertices[i1];
+            Vector2 v2 = Vertices[i2];
 
-            aabb.LowerBound = Vector2.Min(v1, v2);
-            aabb.UpperBound = Vector2.Max(v1, v2);
+            AABBHelper.ComputeEdgeAABB(ref v1, ref v2, ref transform, out aabb);
         }
 
         protected sealed override void ComputeProperties()

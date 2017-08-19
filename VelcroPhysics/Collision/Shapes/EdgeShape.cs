@@ -23,7 +23,6 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -119,81 +118,12 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
-            // p = p1 + t * d
-            // v = v1 + s * e
-            // p1 + t * d = v1 + s * e
-            // s * e - t * d = p1 - v1
-
-            output = new RayCastOutput();
-
-            // Put the ray into the edge's frame of reference.
-            Vector2 p1 = MathUtils.MulT(transform.q, input.Point1 - transform.p);
-            Vector2 p2 = MathUtils.MulT(transform.q, input.Point2 - transform.p);
-            Vector2 d = p2 - p1;
-
-            Vector2 v1 = _vertex1;
-            Vector2 v2 = _vertex2;
-            Vector2 e = v2 - v1;
-            Vector2 normal = new Vector2(e.Y, -e.X); //TODO: Could possibly cache the normal.
-            normal.Normalize();
-
-            // q = p1 + t * d
-            // dot(normal, q - v1) = 0
-            // dot(normal, p1 - v1) + t * dot(normal, d) = 0
-            float numerator = Vector2.Dot(normal, v1 - p1);
-            float denominator = Vector2.Dot(normal, d);
-
-            if (denominator == 0.0f)
-            {
-                return false;
-            }
-
-            float t = numerator / denominator;
-            if (t < 0.0f || input.MaxFraction < t)
-            {
-                return false;
-            }
-
-            Vector2 q = p1 + t * d;
-
-            // q = v1 + s * r
-            // s = dot(q - v1, r) / dot(r, r)
-            Vector2 r = v2 - v1;
-            float rr = Vector2.Dot(r, r);
-            if (rr == 0.0f)
-            {
-                return false;
-            }
-
-            float s = Vector2.Dot(q - v1, r) / rr;
-            if (s < 0.0f || 1.0f < s)
-            {
-                return false;
-            }
-
-            output.Fraction = t;
-            if (numerator > 0.0f)
-            {
-                output.Normal = -MathUtils.MulT(transform.q, normal);
-            }
-            else
-            {
-                output.Normal = MathUtils.MulT(transform.q, normal);
-            }
-            return true;
+            return RayCastHelper.RayCastEdge(ref _vertex1, ref _vertex2, ref input, ref transform, out output);
         }
 
-        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
+        public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
-            Vector2 v1 = MathUtils.Mul(ref transform, _vertex1);
-            Vector2 v2 = MathUtils.Mul(ref transform, _vertex2);
-
-            Vector2 lower = Vector2.Min(v1, v2);
-            Vector2 upper = Vector2.Max(v1, v2);
-
-            Vector2 r = new Vector2(Radius, Radius);
-            aabb.LowerBound = lower - r;
-            aabb.UpperBound = upper + r;
+            AABBHelper.ComputeEdgeAABB(ref _vertex1, ref _vertex2, ref transform, out aabb);
         }
 
         protected sealed override void ComputeProperties()

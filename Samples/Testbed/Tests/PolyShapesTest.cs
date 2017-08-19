@@ -276,7 +276,7 @@ namespace VelcroPhysics.Samples.Testbed.Tests
             callback.DebugDraw = DebugView;
 
             AABB aabb;
-            callback.Circle.ComputeAABB(out aabb, ref callback.Transform, 0);
+            callback.Circle.ComputeAABB(ref callback.Transform, 0, out aabb);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             World.QueryAABB(callback.ReportFixture, ref aabb);

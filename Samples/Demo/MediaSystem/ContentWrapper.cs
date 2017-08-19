@@ -154,7 +154,7 @@ namespace VelcroPhysics.Samples.Demo.MediaSystem
                 for (int j = 0; j < body.FixtureList[i].Shape.ChildCount; j++)
                 {
                     AABB bounds;
-                    body.FixtureList[i].Shape.ComputeAABB(out bounds, ref transform, j);
+                    body.FixtureList[i].Shape.ComputeAABB(ref transform, j, out bounds);
                     Vector2.Min(ref lowerBound, ref bounds.LowerBound, out lowerBound);
                 }
             }

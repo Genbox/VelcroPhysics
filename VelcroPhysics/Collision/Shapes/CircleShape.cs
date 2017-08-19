@@ -20,11 +20,9 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-using System;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Collision.Shapes
 {
@@ -64,57 +62,17 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
         {
-            Vector2 center = transform.p + MathUtils.Mul(transform.q, Position);
-            Vector2 d = point - center;
-            return Vector2.Dot(d, d) <= _2radius;
+            return TestPointHelper.TestPointCircle(ref _position, _radius, ref point, ref transform);
         }
 
         public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
-            // Collision Detection in Interactive 3D Environments by Gino van den Bergen
-            // From Section 3.1.2
-            // x = s + a * r
-            // norm(x) = radius
-
-            output = new RayCastOutput();
-
-            Vector2 position = transform.p + MathUtils.Mul(transform.q, Position);
-            Vector2 s = input.Point1 - position;
-            float b = Vector2.Dot(s, s) - _2radius;
-
-            // Solve quadratic equation.
-            Vector2 r = input.Point2 - input.Point1;
-            float c = Vector2.Dot(s, r);
-            float rr = Vector2.Dot(r, r);
-            float sigma = c * c - rr * b;
-
-            // Check for negative discriminant and short segment.
-            if (sigma < 0.0f || rr < Settings.Epsilon)
-            {
-                return false;
-            }
-
-            // Find the point of intersection of the line with the circle.
-            float a = -(c + (float)Math.Sqrt(sigma));
-
-            // Is the intersection point on the segment?
-            if (0.0f <= a && a <= input.MaxFraction * rr)
-            {
-                a /= rr;
-                output.Fraction = a;
-                output.Normal = s + a * r;
-                output.Normal.Normalize();
-                return true;
-            }
-
-            return false;
+            return RayCastHelper.RayCastCircle(ref _position, Radius, ref input, ref transform, out output);
         }
 
-        public override void ComputeAABB(out AABB aabb, ref Transform transform, int childIndex)
+        public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
-            Vector2 p = transform.p + MathUtils.Mul(transform.q, Position);
-            aabb.LowerBound = new Vector2(p.X - Radius, p.Y - Radius);
-            aabb.UpperBound = new Vector2(p.X + Radius, p.Y + Radius);
+            AABBHelper.ComputeCircleAABB(ref _position, _radius, ref transform, out aabb);
         }
 
         protected sealed override void ComputeProperties()
