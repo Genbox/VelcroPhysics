@@ -1,6 +1,5 @@
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Templates.Shapes;
 
 namespace VelcroPhysics.Templates
 {

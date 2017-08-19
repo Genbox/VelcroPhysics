@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Solver;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;

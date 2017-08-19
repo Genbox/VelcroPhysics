@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Shared.Contracts;
 
 namespace VelcroPhysics.Shared

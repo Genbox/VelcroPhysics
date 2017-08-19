@@ -1,6 +1,4 @@
-﻿using VelcroPhysics.Dynamics;
-
-namespace VelcroPhysics.Shared
+﻿namespace VelcroPhysics.Shared
 {
     public class GraphNode<T, T1>
     {
