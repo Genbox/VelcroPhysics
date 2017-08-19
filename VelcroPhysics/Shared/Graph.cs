@@ -47,7 +47,7 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Add a node to to the graph
+        /// Add a node to the graph
         /// </summary>
         /// <remarks>Note that this method is O(1) in worst case.</remarks>
         public void Add(GraphNode<T, T1> node)
@@ -147,7 +147,7 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// Remove the specified node from the graph.
         /// </summary>
-        /// <remarks>Note that this methid is O(1) in worst case.</remarks>
+        /// <remarks>Note that this method is O(1) in worst case.</remarks>
         public void Remove(GraphNode<T, T1> node)
         {
             Contract.Requires(node != null, nameof(node) + " must not be null");

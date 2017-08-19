@@ -76,7 +76,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         }
 
         /// <summary>
-        /// Duplicates the given Body along the given path for approximatly the given copies.
+        /// Duplicates the given Body along the given path for approximately the given copies.
         /// </summary>
         /// <param name="world">The world.</param>
         /// <param name="path">The path.</param>
@@ -107,7 +107,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         }
 
         /// <summary>
-        /// Duplicates the given Body along the given path for approximatly the given copies.
+        /// Duplicates the given Body along the given path for approximately the given copies.
         /// </summary>
         /// <param name="world">The world.</param>
         /// <param name="path">The path.</param>

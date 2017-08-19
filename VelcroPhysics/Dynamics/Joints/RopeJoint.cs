@@ -39,7 +39,7 @@ namespace VelcroPhysics.Dynamics.Joints
     /// <summary>
     /// A rope joint enforces a maximum distance between two points on two bodies. It has no other effect.
     /// It can be used on ropes that are made up of several connected bodies, and if there is a need to support a heavy body.
-    /// This joint is used for stabiliation of heavy objects on soft constraint joints.
+    /// This joint is used for stabilization of heavy objects on soft constraint joints.
     /// Warning: if you attempt to change the maximum length during the simulation you will get some non-physical behavior.
     /// Use the DistanceJoint instead if you want to dynamically control the length.
     /// </summary>

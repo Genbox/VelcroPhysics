@@ -14,7 +14,7 @@ namespace VelcroPhysics.Tools.TextureTools
         private const int ClosepixelsLength = 8;
 
         /// <summary>
-        /// This array is ment to be readonly.
+        /// This array is meant to be read-only.
         /// It's not because it is accessed very frequently.
         /// </summary>
         private static int[,] _closePixels = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
@@ -315,7 +315,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// </summary>
         /// <param name="polygon">The polygon to search in.</param>
         /// <param name="lastHoleEntrance">The last entrance point.</param>
-        /// <returns>The next holes entrance point. Null if ther are no holes.</returns>
+        /// <returns>The next holes entrance point. Null if there are no holes.</returns>
         private Vector2? SearchHoleEntrance(Vertices polygon, Vector2? lastHoleEntrance)
         {
             if (polygon == null)
@@ -376,7 +376,7 @@ namespace VelcroPhysics.Tools.TextureTools
                             for (int x = (int)xCoords[i]; x <= (int)xCoords[i + 1]; x++)
                             {
                                 // First pass: IsSolid might return false.
-                                // In that case the polygon edge doesn't lie on the texture's solid pixel, because of the hull tolearance.
+                                // In that case the polygon edge doesn't lie on the texture's solid pixel, because of the hull tolerance.
                                 // If the edge lies before the first solid pixel then we need to skip our transparent pixel finds.
 
                                 // The algorithm starts to search for a relevant transparent pixel (which indicates a possible hole) 
@@ -384,7 +384,7 @@ namespace VelcroPhysics.Tools.TextureTools
 
                                 // After we've found a solid and a transparent pixel (a hole's left edge) 
                                 // we search for a solid pixel again (a hole's right edge).
-                                // When found the distance of that coodrinate has to be greater then the hull tolerance.
+                                // When found the distance of that coordinate has to be greater then the hull tolerance.
 
                                 if (IsSolid(ref x, ref y))
                                 {
@@ -633,7 +633,7 @@ namespace VelcroPhysics.Tools.TextureTools
                             addFind = true;
                             slope = vertex2 - vertex1;
 
-                            // Special threatment for edges that end at the y coord.
+                            // Special treatment for edges that end at the y coord.
                             if (vertex1.Y == y)
                             {
                                 // Create preview of the next edge.
@@ -641,7 +641,7 @@ namespace VelcroPhysics.Tools.TextureTools
                                 nextSlope = vertex1 - nextVertex;
 
                                 // Ignore peaks. 
-                                // If thwo edges are aligned like this: /\ and the y coordinate lies on the top,
+                                // If two edges are aligned like this: /\ and the y coordinate lies on the top,
                                 // then we get the same x coord twice and we don't need that.
                                 if (slope.Y > 0)
                                     addFind = (nextSlope.Y <= 0);
@@ -843,7 +843,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     // Get the next point on hull.
                     if (GetNextHullPoint(ref last, ref current, out next))
                     {
-                        // Add the vertex to a hull pre vision list.
+                        // Add the vertex to a hull pre-vision list.
                         hullArea.Add(next);
                     }
                     else

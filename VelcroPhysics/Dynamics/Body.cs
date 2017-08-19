@@ -483,7 +483,7 @@ namespace VelcroPhysics.Dynamics
                 if (_type != BodyType.Dynamic)
                     return;
 
-                //Velcro: We support setting the mass independenly
+                //Velcro: We support setting the mass independently
 
                 // Move center of mass.
                 Vector2 oldCenter = _sweep.C;
@@ -510,7 +510,7 @@ namespace VelcroPhysics.Dynamics
                 if (_type != BodyType.Dynamic)
                     return;
 
-                //Velcro: We support setting the mass independenly
+                //Velcro: We support setting the mass independently
                 _mass = value;
 
                 if (_mass <= 0.0f)
@@ -534,7 +534,7 @@ namespace VelcroPhysics.Dynamics
                 if (_type != BodyType.Dynamic)
                     return;
 
-                //Velcro: We support setting the inertia independenly
+                //Velcro: We support setting the inertia independently
                 if (value > 0.0f && !FixedRotation)
                 {
                     _inertia = value - _mass * Vector2.Dot(_sweep.LocalCenter, _sweep.LocalCenter);
@@ -1029,7 +1029,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Get the world coordinates of a point given the local coordinates.
         /// </summary>
-        /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
+        /// <param name="localPoint">A point on the body measured relative the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(ref Vector2 localPoint)
         {
@@ -1039,7 +1039,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Get the world coordinates of a point given the local coordinates.
         /// </summary>
-        /// <param name="localPoint">A point on the body measured relative the the body's origin.</param>
+        /// <param name="localPoint">A point on the body measured relative the body's origin.</param>
         /// <returns>The same point expressed in world coordinates.</returns>
         public Vector2 GetWorldPoint(Vector2 localPoint)
         {

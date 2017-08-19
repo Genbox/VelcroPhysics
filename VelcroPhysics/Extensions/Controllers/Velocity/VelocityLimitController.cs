@@ -6,7 +6,7 @@ using VelcroPhysics.Extensions.Controllers.ControllerBase;
 namespace VelcroPhysics.Extensions.Controllers.Velocity
 {
     /// <summary>
-    /// Put a limit on the linear (translation - the movespeed) and angular (rotation) velocity
+    /// Put a limit on the linear (translation - the move speed) and angular (rotation) velocity
     /// of bodies added to this controller.
     /// </summary>
     public class VelocityLimitController : Controller

@@ -130,7 +130,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// Get the AABB for a proxy.
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         public void GetFatAABB(int proxyId, out AABB aabb)
         {
             _tree.GetFatAABB(proxyId, out aabb);
@@ -220,7 +220,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// is called for each proxy that overlaps the supplied AABB.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         public void Query(Func<int, bool> callback, ref AABB aabb)
         {
             _tree.Query(callback, ref aabb);

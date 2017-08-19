@@ -30,7 +30,7 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// Represents a simple non-selfintersecting convex polygon.
+    /// Represents a simple non-self intersecting convex polygon.
     /// Create a convex hull from the given array of points.
     /// </summary>
     public class PolygonShape : Shape
@@ -219,7 +219,7 @@ namespace VelcroPhysics.Collision.Shapes
         /// </summary>
         /// <param name="transform">The world transform of the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
-        /// <param name="aabb">The aabb results.</param>
+        /// <param name="aabb">The AABB results.</param>
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
             AABBHelper.ComputePolygonAABB(_vertices, ref transform, out aabb);

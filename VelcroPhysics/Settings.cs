@@ -34,7 +34,7 @@ namespace VelcroPhysics
         // Common
 
         /// <summary>
-        /// Enabling diagnistics causes the engine to gather timing information.
+        /// Enabling diagnostics causes the engine to gather timing information.
         /// You can see how much time it took to solve the contacts, solve CCD
         /// and update the controllers.
         /// NOTE: If you are using a debug view that shows performance counters,
@@ -55,7 +55,7 @@ namespace VelcroPhysics
         public const int MaxSubSteps = 8;
 
         /// <summary>
-        /// Enable/Disable warmstarting
+        /// Enable/Disable warm-starting
         /// </summary>
         public const bool EnableWarmstarting = true;
 

@@ -14,7 +14,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
         //Cutting a shape into two is based on the work of Daid and his prototype BoxCutter: http://www.box2d.org/forum/viewtopic.php?f=3&t=1473
 
         /// <summary>
-        /// Split a fixture into 2 vertice collections using the given entry and exit-point.
+        /// Split a fixture into 2 vertices collections using the given entry and exit-point.
         /// </summary>
         /// <param name="fixture">The Fixture to split</param>
         /// <param name="entryPoint">The entry point - The start point</param>

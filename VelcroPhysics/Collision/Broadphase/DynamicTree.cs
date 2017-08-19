@@ -155,14 +155,14 @@ namespace VelcroPhysics.Collision.Broadphase
         /// of the node instead of a pointer so that we can grow
         /// the node pool.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
         public int AddProxy(ref AABB aabb, T userData)
         {
             int proxyId = AllocateNode();
 
-            // Fatten the aabb.
+            // Fatten the AABB.
             Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
             _nodes[proxyId].AABB.LowerBound = aabb.LowerBound - r;
             _nodes[proxyId].AABB.UpperBound = aabb.UpperBound + r;
@@ -193,7 +193,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// the function returns immediately.
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         /// <param name="displacement">The displacement.</param>
         /// <returns>true if the proxy was re-inserted.</returns>
         public bool MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
@@ -270,7 +270,7 @@ namespace VelcroPhysics.Collision.Broadphase
         /// is called for each proxy that overlaps the supplied AABB.
         /// </summary>
         /// <param name="callback">The callback.</param>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         public void Query(Func<int, bool> callback, ref AABB aabb)
         {
             _queryStack.Clear();

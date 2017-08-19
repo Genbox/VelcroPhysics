@@ -316,7 +316,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         }
 
         /// <summary>
-        /// Apply the force supplying strength (wich is modified in Update()
+        /// Apply the force supplying strength which is modified in Update()
         /// according to the TimingMode
         /// </summary>
         /// <param name="dt"></param>

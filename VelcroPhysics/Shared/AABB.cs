@@ -114,7 +114,7 @@ namespace VelcroPhysics.Shared
         /// <summary>
         /// Combine an AABB into this one.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         public void Combine(ref AABB aabb)
         {
             LowerBound = Vector2.Min(LowerBound, aabb.LowerBound);
@@ -133,11 +133,11 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Does this aabb contain the provided AABB.
+        /// Does this AABB contain the provided AABB.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         /// <returns>
-        /// <c>true</c> if it contains the specified aabb; otherwise, <c>false</c>.
+        /// <c>true</c> if it contains the specified AABB; otherwise, <c>false</c>.
         /// </returns>
         public bool Contains(ref AABB aabb)
         {

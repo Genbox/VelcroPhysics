@@ -40,11 +40,11 @@ namespace VelcroPhysics.Collision.Shapes
         private Vector2 _prevVertex, _nextVertex;
 
         /// <summary>
-        /// Create a new chainshape from the vertices.
+        /// Create a new ChainShape from the vertices.
         /// </summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
         /// <param name="createLoop">
-        /// Set to true to create a closed loop. It connects the first vertice to the last, and
+        /// Set to true to create a closed loop. It connects the first vertex to the last, and
         /// automatically adjusts connectivity to create smooth collisions along the chain.
         /// </param>
         public ChainShape(Vertices vertices, bool createLoop = false) : base(ShapeType.Chain, Settings.PolygonRadius)
@@ -65,7 +65,7 @@ namespace VelcroPhysics.Collision.Shapes
             {
                 Vertices.Add(vertices[0]);
                 PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
-                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here here to set _hasNextVertex
+                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here to set _hasNextVertex
             }
 
             ComputeProperties();

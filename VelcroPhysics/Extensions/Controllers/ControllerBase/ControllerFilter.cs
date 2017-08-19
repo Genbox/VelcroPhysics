@@ -23,7 +23,7 @@ namespace VelcroPhysics.Extensions.Controllers.ControllerBase
         }
 
         /// <summary>
-        /// Determines whether this body ignores the the specified controller.
+        /// Determines whether this body ignores the specified controller.
         /// </summary>
         /// <param name="controller">The controller type.</param>
         /// <returns>

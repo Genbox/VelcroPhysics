@@ -24,7 +24,7 @@ namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
             {
                 case TriangulationAlgorithm.Earclip:
                     if (Settings.SkipSanityChecks)
-                        Debug.Assert(!vertices.IsCounterClockWise(), "The Earclip algorithm expects the polygon to be clockwise.");
+                        Debug.Assert(!vertices.IsCounterClockWise(), "The Ear-clip algorithm expects the polygon to be clockwise.");
                     else
                     {
                         if (vertices.IsCounterClockWise())

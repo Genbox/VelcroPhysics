@@ -50,7 +50,7 @@ namespace VelcroPhysics.Collision.Distance
         public static int GJKIters;
 
         /// <summary>
-        /// The maximum numer of iterations ever mae with calls to the CompteDistance() funtion.
+        /// The maximum number of iterations calls to the CompteDistance() function.
         /// Note: This is only activated when Settings.EnableDiagnostics = true
         /// </summary>
         [ThreadStatic]
@@ -156,7 +156,7 @@ namespace VelcroPhysics.Collision.Distance
                     break;
                 }
 
-                // New vertex is ok and needed.
+                // New vertex is OK and needed.
                 ++simplex.Count;
             }
 

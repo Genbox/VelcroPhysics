@@ -329,7 +329,7 @@ namespace VelcroPhysics.Dynamics
         /// If you need a more accurate AABB, compute it using the Shape and
         /// the body transform.
         /// </summary>
-        /// <param name="aabb">The aabb.</param>
+        /// <param name="aabb">The AABB.</param>
         /// <param name="childIndex">Index of the child.</param>
         public void GetAABB(out AABB aabb, int childIndex)
         {

@@ -146,11 +146,6 @@ namespace VelcroPhysics.Collision.Narrowphase
         /// <summary>
         /// Collides and edge and a polygon, taking into account edge adjacency.
         /// </summary>
-        /// <param name="manifold">The manifold.</param>
-        /// <param name="edgeA">The edge A.</param>
-        /// <param name="xfA">The xf A.</param>
-        /// <param name="polygonB">The polygon B.</param>
-        /// <param name="xfB">The xf B.</param>
         public static void CollideEdgeAndPolygon(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
         {
             EPCollider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);

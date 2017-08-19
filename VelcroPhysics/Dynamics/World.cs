@@ -104,7 +104,7 @@ namespace VelcroPhysics.Dynamics
         public ControllerHandler ControllerAdded;
 
         /// <summary>
-        /// Fires every time a controlelr is removed form the World.
+        /// Fires every time a controller is removed form the World.
         /// </summary>
         public ControllerHandler ControllerRemoved;
 
@@ -925,7 +925,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>
         /// Get the world body list.
         /// </summary>
-        /// <value>Thehead of the world body list.</value>
+        /// <value>The head of the world body list.</value>
         public List<Body> BodyList { get; private set; }
 
         /// <summary>
@@ -1010,7 +1010,7 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// All adds and removes are cached by the World duing a World step.
+        /// All adds and removes are cached by the World during a World step.
         /// To process the changes before the world updates again, call this method.
         /// </summary>
         public void ProcessChanges()
@@ -1024,7 +1024,7 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>
         /// Take a time step. This performs collision detection, integration,
-        /// and consraint solution.
+        /// and constraint solution.
         /// </summary>
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
@@ -1071,7 +1071,7 @@ namespace VelcroPhysics.Dynamics
             if (Settings.EnableDiagnostics)
                 ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime);
 
-            // Integrate velocities, solve velocity raints, and integrate positions.
+            // Integrate velocities, solve velocity constraints, and integrate positions.
             Solve(ref step);
 
             if (Settings.EnableDiagnostics)
@@ -1126,7 +1126,7 @@ namespace VelcroPhysics.Dynamics
         /// Return false: Terminate the query
         /// </summary>
         /// <param name="callback">A user implemented callback class.</param>
-        /// <param name="aabb">The aabb query box.</param>
+        /// <param name="aabb">The AABB query box.</param>
         public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
@@ -1138,7 +1138,7 @@ namespace VelcroPhysics.Dynamics
         /// Query the world for all fixtures that potentially overlap the provided AABB.
         /// Use the overload with a callback for filtering and better performance.
         /// </summary>
-        /// <param name="aabb">The aabb query box.</param>
+        /// <param name="aabb">The AABB query box.</param>
         /// <returns>A list of fixtures that were in the affected area.</returns>
         public List<Fixture> QueryAABB(ref AABB aabb)
         {

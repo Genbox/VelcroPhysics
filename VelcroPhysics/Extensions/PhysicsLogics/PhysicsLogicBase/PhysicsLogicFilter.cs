@@ -23,7 +23,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
         }
 
         /// <summary>
-        /// Determines whether this body ignores the the specified controller.
+        /// Determines whether this body ignores the specified controller.
         /// </summary>
         /// <param name="type">The logic type.</param>
         /// <returns>
