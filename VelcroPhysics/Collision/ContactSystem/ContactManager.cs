@@ -242,9 +242,8 @@ namespace VelcroPhysics.Collision.ContactSystem
         internal void Collide()
         {
             // Update awake contacts.
-            for (int i = 0; i < ContactList.Count; i++)
+            foreach (Contact c in ContactList.ToArray())
             {
-                Contact c = ContactList[i];
                 Fixture fixtureA = c.FixtureA;
                 Fixture fixtureB = c.FixtureB;
                 int indexA = c.ChildIndexA;
