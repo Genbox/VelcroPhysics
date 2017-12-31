@@ -27,3 +27,6 @@ We have tons of features!
 * Controllers (gravity, force generators)
 * Tools to decompose concave polygons, find convex hulls and boolean operations
 * Factories to simplify the creation of bodies
+
+## Integration
+You can run VelcroPhysics in a console application without any dependency on third party game libraries. See VelcroPhysics.sln for an example. We have zero-copy integration with [MonoGame](http://www.monogame.net/), which means if you already use MonoGame for your game, VelcroPhysics uses the same Vector2 clases and you don't have to copy between different vector types. See VelcroPhysics.MonoGame.sln for an example on how to use MonoGame with VelcroPhysics.
