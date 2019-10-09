@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyName>VelcroPhysics.DebugViews.MonoGame</AssemblyName>
     <RootNamespace>VelcroPhysics.DebugViews.MonoGame</RootNamespace>
   </PropertyGroup>
@@ -12,6 +12,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\VelcroPhysics\VelcroPhysics.MonoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

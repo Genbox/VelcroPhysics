@@ -1,32 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
-    <RootNamespace>VelcroPhysics</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;MONOGAME</DefineConstants>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Tools\Curve.cs" />
-    <Compile Remove="Tools\CurveKey.cs" />
-    <Compile Remove="Tools\CurveKeyCollection.cs" />
-    <Compile Remove="Tools\HashSet.cs" />
-    <Compile Remove="Tools\MathHelper.cs" />
-    <Compile Remove="Tools\Matrix.cs" />
-    <Compile Remove="Tools\Stopwatch.cs" />
-    <Compile Remove="Tools\Vector2.cs" />
-    <Compile Remove="Tools\Vector3.cs" />
+    <Compile Remove="Primitives\**" />
+    <EmbeddedResource Remove="Primitives\**" />
+    <None Remove="Primitives\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Portable" Version="3.6.0.1625" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
