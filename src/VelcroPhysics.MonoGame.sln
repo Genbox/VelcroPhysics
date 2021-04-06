@@ -1,0 +1,65 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_imports", "_imports", "{27DDB19D-8669-4E5E-B3C9-76E022E6BD8E}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame", "VelcroPhysics\VelcroPhysics.MonoGame.csproj", "{4D379EBE-1BAD-4CC5-8D54-65894C9FF5DE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.ContentPipelines.SVGImport", "VelcroPhysics.MonoGame.ContentPipelines.SVGImport\VelcroPhysics.MonoGame.ContentPipelines.SVGImport.csproj", "{F77699A6-C80D-45EA-800E-2931D90223FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices", "VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices\VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices.csproj", "{7B0DCEDE-EB75-4A14-BCE0-C91F4B44AC50}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.DebugView", "VelcroPhysics.MonoGame.DebugView\VelcroPhysics.MonoGame.DebugView.csproj", "{FA97CE06-E4B4-452A-86C2-99A797545E30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.Samples.Demo", "VelcroPhysics.MonoGame.Samples.Demo\VelcroPhysics.MonoGame.Samples.Demo.csproj", "{2A2EB806-CC55-47BA-8EFB-F4B0697EE15A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.Samples.HelloWorld", "VelcroPhysics.MonoGame.Samples.HelloWorld\VelcroPhysics.MonoGame.Samples.HelloWorld.csproj", "{ABBA8662-3984-4659-9B02-C2A9ADC438E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame.Samples.Testbed", "VelcroPhysics.MonoGame.Samples.Testbed\VelcroPhysics.MonoGame.Samples.Testbed.csproj", "{4BB065F9-3C98-4855-91E5-BA221EDB8B8F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D379EBE-1BAD-4CC5-8D54-65894C9FF5DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D379EBE-1BAD-4CC5-8D54-65894C9FF5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D379EBE-1BAD-4CC5-8D54-65894C9FF5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D379EBE-1BAD-4CC5-8D54-65894C9FF5DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F77699A6-C80D-45EA-800E-2931D90223FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F77699A6-C80D-45EA-800E-2931D90223FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F77699A6-C80D-45EA-800E-2931D90223FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F77699A6-C80D-45EA-800E-2931D90223FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B0DCEDE-EB75-4A14-BCE0-C91F4B44AC50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B0DCEDE-EB75-4A14-BCE0-C91F4B44AC50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B0DCEDE-EB75-4A14-BCE0-C91F4B44AC50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B0DCEDE-EB75-4A14-BCE0-C91F4B44AC50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA97CE06-E4B4-452A-86C2-99A797545E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA97CE06-E4B4-452A-86C2-99A797545E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA97CE06-E4B4-452A-86C2-99A797545E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA97CE06-E4B4-452A-86C2-99A797545E30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2EB806-CC55-47BA-8EFB-F4B0697EE15A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2EB806-CC55-47BA-8EFB-F4B0697EE15A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2EB806-CC55-47BA-8EFB-F4B0697EE15A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2EB806-CC55-47BA-8EFB-F4B0697EE15A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABBA8662-3984-4659-9B02-C2A9ADC438E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABBA8662-3984-4659-9B02-C2A9ADC438E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABBA8662-3984-4659-9B02-C2A9ADC438E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABBA8662-3984-4659-9B02-C2A9ADC438E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BB065F9-3C98-4855-91E5-BA221EDB8B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BB065F9-3C98-4855-91E5-BA221EDB8B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BB065F9-3C98-4855-91E5-BA221EDB8B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BB065F9-3C98-4855-91E5-BA221EDB8B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {107A15C3-7B55-4F30-B371-88467BF0BB92}
+	EndGlobalSection
+EndGlobal
