@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard1.4</TargetFramework>
     <Authors>Ian Qvist and collaborators</Authors>
     <Company />
   </PropertyGroup>
