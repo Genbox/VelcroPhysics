@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net50</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>VelcroPhysics.ContentPipelines.SVGImport</AssemblyName>
     <RootNamespace>VelcroPhysics.ContentPipelines.SVGImport</RootNamespace>
     <ApplicationIcon />

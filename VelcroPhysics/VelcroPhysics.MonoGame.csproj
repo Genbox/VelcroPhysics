@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net50</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>VelcroPhysics</RootNamespace>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;MONOGAME</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;MONOGAME</DefineConstants>
+    <Authors>Ian Qvist and collaborators</Authors>
   </PropertyGroup>
 
   <ItemGroup>

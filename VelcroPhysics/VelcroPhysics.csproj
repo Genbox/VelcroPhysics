@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.4</TargetFrameworks>
-    <Authors>Ian Qvist</Authors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3</DefineConstants>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>Ian Qvist and collaborators</Authors>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>
