@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using VelcroPhysics.Benchmarks.Code;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Benchmarks.Tests.Shared
 {
-    public class Dummy { }
-
     [MemoryDiagnoser]
+    [InProcess]
     public class GraphBenchmark
     {
         private List<Dummy> _list;

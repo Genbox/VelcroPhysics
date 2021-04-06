@@ -1,176 +1,174 @@
-﻿#if !XNA && !XBOX && !ANDROID && !MONOGAME
+﻿#if STANDARD_IMPLEMENTATION
 
-#region License
-
-/*
-MIT License
-Copyright © 2006 The Mono.Xna Team
-
-All rights reserved.
-
-Authors:
-Olivier Dufour (Duff)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-#endregion License
+// MIT License - Copyright (C) The Mono.Xna Team
+// This file is subject to the terms and conditions defined in
+// file 'MONOGAME LICENSE.txt', which is part of this source code package.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
-namespace VelcroPhysics.Primitives
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Xna.Framework
 {
-    public class CurveKeyCollection : ICollection<CurveKey>, IEnumerable<CurveKey>, IEnumerable
+    /// <summary>The collection of the <see cref="CurveKey" /> elements and a part of the <see cref="Curve" /> class.</summary>
+
+    // TODO : [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DataContract]
+    public class CurveKeyCollection : ICollection<CurveKey>
     {
         #region Private Fields
 
-        private List<CurveKey> innerlist;
-        private bool isReadOnly = false;
+        private readonly List<CurveKey> _keys;
 
-        #endregion Private Fields
+        #endregion
+
+        #region Constructors
+
+        /// <summary>Creates a new instance of <see cref="CurveKeyCollection" /> class.</summary>
+        public CurveKeyCollection()
+        {
+            _keys = new List<CurveKey>();
+        }
+
+        #endregion
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _keys.GetEnumerator();
+        }
+
+        /// <summary>Adds a key to this collection.</summary>
+        /// <param name="item">New key for the collection.</param>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="item" /> is null.</exception>
+        /// <remarks>The new key would be added respectively to a position of that key and the position of other keys.</remarks>
+        public void Add(CurveKey item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item");
+
+            if (_keys.Count == 0)
+            {
+                _keys.Add(item);
+                return;
+            }
+
+            for (int i = 0; i < _keys.Count; i++)
+            {
+                if (item.Position < _keys[i].Position)
+                {
+                    _keys.Insert(i, item);
+                    return;
+                }
+            }
+
+            _keys.Add(item);
+        }
+
+        /// <summary>Removes all keys from this collection.</summary>
+        public void Clear()
+        {
+            _keys.Clear();
+        }
+
+        /// <summary>Determines whether this collection contains a specific key.</summary>
+        /// <param name="item">The key to locate in this collection.</param>
+        /// <returns><c>true</c> if the key is found; <c>false</c> otherwise.</returns>
+        public bool Contains(CurveKey item)
+        {
+            return _keys.Contains(item);
+        }
+
+        /// <summary>Copies the keys of this collection to an array, starting at the array index provided.</summary>
+        /// <param name="array">Destination array where elements will be copied.</param>
+        /// <param name="arrayIndex">The zero-based index in the array to start copying from.</param>
+        public void CopyTo(CurveKey[] array, int arrayIndex)
+        {
+            _keys.CopyTo(array, arrayIndex);
+        }
+
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>An enumerator for the <see cref="CurveKeyCollection" />.</returns>
+        public IEnumerator<CurveKey> GetEnumerator()
+        {
+            return _keys.GetEnumerator();
+        }
+
+        /// <summary>Removes specific element.</summary>
+        /// <param name="item">The element</param>
+        /// <returns>
+        /// <c>true</c> if item is successfully removed; <c>false</c> otherwise. This method also returns <c>false</c> if
+        /// item was not found.
+        /// </returns>
+        public bool Remove(CurveKey item)
+        {
+            return _keys.Remove(item);
+        }
+
+        /// <summary>Creates a copy of this collection.</summary>
+        /// <returns>A copy of this collection.</returns>
+        public CurveKeyCollection Clone()
+        {
+            CurveKeyCollection ckc = new CurveKeyCollection();
+            foreach (CurveKey key in _keys)
+            {
+                ckc.Add(key);
+            }
+            return ckc;
+        }
+
+        /// <summary>Finds element in the collection and returns its index.</summary>
+        /// <param name="item">Element for the search.</param>
+        /// <returns>Index of the element; or -1 if item is not found.</returns>
+        public int IndexOf(CurveKey item)
+        {
+            return _keys.IndexOf(item);
+        }
+
+        /// <summary>Removes element at the specified index.</summary>
+        /// <param name="index">The index which element will be removed.</param>
+        public void RemoveAt(int index)
+        {
+            _keys.RemoveAt(index);
+        }
 
         #region Properties
 
+        /// <summary>Indexer.</summary>
+        /// <param name="index">The index of key in this collection.</param>
+        /// <returns><see cref="CurveKey" /> at <paramref name="index" /> position.</returns>
+        [DataMember(Name = "Items")]
         public CurveKey this[int index]
         {
-            get { return innerlist[index]; }
+            get => _keys[index];
             set
             {
                 if (value == null)
                     throw new ArgumentNullException();
 
-                if (index >= innerlist.Count)
+                if (index >= _keys.Count)
                     throw new IndexOutOfRangeException();
 
-                if (innerlist[index].Position == value.Position)
-                    innerlist[index] = value;
+                if (_keys[index].Position == value.Position)
+                    _keys[index] = value;
                 else
                 {
-                    innerlist.RemoveAt(index);
-                    innerlist.Add(value);
+                    _keys.RemoveAt(index);
+                    _keys.Add(value);
                 }
             }
         }
 
-        public int Count
-        {
-            get { return innerlist.Count; }
-        }
+        /// <summary>Returns the count of keys in this collection.</summary>
+        [DataMember]
+        public int Count => _keys.Count;
 
-        public bool IsReadOnly
-        {
-            get { return isReadOnly; }
-        }
+        /// <summary>Returns false because it is not a read-only collection.</summary>
+        [DataMember]
+        public bool IsReadOnly => false;
 
-        #endregion Properties
-
-        #region Constructors
-
-        public CurveKeyCollection()
-        {
-            innerlist = new List<CurveKey>();
-        }
-
-        #endregion Constructors
-
-        #region Public Methods
-
-        public void Add(CurveKey item)
-        {
-            if (item == null)
-                throw new ArgumentNullException("Value cannot be null.", (Exception)null);
-
-            if (innerlist.Count == 0)
-            {
-                innerlist.Add(item);
-                return;
-            }
-
-            for (int i = 0; i < innerlist.Count; i++)
-            {
-                if (item.Position < innerlist[i].Position)
-                {
-                    innerlist.Insert(i, item);
-                    return;
-                }
-            }
-
-            innerlist.Add(item);
-        }
-
-        public void Clear()
-        {
-            innerlist.Clear();
-        }
-
-        public bool Contains(CurveKey item)
-        {
-            return innerlist.Contains(item);
-        }
-
-        public void CopyTo(CurveKey[] array, int arrayIndex)
-        {
-            innerlist.CopyTo(array, arrayIndex);
-        }
-
-        public IEnumerator<CurveKey> GetEnumerator()
-        {
-            return innerlist.GetEnumerator();
-        }
-
-        public bool Remove(CurveKey item)
-        {
-            return innerlist.Remove(item);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return innerlist.GetEnumerator();
-        }
-
-        public CurveKeyCollection Clone()
-        {
-            CurveKeyCollection ckc = new CurveKeyCollection();
-            foreach (CurveKey key in innerlist)
-                ckc.Add(key);
-            return ckc;
-        }
-
-        public int IndexOf(CurveKey item)
-        {
-            return innerlist.IndexOf(item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            if (index != Count && index > -1)
-                innerlist.RemoveAt(index);
-            else
-                throw new ArgumentOutOfRangeException(
-                    "Index was out of range. Must be non-negative and less than the size of the collection.\r\nParameter name: index",
-                    (Exception)null);
-        }
-
-        #endregion Public Methods
+        #endregion
     }
 }
-
 #endif

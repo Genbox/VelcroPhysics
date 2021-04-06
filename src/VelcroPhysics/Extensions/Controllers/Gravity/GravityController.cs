@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Extensions.Controllers.Gravity
 {

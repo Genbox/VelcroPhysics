@@ -1,5 +1,5 @@
 using System;
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 
 namespace VelcroPhysics.Shared
 {

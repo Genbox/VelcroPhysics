@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 

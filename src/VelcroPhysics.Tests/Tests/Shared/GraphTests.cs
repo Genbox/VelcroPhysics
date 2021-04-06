@@ -1,10 +1,9 @@
 ﻿using VelcroPhysics.Shared;
+using VelcroPhysics.Tests.Code;
 using Xunit;
 
 namespace VelcroPhysics.Tests.Tests.Shared
 {
-    public class Dummy { }
-
     public class GraphTests
     {
         [Fact]

@@ -1,7 +1,7 @@
 ﻿using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Benchmarks.TestObjects
+namespace VelcroPhysics.Benchmarks.Code
 {
     public class PoolObject : IPoolable<PoolObject>
     {

@@ -21,13 +21,13 @@
 */
 
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Collision.Handlers;
 using VelcroPhysics.Collision.RayCast;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Templates;
 

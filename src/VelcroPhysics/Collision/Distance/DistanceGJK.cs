@@ -22,8 +22,8 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared.Optimization;
 using VelcroPhysics.Utilities;
 

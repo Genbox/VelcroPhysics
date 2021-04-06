@@ -1,5 +1,5 @@
-﻿using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
+﻿using Microsoft.Xna.Framework;
+using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 

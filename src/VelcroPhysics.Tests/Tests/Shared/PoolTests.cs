@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VelcroPhysics.Shared;
-using VelcroPhysics.Tests.TestObjects;
+using VelcroPhysics.Tests.Code;
 using Xunit;
 
 namespace VelcroPhysics.Tests.Tests.Shared

@@ -1,13 +1,14 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Shapes;
 using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Benchmarks.Tests.Collision
 {
     [MemoryDiagnoser]
+    [InProcess]
     public class TOIBenchmark
     {
         private PolygonShape _shapeA;

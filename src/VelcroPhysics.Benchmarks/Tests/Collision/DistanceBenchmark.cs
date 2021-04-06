@@ -1,13 +1,14 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Benchmarks.Tests.Collision
 {
     [MemoryDiagnoser]
+    [InProcess]
     public class DistanceBenchmark
     {
         private PolygonShape _polygonA;

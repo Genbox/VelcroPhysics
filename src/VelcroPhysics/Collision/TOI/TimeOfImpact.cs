@@ -22,9 +22,9 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Distance;
 using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.TOI

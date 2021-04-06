@@ -1,167 +1,148 @@
-﻿#if !XNA && !XBOX && !ANDROID && !MONOGAME
+﻿#if STANDARD_IMPLEMENTATION
 
-#region License
-
-/*
-MIT License
-Copyright © 2006 The Mono.Xna Team
-
-All rights reserved.
-
-Authors:
-Olivier Dufour (Duff)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-#endregion License
+// MIT License - Copyright (C) The Mono.Xna Team
+// This file is subject to the terms and conditions defined in
+// file 'MONOGAME LICENSE.txt', which is part of this source code package.
 
 using System;
+using System.Runtime.Serialization;
 
-namespace VelcroPhysics.Primitives
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Xna.Framework
 {
+    /// <summary>Key point on the <see cref="Curve" />.</summary>
+    [DataContract]
     public class CurveKey : IEquatable<CurveKey>, IComparable<CurveKey>
     {
+        /// <summary>Compares whether two <see cref="CurveKey" /> instances are not equal.</summary>
+        /// <param name="value1"><see cref="CurveKey" /> instance on the left of the not equal sign.</param>
+        /// <param name="value2"><see cref="CurveKey" /> instance on the right of the not equal sign.</param>
+        /// <returns><c>true</c> if the instances are not equal; <c>false</c> otherwise.</returns>
+        public static bool operator !=(CurveKey value1, CurveKey value2)
+        {
+            return !(value1 == value2);
+        }
+
+        /// <summary>Compares whether two <see cref="CurveKey" /> instances are equal.</summary>
+        /// <param name="value1"><see cref="CurveKey" /> instance on the left of the equal sign.</param>
+        /// <param name="value2"><see cref="CurveKey" /> instance on the right of the equal sign.</param>
+        /// <returns><c>true</c> if the instances are equal; <c>false</c> otherwise.</returns>
+        public static bool operator ==(CurveKey value1, CurveKey value2)
+        {
+            if (Equals(value1, null))
+                return Equals(value2, null);
+
+            if (Equals(value2, null))
+                return Equals(value1, null);
+
+            return value1.Position == value2.Position
+                   && value1.Value == value2.Value
+                   && value1.TangentIn == value2.TangentIn
+                   && value1.TangentOut == value2.TangentOut
+                   && value1.Continuity == value2.Continuity;
+        }
+
+        /// <summary>Creates a copy of this key.</summary>
+        /// <returns>A copy of this key.</returns>
+        public CurveKey Clone()
+        {
+            return new CurveKey(Position, Value, TangentIn, TangentOut, Continuity);
+        }
+
         #region Private Fields
 
-        private CurveContinuity continuity;
-        private float position;
-        private float tangentIn;
-        private float tangentOut;
-        private float value;
-
-        #endregion Private Fields
+        #endregion
 
         #region Properties
 
-        public CurveContinuity Continuity
-        {
-            get { return continuity; }
-            set { continuity = value; }
-        }
+        /// <summary>
+        /// Gets or sets the indicator whether the segment between this point and the next point on the curve is discrete
+        /// or continuous.
+        /// </summary>
+        [DataMember]
+        public CurveContinuity Continuity { get; set; }
 
-        public float Position
-        {
-            get { return position; }
-        }
+        /// <summary>Gets a position of the key on the curve.</summary>
+        [DataMember]
+        public float Position { get; }
 
-        public float TangentIn
-        {
-            get { return tangentIn; }
-            set { tangentIn = value; }
-        }
+        /// <summary>Gets or sets a tangent when approaching this point from the previous point on the curve.</summary>
+        [DataMember]
+        public float TangentIn { get; set; }
 
-        public float TangentOut
-        {
-            get { return tangentOut; }
-            set { tangentOut = value; }
-        }
+        /// <summary>Gets or sets a tangent when leaving this point to the next point on the curve.</summary>
+        [DataMember]
+        public float TangentOut { get; set; }
 
-        public float Value
-        {
-            get { return value; }
-            set { this.value = value; }
-        }
+        /// <summary>Gets a value of this point.</summary>
+        [DataMember]
+        public float Value { get; set; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>Creates a new instance of <see cref="CurveKey" /> class with position: 0 and value: 0.</summary>
+        public CurveKey() : this(0, 0)
+        {
+            // This parameterless constructor is needed for correct serialization of CurveKeyCollection and CurveKey.
+        }
+
+        /// <summary>Creates a new instance of <see cref="CurveKey" /> class.</summary>
+        /// <param name="position">Position on the curve.</param>
+        /// <param name="value">Value of the control point.</param>
         public CurveKey(float position, float value)
-            : this(position, value, 0, 0, CurveContinuity.Smooth)
-        {
-        }
+            : this(position, value, 0, 0, CurveContinuity.Smooth) { }
 
+        /// <summary>Creates a new instance of <see cref="CurveKey" /> class.</summary>
+        /// <param name="position">Position on the curve.</param>
+        /// <param name="value">Value of the control point.</param>
+        /// <param name="tangentIn">Tangent approaching point from the previous point on the curve.</param>
+        /// <param name="tangentOut">Tangent leaving point toward next point on the curve.</param>
         public CurveKey(float position, float value, float tangentIn, float tangentOut)
-            : this(position, value, tangentIn, tangentOut, CurveContinuity.Smooth)
-        {
-        }
+            : this(position, value, tangentIn, tangentOut, CurveContinuity.Smooth) { }
 
+        /// <summary>Creates a new instance of <see cref="CurveKey" /> class.</summary>
+        /// <param name="position">Position on the curve.</param>
+        /// <param name="value">Value of the control point.</param>
+        /// <param name="tangentIn">Tangent approaching point from the previous point on the curve.</param>
+        /// <param name="tangentOut">Tangent leaving point toward next point on the curve.</param>
+        /// <param name="continuity">Indicates whether the curve is discrete or continuous.</param>
         public CurveKey(float position, float value, float tangentIn, float tangentOut, CurveContinuity continuity)
         {
-            this.position = position;
-            this.value = value;
-            this.tangentIn = tangentIn;
-            this.tangentOut = tangentOut;
-            this.continuity = continuity;
+            Position = position;
+            Value = value;
+            TangentIn = tangentIn;
+            TangentOut = tangentOut;
+            Continuity = continuity;
         }
 
-        #endregion Constructors
+        #endregion
 
-        #region Public Methods
-
-        #region IComparable<CurveKey> Members
+        #region Inherited Methods
 
         public int CompareTo(CurveKey other)
         {
-            return position.CompareTo(other.position);
+            return Position.CompareTo(other.Position);
         }
-
-        #endregion
-
-        #region IEquatable<CurveKey> Members
 
         public bool Equals(CurveKey other)
         {
-            return (this == other);
-        }
-
-        #endregion
-
-        public static bool operator !=(CurveKey a, CurveKey b)
-        {
-            return !(a == b);
-        }
-
-        public static bool operator ==(CurveKey a, CurveKey b)
-        {
-            if (Equals(a, null))
-                return Equals(b, null);
-
-            if (Equals(b, null))
-                return Equals(a, null);
-
-            return (a.position == b.position)
-                   && (a.value == b.value)
-                   && (a.tangentIn == b.tangentIn)
-                   && (a.tangentOut == b.tangentOut)
-                   && (a.continuity == b.continuity);
-        }
-
-        public CurveKey Clone()
-        {
-            return new CurveKey(position, value, tangentIn, tangentOut, continuity);
+            return this == other;
         }
 
         public override bool Equals(object obj)
         {
-            return (obj is CurveKey) ? ((CurveKey)obj) == this : false;
+            return obj as CurveKey != null && Equals((CurveKey)obj);
         }
 
         public override int GetHashCode()
         {
-            return position.GetHashCode() ^ value.GetHashCode() ^ tangentIn.GetHashCode() ^
-                   tangentOut.GetHashCode() ^ continuity.GetHashCode();
+            return Position.GetHashCode() ^ Value.GetHashCode() ^ TangentIn.GetHashCode() ^
+                   TangentOut.GetHashCode() ^ Continuity.GetHashCode();
         }
 
         #endregion
     }
 }
-
 #endif

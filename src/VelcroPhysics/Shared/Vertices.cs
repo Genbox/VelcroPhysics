@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Shared

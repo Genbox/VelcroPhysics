@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion

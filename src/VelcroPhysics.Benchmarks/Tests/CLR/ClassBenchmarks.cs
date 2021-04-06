@@ -1,27 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
+using VelcroPhysics.Benchmarks.Code;
 
 namespace VelcroPhysics.Benchmarks.Tests.CLR
 {
-    public class Class8
-    {
-        public int Value1;
-        public int Value2;
-    }
-
-    public class Class32
-    {
-        public Class8 Value1;
-        public Class8 Value2;
-        public Class8 Value3;
-        public Class8 Value4;
-    }
-
-    public class Class64
-    {
-        public Class32 Value1;
-        public Class32 Value2;
-    }
-
+    [InProcess]
     public class ClassBenchmarks
     {
         private Class8[] _class8;

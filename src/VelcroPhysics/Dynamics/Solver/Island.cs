@@ -22,9 +22,9 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics.Solver

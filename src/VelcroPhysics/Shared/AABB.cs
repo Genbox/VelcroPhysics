@@ -1,6 +1,6 @@
 using System;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Shared

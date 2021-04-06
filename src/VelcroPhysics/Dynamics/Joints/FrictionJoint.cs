@@ -20,8 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 

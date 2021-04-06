@@ -1,14 +1,15 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Benchmarks.Utilities;
 using VelcroPhysics.Collision.Broadphase;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Benchmarks.Tests.Collision
 {
     [MemoryDiagnoser]
+    [InProcess]
     public class BroadphaseBenchmark
     {
         private float _proxyExtent;

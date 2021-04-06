@@ -1,4 +1,4 @@
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared.Optimization;
 
 namespace VelcroPhysics.Collision.Narrowphase

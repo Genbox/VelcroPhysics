@@ -1,6 +1,6 @@
-﻿using VelcroPhysics.Dynamics;
+﻿using Microsoft.Xna.Framework;
+using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Factories
 {

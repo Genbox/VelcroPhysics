@@ -22,8 +22,8 @@
 
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Dynamics.Joints
 {

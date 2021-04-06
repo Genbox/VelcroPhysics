@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Collision.Distance
 {

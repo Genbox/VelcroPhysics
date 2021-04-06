@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Cutting.Simple;
 using VelcroPhysics.Tools.PolygonManipulation;

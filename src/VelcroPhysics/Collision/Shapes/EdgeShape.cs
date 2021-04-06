@@ -20,8 +20,8 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Shapes

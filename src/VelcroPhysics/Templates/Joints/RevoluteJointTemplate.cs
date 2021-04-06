@@ -1,5 +1,5 @@
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Templates.Joints
 {

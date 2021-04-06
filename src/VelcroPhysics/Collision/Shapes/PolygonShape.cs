@@ -21,8 +21,8 @@
 */
 
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.ConvexHull.GiftWrap;
 using VelcroPhysics.Utilities;

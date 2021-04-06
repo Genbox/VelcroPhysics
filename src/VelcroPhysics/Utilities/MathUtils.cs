@@ -22,7 +22,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Utilities

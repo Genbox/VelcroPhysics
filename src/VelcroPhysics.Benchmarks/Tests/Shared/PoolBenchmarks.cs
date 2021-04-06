@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
-using VelcroPhysics.Benchmarks.TestObjects;
+using VelcroPhysics.Benchmarks.Code;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Benchmarks.Tests.Shared
 {
     [MemoryDiagnoser]
+    [InProcess]
     public class PoolBenchmarks
     {
         private readonly Pool<PoolObject> _pool;

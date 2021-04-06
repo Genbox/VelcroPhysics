@@ -2,6 +2,7 @@
 
 namespace VelcroPhysics.Benchmarks.Tests.Primitives
 {
+    [InProcess]
     public class AABBBenchmark
     {
         [Benchmark]

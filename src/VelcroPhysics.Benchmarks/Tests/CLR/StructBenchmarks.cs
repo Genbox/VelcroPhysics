@@ -1,27 +1,9 @@
 ﻿using BenchmarkDotNet.Attributes;
+using VelcroPhysics.Benchmarks.Code;
 
 namespace VelcroPhysics.Benchmarks.Tests.CLR
 {
-    public struct Struct8
-    {
-        public int Value1;
-        public int Value2;
-    }
-
-    public struct Struct32
-    {
-        public Struct8 Value1;
-        public Struct8 Value2;
-        public Struct8 Value3;
-        public Struct8 Value4;
-    }
-
-    public struct Struct64
-    {
-        public Struct32 Value1;
-        public Struct32 Value2;
-    }
-
+    [InProcess]
     public class StructBenchmarks
     {
         private Struct8[] _struct8;

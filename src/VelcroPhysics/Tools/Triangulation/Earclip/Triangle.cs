@@ -1,4 +1,4 @@
-using VelcroPhysics.Primitives;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Tools.Triangulation.Earclip {

@@ -1,5 +1,5 @@
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Primitives;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {

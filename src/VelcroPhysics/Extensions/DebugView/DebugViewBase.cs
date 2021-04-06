@@ -3,8 +3,8 @@
 * Copyright (c) 2017 Ian Qvist
 */
 
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
-using VelcroPhysics.Primitives;
 using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Extensions.DebugView
