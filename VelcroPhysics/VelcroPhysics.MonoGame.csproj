@@ -7,21 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Primitives\**" />
+    <EmbeddedResource Remove="Primitives\**" />
+    <None Remove="Primitives\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Tools\Curve.cs" />
-    <Compile Remove="Tools\CurveKey.cs" />
-    <Compile Remove="Tools\CurveKeyCollection.cs" />
-    <Compile Remove="Tools\HashSet.cs" />
-    <Compile Remove="Tools\MathHelper.cs" />
-    <Compile Remove="Tools\Matrix.cs" />
-    <Compile Remove="Tools\Stopwatch.cs" />
-    <Compile Remove="Tools\Vector2.cs" />
-    <Compile Remove="Tools\Vector3.cs" />
-  </ItemGroup>
 
 </Project>
