@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>net50</TargetFramework>
     <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>
 

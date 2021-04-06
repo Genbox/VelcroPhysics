@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net50</TargetFramework>
     <AssemblyName>VelcroPhysics.ContentPipelines.SVGImport</AssemblyName>
     <RootNamespace>VelcroPhysics.ContentPipelines.SVGImport</RootNamespace>
     <ApplicationIcon />
@@ -13,8 +13,12 @@
     <StartupObject />
   </PropertyGroup>
 
+
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.Content.Pipeline.Portable" Version="3.6.0.1625" />
+    <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
