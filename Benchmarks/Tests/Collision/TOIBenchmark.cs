@@ -14,7 +14,7 @@ namespace Benchmarks.Core.Collision
         private Sweep _sweepA;
         private Sweep _sweepB;
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _shapeA = new PolygonShape(PolygonUtils.CreateRectangle(25.0f, 5.0f), 0);

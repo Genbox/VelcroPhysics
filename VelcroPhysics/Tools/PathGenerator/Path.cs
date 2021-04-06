@@ -240,8 +240,8 @@ namespace VelcroPhysics.Tools.PathGenerator
 
             Vector2.Subtract(ref a, ref b, out temp);
 
-#if (XBOX360 || WINDOWS_PHONE)
-output = new Vector2();
+#if XBOX
+            output = new Vector2();
 #endif
             output.X = -temp.Y;
             output.Y = temp.X;

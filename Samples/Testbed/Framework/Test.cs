@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Collision.ContactSystem;
@@ -30,7 +29,6 @@ using VelcroPhysics.DebugViews.MonoGame;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Dynamics.Joints;
 using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Samples.Testbed.Framework
 {

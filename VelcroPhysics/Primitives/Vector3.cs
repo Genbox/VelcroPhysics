@@ -1,4 +1,4 @@
-﻿#if !XNA && !WINDOWS_PHONE && !XBOX && !ANDROID && !MONOGAME
+﻿#if !XNA && !XBOX && !ANDROID && !MONOGAME
 
 #region License
 

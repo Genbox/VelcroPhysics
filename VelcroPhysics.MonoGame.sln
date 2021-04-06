@@ -1,26 +1,25 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "Samples\HelloWorld\HelloWorld.csproj", "{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.Samples.HelloWorld", "Samples\HelloWorld\VelcroPhysics.Samples.HelloWorld.csproj", "{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{D0514F04-3F36-4C34-9204-455CCD68A939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.Samples.Testbed", "Samples\Testbed\VelcroPhysics.Samples.Testbed.csproj", "{7A80C882-DBE7-4DC9-B0F9-6C42B1202B40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testbed", "Samples\Testbed\Testbed.csproj", "{7A80C882-DBE7-4DC9-B0F9-6C42B1202B40}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DebugViews", "DebugViews", "{A18F89F3-3ED3-4026-BBD5-2449FCAA4BF4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ContentPipelines", "ContentPipelines", "{CC2879B7-766A-46C5-A7B6-973D93FBEBD6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SVGImport", "ContentPipeline\SVGImport\SVGImport.csproj", "{2E48CA68-BC53-4B93-8A19-A7B738CDB62A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.ContentPipelines.SVGImport", "ContentPipeline\SVGImport\VelcroPhysics.ContentPipelines.SVGImport.csproj", "{2E48CA68-BC53-4B93-8A19-A7B738CDB62A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.MonoGame", "VelcroPhysics\VelcroPhysics.MonoGame.csproj", "{49E14821-6543-4AB8-BB81-1EB7AAB85B04}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonoGame", "DebugViews\MonoGame\MonoGame.csproj", "{E15A7AA9-EEB9-411D-9BDD-322B8AD1789F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.DebugViews.MonoGame", "DebugViews\MonoGame\VelcroPhysics.DebugViews.MonoGame.csproj", "{E15A7AA9-EEB9-411D-9BDD-322B8AD1789F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Samples\Demo\Demo.csproj", "{D4856F74-C825-412D-87FB-3C4A74D1B619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.Samples.Demo", "Samples\Demo\VelcroPhysics.Samples.Demo.csproj", "{D4856F74-C825-412D-87FB-3C4A74D1B619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextureToVertices", "ContentPipeline\TextureToVertices\TextureToVertices.csproj", "{B8F44F40-424F-4E46-8CB5-B0E5A28705BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VelcroPhysics.ContentPipelines.TextureToVertices", "ContentPipeline\TextureToVertices\VelcroPhysics.ContentPipelines.TextureToVertices.csproj", "{B8F44F40-424F-4E46-8CB5-B0E5A28705BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_imports", "_imports", "{27DDB19D-8669-4E5E-B3C9-76E022E6BD8E}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,7 +33,8 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|ARM.ActiveCfg = Debug|x86
 		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|x64.ActiveCfg = Debug|x86
 		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6}.Debug|x86.ActiveCfg = Debug|x86
@@ -144,12 +144,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B7D9A788-8259-47E2-A7E9-52FB37DA8AF6} = {D0514F04-3F36-4C34-9204-455CCD68A939}
-		{7A80C882-DBE7-4DC9-B0F9-6C42B1202B40} = {D0514F04-3F36-4C34-9204-455CCD68A939}
-		{2E48CA68-BC53-4B93-8A19-A7B738CDB62A} = {CC2879B7-766A-46C5-A7B6-973D93FBEBD6}
-		{E15A7AA9-EEB9-411D-9BDD-322B8AD1789F} = {A18F89F3-3ED3-4026-BBD5-2449FCAA4BF4}
-		{D4856F74-C825-412D-87FB-3C4A74D1B619} = {D0514F04-3F36-4C34-9204-455CCD68A939}
-		{B8F44F40-424F-4E46-8CB5-B0E5A28705BA} = {CC2879B7-766A-46C5-A7B6-973D93FBEBD6}
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {107A15C3-7B55-4F30-B371-88467BF0BB92}
 	EndGlobalSection
 EndGlobal

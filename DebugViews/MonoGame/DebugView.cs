@@ -73,7 +73,7 @@ namespace VelcroPhysics.DebugViews.MonoGame
         private readonly Vector2[] _background = new Vector2[4];
         public bool Enabled = true;
 
-#if XBOX || WINDOWS_PHONE
+#if XBOX
         public const int CircleSegments = 16;
 #else
         public const int CircleSegments = 32;
@@ -458,52 +458,52 @@ namespace VelcroPhysics.DebugViews.MonoGame
             switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
-                {
-                    CircleShape circle = (CircleShape)fixture.Shape;
+                    {
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
-                    Vector2 center = MathUtils.Mul(ref xf, circle.Position);
-                    float radius = circle.Radius;
-                    Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
+                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                        float radius = circle.Radius;
+                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
 
-                    DrawSolidCircle(center, radius, axis, color);
-                }
+                        DrawSolidCircle(center, radius, axis, color);
+                    }
                     break;
 
                 case ShapeType.Polygon:
-                {
-                    PolygonShape poly = (PolygonShape)fixture.Shape;
-                    int vertexCount = poly.Vertices.Count;
-                    Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-
-                    for (int i = 0; i < vertexCount; ++i)
                     {
-                        _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
-                    }
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        int vertexCount = poly.Vertices.Count;
+                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
 
-                    DrawSolidPolygon(_tempVertices, vertexCount, color);
-                }
+                        for (int i = 0; i < vertexCount; ++i)
+                        {
+                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
+                        }
+
+                        DrawSolidPolygon(_tempVertices, vertexCount, color);
+                    }
                     break;
 
                 case ShapeType.Edge:
-                {
-                    EdgeShape edge = (EdgeShape)fixture.Shape;
-                    Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
-                    Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
-                    DrawSegment(v1, v2, color);
-                }
+                    {
+                        EdgeShape edge = (EdgeShape)fixture.Shape;
+                        Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
+                        Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
+                        DrawSegment(v1, v2, color);
+                    }
                     break;
 
                 case ShapeType.Chain:
-                {
-                    ChainShape chain = (ChainShape)fixture.Shape;
-
-                    for (int i = 0; i < chain.Vertices.Count - 1; ++i)
                     {
-                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
-                        Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
-                        DrawSegment(v1, v2, color);
+                        ChainShape chain = (ChainShape)fixture.Shape;
+
+                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
+                        {
+                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
+                            DrawSegment(v1, v2, color);
+                        }
                     }
-                }
                     break;
             }
         }

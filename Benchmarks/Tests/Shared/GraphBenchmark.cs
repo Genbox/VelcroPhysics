@@ -12,7 +12,7 @@ namespace Benchmarks.Benchmarks.Shared
         private List<Dummy> _list;
         private Graph<Dummy> _graph;
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _list = ConstructList();

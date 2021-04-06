@@ -31,7 +31,7 @@ namespace VelcroPhysics.Samples.HelloWorld
         private Vector2 _groundOrigin;
         private Vector2 _circleOrigin;
 
-#if !XBOX360
+#if !XBOX
 
         private const string Text = "Press A or D to rotate the ball\n" +
                                     "Press Space to jump\n" +

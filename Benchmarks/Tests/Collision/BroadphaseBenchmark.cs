@@ -20,7 +20,7 @@ namespace Benchmarks.Core.Collision
         private RayCastInput _rayCastInput;
         private Actor[] _actors;
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _worldExtent = 15.0f;

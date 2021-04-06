@@ -28,7 +28,7 @@ namespace Benchmarks.Core.CLR
         private Class32[] _class32;
         private Class64[] _class64;
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _class8 = new Class8[1000];

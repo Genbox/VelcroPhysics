@@ -96,7 +96,7 @@ namespace VelcroPhysics.Shared
         /// Returns the zero matrix if singular.
         public void GetSymInverse33(ref Mat33 M)
         {
-            float det = MathUtils.Dot(ex, MathUtils.Cross((Vector3)ey, ez));
+            float det = MathUtils.Dot(ex, MathUtils.Cross(ey, ez));
             if (det != 0.0f)
             {
                 det = 1.0f / det;

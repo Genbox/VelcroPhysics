@@ -1,0 +1,89 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Authors>Ian Qvist</Authors>
+    <Copyright>Copyright 2021, by Ian Qvist. All rights reserved.</Copyright>
+    <Description>High performance 2D collision detection system with realistic physics responses.</Description>
+
+    <!-- Set copying files etc. to timeout faster -->
+    <CopyRetryCount>2</CopyRetryCount>
+    <CopyRetryDelayMilliseconds>500</CopyRetryDelayMilliseconds>
+
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <WarningLevel>0</WarningLevel>
+    <AnalysisLevel>none</AnalysisLevel>
+
+    <LangVersion>latest</LangVersion>
+    <!--<Nullable>enable</Nullable>-->
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <DebugType>portable</DebugType>
+    <RepositoryType>Git</RepositoryType>
+    <PackageProjectUrl>https://github.com/Genbox/SimpleS3</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!--<Configurations>Debug;Release;CommercialDebug;CommercialRelease</Configurations>-->
+
+    <!--SourceLink stuff-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="2.5.0" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'CommercialDebug'">
+    <DefineConstants>$(DefineConstants);COMMERCIAL</DefineConstants>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'CommercialRelease'">
+    <DefineConstants>$(DefineConstants);COMMERCIAL</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(DefineConstants.Contains(COMMERCIAL))">
+    <AssemblyName>Genbox.$(MSBuildProjectName).Commercial</AssemblyName>
+    <Description>$(Description)
+      This is a commercial version of the package. You must be a Github commercial tier sponsor to use it. See https://github.com/sponsors/Genbox/ for more info.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <!--<PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <WarningLevel>5</WarningLevel>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Global.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>-->
+
+  <ItemGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.4.13" PrivateAssets="all" />
+    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0" PrivateAssets="all" />
+    <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="all" />
+    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="5.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="ModifyAssemblyVersion" AfterTargets="MinVer" >
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).0</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

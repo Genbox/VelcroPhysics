@@ -28,7 +28,7 @@ namespace Benchmarks.Core.CLR
         private Struct32[] _struct32;
         private Struct64[] _struct64;
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _struct8 = new Struct8[1000];

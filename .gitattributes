@@ -1,17 +1,33 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-# Custom for Visual Studio
-*.cs     diff=csharp
+# Linux scripts
+*.sh		text merge=text diff=text eol=lf
+*.py		text merge=text diff=python eol=lf
 
-# Standard to msysgit
-*.doc	 diff=astextplain
-*.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
+# Linux configs
+*.conf		text merge=text diff=text eol=lf
+*.yml		text merge=text diff=text eol=lf
+
+# Source code files
+*.cs		text merge=text diff=csharp eol=crlf
+*.cshtml	text merge=text diff=text eol=crlf
+*.json		text merge=text diff=text eol=crlf
+*.xml		text merge=text diff=text eol=crlf
+*.scss		text merge=text diff=css eol=crlf
+*.js		text merge=text diff=text eol=crlf
+*.csproj	text merge=text diff=text eol=crlf
+*.targets	text merge=text diff=text eol=crlf ident
+*.sln		text merge=text diff=text eol=crlf
+
+# Text files
+*.txt		text merge=text diff=text eol=crlf
+
+# Binary files
+*.jpg  	binary
+*.png 	binary
+*.gif 	binary
+
+*.req	text merge=text diff=text eol=lf
+*.creq	text merge=text diff=text eol=lf
+*.sts	text merge=text diff=text eol=lf

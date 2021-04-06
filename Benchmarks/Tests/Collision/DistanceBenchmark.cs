@@ -15,7 +15,7 @@ namespace Benchmarks.Core.Collision
         private Transform _transformA;
         private Transform _transformB = new Transform();
 
-        [Setup]
+        [GlobalSetup]
         public void Setup()
         {
             _transformA.SetIdentity();

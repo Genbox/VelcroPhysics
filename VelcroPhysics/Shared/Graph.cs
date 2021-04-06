@@ -38,7 +38,7 @@ namespace VelcroPhysics.Shared
         /// </summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>The node that represents the value</returns>
-        public GraphNode<T,T1> Add(T value)
+        public GraphNode<T, T1> Add(T value)
         {
             GraphNode<T, T1> result = new GraphNode<T, T1>(value);
             Add(result);

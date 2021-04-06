@@ -8,11 +8,7 @@ namespace VelcroPhysics.Samples.Testbed.Framework
 
         public GameSettings()
         {
-#if WINDOWS_PHONE
-			Hz = 30.0f;
-#else
             Hz = 60.0f;
-#endif
         }
     }
 }

@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Microsoft Managed Recommended Rules" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. It is recommended to include this rule set in any custom rule set you create for your projects." ToolsVersion="16.0">
+  <Localization ResourceAssembly="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.dll" ResourceBaseName="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.Localized">
+    <Name Resource="MinimumRecommendedRules_Name" />
+    <Description Resource="MinimumRecommendedRules_Description" />
+  </Localization>
+  <Rules AnalyzerId="ConfigureAwaitChecker.Analyzer" RuleNamespace="ConfigureAwaitChecker.Analyzer">
+    <Rule Id="CAC001" Action="None" />
+    <Rule Id="CAC002" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="IDisposableAnalyzers" RuleNamespace="IDisposableAnalyzers">
+    <Rule Id="IDISP013" Action="Error" />
+    <Rule Id="IDISP014" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1001" Action="Warning" />
+    <Rule Id="CA1009" Action="Warning" />
+    <Rule Id="CA1016" Action="Warning" />
+    <Rule Id="CA1033" Action="Warning" />
+    <Rule Id="CA1049" Action="Warning" />
+    <Rule Id="CA1060" Action="Warning" />
+    <Rule Id="CA1061" Action="Warning" />
+    <Rule Id="CA1063" Action="Warning" />
+    <Rule Id="CA1065" Action="Warning" />
+    <Rule Id="CA1301" Action="Warning" />
+    <Rule Id="CA1400" Action="Warning" />
+    <Rule Id="CA1401" Action="Warning" />
+    <Rule Id="CA1403" Action="Warning" />
+    <Rule Id="CA1404" Action="Warning" />
+    <Rule Id="CA1405" Action="Warning" />
+    <Rule Id="CA1410" Action="Warning" />
+    <Rule Id="CA1415" Action="Warning" />
+    <Rule Id="CA1900" Action="Warning" />
+    <Rule Id="CA1901" Action="Warning" />
+    <Rule Id="CA2002" Action="Warning" />
+    <Rule Id="CA2100" Action="Warning" />
+    <Rule Id="CA2101" Action="Warning" />
+    <Rule Id="CA2108" Action="Warning" />
+    <Rule Id="CA2111" Action="Warning" />
+    <Rule Id="CA2112" Action="Warning" />
+    <Rule Id="CA2114" Action="Warning" />
+    <Rule Id="CA2116" Action="Warning" />
+    <Rule Id="CA2117" Action="Warning" />
+    <Rule Id="CA2122" Action="Warning" />
+    <Rule Id="CA2123" Action="Warning" />
+    <Rule Id="CA2124" Action="Warning" />
+    <Rule Id="CA2126" Action="Warning" />
+    <Rule Id="CA2131" Action="Warning" />
+    <Rule Id="CA2132" Action="Warning" />
+    <Rule Id="CA2133" Action="Warning" />
+    <Rule Id="CA2134" Action="Warning" />
+    <Rule Id="CA2137" Action="Warning" />
+    <Rule Id="CA2138" Action="Warning" />
+    <Rule Id="CA2140" Action="Warning" />
+    <Rule Id="CA2141" Action="Warning" />
+    <Rule Id="CA2146" Action="Warning" />
+    <Rule Id="CA2147" Action="Warning" />
+    <Rule Id="CA2149" Action="Warning" />
+    <Rule Id="CA2200" Action="Error" />
+    <Rule Id="CA2202" Action="Warning" />
+    <Rule Id="CA2207" Action="Warning" />
+    <Rule Id="CA2212" Action="Warning" />
+    <Rule Id="CA2213" Action="Warning" />
+    <Rule Id="CA2214" Action="Warning" />
+    <Rule Id="CA2216" Action="Warning" />
+    <Rule Id="CA2220" Action="Warning" />
+    <Rule Id="CA2229" Action="Warning" />
+    <Rule Id="CA2231" Action="Warning" />
+    <Rule Id="CA2232" Action="Warning" />
+    <Rule Id="CA2235" Action="Warning" />
+    <Rule Id="CA2236" Action="Warning" />
+    <Rule Id="CA2237" Action="Warning" />
+    <Rule Id="CA2238" Action="Warning" />
+    <Rule Id="CA2240" Action="Warning" />
+    <Rule Id="CA2241" Action="Warning" />
+    <Rule Id="CA2242" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS0108" Action="Error" />
+    <Rule Id="CS0109" Action="Error" />
+    <Rule Id="CS0114" Action="Error" />
+    <Rule Id="CS0162" Action="Error" />
+    <Rule Id="CS0168" Action="Error" />
+    <Rule Id="CS0251" Action="Error" />
+    <Rule Id="CS0659" Action="Error" />
+    <Rule Id="CS0660" Action="Error" />
+    <Rule Id="CS1591" Action="None" />
+    <Rule Id="CS1717" Action="Error" />
+    <Rule Id="CS1718" Action="Error" />
+    <Rule Id="CS8600" Action="Error" />
+    <Rule Id="CS8601" Action="Error" />
+    <Rule Id="CS8602" Action="Error" />
+    <Rule Id="CS8603" Action="Error" />
+    <Rule Id="CS8604" Action="Error" />
+    <Rule Id="CS8608" Action="Error" />
+    <Rule Id="CS8609" Action="Error" />
+    <Rule Id="CS8610" Action="Error" />
+    <Rule Id="CS8611" Action="Error" />
+    <Rule Id="CS8612" Action="Error" />
+    <Rule Id="CS8613" Action="Error" />
+    <Rule Id="CS8614" Action="Error" />
+    <Rule Id="CS8615" Action="Error" />
+    <Rule Id="CS8616" Action="Error" />
+    <Rule Id="CS8617" Action="Error" />
+    <Rule Id="CS8619" Action="Error" />
+    <Rule Id="CS8620" Action="Error" />
+    <Rule Id="CS8625" Action="Error" />
+    <Rule Id="CS8629" Action="Error" />
+    <Rule Id="CS8767" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1012" Action="Error" />
+    <Rule Id="CA1018" Action="Error" />
+    <Rule Id="CA1027" Action="Error" />
+    <Rule Id="CA1028" Action="None" />
+    <Rule Id="CA1031" Action="None" />
+    <Rule Id="CA1040" Action="Info" />
+    <Rule Id="CA1041" Action="Error" />
+    <Rule Id="CA1054" Action="None" />
+    <Rule Id="CA1056" Action="None" />
+    <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1707" Action="None" />
+    <Rule Id="CA1712" Action="Info" />
+    <Rule Id="CA1716" Action="None" />
+    <Rule Id="CA1720" Action="None" />
+    <Rule Id="CA1724" Action="None" />
+    <Rule Id="CA1819" Action="None" />
+    <Rule Id="CA2007" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.CSharp.Analyzers" RuleNamespace="Microsoft.CodeQuality.CSharp.Analyzers">
+    <Rule Id="Async001" Action="Error" />
+    <Rule Id="Async002" Action="Error" />
+    <Rule Id="CA1507" Action="Error" />
+    <Rule Id="CA1821" Action="None" />
+    <Rule Id="CA2200" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.DotNet.Analyzers.Compatibility" RuleNamespace="Microsoft.DotNet.Analyzers.Compatibility">
+    <Rule Id="DE0001" Action="Error" />
+    <Rule Id="DE0002" Action="Error" />
+    <Rule Id="DE0003" Action="Error" />
+    <Rule Id="DE0004" Action="Error" />
+    <Rule Id="DE0005" Action="Warning" />
+    <Rule Id="DE0006" Action="Error" />
+    <Rule Id="DE0007" Action="Error" />
+    <Rule Id="DE0008" Action="Error" />
+    <Rule Id="DE0009" Action="Error" />
+    <Rule Id="PC001" Action="None" />
+    <Rule Id="PC002" Action="Info" />
+    <Rule Id="PC003" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1303" Action="None" />
+    <Rule Id="CA1308" Action="None" />
+    <Rule Id="CA1813" Action="Error" />
+    <Rule Id="CA1816" Action="Error" />
+    <Rule Id="CA2009" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
+    <Rule Id="CA1825" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
+    <Rule Id="RCS1015" Action="Warning" />
+    <Rule Id="RCS1025" Action="Error" />
+    <Rule Id="RCS1042" Action="Error" />
+    <Rule Id="RCS1043" Action="Error" />
+    <Rule Id="RCS1044" Action="Error" />
+    <Rule Id="RCS1046" Action="Info" />
+    <Rule Id="RCS1047" Action="Error" />
+    <Rule Id="RCS1052" Action="Error" />
+    <Rule Id="RCS1062" Action="Error" />
+    <Rule Id="RCS1066" Action="Error" />
+    <Rule Id="RCS1075" Action="None" />
+    <Rule Id="RCS1079" Action="Error" />
+    <Rule Id="RCS1090" Action="None" />
+    <Rule Id="RCS1093" Action="Warning" />
+    <Rule Id="RCS1096" Action="None" />
+    <Rule Id="RCS1096i" Action="Warning" />
+    <Rule Id="RCS1097" Action="Error" />
+    <Rule Id="RCS1102" Action="None" />
+    <Rule Id="RCS1105" Action="Error" />
+    <Rule Id="RCS1106" Action="Error" />
+    <Rule Id="RCS1107" Action="Error" />
+    <Rule Id="RCS1124" Action="None" />
+    <Rule Id="RCS1124FadeOut" Action="None" />
+    <Rule Id="RCS1130" Action="Error" />
+    <Rule Id="RCS1141" Action="None" />
+    <Rule Id="RCS1155" Action="Error" />
+    <Rule Id="RCS1161" Action="None" />
+    <Rule Id="RCS1163" Action="None" />
+    <Rule Id="RCS1174" Action="Error" />
+    <Rule Id="RCS1194" Action="None" />
+    <Rule Id="RCS1203" Action="Error" />
+    <Rule Id="RCS1210" Action="Error" />
+    <Rule Id="RCS1214" Action="Warning" />
+    <Rule Id="RCS1215" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="SerilogAnalyzer" RuleNamespace="SerilogAnalyzer">
+    <Rule Id="Serilog001" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <Rule Id="S1128" Action="None" />
+    <Rule Id="S3925" Action="None" />
+  </Rules>
+</RuleSet>
