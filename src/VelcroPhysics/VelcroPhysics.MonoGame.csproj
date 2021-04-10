@@ -11,15 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Tools\Curve.cs" />
-    <Compile Remove="Tools\CurveKey.cs" />
-    <Compile Remove="Tools\CurveKeyCollection.cs" />
-    <Compile Remove="Tools\HashSet.cs" />
-    <Compile Remove="Tools\MathHelper.cs" />
-    <Compile Remove="Tools\Matrix.cs" />
-    <Compile Remove="Tools\Stopwatch.cs" />
-    <Compile Remove="Tools\Vector2.cs" />
-    <Compile Remove="Tools\Vector3.cs" />
+    <Compile Remove="Primitives\**" />
+    <None Remove="Primitives\**" />
   </ItemGroup>
 
   <ItemGroup>
