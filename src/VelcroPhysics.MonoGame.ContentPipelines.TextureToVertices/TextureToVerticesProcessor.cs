@@ -18,8 +18,8 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices
         [DefaultValue(1)]
         public int ScaleFactor
         {
-            get { return (int)(1f / _scaleFactor); }
-            set { _scaleFactor = 1f / value; }
+            get => (int)(1f / _scaleFactor);
+            set => _scaleFactor = 1f / value;
         }
 
         [DisplayName("Hole detection")]

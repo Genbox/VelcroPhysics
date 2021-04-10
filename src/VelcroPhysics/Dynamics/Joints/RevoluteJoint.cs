@@ -29,12 +29,10 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// A revolute joint constrains to bodies to share a common point while they
-    /// are free to rotate about the point. The relative rotation about the shared
-    /// point is the joint angle. You can limit the relative rotation with
-    /// a joint limit that specifies a lower and upper angle. You can use a motor
-    /// to drive the relative rotation about the shared point. A maximum motor torque
-    /// is provided so that infinite forces are not generated.
+    /// A revolute joint constrains to bodies to share a common point while they are free to rotate about the point.
+    /// The relative rotation about the shared point is the joint angle. You can limit the relative rotation with a joint limit
+    /// that specifies a lower and upper angle. You can use a motor to drive the relative rotation about the shared point. A
+    /// maximum motor torque is provided so that infinite forces are not generated.
     /// </summary>
     public class RevoluteJoint : Joint
     {
@@ -72,9 +70,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Revolute;
         }
 
-        /// <summary>
-        /// Constructor of RevoluteJoint.
-        /// </summary>
+        /// <summary>Constructor of RevoluteJoint.</summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchorA">The first body anchor.</param>
@@ -102,9 +98,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _limitState = LimitState.Inactive;
         }
 
-        /// <summary>
-        /// Constructor of RevoluteJoint.
-        /// </summary>
+        /// <summary>Constructor of RevoluteJoint.</summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchor">The shared anchor.</param>
@@ -112,34 +106,28 @@ namespace VelcroPhysics.Dynamics.Joints
         public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
             : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates) { }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// The referance angle computed as BodyB angle minus BodyA angle.
-        /// </summary>
+        /// <summary>The referance angle computed as BodyB angle minus BodyA angle.</summary>
         public float ReferenceAngle
         {
-            get { return _referenceAngle; }
+            get => _referenceAngle;
             set
             {
                 WakeBodies();
@@ -147,29 +135,17 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the current joint angle in radians.
-        /// </summary>
-        public float JointAngle
-        {
-            get { return BodyB._sweep.A - BodyA._sweep.A - ReferenceAngle; }
-        }
+        /// <summary>Get the current joint angle in radians.</summary>
+        public float JointAngle => BodyB._sweep.A - BodyA._sweep.A - ReferenceAngle;
 
-        /// <summary>
-        /// Get the current joint angle speed in radians per second.
-        /// </summary>
-        public float JointSpeed
-        {
-            get { return BodyB._angularVelocity - BodyA._angularVelocity; }
-        }
+        /// <summary>Get the current joint angle speed in radians per second.</summary>
+        public float JointSpeed => BodyB._angularVelocity - BodyA._angularVelocity;
 
-        /// <summary>
-        /// Is the joint limit enabled?
-        /// </summary>
+        /// <summary>Is the joint limit enabled?</summary>
         /// <value><c>true</c> if [limit enabled]; otherwise, <c>false</c>.</value>
         public bool LimitEnabled
         {
-            get { return _enableLimit; }
+            get => _enableLimit;
             set
             {
                 if (_enableLimit == value)
@@ -181,12 +157,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the lower joint limit in radians.
-        /// </summary>
+        /// <summary>Get the lower joint limit in radians.</summary>
         public float LowerLimit
         {
-            get { return _lowerAngle; }
+            get => _lowerAngle;
             set
             {
                 if (_lowerAngle == value)
@@ -198,12 +172,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the upper joint limit in radians.
-        /// </summary>
+        /// <summary>Get the upper joint limit in radians.</summary>
         public float UpperLimit
         {
-            get { return _upperAngle; }
+            get => _upperAngle;
             set
             {
                 if (_upperAngle == value)
@@ -215,13 +187,11 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Is the joint motor enabled?
-        /// </summary>
+        /// <summary>Is the joint motor enabled?</summary>
         /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
         public bool MotorEnabled
         {
-            get { return _enableMotor; }
+            get => _enableMotor;
             set
             {
                 if (value == _enableMotor)
@@ -232,9 +202,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get or set the motor speed in radians per second.
-        /// </summary>
+        /// <summary>Get or set the motor speed in radians per second.</summary>
         public float MotorSpeed
         {
             set
@@ -245,12 +213,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 WakeBodies();
                 _motorSpeed = value;
             }
-            get { return _motorSpeed; }
+            get => _motorSpeed;
         }
 
-        /// <summary>
-        /// Get or set the maximum motor torque, usually in N-m.
-        /// </summary>
+        /// <summary>Get or set the maximum motor torque, usually in N-m.</summary>
         public float MaxMotorTorque
         {
             set
@@ -261,15 +227,13 @@ namespace VelcroPhysics.Dynamics.Joints
                 WakeBodies();
                 _maxMotorTorque = value;
             }
-            get { return _maxMotorTorque; }
+            get => _maxMotorTorque;
         }
 
-        /// <summary>
-        /// Get or set the current motor impulse, usually in N-m.
-        /// </summary>
+        /// <summary>Get or set the current motor impulse, usually in N-m.</summary>
         public float MotorImpulse
         {
-            get { return _motorImpulse; }
+            get => _motorImpulse;
             set
             {
                 if (value == _motorImpulse)
@@ -280,9 +244,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Set the joint limits, usually in meters.
-        /// </summary>
+        /// <summary>Set the joint limits, usually in meters.</summary>
         /// <param name="lower">The lower limit</param>
         /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
@@ -296,9 +258,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _impulse.Z = 0.0f;
         }
 
-        /// <summary>
-        /// Gets the motor torque in N-m.
-        /// </summary>
+        /// <summary>Gets the motor torque in N-m.</summary>
         /// <param name="invDt">The inverse delta time</param>
         public float GetMotorTorque(float invDt)
         {
@@ -366,36 +326,26 @@ namespace VelcroPhysics.Dynamics.Joints
 
             _motorMass = iA + iB;
             if (_motorMass > 0.0f)
-            {
                 _motorMass = 1.0f / _motorMass;
-            }
 
             if (_enableMotor == false || fixedRotation)
-            {
                 _motorImpulse = 0.0f;
-            }
 
             if (_enableLimit && fixedRotation == false)
             {
                 float jointAngle = aB - aA - ReferenceAngle;
                 if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
-                {
                     _limitState = LimitState.Equal;
-                }
                 else if (jointAngle <= _lowerAngle)
                 {
                     if (_limitState != LimitState.AtLower)
-                    {
                         _impulse.Z = 0.0f;
-                    }
                     _limitState = LimitState.AtLower;
                 }
                 else if (jointAngle >= _upperAngle)
                 {
                     if (_limitState != LimitState.AtUpper)
-                    {
                         _impulse.Z = 0.0f;
-                    }
                     _limitState = LimitState.AtUpper;
                 }
                 else
@@ -405,9 +355,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 }
             }
             else
-            {
                 _limitState = LimitState.Inactive;
-            }
 
             if (Settings.EnableWarmstarting)
             {
@@ -445,13 +393,13 @@ namespace VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            bool fixedRotation = (iA + iB == 0.0f);
+            bool fixedRotation = iA + iB == 0.0f;
 
             // Solve motor constraint.
             if (_enableMotor && _limitState != LimitState.Equal && fixedRotation == false)
             {
                 float Cdot = wB - wA - _motorSpeed;
-                float impulse = _motorMass * (-Cdot);
+                float impulse = _motorMass * -Cdot;
                 float oldImpulse = _motorImpulse;
                 float maxImpulse = data.Step.dt * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
@@ -471,9 +419,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 Vector3 impulse = -_mass.Solve33(Cdot);
 
                 if (_limitState == LimitState.Equal)
-                {
                     _impulse += impulse;
-                }
                 else if (_limitState == LimitState.AtLower)
                 {
                     float newImpulse = _impulse.Z + impulse.Z;
@@ -489,9 +435,7 @@ namespace VelcroPhysics.Dynamics.Joints
                         _impulse.Z = 0.0f;
                     }
                     else
-                    {
                         _impulse += impulse;
-                    }
                 }
                 else if (_limitState == LimitState.AtUpper)
                 {
@@ -508,9 +452,7 @@ namespace VelcroPhysics.Dynamics.Joints
                         _impulse.Z = 0.0f;
                     }
                     else
-                    {
                         _impulse += impulse;
-                    }
                 }
 
                 Vector2 P = new Vector2(impulse.X, impulse.Y);
@@ -555,7 +497,7 @@ namespace VelcroPhysics.Dynamics.Joints
             float angularError = 0.0f;
             float positionError;
 
-            bool fixedRotation = (_invIA + _invIB == 0.0f);
+            bool fixedRotation = _invIA + _invIB == 0.0f;
 
             // Solve angular limit constraint.
             if (_enableLimit && _limitState != LimitState.Inactive && fixedRotation == false)

@@ -1,7 +1,8 @@
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.Triangulation.Earclip {
+namespace VelcroPhysics.Tools.Triangulation.Earclip
+{
     public class Triangle : Vertices
     {
         //Constructor automatically fixes orientation to ccw
@@ -49,7 +50,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip {
             float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
             float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-            return ((u > 0) && (v > 0) && (u + v < 1));
+            return u > 0 && v > 0 && u + v < 1;
         }
     }
 }

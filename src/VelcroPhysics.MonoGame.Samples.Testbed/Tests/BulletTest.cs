@@ -60,9 +60,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             base.Update(settings, gameTime);
 
             if (DistanceGJK.GJKCalls > 0)
-            {
                 DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", DistanceGJK.GJKCalls, DistanceGJK.GJKIters / (float)DistanceGJK.GJKCalls, DistanceGJK.GJKMaxIters));
-            }
 
             if (TimeOfImpact.TOICalls > 0)
             {
@@ -72,9 +70,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             if (StepCount % 60 == 0)
-            {
                 Launch();
-            }
         }
 
         private void Launch()

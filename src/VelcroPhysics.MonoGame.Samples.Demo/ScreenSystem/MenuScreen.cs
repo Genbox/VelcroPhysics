@@ -91,14 +91,12 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
 
             _menuSlider = new MenuSlider(new Vector2(_menuEntrySize.X + horizontalSpacing + EntrySpacer + _menuEntrySize.Y / 2f, _menuStart));
+
             if (_menuEntries.Count > NumEntries)
-            {
                 _scrollSpacing = _menuSpacing * (NumEntries - 1) / (_menuEntries.Count - NumEntries);
-            }
             else
-            {
                 _scrollSpacing = 0f;
-            }
+
             _scrollHover = false;
             _scrollLock = false;
         }
@@ -115,9 +113,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 {
                     Rectangle boundingBox = new Rectangle((int)(_menuEntries[i].Position.X - _menuEntrySize.X / 2f), (int)(_menuEntries[i].Position.Y - _menuEntrySize.Y / 2f), (int)_menuEntrySize.X, (int)_menuEntrySize.Y);
                     if (boundingBox.Contains((int)position.X, (int)position.Y))
-                    {
                         return i;
-                    }
                 }
             }
             return -1;
@@ -174,9 +170,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                         }
                     }
                     else
-                    {
                         _selectedEntry = _hoverEntry;
-                    }
                 }
             }
 
@@ -184,19 +178,13 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             {
                 _scrollHover = true;
                 if (input.IsMenuHold())
-                {
                     _scrollLock = true;
-                }
             }
             else
-            {
                 _scrollHover = false;
-            }
 
             if (input.IsMenuRelease())
-            {
                 _scrollLock = false;
-            }
 
             if (_scrollLock)
             {
@@ -205,9 +193,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
 
             if (input.IsScreenExit())
-            {
                 Framework.ExitGame();
-            }
 
             if (input.IsMenuDown())
             {
@@ -225,27 +211,22 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         private void UpdateMenuPositions()
         {
             _menuOffset = _menuOffset < 0 ? 0 : _menuOffset > _menuEntries.Count - NumEntries ? _menuEntries.Count - NumEntries : _menuOffset;
+
             if (_selectedEntry < _menuOffset)
-            {
                 _selectedEntry = _menuOffset;
-            }
             else if (_selectedEntry >= NumEntries + _menuOffset)
-            {
                 _selectedEntry = NumEntries + _menuOffset - 1;
-            }
+
             int targetIndex = -_menuOffset;
 
             // Update each nested MenuEntry position
             for (int i = 0; i < _menuEntries.Count; i++)
             {
                 if (targetIndex < 0 || targetIndex >= NumEntries)
-                {
                     _menuEntries[i].Visible = false;
-                }
                 else
-                {
                     _menuEntries[i].Visible = true;
-                }
+
                 _menuEntries[i].Target = _menuStart + _menuSpacing * targetIndex;
                 targetIndex++;
             }
@@ -285,8 +266,11 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 Quads.Render(entry.Position - _menuEntrySize / 2f, entry.Position + _menuEntrySize / 2f, null, true,
                     ContentWrapper.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
             }
-            Quads.Render(_menuSlider.Position - new Vector2(_menuEntrySize.Y / 2f), _menuSlider.Position + new Vector2(_menuEntrySize.Y / 2f), null, true,
+
+            Quads.Render(_menuSlider.Position - new Vector2(_menuEntrySize.Y / 2f),
+                _menuSlider.Position + new Vector2(_menuEntrySize.Y / 2f), null, true,
                 ContentWrapper.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
+
             Quads.End();
 
             Sprites.Begin();
@@ -296,10 +280,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha,
                     0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+
                 if (entry.Fade > 0f)
-                {
                     Sprites.Draw(entry.Preview, PreviewPosition, null, Color.White * Math.Max((TransitionAlpha - 0.8f) / 0.2f, 0f) * entry.Fade, 0f, _previewOrigin, 1f, SpriteEffects.None, 0f);
-                }
             }
             Sprites.End();
 

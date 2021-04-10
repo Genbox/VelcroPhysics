@@ -82,20 +82,18 @@ namespace VelcroPhysics.Collision.Narrowphase
                     return -V[0].W;
 
                 case 2:
+                {
+                    Vector2 e12 = V[1].W - V[0].W;
+                    float sgn = MathUtils.Cross(e12, -V[0].W);
+                    if (sgn > 0.0f)
                     {
-                        Vector2 e12 = V[1].W - V[0].W;
-                        float sgn = MathUtils.Cross(e12, -V[0].W);
-                        if (sgn > 0.0f)
-                        {
-                            // Origin is left of e12.
-                            return MathUtils.Cross(1.0f, e12);
-                        }
-                        else
-                        {
-                            // Origin is right of e12.
-                            return MathUtils.Cross(e12, 1.0f);
-                        }
+                        // Origin is left of e12.
+                        return MathUtils.Cross(1.0f, e12);
                     }
+
+                    // Origin is right of e12.
+                    return MathUtils.Cross(e12, 1.0f);
+                }
 
                 default:
                     Debug.Assert(false);

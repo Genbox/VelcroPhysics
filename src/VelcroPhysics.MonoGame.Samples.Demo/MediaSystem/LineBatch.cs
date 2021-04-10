@@ -32,9 +32,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         public LineBatch(GraphicsDevice graphicsDevice, int bufferSize)
         {
             if (graphicsDevice == null)
-            {
                 throw new ArgumentNullException(nameof(graphicsDevice));
-            }
             _device = graphicsDevice;
 
             _lineVertices = new VertexPositionColor[bufferSize - bufferSize % 2];
@@ -46,15 +44,11 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             _isDisposed = false;
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         protected virtual void Dispose(bool disposing)
         {
@@ -114,9 +108,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 for (int i = 0; i < chain.Vertices.Count; ++i)
                 {
                     if (_lineVertsCount >= _lineVertices.Length)
-                    {
                         Flush();
-                    }
                     _lineVertices[_lineVertsCount].Position = new Vector3(chain.Vertices[i], 0f);
                     _lineVertices[_lineVertsCount + 1].Position = new Vector3(chain.Vertices.NextVertex(i), 0f);
                     _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
@@ -133,15 +125,11 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         public void DrawVertices(Vertices verts, Color color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawVertices can be called.");
-            }
             for (int i = 0; i < verts.Count; ++i)
             {
                 if (_lineVertsCount >= _lineVertices.Length)
-                {
                     Flush();
-                }
                 _lineVertices[_lineVertsCount].Position = new Vector3(verts[i], 0f);
                 _lineVertices[_lineVertsCount + 1].Position = new Vector3(verts.NextVertex(i), 0f);
                 _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
@@ -157,13 +145,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         public void DrawLine(Vector2 v1, Vector2 v2, Color color)
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
-            }
             if (_lineVertsCount >= _lineVertices.Length)
-            {
                 Flush();
-            }
             _lineVertices[_lineVertsCount].Position = new Vector3(v1, 0f);
             _lineVertices[_lineVertsCount + 1].Position = new Vector3(v2, 0f);
             _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;

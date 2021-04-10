@@ -6,19 +6,13 @@ namespace VelcroPhysics.Templates.Joints
     {
         public GearJointTemplate() : base(JointType.Gear) { }
 
-        /// <summary>
-        /// The first revolute/prismatic joint attached to the gear joint.
-        /// </summary>
+        /// <summary>The first revolute/prismatic joint attached to the gear joint.</summary>
         public Joint JointA { get; set; }
 
-        /// <summary>
-        /// The second revolute/prismatic joint attached to the gear joint.
-        /// </summary>
+        /// <summary>The second revolute/prismatic joint attached to the gear joint.</summary>
         public Joint JointB { get; set; }
 
-        /// <summary>
-        /// The gear ratio.
-        /// </summary>
+        /// <summary>The gear ratio.</summary>
         public float Ratio { get; set; }
 
         public override void SetDefaults()

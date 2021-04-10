@@ -34,7 +34,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
     /**
      * @author Thomas Åhlén, thahlen@gmail.com
      */
-
     internal class TriangulationUtil
     {
         public static double EPSILON = 1e-12;
@@ -63,8 +62,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
         /// <param name="pc">triangle point</param>
         /// <param name="pd">point opposite a</param>
         /// <returns>true if d is inside circle, false if on circle edge</returns>
-        public static bool SmartIncircle(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc,
-                                         TriangulationPoint pd)
+        public static bool SmartIncircle(TriangulationPoint pa, TriangulationPoint pb, TriangulationPoint pc, TriangulationPoint pd)
         {
             double pdx = pd.X;
             double pdy = pd.Y;
@@ -142,15 +140,11 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
         {
             double oadb = (pa.X - pb.X) * (pd.Y - pb.Y) - (pd.X - pb.X) * (pa.Y - pb.Y);
             if (oadb >= -EPSILON)
-            {
                 return false;
-            }
 
             double oadc = (pa.X - pc.X) * (pd.Y - pc.Y) - (pd.X - pc.X) * (pa.Y - pc.Y);
             if (oadc <= EPSILON)
-            {
                 return false;
-            }
             return true;
         }
 
@@ -166,13 +160,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
             double detright = (pa.Y - pc.Y) * (pb.X - pc.X);
             double val = detleft - detright;
             if (val > -EPSILON && val < EPSILON)
-            {
                 return Orientation.Collinear;
-            }
             if (val > 0)
-            {
                 return Orientation.CCW;
-            }
             return Orientation.CW;
         }
     }

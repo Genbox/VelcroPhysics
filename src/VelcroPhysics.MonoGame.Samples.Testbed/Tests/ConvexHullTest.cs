@@ -69,9 +69,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             DebugView.EndCustomDraw();
 
             if (_auto)
-            {
                 Generate();
-            }
         }
 
         public static Test Create()

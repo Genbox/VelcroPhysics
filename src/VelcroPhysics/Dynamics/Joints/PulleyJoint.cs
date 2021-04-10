@@ -42,13 +42,11 @@ namespace VelcroPhysics.Dynamics.Joints
     //   = invMass1 + invI1 * cross(r1, u1)^2 + ratio^2 * (invMass2 + invI2 * cross(r2, u2)^2)
 
     /// <summary>
-    /// The pulley joint is connected to two bodies and two fixed world points.
-    /// The pulley supports a ratio such that:
+    /// The pulley joint is connected to two bodies and two fixed world points. The pulley supports a ratio such that:
     /// <![CDATA[length1 + ratio * length2 <= constant]]>
-    /// Yes, the force transmitted is scaled by the ratio.
-    /// Warning: the pulley joint can get a bit squirrelly by itself. They often
-    /// work better when combined with prismatic joints. You should also cover the
-    /// the anchor points with static shapes to prevent one side from going to zero length.
+    /// Yes, the force transmitted is scaled by the ratio. Warning: the pulley joint can get a bit squirrelly by itself. They
+    /// often work better when combined with prismatic joints. You should also cover the the anchor points with static shapes
+    /// to prevent one side from going to zero length.
     /// </summary>
     public class PulleyJoint : Joint
     {
@@ -76,9 +74,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Pulley;
         }
 
-        /// <summary>
-        /// Constructor for PulleyJoint.
-        /// </summary>
+        /// <summary>Constructor for PulleyJoint.</summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
         /// <param name="anchorA">The anchor on the first body.</param>
@@ -124,43 +120,29 @@ namespace VelcroPhysics.Dynamics.Joints
             _impulse = 0.0f;
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
-        /// <summary>
-        /// Get the first world anchor.
-        /// </summary>
+        /// <summary>Get the first world anchor.</summary>
         /// <value></value>
         public sealed override Vector2 WorldAnchorA { get; set; }
 
-        /// <summary>
-        /// Get the second world anchor.
-        /// </summary>
+        /// <summary>Get the second world anchor.</summary>
         /// <value></value>
         public sealed override Vector2 WorldAnchorB { get; set; }
 
-        /// <summary>
-        /// Get the current length of the segment attached to body1.
-        /// </summary>
+        /// <summary>Get the current length of the segment attached to body1.</summary>
         /// <value></value>
         public float LengthA { get; set; }
 
-        /// <summary>
-        /// Get the current length of the segment attached to body2.
-        /// </summary>
+        /// <summary>Get the current length of the segment attached to body2.</summary>
         /// <value></value>
         public float LengthB { get; set; }
 
-        /// <summary>
-        /// The current length between the anchor point on BodyA and WorldAnchorA
-        /// </summary>
+        /// <summary>The current length between the anchor point on BodyA and WorldAnchorA</summary>
         public float CurrentLengthA
         {
             get
@@ -172,9 +154,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The current length between the anchor point on BodyB and WorldAnchorB
-        /// </summary>
+        /// <summary>The current length between the anchor point on BodyB and WorldAnchorB</summary>
         public float CurrentLengthB
         {
             get
@@ -186,9 +166,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the pulley ratio.
-        /// </summary>
+        /// <summary>Get the pulley ratio.</summary>
         /// <value></value>
         public float Ratio { get; set; }
 
@@ -240,22 +218,14 @@ namespace VelcroPhysics.Dynamics.Joints
             float lengthB = _uB.Length();
 
             if (lengthA > 10.0f * Settings.LinearSlop)
-            {
                 _uA *= 1.0f / lengthA;
-            }
             else
-            {
                 _uA = Vector2.Zero;
-            }
 
             if (lengthB > 10.0f * Settings.LinearSlop)
-            {
                 _uB *= 1.0f / lengthB;
-            }
             else
-            {
                 _uB = Vector2.Zero;
-            }
 
             // Compute effective mass.
             float ruA = MathUtils.Cross(_rA, _uA);
@@ -267,9 +237,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _mass = mA + Ratio * Ratio * mB;
 
             if (_mass > 0.0f)
-            {
                 _mass = 1.0f / _mass;
-            }
 
             if (Settings.EnableWarmstarting)
             {
@@ -343,22 +311,14 @@ namespace VelcroPhysics.Dynamics.Joints
             float lengthB = uB.Length();
 
             if (lengthA > 10.0f * Settings.LinearSlop)
-            {
                 uA *= 1.0f / lengthA;
-            }
             else
-            {
                 uA = Vector2.Zero;
-            }
 
             if (lengthB > 10.0f * Settings.LinearSlop)
-            {
                 uB *= 1.0f / lengthB;
-            }
             else
-            {
                 uB = Vector2.Zero;
-            }
 
             // Compute effective mass.
             float ruA = MathUtils.Cross(rA, uA);
@@ -370,9 +330,7 @@ namespace VelcroPhysics.Dynamics.Joints
             float mass = mA + Ratio * Ratio * mB;
 
             if (mass > 0.0f)
-            {
                 mass = 1.0f / mass;
-            }
 
             float C = Constant - lengthA - Ratio * lengthB;
             float linearError = Math.Abs(C);

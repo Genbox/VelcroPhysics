@@ -58,7 +58,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Sets
          * @param points - A list of all points in PointSet
          * @param constraints - Pairs of two points defining a constraint, all points <b>must</b> be part of given PointSet!
          */
-
         public ConstrainedPointSet(List<TriangulationPoint> points, IEnumerable<TriangulationPoint> constraints)
             : base(points)
         {
@@ -68,10 +67,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Sets
 
         public int[] EdgeIndex { get; private set; }
 
-        public override TriangulationMode TriangulationMode
-        {
-            get { return TriangulationMode.Constrained; }
-        }
+        public override TriangulationMode TriangulationMode => TriangulationMode.Constrained;
 
         public override void PrepareTriangulation(TriangulationContext tcx)
         {
@@ -105,7 +101,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Sets
          * 2. 
          * @return
          */
-
         public bool isValid()
         {
             return true;

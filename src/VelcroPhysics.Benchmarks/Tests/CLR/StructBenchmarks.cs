@@ -6,9 +6,9 @@ namespace VelcroPhysics.Benchmarks.Tests.CLR
     [InProcess]
     public class StructBenchmarks
     {
-        private Struct8[] _struct8;
         private Struct32[] _struct32;
         private Struct64[] _struct64;
+        private Struct8[] _struct8;
 
         [GlobalSetup]
         public void Setup()

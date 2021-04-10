@@ -37,13 +37,10 @@ namespace VelcroPhysics.Dynamics.Joints
     // w k % (rx i + ry j) = w * (-ry i + rx j)
 
     /// <summary>
-    /// A mouse joint is used to make a point on a body track a
-    /// specified world point. This a soft constraint with a maximum
-    /// force. This allows the constraint to stretch and without
-    /// applying huge forces.
-    /// NOTE: this joint is not documented in the manual because it was
-    /// developed to be used in the testbed. If you want to learn how to
-    /// use the mouse joint, look at the testbed.
+    /// A mouse joint is used to make a point on a body track a specified world point. This a soft constraint with a
+    /// maximum force. This allows the constraint to stretch and without applying huge forces. NOTE: this joint is not
+    /// documented in the manual because it was developed to be used in the testbed. If you want to learn how to use the mouse
+    /// joint, look at the testbed.
     /// </summary>
     public class FixedMouseJoint : Joint
     {
@@ -67,10 +64,7 @@ namespace VelcroPhysics.Dynamics.Joints
         private Vector2 _rA;
         private Vector2 _worldAnchor;
 
-        /// <summary>
-        /// This requires a world target point,
-        /// tuning parameters, and the time step.
-        /// </summary>
+        /// <summary>This requires a world target point, tuning parameters, and the time step.</summary>
         /// <param name="body">The body.</param>
         /// <param name="worldAnchor">The target.</param>
         public FixedMouseJoint(Body body, Vector2 worldAnchor)
@@ -87,20 +81,18 @@ namespace VelcroPhysics.Dynamics.Joints
             LocalAnchorA = MathUtils.MulT(BodyA._xf, worldAnchor);
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return _worldAnchor; }
+            get => _worldAnchor;
             set
             {
                 WakeBodies();
@@ -109,13 +101,12 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// The maximum constraint force that can be exerted
-        /// to move the candidate body. Usually you will express
-        /// as some multiple of the weight (multiplier * mass * gravity).
+        /// The maximum constraint force that can be exerted to move the candidate body. Usually you will express as some
+        /// multiple of the weight (multiplier * mass * gravity).
         /// </summary>
         public float MaxForce
         {
-            get { return _maxForce; }
+            get => _maxForce;
             set
             {
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
@@ -123,12 +114,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The response speed.
-        /// </summary>
+        /// <summary>The response speed.</summary>
         public float Frequency
         {
-            get { return _frequency; }
+            get => _frequency;
             set
             {
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
@@ -136,12 +125,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The damping ratio. 0 = no damping, 1 = critical damping.
-        /// </summary>
+        /// <summary>The damping ratio. 0 = no damping, 1 = critical damping.</summary>
         public float DampingRatio
         {
-            get { return _dampingRatio; }
+            get => _dampingRatio;
             set
             {
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
@@ -191,9 +178,7 @@ namespace VelcroPhysics.Dynamics.Joints
             Debug.Assert(d + h * k > Settings.Epsilon);
             _gamma = h * (d + h * k);
             if (_gamma != 0.0f)
-            {
                 _gamma = 1.0f / _gamma;
-            }
 
             _beta = h * k * _gamma;
 
@@ -224,9 +209,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 wA += _invIA * MathUtils.Cross(_rA, _impulse);
             }
             else
-            {
                 _impulse = Vector2.Zero;
-            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;
@@ -245,9 +228,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _impulse += impulse;
             float maxImpulse = data.Step.dt * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
-            {
                 _impulse *= maxImpulse / _impulse.Length();
-            }
             impulse = _impulse - oldImpulse;
 
             vA += _invMassA * impulse;

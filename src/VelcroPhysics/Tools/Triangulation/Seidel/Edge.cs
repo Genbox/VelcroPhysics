@@ -29,7 +29,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
             else
                 Slope = 0;
 
-            B = p.Y - (p.X * Slope);
+            B = p.Y - p.X * Slope;
             Above = null;
             Below = null;
             MPoints = new HashSet<Point>();

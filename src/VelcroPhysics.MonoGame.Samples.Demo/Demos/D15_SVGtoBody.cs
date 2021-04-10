@@ -16,7 +16,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D15_SVGtoBody : PhysicsDemoScreen
     {
-        private VerticesContainer _loadedVertices;
         private Border _border;
         private Sprite _club;
         private Body _clubBody;
@@ -24,6 +23,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
         private Body _diamondBody;
         private Sprite _heart;
         private Body _heartBody;
+        private VerticesContainer _loadedVertices;
         private Sprite _spade;
         private Body _spadeBody;
 
@@ -80,8 +80,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.Draw(gameTime);
         }
 
-        #region Demo description
-
         public override string GetTitle()
         {
             return "SVG Importer to bodies";
@@ -102,7 +100,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
     }
 }

@@ -155,7 +155,6 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
         protected virtual void PostSolve(Contact contact, ContactVelocityConstraint impulse) { }
 
 #if WINDOWS
-
         protected Vertices LoadDataFile(string filename)
         {
             string[] lines = File.ReadAllLines(filename);

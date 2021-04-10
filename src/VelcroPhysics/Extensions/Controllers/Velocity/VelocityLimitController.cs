@@ -6,8 +6,8 @@ using VelcroPhysics.Extensions.Controllers.ControllerBase;
 namespace VelcroPhysics.Extensions.Controllers.Velocity
 {
     /// <summary>
-    /// Put a limit on the linear (translation - the move speed) and angular (rotation) velocity
-    /// of bodies added to this controller.
+    /// Put a limit on the linear (translation - the move speed) and angular (rotation) velocity of bodies added to
+    /// this controller.
     /// </summary>
     public class VelocityLimitController : Controller
     {
@@ -20,9 +20,8 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
         public bool LimitLinearVelocity = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
-        /// Sets the max linear velocity to Settings.MaxTranslation
-        /// Sets the max angular velocity to Settings.MaxRotation
+        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class. Sets the max linear velocity
+        /// to Settings.MaxTranslation Sets the max angular velocity to Settings.MaxRotation
         /// </summary>
         public VelocityLimitController()
             : base(ControllerType.VelocityLimitController)
@@ -32,9 +31,8 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class.
-        /// Pass in 0 or float.MaxValue to disable the limit.
-        /// maxAngularVelocity = 0 will disable the angular velocity limit.
+        /// Initializes a new instance of the <see cref="VelocityLimitController" /> class. Pass in 0 or float.MaxValue to
+        /// disable the limit. maxAngularVelocity = 0 will disable the angular velocity limit.
         /// </summary>
         /// <param name="maxLinearVelocity">The max linear velocity.</param>
         /// <param name="maxAngularVelocity">The max angular velocity.</param>
@@ -51,13 +49,11 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
             MaxAngularVelocity = maxAngularVelocity;
         }
 
-        /// <summary>
-        /// Gets or sets the max angular velocity.
-        /// </summary>
+        /// <summary>Gets or sets the max angular velocity.</summary>
         /// <value>The max angular velocity.</value>
         public float MaxAngularVelocity
         {
-            get { return _maxAngularVelocity; }
+            get => _maxAngularVelocity;
             set
             {
                 _maxAngularVelocity = value;
@@ -65,13 +61,11 @@ namespace VelcroPhysics.Extensions.Controllers.Velocity
             }
         }
 
-        /// <summary>
-        /// Gets or sets the max linear velocity.
-        /// </summary>
+        /// <summary>Gets or sets the max linear velocity.</summary>
         /// <value>The max linear velocity.</value>
         public float MaxLinearVelocity
         {
-            get { return _maxLinearVelocity; }
+            get => _maxLinearVelocity;
             set
             {
                 _maxLinearVelocity = value;

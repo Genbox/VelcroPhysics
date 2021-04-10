@@ -9,32 +9,23 @@ namespace VelcroPhysics.Tools.PathGenerator
     //Contributed by Matthew Bettcher
 
     /// <summary>
-    /// Path:
-    /// Very similar to Vertices, but this
-    /// class contains vectors describing
-    /// control points on a Catmull-Rom
+    /// Path: Very similar to Vertices, but this class contains vectors describing control points on a Catmull-Rom
     /// curve.
     /// </summary>
     public class Path
     {
         private float _deltaT;
 
-        /// <summary>
-        /// All the points that makes up the curve
-        /// </summary>
+        /// <summary>All the points that makes up the curve</summary>
         public List<Vector2> ControlPoints;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Path" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Path" /> class.</summary>
         public Path()
         {
             ControlPoints = new List<Vector2>();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Path" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Path" /> class.</summary>
         /// <param name="vertices">The vertices to created the path from.</param>
         public Path(Vector2[] vertices)
         {
@@ -46,9 +37,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Path" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Path" /> class.</summary>
         /// <param name="vertices">The vertices to created the path from.</param>
         public Path(IList<Vector2> vertices)
         {
@@ -59,63 +48,51 @@ namespace VelcroPhysics.Tools.PathGenerator
             }
         }
 
-        /// <summary>
-        /// True if the curve is closed.
-        /// </summary>
+        /// <summary>True if the curve is closed.</summary>
         /// <value><c>true</c> if closed; otherwise, <c>false</c>.</value>
         public bool Closed { get; set; }
 
-        /// <summary>
-        /// Gets the next index of a controlpoint
-        /// </summary>
+        /// <summary>Gets the next index of a controlpoint</summary>
         /// <param name="index">The index.</param>
         /// <returns></returns>
         public int NextIndex(int index)
         {
             if (index == ControlPoints.Count - 1)
-            {
                 return 0;
-            }
             return index + 1;
         }
 
-        /// <summary>
-        /// Gets the previous index of a controlpoint
-        /// </summary>
+        /// <summary>Gets the previous index of a controlpoint</summary>
         /// <param name="index">The index.</param>
         /// <returns></returns>
         public int PreviousIndex(int index)
         {
             if (index == 0)
-            {
                 return ControlPoints.Count - 1;
-            }
             return index - 1;
         }
 
-        /// <summary>
-        /// Translates the control points by the specified vector.
-        /// </summary>
+        /// <summary>Translates the control points by the specified vector.</summary>
         /// <param name="vector">The vector.</param>
         public void Translate(ref Vector2 vector)
         {
             for (int i = 0; i < ControlPoints.Count; i++)
+            {
                 ControlPoints[i] = Vector2.Add(ControlPoints[i], vector);
+            }
         }
 
-        /// <summary>
-        /// Scales the control points by the specified vector.
-        /// </summary>
+        /// <summary>Scales the control points by the specified vector.</summary>
         /// <param name="value">The Value.</param>
         public void Scale(ref Vector2 value)
         {
             for (int i = 0; i < ControlPoints.Count; i++)
+            {
                 ControlPoints[i] = Vector2.Multiply(ControlPoints[i], value);
+            }
         }
 
-        /// <summary>
-        /// Rotate the control points by the defined value in radians.
-        /// </summary>
+        /// <summary>Rotate the control points by the defined value in radians.</summary>
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(float value)
         {
@@ -123,7 +100,9 @@ namespace VelcroPhysics.Tools.PathGenerator
             Matrix.CreateRotationZ(value, out rotationMatrix);
 
             for (int i = 0; i < ControlPoints.Count; i++)
+            {
                 ControlPoints[i] = Vector2.Transform(ControlPoints[i], rotationMatrix);
+            }
         }
 
         public override string ToString()
@@ -133,18 +112,12 @@ namespace VelcroPhysics.Tools.PathGenerator
             {
                 builder.Append(ControlPoints[i]);
                 if (i < ControlPoints.Count - 1)
-                {
                     builder.Append(" ");
-                }
             }
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Returns a set of points defining the
-        /// curve with the specifed number of divisions
-        /// between each control point.
-        /// </summary>
+        /// <summary>Returns a set of points defining the curve with the specifed number of divisions between each control point.</summary>
         /// <param name="divisions">Number of divisions between each control point.</param>
         /// <returns></returns>
         public Vertices GetVertices(int divisions)
@@ -224,9 +197,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             return temp;
         }
 
-        /// <summary>
-        /// Gets the normal for the given time.
-        /// </summary>
+        /// <summary>Gets the normal for the given time.</summary>
         /// <param name="time">The time</param>
         /// <returns>The normal.</returns>
         public Vector2 GetPositionNormal(float time)

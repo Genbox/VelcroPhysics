@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -28,9 +28,8 @@ using VelcroPhysics.Shared;
 namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A shape is used for collision detection. You can create a shape however you like.
-    /// Shapes used for simulation in World are created automatically when a Fixture
-    /// is created. Shapes may encapsulate a one or more child shapes.
+    /// A shape is used for collision detection. You can create a shape however you like. Shapes used for simulation
+    /// in World are created automatically when a Fixture is created. Shapes may encapsulate a one or more child shapes.
     /// </summary>
     public abstract class Shape
     {
@@ -58,26 +57,19 @@ namespace VelcroPhysics.Collision.Shapes
             _density = density;
         }
 
-        /// <summary>
-        /// Get the type of this shape.
-        /// </summary>
+        /// <summary>Get the type of this shape.</summary>
         /// <value>The type of the shape.</value>
         public ShapeType ShapeType { get; internal set; }
 
-        /// <summary>
-        /// Get the number of child primitives.
-        /// </summary>
+        /// <summary>Get the number of child primitives.</summary>
         /// <value></value>
         public abstract int ChildCount { get; }
 
-        /// <summary>
-        /// Gets or sets the density.
-        /// Changing the density causes a recalculation of shape properties.
-        /// </summary>
+        /// <summary>Gets or sets the density. Changing the density causes a recalculation of shape properties.</summary>
         /// <value>The density.</value>
         public float Density
         {
-            get { return _density; }
+            get => _density;
             set
             {
                 Debug.Assert(value >= 0);
@@ -87,13 +79,10 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// Radius of the Shape
-        /// Changing the radius causes a recalculation of shape properties.
-        /// </summary>
+        /// <summary>Radius of the Shape Changing the radius causes a recalculation of shape properties.</summary>
         public float Radius
         {
-            get { return _radius; }
+            get => _radius;
             set
             {
                 Debug.Assert(value >= 0);
@@ -105,24 +94,17 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// Clone the concrete shape
-        /// </summary>
+        /// <summary>Clone the concrete shape</summary>
         /// <returns>A clone of the shape</returns>
         public abstract Shape Clone();
 
-        /// <summary>
-        /// Test a point for containment in this shape.
-        /// Note: This only works for convex shapes.
-        /// </summary>
+        /// <summary>Test a point for containment in this shape. Note: This only works for convex shapes.</summary>
         /// <param name="transform">The shape world transform.</param>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns>True if the point is inside the shape</returns>
         public abstract bool TestPoint(ref Transform transform, ref Vector2 point);
 
-        /// <summary>
-        /// Cast a ray against a child shape.
-        /// </summary>
+        /// <summary>Cast a ray against a child shape.</summary>
         /// <param name="input">The ray-cast input parameters.</param>
         /// <param name="transform">The transform to be applied to the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
@@ -130,17 +112,15 @@ namespace VelcroPhysics.Collision.Shapes
         /// <returns>True if the ray-cast hits the shape</returns>
         public abstract bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output);
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
+        /// <summary>Given a transform, compute the associated axis aligned bounding box for a child shape.</summary>
         /// <param name="transform">The world transform of the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <param name="aabb">The AABB results.</param>
         public abstract void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb);
 
         /// <summary>
-        /// Compute the mass properties of this shape using its dimensions and density.
-        /// The inertia tensor is computed about the local origin, not the centroid.
+        /// Compute the mass properties of this shape using its dimensions and density. The inertia tensor is computed
+        /// about the local origin, not the centroid.
         /// </summary>
         protected abstract void ComputeProperties();
     }

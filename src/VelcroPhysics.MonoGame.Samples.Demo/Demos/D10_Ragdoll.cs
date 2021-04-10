@@ -60,8 +60,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.Draw(gameTime);
         }
 
-        #region Demo description
-
         public override string GetTitle()
         {
             return "Ragdoll";
@@ -93,7 +91,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
     }
 }

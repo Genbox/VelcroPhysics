@@ -1,21 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
 {
     /// <summary>
-    /// Giftwrap convex hull algorithm.
-    /// O(n * h) time complexity, where n is the number of points and h is the number of points on the convex hull.
-    /// See http://en.wikipedia.org/wiki/Gift_wrapping_algorithm for more details.
+    /// Giftwrap convex hull algorithm. O(n * h) time complexity, where n is the number of points and h is the number
+    /// of points on the convex hull. See http://en.wikipedia.org/wiki/Gift_wrapping_algorithm for more details.
     /// </summary>
     public static class GiftWrap
     {
         //Extracted from Box2D
 
-        /// <summary>
-        /// Returns the convex hull from the given vertices.
-        /// </summary>
+        /// <summary>Returns the convex hull from the given vertices.</summary>
         /// <param name="vertices">The vertices.</param>
         public static Vertices GetConvexHull(Vertices vertices)
         {
@@ -56,24 +53,18 @@ namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
                     Vector2 v = vertices[j] - vertices[hull[m]];
                     float c = MathUtils.Cross(ref r, ref v);
                     if (c < 0.0f)
-                    {
                         ie = j;
-                    }
 
                     // Collinearity check
                     if (c == 0.0f && v.LengthSquared() > r.LengthSquared())
-                    {
                         ie = j;
-                    }
                 }
 
                 ++m;
                 ih = ie;
 
                 if (ie == i0)
-                {
                     break;
-                }
             }
 
             Vertices result = new Vertices(m);

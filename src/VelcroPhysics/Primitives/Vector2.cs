@@ -20,12 +20,6 @@ namespace Microsoft.Xna.Framework
     [DebuggerDisplay("{DebugDisplayString,nq}")]
     public struct Vector2 : IEquatable<Vector2>
     {
-        #region Private Fields
-
-        #endregion
-
-        #region Public Fields
-
         /// <summary>The x coordinate of this <see cref="Vector2" />.</summary>
         [DataMember]
         public float X;
@@ -33,10 +27,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>The y coordinate of this <see cref="Vector2" />.</summary>
         [DataMember]
         public float Y;
-
-        #endregion
-
-        #region Properties
 
         /// <summary>Returns a <see cref="Vector2" /> with components 0, 0.</summary>
         public static Vector2 Zero { get; } = new Vector2(0f, 0f);
@@ -50,19 +40,11 @@ namespace Microsoft.Xna.Framework
         /// <summary>Returns a <see cref="Vector2" /> with components 0, 1.</summary>
         public static Vector2 UnitY { get; } = new Vector2(0f, 1f);
 
-        #endregion
-
-        #region Internal Properties
-
         internal string DebugDisplayString =>
             string.Concat(
                 X.ToString(), "  ",
                 Y.ToString()
             );
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>Constructs a 2d vector with X and Y from two values.</summary>
         /// <param name="x">The x coordinate in 2d-space.</param>
@@ -80,10 +62,6 @@ namespace Microsoft.Xna.Framework
             X = value;
             Y = value;
         }
-
-        #endregion
-
-        #region Operators
 
         /// <summary>Inverts values in the specified <see cref="Vector2" />.</summary>
         /// <param name="value">Source <see cref="Vector2" /> on the right of the sub sign.</param>
@@ -192,10 +170,6 @@ namespace Microsoft.Xna.Framework
         {
             return value1.X != value2.X || value1.Y != value2.Y;
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>Performs vector addition on <paramref name="value1" /> and <paramref name="value2" />.</summary>
         /// <param name="value1">The first vector to add.</param>
@@ -1032,8 +1006,6 @@ namespace Microsoft.Xna.Framework
             x = X;
             y = Y;
         }
-
-        #endregion
     }
 }
 #endif

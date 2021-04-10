@@ -44,32 +44,20 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public string Text { get; }
 
-        public Vector2 Position
-        {
-            get { return _currentPosition; }
-        }
+        public Vector2 Position => _currentPosition;
 
         public float Target
         {
-            set { _targetY = value; }
+            set => _targetY = value;
         }
 
-        public Vector2 Origin
-        {
-            get { return Size / 2f; }
-        }
+        public Vector2 Origin => Size / 2f;
 
         public Vector2 Size { get; }
 
-        public float Fade
-        {
-            get { return (float)_selectionFade; }
-        }
+        public float Fade => (float)_selectionFade;
 
-        public GameScreen Screen
-        {
-            get { return _screen; }
-        }
+        public GameScreen Screen => _screen;
 
         public Texture2D Preview { get; }
 
@@ -77,31 +65,19 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public Color TileColor { get; private set; }
 
-        public float Scale
-        {
-            get { return 0.9f + 0.1f * (float)_hoverFade; }
-        }
+        public float Scale => 0.9f + 0.1f * (float)_hoverFade;
 
         public bool Visible { get; set; }
 
-        public float Alpha
-        {
-            get { return (float)_visibleFade; }
-        }
-
-        #region IComparable Members
+        public float Alpha => (float)_visibleFade;
 
         public int CompareTo(object obj)
         {
             MenuEntry entry = obj as MenuEntry;
             if (entry == null)
-            {
                 return 0;
-            }
             return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
         }
-
-        #endregion
 
         public static void InitializeEntries(float hiddenX, float visibleX)
         {
@@ -123,44 +99,28 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public void Update(bool isSelected, bool isHovered, GameTime gameTime)
         {
             if (isHovered)
-            {
                 _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
-            }
             else
-            {
                 _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
-            }
             if (isSelected)
-            {
                 _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
-            }
             else
-            {
                 _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
-            }
 
             TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
             TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
             if (Visible)
-            {
                 _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 1.0);
-            }
             else
-            {
                 _visibleFade = Math.Max(_visibleFade - gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 0.0);
-            }
             _currentPosition.X = MathHelper.SmoothStep(_targetHiddenX, _targetVisibleX, (float)_visibleFade);
 
             float deltaY = _targetY - _currentPosition.Y;
             if (Math.Abs(deltaY) > MaxTranslation)
-            {
                 _currentPosition.Y += MaxTranslation * Math.Sign(deltaY);
-            }
             else
-            {
                 _currentPosition.Y += deltaY;
-            }
         }
     }
 }

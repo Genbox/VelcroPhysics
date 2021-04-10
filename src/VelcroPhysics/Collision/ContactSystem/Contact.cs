@@ -33,9 +33,8 @@ using VelcroPhysics.Shared.Optimization;
 namespace VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
-    /// The class manages contact between two shapes. A contact exists for each overlapping
-    /// AABB in the broad-phase (except if filtered). Therefore a contact object may exist
-    /// that has no contact points.
+    /// The class manages contact between two shapes. A contact exists for each overlapping AABB in the broad-phase
+    /// (except if filtered). Therefore a contact object may exist that has no contact points.
     /// </summary>
     public class Contact
     {
@@ -77,6 +76,8 @@ namespace VelcroPhysics.Collision.ContactSystem
             }
         };
 
+        internal ContactFlags _flags;
+
         // Nodes for connecting bodies.
         internal ContactEdge _nodeA = new ContactEdge();
         internal ContactEdge _nodeB = new ContactEdge();
@@ -88,10 +89,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         public Fixture FixtureA;
         public Fixture FixtureB;
 
-        /// <summary>
-        /// Get the contact manifold. Do not modify the manifold unless you understand the
-        /// internals of Box2D.
-        /// </summary>
+        /// <summary>Get the contact manifold. Do not modify the manifold unless you understand the internals of Box2D.</summary>
         public Manifold Manifold;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
@@ -102,27 +100,20 @@ namespace VelcroPhysics.Collision.ContactSystem
         public float Friction { get; set; }
         public float Restitution { get; set; }
 
-        /// <summary>
-        /// Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.
-        /// </summary>
+        /// <summary>Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.</summary>
         public float TangentSpeed { get; set; }
 
-
-        /// <summary>
-        /// Get the child primitive index for fixture A.
-        /// </summary>
+        /// <summary>Get the child primitive index for fixture A.</summary>
         /// <value>The child index A.</value>
         public int ChildIndexA { get; private set; }
 
-        /// <summary>
-        /// Get the child primitive index for fixture B.
-        /// </summary>
+        /// <summary>Get the child primitive index for fixture B.</summary>
         /// <value>The child index B.</value>
         public int ChildIndexB { get; private set; }
 
         /// <summary>
-        /// Enable/disable this contact.The contact is only disabled for the current
-        /// time step (or sub-step in continuous collisions).
+        /// Enable/disable this contact.The contact is only disabled for the current time step (or sub-step in continuous
+        /// collisions).
         /// </summary>
         public bool Enabled
         {
@@ -141,8 +132,6 @@ namespace VelcroPhysics.Collision.ContactSystem
         internal bool TOIFlag => (_flags & ContactFlags.TOIFlag) == ContactFlags.TOIFlag;
         internal bool FilterFlag => (_flags & ContactFlags.FilterFlag) == ContactFlags.FilterFlag;
 
-        internal ContactFlags _flags;
-
         public void ResetRestitution()
         {
             Restitution = Settings.MixRestitution(FixtureA.Restitution, FixtureB.Restitution);
@@ -153,9 +142,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             Friction = Settings.MixFriction(FixtureA.Friction, FixtureB.Friction);
         }
 
-        /// <summary>
-        /// Gets the world manifold.
-        /// </summary>
+        /// <summary>Gets the world manifold.</summary>
         public void GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points)
         {
             Body bodyA = FixtureA.Body;
@@ -201,8 +188,8 @@ namespace VelcroPhysics.Collision.ContactSystem
         }
 
         /// <summary>
-        /// Update the contact manifold and touching status.
-        /// Note: do not assume the fixture AABBs are overlapping or are valid.
+        /// Update the contact manifold and touching status. Note: do not assume the fixture AABBs are overlapping or are
+        /// valid.
         /// </summary>
         /// <param name="contactManager">The contact manager.</param>
         internal void Update(ContactManager contactManager)
@@ -287,7 +274,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     touching = false;
             }
 
-            if (wasTouching == true && touching == false)
+            if (wasTouching && touching == false)
             {
                 FixtureA?.OnSeparation?.Invoke(FixtureA, FixtureB, this);
                 FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
@@ -300,9 +287,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             contactManager.PreSolve?.Invoke(this, ref oldManifold);
         }
 
-        /// <summary>
-        /// Evaluate this contact with your own manifold and transforms.
-        /// </summary>
+        /// <summary>Evaluate this contact with your own manifold and transforms.</summary>
         /// <param name="manifold">The manifold.</param>
         /// <param name="transformA">The first transform.</param>
         /// <param name="transformB">The second transform.</param>
@@ -353,26 +338,18 @@ namespace VelcroPhysics.Collision.ContactSystem
             if (pool.Count > 0)
             {
                 c = pool.Dequeue();
-                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon)) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
-                {
+                if ((type1 >= type2 || type1 == ShapeType.Edge && type2 == ShapeType.Polygon) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
                     c.Reset(fixtureA, indexA, fixtureB, indexB);
-                }
                 else
-                {
                     c.Reset(fixtureB, indexB, fixtureA, indexA);
-                }
             }
             else
             {
                 // Edge+Polygon is non-symmetrical due to the way Erin handles collision type registration.
-                if ((type1 >= type2 || (type1 == ShapeType.Edge && type2 == ShapeType.Polygon)) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
-                {
+                if ((type1 >= type2 || type1 == ShapeType.Edge && type2 == ShapeType.Polygon) && !(type2 == ShapeType.Edge && type1 == ShapeType.Polygon))
                     c = new Contact(fixtureA, indexA, fixtureB, indexB);
-                }
                 else
-                {
                     c = new Contact(fixtureB, indexB, fixtureA, indexA);
-                }
             }
 
             c._type = _registers[(int)type1, (int)type2];

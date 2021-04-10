@@ -37,11 +37,11 @@ namespace VelcroPhysics.Dynamics.Joints
     //   = invMassA + invIA * cross(rA, u)^2 + invMassB + invIB * cross(rB, u)^2
 
     /// <summary>
-    /// A rope joint enforces a maximum distance between two points on two bodies. It has no other effect.
-    /// It can be used on ropes that are made up of several connected bodies, and if there is a need to support a heavy body.
-    /// This joint is used for stabilization of heavy objects on soft constraint joints.
-    /// Warning: if you attempt to change the maximum length during the simulation you will get some non-physical behavior.
-    /// Use the DistanceJoint instead if you want to dynamically control the length.
+    /// A rope joint enforces a maximum distance between two points on two bodies. It has no other effect. It can be
+    /// used on ropes that are made up of several connected bodies, and if there is a need to support a heavy body. This joint
+    /// is used for stabilization of heavy objects on soft constraint joints. Warning: if you attempt to change the maximum
+    /// length during the simulation you will get some non-physical behavior. Use the DistanceJoint instead if you want to
+    /// dynamically control the length.
     /// </summary>
     public class RopeJoint : Joint
     {
@@ -68,9 +68,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Rope;
         }
 
-        /// <summary>
-        /// Constructor for RopeJoint.
-        /// </summary>
+        /// <summary>Constructor for RopeJoint.</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         /// <param name="anchorA">The anchor on the first body</param>
@@ -97,42 +95,33 @@ namespace VelcroPhysics.Dynamics.Joints
             MaxLength = d.Length();
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public sealed override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public sealed override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// Get or set the maximum length of the rope.
-        /// By default, it is the distance between the two anchor points.
-        /// </summary>
+        /// <summary>Get or set the maximum length of the rope. By default, it is the distance between the two anchor points.</summary>
         public float MaxLength { get; set; }
 
-        /// <summary>
-        /// Gets the state of the joint.
-        /// </summary>
+        /// <summary>Gets the state of the joint.</summary>
         public LimitState State { get; private set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            return (invDt * _impulse) * _u;
+            return invDt * _impulse * _u;
         }
 
         public override float GetReactionTorque(float invDt)
@@ -171,18 +160,12 @@ namespace VelcroPhysics.Dynamics.Joints
 
             float C = _length - MaxLength;
             if (C > 0.0f)
-            {
                 State = LimitState.AtUpper;
-            }
             else
-            {
                 State = LimitState.Inactive;
-            }
 
             if (_length > Settings.LinearSlop)
-            {
                 _u *= 1.0f / _length;
-            }
             else
             {
                 _u = Vector2.Zero;
@@ -210,9 +193,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 wB += _invIB * MathUtils.Cross(_rB, P);
             }
             else
-            {
                 _impulse = 0.0f;
-            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;
@@ -235,9 +216,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             // Predictive constraint.
             if (C < 0.0f)
-            {
                 Cdot += data.Step.inv_dt * C;
-            }
 
             float impulse = -_mass * Cdot;
             float oldImpulse = _impulse;

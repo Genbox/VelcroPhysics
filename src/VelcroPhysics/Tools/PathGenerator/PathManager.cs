@@ -10,27 +10,18 @@ using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
 namespace VelcroPhysics.Tools.PathGenerator
 {
-    /// <summary>
-    /// An easy to use manager for creating paths.
-    /// </summary>
+    /// <summary>An easy to use manager for creating paths.</summary>
     public static class PathManager
     {
-        #region LinkType enum
-
         public enum LinkType
         {
             Revolute,
             Slider
         }
 
-        #endregion
-
         //Contributed by Matthew Bettcher
 
-        /// <summary>
-        /// Convert a path into a set of edges and attaches them to the specified body.
-        /// Note: use only for static edges.
-        /// </summary>
+        /// <summary>Convert a path into a set of edges and attaches them to the specified body. Note: use only for static edges.</summary>
         /// <param name="path">The path.</param>
         /// <param name="body">The body.</param>
         /// <param name="subdivisions">The subdivisions.</param>
@@ -52,10 +43,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             }
         }
 
-        /// <summary>
-        /// Convert a closed path into a polygon.
-        /// Convex decomposition is automatically performed.
-        /// </summary>
+        /// <summary>Convert a closed path into a polygon. Convex decomposition is automatically performed.</summary>
         /// <param name="path">The path.</param>
         /// <param name="body">The body.</param>
         /// <param name="density">The density.</param>
@@ -75,9 +63,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             }
         }
 
-        /// <summary>
-        /// Duplicates the given Body along the given path for approximately the given copies.
-        /// </summary>
+        /// <summary>Duplicates the given Body along the given path for approximately the given copies.</summary>
         /// <param name="world">The world.</param>
         /// <param name="path">The path.</param>
         /// <param name="shapes">The shapes.</param>
@@ -106,9 +92,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             return bodyList;
         }
 
-        /// <summary>
-        /// Duplicates the given Body along the given path for approximately the given copies.
-        /// </summary>
+        /// <summary>Duplicates the given Body along the given path for approximately the given copies.</summary>
         /// <param name="world">The world.</param>
         /// <param name="path">The path.</param>
         /// <param name="shape">The shape.</param>
@@ -129,9 +113,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             return EvenlyDistributeShapesAlongPath(world, path, shape, type, copies, null);
         }
 
-        /// <summary>
-        /// Moves the given body along the defined path.
-        /// </summary>
+        /// <summary>Moves the given body along the defined path.</summary>
         /// <param name="path">The path.</param>
         /// <param name="body">The body.</param>
         /// <param name="time">The time.</param>
@@ -146,9 +128,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             body.LinearVelocity = -velocity;
         }
 
-        /// <summary>
-        /// Attaches the bodies with revolute joints.
-        /// </summary>
+        /// <summary>Attaches the bodies with revolute joints.</summary>
         /// <param name="world">The world.</param>
         /// <param name="bodies">The bodies.</param>
         /// <param name="localAnchorA">The local anchor A.</param>

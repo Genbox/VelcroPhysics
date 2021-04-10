@@ -36,15 +36,11 @@ namespace VelcroPhysics.Collision
             float denominator = Vector2.Dot(normal, d);
 
             if (denominator == 0.0f)
-            {
                 return false;
-            }
 
             float t = numerator / denominator;
             if (t < 0.0f || input.MaxFraction < t)
-            {
                 return false;
-            }
 
             Vector2 q = p1 + t * d;
 
@@ -53,25 +49,17 @@ namespace VelcroPhysics.Collision
             Vector2 r = v2 - v1;
             float rr = Vector2.Dot(r, r);
             if (rr == 0.0f)
-            {
                 return false;
-            }
 
             float s = Vector2.Dot(q - v1, r) / rr;
             if (s < 0.0f || 1.0f < s)
-            {
                 return false;
-            }
 
             output.Fraction = t;
             if (numerator > 0.0f)
-            {
                 output.Normal = -MathUtils.MulT(transform.q, normal);
-            }
             else
-            {
                 output.Normal = MathUtils.MulT(transform.q, normal);
-            }
             return true;
         }
 
@@ -96,9 +84,7 @@ namespace VelcroPhysics.Collision
 
             // Check for negative discriminant and short segment.
             if (sigma < 0.0f || rr < Settings.Epsilon)
-            {
                 return false;
-            }
 
             // Find the point of intersection of the line with the circle.
             float a = -(c + (float)Math.Sqrt(sigma));
@@ -116,7 +102,7 @@ namespace VelcroPhysics.Collision
             return false;
         }
 
-        public static bool RayCastPolygon(Vertices vertices, Vertices normals, ref RayCastInput input, ref Transform transform,  out RayCastOutput output)
+        public static bool RayCastPolygon(Vertices vertices, Vertices normals, ref RayCastInput input, ref Transform transform, out RayCastOutput output)
         {
             output = new RayCastOutput();
 
@@ -140,9 +126,7 @@ namespace VelcroPhysics.Collision
                 if (denominator == 0.0f)
                 {
                     if (numerator < 0.0f)
-                    {
                         return false;
-                    }
                 }
                 else
                 {
@@ -170,9 +154,7 @@ namespace VelcroPhysics.Collision
                 // shapes work, but now those are handled separately.
                 //if (upper < lower - b2_epsilon)
                 if (upper < lower)
-                {
                     return false;
-                }
             }
 
             Debug.Assert(0.0f <= lower && lower <= input.MaxFraction);

@@ -65,8 +65,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.Draw(gameTime);
         }
 
-        #region Demo description
-
         public override string GetTitle()
         {
             return "Single body with two fixtures";
@@ -100,7 +98,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
     }
 }

@@ -71,10 +71,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// from 1 (fully active, no transition) to 0 (transitioned
         /// fully off to nothing).
         /// </summary>
-        public float TransitionAlpha
-        {
-            get { return 1f - TransitionPosition; }
-        }
+        public float TransitionAlpha => 1f - TransitionPosition;
 
         /// <summary>
         /// Gets the current screen transition state.
@@ -94,10 +91,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// <summary>
         /// Checks whether this screen is active and can respond to user input.
         /// </summary>
-        public bool IsActive
-        {
-            get { return !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active); }
-        }
+        public bool IsActive => !_otherScreenHasFocus && (ScreenState == ScreenState.TransitionOn || ScreenState == ScreenState.Active);
 
         /// <summary>
         /// Gets the main game type that this screen belongs to.
@@ -123,8 +117,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// Unlike HandleInput, this method is called regardless of whether the screen
         /// is active, hidden, or in the middle of a transition.
         /// </summary>
-        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
-                                   bool coveredByOtherScreen)
+        public virtual void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             _otherScreenHasFocus = otherScreenHasFocus;
 
@@ -178,13 +171,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             float transitionDelta;
 
             if (time == TimeSpan.Zero)
-            {
                 transitionDelta = 1f;
-            }
             else
-            {
                 transitionDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds / time.TotalMilliseconds);
-            }
 
             // Update the transition position.
             TransitionPosition += transitionDelta * direction;

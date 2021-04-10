@@ -107,8 +107,8 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 Vector2 p = tf.p;
                 Vector2 v = _platform.LinearVelocity;
 
-                if ((p.X < -10.0f && v.X < 0.0f) ||
-                    (p.X > 10.0f && v.X > 0.0f))
+                if (p.X < -10.0f && v.X < 0.0f ||
+                    p.X > 10.0f && v.X > 0.0f)
                 {
                     v.X = -v.X;
                     _platform.LinearVelocity = v;

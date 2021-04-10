@@ -45,11 +45,9 @@ namespace VelcroPhysics.Dynamics.Joints
     // J = [0 0 -1 0 0 1]
 
     /// <summary>
-    /// A wheel joint. This joint provides two degrees of freedom: translation
-    /// along an axis fixed in bodyA and rotation in the plane. You can use a
-    /// joint limit to restrict the range of motion and a joint motor to drive
-    /// the rotation or to model rotational friction.
-    /// This joint is designed for vehicle suspensions.
+    /// A wheel joint. This joint provides two degrees of freedom: translation along an axis fixed in bodyA and
+    /// rotation in the plane. You can use a joint limit to restrict the range of motion and a joint motor to drive the
+    /// rotation or to model rotational friction. This joint is designed for vehicle suspensions.
     /// </summary>
     public class WheelJoint : Joint
     {
@@ -93,9 +91,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Wheel;
         }
 
-        /// <summary>
-        /// Constructor for WheelJoint
-        /// </summary>
+        /// <summary>Constructor for WheelJoint</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         /// <param name="anchor">The anchor point</param>
@@ -120,34 +116,28 @@ namespace VelcroPhysics.Dynamics.Joints
             Axis = axis; //Velcro only: We maintain the original value as it is supposed to.
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// The axis at which the suspension moves.
-        /// </summary>
+        /// <summary>The axis at which the suspension moves.</summary>
         public Vector2 Axis
         {
-            get { return _axis; }
+            get => _axis;
             set
             {
                 _axis = value;
@@ -156,17 +146,13 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The axis in local coordinates relative to BodyA
-        /// </summary>
+        /// <summary>The axis in local coordinates relative to BodyA</summary>
         public Vector2 LocalXAxis { get; private set; }
 
-        /// <summary>
-        /// The desired motor speed in radians per second.
-        /// </summary>
+        /// <summary>The desired motor speed in radians per second.</summary>
         public float MotorSpeed
         {
-            get { return _motorSpeed; }
+            get => _motorSpeed;
             set
             {
                 if (value == _motorSpeed)
@@ -177,12 +163,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The maximum motor torque, usually in N-m.
-        /// </summary>
+        /// <summary>The maximum motor torque, usually in N-m.</summary>
         public float MaxMotorTorque
         {
-            get { return _maxMotorTorque; }
+            get => _maxMotorTorque;
             set
             {
                 if (value == _maxMotorTorque)
@@ -193,19 +177,13 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Suspension frequency, zero indicates no suspension
-        /// </summary>
+        /// <summary>Suspension frequency, zero indicates no suspension</summary>
         public float Frequency { get; set; }
 
-        /// <summary>
-        /// Suspension damping ratio, one indicates critical damping
-        /// </summary>
+        /// <summary>Suspension damping ratio, one indicates critical damping</summary>
         public float DampingRatio { get; set; }
 
-        /// <summary>
-        /// Gets the translation along the axis
-        /// </summary>
+        /// <summary>Gets the translation along the axis</summary>
         public float JointTranslation
         {
             get
@@ -263,9 +241,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Gets the angular velocity of the joint
-        /// </summary>
+        /// <summary>Gets the angular velocity of the joint</summary>
         public float JointAngularSpeed
         {
             get
@@ -276,12 +252,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Enable/disable the joint motor.
-        /// </summary>
+        /// <summary>Enable/disable the joint motor.</summary>
         public bool MotorEnabled
         {
-            get { return _enableMotor; }
+            get => _enableMotor;
             set
             {
                 if (value == _enableMotor)
@@ -292,9 +266,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Gets the torque of the motor
-        /// </summary>
+        /// <summary>Gets the torque of the motor</summary>
         /// <param name="invDt">inverse delta time</param>
         public float GetMotorTorque(float invDt)
         {
@@ -351,9 +323,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 _mass = mA + mB + iA * _sAy * _sAy + iB * _sBy * _sBy;
 
                 if (_mass > 0.0f)
-                {
                     _mass = 1.0f / _mass;
-                }
             }
 
             // Spring constraint
@@ -387,32 +357,24 @@ namespace VelcroPhysics.Dynamics.Joints
                     float h = data.Step.dt;
                     _gamma = h * (d + h * k);
                     if (_gamma > 0.0f)
-                    {
                         _gamma = 1.0f / _gamma;
-                    }
 
                     _bias = C * h * k * _gamma;
 
                     _springMass = invMass + _gamma;
                     if (_springMass > 0.0f)
-                    {
                         _springMass = 1.0f / _springMass;
-                    }
                 }
             }
             else
-            {
                 _springImpulse = 0.0f;
-            }
 
             // Rotational motor
             if (_enableMotor)
             {
                 _motorMass = iA + iB;
                 if (_motorMass > 0.0f)
-                {
                     _motorMass = 1.0f / _motorMass;
-                }
             }
             else
             {
@@ -538,13 +500,9 @@ namespace VelcroPhysics.Dynamics.Joints
 
             float impulse;
             if (k != 0.0f)
-            {
                 impulse = -C / k;
-            }
             else
-            {
                 impulse = 0.0f;
-            }
 
             Vector2 P = impulse * ay;
             float LA = impulse * sAy;

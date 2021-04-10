@@ -10,9 +10,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 {
     public static class CollidePolygon
     {
-        /// <summary>
-        /// Compute the collision manifold between two polygons.
-        /// </summary>
+        /// <summary>Compute the collision manifold between two polygons.</summary>
         public static void CollidePolygons(ref Manifold manifold, PolygonShape polyA, ref Transform xfA, PolygonShape polyB, ref Transform xfB)
         {
             // Find edge normal of max separation on A - return if separating axis is found
@@ -107,9 +105,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             np = Collision.ClipSegmentToLine(out clipPoints2, ref clipPoints1, tangent, sideOffset2, iv2);
 
             if (np < 2)
-            {
                 return;
-            }
 
             // Now clipPoints2 contains the clipped points.
             manifold.LocalNormal = localNormal;
@@ -145,9 +141,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             manifold.PointCount = pointCount;
         }
 
-        /// <summary>
-        /// Find the max separation between poly1 and poly2 using edge normals from poly1.
-        /// </summary>
+        /// <summary>Find the max separation between poly1 and poly2 using edge normals from poly1.</summary>
         private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
         {
             int count1 = poly1.Vertices.Count;
@@ -171,9 +165,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 {
                     float sij = Vector2.Dot(n, v2s[j] - v1);
                     if (sij < si)
-                    {
                         si = sij;
-                    }
                 }
 
                 if (si > maxSeparation)

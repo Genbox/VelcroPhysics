@@ -29,18 +29,13 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Collision.Shapes
 {
-    /// <summary>
-    /// Represents a simple non-self intersecting convex polygon.
-    /// Create a convex hull from the given array of points.
-    /// </summary>
+    /// <summary>Represents a simple non-self intersecting convex polygon. Create a convex hull from the given array of points.</summary>
     public class PolygonShape : Shape
     {
         private Vertices _normals;
         private Vertices _vertices;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonShape" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="PolygonShape" /> class.</summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="density">The density.</param>
         public PolygonShape(Vertices vertices, float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
@@ -48,23 +43,20 @@ namespace VelcroPhysics.Collision.Shapes
             Vertices = vertices; //This assignment will call ComputeProperties()
         }
 
-        /// <summary>
-        /// Create a new PolygonShape with the specified density.
-        /// </summary>
+        /// <summary>Create a new PolygonShape with the specified density.</summary>
         /// <param name="density">The density.</param>
         public PolygonShape(float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density) { }
 
         internal PolygonShape() : base(ShapeType.Polygon, Settings.PolygonRadius) { }
 
         /// <summary>
-        /// Create a convex hull from the given array of local points.
-        /// The number of vertices must be in the range [3, Settings.MaxPolygonVertices].
-        /// Warning: the points may be re-ordered, even if they form a convex polygon
-        /// Warning: collinear points are handled but not removed. Collinear points may lead to poor stacking behavior.
+        /// Create a convex hull from the given array of local points. The number of vertices must be in the range [3,
+        /// Settings.MaxPolygonVertices]. Warning: the points may be re-ordered, even if they form a convex polygon Warning:
+        /// collinear points are handled but not removed. Collinear points may lead to poor stacking behavior.
         /// </summary>
         public Vertices Vertices
         {
-            get { return _vertices; }
+            get => _vertices;
             set
             {
                 Debug.Assert(value.Count >= 3 && value.Count <= Settings.MaxPolygonVertices);
@@ -82,9 +74,7 @@ namespace VelcroPhysics.Collision.Shapes
                         _vertices = GiftWrap.GetConvexHull(value);
                 }
                 else
-                {
                     _vertices = new Vertices(value);
-                }
 
                 _normals = new Vertices(_vertices.Count);
 
@@ -181,7 +171,7 @@ namespace VelcroPhysics.Collision.Shapes
                 float intx2 = ex1 * ex1 + ex2 * ex1 + ex2 * ex2;
                 float inty2 = ey1 * ey1 + ey2 * ey1 + ey2 * ey2;
 
-                I += (0.25f * k_inv3 * D) * (intx2 + inty2);
+                I += 0.25f * k_inv3 * D * (intx2 + inty2);
             }
 
             //The area is too small for the engine to handle.
@@ -214,9 +204,7 @@ namespace VelcroPhysics.Collision.Shapes
             return RayCastHelper.RayCastPolygon(_vertices, _normals, ref input, ref transform, out output);
         }
 
-        /// <summary>
-        /// Given a transform, compute the associated axis aligned bounding box for a child shape.
-        /// </summary>
+        /// <summary>Given a transform, compute the associated axis aligned bounding box for a child shape.</summary>
         /// <param name="transform">The world transform of the shape.</param>
         /// <param name="childIndex">The child shape index.</param>
         /// <param name="aabb">The AABB results.</param>

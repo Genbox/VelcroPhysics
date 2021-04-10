@@ -59,8 +59,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public bool ShowCursor
         {
-            get { return _cursorIsVisible && IsCursorValid; }
-            set { _cursorIsVisible = value; }
+            get => _cursorIsVisible && IsCursorValid;
+            set => _cursorIsVisible = value;
         }
 
         public bool IsCursorValid { get; private set; }
@@ -102,13 +102,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
 
             if (_viewport.Bounds.Contains(MouseState.X, MouseState.Y))
-            {
                 IsCursorValid = true;
-            }
             else
-            {
                 IsCursorValid = false;
-            }
         }
 
         public void Draw(SpriteBatch batch)

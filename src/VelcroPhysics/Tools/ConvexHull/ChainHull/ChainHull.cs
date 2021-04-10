@@ -6,9 +6,8 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Tools.ConvexHull.ChainHull
 {
     /// <summary>
-    /// Andrew's Monotone Chain Convex Hull algorithm.
-    /// Used to get the convex hull of a point cloud.
-    /// Source: http://www.softsurfer.com/Archive/algorithm_0109/algorithm_0109.htm
+    /// Andrew's Monotone Chain Convex Hull algorithm. Used to get the convex hull of a point cloud. Source:
+    /// http://www.softsurfer.com/Archive/algorithm_0109/algorithm_0109.htm
     /// </summary>
     public static class ChainHull
     {
@@ -16,9 +15,7 @@ namespace VelcroPhysics.Tools.ConvexHull.ChainHull
 
         private static PointComparer _pointComparer = new PointComparer();
 
-        /// <summary>
-        /// Returns the convex hull from the given vertices..
-        /// </summary>
+        /// <summary>Returns the convex hull from the given vertices..</summary>
         public static Vertices GetConvexHull(Vertices vertices)
         {
             if (vertices.Count <= 3)

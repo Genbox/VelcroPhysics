@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 */
@@ -29,9 +29,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
     /// </summary>
     internal static class SeidelDecomposer
     {
-        /// <summary>
-        /// Decompose the polygon into several smaller non-concave polygons.
-        /// </summary>
+        /// <summary>Decompose the polygon into several smaller non-concave polygons.</summary>
         /// <param name="vertices">The polygon to decompose.</param>
         /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of triangles</returns>
@@ -65,9 +63,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
             return list;
         }
 
-        /// <summary>
-        /// Decompose the polygon into several smaller non-concave polygons.
-        /// </summary>
+        /// <summary>Decompose the polygon into several smaller non-concave polygons.</summary>
         /// <param name="vertices">The polygon to decompose.</param>
         /// <param name="sheer">The sheer to use if you get bad results, try using a higher value.</param>
         /// <returns>A list of trapezoids</returns>

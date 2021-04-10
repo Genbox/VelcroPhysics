@@ -1,37 +1,24 @@
-﻿using VelcroPhysics.Collision.Filtering;
+using VelcroPhysics.Collision.Filtering;
 using VelcroPhysics.Dynamics;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
 {
-    /// <summary>
-    /// Contains filter data that can determine whether an object should be processed or not.
-    /// </summary>
+    /// <summary>Contains filter data that can determine whether an object should be processed or not.</summary>
     public abstract class FilterData
     {
-        /// <summary>
-        /// Disable the logic on specific categories.
-        /// Category.None by default.
-        /// </summary>
+        /// <summary>Disable the logic on specific categories. Category.None by default.</summary>
         public Category DisabledOnCategories = Category.None;
 
-        /// <summary>
-        /// Disable the logic on specific groups
-        /// </summary>
+        /// <summary>Disable the logic on specific groups</summary>
         public int DisabledOnGroup;
 
-        /// <summary>
-        /// Enable the logic on specific categories
-        /// Category.All by default.
-        /// </summary>
+        /// <summary>Enable the logic on specific categories Category.All by default.</summary>
         public Category EnabledOnCategories = Category.All;
 
-        /// <summary>
-        /// Enable the logic on specific groups.
-        /// </summary>
+        /// <summary>Enable the logic on specific groups.</summary>
         public int EnabledOnGroup;
 
-        /// <summary>
-        /// </summary>
+        /// <summary></summary>
         /// <param name="body"></param>
         /// <returns></returns>
         public virtual bool IsActiveOn(Body body)
@@ -62,69 +49,51 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
                         return true;
                 }
                 else
-                {
                     return true;
-                }
             }
 
             return false;
         }
 
-        /// <summary>
-        /// Adds the category.
-        /// </summary>
+        /// <summary>Adds the category.</summary>
         /// <param name="category">The category.</param>
         public void AddDisabledCategory(Category category)
         {
             DisabledOnCategories |= category;
         }
 
-        /// <summary>
-        /// Removes the category.
-        /// </summary>
+        /// <summary>Removes the category.</summary>
         /// <param name="category">The category.</param>
         public void RemoveDisabledCategory(Category category)
         {
             DisabledOnCategories &= ~category;
         }
 
-        /// <summary>
-        /// Determines whether this body ignores the the specified controller.
-        /// </summary>
+        /// <summary>Determines whether this body ignores the the specified controller.</summary>
         /// <param name="category">The category.</param>
-        /// <returns>
-        /// <c>true</c> if the object has the specified category; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the object has the specified category; otherwise, <c>false</c>.</returns>
         public bool IsInDisabledCategory(Category category)
         {
             return (DisabledOnCategories & category) == category;
         }
 
-        /// <summary>
-        /// Adds the category.
-        /// </summary>
+        /// <summary>Adds the category.</summary>
         /// <param name="category">The category.</param>
         public void AddEnabledCategory(Category category)
         {
             EnabledOnCategories |= category;
         }
 
-        /// <summary>
-        /// Removes the category.
-        /// </summary>
+        /// <summary>Removes the category.</summary>
         /// <param name="category">The category.</param>
         public void RemoveEnabledCategory(Category category)
         {
             EnabledOnCategories &= ~category;
         }
 
-        /// <summary>
-        /// Determines whether this body ignores the the specified controller.
-        /// </summary>
+        /// <summary>Determines whether this body ignores the the specified controller.</summary>
         /// <param name="category">The category.</param>
-        /// <returns>
-        /// <c>true</c> if the object has the specified category; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the object has the specified category; otherwise, <c>false</c>.</returns>
         public bool IsInEnabledInCategory(Category category)
         {
             return (EnabledOnCategories & category) == category;

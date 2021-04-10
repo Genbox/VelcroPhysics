@@ -15,9 +15,6 @@ namespace VelcroPhysics.Benchmarks.Code
 
         public Pool<PoolObject> Pool { get; set; }
 
-        public void Reset()
-        {
-
-        }
+        public void Reset() { }
     }
 }

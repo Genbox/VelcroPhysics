@@ -213,17 +213,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
                 _spring1.MotorSpeed = _speed;
-            }
             else if (keyboardManager.IsNewKeyPress(Keys.S))
-            {
                 _spring1.MotorSpeed = 0.0f;
-            }
             else if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 _spring1.MotorSpeed = -_speed;
-            }
             else if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 _hz = Math.Max(0.0f, _hz - 1.0f);

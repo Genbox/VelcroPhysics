@@ -245,21 +245,15 @@ namespace VelcroPhysics.Collision.Narrowphase
             {
                 float s = Vector2.Dot(normal, vertices[i] - v1);
                 if (s < edgeAxis.Separation)
-                {
                     edgeAxis.Separation = s;
-                }
             }
 
             // If no valid normal can be found than this edge should not collide.
             if (edgeAxis.Type == EPAxisType.Unknown)
-            {
                 return;
-            }
 
             if (edgeAxis.Separation > radius)
-            {
                 return;
-            }
 
             //Velcro: ComputePolygonSeparation() was manually inlined here
             EPAxis polygonAxis;
@@ -290,16 +284,12 @@ namespace VelcroPhysics.Collision.Narrowphase
                 if (Vector2.Dot(n, perp) >= 0.0f)
                 {
                     if (Vector2.Dot(n - upperLimit, normal) < -Settings.AngularSlop)
-                    {
                         continue;
-                    }
                 }
                 else
                 {
                     if (Vector2.Dot(n - lowerLimit, normal) < -Settings.AngularSlop)
-                    {
                         continue;
-                    }
                 }
 
                 if (s > polygonAxis.Separation)
@@ -311,9 +301,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
 
             if (polygonAxis.Type != EPAxisType.Unknown && polygonAxis.Separation > radius)
-            {
                 return;
-            }
 
             // Use hysteresis for jitter reduction.
             const float k_relativeTol = 0.98f;
@@ -321,17 +309,11 @@ namespace VelcroPhysics.Collision.Narrowphase
 
             EPAxis primaryAxis;
             if (polygonAxis.Type == EPAxisType.Unknown)
-            {
                 primaryAxis = edgeAxis;
-            }
             else if (polygonAxis.Separation > k_relativeTol * edgeAxis.Separation + k_absoluteTol)
-            {
                 primaryAxis = polygonAxis;
-            }
             else
-            {
                 primaryAxis = edgeAxis;
-            }
 
             FixedArray2<ClipVertex> ie = new FixedArray2<ClipVertex>();
             ReferenceFace rf;
@@ -421,17 +403,13 @@ namespace VelcroPhysics.Collision.Narrowphase
             np = Collision.ClipSegmentToLine(out clipPoints1, ref ie, rf.SideNormal1, rf.SideOffset1, rf.i1);
 
             if (np < Settings.MaxManifoldPoints)
-            {
                 return;
-            }
 
             // Clip to negative box side 1
             np = Collision.ClipSegmentToLine(out clipPoints2, ref clipPoints1, rf.SideNormal2, rf.SideOffset2, rf.i2);
 
             if (np < Settings.MaxManifoldPoints)
-            {
                 return;
-            }
 
             // Now clipPoints2 contains the clipped points.
             if (primaryAxis.Type == EPAxisType.EdgeA)

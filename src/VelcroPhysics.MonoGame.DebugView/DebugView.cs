@@ -90,14 +90,10 @@ namespace VelcroPhysics.MonoGame.DebugView
             AppendFlags(DebugViewFlags.Joint);
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             World.ContactManager.PreSolve -= PreSolve;
         }
-
-        #endregion
 
         private void PreSolve(Contact contact, ref Manifold oldManifold)
         {
@@ -317,7 +313,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             _background[2] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y + PerformancePanelBounds.Height);
             _background[3] = new Vector2(PerformancePanelBounds.X + PerformancePanelBounds.Width, PerformancePanelBounds.Y);
 
-            DrawSolidPolygon(_background, 4, Color.DarkGray, true);
+            DrawSolidPolygon(_background, 4, Color.DarkGray);
         }
 
         private void DrawDebugPanel()
@@ -458,52 +454,52 @@ namespace VelcroPhysics.MonoGame.DebugView
             switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
-                    {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                {
+                    CircleShape circle = (CircleShape)fixture.Shape;
 
-                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
-                        float radius = circle.Radius;
-                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
+                    Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                    float radius = circle.Radius;
+                    Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
 
-                        DrawSolidCircle(center, radius, axis, color);
-                    }
+                    DrawSolidCircle(center, radius, axis, color);
+                }
                     break;
 
                 case ShapeType.Polygon:
+                {
+                    PolygonShape poly = (PolygonShape)fixture.Shape;
+                    int vertexCount = poly.Vertices.Count;
+                    Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
+
+                    for (int i = 0; i < vertexCount; ++i)
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
-                        int vertexCount = poly.Vertices.Count;
-                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-
-                        for (int i = 0; i < vertexCount; ++i)
-                        {
-                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
-                        }
-
-                        DrawSolidPolygon(_tempVertices, vertexCount, color);
+                        _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
                     }
+
+                    DrawSolidPolygon(_tempVertices, vertexCount, color);
+                }
                     break;
 
                 case ShapeType.Edge:
-                    {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
-                        Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
-                        Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
-                        DrawSegment(v1, v2, color);
-                    }
+                {
+                    EdgeShape edge = (EdgeShape)fixture.Shape;
+                    Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
+                    Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
+                    DrawSegment(v1, v2, color);
+                }
                     break;
 
                 case ShapeType.Chain:
-                    {
-                        ChainShape chain = (ChainShape)fixture.Shape;
+                {
+                    ChainShape chain = (ChainShape)fixture.Shape;
 
-                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
-                        {
-                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
-                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
-                            DrawSegment(v1, v2, color);
-                        }
+                    for (int i = 0; i < chain.Vertices.Count - 1; ++i)
+                    {
+                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                        Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
+                        DrawSegment(v1, v2, color);
                     }
+                }
                     break;
             }
         }
@@ -653,7 +649,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             verts[2] = p + new Vector2(hs, hs);
             verts[3] = p + new Vector2(-hs, hs);
 
-            DrawSolidPolygon(verts, 4, color, true);
+            DrawSolidPolygon(verts, 4, color);
         }
 
         public void DrawString(int x, int y, string text)
@@ -805,18 +801,12 @@ namespace VelcroPhysics.MonoGame.DebugView
             _localView = Matrix.Identity;
         }
 
-        #region Nested type: ContactPoint
-
         private struct ContactPoint
         {
             public Vector2 Normal;
             public Vector2 Position;
             public PointState State;
         }
-
-        #endregion
-
-        #region Nested type: StringData
 
         private struct StringData
         {
@@ -831,7 +821,5 @@ namespace VelcroPhysics.MonoGame.DebugView
                 Color = color;
             }
         }
-
-        #endregion
     }
 }

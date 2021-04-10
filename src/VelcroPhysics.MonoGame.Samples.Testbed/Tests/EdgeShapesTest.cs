@@ -124,9 +124,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
             if (index == 4)
-            {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
-            }
             _bodies[_bodyIndex].Position = new Vector2(x, y);
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-(float)Math.PI, (float)Math.PI);
             _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
@@ -161,29 +159,17 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.D1))
-            {
                 Create(0);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D2))
-            {
                 Create(1);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D3))
-            {
                 Create(2);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D4))
-            {
                 Create(3);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D5))
-            {
                 Create(4);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 DestroyBody();
-            }
 
             base.Keyboard(keyboardManager);
         }
@@ -222,15 +208,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 DebugView.DrawSegment(_point, head, new Color(0.9f, 0.9f, 0.4f));
             }
             else
-            {
                 DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
-            }
             DebugView.EndCustomDraw();
 
             if (advanceRay)
-            {
                 _angle += 0.25f * Settings.Pi / 180.0f;
-            }
         }
 
         internal static Test Create()

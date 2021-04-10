@@ -7,8 +7,8 @@ namespace VelcroPhysics.Shared
 {
     public class Pool<T> where T : IPoolable<T>
     {
-        private readonly Queue<T> _queue;
         private readonly Func<T> _objectCreator;
+        private readonly Queue<T> _queue;
 
         public Pool(Func<T> objectCreator, int capacity = 16, bool preCreateInstances = true)
         {

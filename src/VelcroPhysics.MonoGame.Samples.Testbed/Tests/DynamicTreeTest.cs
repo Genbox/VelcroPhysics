@@ -41,7 +41,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         private bool _automated;
         private AABB _queryAABB;
         private Actor _rayActor = new Actor();
-        private RayCastInput _rayCastInput;
+        private readonly RayCastInput _rayCastInput;
         private RayCastOutput _rayCastOutput;
 
         private DynamicTreeTest()
@@ -105,17 +105,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                 Color ca = new Color(0.9f, 0.9f, 0.9f);
                 if (actor == _rayActor && actor.Overlap)
-                {
                     ca = new Color(0.9f, 0.6f, 0.6f);
-                }
                 else if (actor == _rayActor)
-                {
                     ca = new Color(0.6f, 0.9f, 0.6f);
-                }
                 else if (actor.Overlap)
-                {
                     ca = new Color(0.6f, 0.6f, 0.9f);
-                }
 
                 DebugView.DrawAABB(ref actor.AABB, ca);
             }
@@ -145,21 +139,13 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.A))
-            {
                 _automated = !_automated;
-            }
             if (keyboardManager.IsNewKeyPress(Keys.C))
-            {
                 CreateProxy();
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 DestroyProxy();
-            }
             if (keyboardManager.IsNewKeyPress(Keys.M))
-            {
                 MoveProxy();
-            }
         }
 
         private bool QueryCallback(int proxyid)
@@ -257,9 +243,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 int j = Rand.Random.Next() % ActorCount;
                 Actor actor = _actors[j];
                 if (actor.ProxyId == -1)
-                {
                     continue;
-                }
 
                 AABB aabb0 = actor.AABB;
                 MoveAABB(ref actor.AABB);
@@ -296,9 +280,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             for (int i = 0; i < ActorCount; ++i)
             {
                 if (_actors[i].ProxyId == -1)
-                {
                     continue;
-                }
 
                 bool overlap = AABB.TestOverlap(ref _queryAABB, ref _actors[i].AABB);
                 Debug.Assert(overlap == _actors[i].Overlap);
@@ -320,9 +302,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             for (int i = 0; i < ActorCount; ++i)
             {
                 if (_actors[i].ProxyId == -1)
-                {
                     continue;
-                }
 
                 RayCastOutput output;
                 bool hit = _actors[i].AABB.RayCast(out output, ref input);
@@ -335,17 +315,13 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             if (bruteActor != null)
-            {
                 Debug.Assert(bruteOutput.Fraction == _rayCastOutput.Fraction);
-            }
         }
 
         internal static Test Create()
         {
             return new DynamicTreeTest();
         }
-
-        #region Nested type: Actor
 
         private sealed class Actor
         {
@@ -354,7 +330,5 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             internal bool Overlap;
             internal int ProxyId;
         }
-
-        #endregion
     }
 }

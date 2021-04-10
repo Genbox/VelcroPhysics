@@ -2,9 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
-    /// <summary>
-    /// Reference face used for clipping
-    /// </summary>
+    /// <summary>Reference face used for clipping</summary>
     public struct ReferenceFace
     {
         public int i1, i2;

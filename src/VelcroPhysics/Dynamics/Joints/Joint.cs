@@ -35,10 +35,7 @@ namespace VelcroPhysics.Dynamics.Joints
         internal JointEdge EdgeA = new JointEdge();
         internal JointEdge EdgeB = new JointEdge();
 
-        /// <summary>
-        /// Indicate if this join is enabled or not. Disabling a joint
-        /// means it is still in the simulation, but inactive.
-        /// </summary>
+        /// <summary>Indicate if this join is enabled or not. Disabling a joint means it is still in the simulation, but inactive.</summary>
         public bool Enabled = true;
 
         internal bool IslandFlag;
@@ -60,60 +57,48 @@ namespace VelcroPhysics.Dynamics.Joints
             BodyB = bodyB;
         }
 
-        /// <summary>
-        /// Constructor for fixed joint
-        /// </summary>
+        /// <summary>Constructor for fixed joint</summary>
         protected Joint(Body body) : this()
         {
             BodyA = body;
         }
 
-        /// <summary>
-        /// Gets or sets the type of the joint.
-        /// </summary>
+        /// <summary>Gets or sets the type of the joint.</summary>
         /// <value>The type of the joint.</value>
         public JointType JointType { get; protected set; }
 
-        /// <summary>
-        /// Get the first body attached to this joint.
-        /// </summary>
+        /// <summary>Get the first body attached to this joint.</summary>
         public Body BodyA { get; internal set; }
 
-        /// <summary>
-        /// Get the second body attached to this joint.
-        /// </summary>
+        /// <summary>Get the second body attached to this joint.</summary>
         public Body BodyB { get; internal set; }
 
         /// <summary>
-        /// Get the anchor point on bodyA in world coordinates.
-        /// On some joints, this value indicate the anchor point within the world.
+        /// Get the anchor point on bodyA in world coordinates. On some joints, this value indicate the anchor point
+        /// within the world.
         /// </summary>
         public abstract Vector2 WorldAnchorA { get; set; }
 
         /// <summary>
-        /// Get the anchor point on bodyB in world coordinates.
-        /// On some joints, this value indicate the anchor point within the world.
+        /// Get the anchor point on bodyB in world coordinates. On some joints, this value indicate the anchor point
+        /// within the world.
         /// </summary>
         public abstract Vector2 WorldAnchorB { get; set; }
 
-        /// <summary>
-        /// Set the user data pointer.
-        /// </summary>
+        /// <summary>Set the user data pointer.</summary>
         /// <value>The data.</value>
         public object UserData { get; set; }
 
-        /// <summary>
-        /// Set this flag to true if the attached bodies should collide.
-        /// </summary>
+        /// <summary>Set this flag to true if the attached bodies should collide.</summary>
         public bool CollideConnected { get; set; }
 
         /// <summary>
-        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks.
-        /// The default value is float.MaxValue, which means it never breaks.
+        /// The Breakpoint simply indicates the maximum Value the JointError can be before it breaks. The default value is
+        /// float.MaxValue, which means it never breaks.
         /// </summary>
         public float Breakpoint
         {
-            get { return _breakpoint; }
+            get => _breakpoint;
             set
             {
                 _breakpoint = value;
@@ -121,20 +106,14 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Fires when the joint is broken.
-        /// </summary>
+        /// <summary>Fires when the joint is broken.</summary>
         public event Action<Joint, float> Broke;
 
-        /// <summary>
-        /// Get the reaction force on body at the joint anchor in Newtons.
-        /// </summary>
+        /// <summary>Get the reaction force on body at the joint anchor in Newtons.</summary>
         /// <param name="invDt">The inverse delta time.</param>
         public abstract Vector2 GetReactionForce(float invDt);
 
-        /// <summary>
-        /// Get the reaction torque on the body at the joint anchor in N*m.
-        /// </summary>
+        /// <summary>Get the reaction torque on the body at the joint anchor in N*m.</summary>
         /// <param name="invDt">The inverse delta time.</param>
         public abstract float GetReactionTorque(float invDt);
 
@@ -147,9 +126,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 BodyB.Awake = true;
         }
 
-        /// <summary>
-        /// Return true if the joint is a fixed type.
-        /// </summary>
+        /// <summary>Return true if the joint is a fixed type.</summary>
         public bool IsFixedType()
         {
             return JointType == JointType.FixedRevolute ||
@@ -180,9 +157,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
         internal abstract void SolveVelocityConstraints(ref SolverData data);
 
-        /// <summary>
-        /// Solves the position constraints.
-        /// </summary>
+        /// <summary>Solves the position constraints.</summary>
         /// <param name="data"></param>
         /// <returns>returns true if the position errors are within tolerance.</returns>
         internal abstract bool SolvePositionConstraints(ref SolverData data);

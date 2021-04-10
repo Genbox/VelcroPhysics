@@ -19,21 +19,11 @@ namespace Microsoft.Xna.Framework
     [DataContract]
     public class Curve
     {
-        #region Public Constructors
-
         /// <summary>Constructs a curve.</summary>
         public Curve()
         {
             Keys = new CurveKeyCollection();
         }
-
-        #endregion
-
-        #region Private Fields
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>Returns <c>true</c> if this curve is constant (has zero or one points); <c>false</c> otherwise.</summary>
         [DataMember]
@@ -50,10 +40,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>The collection of curve keys.</summary>
         [DataMember]
         public CurveKeyCollection Keys { get; private set; }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>Creates a copy of this curve.</summary>
         /// <returns>A copy of this curve.</returns>
@@ -248,10 +234,6 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
         private int GetNumberOfCycle(float position)
         {
             float cycle = (position - Keys[0].Position) / (Keys[Keys.Count - 1].Position - Keys[0].Position);
@@ -291,8 +273,6 @@ namespace Microsoft.Xna.Framework
             }
             return 0f;
         }
-
-        #endregion
     }
 }
 #endif

@@ -56,9 +56,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             body.BodyType = BodyType.Dynamic;
 
             if (depth == Depth)
-            {
                 return body;
-            }
 
             FixtureFactory.AttachRectangle(offset * 2, 0.5f * a, density, new Vector2(0, -a), body);
 

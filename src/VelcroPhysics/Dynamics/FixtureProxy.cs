@@ -2,9 +2,7 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Dynamics
 {
-    /// <summary>
-    /// This proxy is used internally to connect fixtures to the broad-phase.
-    /// </summary>
+    /// <summary>This proxy is used internally to connect fixtures to the broad-phase.</summary>
     public struct FixtureProxy
     {
         public AABB AABB;

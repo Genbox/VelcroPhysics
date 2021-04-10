@@ -12,14 +12,14 @@ namespace VelcroPhysics.Benchmarks.Tests.Collision
     [InProcess]
     public class BroadphaseBenchmark
     {
+        private Actor[] _actors;
         private float _proxyExtent;
+        private AABB _queryAABB;
         private Random _random;
-        private float _worldExtent;
+        private RayCastInput _rayCastInput;
 
         private DynamicTree<Actor> _tree;
-        private AABB _queryAABB;
-        private RayCastInput _rayCastInput;
-        private Actor[] _actors;
+        private float _worldExtent;
 
         [GlobalSetup]
         public void Setup()

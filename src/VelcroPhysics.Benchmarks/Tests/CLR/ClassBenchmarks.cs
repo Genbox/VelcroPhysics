@@ -6,9 +6,9 @@ namespace VelcroPhysics.Benchmarks.Tests.CLR
     [InProcess]
     public class ClassBenchmarks
     {
-        private Class8[] _class8;
         private Class32[] _class32;
         private Class64[] _class64;
+        private Class8[] _class8;
 
         [GlobalSetup]
         public void Setup()

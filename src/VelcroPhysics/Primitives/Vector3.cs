@@ -17,12 +17,6 @@ namespace Microsoft.Xna.Framework
     [DebuggerDisplay("{DebugDisplayString,nq}")]
     public struct Vector3 : IEquatable<Vector3>
     {
-        #region Private Fields
-
-        #endregion
-
-        #region Public Fields
-
         /// <summary>The x coordinate of this <see cref="Vector3" />.</summary>
         [DataMember]
         public float X;
@@ -34,10 +28,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>The z coordinate of this <see cref="Vector3" />.</summary>
         [DataMember]
         public float Z;
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>Returns a <see cref="Vector3" /> with components 0, 0, 0.</summary>
         public static Vector3 Zero { get; } = new Vector3(0f, 0f, 0f);
@@ -72,20 +62,12 @@ namespace Microsoft.Xna.Framework
         /// <summary>Returns a <see cref="Vector3" /> with components 0, 0, 1.</summary>
         public static Vector3 Backward { get; } = new Vector3(0f, 0f, 1f);
 
-        #endregion
-
-        #region Internal Properties
-
         internal string DebugDisplayString =>
             string.Concat(
                 X.ToString(), "  ",
                 Y.ToString(), "  ",
                 Z.ToString()
             );
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>Constructs a 3d vector with X, Y and Z from three values.</summary>
         /// <param name="x">The x coordinate in 3d-space.</param>
@@ -116,10 +98,6 @@ namespace Microsoft.Xna.Framework
             Y = value.Y;
             Z = z;
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>Performs vector addition on <paramref name="value1" /> and <paramref name="value2" />.</summary>
         /// <param name="value1">The first vector to add.</param>
@@ -871,8 +849,6 @@ namespace Microsoft.Xna.Framework
             return sb.ToString();
         }
 
-        #region Transform
-
         /// <summary>
         /// Creates a new <see cref="Vector3" /> that contains a transformation of 3d-vector by the specified
         /// <see cref="Matrix" />.
@@ -968,10 +944,6 @@ namespace Microsoft.Xna.Framework
                         position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33 + matrix.M43);
             }
         }
-
-        #endregion
-
-        #region TransformNormal
 
         /// <summary>
         /// Creates a new <see cref="Vector3" /> that contains a transformation of the specified normal by the specified
@@ -1072,8 +1044,6 @@ namespace Microsoft.Xna.Framework
             }
         }
 
-        #endregion
-
         /// <summary>Deconstruction method for <see cref="Vector3" />.</summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -1084,10 +1054,6 @@ namespace Microsoft.Xna.Framework
             y = Y;
             z = Z;
         }
-
-        #endregion
-
-        #region Operators
 
         /// <summary>Compares whether two <see cref="Vector3" /> instances are equal.</summary>
         /// <param name="value1"><see cref="Vector3" /> instance on the left of the equal sign.</param>
@@ -1202,8 +1168,6 @@ namespace Microsoft.Xna.Framework
             value1.Z *= factor;
             return value1;
         }
-
-        #endregion
     }
 }
 #endif

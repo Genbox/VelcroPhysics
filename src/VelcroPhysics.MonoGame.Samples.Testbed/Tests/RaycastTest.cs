@@ -97,29 +97,17 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.D1))
-            {
                 Create(0);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D2))
-            {
                 Create(1);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D3))
-            {
                 Create(2);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D4))
-            {
                 Create(3);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D5))
-            {
                 Create(4);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 DestroyBody();
-            }
             if (keyboardManager.IsNewKeyPress(Keys.M))
             {
                 switch (_mode)
@@ -132,8 +120,6 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                         break;
                     case RayCastMode.Multiple:
                         _mode = RayCastMode.Closest;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -288,9 +274,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             if (advanceRay)
-            {
                 _angle += 0.25f * Settings.Pi / 180.0f;
-            }
         }
 
         private void Create(int index)
@@ -311,9 +295,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             _bodies[_bodyIndex].UserData = index;
 
             if (index == 4)
-            {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
-            }
 
             if (index < 4)
             {
@@ -334,15 +316,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             return new RayCastTest();
         }
 
-        #region Nested type: RayCastMode
-
         private enum RayCastMode
         {
             Closest,
             Any,
             Multiple
         }
-
-        #endregion
     }
 }

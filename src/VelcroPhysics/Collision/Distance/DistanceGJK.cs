@@ -30,28 +30,28 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Collision.Distance
 {
     /// <summary>
-    /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes.
-    /// Using Voronoi regions (Christer Ericson) and Barycentric coordinates.
+    /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes. Using Voronoi
+    /// regions (Christer Ericson) and Barycentric coordinates.
     /// </summary>
     public static class DistanceGJK
     {
         /// <summary>
-        /// The number of calls made to the ComputeDistance() function.
-        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// The number of calls made to the ComputeDistance() function. Note: This is only activated when
+        /// Settings.EnableDiagnostics = true
         /// </summary>
         [ThreadStatic]
         public static int GJKCalls;
 
         /// <summary>
-        /// The number of iterations that was made on the last call to ComputeDistance().
-        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// The number of iterations that was made on the last call to ComputeDistance(). Note: This is only activated
+        /// when Settings.EnableDiagnostics = true
         /// </summary>
         [ThreadStatic]
         public static int GJKIters;
 
         /// <summary>
-        /// The maximum number of iterations calls to the CompteDistance() function.
-        /// Note: This is only activated when Settings.EnableDiagnostics = true
+        /// The maximum number of iterations calls to the CompteDistance() function. Note: This is only activated when
+        /// Settings.EnableDiagnostics = true
         /// </summary>
         [ThreadStatic]
         public static int GJKMaxIters;
@@ -104,9 +104,7 @@ namespace VelcroPhysics.Collision.Distance
 
                 // If we have 3 points, then the origin is in the corresponding triangle.
                 if (simplex.Count == 3)
-                {
                     break;
-                }
 
                 // Get search direction.
                 Vector2 d = simplex.GetSearchDirection();
@@ -152,9 +150,7 @@ namespace VelcroPhysics.Collision.Distance
 
                 // If we found a duplicate support point we must exit to avoid cycling.
                 if (duplicate)
-                {
                     break;
-                }
 
                 // New vertex is OK and needed.
                 ++simplex.Count;

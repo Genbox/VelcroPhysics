@@ -43,7 +43,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)
      */
-
     internal class AdvancingFront
     {
         public AdvancingFrontNode Head;
@@ -83,8 +82,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         }
 
         /// <summary>
-        /// MM:  This seems to be used by LocateNode to guess a position in the implicit linked list of AdvancingFrontNodes near x
-        /// Removed an overload that depended on this being exact
+        /// MM:  This seems to be used by LocateNode to guess a position in the implicit linked list of
+        /// AdvancingFrontNodes near x Removed an overload that depended on this being exact
         /// </summary>
         private AdvancingFrontNode FindSearchNode(double x)
         {
@@ -92,9 +91,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return Search;
         }
 
-        /// <summary>
-        /// We use a balancing tree to locate a node smaller or equal to given key value
-        /// </summary>
+        /// <summary>We use a balancing tree to locate a node smaller or equal to given key value</summary>
         public AdvancingFrontNode LocateNode(TriangulationPoint point)
         {
             return LocateNode(point.X);
@@ -106,27 +103,29 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             if (x < node.Value)
             {
                 while ((node = node.Prev) != null)
+                {
                     if (x >= node.Value)
                     {
                         Search = node;
                         return node;
                     }
+                }
             }
             else
             {
                 while ((node = node.Next) != null)
+                {
                     if (x < node.Value)
                     {
                         Search = node.Prev;
                         return node.Prev;
                     }
+                }
             }
             return null;
         }
 
-        /// <summary>
-        /// This implementation will use simple node traversal algorithm to find a point on the front
-        /// </summary>
+        /// <summary>This implementation will use simple node traversal algorithm to find a point on the front</summary>
         public AdvancingFrontNode LocatePoint(TriangulationPoint point)
         {
             double px = point.X;
@@ -139,13 +138,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 {
                     // We might have two nodes with same x value for a short time
                     if (point == node.Prev.Point)
-                    {
                         node = node.Prev;
-                    }
                     else if (point == node.Next.Point)
-                    {
                         node = node.Next;
-                    }
                     else
                     {
                         throw new Exception("Failed to find Node for given afront point");
@@ -159,9 +154,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 while ((node = node.Prev) != null)
                 {
                     if (point == node.Point)
-                    {
                         break;
-                    }
                 }
             }
             else
@@ -169,9 +162,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 while ((node = node.Next) != null)
                 {
                     if (point == node.Point)
-                    {
                         break;
-                    }
                 }
             }
             Search = node;

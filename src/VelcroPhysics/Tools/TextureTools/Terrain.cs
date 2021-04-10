@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
@@ -8,14 +8,10 @@ using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
 namespace VelcroPhysics.Tools.TextureTools
 {
-    /// <summary>
-    /// Simple class to maintain a terrain. It can keep track
-    /// </summary>
+    /// <summary>Simple class to maintain a terrain. It can keep track</summary>
     public class Terrain
     {
-        /// <summary>
-        /// Generated bodies.
-        /// </summary>
+        /// <summary>Generated bodies.</summary>
         private List<Body>[,] _bodyMap;
 
         private AABB _dirtyArea;
@@ -23,65 +19,47 @@ namespace VelcroPhysics.Tools.TextureTools
 
         private float _localWidth;
 
-        /// <summary>
-        /// Point cloud defining the terrain.
-        /// </summary>
+        /// <summary>Point cloud defining the terrain.</summary>
         private sbyte[,] _terrainMap;
 
         private Vector2 _topLeft;
         private int _xnum;
         private int _ynum;
 
-        /// <summary>
-        /// Points per cell.
-        /// </summary>
+        /// <summary>Points per cell.</summary>
         public int CellSize;
 
-        /// <summary>
-        /// Center of terrain in world units.
-        /// </summary>
+        /// <summary>Center of terrain in world units.</summary>
         public Vector2 Center;
 
         /// <summary>
-        /// Decomposer to use when regenerating terrain. Can be changed on the fly without consequence.
-        /// Note: Some decomposerers are unstable.
+        /// Decomposer to use when regenerating terrain. Can be changed on the fly without consequence. Note: Some
+        /// decomposerers are unstable.
         /// </summary>
         public TriangulationAlgorithm Decomposer;
 
-        /// <summary>
-        /// Height of terrain in world units.
-        /// </summary>
+        /// <summary>Height of terrain in world units.</summary>
         public float Height;
 
         /// <summary>
-        /// Number of iterations to perform in the Marching Squares algorithm.
-        /// Note: More then 3 has almost no effect on quality.
+        /// Number of iterations to perform in the Marching Squares algorithm. Note: More then 3 has almost no effect on
+        /// quality.
         /// </summary>
         public int Iterations = 2;
 
-        /// <summary>
-        /// Points per each world unit used to define the terrain in the point cloud.
-        /// </summary>
+        /// <summary>Points per each world unit used to define the terrain in the point cloud.</summary>
         public int PointsPerUnit;
 
-        /// <summary>
-        /// Points per sub cell.
-        /// </summary>
+        /// <summary>Points per sub cell.</summary>
         public int SubCellSize;
 
-        /// <summary>
-        /// Width of terrain in world units.
-        /// </summary>
+        /// <summary>Width of terrain in world units.</summary>
         public float Width;
 
-        /// <summary>
-        /// World to manage terrain in.
-        /// </summary>
+        /// <summary>World to manage terrain in.</summary>
         public World World;
 
-        /// <summary>
-        /// Creates a new terrain.
-        /// </summary>
+        /// <summary>Creates a new terrain.</summary>
         /// <param name="world">The World</param>
         /// <param name="area">The area of the terrain.</param>
         public Terrain(World world, AABB area)
@@ -92,9 +70,7 @@ namespace VelcroPhysics.Tools.TextureTools
             Center = area.Center;
         }
 
-        /// <summary>
-        /// Creates a new terrain
-        /// </summary>
+        /// <summary>Creates a new terrain</summary>
         /// <param name="world">The World</param>
         /// <param name="position">The position (center) of the terrain.</param>
         /// <param name="width">The width of the terrain.</param>
@@ -107,9 +83,7 @@ namespace VelcroPhysics.Tools.TextureTools
             Center = position;
         }
 
-        /// <summary>
-        /// Initialize the terrain for use.
-        /// </summary>
+        /// <summary>Initialize the terrain for use.</summary>
         public void Initialize()
         {
             // find top left of terrain in world space
@@ -137,30 +111,24 @@ namespace VelcroPhysics.Tools.TextureTools
             _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
         }
 
-        /// <summary>
-        /// Apply the specified texture data to the terrain.
-        /// </summary>
+        /// <summary>Apply the specified texture data to the terrain.</summary>
         /// <param name="data"></param>
         /// <param name="offset"></param>
-        public void ApplyData(sbyte[,] data, Vector2 offset = default(Vector2))
+        public void ApplyData(sbyte[,] data, Vector2 offset = default)
         {
             for (int x = 0; x < data.GetUpperBound(0); x++)
             {
                 for (int y = 0; y < data.GetUpperBound(1); y++)
                 {
                     if (x + offset.X >= 0 && x + offset.X < _localWidth && y + offset.Y >= 0 && y + offset.Y < _localHeight)
-                    {
                         _terrainMap[(int)(x + offset.X), (int)(y + offset.Y)] = data[x, y];
-                    }
                 }
             }
 
             RemoveOldData(0, _xnum, 0, _ynum);
         }
 
-        /// <summary>
-        /// Modify a single point in the terrain.
-        /// </summary>
+        /// <summary>Modify a single point in the terrain.</summary>
         /// <param name="location">World location to modify. Automatically clipped.</param>
         /// <param name="value">-1 = inside terrain, 1 = outside terrain</param>
         public void ModifyTerrain(Vector2 location, sbyte value)
@@ -190,9 +158,7 @@ namespace VelcroPhysics.Tools.TextureTools
             }
         }
 
-        /// <summary>
-        /// Regenerate the terrain.
-        /// </summary>
+        /// <summary>Regenerate the terrain.</summary>
         public void RegenerateTerrain()
         {
             //iterate effected cells

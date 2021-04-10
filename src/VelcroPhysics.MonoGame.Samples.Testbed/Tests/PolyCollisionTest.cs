@@ -100,29 +100,17 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.A))
-            {
                 _positionB.X -= 0.1f;
-            }
             if (keyboardManager.IsKeyDown(Keys.D))
-            {
                 _positionB.X += 0.1f;
-            }
             if (keyboardManager.IsKeyDown(Keys.S))
-            {
                 _positionB.Y -= 0.1f;
-            }
             if (keyboardManager.IsKeyDown(Keys.W))
-            {
                 _positionB.Y += 0.1f;
-            }
             if (keyboardManager.IsKeyDown(Keys.Q))
-            {
                 _angleB += 0.1f * Settings.Pi;
-            }
             if (keyboardManager.IsKeyDown(Keys.E))
-            {
                 _angleB -= 0.1f * Settings.Pi;
-            }
 
             _transformB.Set(_positionB, _angleB);
         }

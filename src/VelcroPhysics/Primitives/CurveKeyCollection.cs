@@ -18,21 +18,13 @@ namespace Microsoft.Xna.Framework
     [DataContract]
     public class CurveKeyCollection : ICollection<CurveKey>
     {
-        #region Private Fields
-
         private readonly List<CurveKey> _keys;
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>Creates a new instance of <see cref="CurveKeyCollection" /> class.</summary>
         public CurveKeyCollection()
         {
             _keys = new List<CurveKey>();
         }
-
-        #endregion
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -133,8 +125,6 @@ namespace Microsoft.Xna.Framework
             _keys.RemoveAt(index);
         }
 
-        #region Properties
-
         /// <summary>Indexer.</summary>
         /// <param name="index">The index of key in this collection.</param>
         /// <returns><see cref="CurveKey" /> at <paramref name="index" /> position.</returns>
@@ -167,8 +157,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>Returns false because it is not a read-only collection.</summary>
         [DataMember]
         public bool IsReadOnly => false;
-
-        #endregion
     }
 }
 #endif

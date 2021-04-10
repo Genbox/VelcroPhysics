@@ -4,9 +4,7 @@ using VelcroPhysics.Shared.Contracts;
 
 namespace VelcroPhysics.Shared
 {
-    /// <summary>
-    /// This graph is a doubly linked circular list. It is circular to avoid branches in Add/Remove methods.
-    /// </summary>
+    /// <summary>This graph is a doubly linked circular list. It is circular to avoid branches in Add/Remove methods.</summary>
     public class Graph<T> : IEnumerable<T>
     {
         private readonly EqualityComparer<T> _comparer;
@@ -23,19 +21,30 @@ namespace VelcroPhysics.Shared
             _comparer = comparer;
         }
 
-        /// <summary>
-        /// The number of items in the graph
-        /// </summary>
+        /// <summary>The number of items in the graph</summary>
         public int Count { get; private set; }
 
-        /// <summary>
-        /// The first node in the graph
-        /// </summary>
+        /// <summary>The first node in the graph</summary>
         public GraphNode<T> First { get; private set; }
 
-        /// <summary>
-        /// Add a value to the graph
-        /// </summary>
+        public IEnumerator<T> GetEnumerator()
+        {
+            GraphNode<T> node = First;
+
+            for (int i = 0; i < Count; i++)
+            {
+                GraphNode<T> node0 = node;
+                node = node.Next;
+                yield return node0.Item;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <summary>Add a value to the graph</summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>The node that represents the value</returns>
         public GraphNode<T> Add(T value)
@@ -45,9 +54,7 @@ namespace VelcroPhysics.Shared
             return result;
         }
 
-        /// <summary>
-        /// Add a node to the graph
-        /// </summary>
+        /// <summary>Add a node to the graph</summary>
         /// <remarks>Note that this method is O(1) in worst case.</remarks>
         public void Add(GraphNode<T> node)
         {
@@ -70,9 +77,7 @@ namespace VelcroPhysics.Shared
             }
         }
 
-        /// <summary>
-        /// Check if the specified value is contained within the graph.
-        /// </summary>
+        /// <summary>Check if the specified value is contained within the graph.</summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>True if it found the value, otherwise false.</returns>
         public bool Contains(T value)
@@ -80,9 +85,7 @@ namespace VelcroPhysics.Shared
             return Find(value) != null;
         }
 
-        /// <summary>
-        /// Finds the specified value
-        /// </summary>
+        /// <summary>Finds the specified value</summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>The graph node that was found if any. Otherwise it returns null.</returns>
         public GraphNode<T> Find(T value)
@@ -127,9 +130,7 @@ namespace VelcroPhysics.Shared
             }
         }
 
-        /// <summary>
-        /// Remove the specified value
-        /// </summary>
+        /// <summary>Remove the specified value</summary>
         /// <remarks>Note that this method is O(n) in worst case.</remarks>
         /// <returns>True if the value was removed, otherwise false.</returns>
         public bool Remove(T value)
@@ -143,9 +144,7 @@ namespace VelcroPhysics.Shared
             return true;
         }
 
-        /// <summary>
-        /// Remove the specified node from the graph.
-        /// </summary>
+        /// <summary>Remove the specified node from the graph.</summary>
         /// <remarks>Note that this method is O(1) in worst case.</remarks>
         public void Remove(GraphNode<T> node)
         {
@@ -157,9 +156,7 @@ namespace VelcroPhysics.Shared
                 return;
 
             if (node.Next == node)
-            {
                 First = null;
-            }
             else
             {
                 node.Next.Prev = node.Prev;
@@ -171,23 +168,6 @@ namespace VelcroPhysics.Shared
 
             node.Invalidate();
             Count--;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            GraphNode<T> node = First;
-
-            for (int i = 0; i < Count; i++)
-            {
-                GraphNode<T> node0 = node;
-                node = node.Next;
-                yield return node0.Item;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public IEnumerable<GraphNode<T>> GetNodes()

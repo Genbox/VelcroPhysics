@@ -5,20 +5,27 @@ namespace VelcroPhysics.Shared
 {
     public class BenchmarkRun : IPoolable<BenchmarkRun>
     {
-        private string _area;
         private readonly Stopwatch _stopwatch = new Stopwatch();
+        private string _area;
         private bool _resultsRecorded;
-
-        public void SetData(string area)
-        {
-            _area = area;
-            _stopwatch.Start();
-        }
 
         public void Dispose()
         {
             RecordResults();
             Pool.ReturnToPool(this);
+        }
+
+        public void Reset()
+        {
+            _stopwatch.Reset();
+        }
+
+        public Pool<BenchmarkRun> Pool { private get; set; }
+
+        public void SetData(string area)
+        {
+            _area = area;
+            _stopwatch.Start();
         }
 
         public void RecordResults()
@@ -30,12 +37,5 @@ namespace VelcroPhysics.Shared
             Benchmark.RecordResults(_area, _stopwatch.ElapsedTicks);
             _resultsRecorded = true;
         }
-
-        public void Reset()
-        {
-            _stopwatch.Reset();
-        }
-
-        public Pool<BenchmarkRun> Pool { private get; set; }
     }
 }

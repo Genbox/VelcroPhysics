@@ -53,7 +53,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                     XmlElement parent = currentElement.ParentNode as XmlElement;
 
                     //Take the attribute from the parent if it is a group, otherwise just take it from the current element
-                    if (currentId == null && parent != null  && parent.HasAttribute("velcro_id"))
+                    if (currentId == null && parent != null && parent.HasAttribute("velcro_id"))
                         path.Id = parent.Attributes["velcro_id"].Value;
                     else
                         path.Id = currentElement.HasAttribute("velcro_id") ? currentElement.Attributes["velcro_id"].Value : "empty_id";
@@ -127,9 +127,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                         results.Push(Matrix.CreateTranslation(arguments[0], arguments[1], 0f));
                 }
                 else
-                {
                     transformation = transformation.Remove(0, 1);
-                }
             }
 
             Matrix result = Matrix.Identity;
@@ -160,9 +158,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                     parameters = parameters.Remove(0, matchLength);
                 }
                 else
-                {
                     parameters = parameters.Remove(0, 1);
-                }
             }
             return operation.Remove(0, end + 1);
         }

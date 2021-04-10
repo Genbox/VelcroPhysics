@@ -17,8 +17,8 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
         [DefaultValue(1)]
         public int ScaleFactor
         {
-            get { return (int)(1f / _scaleFactor); }
-            set { _scaleFactor = 1f / value; }
+            get => (int)(1f / _scaleFactor);
+            set => _scaleFactor = 1f / value;
         }
 
         [DisplayName("Cubic bézier iterations")]
@@ -41,7 +41,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
             foreach (PathDefinition d in input)
             {
                 List<VerticesExt> vertices = parser.ParseSVGPath(d.Path, d.Transformation * matScale);
-                List<VerticesExt> c = container.ContainsKey(d.Id) ? container[d.Id] : (container[d.Id] = new List<VerticesExt>());
+                List<VerticesExt> c = container.ContainsKey(d.Id) ? container[d.Id] : container[d.Id] = new List<VerticesExt>();
 
                 if (vertices.Count == 1)
                     c.Add(vertices[0]);

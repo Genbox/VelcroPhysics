@@ -184,6 +184,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             if (_time >= 300)
             {
                 _time = 0;
+
                 //if (_save)
                 //{
                 //    WorldSerializer.Serialize(World, "out.xml");

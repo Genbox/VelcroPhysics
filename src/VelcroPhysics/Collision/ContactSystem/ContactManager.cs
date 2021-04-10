@@ -31,34 +31,22 @@ namespace VelcroPhysics.Collision.ContactSystem
 {
     public class ContactManager
     {
-        /// <summary>
-        /// Fires when a contact is created
-        /// </summary>
+        /// <summary>Fires when a contact is created</summary>
         public BeginContactHandler BeginContact;
 
-        /// <summary>
-        /// The filter used by the contact manager.
-        /// </summary>
+        /// <summary>The filter used by the contact manager.</summary>
         public CollisionFilterHandler ContactFilter;
 
-        /// <summary>
-        /// Fires when a contact is deleted
-        /// </summary>
+        /// <summary>Fires when a contact is deleted</summary>
         public EndContactHandler EndContact;
 
-        /// <summary>
-        /// Fires when the broadphase detects that two Fixtures are close to each other.
-        /// </summary>
+        /// <summary>Fires when the broadphase detects that two Fixtures are close to each other.</summary>
         public BroadphaseHandler OnBroadphaseCollision;
 
-        /// <summary>
-        /// Fires after the solver has run
-        /// </summary>
+        /// <summary>Fires after the solver has run</summary>
         public PostSolveHandler PostSolve;
 
-        /// <summary>
-        /// Fires before the solver runs
-        /// </summary>
+        /// <summary>Fires before the solver runs</summary>
         public PreSolveHandler PreSolve;
 
         internal ContactManager(IBroadPhase broadPhase)
@@ -85,9 +73,7 @@ namespace VelcroPhysics.Collision.ContactSystem
 
             // Are the fixtures on the same body?
             if (bodyA == bodyB)
-            {
                 return;
-            }
 
             // Does a contact already exist?
             ContactEdge edge = bodyB.ContactList;
@@ -159,9 +145,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             c._nodeA.Prev = null;
             c._nodeA.Next = bodyA.ContactList;
             if (bodyA.ContactList != null)
-            {
                 bodyA.ContactList.Prev = c._nodeA;
-            }
             bodyA.ContactList = c._nodeA;
 
             // Connect to body B
@@ -171,9 +155,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             c._nodeB.Prev = null;
             c._nodeB.Next = bodyB.ContactList;
             if (bodyB.ContactList != null)
-            {
                 bodyB.ContactList.Prev = c._nodeB;
-            }
             bodyB.ContactList = c._nodeB;
 
             // Wake up the bodies
@@ -292,9 +274,7 @@ namespace VelcroPhysics.Collision.ContactSystem
 
                 // At least one body must be awake and it must be dynamic or kinematic.
                 if (activeA == false && activeB == false)
-                {
                     continue;
-                }
 
                 int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
                 int proxyIdB = fixtureB.Proxies[indexB].ProxyId;
@@ -317,7 +297,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         {
             if (Settings.UseFPECollisionCategories)
             {
-                if ((fixtureA.CollisionGroup == fixtureB.CollisionGroup) &&
+                if (fixtureA.CollisionGroup == fixtureB.CollisionGroup &&
                     fixtureA.CollisionGroup != 0 && fixtureB.CollisionGroup != 0)
                     return false;
 
@@ -332,9 +312,7 @@ namespace VelcroPhysics.Collision.ContactSystem
 
             if (fixtureA.CollisionGroup == fixtureB.CollisionGroup &&
                 fixtureA.CollisionGroup != 0)
-            {
                 return fixtureA.CollisionGroup > 0;
-            }
 
             bool collide = (fixtureA.CollidesWith & fixtureB.CollisionCategories) != 0 &&
                            (fixtureA.CollisionCategories & fixtureB.CollidesWith) != 0;

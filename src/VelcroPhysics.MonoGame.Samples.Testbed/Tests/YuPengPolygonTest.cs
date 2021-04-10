@@ -88,28 +88,20 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     Vector2[] array = vertex.ToArray();
                     Color col = Color.SteelBlue;
                     if (!vertex.IsCounterClockWise())
-                    {
                         col = Color.Aquamarine;
-                    }
                     if (vertex == _selected)
-                    {
                         col = Color.LightBlue;
-                    }
                     if (vertex == _subject)
                     {
                         col = Color.Green;
                         if (vertex == _selected)
-                        {
                             col = Color.LightGreen;
-                        }
                     }
                     if (vertex == _clip)
                     {
                         col = Color.DarkRed;
                         if (vertex == _selected)
-                        {
                             col = Color.IndianRed;
-                        }
                     }
                     DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                     DebugView.DrawPolygon(array, vertex.Count, col);
@@ -224,9 +216,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
-            {
                 _selected = null;
-            }
 
             MouseMove(state, oldState);
             base.Mouse(state, oldState);

@@ -53,9 +53,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
         protected List<TriangulationPoint> _steinerPoints;
         protected List<DelaunayTriangle> _triangles;
 
-        /// <summary>
-        /// Create a polygon from a list of at least 3 points with no duplicates.
-        /// </summary>
+        /// <summary>Create a polygon from a list of at least 3 points with no duplicates.</summary>
         /// <param name="points">A list of unique points</param>
         public Polygon(IList<PolygonPoint> points)
         {
@@ -67,51 +65,38 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             if (points[0].Equals(points[points.Count - 1]))
                 points.RemoveAt(points.Count - 1);
 
-            _points.AddRange(points.Cast<TriangulationPoint>());
+            _points.AddRange(points);
         }
 
-        /// <summary>
-        /// Create a polygon from a list of at least 3 points with no duplicates.
-        /// </summary>
+        /// <summary>Create a polygon from a list of at least 3 points with no duplicates.</summary>
         /// <param name="points">A list of unique points.</param>
-        public Polygon(IEnumerable<PolygonPoint> points) : this((points as IList<PolygonPoint>) ?? points.ToArray()) { }
+        public Polygon(IEnumerable<PolygonPoint> points) : this(points as IList<PolygonPoint> ?? points.ToArray()) { }
 
         public Polygon() { }
 
-        public IList<Polygon> Holes
-        {
-            get { return _holes; }
-        }
+        public IList<Polygon> Holes => _holes;
 
         public void AddSteinerPoint(TriangulationPoint point)
         {
             if (_steinerPoints == null)
-            {
                 _steinerPoints = new List<TriangulationPoint>();
-            }
             _steinerPoints.Add(point);
         }
 
         public void AddSteinerPoints(List<TriangulationPoint> points)
         {
             if (_steinerPoints == null)
-            {
                 _steinerPoints = new List<TriangulationPoint>();
-            }
             _steinerPoints.AddRange(points);
         }
 
         public void ClearSteinerPoints()
         {
             if (_steinerPoints != null)
-            {
                 _steinerPoints.Clear();
-            }
         }
 
-        /// <summary>
-        /// Add a hole to the polygon.
-        /// </summary>
+        /// <summary>Add a hole to the polygon.</summary>
         /// <param name="poly">A subtraction polygon fully contained inside this polygon.</param>
         public void AddHole(Polygon poly)
         {
@@ -123,9 +108,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             //        addSubtraction( poly.getPoints() );
         }
 
-        /// <summary>
-        /// Inserts newPoint after point.
-        /// </summary>
+        /// <summary>Inserts newPoint after point.</summary>
         /// <param name="point">The point to insert after in the polygon</param>
         /// <param name="newPoint">The point to insert into the polygon</param>
         public void InsertPointAfter(PolygonPoint point, PolygonPoint newPoint)
@@ -133,8 +116,10 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             // Validate that 
             int index = _points.IndexOf(point);
             if (index == -1)
+            {
                 throw new ArgumentException(
                     "Tried to insert a point into a Polygon after a point not belonging to the Polygon", nameof(point));
+            }
             newPoint.Next = point.Next;
             newPoint.Previous = point;
             point.Next.Previous = newPoint;
@@ -142,9 +127,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             _points.Insert(index + 1, newPoint);
         }
 
-        /// <summary>
-        /// Inserts list (after last point in polygon?)
-        /// </summary>
+        /// <summary>Inserts list (after last point in polygon?)</summary>
         /// <param name="list"></param>
         public void AddPoints(IEnumerable<PolygonPoint> list)
         {
@@ -165,9 +148,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             first.Previous = _last;
         }
 
-        /// <summary>
-        /// Adds a point after the last in the polygon.
-        /// </summary>
+        /// <summary>Adds a point after the last in the polygon.</summary>
         /// <param name="p">The point to add</param>
         public void AddPoint(PolygonPoint p)
         {
@@ -177,9 +158,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             _points.Add(p);
         }
 
-        /// <summary>
-        /// Removes a point from the polygon.
-        /// </summary>
+        /// <summary>Removes a point from the polygon.</summary>
         /// <param name="p"></param>
         public void RemovePoint(PolygonPoint p)
         {
@@ -192,22 +171,11 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             _points.Remove(p);
         }
 
-        #region Triangulatable Members
+        public TriangulationMode TriangulationMode => TriangulationMode.Polygon;
 
-        public TriangulationMode TriangulationMode
-        {
-            get { return TriangulationMode.Polygon; }
-        }
+        public IList<TriangulationPoint> Points => _points;
 
-        public IList<TriangulationPoint> Points
-        {
-            get { return _points; }
-        }
-
-        public IList<DelaunayTriangle> Triangles
-        {
-            get { return _triangles; }
-        }
+        public IList<DelaunayTriangle> Triangles => _triangles;
 
         public void AddTriangle(DelaunayTriangle t)
         {
@@ -225,20 +193,14 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
                 _triangles.Clear();
         }
 
-        /// <summary>
-        /// Creates constraints and populates the context with points
-        /// </summary>
+        /// <summary>Creates constraints and populates the context with points</summary>
         /// <param name="tcx">The context</param>
         public void PrepareTriangulation(TriangulationContext tcx)
         {
             if (_triangles == null)
-            {
                 _triangles = new List<DelaunayTriangle>(_points.Count);
-            }
             else
-            {
                 _triangles.Clear();
-            }
 
             // Outer constraints
             for (int i = 0; i < _points.Count - 1; i++)
@@ -263,11 +225,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
             }
 
             if (_steinerPoints != null)
-            {
                 tcx.Points.AddRange(_steinerPoints);
-            }
         }
-
-        #endregion
     }
 }

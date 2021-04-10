@@ -7,9 +7,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 {
     public static class CollideCircle
     {
-        /// <summary>
-        /// Compute the collision manifold between two circles.
-        /// </summary>
+        /// <summary>Compute the collision manifold between two circles.</summary>
         public static void CollideCircles(ref Manifold manifold, CircleShape circleA, ref Transform xfA, CircleShape circleB, ref Transform xfB)
         {
             manifold.PointCount = 0;
@@ -22,9 +20,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             float rA = circleA.Radius, rB = circleB.Radius;
             float radius = rA + rB;
             if (distSqr > radius * radius)
-            {
                 return;
-            }
 
             manifold.Type = ManifoldType.Circles;
             manifold.LocalPoint = circleA.Position;
@@ -37,9 +33,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             manifold.Points[0] = p0;
         }
 
-        /// <summary>
-        /// Compute the collision manifold between a polygon and a circle.
-        /// </summary>
+        /// <summary>Compute the collision manifold between a polygon and a circle.</summary>
         /// <param name="manifold">The manifold.</param>
         /// <param name="polygonA">The polygon A.</param>
         /// <param name="xfA">The transform of A.</param>
@@ -103,9 +97,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             if (u1 <= 0.0f)
             {
                 if (Vector2.DistanceSquared(cLocal, v1) > radius * radius)
-                {
                     return;
-                }
 
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
@@ -118,9 +110,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             else if (u2 <= 0.0f)
             {
                 if (Vector2.DistanceSquared(cLocal, v2) > radius * radius)
-                {
                     return;
-                }
 
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;
@@ -135,9 +125,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 Vector2 faceCenter = 0.5f * (v1 + v2);
                 float s = Vector2.Dot(cLocal - faceCenter, normals[vertIndex1]);
                 if (s > radius)
-                {
                     return;
-                }
 
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;

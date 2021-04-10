@@ -86,9 +86,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             foreach (Type sampleType in samplesFramework.GetTypes())
             {
                 if (sampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
-                {
                     DemosToLoad.Add(sampleType);
-                }
             }
             DemosToLoad.Add(DemosToLoad[0]); // HACK: Load the first sample two times, since some delayed creation stuff with the rendertargets always breaks the first preview picture.
             bool firstPreview = true;
@@ -137,13 +135,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
                 demoScreen.ExitScreen();
                 demoScreen.Update(new GameTime(demoScreen.TransitionOffTime, demoScreen.TransitionOffTime), true, false);
                 if (!firstPreview)
-                {
                     _menuScreen.AddMenuItem(demoScreen, preview);
-                }
                 else
-                {
                     firstPreview = false;
-                }
             }
 
             AddScreen(new BackgroundScreen());
@@ -253,9 +247,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             foreach (GameScreen screen in _screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
-                {
                     continue;
-                }
 
                 if (screen.ScreenState == ScreenState.TransitionOn || screen.ScreenState == ScreenState.TransitionOff)
                 {
@@ -267,17 +259,13 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
                             new Vector2(_transitions[transitionCount].Width, _transitions[transitionCount].Height) / 2f, 0.5f + 0.5f * (1f - screen.TransitionPosition), SpriteEffects.None, 0f);
                     }
                     else
-                    {
                         _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
-                    }
                     _spriteBatch.End();
 
                     transitionCount++;
                 }
                 else
-                {
                     screen.Draw(gameTime);
-                }
             }
 
             _input.Draw(_spriteBatch);

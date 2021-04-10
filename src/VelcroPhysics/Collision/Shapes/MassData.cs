@@ -3,34 +3,22 @@ using Microsoft.Xna.Framework;
 
 namespace VelcroPhysics.Collision.Shapes
 {
-    /// <summary>
-    /// This holds the mass data computed for a shape.
-    /// </summary>
+    /// <summary>This holds the mass data computed for a shape.</summary>
     public struct MassData : IEquatable<MassData>
     {
-        /// <summary>
-        /// The area of the shape
-        /// </summary>
+        /// <summary>The area of the shape</summary>
         public float Area { get; set; }
 
-        /// <summary>
-        /// The position of the shape's centroid relative to the shape's origin.
-        /// </summary>
+        /// <summary>The position of the shape's centroid relative to the shape's origin.</summary>
         public Vector2 Centroid { get; set; }
 
-        /// <summary>
-        /// The rotational inertia of the shape about the local origin.
-        /// </summary>
+        /// <summary>The rotational inertia of the shape about the local origin.</summary>
         public float Inertia { get; set; }
 
-        /// <summary>
-        /// The mass of the shape, usually in kilograms.
-        /// </summary>
+        /// <summary>The mass of the shape, usually in kilograms.</summary>
         public float Mass { get; set; }
 
-        /// <summary>
-        /// The equal operator
-        /// </summary>
+        /// <summary>The equal operator</summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>
@@ -39,9 +27,7 @@ namespace VelcroPhysics.Collision.Shapes
             return left.Area == right.Area && left.Mass == right.Mass && left.Centroid == right.Centroid && left.Inertia == right.Inertia;
         }
 
-        /// <summary>
-        /// The not equal operator
-        /// </summary>
+        /// <summary>The not equal operator</summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
         /// <returns></returns>

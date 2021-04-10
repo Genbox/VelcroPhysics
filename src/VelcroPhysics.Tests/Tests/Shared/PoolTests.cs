@@ -25,9 +25,7 @@ namespace VelcroPhysics.Tests.Tests.Shared
                     first = false;
                 }
                 else
-                {
                     Assert.False(obj.IsNew);
-                }
 
                 pool.ReturnToPool(obj);
             }

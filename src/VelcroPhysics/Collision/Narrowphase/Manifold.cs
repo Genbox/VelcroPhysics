@@ -23,24 +23,16 @@ namespace VelcroPhysics.Collision.Narrowphase
     /// </summary>
     public struct Manifold
     {
-        /// <summary>
-        /// Not use for Type.SeparationFunction.Points
-        /// </summary>
+        /// <summary>Not use for Type.SeparationFunction.Points</summary>
         public Vector2 LocalNormal;
 
-        /// <summary>
-        /// Usage depends on manifold type
-        /// </summary>
+        /// <summary>Usage depends on manifold type</summary>
         public Vector2 LocalPoint;
 
-        /// <summary>
-        /// The number of manifold points
-        /// </summary>
+        /// <summary>The number of manifold points</summary>
         public int PointCount;
 
-        /// <summary>
-        /// The points of contact
-        /// </summary>
+        /// <summary>The points of contact</summary>
         public FixedArray2<ManifoldPoint> Points;
 
         public ManifoldType Type;

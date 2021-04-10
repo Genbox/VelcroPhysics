@@ -28,20 +28,16 @@ using VelcroPhysics.Shared;
 namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A chain shape is a free form sequence of line segments.
-    /// The chain has two-sided collision, so you can use inside and outside collision.
-    /// Therefore, you may use any winding order.
-    /// Connectivity information is used to create smooth collisions.
-    /// WARNING: The chain will not collide properly if there are self-intersections.
+    /// A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use
+    /// inside and outside collision. Therefore, you may use any winding order. Connectivity information is used to create
+    /// smooth collisions. WARNING: The chain will not collide properly if there are self-intersections.
     /// </summary>
     public class ChainShape : Shape
     {
         private bool _hasPrevVertex, _hasNextVertex;
         private Vector2 _prevVertex, _nextVertex;
 
-        /// <summary>
-        /// Create a new ChainShape from the vertices.
-        /// </summary>
+        /// <summary>Create a new ChainShape from the vertices.</summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
         /// <param name="createLoop">
         /// Set to true to create a closed loop. It connects the first vertex to the last, and
@@ -73,23 +69,16 @@ namespace VelcroPhysics.Collision.Shapes
 
         internal ChainShape() : base(ShapeType.Chain, Settings.PolygonRadius) { }
 
-        /// <summary>
-        /// The vertices. These are not owned/freed by the chain Shape.
-        /// </summary>
+        /// <summary>The vertices. These are not owned/freed by the chain Shape.</summary>
         public Vertices Vertices { get; set; }
 
-        /// <summary>
-        /// Edge count = vertex count - 1
-        /// </summary>
+        /// <summary>Edge count = vertex count - 1</summary>
         public override int ChildCount => Vertices.Count - 1;
 
-        /// <summary>
-        /// Establish connectivity to a vertex that precedes the first vertex.
-        /// Don't call this for loops.
-        /// </summary>
+        /// <summary>Establish connectivity to a vertex that precedes the first vertex. Don't call this for loops.</summary>
         public Vector2 PrevVertex
         {
-            get { return _prevVertex; }
+            get => _prevVertex;
             set
             {
                 _prevVertex = value;
@@ -97,13 +86,10 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// Establish connectivity to a vertex that follows the last vertex.
-        /// Don't call this for loops.
-        /// </summary>
+        /// <summary>Establish connectivity to a vertex that follows the last vertex. Don't call this for loops.</summary>
         public Vector2 NextVertex
         {
-            get { return _nextVertex; }
+            get => _nextVertex;
             set
             {
                 _nextVertex = value;
@@ -194,9 +180,7 @@ namespace VelcroPhysics.Collision.Shapes
             //Does nothing. Chain shapes don't have properties.
         }
 
-        /// <summary>
-        /// Compare the chain to another chain
-        /// </summary>
+        /// <summary>Compare the chain to another chain</summary>
         /// <param name="shape">The other chain</param>
         /// <returns>True if the two chain shapes are the same</returns>
         public bool CompareTo(ChainShape shape)

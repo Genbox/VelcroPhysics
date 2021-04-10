@@ -9,7 +9,6 @@ using VelcroPhysics.Dynamics;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using VelcroPhysics.Utilities;
-using Path = System.IO.Path;
 
 namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
@@ -107,7 +106,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public static int SoundVolume
         {
-            get { return _soundVolume; }
+            get => _soundVolume;
             set
             {
                 _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
@@ -127,9 +126,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         public static Texture2D GetTexture(string textureName)
         {
             if (_contentWrapper != null && _textureList.ContainsKey(textureName))
-            {
                 return _textureList[textureName];
-            }
 #if WINDOWS
             Console.WriteLine("Texture \"" + textureName + "\" not found!");
 #endif
@@ -282,9 +279,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
                 List<Vertices> decomposedVertices;
                 if (!scaledVertices.IsConvex())
-                {
                     decomposedVertices = Triangulate.ConvexPartition(scaledVertices, TriangulationAlgorithm.Earclip);
-                }
                 else
                 {
                     decomposedVertices = new List<Vertices>();
@@ -294,13 +289,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
 
                 if (_textureList.ContainsKey(pattern))
-                {
                     materialScale /= _textureList[pattern].Width;
-                }
                 else
-                {
                     materialScale = 1f;
-                }
 
                 for (int i = 0; i < decomposedVertices.Count; i++)
                 {
@@ -353,9 +344,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                         AABB polygonBounds = v.GetAABB();
                         List<Vertices> decomposedVertices;
                         if (!v.IsConvex())
-                        {
                             decomposedVertices = Triangulate.ConvexPartition(v, TriangulationAlgorithm.Bayazit);
-                        }
                         else
                         {
                             decomposedVertices = new List<Vertices>();
@@ -383,9 +372,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                         result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, new VertexPositionColor[0]));
                     }
                     else
-                    {
                         result.Add(_textureList["Blank"]);
-                    }
                 }
             }
             return result;
@@ -486,9 +473,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 }
             }
             else
-            {
                 throw new FileNotFoundException();
-            }
             return instance;
         }
     }

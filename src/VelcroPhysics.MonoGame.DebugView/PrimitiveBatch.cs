@@ -41,15 +41,11 @@ namespace VelcroPhysics.MonoGame.DebugView
             _basicEffect.VertexColorEnabled = true;
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         public void SetProjection(ref Matrix projection)
         {
@@ -130,9 +126,7 @@ namespace VelcroPhysics.MonoGame.DebugView
         public void End()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before End can be called.");
-            }
 
             // Draw whatever the user wanted us to draw
             FlushTriangles();
@@ -144,9 +138,7 @@ namespace VelcroPhysics.MonoGame.DebugView
         private void FlushTriangles()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before Flush can be called.");
-            }
             if (_triangleVertsCount >= 3)
             {
                 int primitiveCount = _triangleVertsCount / 3;
@@ -161,9 +153,7 @@ namespace VelcroPhysics.MonoGame.DebugView
         private void FlushLines()
         {
             if (!_hasBegun)
-            {
                 throw new InvalidOperationException("Begin must be called before Flush can be called.");
-            }
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;

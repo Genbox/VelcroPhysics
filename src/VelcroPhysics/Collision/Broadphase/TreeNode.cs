@@ -2,14 +2,10 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Broadphase
 {
-    /// <summary>
-    /// A node in the dynamic tree. The client does not interact with this directly.
-    /// </summary>
+    /// <summary>A node in the dynamic tree. The client does not interact with this directly.</summary>
     internal class TreeNode<T>
     {
-        /// <summary>
-        /// Enlarged AABB
-        /// </summary>
+        /// <summary>Enlarged AABB</summary>
         internal AABB AABB;
 
         internal int Child1;

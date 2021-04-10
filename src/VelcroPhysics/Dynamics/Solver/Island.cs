@@ -29,9 +29,7 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
-    /// <summary>
-    /// This is an internal class.
-    /// </summary>
+    /// <summary>This is an internal class.</summary>
     public class Island
     {
         private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
@@ -43,8 +41,6 @@ namespace VelcroPhysics.Dynamics.Solver
         private Stopwatch _watch = new Stopwatch();
 
         public Body[] Bodies;
-        public Position[] Positions;
-        public Velocity[] Velocities;
         public int BodyCapacity;
         public int BodyCount;
         public int ContactCapacity;
@@ -52,6 +48,8 @@ namespace VelcroPhysics.Dynamics.Solver
         public int JointCapacity;
         public int JointCount;
         public float JointUpdateTime;
+        public Position[] Positions;
+        public Velocity[] Velocities;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
@@ -72,14 +70,10 @@ namespace VelcroPhysics.Dynamics.Solver
             }
 
             if (_contacts == null || _contacts.Length < contactCapacity)
-            {
                 _contacts = new Contact[contactCapacity * 2];
-            }
 
             if (_joints == null || _joints.Length < jointCapacity)
-            {
                 _joints = new Joint[jointCapacity * 2];
-            }
         }
 
         public void Clear()
@@ -146,9 +140,7 @@ namespace VelcroPhysics.Dynamics.Solver
             _contactSolver.InitializeVelocityConstraints();
 
             if (Settings.EnableWarmstarting)
-            {
                 _contactSolver.WarmStart();
-            }
 
             if (Settings.EnableDiagnostics)
                 _watch.Start();
@@ -329,9 +321,7 @@ namespace VelcroPhysics.Dynamics.Solver
             {
                 bool contactsOkay = _contactSolver.SolveTOIPositionConstraints(toiIndexA, toiIndexB);
                 if (contactsOkay)
-                {
                     break;
-                }
             }
 
             // Leap of faith to new safe state.

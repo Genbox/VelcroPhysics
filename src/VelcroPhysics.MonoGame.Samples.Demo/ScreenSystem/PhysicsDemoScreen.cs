@@ -36,7 +36,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public static DebugViewFlags Flags
         {
-            get { return _flags; }
+            get => _flags;
             set
             {
                 _flags = value;
@@ -227,8 +227,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             base.Draw(gameTime);
         }
 
-        #region Demo description
-
         public virtual string GetTitle()
         {
             return "GetTitle() not implemented, override it for a proper title.";
@@ -238,7 +236,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         {
             return "GetDetails() not implemented, override it for a proper demo description.";
         }
-
-        #endregion
     }
 }

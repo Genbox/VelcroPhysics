@@ -27,13 +27,9 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
             while (edge.Q.X > trapezoids[j].RightPoint.X)
             {
                 if (edge.IsAbove(trapezoids[j].RightPoint))
-                {
                     trapezoids.Add(trapezoids[j].UpperRight);
-                }
                 else
-                {
                     trapezoids.Add(trapezoids[j].LowerRight);
-                }
                 j += 1;
             }
             return trapezoids;

@@ -49,7 +49,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed
 
         public float ViewZoom
         {
-            get { return _viewZoom; }
+            get => _viewZoom;
             set
             {
                 _viewZoom = value;
@@ -59,7 +59,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed
 
         public Vector2 ViewCenter
         {
-            get { return _viewCenter; }
+            get => _viewCenter;
             set
             {
                 _viewCenter = value;

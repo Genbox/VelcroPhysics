@@ -120,7 +120,9 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
                     points.Sort((p1, p2) => p1.X.CompareTo(p2.X));
 
                     foreach (Point p in points)
+                    {
                         mountain.Add(p);
+                    }
 
                     // Triangulate monotone mountain
                     mountain.Process();
@@ -168,13 +170,9 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
 
                 // Point p must be to the left of point q
                 if (p.X > q.X)
-                {
                     edges.Add(new Edge(q, p));
-                }
                 else if (p.X < q.X)
-                {
                     edges.Add(new Edge(p, q));
-                }
             }
 
             // Randomized triangulation improves performance

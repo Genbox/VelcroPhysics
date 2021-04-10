@@ -5,28 +5,20 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Shared
 {
-    /// <summary>
-    /// An axis aligned bounding box.
-    /// </summary>
+    /// <summary>An axis aligned bounding box.</summary>
     public struct AABB
     {
-        /// <summary>
-        /// The lower vertex
-        /// </summary>
+        /// <summary>The lower vertex</summary>
         public Vector2 LowerBound;
 
-        /// <summary>
-        /// The upper vertex
-        /// </summary>
+        /// <summary>The upper vertex</summary>
         public Vector2 UpperBound;
 
         public AABB(Vector2 min, Vector2 max)
             : this(ref min, ref max) { }
 
         public AABB(Vector2 center, float width, float height)
-            : this(center - new Vector2(width / 2, height / 2), center + new Vector2(width / 2, height / 2))
-        {
-        }
+            : this(center - new Vector2(width / 2, height / 2), center + new Vector2(width / 2, height / 2)) { }
 
         public AABB(ref Vector2 min, ref Vector2 max)
         {
@@ -38,19 +30,13 @@ namespace VelcroPhysics.Shared
 
         public float Height => UpperBound.Y - LowerBound.Y;
 
-        /// <summary>
-        /// Get the center of the AABB.
-        /// </summary>
+        /// <summary>Get the center of the AABB.</summary>
         public Vector2 Center => 0.5f * (LowerBound + UpperBound);
 
-        /// <summary>
-        /// Get the extents of the AABB (half-widths).
-        /// </summary>
+        /// <summary>Get the extents of the AABB (half-widths).</summary>
         public Vector2 Extents => 0.5f * (UpperBound - LowerBound);
 
-        /// <summary>
-        /// Get the perimeter length
-        /// </summary>
+        /// <summary>Get the perimeter length</summary>
         public float Perimeter
         {
             get
@@ -61,9 +47,7 @@ namespace VelcroPhysics.Shared
             }
         }
 
-        /// <summary>
-        /// Gets the vertices of the AABB.
-        /// </summary>
+        /// <summary>Gets the vertices of the AABB.</summary>
         /// <value>The corners of the AABB</value>
         public Vertices Vertices
         {
@@ -78,32 +62,20 @@ namespace VelcroPhysics.Shared
             }
         }
 
-        /// <summary>
-        /// First quadrant
-        /// </summary>
+        /// <summary>First quadrant</summary>
         public AABB Q1 => new AABB(Center, UpperBound);
 
-        /// <summary>
-        /// Second quadrant
-        /// </summary>
+        /// <summary>Second quadrant</summary>
         public AABB Q2 => new AABB(new Vector2(LowerBound.X, Center.Y), new Vector2(Center.X, UpperBound.Y));
 
-        /// <summary>
-        /// Third quadrant
-        /// </summary>
+        /// <summary>Third quadrant</summary>
         public AABB Q3 => new AABB(LowerBound, Center);
 
-        /// <summary>
-        /// Forth quadrant
-        /// </summary>
+        /// <summary>Forth quadrant</summary>
         public AABB Q4 => new AABB(new Vector2(Center.X, LowerBound.Y), new Vector2(UpperBound.X, Center.Y));
 
-        /// <summary>
-        /// Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if this instance is valid; otherwise, <c>false</c>.
-        /// </returns>
+        /// <summary>Verify that the bounds are sorted. And the bounds are valid numbers (not NaN).</summary>
+        /// <returns><c>true</c> if this instance is valid; otherwise, <c>false</c>.</returns>
         public bool IsValid()
         {
             Vector2 d = UpperBound - LowerBound;
@@ -111,9 +83,7 @@ namespace VelcroPhysics.Shared
             return valid && LowerBound.IsValid() && UpperBound.IsValid();
         }
 
-        /// <summary>
-        /// Combine an AABB into this one.
-        /// </summary>
+        /// <summary>Combine an AABB into this one.</summary>
         /// <param name="aabb">The AABB.</param>
         public void Combine(ref AABB aabb)
         {
@@ -121,9 +91,7 @@ namespace VelcroPhysics.Shared
             UpperBound = Vector2.Max(UpperBound, aabb.UpperBound);
         }
 
-        /// <summary>
-        /// Combine two AABBs into this one.
-        /// </summary>
+        /// <summary>Combine two AABBs into this one.</summary>
         /// <param name="aabb1">The aabb1.</param>
         /// <param name="aabb2">The aabb2.</param>
         public void Combine(ref AABB aabb1, ref AABB aabb2)
@@ -132,13 +100,9 @@ namespace VelcroPhysics.Shared
             UpperBound = Vector2.Max(aabb1.UpperBound, aabb2.UpperBound);
         }
 
-        /// <summary>
-        /// Does this AABB contain the provided AABB.
-        /// </summary>
+        /// <summary>Does this AABB contain the provided AABB.</summary>
         /// <param name="aabb">The AABB.</param>
-        /// <returns>
-        /// <c>true</c> if it contains the specified AABB; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if it contains the specified AABB; otherwise, <c>false</c>.</returns>
         public bool Contains(ref AABB aabb)
         {
             bool result = LowerBound.X <= aabb.LowerBound.X;
@@ -148,13 +112,9 @@ namespace VelcroPhysics.Shared
             return result;
         }
 
-        /// <summary>
-        /// Determines whether the AABB contains the specified point.
-        /// </summary>
+        /// <summary>Determines whether the AABB contains the specified point.</summary>
         /// <param name="point">The point.</param>
-        /// <returns>
-        /// <c>true</c> if it contains the specified point; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if it contains the specified point; otherwise, <c>false</c>.</returns>
         public bool Contains(ref Vector2 point)
         {
             //using epsilon to try and guard against float rounding errors.
@@ -162,9 +122,7 @@ namespace VelcroPhysics.Shared
                     (point.Y > (LowerBound.Y + float.Epsilon) && point.Y < (UpperBound.Y - float.Epsilon)));
         }
 
-        /// <summary>
-        /// Test if the two AABBs overlap.
-        /// </summary>
+        /// <summary>Test if the two AABBs overlap.</summary>
         /// <param name="a">The first AABB.</param>
         /// <param name="b">The second AABB.</param>
         /// <returns>True if they are overlapping.</returns>
@@ -173,12 +131,10 @@ namespace VelcroPhysics.Shared
             Vector2 d1 = b.LowerBound - a.UpperBound;
             Vector2 d2 = a.LowerBound - b.UpperBound;
 
-            return (d1.X <= 0) && (d1.Y <= 0) && (d2.X <= 0) && (d2.Y <= 0);
+            return d1.X <= 0 && d1.Y <= 0 && d2.X <= 0 && d2.Y <= 0;
         }
 
-        /// <summary>
-        /// Raycast against this AABB using the specified points and maxfraction (found in input)
-        /// </summary>
+        /// <summary>Raycast against this AABB using the specified points and maxfraction (found in input)</summary>
         /// <param name="output">The results of the raycast.</param>
         /// <param name="input">The parameters for the raycast.</param>
         /// <returns>True if the ray intersects the AABB</returns>
@@ -208,9 +164,7 @@ namespace VelcroPhysics.Shared
                 {
                     // Parallel.
                     if (p_i < lowerBound_i || upperBound_i < p_i)
-                    {
                         return false;
-                    }
                 }
                 else
                 {
@@ -233,13 +187,9 @@ namespace VelcroPhysics.Shared
                     if (t1 > tmin)
                     {
                         if (i == 0)
-                        {
                             normal.X = s;
-                        }
                         else
-                        {
                             normal.Y = s;
-                        }
 
                         tmin = t1;
                     }
@@ -248,18 +198,14 @@ namespace VelcroPhysics.Shared
                     tmax = Math.Min(tmax, t2);
 
                     if (tmin > tmax)
-                    {
                         return false;
-                    }
                 }
             }
 
             // Does the ray start inside the box?
             // Does the ray intersect beyond the max fraction?
             if (doInteriorCheck && (tmin < 0.0f || input.MaxFraction < tmin))
-            {
                 return false;
-            }
 
             // Intersection.
             output.Fraction = tmin;

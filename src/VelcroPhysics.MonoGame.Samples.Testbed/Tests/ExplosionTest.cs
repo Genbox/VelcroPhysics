@@ -52,9 +52,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                     //First column is unaffected by the explosion
                     if (j == 0)
-                    {
                         body.PhysicsLogicFilter.IgnorePhysicsLogic(PhysicsLogicType.Explosion);
-                    }
                 }
             }
 
@@ -72,25 +70,15 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.OemComma))
-            {
                 _realExplosion.Activate(_mousePos, _radius, _force);
-            }
             if (keyboardManager.IsKeyDown(Keys.A))
-            {
                 _radius = MathHelper.Clamp(_radius - 0.1f, 0, 20);
-            }
             if (keyboardManager.IsKeyDown(Keys.S))
-            {
                 _radius = MathHelper.Clamp(_radius + 0.1f, 0, 20);
-            }
             if (keyboardManager.IsKeyDown(Keys.D))
-            {
                 _force = MathHelper.Clamp(_force - 0.1f, 0, 20);
-            }
             if (keyboardManager.IsKeyDown(Keys.F))
-            {
                 _force = MathHelper.Clamp(_force + 0.1f, 0, 20);
-            }
 
             base.Keyboard(keyboardManager);
         }

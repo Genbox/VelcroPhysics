@@ -48,14 +48,12 @@ namespace VelcroPhysics.Dynamics.Joints
     // K = J * invM * JT = invMass + invI * cross(r, ug)^2
 
     /// <summary>
-    /// A gear joint is used to connect two joints together.
-    /// Either joint can be a revolute or prismatic joint.
-    /// You specify a gear ratio to bind the motions together:
+    /// A gear joint is used to connect two joints together. Either joint can be a revolute or prismatic joint. You specify a
+    /// gear ratio to bind the motions together:
     /// <![CDATA[coordinate1 + ratio * coordinate2 = ant]]>
-    /// The ratio can be negative or positive. If one joint is a revolute joint
-    /// and the other joint is a prismatic joint, then the ratio will have units
-    /// of length or units of 1/length.
-    /// Warning: You have to manually destroy the gear joint if jointA or jointB is destroyed.
+    /// The ratio can be negative or positive. If one joint is a revolute joint and the other joint is a prismatic joint, then
+    /// the ratio will have units of length or units of 1/length. Warning: You have to manually destroy the gear joint if
+    /// jointA or jointB is destroyed.
     /// </summary>
     public class GearJoint : Joint
     {
@@ -95,8 +93,8 @@ namespace VelcroPhysics.Dynamics.Joints
         private JointType _typeB;
 
         /// <summary>
-        /// Requires two existing revolute or prismatic joints (any combination will work).
-        /// The provided joints must attach a dynamic body to a static body.
+        /// Requires two existing revolute or prismatic joints (any combination will work). The provided joints must
+        /// attach a dynamic body to a static body.
         /// </summary>
         /// <param name="jointA">The first joint.</param>
         /// <param name="jointB">The second joint.</param>
@@ -193,22 +191,20 @@ namespace VelcroPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return _bodyA.GetWorldPoint(_localAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => _bodyA.GetWorldPoint(_localAnchorA);
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return _bodyB.GetWorldPoint(_localAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => _bodyB.GetWorldPoint(_localAnchorB);
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
-        /// <summary>
-        /// The gear ratio.
-        /// </summary>
+        /// <summary>The gear ratio.</summary>
         public float Ratio
         {
-            get { return _ratio; }
+            get => _ratio;
             set
             {
                 Debug.Assert(MathUtils.IsValid(value));
@@ -216,14 +212,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The first revolute/prismatic joint attached to the gear joint.
-        /// </summary>
+        /// <summary>The first revolute/prismatic joint attached to the gear joint.</summary>
         public Joint JointA { get; private set; }
 
-        /// <summary>
-        /// The second revolute/prismatic joint attached to the gear joint.
-        /// </summary>
+        /// <summary>The second revolute/prismatic joint attached to the gear joint.</summary>
         public Joint JointB { get; private set; }
 
         public override Vector2 GetReactionForce(float invDt)
@@ -328,9 +320,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 wD -= _iD * _impulse * _JwD;
             }
             else
-            {
                 _impulse = 0.0f;
-            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;
@@ -451,9 +441,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             float impulse = 0.0f;
             if (mass > 0.0f)
-            {
                 impulse = -C / mass;
-            }
 
             cA += _mA * impulse * JvAC;
             aA += _iA * impulse * JwA;

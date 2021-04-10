@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
@@ -22,8 +22,8 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
     internal static class BayazitDecomposer
     {
         /// <summary>
-        /// Decompose the polygon into several smaller non-concave polygon.
-        /// If the polygon is already convex, it will return the original polygon, unless it is over Settings.MaxPolygonVertices.
+        /// Decompose the polygon into several smaller non-concave polygon. If the polygon is already convex, it will
+        /// return the original polygon, unless it is over Settings.MaxPolygonVertices.
         /// </summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
@@ -91,7 +91,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                     // if there are no vertices to connect to, choose a point in the middle
                     if (lowerIndex == (upperIndex + 1) % vertices.Count)
                     {
-                        Vector2 p = ((lowerInt + upperInt) / 2);
+                        Vector2 p = (lowerInt + upperInt) / 2;
 
                         lowerPoly = Copy(i, upperIndex, vertices);
                         lowerPoly.Add(p);
@@ -102,7 +102,9 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                     {
                         double highestScore = 0, bestIndex = lowerIndex;
                         while (upperIndex < lowerIndex)
+                        {
                             upperIndex += vertices.Count;
+                        }
 
                         for (int j = lowerIndex; j <= upperIndex; ++j)
                         {
@@ -117,9 +119,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                                         score += 2;
                                 }
                                 else
-                                {
                                     score += 1;
-                                }
                                 if (score > highestScore)
                                 {
                                     bestIndex = j;
@@ -159,7 +159,9 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
         private static Vertices Copy(int i, int j, Vertices vertices)
         {
             while (j < i)
+            {
                 j += vertices.Count;
+            }
 
             Vertices p = new Vertices(j);
 

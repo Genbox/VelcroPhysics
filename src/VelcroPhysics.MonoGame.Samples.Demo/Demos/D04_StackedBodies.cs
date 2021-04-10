@@ -17,8 +17,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
         private Pyramid _pyramid;
         private Border _border;
 
-        #region Demo description
-
         public override string GetTitle()
         {
             return "Stacked bodies";
@@ -51,8 +49,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
 
         public override void LoadContent()
         {

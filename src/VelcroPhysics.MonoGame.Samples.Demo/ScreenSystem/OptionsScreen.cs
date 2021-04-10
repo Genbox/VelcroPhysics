@@ -110,9 +110,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             {
                 Rectangle boundingBox = new Rectangle((int)(_optionEntries[i].Position.X - _optionEntrySize.X / 2f), (int)(_optionEntries[i].Position.Y - _optionEntrySize.Y / 2f), (int)_optionEntrySize.X, (int)_optionEntrySize.Y);
                 if (boundingBox.Contains((int)position.X, (int)position.Y))
-                {
                     return i;
-                }
             }
             return -1;
         }

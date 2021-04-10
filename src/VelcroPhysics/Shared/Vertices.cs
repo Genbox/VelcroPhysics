@@ -22,51 +22,40 @@ namespace VelcroPhysics.Shared
         internal bool AttachedToBody { get; set; }
 
         /// <summary>
-        /// You can add holes to this collection.
-        /// It will get respected by some of the triangulation algoithms, but otherwise not used.
+        /// You can add holes to this collection. It will get respected by some of the triangulation algoithms, but
+        /// otherwise not used.
         /// </summary>
         public List<Vertices> Holes { get; set; }
 
-        /// <summary>
-        /// Gets the next index. Used for iterating all the edges with wrap-around.
-        /// </summary>
+        /// <summary>Gets the next index. Used for iterating all the edges with wrap-around.</summary>
         /// <param name="index">The current index</param>
         public int NextIndex(int index)
         {
-            return (index + 1 > Count - 1) ? 0 : index + 1;
+            return index + 1 > Count - 1 ? 0 : index + 1;
         }
 
-        /// <summary>
-        /// Gets the next vertex. Used for iterating all the edges with wrap-around.
-        /// </summary>
+        /// <summary>Gets the next vertex. Used for iterating all the edges with wrap-around.</summary>
         /// <param name="index">The current index</param>
         public Vector2 NextVertex(int index)
         {
             return this[NextIndex(index)];
         }
 
-        /// <summary>
-        /// Gets the previous index. Used for iterating all the edges with wrap-around.
-        /// </summary>
+        /// <summary>Gets the previous index. Used for iterating all the edges with wrap-around.</summary>
         /// <param name="index">The current index</param>
         public int PreviousIndex(int index)
         {
             return index - 1 < 0 ? Count - 1 : index - 1;
         }
 
-        /// <summary>
-        /// Gets the previous vertex. Used for iterating all the edges with wrap-around.
-        /// </summary>
+        /// <summary>Gets the previous vertex. Used for iterating all the edges with wrap-around.</summary>
         /// <param name="index">The current index</param>
         public Vector2 PreviousVertex(int index)
         {
             return this[PreviousIndex(index)];
         }
 
-        /// <summary>
-        /// Gets the signed area.
-        /// If the area is less than 0, it indicates that the polygon is clockwise winded.
-        /// </summary>
+        /// <summary>Gets the signed area. If the area is less than 0, it indicates that the polygon is clockwise winded.</summary>
         /// <returns>The signed area</returns>
         public float GetSignedArea()
         {
@@ -91,19 +80,15 @@ namespace VelcroPhysics.Shared
             return area;
         }
 
-        /// <summary>
-        /// Gets the area.
-        /// </summary>
+        /// <summary>Gets the area.</summary>
         /// <returns></returns>
         public float GetArea()
         {
             float area = GetSignedArea();
-            return (area < 0 ? -area : area);
+            return area < 0 ? -area : area;
         }
 
-        /// <summary>
-        /// Gets the centroid.
-        /// </summary>
+        /// <summary>Gets the centroid.</summary>
         /// <returns></returns>
         public Vector2 GetCentroid()
         {
@@ -120,7 +105,7 @@ namespace VelcroPhysics.Shared
             {
                 // Triangle vertices.
                 Vector2 current = this[i];
-                Vector2 next = (i + 1 < Count ? this[i + 1] : this[0]);
+                Vector2 next = i + 1 < Count ? this[i + 1] : this[0];
 
                 float triangleArea = 0.5f * (current.X * next.Y - current.Y * next.X);
                 area += triangleArea;
@@ -134,9 +119,7 @@ namespace VelcroPhysics.Shared
             return c;
         }
 
-        /// <summary>
-        /// Returns an AABB that fully contains this polygon.
-        /// </summary>
+        /// <summary>Returns an AABB that fully contains this polygon.</summary>
         public AABB GetAABB()
         {
             AABB aabb;
@@ -146,22 +129,14 @@ namespace VelcroPhysics.Shared
             for (int i = 0; i < Count; ++i)
             {
                 if (this[i].X < lowerBound.X)
-                {
                     lowerBound.X = this[i].X;
-                }
                 if (this[i].X > upperBound.X)
-                {
                     upperBound.X = this[i].X;
-                }
 
                 if (this[i].Y < lowerBound.Y)
-                {
                     lowerBound.Y = this[i].Y;
-                }
                 if (this[i].Y > upperBound.Y)
-                {
                     upperBound.Y = this[i].Y;
-                }
             }
 
             aabb.LowerBound = lowerBound;
@@ -170,25 +145,23 @@ namespace VelcroPhysics.Shared
             return aabb;
         }
 
-        /// <summary>
-        /// Translates the vertices with the specified vector.
-        /// </summary>
+        /// <summary>Translates the vertices with the specified vector.</summary>
         /// <param name="value">The value.</param>
         public void Translate(Vector2 value)
         {
             Translate(ref value);
         }
 
-        /// <summary>
-        /// Translates the vertices with the specified vector.
-        /// </summary>
+        /// <summary>Translates the vertices with the specified vector.</summary>
         /// <param name="value">The vector.</param>
         public void Translate(ref Vector2 value)
         {
             Debug.Assert(!AttachedToBody, "Translating vertices that are used by a Body can result in unstable behavior. Use Body.Position instead.");
 
             for (int i = 0; i < Count; i++)
+            {
                 this[i] = Vector2.Add(this[i], value);
+            }
 
             if (Holes != null && Holes.Count > 0)
             {
@@ -199,25 +172,23 @@ namespace VelcroPhysics.Shared
             }
         }
 
-        /// <summary>
-        /// Scales the vertices with the specified vector.
-        /// </summary>
+        /// <summary>Scales the vertices with the specified vector.</summary>
         /// <param name="value">The Value.</param>
         public void Scale(Vector2 value)
         {
             Scale(ref value);
         }
 
-        /// <summary>
-        /// Scales the vertices with the specified vector.
-        /// </summary>
+        /// <summary>Scales the vertices with the specified vector.</summary>
         /// <param name="value">The Value.</param>
         public void Scale(ref Vector2 value)
         {
             Debug.Assert(!AttachedToBody, "Scaling vertices that are used by a Body can result in unstable behavior.");
 
             for (int i = 0; i < Count; i++)
+            {
                 this[i] = Vector2.Multiply(this[i], value);
+            }
 
             if (Holes != null && Holes.Count > 0)
             {
@@ -229,9 +200,8 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Rotate the vertices with the defined value in radians.
-        /// Warning: Using this method on an active set of vertices of a Body,
-        /// will cause problems with collisions. Use Body.Rotation instead.
+        /// Rotate the vertices with the defined value in radians. Warning: Using this method on an active set of vertices
+        /// of a Body, will cause problems with collisions. Use Body.Rotation instead.
         /// </summary>
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(float value)
@@ -244,7 +214,7 @@ namespace VelcroPhysics.Shared
             for (int i = 0; i < Count; i++)
             {
                 Vector2 position = this[i];
-                this[i] = new Vector2((position.X * num1 + position.Y * -num2), (position.X * num2 + position.Y * num1));
+                this[i] = new Vector2(position.X * num1 + position.Y * -num2, position.X * num2 + position.Y * num1);
             }
 
             if (Holes != null && Holes.Count > 0)
@@ -257,15 +227,10 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Determines whether the polygon is convex.
-        /// O(n^2) running time.
-        /// Assumptions:
-        /// - The polygon is in counter clockwise order
-        /// - The polygon has no overlapping edges
+        /// Determines whether the polygon is convex. O(n^2) running time. Assumptions: - The polygon is in counter
+        /// clockwise order - The polygon has no overlapping edges
         /// </summary>
-        /// <returns>
-        /// <c>true</c> if it is convex; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if it is convex; otherwise, <c>false</c>.</returns>
         public bool IsConvex()
         {
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
@@ -300,8 +265,8 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Indicates if the vertices are in counter clockwise order.
-        /// Warning: If the area of the polygon is 0, it is unable to determine the winding.
+        /// Indicates if the vertices are in counter clockwise order. Warning: If the area of the polygon is 0, it is
+        /// unable to determine the winding.
         /// </summary>
         public bool IsCounterClockWise()
         {
@@ -309,12 +274,10 @@ namespace VelcroPhysics.Shared
             if (Count < 3)
                 return false;
 
-            return (GetSignedArea() > 0.0f);
+            return GetSignedArea() > 0.0f;
         }
 
-        /// <summary>
-        /// Forces the vertices to be counter clock wise order.
-        /// </summary>
+        /// <summary>Forces the vertices to be counter clock wise order.</summary>
         public void ForceCounterClockWise()
         {
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
@@ -325,9 +288,7 @@ namespace VelcroPhysics.Shared
                 Reverse();
         }
 
-        /// <summary>
-        /// Checks if the vertices forms an simple polygon by checking for edge crossings.
-        /// </summary>
+        /// <summary>Checks if the vertices forms an simple polygon by checking for edge crossings.</summary>
         public bool IsSimple()
         {
             //The simplest polygon which can exist in the Euclidean plane has 3 sides.
@@ -353,10 +314,8 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Checks if the polygon is valid for use in the engine.
-        /// Performs a full check, for simplicity, convexity,
-        /// orientation, minimum angle, and volume.
-        /// From Eric Jordan's convex decomposition library
+        /// Checks if the polygon is valid for use in the engine. Performs a full check, for simplicity, convexity,
+        /// orientation, minimum angle, and volume. From Eric Jordan's convex decomposition library
         /// </summary>
         /// <returns>PolygonError.NoError if there were no error.</returns>
         public PolygonError CheckPolygon()
@@ -380,9 +339,7 @@ namespace VelcroPhysics.Shared
                 int next = i + 1 < Count ? i + 1 : 0;
                 Vector2 edge = this[next] - this[i];
                 if (edge.LengthSquared() <= float.Epsilon * float.Epsilon)
-                {
                     return PolygonError.SideTooSmall;
-                }
             }
 
             if (!IsCounterClockWise())
@@ -391,9 +348,7 @@ namespace VelcroPhysics.Shared
             return PolygonError.NoError;
         }
 
-        /// <summary>
-        /// Projects to axis.
-        /// </summary>
+        /// <summary>Projects to axis.</summary>
         /// <param name="axis">The axis.</param>
         /// <param name="min">The min.</param>
         /// <param name="max">The max.</param>
@@ -408,28 +363,21 @@ namespace VelcroPhysics.Shared
             {
                 dotProduct = Vector2.Dot(this[i], axis);
                 if (dotProduct < min)
-                {
                     min = dotProduct;
-                }
                 else
                 {
                     if (dotProduct > max)
-                    {
                         max = dotProduct;
-                    }
                 }
             }
         }
 
-        /// <summary>
-        /// Winding number test for a point in a polygon.
-        /// </summary>
+        /// <summary>Winding number test for a point in a polygon.</summary>
         /// See more info about the algorithm here: http://softsurfer.com/Archive/algorithm_0103/algorithm_0103.htm
         /// <param name="point">The point to be tested.</param>
         /// <returns>
-        /// -1 if the winding number is zero and the point is outside
-        /// the polygon, 1 if the point is inside the polygon, and 0 if the point
-        /// is on the polygons edge.
+        /// -1 if the winding number is zero and the point is outside the polygon, 1 if the point is inside the polygon,
+        /// and 0 if the point is on the polygons edge.
         /// </returns>
         public int PointInPolygon(ref Vector2 point)
         {
@@ -447,33 +395,27 @@ namespace VelcroPhysics.Shared
                 Vector2 edge = p2 - p1;
                 float area = MathUtils.Area(ref p1, ref p2, ref point);
                 if (area == 0f && Vector2.Dot(point - p1, edge) >= 0f && Vector2.Dot(point - p2, edge) <= 0f)
-                {
                     return 0;
-                }
 
                 // Test edge for intersection with ray from point
                 if (p1.Y <= point.Y)
                 {
                     if (p2.Y > point.Y && area > 0f)
-                    {
                         ++wn;
-                    }
                 }
                 else
                 {
                     if (p2.Y <= point.Y && area < 0f)
-                    {
                         --wn;
-                    }
                 }
             }
-            return (wn == 0 ? -1 : 1);
+            return wn == 0 ? -1 : 1;
         }
 
         /// <summary>
-        /// Compute the sum of the angles made between the test point and each pair of points making up the polygon.
-        /// If this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point.
-        /// ref: http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2
+        /// Compute the sum of the angles made between the test point and each pair of points making up the polygon. If
+        /// this sum is 2pi then the point is an interior point, if 0 then the point is an exterior point. ref:
+        /// http://ozviz.wasp.uwa.edu.au/~pbourke/geometry/insidepoly/  - Solution 2
         /// </summary>
         public bool PointInPolygonAngle(ref Vector2 point)
         {
@@ -490,22 +432,20 @@ namespace VelcroPhysics.Shared
             }
 
             if (Math.Abs(angle) < Math.PI)
-            {
                 return false;
-            }
 
             return true;
         }
 
-        /// <summary>
-        /// Transforms the polygon using the defined matrix.
-        /// </summary>
+        /// <summary>Transforms the polygon using the defined matrix.</summary>
         /// <param name="transform">The matrix to use as transformation.</param>
         public void Transform(ref Matrix transform)
         {
             // Transform main polygon
             for (int i = 0; i < Count; i++)
+            {
                 this[i] = Vector2.Transform(this[i], transform);
+            }
 
             // Transform holes
             if (Holes != null && Holes.Count > 0)
@@ -527,9 +467,7 @@ namespace VelcroPhysics.Shared
             {
                 builder.Append(this[i]);
                 if (i < Count - 1)
-                {
                     builder.Append(" ");
-                }
             }
             return builder.ToString();
         }

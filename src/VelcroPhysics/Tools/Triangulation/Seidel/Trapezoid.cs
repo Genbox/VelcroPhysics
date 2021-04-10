@@ -81,7 +81,7 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         // Determines if this point lies inside the trapezoid
         public bool Contains(Point point)
         {
-            return (point.X > LeftPoint.X && point.X < RightPoint.X && Top.IsAbove(point) && Bottom.IsBelow(point));
+            return point.X > LeftPoint.X && point.X < RightPoint.X && Top.IsAbove(point) && Bottom.IsBelow(point);
         }
 
         public List<Point> GetVertices()
@@ -104,21 +104,13 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
         public void AddPoints()
         {
             if (LeftPoint != Bottom.P)
-            {
                 Bottom.AddMpoint(LeftPoint);
-            }
             if (RightPoint != Bottom.Q)
-            {
                 Bottom.AddMpoint(RightPoint);
-            }
             if (LeftPoint != Top.P)
-            {
                 Top.AddMpoint(LeftPoint);
-            }
             if (RightPoint != Top.Q)
-            {
                 Top.AddMpoint(RightPoint);
-            }
         }
     }
 }

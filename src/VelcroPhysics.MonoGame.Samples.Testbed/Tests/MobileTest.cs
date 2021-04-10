@@ -54,9 +54,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             body.BodyType = BodyType.Dynamic;
 
             if (depth == Depth)
-            {
                 return body;
-            }
 
             Vector2 a1 = new Vector2(offset, -a);
             Vector2 a2 = new Vector2(-offset, -a);

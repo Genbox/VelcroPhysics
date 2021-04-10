@@ -34,11 +34,9 @@ using VelcroPhysics.Templates;
 namespace VelcroPhysics.Dynamics
 {
     /// <summary>
-    /// A fixture is used to attach a Shape to a body for collision detection. A fixture
-    /// inherits its transform from its parent. Fixtures hold additional non-geometric data
-    /// such as friction, collision filters, etc.
-    /// Fixtures are created via Body.CreateFixture.
-    /// Warning: You cannot reuse fixtures.
+    /// A fixture is used to attach a Shape to a body for collision detection. A fixture inherits its transform from
+    /// its parent. Fixtures hold additional non-geometric data such as friction, collision filters, etc. Fixtures are created
+    /// via Body.CreateFixture. Warning: You cannot reuse fixtures.
     /// </summary>
     public class Fixture
     {
@@ -49,29 +47,27 @@ namespace VelcroPhysics.Dynamics
         private bool _isSensor;
         private float _restitution;
 
-        /// <summary>
-        /// Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.
-        /// </summary>
+        /// <summary>Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.</summary>
         public AfterCollisionHandler AfterCollision;
 
         /// <summary>
-        /// Fires when two fixtures are close to each other.
-        /// Due to how the broadphase works, this can be quite inaccurate as shapes are approximated using AABBs.
+        /// Fires when two fixtures are close to each other. Due to how the broadphase works, this can be quite inaccurate
+        /// as shapes are approximated using AABBs.
         /// </summary>
         public BeforeCollisionHandler BeforeCollision;
 
         public Category IgnoreCCDWith;
 
         /// <summary>
-        /// Fires when two shapes collide and a contact is created between them.
-        /// Note that the first fixture argument is always the fixture that the delegate is subscribed to.
+        /// Fires when two shapes collide and a contact is created between them. Note that the first fixture argument is
+        /// always the fixture that the delegate is subscribed to.
         /// </summary>
         public OnCollisionHandler OnCollision;
 
         /// <summary>
-        /// Fires when two shapes separate and a contact is removed between them.
-        /// Note: This can in some cases be called multiple times, as a fixture can have multiple contacts.
-        /// Note The first fixture argument is always the fixture that the delegate is subscribed to.
+        /// Fires when two shapes separate and a contact is removed between them. Note: This can in some cases be called
+        /// multiple times, as a fixture can have multiple contacts. Note The first fixture argument is always the fixture that the
+        /// delegate is subscribed to.
         /// </summary>
         public OnSeparationHandler OnSeparation;
 
@@ -101,13 +97,10 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// Defaults to 0
-        /// If Settings.UseFPECollisionCategories is set to false:
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// If Settings.UseFPECollisionCategories is set to true:
-        /// If 2 fixtures are in the same collision group, they will not collide.
+        /// Defaults to 0 If Settings.UseFPECollisionCategories is set to false: Collision groups allow a certain group of
+        /// objects to never collide (negative) or always collide (positive). Zero means no collision group. Non-zero group
+        /// filtering always wins against the mask bits. If Settings.UseFPECollisionCategories is set to true: If 2 fixtures are in
+        /// the same collision group, they will not collide.
         /// </summary>
         public short CollisionGroup
         {
@@ -119,18 +112,16 @@ namespace VelcroPhysics.Dynamics
                 _collisionGroup = value;
                 Refilter();
             }
-            get { return _collisionGroup; }
+            get => _collisionGroup;
         }
 
         /// <summary>
-        /// Defaults to Category.All
-        /// The collision mask bits. This states the categories that this
-        /// fixture would accept for collision.
-        /// Use Settings.UseFPECollisionCategories to change the behavior.
+        /// Defaults to Category.All The collision mask bits. This states the categories that this fixture would accept
+        /// for collision. Use Settings.UseFPECollisionCategories to change the behavior.
         /// </summary>
         public Category CollidesWith
         {
-            get { return _collidesWith; }
+            get => _collidesWith;
 
             set
             {
@@ -143,15 +134,12 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// The collision categories this fixture is a part of.
-        /// If Settings.UseFPECollisionCategories is set to false:
-        /// Defaults to Category.Cat1
-        /// If Settings.UseFPECollisionCategories is set to true:
-        /// Defaults to Category.All
+        /// The collision categories this fixture is a part of. If Settings.UseFPECollisionCategories is set to false:
+        /// Defaults to Category.Cat1 If Settings.UseFPECollisionCategories is set to true: Defaults to Category.All
         /// </summary>
         public Category CollisionCategories
         {
-            get { return _collisionCategories; }
+            get => _collisionCategories;
 
             set
             {
@@ -164,19 +152,17 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the child Shape. You can modify the child Shape, however you should not change the
-        /// number of vertices because this will crash some collision caching mechanisms.
+        /// Get the child Shape. You can modify the child Shape, however you should not change the number of vertices
+        /// because this will crash some collision caching mechanisms.
         /// </summary>
         /// <value>The shape.</value>
         public Shape Shape { get; internal set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this fixture is a sensor.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating whether this fixture is a sensor.</summary>
         /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
         public bool IsSensor
         {
-            get { return _isSensor; }
+            get => _isSensor;
             set
             {
                 if (Body != null)
@@ -186,26 +172,19 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// Get the parent body of this fixture. This is null if the fixture is not attached.
-        /// </summary>
+        /// <summary>Get the parent body of this fixture. This is null if the fixture is not attached.</summary>
         /// <value>The body.</value>
         public Body Body { get; internal set; }
 
-        /// <summary>
-        /// Set the user data. Use this to store your application specific data.
-        /// </summary>
+        /// <summary>Set the user data. Use this to store your application specific data.</summary>
         /// <value>The user data.</value>
         public object UserData { get; set; }
 
-        /// <summary>
-        /// Set the coefficient of friction. This will _not_ change the friction of
-        /// existing contacts.
-        /// </summary>
+        /// <summary>Set the coefficient of friction. This will _not_ change the friction of existing contacts.</summary>
         /// <value>The friction.</value>
         public float Friction
         {
-            get { return _friction; }
+            get => _friction;
             set
             {
                 Debug.Assert(!float.IsNaN(value));
@@ -214,14 +193,11 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// Set the coefficient of restitution. This will not change the restitution of
-        /// existing contacts.
-        /// </summary>
+        /// <summary>Set the coefficient of restitution. This will not change the restitution of existing contacts.</summary>
         /// <value>The restitution.</value>
         public float Restitution
         {
-            get { return _restitution; }
+            get => _restitution;
             set
             {
                 Debug.Assert(!float.IsNaN(value));
@@ -230,16 +206,13 @@ namespace VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// Gets a unique ID for this fixture.
-        /// </summary>
+        /// <summary>Gets a unique ID for this fixture.</summary>
         /// <value>The fixture id.</value>
         public int FixtureId { get; internal set; }
 
         /// <summary>
-        /// Contacts are persistent and will keep being persistent unless they are
-        /// flagged for filtering.
-        /// This methods flags all contacts associated with the body for filtering.
+        /// Contacts are persistent and will keep being persistent unless they are flagged for filtering. This methods
+        /// flags all contacts associated with the body for filtering.
         /// </summary>
         private void Refilter()
         {
@@ -251,9 +224,7 @@ namespace VelcroPhysics.Dynamics
                 Fixture fixtureA = contact.FixtureA;
                 Fixture fixtureB = contact.FixtureB;
                 if (fixtureA == this || fixtureB == this)
-                {
                     contact._flags |= ContactFlags.FilterFlag;
-                }
 
                 edge = edge.Next;
             }
@@ -261,9 +232,7 @@ namespace VelcroPhysics.Dynamics
             World world = Body._world;
 
             if (world == null)
-            {
                 return;
-            }
 
             // Touch each proxy so that new pairs may be created
             IBroadPhase broadPhase = world.ContactManager.BroadPhase;
@@ -289,9 +258,7 @@ namespace VelcroPhysics.Dynamics
 
             // Adjust mass properties if needed.
             if (Shape._density > 0.0f)
-            {
                 Body.ResetMassData();
-            }
 
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
@@ -301,9 +268,7 @@ namespace VelcroPhysics.Dynamics
             Body._world.FixtureAdded?.Invoke(this);
         }
 
-        /// <summary>
-        /// Test a point for containment in this fixture.
-        /// </summary>
+        /// <summary>Test a point for containment in this fixture.</summary>
         /// <param name="point">A point in world coordinates.</param>
         /// <returns></returns>
         public bool TestPoint(ref Vector2 point)
@@ -311,9 +276,7 @@ namespace VelcroPhysics.Dynamics
             return Shape.TestPoint(ref Body._xf, ref point);
         }
 
-        /// <summary>
-        /// Cast a ray against this Shape.
-        /// </summary>
+        /// <summary>Cast a ray against this Shape.</summary>
         /// <param name="output">The ray-cast results.</param>
         /// <param name="input">The ray-cast input parameters.</param>
         /// <param name="childIndex">Index of the child.</param>
@@ -324,9 +287,8 @@ namespace VelcroPhysics.Dynamics
         }
 
         /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale.
-        /// If you need a more accurate AABB, compute it using the Shape and
-        /// the body transform.
+        /// Get the fixture's AABB. This AABB may be enlarge and/or stale. If you need a more accurate AABB, compute it
+        /// using the Shape and the body transform.
         /// </summary>
         /// <param name="aabb">The AABB.</param>
         /// <param name="childIndex">Index of the child.</param>
@@ -398,9 +360,7 @@ namespace VelcroPhysics.Dynamics
         internal void Synchronize(IBroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
             if (ProxyCount == 0)
-            {
                 return;
-            }
 
             for (int i = 0; i < ProxyCount; ++i)
             {

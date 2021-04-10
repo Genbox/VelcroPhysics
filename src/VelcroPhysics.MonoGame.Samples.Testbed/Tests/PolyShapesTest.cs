@@ -94,9 +94,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public bool ReportFixture(Fixture fixture)
         {
             if (_count == MaxCount)
-            {
                 return false;
-            }
 
             Body body = fixture.Body;
             Shape shape = fixture.Shape;
@@ -192,9 +190,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
 
             if (index == 4)
-            {
                 _bodies[_bodyIndex].AngularDamping = 0.02f;
-            }
 
             if (index < 4)
             {
@@ -226,25 +222,15 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsNewKeyPress(Keys.D1))
-            {
                 Create(0);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D2))
-            {
                 Create(1);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D3))
-            {
                 Create(2);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D4))
-            {
                 Create(3);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.D5))
-            {
                 Create(4);
-            }
             if (keyboardManager.IsNewKeyPress(Keys.A))
             {
                 for (int i = 0; i < MaxBodies; i += 2)
@@ -257,9 +243,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 }
             }
             if (keyboardManager.IsNewKeyPress(Keys.D))
-            {
                 DestroyBody();
-            }
 
             base.Keyboard(keyboardManager);
         }

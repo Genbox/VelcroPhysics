@@ -13,9 +13,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
     {
         //Cutting a shape into two is based on the work of Daid and his prototype BoxCutter: http://www.box2d.org/forum/viewtopic.php?f=3&t=1473
 
-        /// <summary>
-        /// Split a fixture into 2 vertices collections using the given entry and exit-point.
-        /// </summary>
+        /// <summary>Split a fixture into 2 vertices collections using the given entry and exit-point.</summary>
         /// <param name="fixture">The Fixture to split</param>
         /// <param name="entryPoint">The entry point - The start point</param>
         /// <param name="exitPoint">The exit point - The end point</param>
@@ -107,13 +105,9 @@ namespace VelcroPhysics.Tools.Cutting.Simple
             {
                 Vector2 offset;
                 if (cutAdded[n] > 0)
-                {
-                    offset = (newPolygon[n][cutAdded[n] - 1] - newPolygon[n][cutAdded[n]]);
-                }
+                    offset = newPolygon[n][cutAdded[n] - 1] - newPolygon[n][cutAdded[n]];
                 else
-                {
-                    offset = (newPolygon[n][newPolygon[n].Count - 1] - newPolygon[n][0]);
-                }
+                    offset = newPolygon[n][newPolygon[n].Count - 1] - newPolygon[n][0];
                 offset.Normalize();
 
                 if (!offset.IsValid())
@@ -122,13 +116,9 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                 newPolygon[n][cutAdded[n]] += Settings.Epsilon * offset;
 
                 if (cutAdded[n] < newPolygon[n].Count - 2)
-                {
-                    offset = (newPolygon[n][cutAdded[n] + 2] - newPolygon[n][cutAdded[n] + 1]);
-                }
+                    offset = newPolygon[n][cutAdded[n] + 2] - newPolygon[n][cutAdded[n] + 1];
                 else
-                {
-                    offset = (newPolygon[n][0] - newPolygon[n][newPolygon[n].Count - 1]);
-                }
+                    offset = newPolygon[n][0] - newPolygon[n][newPolygon[n].Count - 1];
                 offset.Normalize();
 
                 if (!offset.IsValid())
@@ -142,8 +132,8 @@ namespace VelcroPhysics.Tools.Cutting.Simple
         }
 
         /// <summary>
-        /// This is a high-level function to cuts fixtures inside the given world, using the start and end points.
-        /// Note: We don't support cutting when the start or end is inside a shape.
+        /// This is a high-level function to cuts fixtures inside the given world, using the start and end points. Note:
+        /// We don't support cutting when the start or end is inside a shape.
         /// </summary>
         /// <param name="world">The world.</param>
         /// <param name="start">The startpoint.</param>

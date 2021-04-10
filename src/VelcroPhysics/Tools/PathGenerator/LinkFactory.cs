@@ -10,9 +10,7 @@ namespace VelcroPhysics.Tools.PathGenerator
 {
     public static class LinkFactory
     {
-        /// <summary>
-        /// Creates a chain.
-        /// </summary>
+        /// <summary>Creates a chain.</summary>
         /// <param name="world">The world.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
@@ -62,7 +60,7 @@ namespace VelcroPhysics.Tools.PathGenerator
             if (attachRopeJoint)
                 JointFactory.CreateRopeJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], Vector2.Zero, Vector2.Zero);
 
-            return (path);
+            return path;
         }
     }
 }

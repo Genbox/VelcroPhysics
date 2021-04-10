@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -13,10 +13,7 @@ namespace VelcroPhysics.Tools.TextureTools
     {
         private const int ClosepixelsLength = 8;
 
-        /// <summary>
-        /// This array is meant to be read-only.
-        /// It's not because it is accessed very frequently.
-        /// </summary>
+        /// <summary>This array is meant to be read-only. It's not because it is accessed very frequently.</summary>
         private static int[,] _closePixels = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
 
         private uint _alphaTolerance;
@@ -35,11 +32,7 @@ namespace VelcroPhysics.Tools.TextureTools
         private Matrix _transform = Matrix.Identity;
         private int _width;
 
-        #region Initialization
-
-        private void Initialize(uint[] data, int? width, byte? alphaTolerance,
-                                float? hullTolerance, bool? holeDetection, bool? multipartDetection,
-                                bool? pixelOffsetOptimization, Matrix? transform)
+        private void Initialize(uint[] data, int? width, byte? alphaTolerance, float? hullTolerance, bool? holeDetection, bool? multipartDetection, bool? pixelOffsetOptimization, Matrix? transform)
         {
             if (data != null && !width.HasValue)
                 throw new ArgumentNullException(nameof(width), "'width' can't be null if 'data' is set.");
@@ -81,8 +74,6 @@ namespace VelcroPhysics.Tools.TextureTools
                 Transform = Matrix.Identity;
         }
 
-        #endregion
-
         private void SetTextureData(uint[] data, int width)
         {
             if (data == null)
@@ -103,9 +94,7 @@ namespace VelcroPhysics.Tools.TextureTools
             _height = _dataLength / width;
         }
 
-        /// <summary>
-        /// Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)
-        /// </summary>
+        /// <summary>Detects the vertices of the supplied texture data. (PolygonDetectionType.Integrated)</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <returns></returns>
@@ -118,9 +107,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return detectedVerticesList[0];
         }
 
-        /// <summary>
-        /// Detects the vertices of the supplied texture data.
-        /// </summary>
+        /// <summary>Detects the vertices of the supplied texture data.</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
@@ -137,9 +124,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return detectedVerticesList[0];
         }
 
-        /// <summary>
-        /// Detects the vertices of the supplied texture data.
-        /// </summary>
+        /// <summary>Detects the vertices of the supplied texture data.</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
@@ -171,7 +156,6 @@ namespace VelcroPhysics.Tools.TextureTools
 
         public List<Vertices> DetectVertices()
         {
-            #region Check TextureConverter setup.
 
             if (_data == null)
                 throw new Exception("'_data' can't be null. You have to use SetTextureData(uint[] data, int width) before calling this method.");
@@ -186,8 +170,6 @@ namespace VelcroPhysics.Tools.TextureTools
 
             if (_data.Length % _width != 0)
                 throw new Exception("'_width' has an invalid value. You have to use SetTextureData(uint[] data, int width) before calling this method.");
-
-            #endregion
 
             List<Vertices> detectedPolygons = new List<Vertices>();
 
@@ -310,8 +292,8 @@ namespace VelcroPhysics.Tools.TextureTools
         }
 
         /// <summary>
-        /// Function to search for an entrance point of a hole in a polygon. It searches the polygon from top to bottom between the
-        /// polygon edges.
+        /// Function to search for an entrance point of a hole in a polygon. It searches the polygon from top to bottom
+        /// between the polygon edges.
         /// </summary>
         /// <param name="polygon">The polygon to search in.</param>
         /// <param name="lastHoleEntrance">The last entrance point.</param>
@@ -586,9 +568,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return result;
         }
 
-        /// <summary>
-        /// Searches the polygon for the x coordinates of the edges that cross the specified y coordinate.
-        /// </summary>
+        /// <summary>Searches the polygon for the x coordinates of the edges that cross the specified y coordinate.</summary>
         /// <param name="polygon">Polygon to search in.</param>
         /// <param name="y">Y coordinate to check for edges.</param>
         /// <returns>Descending sorted list of x coordinates of edges that cross the specified y coordinate.</returns>
@@ -749,8 +729,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        /// <summary>
-        /// </summary>
+        /// <summary></summary>
         /// <param name="entrance"></param>
         /// <param name="last"></param>
         /// <returns></returns>
@@ -764,8 +743,6 @@ namespace VelcroPhysics.Tools.TextureTools
             Vertices endOfHullArea = new Vertices(32);
 
             Vector2 current = Vector2.Zero;
-
-            #region Entrance check
 
             // Get the entrance point. //todo: alle möglichkeiten testen
             if (entrance == Vector2.Zero || !InBounds(ref entrance))
@@ -801,8 +778,6 @@ namespace VelcroPhysics.Tools.TextureTools
                     }
                 }
             }
-
-            #endregion
 
             if (entranceFound)
             {
@@ -926,9 +901,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return false;
         }
 
-        /// <summary>
-        /// Searches for the next shape.
-        /// </summary>
+        /// <summary>Searches for the next shape.</summary>
         /// <param name="detectedPolygons">Already detected polygons.</param>
         /// <param name="start">Search start coordinate.</param>
         /// <param name="entrance">Returns the found entrance coordinate. Null if no other shapes found.</param>
@@ -1091,29 +1064,21 @@ namespace VelcroPhysics.Tools.TextureTools
             return 0;
         }
 
-        #region Properties
-
-        /// <summary>
-        /// Get or set the polygon detection type.
-        /// </summary>
+        /// <summary>Get or set the polygon detection type.</summary>
         public VerticesDetectionType PolygonDetectionType
         {
             get { return _polygonDetectionType; }
             set { _polygonDetectionType = value; }
         }
 
-        /// <summary>
-        /// Will detect texture 'holes' if set to true. Slows down the detection. Default is false.
-        /// </summary>
+        /// <summary>Will detect texture 'holes' if set to true. Slows down the detection. Default is false.</summary>
         public bool HoleDetection
         {
             get { return _holeDetection; }
             set { _holeDetection = value; }
         }
 
-        /// <summary>
-        /// Will detect texture multiple 'solid' isles if set to true. Slows down the detection. Default is false.
-        /// </summary>
+        /// <summary>Will detect texture multiple 'solid' isles if set to true. Slows down the detection. Default is false.</summary>
         public bool MultipartDetection
         {
             get { return _multipartDetection; }
@@ -1130,9 +1095,7 @@ namespace VelcroPhysics.Tools.TextureTools
             set { _pixelOffsetOptimization = value; }
         }
 
-        /// <summary>
-        /// Can be used for scaling.
-        /// </summary>
+        /// <summary>Can be used for scaling.</summary>
         public Matrix Transform
         {
             get { return _transform; }
@@ -1140,8 +1103,8 @@ namespace VelcroPhysics.Tools.TextureTools
         }
 
         /// <summary>
-        /// Alpha (coverage) tolerance. Default is 20: Every pixel with a coverage value equal or greater to 20 will be counts as
-        /// solid.
+        /// Alpha (coverage) tolerance. Default is 20: Every pixel with a coverage value equal or greater to 20 will be
+        /// counts as solid.
         /// </summary>
         public byte AlphaTolerance
         {
@@ -1149,9 +1112,7 @@ namespace VelcroPhysics.Tools.TextureTools
             set { _alphaTolerance = (uint)value << 24; }
         }
 
-        /// <summary>
-        /// Default is 1.5f.
-        /// </summary>
+        /// <summary>Default is 1.5f.</summary>
         public float HullTolerance
         {
             get { return _hullTolerance; }
@@ -1171,10 +1132,6 @@ namespace VelcroPhysics.Tools.TextureTools
                 }
             }
         }
-
-        #endregion
-
-        #region Constructors
 
         public TextureConverter()
         {
@@ -1200,10 +1157,6 @@ namespace VelcroPhysics.Tools.TextureTools
             Initialize(data, width, alphaTolerance, hullTolerance, holeDetection,
                 multipartDetection, pixelOffsetOptimization, transform);
         }
-
-        #endregion
-
-        #region Data[] functions
 
         private int _tempIsSolidX;
         private int _tempIsSolidY;
@@ -1245,7 +1198,5 @@ namespace VelcroPhysics.Tools.TextureTools
         {
             return (coord.X >= 0f && coord.X < _width && coord.Y >= 0f && coord.Y < _height);
         }
-
-        #endregion
     }
 }

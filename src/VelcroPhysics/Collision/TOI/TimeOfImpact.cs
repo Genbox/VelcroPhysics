@@ -44,11 +44,10 @@ namespace VelcroPhysics.Collision.TOI
                           TOIMaxRootIters;
 
         /// <summary>
-        /// Compute the upper bound on time before two shapes penetrate. Time is represented as
-        /// a fraction between [0,tMax]. This uses a swept separating axis and may miss some intermediate,
-        /// non-tunneling collision. If you change the time interval, you should call this function
-        /// again.
-        /// Note: use Distance() to compute the contact point and normal at the time of impact.
+        /// Compute the upper bound on time before two shapes penetrate. Time is represented as a fraction between
+        /// [0,tMax]. This uses a swept separating axis and may miss some intermediate, non-tunneling collision. If you change the
+        /// time interval, you should call this function again. Note: use Distance() to compute the contact point and normal at the
+        /// time of impact.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
@@ -218,9 +217,7 @@ namespace VelcroPhysics.Collision.TOI
                         }
 
                         if (rootIterCount == 50)
-                        {
                             break;
-                        }
                     }
 
                     if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
@@ -229,9 +226,7 @@ namespace VelcroPhysics.Collision.TOI
                     ++pushBackIter;
 
                     if (pushBackIter == Settings.MaxPolygonVertices)
-                    {
                         break;
-                    }
                 }
 
                 ++iter;
@@ -240,9 +235,7 @@ namespace VelcroPhysics.Collision.TOI
                     ++TOIIters;
 
                 if (done)
-                {
                     break;
-                }
 
                 if (iter == k_maxIterations)
                 {

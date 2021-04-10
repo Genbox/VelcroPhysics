@@ -30,9 +30,9 @@ using VelcroPhysics.Shared;
 namespace VelcroPhysics.Collision.Broadphase
 {
     /// <summary>
-    /// The broad-phase is used for computing pairs and performing volume queries and ray casts.
-    /// This broad-phase does not persist pairs. Instead, this reports potentially new pairs.
-    /// It is up to the client to consume the new pairs and to track subsequent overlap.
+    /// The broad-phase is used for computing pairs and performing volume queries and ray casts. This broad-phase does
+    /// not persist pairs. Instead, this reports potentially new pairs. It is up to the client to consume the new pairs and to
+    /// track subsequent overlap.
     /// </summary>
     public class DynamicTreeBroadPhase : IBroadPhase
     {
@@ -49,9 +49,7 @@ namespace VelcroPhysics.Collision.Broadphase
         private int _queryProxyId;
         private DynamicTree<FixtureProxy> _tree = new DynamicTree<FixtureProxy>();
 
-        /// <summary>
-        /// Constructs a new broad phase based on the dynamic tree implementation
-        /// </summary>
+        /// <summary>Constructs a new broad phase based on the dynamic tree implementation</summary>
         public DynamicTreeBroadPhase()
         {
             _queryCallback = QueryCallback;
@@ -66,26 +64,17 @@ namespace VelcroPhysics.Collision.Broadphase
             _moveBuffer = new int[_moveCapacity];
         }
 
-        /// <summary>
-        /// Get the tree quality based on the area of the tree.
-        /// </summary>
+        /// <summary>Get the tree quality based on the area of the tree.</summary>
         public float TreeQuality => _tree.AreaRatio;
 
-        /// <summary>
-        /// Gets the height of the tree.
-        /// </summary>
+        /// <summary>Gets the height of the tree.</summary>
         public int TreeHeight => _tree.Height;
 
-        /// <summary>
-        /// Get the number of proxies.
-        /// </summary>
+        /// <summary>Get the number of proxies.</summary>
         /// <value>The proxy count.</value>
         public int ProxyCount => _proxyCount;
 
-        /// <summary>
-        /// Create a proxy with an initial AABB. Pairs are not reported until
-        /// UpdatePairs is called.
-        /// </summary>
+        /// <summary>Create a proxy with an initial AABB. Pairs are not reported until UpdatePairs is called.</summary>
         /// <param name="proxy">The user data.</param>
         /// <returns></returns>
         public int AddProxy(ref FixtureProxy proxy)
@@ -96,9 +85,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return proxyId;
         }
 
-        /// <summary>
-        /// Destroy a proxy. It is up to the client to remove any pairs.
-        /// </summary>
+        /// <summary>Destroy a proxy. It is up to the client to remove any pairs.</summary>
         /// <param name="proxyId">The proxy id.</param>
         public void RemoveProxy(int proxyId)
         {
@@ -108,8 +95,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Call MoveProxy as many times as you like, then when you are done
-        /// call UpdatePairs to finalized the proxy pairs (for your time step).
+        /// Call MoveProxy as many times as you like, then when you are done call UpdatePairs to finalized the proxy pairs
+        /// (for your time step).
         /// </summary>
         public void MoveProxy(int proxyId, ref AABB aabb, Vector2 displacement)
         {
@@ -118,17 +105,13 @@ namespace VelcroPhysics.Collision.Broadphase
                 BufferMove(proxyId);
         }
 
-        /// <summary>
-        /// Call to trigger a re-processing of it's pairs on the next call to UpdatePairs.
-        /// </summary>
+        /// <summary>Call to trigger a re-processing of it's pairs on the next call to UpdatePairs.</summary>
         public void TouchProxy(int proxyId)
         {
             BufferMove(proxyId);
         }
 
-        /// <summary>
-        /// Get the AABB for a proxy.
-        /// </summary>
+        /// <summary>Get the AABB for a proxy.</summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <param name="aabb">The AABB.</param>
         public void GetFatAABB(int proxyId, out AABB aabb)
@@ -136,9 +119,7 @@ namespace VelcroPhysics.Collision.Broadphase
             _tree.GetFatAABB(proxyId, out aabb);
         }
 
-        /// <summary>
-        /// Get user data from a proxy. Returns null if the id is invalid.
-        /// </summary>
+        /// <summary>Get user data from a proxy. Returns null if the id is invalid.</summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns></returns>
         public FixtureProxy GetProxy(int proxyId)
@@ -146,9 +127,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return _tree.GetUserData(proxyId);
         }
 
-        /// <summary>
-        /// Test overlap of fat AABBs.
-        /// </summary>
+        /// <summary>Test overlap of fat AABBs.</summary>
         /// <param name="proxyIdA">The proxy id A.</param>
         /// <param name="proxyIdB">The proxy id B.</param>
         /// <returns></returns>
@@ -159,9 +138,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return AABB.TestOverlap(ref aabbA, ref aabbB);
         }
 
-        /// <summary>
-        /// Update the pairs. This results in pair callbacks. This can only add pairs.
-        /// </summary>
+        /// <summary>Update the pairs. This results in pair callbacks. This can only add pairs.</summary>
         /// <param name="callback">The callback.</param>
         public void UpdatePairs(BroadphaseHandler callback)
         {
@@ -216,8 +193,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Query an AABB for overlapping proxies. The callback class
-        /// is called for each proxy that overlaps the supplied AABB.
+        /// Query an AABB for overlapping proxies. The callback class is called for each proxy that overlaps the supplied
+        /// AABB.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="aabb">The AABB.</param>
@@ -227,11 +204,9 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Ray-cast against the proxies in the tree. This relies on the callback
-        /// to perform a exact ray-cast in the case were the proxy contains a shape.
-        /// The callback also performs the any collision filtering. This has performance
-        /// roughly equal to k * log(n), where k is the number of collisions and n is the
-        /// number of proxies in the tree.
+        /// Ray-cast against the proxies in the tree. This relies on the callback to perform a exact ray-cast in the case
+        /// were the proxy contains a shape. The callback also performs the any collision filtering. This has performance roughly
+        /// equal to k * log(n), where k is the number of collisions and n is the number of proxies in the tree.
         /// </summary>
         /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
@@ -240,9 +215,7 @@ namespace VelcroPhysics.Collision.Broadphase
             _tree.RayCast(callback, ref input);
         }
 
-        /// <summary>
-        /// Shift the world origin. Useful for large worlds.
-        /// </summary>
+        /// <summary>Shift the world origin. Useful for large worlds.</summary>
         public void ShiftOrigin(Vector2 newOrigin)
         {
             _tree.ShiftOrigin(newOrigin);
@@ -271,9 +244,7 @@ namespace VelcroPhysics.Collision.Broadphase
             }
         }
 
-        /// <summary>
-        /// This is called from DynamicTree.Query when we are gathering pairs.
-        /// </summary>
+        /// <summary>This is called from DynamicTree.Query when we are gathering pairs.</summary>
         private bool QueryCallback(int proxyId)
         {
             // A proxy cannot form a pair with itself.

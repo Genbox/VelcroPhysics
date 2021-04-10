@@ -2,7 +2,7 @@
 
 namespace VelcroPhysics.Benchmarks
 {
-    class Program
+    internal class Program
     {
         public static void Main()
         {

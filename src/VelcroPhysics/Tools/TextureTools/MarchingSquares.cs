@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 
@@ -34,11 +34,9 @@ namespace VelcroPhysics.Tools.TextureTools
     public static class MarchingSquares
     {
         /// <summary>
-        /// Marching squares over the given domain using the mesh defined via the dimensions
-        /// (wid,hei) to build a set of polygons such that f(x,y) less than 0, using the given number
-        /// 'bin' for recursive linear inteprolation along cell boundaries.
-        /// if 'comb' is true, then the polygons will also be composited into larger possible concave
-        /// polygons.
+        /// Marching squares over the given domain using the mesh defined via the dimensions (wid,hei) to build a set of
+        /// polygons such that f(x,y) less than 0, using the given number 'bin' for recursive linear inteprolation along cell
+        /// boundaries. if 'comb' is true, then the polygons will also be composited into larger possible concave polygons.
         /// </summary>
         /// <param name="domain"></param>
         /// <param name="cellWidth"></param>
@@ -47,8 +45,7 @@ namespace VelcroPhysics.Tools.TextureTools
         /// <param name="lerpCount"></param>
         /// <param name="combine"></param>
         /// <returns></returns>
-        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, sbyte[,] f,
-                                                   int lerpCount, bool combine)
+        public static List<Vertices> DetectSquares(AABB domain, float cellWidth, float cellHeight, sbyte[,] f, int lerpCount, bool combine)
         {
             CxFastList<GeomPoly> ret = new CxFastList<GeomPoly>();
 
@@ -192,7 +189,9 @@ namespace VelcroPhysics.Tools.TextureTools
                     //combine above (but disallow the hole thingies
                     CxFastListNode<Vector2> bi = bp.Begin();
                     while (Square(bi.Elem().Y - ay) > Settings.Epsilon || bi.Elem().X < ax)
+                    {
                         bi = bi.Next();
+                    }
 
                     //NOTE: Unused
                     //Vector2 b0 = bi.elem();
@@ -277,14 +276,10 @@ namespace VelcroPhysics.Tools.TextureTools
             return verticesList;
         }
 
-        #region Private Methods
-
-        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-        /** Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1)
-            such as to approximate value(return) = 0
-        **/
-
+        /// <summary>
+        /// Linearly interpolate between (x0 to x1) given a value at these coordinates (v0 and v1) such as to approximate
+        /// value(return) = 0
+        /// </summary>
         private static int[] _lookMarch =
         {
             0x00, 0xE0, 0x38, 0xD8, 0x0E, 0xEE, 0x36, 0xD6, 0x83, 0x63, 0xBB, 0x5B, 0x8D,
@@ -302,10 +297,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return x0 + t * (x1 - x0);
         }
 
-        //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-        /** Recursive linear interpolation for use in marching squares **/
-
+        /// <summary>Recursive linear interpolation for use in marching squares</summary>
         private static float Xlerp(float x0, float x1, float y, float v0, float v1, sbyte[,] f, int c)
         {
             float xm = Lerp(x0, x1, v0, v1);
@@ -320,8 +312,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return Xlerp(xm, x1, y, vm, v1, f, c - 1);
         }
 
-        /** Recursive linear interpolation for use in marching squares **/
-
+        /// <summary>Recursive linear interpolation for use in marching squares</summary>
         private static float Ylerp(float y0, float y1, float x, float v0, float v1, sbyte[,] f, int c)
         {
             float ym = Lerp(y0, y1, v0, v1);
@@ -336,8 +327,7 @@ namespace VelcroPhysics.Tools.TextureTools
             return Ylerp(ym, y1, x, vm, v1, f, c - 1);
         }
 
-        /** Square value for use in marching squares **/
-
+        /// <summary>Square value for use in marching squares</summary>
         private static float Square(float x)
         {
             return x * x;
@@ -354,18 +344,13 @@ namespace VelcroPhysics.Tools.TextureTools
             return a.X * b.Y - a.Y * b.X;
         }
 
-        /** Look-up table to relate polygon key with the vertices that should be used for
-            the sub polygon in marching squares
-        **/
-
-        /** Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1)
-            using the function f for recursive interpolation, given the look-up table 'fs' of
-            the values of 'f' at cell vertices with the result to be stored in 'poly' given the actual
-            coordinates of 'ax' 'ay' in the marching squares mesh.
-        **/
-
-        private static int MarchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0,
-                                       float x1, float y1, int bin)
+        /// <summary>
+        /// Look-up table to relate polygon key with the vertices that should be used for the sub polygon in marching
+        /// squares Perform a single celled marching square for for the given cell defined by (x0,y0) (x1,y1) using the function f
+        /// for recursive interpolation, given the look-up table 'fs' of the values of 'f' at cell vertices with the result to be
+        /// stored in 'poly' given the actual coordinates of 'ax' 'ay' in the marching squares mesh.
+        /// </summary>
+        private static int MarchSquare(sbyte[,] f, sbyte[,] fs, ref GeomPoly poly, int ax, int ay, float x0, float y0, float x1, float y1, int bin)
         {
             //key lookup
             int key = 0;
@@ -425,10 +410,10 @@ namespace VelcroPhysics.Tools.TextureTools
             return key;
         }
 
-        /** Used in polygon composition to composit polygons into scan lines
-            Combining polya and polyb into one super-polygon stored in polya.
-        **/
-
+        /// <summary>
+        /// Used in polygon composition to composit polygons into scan lines Combining polya and polyb into one
+        /// super-polygon stored in polya.
+        /// </summary>
         private static void combLeft(ref GeomPoly polya, ref GeomPoly polyb)
         {
             CxFastList<Vector2> ap = polya.Points;
@@ -508,49 +493,31 @@ namespace VelcroPhysics.Tools.TextureTools
             }
         }
 
-        #endregion
-
-        #region CxFastList from nape physics
-
-        #region Nested type: CxFastList
-
-        /// <summary>
-        /// Designed as a complete port of CxFastList from CxStd.
-        /// </summary>
+        /// <summary>Designed as a complete port of CxFastList from CxStd.</summary>
         internal class CxFastList<T>
         {
-            private int _count;
-
             // first node in the list
             private CxFastListNode<T> _head;
 
-            /// <summary>
-            /// Iterator to start of list (O(1))
-            /// </summary>
+            /// <summary>Iterator to start of list (O(1))</summary>
             public CxFastListNode<T> Begin()
             {
                 return _head;
             }
 
-            /// <summary>
-            /// Iterator to end of list (O(1))
-            /// </summary>
+            /// <summary>Iterator to end of list (O(1))</summary>
             public CxFastListNode<T> End()
             {
                 return null;
             }
 
-            /// <summary>
-            /// Returns first element of list (O(1))
-            /// </summary>
+            /// <summary>Returns first element of list (O(1))</summary>
             public T Front()
             {
                 return _head.Elem();
             }
 
-            /// <summary>
-            /// add object to list (O(1))
-            /// </summary>
+            /// <summary>add object to list (O(1))</summary>
             public CxFastListNode<T> Add(T value)
             {
                 CxFastListNode<T> newNode = new CxFastListNode<T>(value);
@@ -558,20 +525,15 @@ namespace VelcroPhysics.Tools.TextureTools
                 {
                     newNode._next = null;
                     _head = newNode;
-                    _count++;
                     return newNode;
                 }
                 newNode._next = _head;
                 _head = newNode;
 
-                _count++;
-
                 return newNode;
             }
 
-            /// <summary>
-            /// remove object from list, returns true if an element was removed (O(n))
-            /// </summary>
+            /// <summary>remove object from list, returns true if an element was removed (O(n))</summary>
             public bool Remove(T value)
             {
                 CxFastListNode<T> head = _head;
@@ -593,16 +555,12 @@ namespace VelcroPhysics.Tools.TextureTools
                                 if (head == _head)
                                 {
                                     _head = head._next;
-                                    _count--;
                                     return true;
                                 }
-                                else
-                                {
-                                    // were not at the head
-                                    prev._next = head._next;
-                                    _count--;
-                                    return true;
-                                }
+
+                                // were not at the head
+                                prev._next = head._next;
+                                return true;
                             }
 
                             // cache the current as the previous for the next go around
@@ -615,39 +573,32 @@ namespace VelcroPhysics.Tools.TextureTools
             }
 
             /// <summary>
-            /// pop element from head of list (O(1)) Note: this does not return the object popped!
-            /// There is good reason to this, and it regards the Alloc list variants which guarantee
-            /// objects are released to the object pool. You do not want to retrieve an element
-            /// through pop or else that object may suddenly be used by another piece of code which
-            /// retrieves it from the object pool.
+            /// pop element from head of list (O(1)) Note: this does not return the object popped! There is good reason to
+            /// this, and it regards the Alloc list variants which guarantee objects are released to the object pool. You do not want
+            /// to retrieve an element through pop or else that object may suddenly be used by another piece of code which retrieves it
+            /// from the object pool.
             /// </summary>
             public CxFastListNode<T> Pop()
             {
                 return Erase(null, _head);
             }
 
-            /// <summary>
-            /// insert object after 'node' returning an iterator to the inserted object.
-            /// </summary>
+            /// <summary>insert object after 'node' returning an iterator to the inserted object.</summary>
             public CxFastListNode<T> Insert(CxFastListNode<T> node, T value)
             {
                 if (node == null)
-                {
                     return Add(value);
-                }
                 CxFastListNode<T> newNode = new CxFastListNode<T>(value);
                 CxFastListNode<T> nextNode = node._next;
                 newNode._next = nextNode;
                 node._next = newNode;
 
-                _count++;
-
                 return newNode;
             }
 
             /// <summary>
-            /// removes the element pointed to by 'node' with 'prev' being the previous iterator,
-            /// returning an iterator to the element following that of 'node' (O(1))
+            /// removes the element pointed to by 'node' with 'prev' being the previous iterator, returning an iterator to the
+            /// element following that of 'node' (O(1))
             /// </summary>
             public CxFastListNode<T> Erase(CxFastListNode<T> prev, CxFastListNode<T> node)
             {
@@ -660,13 +611,10 @@ namespace VelcroPhysics.Tools.TextureTools
                 else
                     return null;
 
-                _count--;
                 return nextNode;
             }
 
-            /// <summary>
-            /// whether the list is empty (O(1))
-            /// </summary>
+            /// <summary>whether the list is empty (O(1))</summary>
             public bool Empty()
             {
                 if (_head == null)
@@ -674,9 +622,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 return false;
             }
 
-            /// <summary>
-            /// computes size of list (O(n))
-            /// </summary>
+            /// <summary>computes size of list (O(n))</summary>
             public int Size()
             {
                 CxFastListNode<T> i = Begin();
@@ -690,9 +636,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 return count;
             }
 
-            /// <summary>
-            /// empty the list (O(1) if CxMixList, O(n) otherwise)
-            /// </summary>
+            /// <summary>empty the list (O(1) if CxMixList, O(n) otherwise)</summary>
             public void Clear()
             {
                 CxFastListNode<T> head = _head;
@@ -703,15 +647,12 @@ namespace VelcroPhysics.Tools.TextureTools
                     node2._next = null;
                 }
                 _head = null;
-                _count = 0;
             }
 
-            /// <summary>
-            /// returns true if 'value' is an element of the list (O(n))
-            /// </summary>
+            /// <summary>returns true if 'value' is an element of the list (O(n))</summary>
             public bool Has(T value)
             {
-                return (Find(value) != null);
+                return Find(value) != null;
             }
 
             // Non CxFastList Methods 
@@ -727,9 +668,7 @@ namespace VelcroPhysics.Tools.TextureTools
                         do
                         {
                             if (comparer.Equals(head._elt, value))
-                            {
                                 return head;
-                            }
                             head = head._next;
                         } while (head != _head);
                     }
@@ -738,9 +677,7 @@ namespace VelcroPhysics.Tools.TextureTools
                         do
                         {
                             if (head._elt == null)
-                            {
                                 return head;
-                            }
                             head = head._next;
                         } while (head != _head);
                     }
@@ -766,10 +703,6 @@ namespace VelcroPhysics.Tools.TextureTools
             }
         }
 
-        #endregion
-
-        #region Nested type: CxFastListNode
-
         internal class CxFastListNode<T>
         {
             internal T _elt;
@@ -791,14 +724,6 @@ namespace VelcroPhysics.Tools.TextureTools
             }
         }
 
-        #endregion
-
-        #endregion
-
-        #region Internal Stuff
-
-        #region Nested type: GeomPoly
-
         internal class GeomPoly
         {
             public int Length;
@@ -810,10 +735,6 @@ namespace VelcroPhysics.Tools.TextureTools
                 Length = 0;
             }
         }
-
-        #endregion
-
-        #region Nested type: GeomPolyVal
 
         private class GeomPolyVal
         {
@@ -829,9 +750,5 @@ namespace VelcroPhysics.Tools.TextureTools
                 Key = K;
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

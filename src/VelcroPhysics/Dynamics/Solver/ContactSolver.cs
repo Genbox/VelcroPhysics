@@ -144,9 +144,7 @@ namespace VelcroPhysics.Dynamics.Solver
             }
         }
 
-        /// <summary>
-        /// Initialize position dependent portions of the velocity constraints.
-        /// </summary>
+        /// <summary>Initialize position dependent portions of the velocity constraints.</summary>
         public void InitializeVelocityConstraints()
         {
             for (int i = 0; i < _count; ++i)
@@ -219,9 +217,7 @@ namespace VelcroPhysics.Dynamics.Solver
                     vcp.VelocityBias = 0.0f;
                     float vRel = Vector2.Dot(vc.Normal, vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
                     if (vRel < -Settings.VelocityThreshold)
-                    {
                         vcp.VelocityBias = -vc.Restitution * vRel;
-                    }
                 }
 
                 // If we have two points, then prepare the block solver.
@@ -334,7 +330,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
                     // Compute tangent force
                     float vt = Vector2.Dot(dv, tangent) - vc.TangentSpeed;
-                    float lambda = vcp.TangentMass * (-vt);
+                    float lambda = vcp.TangentMass * -vt;
 
                     // b2Clamp the accumulated force
                     float maxFriction = friction * vcp.NormalImpulse;
@@ -594,7 +590,6 @@ namespace VelcroPhysics.Dynamics.Solver
                             cp1.NormalImpulse = x.X;
                             cp2.NormalImpulse = x.Y;
 
-                            break;
                         }
 
                         // No solution, give up. This is hit sometimes, but it doesn't seem to matter.

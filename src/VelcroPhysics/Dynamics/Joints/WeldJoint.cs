@@ -43,11 +43,10 @@ namespace VelcroPhysics.Dynamics.Joints
     // K = invI1 + invI2
 
     /// <summary>
-    /// A weld joint essentially glues two bodies together. A weld joint may
-    /// distort somewhat because the island constraint solver is approximate.
-    /// The joint is soft constraint based, which means the two bodies will move
-    /// relative to each other, when a force is applied. To combine two bodies
-    /// in a rigid fashion, combine the fixtures to a single body instead.
+    /// A weld joint essentially glues two bodies together. A weld joint may distort somewhat because the island
+    /// constraint solver is approximate. The joint is soft constraint based, which means the two bodies will move relative to
+    /// each other, when a force is applied. To combine two bodies in a rigid fashion, combine the fixtures to a single body
+    /// instead.
     /// </summary>
     public class WeldJoint : Joint
     {
@@ -78,8 +77,8 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// You need to specify an anchor point where they are attached.
-        /// The position of the anchor point is important for computing the reaction torque.
+        /// You need to specify an anchor point where they are attached. The position of the anchor point is important for
+        /// computing the reaction torque.
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
@@ -105,43 +104,36 @@ namespace VelcroPhysics.Dynamics.Joints
             ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// The bodyB angle minus bodyA angle in the reference state (radians).
-        /// </summary>
+        /// <summary>The bodyB angle minus bodyA angle in the reference state (radians).</summary>
         public float ReferenceAngle { get; set; }
 
         /// <summary>
-        /// The frequency of the joint. A higher frequency means a stiffer joint, but
-        /// a too high value can cause the joint to oscillate.
-        /// Default is 0, which means the joint does no spring calculations.
+        /// The frequency of the joint. A higher frequency means a stiffer joint, but a too high value can cause the joint
+        /// to oscillate. Default is 0, which means the joint does no spring calculations.
         /// </summary>
         public float FrequencyHz { get; set; }
 
         /// <summary>
-        /// The damping on the joint. The damping is only used when
-        /// the joint has a frequency (> 0). A higher value means more damping.
+        /// The damping on the joint. The damping is only used when the joint has a frequency (> 0). A higher value means
+        /// more damping.
         /// </summary>
         public float DampingRatio { get; set; }
 
@@ -256,9 +248,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 wB += iB * (MathUtils.Cross(_rB, P) + _impulse.Z);
             }
             else
-            {
                 _impulse = Vector3.Zero;
-            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;
@@ -379,9 +369,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
                 Vector3 impulse;
                 if (K.ez.Z > 0.0f)
-                {
                     impulse = -K.Solve33(C);
-                }
                 else
                 {
                     Vector2 impulse2 = -K.Solve22(C1);

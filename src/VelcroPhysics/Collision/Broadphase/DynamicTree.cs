@@ -31,12 +31,10 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Collision.Broadphase
 {
     /// <summary>
-    /// A dynamic tree arranges data in a binary tree to accelerate
-    /// queries such as volume queries and ray casts. Leafs are proxies
-    /// with an AABB. In the tree we expand the proxy AABB by Settings.b2_fatAABBFactor
-    /// so that the proxy AABB is bigger than the client object. This allows the client
-    /// object to move by small amounts without triggering a tree update.
-    /// Nodes are pooled and relocatable, so we use node indices rather than pointers.
+    /// A dynamic tree arranges data in a binary tree to accelerate queries such as volume queries and ray casts.
+    /// Leafs are proxies with an AABB. In the tree we expand the proxy AABB by Settings.b2_fatAABBFactor so that the proxy
+    /// AABB is bigger than the client object. This allows the client object to move by small amounts without triggering a tree
+    /// update. Nodes are pooled and relocatable, so we use node indices rather than pointers.
     /// </summary>
     public class DynamicTree<T>
     {
@@ -49,9 +47,7 @@ namespace VelcroPhysics.Collision.Broadphase
         private Stack<int> _raycastStack = new Stack<int>(256);
         private int _root;
 
-        /// <summary>
-        /// Constructing the tree initializes the node pool.
-        /// </summary>
+        /// <summary>Constructing the tree initializes the node pool.</summary>
         public DynamicTree()
         {
             _root = NullNode;
@@ -73,33 +69,25 @@ namespace VelcroPhysics.Collision.Broadphase
             _freeList = 0;
         }
 
-        /// <summary>
-        /// Compute the height of the binary tree in O(N) time. Should not be called often.
-        /// </summary>
+        /// <summary>Compute the height of the binary tree in O(N) time. Should not be called often.</summary>
         public int Height
         {
             get
             {
                 if (_root == NullNode)
-                {
                     return 0;
-                }
 
                 return _nodes[_root].Height;
             }
         }
 
-        /// <summary>
-        /// Get the ratio of the sum of the node areas to the root area.
-        /// </summary>
+        /// <summary>Get the ratio of the sum of the node areas to the root area.</summary>
         public float AreaRatio
         {
             get
             {
                 if (_root == NullNode)
-                {
                     return 0.0f;
-                }
 
                 TreeNode<T> root = _nodes[_root];
                 float rootArea = root.AABB.Perimeter;
@@ -122,8 +110,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Get the maximum balance of an node in the tree. The balance is the difference
-        /// in height of the two children of a node.
+        /// Get the maximum balance of an node in the tree. The balance is the difference in height of the two children of
+        /// a node.
         /// </summary>
         public int MaxBalance
         {
@@ -134,9 +122,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 {
                     TreeNode<T> node = _nodes[i];
                     if (node.Height <= 1)
-                    {
                         continue;
-                    }
 
                     Debug.Assert(node.IsLeaf() == false);
 
@@ -151,9 +137,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Create a proxy in the tree as a leaf node. We return the index
-        /// of the node instead of a pointer so that we can grow
-        /// the node pool.
+        /// Create a proxy in the tree as a leaf node. We return the index of the node instead of a pointer so that we can
+        /// grow the node pool.
         /// </summary>
         /// <param name="aabb">The AABB.</param>
         /// <param name="userData">The user data.</param>
@@ -174,9 +159,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return proxyId;
         }
 
-        /// <summary>
-        /// Destroy a proxy. This asserts if the id is invalid.
-        /// </summary>
+        /// <summary>Destroy a proxy. This asserts if the id is invalid.</summary>
         /// <param name="proxyId">The proxy id.</param>
         public void RemoveProxy(int proxyId)
         {
@@ -188,9 +171,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB,
-        /// then the proxy is removed from the tree and re-inserted. Otherwise
-        /// the function returns immediately.
+        /// Move a proxy with a swepted AABB. If the proxy has moved outside of its fattened AABB, then the proxy is
+        /// removed from the tree and re-inserted. Otherwise the function returns immediately.
         /// </summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <param name="aabb">The AABB.</param>
@@ -203,9 +185,7 @@ namespace VelcroPhysics.Collision.Broadphase
             Debug.Assert(_nodes[proxyId].IsLeaf());
 
             if (_nodes[proxyId].AABB.Contains(ref aabb))
-            {
                 return false;
-            }
 
             RemoveLeaf(proxyId);
 
@@ -219,22 +199,14 @@ namespace VelcroPhysics.Collision.Broadphase
             Vector2 d = Settings.AABBMultiplier * displacement;
 
             if (d.X < 0.0f)
-            {
                 b.LowerBound.X += d.X;
-            }
             else
-            {
                 b.UpperBound.X += d.X;
-            }
 
             if (d.Y < 0.0f)
-            {
                 b.LowerBound.Y += d.Y;
-            }
             else
-            {
                 b.UpperBound.Y += d.Y;
-            }
 
             _nodes[proxyId].AABB = b;
 
@@ -242,9 +214,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return true;
         }
 
-        /// <summary>
-        /// Get proxy user data.
-        /// </summary>
+        /// <summary>Get proxy user data.</summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="proxyId">The proxy id.</param>
         /// <returns>the proxy user data or 0 if the id is invalid.</returns>
@@ -254,9 +224,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return _nodes[proxyId].UserData;
         }
 
-        /// <summary>
-        /// Get the fat AABB for a proxy.
-        /// </summary>
+        /// <summary>Get the fat AABB for a proxy.</summary>
         /// <param name="proxyId">The proxy id.</param>
         /// <param name="fatAABB">The fat AABB.</param>
         public void GetFatAABB(int proxyId, out AABB fatAABB)
@@ -266,8 +234,8 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Query an AABB for overlapping proxies. The callback class
-        /// is called for each proxy that overlaps the supplied AABB.
+        /// Query an AABB for overlapping proxies. The callback class is called for each proxy that overlaps the supplied
+        /// AABB.
         /// </summary>
         /// <param name="callback">The callback.</param>
         /// <param name="aabb">The AABB.</param>
@@ -280,9 +248,7 @@ namespace VelcroPhysics.Collision.Broadphase
             {
                 int nodeId = _queryStack.Pop();
                 if (nodeId == NullNode)
-                {
                     continue;
-                }
 
                 TreeNode<T> node = _nodes[nodeId];
 
@@ -292,9 +258,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     {
                         bool proceed = callback(nodeId);
                         if (proceed == false)
-                        {
                             return;
-                        }
                     }
                     else
                     {
@@ -306,11 +270,9 @@ namespace VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>
-        /// Ray-cast against the proxies in the tree. This relies on the callback
-        /// to perform a exact ray-cast in the case were the proxy contains a Shape.
-        /// The callback also performs the any collision filtering. This has performance
-        /// roughly equal to k * log(n), where k is the number of collisions and n is the
-        /// number of proxies in the tree.
+        /// Ray-cast against the proxies in the tree. This relies on the callback to perform a exact ray-cast in the case
+        /// were the proxy contains a Shape. The callback also performs the any collision filtering. This has performance roughly
+        /// equal to k * log(n), where k is the number of collisions and n is the number of proxies in the tree.
         /// </summary>
         /// <param name="callback">A callback class that is called for each proxy that is hit by the ray.</param>
         /// <param name="input">The ray-cast input data. The ray extends from p1 to p1 + maxFraction * (p2 - p1).</param>
@@ -345,16 +307,12 @@ namespace VelcroPhysics.Collision.Broadphase
             {
                 int nodeId = _raycastStack.Pop();
                 if (nodeId == NullNode)
-                {
                     continue;
-                }
 
                 TreeNode<T> node = _nodes[nodeId];
 
                 if (AABB.TestOverlap(ref node.AABB, ref segmentAABB) == false)
-                {
                     continue;
-                }
 
                 // Separating axis for segment (Gino, p80).
                 // |dot(v, p1 - c)| > dot(|v|, h)
@@ -362,9 +320,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 Vector2 h = node.AABB.Extents;
                 float separation = Math.Abs(Vector2.Dot(new Vector2(-r.Y, r.X), p1 - c)) - Vector2.Dot(absV, h);
                 if (separation > 0.0f)
-                {
                     continue;
-                }
 
                 if (node.IsLeaf())
                 {
@@ -432,7 +388,7 @@ namespace VelcroPhysics.Collision.Broadphase
             _nodes[nodeId].Child1 = NullNode;
             _nodes[nodeId].Child2 = NullNode;
             _nodes[nodeId].Height = 0;
-            _nodes[nodeId].UserData = default(T);
+            _nodes[nodeId].UserData = default;
             ++_nodeCount;
             return nodeId;
         }
@@ -490,7 +446,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     aabb.Combine(ref leafAABB, ref _nodes[child1].AABB);
                     float oldArea = _nodes[child1].AABB.Perimeter;
                     float newArea = aabb.Perimeter;
-                    cost1 = (newArea - oldArea) + inheritanceCost;
+                    cost1 = newArea - oldArea + inheritanceCost;
                 }
 
                 // Cost of descending into child2
@@ -512,19 +468,13 @@ namespace VelcroPhysics.Collision.Broadphase
 
                 // Descend according to the minimum cost.
                 if (cost < cost1 && cost1 < cost2)
-                {
                     break;
-                }
 
                 // Descend
                 if (cost1 < cost2)
-                {
                     index = child1;
-                }
                 else
-                {
                     index = child2;
-                }
             }
 
             int sibling = index;
@@ -533,7 +483,7 @@ namespace VelcroPhysics.Collision.Broadphase
             int oldParent = _nodes[sibling].ParentOrNext;
             int newParent = AllocateNode();
             _nodes[newParent].ParentOrNext = oldParent;
-            _nodes[newParent].UserData = default(T);
+            _nodes[newParent].UserData = default;
             _nodes[newParent].AABB.Combine(ref leafAABB, ref _nodes[sibling].AABB);
             _nodes[newParent].Height = _nodes[sibling].Height + 1;
 
@@ -541,13 +491,9 @@ namespace VelcroPhysics.Collision.Broadphase
             {
                 // The sibling was not the root.
                 if (_nodes[oldParent].Child1 == sibling)
-                {
                     _nodes[oldParent].Child1 = newParent;
-                }
                 else
-                {
                     _nodes[oldParent].Child2 = newParent;
-                }
 
                 _nodes[newParent].Child1 = sibling;
                 _nodes[newParent].Child2 = leaf;
@@ -597,25 +543,17 @@ namespace VelcroPhysics.Collision.Broadphase
             int grandParent = _nodes[parent].ParentOrNext;
             int sibling;
             if (_nodes[parent].Child1 == leaf)
-            {
                 sibling = _nodes[parent].Child2;
-            }
             else
-            {
                 sibling = _nodes[parent].Child1;
-            }
 
             if (grandParent != NullNode)
             {
                 // Destroy parent and connect sibling to grandParent.
                 if (_nodes[grandParent].Child1 == parent)
-                {
                     _nodes[grandParent].Child1 = sibling;
-                }
                 else
-                {
                     _nodes[grandParent].Child2 = sibling;
-                }
                 _nodes[sibling].ParentOrNext = grandParent;
                 FreeNode(parent);
 
@@ -644,9 +582,7 @@ namespace VelcroPhysics.Collision.Broadphase
             //Validate();
         }
 
-        /// <summary>
-        /// Perform a left or right rotation if node A is imbalanced.
-        /// </summary>
+        /// <summary>Perform a left or right rotation if node A is imbalanced.</summary>
         /// <param name="iA"></param>
         /// <returns>the new root index.</returns>
         private int Balance(int iA)
@@ -655,9 +591,7 @@ namespace VelcroPhysics.Collision.Broadphase
 
             TreeNode<T> A = _nodes[iA];
             if (A.IsLeaf() || A.Height < 2)
-            {
                 return iA;
-            }
 
             int iB = A.Child1;
             int iC = A.Child2;
@@ -688,9 +622,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 if (C.ParentOrNext != NullNode)
                 {
                     if (_nodes[C.ParentOrNext].Child1 == iA)
-                    {
                         _nodes[C.ParentOrNext].Child1 = iC;
-                    }
                     else
                     {
                         Debug.Assert(_nodes[C.ParentOrNext].Child2 == iA);
@@ -698,9 +630,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     }
                 }
                 else
-                {
                     _root = iC;
-                }
 
                 // Rotate
                 if (F.Height > G.Height)
@@ -748,9 +678,7 @@ namespace VelcroPhysics.Collision.Broadphase
                 if (B.ParentOrNext != NullNode)
                 {
                     if (_nodes[B.ParentOrNext].Child1 == iA)
-                    {
                         _nodes[B.ParentOrNext].Child1 = iB;
-                    }
                     else
                     {
                         Debug.Assert(_nodes[B.ParentOrNext].Child2 == iA);
@@ -758,9 +686,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     }
                 }
                 else
-                {
                     _root = iB;
-                }
 
                 // Rotate
                 if (D.Height > E.Height)
@@ -792,9 +718,7 @@ namespace VelcroPhysics.Collision.Broadphase
             return iA;
         }
 
-        /// <summary>
-        /// Compute the height of a sub-tree.
-        /// </summary>
+        /// <summary>Compute the height of a sub-tree.</summary>
         /// <param name="nodeId">The node id to use as parent.</param>
         /// <returns>The height of the tree.</returns>
         public int ComputeHeight(int nodeId)
@@ -803,18 +727,14 @@ namespace VelcroPhysics.Collision.Broadphase
             TreeNode<T> node = _nodes[nodeId];
 
             if (node.IsLeaf())
-            {
                 return 0;
-            }
 
             int height1 = ComputeHeight(node.Child1);
             int height2 = ComputeHeight(node.Child2);
             return 1 + Math.Max(height1, height2);
         }
 
-        /// <summary>
-        /// Compute the height of the entire tree.
-        /// </summary>
+        /// <summary>Compute the height of the entire tree.</summary>
         /// <returns>The height of the tree.</returns>
         public int ComputeHeight()
         {
@@ -825,14 +745,10 @@ namespace VelcroPhysics.Collision.Broadphase
         public void ValidateStructure(int index)
         {
             if (index == NullNode)
-            {
                 return;
-            }
 
             if (index == _root)
-            {
                 Debug.Assert(_nodes[index].ParentOrNext == NullNode);
-            }
 
             TreeNode<T> node = _nodes[index];
 
@@ -860,9 +776,7 @@ namespace VelcroPhysics.Collision.Broadphase
         public void ValidateMetrics(int index)
         {
             if (index == NullNode)
-            {
                 return;
-            }
 
             TreeNode<T> node = _nodes[index];
 
@@ -895,9 +809,7 @@ namespace VelcroPhysics.Collision.Broadphase
             ValidateMetrics(child2);
         }
 
-        /// <summary>
-        /// Validate this tree. For testing.
-        /// </summary>
+        /// <summary>Validate this tree. For testing.</summary>
         public void Validate()
         {
             ValidateStructure(_root);
@@ -917,9 +829,7 @@ namespace VelcroPhysics.Collision.Broadphase
             Debug.Assert(_nodeCount + freeCount == _nodeCapacity);
         }
 
-        /// <summary>
-        /// Build an optimal tree. Very expensive. For testing.
-        /// </summary>
+        /// <summary>Build an optimal tree. Very expensive. For testing.</summary>
         public void RebuildBottomUp()
         {
             int[] nodes = new int[_nodeCount];
@@ -941,9 +851,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     ++count;
                 }
                 else
-                {
                     FreeNode(i);
-                }
             }
 
             while (count > 1)
@@ -995,9 +903,7 @@ namespace VelcroPhysics.Collision.Broadphase
             Validate();
         }
 
-        /// <summary>
-        /// Shift the origin of the nodes
-        /// </summary>
+        /// <summary>Shift the origin of the nodes</summary>
         /// <param name="newOrigin">The displacement to use.</param>
         public void ShiftOrigin(Vector2 newOrigin)
         {

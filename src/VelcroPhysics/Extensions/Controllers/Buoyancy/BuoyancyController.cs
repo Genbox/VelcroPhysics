@@ -19,32 +19,24 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
         private Dictionary<int, Body> _uniqueBodies = new Dictionary<int, Body>();
 
         /// <summary>
-        /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate thick
-        /// fluid, like honey, lower values to
-        /// simulate water-like fluids.
+        /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate
+        /// thick fluid, like honey, lower values to simulate water-like fluids.
         /// </summary>
         public float AngularDragCoefficient;
 
-        /// <summary>
-        /// Density of the fluid. Higher values will make things more buoyant, lower values will cause things to sink.
-        /// </summary>
+        /// <summary>Density of the fluid. Higher values will make things more buoyant, lower values will cause things to sink.</summary>
         public float Density;
 
         /// <summary>
-        /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick fluid,
-        /// like honey, lower values to
-        /// simulate water-like fluids.
+        /// Controls the linear drag that the fluid exerts on the bodies within it.  Use higher values will simulate thick
+        /// fluid, like honey, lower values to simulate water-like fluids.
         /// </summary>
         public float LinearDragCoefficient;
 
-        /// <summary>
-        /// Acts like waterflow. Defaults to 0,0.
-        /// </summary>
+        /// <summary>Acts like waterflow. Defaults to 0,0.</summary>
         public Vector2 Velocity;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BuoyancyController" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="BuoyancyController" /> class.</summary>
         /// <param name="container">Only bodies inside this AABB will be influenced by the controller</param>
         /// <param name="density">Density of the fluid</param>
         /// <param name="linearDragCoefficient">Linear drag coefficient of the fluid</param>
@@ -63,7 +55,7 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
 
         public AABB Container
         {
-            get { return _container; }
+            get => _container;
             set
             {
                 _container = value;
@@ -141,156 +133,152 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
+                {
+                    CircleShape circleShape = (CircleShape)shape;
+
+                    sc = Vector2.Zero;
+
+                    Vector2 p = MathUtils.Mul(ref xf, circleShape.Position);
+                    float l = -(Vector2.Dot(normal, p) - offset);
+                    if (l < -circleShape.Radius + Settings.Epsilon)
                     {
-                        CircleShape circleShape = (CircleShape)shape;
-
-                        sc = Vector2.Zero;
-
-                        Vector2 p = MathUtils.Mul(ref xf, circleShape.Position);
-                        float l = -(Vector2.Dot(normal, p) - offset);
-                        if (l < -circleShape.Radius + Settings.Epsilon)
-                        {
-                            //Completely dry
-                            return 0;
-                        }
-                        if (l > circleShape.Radius)
-                        {
-                            //Completely wet
-                            sc = p;
-                            return Settings.Pi * circleShape._2radius;
-                        }
-
-                        //Magic
-                        float l2 = l * l;
-                        float area = circleShape._2radius * (float)((Math.Asin(l / circleShape.Radius) + Settings.Pi / 2) + l * Math.Sqrt(circleShape._2radius - l2));
-                        float com = -2.0f / 3.0f * (float)Math.Pow(circleShape._2radius - l2, 1.5f) / area;
-
-                        sc.X = p.X + normal.X * com;
-                        sc.Y = p.Y + normal.Y * com;
-
-                        return area;
+                        //Completely dry
+                        return 0;
                     }
+                    if (l > circleShape.Radius)
+                    {
+                        //Completely wet
+                        sc = p;
+                        return Settings.Pi * circleShape._2radius;
+                    }
+
+                    //Magic
+                    float l2 = l * l;
+                    float area = circleShape._2radius * (float)(Math.Asin(l / circleShape.Radius) + Settings.Pi / 2 + l * Math.Sqrt(circleShape._2radius - l2));
+                    float com = -2.0f / 3.0f * (float)Math.Pow(circleShape._2radius - l2, 1.5f) / area;
+
+                    sc.X = p.X + normal.X * com;
+                    sc.Y = p.Y + normal.Y * com;
+
+                    return area;
+                }
                 case ShapeType.Edge:
                     sc = Vector2.Zero;
                     return 0;
                 case ShapeType.Polygon:
+                {
+                    sc = Vector2.Zero;
+
+                    PolygonShape polygonShape = (PolygonShape)shape;
+
+                    //Transform plane into shape co-ordinates
+                    Vector2 normalL = MathUtils.MulT(xf.q, normal);
+                    float offsetL = offset - Vector2.Dot(normal, xf.p);
+
+                    float[] depths = new float[Settings.MaxPolygonVertices];
+                    int diveCount = 0;
+                    int intoIndex = -1;
+                    int outoIndex = -1;
+
+                    bool lastSubmerged = false;
+                    int i;
+                    for (i = 0; i < polygonShape.Vertices.Count; i++)
                     {
-                        sc = Vector2.Zero;
-
-                        PolygonShape polygonShape = (PolygonShape)shape;
-
-                        //Transform plane into shape co-ordinates
-                        Vector2 normalL = MathUtils.MulT(xf.q, normal);
-                        float offsetL = offset - Vector2.Dot(normal, xf.p);
-
-                        float[] depths = new float[Settings.MaxPolygonVertices];
-                        int diveCount = 0;
-                        int intoIndex = -1;
-                        int outoIndex = -1;
-
-                        bool lastSubmerged = false;
-                        int i;
-                        for (i = 0; i < polygonShape.Vertices.Count; i++)
+                        depths[i] = Vector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
+                        bool isSubmerged = depths[i] < -Settings.Epsilon;
+                        if (i > 0)
                         {
-                            depths[i] = Vector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
-                            bool isSubmerged = depths[i] < -Settings.Epsilon;
-                            if (i > 0)
+                            if (isSubmerged)
                             {
-                                if (isSubmerged)
+                                if (!lastSubmerged)
                                 {
-                                    if (!lastSubmerged)
-                                    {
-                                        intoIndex = i - 1;
-                                        diveCount++;
-                                    }
-                                }
-                                else
-                                {
-                                    if (lastSubmerged)
-                                    {
-                                        outoIndex = i - 1;
-                                        diveCount++;
-                                    }
+                                    intoIndex = i - 1;
+                                    diveCount++;
                                 }
                             }
-                            lastSubmerged = isSubmerged;
-                        }
-                        switch (diveCount)
-                        {
-                            case 0:
+                            else
+                            {
                                 if (lastSubmerged)
                                 {
-                                    //Completely submerged
-                                    sc = MathUtils.Mul(ref xf, polygonShape.MassData.Centroid);
-                                    return polygonShape.MassData.Mass / Density;
+                                    outoIndex = i - 1;
+                                    diveCount++;
                                 }
-
-                                //Completely dry
-                                return 0;
-                            case 1:
-                                if (intoIndex == -1)
-                                {
-                                    intoIndex = polygonShape.Vertices.Count - 1;
-                                }
-                                else
-                                {
-                                    outoIndex = polygonShape.Vertices.Count - 1;
-                                }
-                                break;
+                            }
                         }
-
-                        int intoIndex2 = (intoIndex + 1) % polygonShape.Vertices.Count;
-                        int outoIndex2 = (outoIndex + 1) % polygonShape.Vertices.Count;
-
-                        float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
-                        float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
-
-                        Vector2 intoVec = new Vector2(polygonShape.Vertices[intoIndex].X * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].X * intoLambda, polygonShape.Vertices[intoIndex].Y * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].Y * intoLambda);
-                        Vector2 outoVec = new Vector2(polygonShape.Vertices[outoIndex].X * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].X * outoLambda, polygonShape.Vertices[outoIndex].Y * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].Y * outoLambda);
-
-                        //Initialize accumulator
-                        float area = 0;
-                        Vector2 center = new Vector2(0, 0);
-                        Vector2 p2 = polygonShape.Vertices[intoIndex2];
-
-                        const float k_inv3 = 1.0f / 3.0f;
-
-                        //An awkward loop from intoIndex2+1 to outIndex2
-                        i = intoIndex2;
-                        while (i != outoIndex2)
-                        {
-                            i = (i + 1) % polygonShape.Vertices.Count;
-                            Vector2 p3;
-                            if (i == outoIndex2)
-                                p3 = outoVec;
-                            else
-                                p3 = polygonShape.Vertices[i];
-
-                            //Add the triangle formed by intoVec,p2,p3
+                        lastSubmerged = isSubmerged;
+                    }
+                    switch (diveCount)
+                    {
+                        case 0:
+                            if (lastSubmerged)
                             {
-                                Vector2 e1 = p2 - intoVec;
-                                Vector2 e2 = p3 - intoVec;
-
-                                float D = MathUtils.Cross(e1, e2);
-
-                                float triangleArea = 0.5f * D;
-
-                                area += triangleArea;
-
-                                // Area weighted centroid
-                                center += triangleArea * k_inv3 * (intoVec + p2 + p3);
+                                //Completely submerged
+                                sc = MathUtils.Mul(ref xf, polygonShape.MassData.Centroid);
+                                return polygonShape.MassData.Mass / Density;
                             }
 
-                            p2 = p3;
+                            //Completely dry
+                            return 0;
+                        case 1:
+                            if (intoIndex == -1)
+                                intoIndex = polygonShape.Vertices.Count - 1;
+                            else
+                                outoIndex = polygonShape.Vertices.Count - 1;
+                            break;
+                    }
+
+                    int intoIndex2 = (intoIndex + 1) % polygonShape.Vertices.Count;
+                    int outoIndex2 = (outoIndex + 1) % polygonShape.Vertices.Count;
+
+                    float intoLambda = (0 - depths[intoIndex]) / (depths[intoIndex2] - depths[intoIndex]);
+                    float outoLambda = (0 - depths[outoIndex]) / (depths[outoIndex2] - depths[outoIndex]);
+
+                    Vector2 intoVec = new Vector2(polygonShape.Vertices[intoIndex].X * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].X * intoLambda, polygonShape.Vertices[intoIndex].Y * (1 - intoLambda) + polygonShape.Vertices[intoIndex2].Y * intoLambda);
+                    Vector2 outoVec = new Vector2(polygonShape.Vertices[outoIndex].X * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].X * outoLambda, polygonShape.Vertices[outoIndex].Y * (1 - outoLambda) + polygonShape.Vertices[outoIndex2].Y * outoLambda);
+
+                    //Initialize accumulator
+                    float area = 0;
+                    Vector2 center = new Vector2(0, 0);
+                    Vector2 p2 = polygonShape.Vertices[intoIndex2];
+
+                    const float k_inv3 = 1.0f / 3.0f;
+
+                    //An awkward loop from intoIndex2+1 to outIndex2
+                    i = intoIndex2;
+                    while (i != outoIndex2)
+                    {
+                        i = (i + 1) % polygonShape.Vertices.Count;
+                        Vector2 p3;
+                        if (i == outoIndex2)
+                            p3 = outoVec;
+                        else
+                            p3 = polygonShape.Vertices[i];
+
+                        //Add the triangle formed by intoVec,p2,p3
+                        {
+                            Vector2 e1 = p2 - intoVec;
+                            Vector2 e2 = p3 - intoVec;
+
+                            float D = MathUtils.Cross(e1, e2);
+
+                            float triangleArea = 0.5f * D;
+
+                            area += triangleArea;
+
+                            // Area weighted centroid
+                            center += triangleArea * k_inv3 * (intoVec + p2 + p3);
                         }
 
-                        //Normalize and transform centroid
-                        center *= 1.0f / area;
-
-                        sc = MathUtils.Mul(ref xf, center);
-
-                        return area;
+                        p2 = p3;
                     }
+
+                    //Normalize and transform centroid
+                    center *= 1.0f / area;
+
+                    sc = MathUtils.Mul(ref xf, center);
+
+                    return area;
+                }
                 case ShapeType.Chain:
                     sc = Vector2.Zero;
                     return 0;

@@ -9,8 +9,8 @@ namespace VelcroPhysics.Benchmarks.Tests.Shared
     [InProcess]
     public class GraphBenchmark
     {
-        private List<Dummy> _list;
         private Graph<Dummy> _graph;
+        private List<Dummy> _list;
 
         [GlobalSetup]
         public void Setup()
@@ -68,7 +68,6 @@ namespace VelcroPhysics.Benchmarks.Tests.Shared
 
             return i;
         }
-
 
         [Benchmark]
         public void RemoveFromList()

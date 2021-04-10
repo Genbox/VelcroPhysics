@@ -69,11 +69,11 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             _distanceBody[3].Friction = 0.7f;
             _distanceBody[3].Position = new Vector2(16.5f, -6f);
 
-            DistanceJoint softDistance = new DistanceJoint(_distanceBody[0], _distanceBody[1], Vector2.Zero, Vector2.Zero, false);
+            DistanceJoint softDistance = new DistanceJoint(_distanceBody[0], _distanceBody[1], Vector2.Zero, Vector2.Zero);
             softDistance.DampingRatio = 0.3f;
             softDistance.Frequency = 5f;
             World.AddJoint(softDistance);
-            World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero, false));
+            World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero));
 
             // create sprites based on bodies
             _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
@@ -118,8 +118,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.Draw(gameTime);
         }
 
-        #region Demo description
-
         public override string GetTitle()
         {
             return "Distance & angle joints";
@@ -152,7 +150,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
     }
 }

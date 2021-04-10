@@ -16,9 +16,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             ground.OnSeparation += OnSeparation;
         }
 
-        private void OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
-        {
-        }
+        private void OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact) { }
 
         private void OnSeparation(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {

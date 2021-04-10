@@ -10,9 +10,7 @@ using VelcroPhysics.Dynamics.Solver;
 
 namespace VelcroPhysics.Dynamics.Joints
 {
-    /// <summary>
-    /// Maintains a fixed angle between two bodies
-    /// </summary>
+    /// <summary>Maintains a fixed angle between two bodies</summary>
     public class AngleJoint : Joint
     {
         private float _bias;
@@ -25,9 +23,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Angle;
         }
 
-        /// <summary>
-        /// Constructor for AngleJoint
-        /// </summary>
+        /// <summary>Constructor for AngleJoint</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         public AngleJoint(Body bodyA, Body bodyB)
@@ -40,22 +36,20 @@ namespace VelcroPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.Position; }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyA.Position;
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.Position; }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyB.Position;
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
-        /// <summary>
-        /// The desired angle between BodyA and BodyB
-        /// </summary>
+        /// <summary>The desired angle between BodyA and BodyB</summary>
         public float TargetAngle
         {
-            get { return _targetAngle; }
+            get => _targetAngle;
             set
             {
                 if (value != _targetAngle)
@@ -66,22 +60,13 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Gets or sets the bias factor.
-        /// Defaults to 0.2
-        /// </summary>
+        /// <summary>Gets or sets the bias factor. Defaults to 0.2</summary>
         public float BiasFactor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum impulse
-        /// Defaults to float.MaxValue
-        /// </summary>
+        /// <summary>Gets or sets the maximum impulse Defaults to float.MaxValue</summary>
         public float MaxImpulse { get; set; }
 
-        /// <summary>
-        /// Gets or sets the softness of the joint
-        /// Defaults to 0
-        /// </summary>
+        /// <summary>Gets or sets the softness of the joint Defaults to 0</summary>
         public float Softness { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
@@ -104,7 +89,7 @@ namespace VelcroPhysics.Dynamics.Joints
             float aW = data.Positions[indexA].A;
             float bW = data.Positions[indexB].A;
 
-            _jointError = (bW - aW - TargetAngle);
+            _jointError = bW - aW - TargetAngle;
             _bias = -BiasFactor * data.Step.inv_dt * _jointError;
             _massFactor = (1 - Softness) / (BodyA._invI + BodyB._invI);
         }

@@ -58,14 +58,12 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public Vector2 Position
         {
-            get { return ConvertUnits.ToDisplayUnits(_currentPosition); }
+            get => ConvertUnits.ToDisplayUnits(_currentPosition);
             set
             {
                 _targetPosition = ConvertUnits.ToSimUnits(value);
                 if (_minPosition != _maxPosition)
-                {
                     Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
-                }
             }
         }
 
@@ -76,8 +74,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public Vector2 MinPosition
         {
-            get { return ConvertUnits.ToDisplayUnits(_minPosition); }
-            set { _minPosition = ConvertUnits.ToSimUnits(value); }
+            get => ConvertUnits.ToDisplayUnits(_minPosition);
+            set => _minPosition = ConvertUnits.ToSimUnits(value);
         }
 
         /// <summary>
@@ -87,8 +85,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public Vector2 MaxPosition
         {
-            get { return ConvertUnits.ToDisplayUnits(_maxPosition); }
-            set { _maxPosition = ConvertUnits.ToSimUnits(value); }
+            get => ConvertUnits.ToDisplayUnits(_maxPosition);
+            set => _maxPosition = ConvertUnits.ToSimUnits(value);
         }
 
         /// <summary>
@@ -96,14 +94,12 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public float Rotation
         {
-            get { return _currentRotation; }
+            get => _currentRotation;
             set
             {
                 _targetRotation = value % MathHelper.TwoPi;
                 if (_minRotation != _maxRotation)
-                {
                     _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
-                }
             }
         }
 
@@ -113,8 +109,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// <value>The min rotation.</value>
         public float MinRotation
         {
-            get { return _minRotation; }
-            set { _minRotation = MathHelper.Clamp(value, -MathHelper.Pi, 0f); }
+            get => _minRotation;
+            set => _minRotation = MathHelper.Clamp(value, -MathHelper.Pi, 0f);
         }
 
         /// <summary>
@@ -123,8 +119,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// <value>The max rotation.</value>
         public float MaxRotation
         {
-            get { return _maxRotation; }
-            set { _maxRotation = MathHelper.Clamp(value, 0f, MathHelper.Pi); }
+            get => _maxRotation;
+            set => _maxRotation = MathHelper.Clamp(value, 0f, MathHelper.Pi);
         }
 
         /// <summary>
@@ -132,7 +128,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public float Zoom
         {
-            get { return _currentZoom; }
+            get => _currentZoom;
             set
             {
                 _currentZoom = value;
@@ -146,46 +142,36 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public Body TrackingBody
         {
-            get { return _trackingBody; }
+            get => _trackingBody;
             set
             {
                 _trackingBody = value;
                 if (_trackingBody != null)
-                {
                     _positionTracking = true;
-                }
             }
         }
 
         public bool EnablePositionTracking
         {
-            get { return _positionTracking; }
+            get => _positionTracking;
             set
             {
                 if (value && _trackingBody != null)
-                {
                     _positionTracking = true;
-                }
                 else
-                {
                     _positionTracking = false;
-                }
             }
         }
 
         public bool EnableRotationTracking
         {
-            get { return _rotationTracking; }
+            get => _rotationTracking;
             set
             {
                 if (value && _trackingBody != null)
-                {
                     _rotationTracking = true;
-                }
                 else
-                {
                     _rotationTracking = false;
-                }
             }
         }
 
@@ -202,9 +188,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         {
             _currentPosition += amount;
             if (_minPosition != _maxPosition)
-            {
                 Vector2.Clamp(ref _currentPosition, ref _minPosition, ref _maxPosition, out _currentPosition);
-            }
             _targetPosition = _currentPosition;
             _positionTracking = false;
             _rotationTracking = false;
@@ -214,9 +198,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         {
             _currentRotation += amount;
             if (_minRotation != _maxRotation)
-            {
                 _currentRotation = MathHelper.Clamp(_currentRotation, _minRotation, _maxRotation);
-            }
             _targetRotation = _currentRotation;
             _positionTracking = false;
             _rotationTracking = false;
@@ -285,50 +267,34 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 {
                     _targetPosition = _trackingBody.Position;
                     if (_minPosition != _maxPosition)
-                    {
                         Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
-                    }
                 }
                 if (_rotationTracking)
                 {
                     _targetRotation = -_trackingBody.Rotation % MathHelper.TwoPi;
                     if (_minRotation != _maxRotation)
-                    {
                         _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
-                    }
                 }
             }
             Vector2 delta = _targetPosition - _currentPosition;
             float distance = delta.Length();
             if (distance > 0f)
-            {
                 delta /= distance;
-            }
             float inertia;
             if (distance < 10f)
-            {
                 inertia = (float)Math.Pow(distance / 10.0, 2.0);
-            }
             else
-            {
                 inertia = 1f;
-            }
 
             float rotDelta = _targetRotation - _currentRotation;
 
             float rotInertia;
             if (Math.Abs(rotDelta) < 5f)
-            {
                 rotInertia = (float)Math.Pow(rotDelta / 5.0, 2.0);
-            }
             else
-            {
                 rotInertia = 1f;
-            }
             if (Math.Abs(rotDelta) > 0f)
-            {
                 rotDelta /= Math.Abs(rotDelta);
-            }
 
             _currentPosition += 100f * delta * inertia * (float)gameTime.ElapsedGameTime.TotalSeconds;
             _currentRotation += 80f * rotDelta * rotInertia * (float)gameTime.ElapsedGameTime.TotalSeconds;

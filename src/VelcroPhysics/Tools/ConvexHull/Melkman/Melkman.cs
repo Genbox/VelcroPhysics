@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Utilities;
 
@@ -18,9 +18,7 @@ namespace VelcroPhysics.Tools.ConvexHull.Melkman
     {
         //Melkman based convex hull algorithm contributed by Cowdozer
 
-        /// <summary>
-        /// Returns a convex hull from the given vertices.
-        /// </summary>
+        /// <summary>Returns a convex hull from the given vertices.</summary>
         /// <returns>A convex hull in counter clockwise winding order.</returns>
         public static Vertices GetConvexHull(Vertices vertices)
         {
@@ -115,7 +113,9 @@ namespace VelcroPhysics.Tools.ConvexHull.Melkman
                 Vertices convexHull = new Vertices(qf);
 
                 for (int i = qb; i < qf; i++)
+                {
                     convexHull.Add(deque[i]);
+                }
 
                 return convexHull;
             }
@@ -124,10 +124,14 @@ namespace VelcroPhysics.Tools.ConvexHull.Melkman
                 Vertices convexHull = new Vertices(qf + deque.Length);
 
                 for (int i = 0; i < qf; i++)
+                {
                     convexHull.Add(deque[i]);
+                }
 
                 for (int i = qb; i < deque.Length; i++)
+                {
                     convexHull.Add(deque[i]);
+                }
 
                 return convexHull;
             }

@@ -10,9 +10,7 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Factories
 {
-    /// <summary>
-    /// An easy to use factory for creating bodies
-    /// </summary>
+    /// <summary>An easy to use factory for creating bodies</summary>
     public static class FixtureFactory
     {
         public static Fixture AttachEdge(Vector2 start, Vector2 end, Body body, object userData = null)

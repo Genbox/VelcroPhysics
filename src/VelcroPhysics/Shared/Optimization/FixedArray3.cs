@@ -56,20 +56,24 @@ namespace VelcroPhysics.Shared.Optimization
         public int IndexOf(T value)
         {
             for (int i = 0; i < 3; ++i)
+            {
                 if (this[i].Equals(value))
                     return i;
+            }
             return -1;
         }
 
         public void Clear()
         {
-            Value0 = Value1 = Value2 = default(T);
+            Value0 = Value1 = Value2 = default;
         }
 
         private IEnumerable<T> Enumerate()
         {
             for (int i = 0; i < 3; ++i)
+            {
                 yield return this[i];
+            }
         }
     }
 }

@@ -7,9 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace VelcroPhysics.Utilities
 {
-    /// <summary>
-    /// Convert units between display and simulation units.
-    /// </summary>
+    /// <summary>Convert units between display and simulation units.</summary>
     public static class ConvertUnits
     {
         private static float _displayUnitsToSimUnitsRatio = 100f;

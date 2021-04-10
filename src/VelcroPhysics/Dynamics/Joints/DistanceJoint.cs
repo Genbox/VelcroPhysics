@@ -45,8 +45,7 @@ namespace VelcroPhysics.Dynamics.Joints
     //   = invMass1 + invI1 * cross(r1, u)^2 + invMass2 + invI2 * cross(r2, u)^2
 
     /// <summary>
-    /// A distance joint rains two points on two bodies
-    /// to remain at a fixed distance from each other. You can view
+    /// A distance joint rains two points on two bodies to remain at a fixed distance from each other. You can view
     /// this as a massless, rigid rod.
     /// </summary>
     public class DistanceJoint : Joint
@@ -78,12 +77,9 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// This requires defining an
-        /// anchor point on both bodies and the non-zero length of the
-        /// distance joint. If you don't supply a length, the local anchor points
-        /// is used so that the initial configuration can violate the constraint
-        /// slightly. This helps when saving and loading a game.
-        /// Warning Do not use a zero or short length.
+        /// This requires defining an anchor point on both bodies and the non-zero length of the distance joint. If you
+        /// don't supply a length, the local anchor points is used so that the initial configuration can violate the constraint
+        /// slightly. This helps when saving and loading a game. Warning Do not use a zero or short length.
         /// </summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
@@ -109,48 +105,37 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The local anchor point relative to bodyA's origin.
-        /// </summary>
+        /// <summary>The local anchor point relative to bodyA's origin.</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point relative to bodyB's origin.
-        /// </summary>
+        /// <summary>The local anchor point relative to bodyB's origin.</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public sealed override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public sealed override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         /// <summary>
-        /// The natural length between the anchor points.
-        /// Manipulating the length can lead to non-physical behavior when the frequency is zero.
+        /// The natural length between the anchor points. Manipulating the length can lead to non-physical behavior when
+        /// the frequency is zero.
         /// </summary>
         public float Length { get; set; }
 
-        /// <summary>
-        /// The mass-spring-damper frequency in Hertz. A value of 0
-        /// disables softness.
-        /// </summary>
+        /// <summary>The mass-spring-damper frequency in Hertz. A value of 0 disables softness.</summary>
         public float Frequency { get; set; }
 
-        /// <summary>
-        /// The damping ratio. 0 = no damping, 1 = critical damping.
-        /// </summary>
+        /// <summary>The damping ratio. 0 = no damping, 1 = critical damping.</summary>
         public float DampingRatio { get; set; }
 
-        /// <summary>
-        /// Get the reaction force given the inverse time step. Unit is N.
-        /// </summary>
+        /// <summary>Get the reaction force given the inverse time step. Unit is N.</summary>
         /// <param name="invDt"></param>
         /// <returns></returns>
         public override Vector2 GetReactionForce(float invDt)
@@ -159,10 +144,7 @@ namespace VelcroPhysics.Dynamics.Joints
             return F;
         }
 
-        /// <summary>
-        /// Get the reaction torque given the inverse time step.
-        /// Unit is N*m. This is always zero for a distance joint.
-        /// </summary>
+        /// <summary>Get the reaction torque given the inverse time step. Unit is N*m. This is always zero for a distance joint.</summary>
         /// <param name="invDt"></param>
         /// <returns></returns>
         public override float GetReactionTorque(float invDt)
@@ -200,13 +182,9 @@ namespace VelcroPhysics.Dynamics.Joints
             // Handle singularity.
             float length = _u.Length();
             if (length > Settings.LinearSlop)
-            {
                 _u *= 1.0f / length;
-            }
             else
-            {
                 _u = Vector2.Zero;
-            }
 
             float crAu = MathUtils.Cross(_rA, _u);
             float crBu = MathUtils.Cross(_rB, _u);
@@ -255,9 +233,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 wB += _invIB * MathUtils.Cross(_rB, P);
             }
             else
-            {
                 _impulse = 0.0f;
-            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;

@@ -40,8 +40,8 @@ namespace VelcroPhysics.Dynamics.Joints
     // K = invI1 + invI2
 
     /// <summary>
-    /// Friction joint. This is used for top-down friction.
-    /// It provides 2D translational friction and angular friction.
+    /// Friction joint. This is used for top-down friction. It provides 2D translational friction and angular
+    /// friction.
     /// </summary>
     public class FrictionJoint : Joint
     {
@@ -72,9 +72,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Friction;
         }
 
-        /// <summary>
-        /// Constructor for FrictionJoint.
-        /// </summary>
+        /// <summary>Constructor for FrictionJoint.</summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
@@ -96,36 +94,28 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// The maximum friction force in N.
-        /// </summary>
+        /// <summary>The maximum friction force in N.</summary>
         public float MaxForce { get; set; }
 
-        /// <summary>
-        /// The maximum friction torque in N-m.
-        /// </summary>
+        /// <summary>The maximum friction torque in N-m.</summary>
         public float MaxTorque { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
@@ -185,9 +175,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             _angularMass = iA + iB;
             if (_angularMass > 0.0f)
-            {
                 _angularMass = 1.0f / _angularMass;
-            }
 
             if (Settings.EnableWarmstarting)
             {

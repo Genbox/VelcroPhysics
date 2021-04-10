@@ -81,14 +81,10 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
-            {
                 _touching[(int)fixtureB.Body.UserData] = true;
-            }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
-            {
                 _touching[(int)fixtureA.Body.UserData] = true;
-            }
 
             return true;
         }
@@ -100,14 +96,10 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA == _sensor && fixtureB.Body.UserData != null)
-            {
                 _touching[(int)fixtureB.Body.UserData] = false;
-            }
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
-            {
                 _touching[(int)fixtureA.Body.UserData] = false;
-            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -119,9 +111,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             for (int i = 0; i < Count; ++i)
             {
                 if (_touching[i] == false)
-                {
                     continue;
-                }
 
                 Body body = _bodies[i];
                 Body ground = _sensor.Body;
@@ -133,9 +123,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                 Vector2 d = center - position;
                 if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
-                {
                     continue;
-                }
 
                 d.Normalize();
                 Vector2 f = 100.0f * d;

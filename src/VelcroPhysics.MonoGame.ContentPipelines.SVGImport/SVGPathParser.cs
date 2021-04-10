@@ -75,63 +75,63 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                     {
                         case 'm':
                         case 'l':
-                            {
-                                currentPosition.X += arguments[0];
-                                currentPosition.Y += arguments[1];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.X += arguments[0];
+                            currentPosition.Y += arguments[1];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'M':
                         case 'L':
-                            {
-                                currentPosition.X = arguments[0];
-                                currentPosition.Y = arguments[1];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.X = arguments[0];
+                            currentPosition.Y = arguments[1];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'h':
-                            {
-                                currentPosition.X += arguments[0];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.X += arguments[0];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'H':
-                            {
-                                currentPosition.X = arguments[0];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.X = arguments[0];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'v':
-                            {
-                                currentPosition.Y += arguments[0];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.Y += arguments[0];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'V':
-                            {
-                                currentPosition.Y = arguments[0];
-                                currentPath.Add(currentPosition);
-                            }
+                        {
+                            currentPosition.Y = arguments[0];
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'c':
-                            {
-                                Vector2 end = currentPosition + new Vector2(arguments[4], arguments[5]);
-                                CubicBezierRecursive(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]));
+                        {
+                            Vector2 end = currentPosition + new Vector2(arguments[4], arguments[5]);
+                            CubicBezierRecursive(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]));
 
-                                //cubicBezier(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
-                                currentPosition = end;
-                                currentPath.Add(currentPosition);
-                            }
+                            //cubicBezier(currentPath, currentPosition, end, currentPosition + new Vector2(arguments[0], arguments[1]), currentPosition + new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
+                            currentPosition = end;
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 'C':
-                            {
-                                Vector2 end = new Vector2(arguments[4], arguments[5]);
-                                CubicBezierRecursive(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]));
+                        {
+                            Vector2 end = new Vector2(arguments[4], arguments[5]);
+                            CubicBezierRecursive(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]));
 
-                                //cubicBezier(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
-                                currentPosition = end;
-                                currentPath.Add(currentPosition);
-                            }
+                            //cubicBezier(currentPath, currentPosition, end, new Vector2(arguments[0], arguments[1]), new Vector2(arguments[2], arguments[3]), (int)Math.Pow(2.0, BezierIterations));
+                            currentPosition = end;
+                            currentPath.Add(currentPosition);
+                        }
                             break;
                         case 's':
                         case 'S':
@@ -141,9 +141,9 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                         case 'Q':
                         case 'a':
                         case 'A':
-                            {
-                                throw new Exception("Path command '" + command + "' is not supported.");
-                            }
+                        {
+                            throw new Exception("Path command '" + command + "' is not supported.");
+                        }
                     }
                     argumentCount = 0;
                 }
@@ -171,28 +171,28 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                     {
                         case 'M':
                         case 'm':
-                            {
-                                if (currentPath != null && currentPath.Count > 1)
-                                    result.Add(new VerticesExt(currentPath, false));
+                        {
+                            if (currentPath != null && currentPath.Count > 1)
+                                result.Add(new VerticesExt(currentPath, false));
 
-                                currentPath = new Vertices();
-                                argumentCount = 0;
+                            currentPath = new Vertices();
+                            argumentCount = 0;
 
-                                if (command == 'M')
-                                    currentPosition = Vector2.Zero;
+                            if (command == 'M')
+                                currentPosition = Vector2.Zero;
 
-                                break;
-                            }
+                            break;
+                        }
                         case 'Z':
                         case 'z':
-                            {
-                                if (currentPath != null && currentPath.Count > 1)
-                                    result.Add(new VerticesExt(currentPath, true));
+                        {
+                            if (currentPath != null && currentPath.Count > 1)
+                                result.Add(new VerticesExt(currentPath, true));
 
-                                currentPath = null;
-                                argumentCount = 0;
-                                break;
-                            }
+                            currentPath = null;
+                            argumentCount = 0;
+                            break;
+                        }
                     }
                 }
             }
@@ -236,9 +236,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
         private void CubicBezierRecursive(Vertices path, Vector2 start, Vector2 end, Vector2 controlStart, Vector2 controlEnd, int level = 0)
         {
             if (level >= _iterations)
-            {
                 return;
-            }
 
             Vector2 s_CS = (start + controlStart) / 2f;
             Vector2 e_CE = (end + controlEnd) / 2f;

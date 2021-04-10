@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Shared;
@@ -35,7 +35,9 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
             int[] polygon = new int[vertices.Count];
 
             for (int v = 0; v < vertices.Count; v++)
+            {
                 polygon[v] = v;
+            }
 
             int nv = vertices.Count;
 
@@ -47,7 +49,7 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
             for (int v = nv - 1; nv > 2;)
             {
                 // If we loop, it is probably a non-simple polygon 
-                if (0 >= (count--))
+                if (0 >= count--)
                 {
                     // Triangulate: ERROR - probable bad polygon!
                     return new List<Vertices>();
@@ -94,10 +96,7 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
             return result;
         }
 
-        /// <summary>
-        /// Check if the point P is inside the triangle defined by
-        /// the points A, B, C
-        /// </summary>
+        /// <summary>Check if the point P is inside the triangle defined by the points A, B, C</summary>
         /// <param name="a">The A point.</param>
         /// <param name="b">The B point.</param>
         /// <param name="c">The C point.</param>
@@ -114,13 +113,10 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
             //b cross cp
             float bcp = (a.X - c.X) * (p.Y - c.Y) - (a.Y - c.Y) * (p.X - c.X);
 
-            return ((abp >= 0.0f) && (bcp >= 0.0f) && (aap >= 0.0f));
+            return abp >= 0.0f && bcp >= 0.0f && aap >= 0.0f;
         }
 
-        /// <summary>
-        /// Cut a the contour and add a triangle into V to describe the
-        /// location of the cut
-        /// </summary>
+        /// <summary>Cut a the contour and add a triangle into V to describe the location of the cut</summary>
         /// <param name="contour">The list of points defining the polygon</param>
         /// <param name="u">The index of the first point</param>
         /// <param name="v">The index of the second point</param>
@@ -135,7 +131,7 @@ namespace VelcroPhysics.Tools.Triangulation.FlipCode
 
             for (int p = 0; p < n; p++)
             {
-                if ((p == u) || (p == v) || (p == w))
+                if (p == u || p == v || p == w)
                     continue;
 
                 Vector2 point = contour[V[p]];

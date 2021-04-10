@@ -26,16 +26,12 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Collision.Shapes
 {
-    /// <summary>
-    /// A circle shape.
-    /// </summary>
+    /// <summary>A circle shape.</summary>
     public class CircleShape : Shape
     {
         internal Vector2 _position;
 
-        /// <summary>
-        /// Create a new circle with the desired radius and density.
-        /// </summary>
+        /// <summary>Create a new circle with the desired radius and density.</summary>
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="density">The density of the circle.</param>
         public CircleShape(float radius, float density) : base(ShapeType.Circle, radius, density)
@@ -47,12 +43,10 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override int ChildCount => 1;
 
-        /// <summary>
-        /// Get or set the position of the circle
-        /// </summary>
+        /// <summary>Get or set the position of the circle</summary>
         public Vector2 Position
         {
-            get { return _position; }
+            get => _position;
             set
             {
                 _position = value;
@@ -97,9 +91,7 @@ namespace VelcroPhysics.Collision.Shapes
             MassData.Inertia = MassData.Mass * (0.5f * _2radius + Vector2.Dot(Position, Position));
         }
 
-        /// <summary>
-        /// Compare the circle to another circle
-        /// </summary>
+        /// <summary>Compare the circle to another circle</summary>
         /// <param name="shape">The other circle</param>
         /// <returns>True if the two circles are the same size and have the same position</returns>
         public bool CompareTo(CircleShape shape)

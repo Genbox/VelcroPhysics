@@ -10,21 +10,13 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics
 {
-    /// <summary>
-    /// A type of body that supports multiple fixtures that can break apart.
-    /// </summary>
+    /// <summary>A type of body that supports multiple fixtures that can break apart.</summary>
     public class BreakableBody
     {
+        private readonly World _world;
         private float[] _angularVelocitiesCache = new float[8];
         private bool _break;
         private Vector2[] _velocitiesCache = new Vector2[8];
-        private readonly World _world;
-
-        /// <summary>
-        /// The force needed to break the body apart.
-        /// Default: 500
-        /// </summary>
-        public float Strength { get; set; }
 
         public BreakableBody(World world, IEnumerable<Vertices> vertices, float density, Vector2 position = new Vector2(), float rotation = 0)
         {
@@ -55,6 +47,9 @@ namespace VelcroPhysics
                 Parts.Add(fixture);
             }
         }
+
+        /// <summary>The force needed to break the body apart. Default: 500</summary>
+        public float Strength { get; set; }
 
         public bool Broken { get; private set; }
         public Body MainBody { get; }

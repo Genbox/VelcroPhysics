@@ -93,10 +93,9 @@ namespace VelcroPhysics.Dynamics.Joints
     // df = f2 - f1
 
     /// <summary>
-    /// A prismatic joint. This joint provides one degree of freedom: translation
-    /// along an axis fixed in bodyA. Relative rotation is prevented. You can
-    /// use a joint limit to restrict the range of motion and a joint motor to
-    /// drive the motion or to model joint friction.
+    /// A prismatic joint. This joint provides one degree of freedom: translation along an axis fixed in bodyA.
+    /// Relative rotation is prevented. You can use a joint limit to restrict the range of motion and a joint motor to drive
+    /// the motion or to model joint friction.
     /// </summary>
     public class PrismaticJoint : Joint
     {
@@ -133,12 +132,10 @@ namespace VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>
-        /// This requires defining a line of
-        /// motion using an axis and an anchor point. The definition uses local
-        /// anchor points and a local axis so that the initial configuration
-        /// can violate the constraint slightly. The joint translation is zero
-        /// when the local anchor points coincide in world space. Using local
-        /// anchors and a local axis helps when saving and loading a game.
+        /// This requires defining a line of motion using an axis and an anchor point. The definition uses local anchor
+        /// points and a local axis so that the initial configuration can violate the constraint slightly. The joint translation is
+        /// zero when the local anchor points coincide in world space. Using local anchors and a local axis helps when saving and
+        /// loading a game.
         /// </summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
@@ -158,31 +155,25 @@ namespace VelcroPhysics.Dynamics.Joints
             Initialize(anchor, anchor, axis, useWorldCoordinates);
         }
 
-        /// <summary>
-        /// The local anchor point on BodyA
-        /// </summary>
+        /// <summary>The local anchor point on BodyA</summary>
         public Vector2 LocalAnchorA { get; set; }
 
-        /// <summary>
-        /// The local anchor point on BodyB
-        /// </summary>
+        /// <summary>The local anchor point on BodyB</summary>
         public Vector2 LocalAnchorB { get; set; }
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.GetWorldPoint(LocalAnchorA); }
-            set { LocalAnchorA = BodyA.GetLocalPoint(value); }
+            get => BodyA.GetWorldPoint(LocalAnchorA);
+            set => LocalAnchorA = BodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.GetWorldPoint(LocalAnchorB); }
-            set { LocalAnchorB = BodyB.GetLocalPoint(value); }
+            get => BodyB.GetWorldPoint(LocalAnchorB);
+            set => LocalAnchorB = BodyB.GetLocalPoint(value);
         }
 
-        /// <summary>
-        /// Get the current joint translation, usually in meters.
-        /// </summary>
+        /// <summary>Get the current joint translation, usually in meters.</summary>
         /// <value></value>
         public float JointTranslation
         {
@@ -195,9 +186,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the current joint translation speed, usually in meters per second.
-        /// </summary>
+        /// <summary>Get the current joint translation speed, usually in meters per second.</summary>
         /// <value></value>
         public float JointSpeed
         {
@@ -224,13 +213,11 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Is the joint limit enabled?
-        /// </summary>
+        /// <summary>Is the joint limit enabled?</summary>
         /// <value><c>true</c> if [limit enabled]; otherwise, <c>false</c>.</value>
         public bool LimitEnabled
         {
-            get { return _enableLimit; }
+            get => _enableLimit;
             set
             {
                 Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false, "Warning: limits does currently not work with fixed rotation");
@@ -244,13 +231,11 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the lower joint limit, usually in meters.
-        /// </summary>
+        /// <summary>Get the lower joint limit, usually in meters.</summary>
         /// <value></value>
         public float LowerLimit
         {
-            get { return _lowerTranslation; }
+            get => _lowerTranslation;
             set
             {
                 if (value == _lowerTranslation)
@@ -262,13 +247,11 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the upper joint limit, usually in meters.
-        /// </summary>
+        /// <summary>Get the upper joint limit, usually in meters.</summary>
         /// <value></value>
         public float UpperLimit
         {
-            get { return _upperTranslation; }
+            get => _upperTranslation;
             set
             {
                 if (value == _upperTranslation)
@@ -280,13 +263,11 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Is the joint motor enabled?
-        /// </summary>
+        /// <summary>Is the joint motor enabled?</summary>
         /// <value><c>true</c> if [motor enabled]; otherwise, <c>false</c>.</value>
         public bool MotorEnabled
         {
-            get { return _enableMotor; }
+            get => _enableMotor;
             set
             {
                 if (value == _enableMotor)
@@ -297,9 +278,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Set the motor speed, usually in meters per second.
-        /// </summary>
+        /// <summary>Set the motor speed, usually in meters per second.</summary>
         /// <value>The speed.</value>
         public float MotorSpeed
         {
@@ -311,16 +290,14 @@ namespace VelcroPhysics.Dynamics.Joints
                 WakeBodies();
                 _motorSpeed = value;
             }
-            get { return _motorSpeed; }
+            get => _motorSpeed;
         }
 
-        /// <summary>
-        /// Set the maximum motor force, usually in N.
-        /// </summary>
+        /// <summary>Set the maximum motor force, usually in N.</summary>
         /// <value>The force.</value>
         public float MaxMotorForce
         {
-            get { return _maxMotorForce; }
+            get => _maxMotorForce;
             set
             {
                 if (value == _maxMotorForce)
@@ -331,18 +308,14 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// Get the current motor impulse, usually in N.
-        /// </summary>
+        /// <summary>Get the current motor impulse, usually in N.</summary>
         /// <value></value>
         public float MotorImpulse { get; set; }
 
-        /// <summary>
-        /// The axis at which the joint moves.
-        /// </summary>
+        /// <summary>The axis at which the joint moves.</summary>
         public Vector2 Axis
         {
-            get { return _axis1; }
+            get => _axis1;
             set
             {
                 _axis1 = value;
@@ -352,14 +325,10 @@ namespace VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>
-        /// The axis in local coordinates relative to BodyA
-        /// </summary>
+        /// <summary>The axis in local coordinates relative to BodyA</summary>
         public Vector2 LocalXAxis { get; private set; }
 
-        /// <summary>
-        /// The reference angle.
-        /// </summary>
+        /// <summary>The reference angle.</summary>
         public float ReferenceAngle { get; set; }
 
         private void Initialize(Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis, bool useWorldCoordinates)
@@ -383,9 +352,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _limitState = LimitState.Inactive;
         }
 
-        /// <summary>
-        /// Set the joint limits, usually in meters.
-        /// </summary>
+        /// <summary>Set the joint limits, usually in meters.</summary>
         /// <param name="lower">The lower limit</param>
         /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
@@ -399,9 +366,7 @@ namespace VelcroPhysics.Dynamics.Joints
             _impulse.Z = 0.0f;
         }
 
-        /// <summary>
-        /// Gets the motor force.
-        /// </summary>
+        /// <summary>Gets the motor force.</summary>
         /// <param name="invDt">The inverse delta time</param>
         public float GetMotorForce(float invDt)
         {
@@ -457,9 +422,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
                 _motorMass = mA + mB + iA * _a1 * _a1 + iB * _a2 * _a2;
                 if (_motorMass > 0.0f)
-                {
                     _motorMass = 1.0f / _motorMass;
-                }
             }
 
             // Prismatic constraint.
@@ -491,9 +454,7 @@ namespace VelcroPhysics.Dynamics.Joints
             {
                 float jointTranslation = Vector2.Dot(_axis, d);
                 if (Math.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
-                {
                     _limitState = LimitState.Equal;
-                }
                 else if (jointTranslation <= _lowerTranslation)
                 {
                     if (_limitState != LimitState.AtLower)
@@ -523,9 +484,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
 
             if (_enableMotor == false)
-            {
                 MotorImpulse = 0.0f;
-            }
 
             if (Settings.EnableWarmstarting)
             {
@@ -602,13 +561,9 @@ namespace VelcroPhysics.Dynamics.Joints
                 _impulse += df;
 
                 if (_limitState == LimitState.AtLower)
-                {
                     _impulse.Z = Math.Max(_impulse.Z, 0.0f);
-                }
                 else if (_limitState == LimitState.AtUpper)
-                {
                     _impulse.Z = Math.Min(_impulse.Z, 0.0f);
-                }
 
                 // f2(1:2) = invK(1:2,1:2) * (-Cdot(1:2) - K(1:2,3) * (f2(3) - f1(3))) + f1(1:2)
                 Vector2 b = -Cdot1 - (_impulse.Z - f1.Z) * new Vector2(_K.ez.X, _K.ez.Y);
@@ -745,9 +700,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float k12 = iA * s1 + iB * s2;
                 float k22 = iA + iB;
                 if (k22 == 0.0f)
-                {
                     k22 = 1.0f;
-                }
 
                 Mat22 K = new Mat22();
                 K.ex = new Vector2(k11, k12);

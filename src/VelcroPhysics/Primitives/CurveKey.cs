@@ -49,12 +49,6 @@ namespace Microsoft.Xna.Framework
             return new CurveKey(Position, Value, TangentIn, TangentOut, Continuity);
         }
 
-        #region Private Fields
-
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the indicator whether the segment between this point and the next point on the curve is discrete
         /// or continuous.
@@ -77,10 +71,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>Gets a value of this point.</summary>
         [DataMember]
         public float Value { get; set; }
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>Creates a new instance of <see cref="CurveKey" /> class with position: 0 and value: 0.</summary>
         public CurveKey() : this(0, 0)
@@ -117,10 +107,6 @@ namespace Microsoft.Xna.Framework
             Continuity = continuity;
         }
 
-        #endregion
-
-        #region Inherited Methods
-
         public int CompareTo(CurveKey other)
         {
             return Position.CompareTo(other.Position);
@@ -141,8 +127,6 @@ namespace Microsoft.Xna.Framework
             return Position.GetHashCode() ^ Value.GetHashCode() ^ TangentIn.GetHashCode() ^
                    TangentOut.GetHashCode() ^ Continuity.GetHashCode();
         }
-
-        #endregion
     }
 }
 #endif

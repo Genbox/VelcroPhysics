@@ -1,4 +1,4 @@
-﻿/*
+/*
 * C# Version Ported by Matt Bettcher and Ian Qvist 2009-2010
 * 
 * Original C++ Version Copyright (c) 2007 Eric Jordan
@@ -26,16 +26,12 @@ using VelcroPhysics.Shared;
 namespace VelcroPhysics.Tools.PolygonManipulation
 {
     /// <summary>
-    /// Combines a list of triangles into a list of convex polygons.
-    /// Starts with a seed triangle, keep adding triangles to it until you can't add any more without making the polygon
-    /// non-convex.
+    /// Combines a list of triangles into a list of convex polygons. Starts with a seed triangle, keep adding
+    /// triangles to it until you can't add any more without making the polygon non-convex.
     /// </summary>
     public static class SimpleCombiner
     {
-        /// <summary>
-        /// Combine a list of triangles into a list of convex polygons.
-        /// Note: This only works on triangles.
-        /// </summary>
+        /// <summary>Combine a list of triangles into a list of convex polygons. Note: This only works on triangles.</summary>
         /// <param name="triangles">The triangles.</param>
         /// <param name="maxPolys">The maximun number of polygons to return.</param>
         /// <param name="tolerance">The tolerance</param>
@@ -77,9 +73,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                 }
 
                 if (currTri == -1)
-                {
                     notDone = false;
-                }
                 else
                 {
                     Vertices poly = new Vertices(3);
@@ -94,11 +88,11 @@ namespace VelcroPhysics.Tools.PolygonManipulation
                     for (int i = 0; i < 2 * triangles.Count; ++i, ++index)
                     {
                         while (index >= triangles.Count)
-                            index -= triangles.Count;
-                        if (covered[index])
                         {
-                            continue;
+                            index -= triangles.Count;
                         }
+                        if (covered[index])
+                            continue;
                         Vertices newP = AddTriangle(triangles[index], poly);
                         if (newP == null)
                             continue; // is this right
@@ -203,9 +197,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
 
             // Didn't find it
             if (secondP == -1)
-            {
                 return null;
-            }
 
             // Find tip index on triangle
             int tipT = 0;

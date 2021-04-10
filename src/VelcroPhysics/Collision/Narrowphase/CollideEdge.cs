@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using VelcroPhysics.Collision.ContactSystem;
 using VelcroPhysics.Collision.Shapes;
@@ -9,10 +9,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 {
     public static class CollideEdge
     {
-        /// <summary>
-        /// Compute contact points for edge versus circle.
-        /// This accounts for edge connectivity.
-        /// </summary>
+        /// <summary>Compute contact points for edge versus circle. This accounts for edge connectivity.</summary>
         /// <param name="manifold">The manifold.</param>
         /// <param name="edgeA">The edge A.</param>
         /// <param name="transformA">The transform A.</param>
@@ -45,9 +42,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 Vector2 d1 = Q - P1;
                 float dd1 = Vector2.Dot(d1, d1);
                 if (dd1 > radius * radius)
-                {
                     return;
-                }
 
                 // Is there an edge connected to A?
                 if (edgeA.HasVertex0)
@@ -59,9 +54,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                     // Is the circle in Region AB of the previous edge?
                     if (u1 > 0.0f)
-                    {
                         return;
-                    }
                 }
 
                 cf.IndexA = 0;
@@ -83,9 +76,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 Vector2 d2 = Q - P2;
                 float dd2 = Vector2.Dot(d2, d2);
                 if (dd2 > radius * radius)
-                {
                     return;
-                }
 
                 // Is there an edge connected to B?
                 if (edgeA.HasVertex3)
@@ -97,9 +88,7 @@ namespace VelcroPhysics.Collision.Narrowphase
 
                     // Is the circle in Region AB of the next edge?
                     if (v2 > 0.0f)
-                    {
                         return;
-                    }
                 }
 
                 cf.IndexA = 1;
@@ -121,15 +110,11 @@ namespace VelcroPhysics.Collision.Narrowphase
             Vector2 d = Q - P;
             float dd = Vector2.Dot(d, d);
             if (dd > radius * radius)
-            {
                 return;
-            }
 
             Vector2 n = new Vector2(-e.Y, e.X);
             if (Vector2.Dot(n, Q - A) < 0.0f)
-            {
                 n = new Vector2(-n.X, -n.Y);
-            }
             n.Normalize();
 
             cf.IndexA = 0;
@@ -143,9 +128,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             manifold.Points.Value0.LocalPoint = circleB.Position;
         }
 
-        /// <summary>
-        /// Collides and edge and a polygon, taking into account edge adjacency.
-        /// </summary>
+        /// <summary>Collides and edge and a polygon, taking into account edge adjacency.</summary>
         public static void CollideEdgeAndPolygon(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
         {
             EPCollider.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);

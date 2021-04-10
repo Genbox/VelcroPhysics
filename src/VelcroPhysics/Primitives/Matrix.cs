@@ -20,8 +20,6 @@ namespace Microsoft.Xna.Framework
     [DebuggerDisplay("{DebugDisplayString,nq}")]
     public struct Matrix : IEquatable<Matrix>
     {
-        #region Public Constructors
-
         /// <summary>Constructs a matrix.</summary>
         /// <param name="m11">A first row and first column value.</param>
         /// <param name="m12">A first row and second column value.</param>
@@ -73,10 +71,6 @@ namespace Microsoft.Xna.Framework
             M43 = m43;
             M44 = m44;
         }
-
-        #endregion
-
-        #region Public Fields
 
         /// <summary>A first row and first column value.</summary>
         [DataMember]
@@ -141,10 +135,6 @@ namespace Microsoft.Xna.Framework
         /// <summary>A fourth row and fourth column value.</summary>
         [DataMember]
         public float M44;
-
-        #endregion
-
-        #region Indexers
 
         /// <summary>Get or set the matrix element at the given index, indexed in row major order.</summary>
         /// <param name="index">The linearized, zero-based index of the matrix element.</param>
@@ -246,14 +236,6 @@ namespace Microsoft.Xna.Framework
             set => this[row * 4 + column] = value;
         }
 
-        #endregion
-
-        #region Private Members
-
-        #endregion
-
-        #region Public Properties
-
         /// <summary>The backward vector formed from the third row M31, M32, M33 elements.</summary>
         public Vector3 Backward
         {
@@ -343,10 +325,6 @@ namespace Microsoft.Xna.Framework
                 M23 = value.Z;
             }
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>Creates a new <see cref="Matrix" /> which contains sum of two matrixes.</summary>
         /// <param name="matrix1">The first matrix to add.</param>
@@ -2016,10 +1994,6 @@ namespace Microsoft.Xna.Framework
             result = ret;
         }
 
-        #endregion
-
-        #region Private Static Methods
-
         /// <summary>
         /// Helper method for using the Laplace expansion theorem using two rows expansions to calculate major and minor
         /// determinants of a 4x4 matrix. This method is used for inverting a matrix.
@@ -2066,8 +2040,6 @@ namespace Microsoft.Xna.Framework
             minor11 = (float)det11;
             minor12 = (float)det12;
         }
-
-        #endregion
     }
 }
 #endif

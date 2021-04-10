@@ -29,14 +29,10 @@ using VelcroPhysics.Shared.Optimization;
 
 namespace VelcroPhysics.Collision.Narrowphase
 {
-    /// <summary>
-    /// Collision methods
-    /// </summary>
+    /// <summary>Collision methods</summary>
     public static class Collision
     {
-        /// <summary>
-        /// Test overlap between the two shapes.
-        /// </summary>
+        /// <summary>Test overlap between the two shapes.</summary>
         /// <param name="shapeA">The first shape.</param>
         /// <param name="indexA">The index for the first shape.</param>
         /// <param name="shapeB">The second shape.</param>
@@ -106,9 +102,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             }
         }
 
-        /// <summary>
-        /// Clipping for contact manifolds.
-        /// </summary>
+        /// <summary>Clipping for contact manifolds.</summary>
         /// <param name="vOut">The v out.</param>
         /// <param name="vIn">The v in.</param>
         /// <param name="normal">The normal.</param>

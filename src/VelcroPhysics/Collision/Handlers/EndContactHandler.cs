@@ -24,8 +24,6 @@ using VelcroPhysics.Collision.ContactSystem;
 
 namespace VelcroPhysics.Collision.Handlers
 {
-    /// <summary>
-    /// This delegate is called when a contact is deleted
-    /// </summary>
+    /// <summary>This delegate is called when a contact is deleted</summary>
     public delegate void EndContactHandler(Contact contact);
 }

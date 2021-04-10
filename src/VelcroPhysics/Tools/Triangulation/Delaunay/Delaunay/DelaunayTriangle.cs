@@ -39,18 +39,15 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
 {
     internal class DelaunayTriangle
     {
-        /** Neighbor pointers */
-
-        /** Flags to determine if an edge is a Delauney edge */
+        /// <summary>Neighbor pointers. Flags to determine if an edge is a Delauney edge</summary>
         public FixedArray3<bool> EdgeIsConstrained;
 
-        /** Flags to determine if an edge is a Constrained edge */
+        /// <summary>Flags to determine if an edge is a Constrained edge</summary>
         public FixedArray3<bool> EdgeIsDelaunay;
 
         public FixedArray3<DelaunayTriangle> Neighbors;
 
-        /** Has this triangle been marked as an interior triangle? */
-
+        /// <summary>Has this triangle been marked as an interior triangle?</summary>
         public FixedArray3<TriangulationPoint> Points;
 
         public DelaunayTriangle(TriangulationPoint p1, TriangulationPoint p2, TriangulationPoint p3)
@@ -102,39 +99,31 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
 
         public bool Contains(TriangulationPoint p)
         {
-            return (p == Points[0] || p == Points[1] || p == Points[2]);
+            return p == Points[0] || p == Points[1] || p == Points[2];
         }
 
         public bool Contains(DTSweepConstraint e)
         {
-            return (Contains(e.P) && Contains(e.Q));
+            return Contains(e.P) && Contains(e.Q);
         }
 
         public bool Contains(TriangulationPoint p, TriangulationPoint q)
         {
-            return (Contains(p) && Contains(q));
+            return Contains(p) && Contains(q);
         }
 
-        /// <summary>
-        /// Update neighbor pointers
-        /// </summary>
+        /// <summary>Update neighbor pointers</summary>
         /// <param name="p1">Point 1 of the shared edge</param>
         /// <param name="p2">Point 2 of the shared edge</param>
         /// <param name="t">This triangle's new neighbor</param>
         private void MarkNeighbor(TriangulationPoint p1, TriangulationPoint p2, DelaunayTriangle t)
         {
-            if ((p1 == Points[2] && p2 == Points[1]) || (p1 == Points[1] && p2 == Points[2]))
-            {
+            if (p1 == Points[2] && p2 == Points[1] || p1 == Points[1] && p2 == Points[2])
                 Neighbors[0] = t;
-            }
-            else if ((p1 == Points[0] && p2 == Points[2]) || (p1 == Points[2] && p2 == Points[0]))
-            {
+            else if (p1 == Points[0] && p2 == Points[2] || p1 == Points[2] && p2 == Points[0])
                 Neighbors[1] = t;
-            }
-            else if ((p1 == Points[0] && p2 == Points[1]) || (p1 == Points[1] && p2 == Points[0]))
-            {
+            else if (p1 == Points[0] && p2 == Points[1] || p1 == Points[1] && p2 == Points[0])
                 Neighbors[2] = t;
-            }
             else
             {
                 Debug.WriteLine("Neighbor error, please report!");
@@ -143,9 +132,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             }
         }
 
-        /// <summary>
-        /// Exhaustive search to update neighbor pointers
-        /// </summary>
+        /// <summary>Exhaustive search to update neighbor pointers</summary>
         public void MarkNeighbor(DelaunayTriangle t)
         {
             if (t.Contains(Points[1], Points[2]))
@@ -164,9 +151,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
                 t.MarkNeighbor(Points[0], Points[1], this);
             }
             else
-            {
                 Debug.WriteLine("markNeighbor failed");
-            }
         }
 
         public void ClearNeighbors()
@@ -177,23 +162,14 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
         public void ClearNeighbor(DelaunayTriangle triangle)
         {
             if (Neighbors[0] == triangle)
-            {
                 Neighbors[0] = null;
-            }
             else if (Neighbors[1] == triangle)
-            {
                 Neighbors[1] = null;
-            }
             else
-            {
                 Neighbors[2] = null;
-            }
         }
 
-        /**
-         * Clears all references to all other triangles and points
-         */
-
+        /// <summary>Clears all references to all other triangles and points</summary>
         public void Clear()
         {
             DelaunayTriangle t;
@@ -201,9 +177,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             {
                 t = Neighbors[i];
                 if (t != null)
-                {
                     t.ClearNeighbor(this);
-                }
             }
             ClearNeighbors();
             Points[0] = Points[1] = Points[2] = null;
@@ -250,9 +224,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             Points[0] = t;
         }
 
-        /// <summary>
-        /// Legalize triangle by rotating clockwise around oPoint
-        /// </summary>
+        /// <summary>Legalize triangle by rotating clockwise around oPoint</summary>
         /// <param name="oPoint">The origin point to rotate around</param>
         /// <param name="nPoint">???</param>
         public void Legalize(TriangulationPoint oPoint, TriangulationPoint nPoint)
@@ -266,35 +238,35 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             return Points[0] + "," + Points[1] + "," + Points[2];
         }
 
-        /// <summary>
-        /// Finalize edge marking
-        /// </summary>
+        /// <summary>Finalize edge marking</summary>
         public void MarkNeighborEdges()
         {
             for (int i = 0; i < 3; i++)
+            {
                 if (EdgeIsConstrained[i] && Neighbors[i] != null)
-                {
                     Neighbors[i].MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
-                }
+            }
         }
 
         public void MarkEdge(DelaunayTriangle triangle)
         {
             for (int i = 0; i < 3; i++)
+            {
                 if (EdgeIsConstrained[i])
-                {
                     triangle.MarkConstrainedEdge(Points[(i + 1) % 3], Points[(i + 2) % 3]);
-                }
+            }
         }
 
         public void MarkEdge(List<DelaunayTriangle> tList)
         {
             foreach (DelaunayTriangle t in tList)
+            {
                 for (int i = 0; i < 3; i++)
+                {
                     if (t.EdgeIsConstrained[i])
-                    {
                         MarkConstrainedEdge(t.Points[(i + 1) % 3], t.Points[(i + 2) % 3]);
-                    }
+                }
+            }
         }
 
         public void MarkConstrainedEdge(int index)
@@ -307,9 +279,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             MarkConstrainedEdge(edge.P, edge.Q);
         }
 
-        /// <summary>
-        /// Mark edge as constrained
-        /// </summary>
+        /// <summary>Mark edge as constrained</summary>
         public void MarkConstrainedEdge(TriangulationPoint p, TriangulationPoint q)
         {
             int i = EdgeIndex(p, q);
@@ -322,7 +292,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             double b = Points[0].X - Points[1].X;
             double h = Points[2].Y - Points[1].Y;
 
-            return Math.Abs((b * h * 0.5f));
+            return Math.Abs(b * h * 0.5f);
         }
 
         public TriangulationPoint Centroid()
@@ -332,9 +302,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             return new TriangulationPoint(cx, cy);
         }
 
-        /// <summary>
-        /// Get the index of the neighbor that shares this edge (or -1 if it isn't shared)
-        /// </summary>
+        /// <summary>Get the index of the neighbor that shares this edge (or -1 if it isn't shared)</summary>
         /// <returns>index of the shared edge or -1 if edge isn't shared</returns>
         public int EdgeIndex(TriangulationPoint p1, TriangulationPoint p2)
         {
@@ -342,9 +310,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
             int i2 = Points.IndexOf(p2);
 
             // Points of this triangle in the edge p1-p2
-            bool a = (i1 == 0 || i2 == 0);
-            bool b = (i1 == 1 || i2 == 1);
-            bool c = (i1 == 2 || i2 == 2);
+            bool a = i1 == 0 || i2 == 0;
+            bool b = i1 == 1 || i2 == 1;
+            bool c = i1 == 2 || i2 == 2;
 
             if (b && c) return 0;
             if (a && c) return 1;

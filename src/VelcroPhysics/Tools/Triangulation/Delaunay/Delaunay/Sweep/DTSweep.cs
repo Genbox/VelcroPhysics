@@ -1,4 +1,4 @@
-﻿/* Poly2Tri
+/* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
  *
@@ -56,9 +56,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         private const double PI_div2 = Math.PI / 2;
         private const double PI_3div4 = 3 * Math.PI / 4;
 
-        /// <summary>
-        /// Triangulate simple polygon with holes
-        /// </summary>
+        /// <summary>Triangulate simple polygon with holes</summary>
         public static void Triangulate(DTSweepContext tcx)
         {
             tcx.CreateAdvancingFront();
@@ -67,20 +65,14 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 
             // Finalize triangulation
             if (tcx.TriangulationMode == TriangulationMode.Polygon)
-            {
                 FinalizationPolygon(tcx);
-            }
             else
-            {
                 FinalizationConvexHull(tcx);
-            }
 
             tcx.Done();
         }
 
-        /// <summary>
-        /// Start sweeping the Y-sorted point set from bottom to top
-        /// </summary>
+        /// <summary>Start sweeping the Y-sorted point set from bottom to top</summary>
         private static void Sweep(DTSweepContext tcx)
         {
             List<TriangulationPoint> points = tcx.Points;
@@ -102,9 +94,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             }
         }
 
-        /// <summary>
-        /// If this is a Delaunay Triangulation of a pointset we need to fill so the triangle mesh gets a ConvexHull
-        /// </summary>
+        /// <summary>If this is a Delaunay Triangulation of a pointset we need to fill so the triangle mesh gets a ConvexHull</summary>
         private static void FinalizationConvexHull(DTSweepContext tcx)
         {
             DelaunayTriangle t1, t2;
@@ -182,9 +172,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             tcx.FinalizeTriangulation();
         }
 
-        /// <summary>
-        /// We will traverse the entire advancing front and fill it to form a convex hull.
-        /// </summary>
+        /// <summary>We will traverse the entire advancing front and fill it to form a convex hull.</summary>
         private static void TurnAdvancingFrontConvex(DTSweepContext tcx, AdvancingFrontNode b, AdvancingFrontNode c)
         {
             AdvancingFrontNode first = b;
@@ -230,9 +218,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         }
 
         /// <summary>
-        /// Find closes node to the left of the new point and
-        /// create a new triangle. If needed new holes and basins
-        /// will be filled to.
+        /// Find closes node to the left of the new point and create a new triangle. If needed new holes and basins will
+        /// be filled to.
         /// </summary>
         private static AdvancingFrontNode PointEvent(DTSweepContext tcx, TriangulationPoint point)
         {
@@ -242,9 +229,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             // Only need to check +epsilon since point never have smaller 
             // x value than node due to how we fetch nodes from the front
             if (point.X <= node.Point.X + TriangulationUtil.EPSILON)
-            {
                 Fill(tcx, node);
-            }
 
             tcx.AddNode(newNode);
 
@@ -252,9 +237,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return newNode;
         }
 
-        /// <summary>
-        /// Creates a new front triangle and legalize it
-        /// </summary>
+        /// <summary>Creates a new front triangle and legalize it</summary>
         private static AdvancingFrontNode NewFrontTriangle(DTSweepContext tcx, TriangulationPoint point, AdvancingFrontNode node)
         {
             DelaunayTriangle triangle = new DelaunayTriangle(point, node.Point, node.Next.Point);
@@ -270,9 +253,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             tcx.AddNode(newNode); // XXX: BST
 
             if (!Legalize(tcx, triangle))
-            {
                 tcx.MapTriangleToNodes(triangle);
-            }
 
             return newNode;
         }
@@ -285,9 +266,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 tcx.EdgeEvent.Right = edge.P.X > edge.Q.X;
 
                 if (IsEdgeSideOfTriangle(node.Triangle, edge.P, edge.Q))
-                {
                     return;
-                }
 
                 // For now we will do all needed filling
                 // TODO: integrate with flip process might give some better performance 
@@ -305,17 +284,12 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         private static void FillEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
             if (tcx.EdgeEvent.Right)
-            {
                 FillRightAboveEdgeEvent(tcx, edge, node);
-            }
             else
-            {
                 FillLeftAboveEdgeEvent(tcx, edge, node);
-            }
         }
 
-        private static void FillRightConcaveEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge,
-                                                      AdvancingFrontNode node)
+        private static void FillRightConcaveEdgeEvent(DTSweepContext tcx, DTSweepConstraint edge, AdvancingFrontNode node)
         {
             Fill(tcx, node.Next);
             if (node.Next.Point != edge.P)
@@ -328,10 +302,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     {
                         // Next is concave
                         FillRightConcaveEdgeEvent(tcx, edge, node);
-                    }
-                    else
-                    {
-                        // Next is convex
                     }
                 }
             }
@@ -354,10 +324,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 {
                     // Below
                     FillRightConvexEdgeEvent(tcx, edge, node.Next);
-                }
-                else
-                {
-                    // Above
                 }
             }
         }
@@ -389,13 +355,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 // Check if next node is below the edge
                 Orientation o1 = TriangulationUtil.Orient2d(edge.Q, node.Next.Point, edge.P);
                 if (o1 == Orientation.CCW)
-                {
                     FillRightBelowEdgeEvent(tcx, edge, node);
-                }
                 else
-                {
                     node = node.Next;
-                }
             }
         }
 
@@ -417,10 +379,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     // Below
                     FillLeftConvexEdgeEvent(tcx, edge, node.Prev);
                 }
-                else
-                {
-                    // Above
-                }
             }
         }
 
@@ -437,10 +395,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     {
                         // Next is concave
                         FillLeftConcaveEdgeEvent(tcx, edge, node);
-                    }
-                    else
-                    {
-                        // Next is convex
                     }
                 }
             }
@@ -473,13 +427,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 // Check if next node is below the edge
                 Orientation o1 = TriangulationUtil.Orient2d(edge.Q, node.Prev.Point, edge.P);
                 if (o1 == Orientation.CW)
-                {
                     FillLeftBelowEdgeEvent(tcx, edge, node);
-                }
                 else
-                {
                     node = node.Prev;
-                }
             }
         }
 
@@ -491,9 +441,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 triangle.MarkConstrainedEdge(index);
                 triangle = triangle.Neighbors[index];
                 if (triangle != null)
-                {
                     triangle.MarkConstrainedEdge(ep, eq);
-                }
                 return true;
             }
             return false;
@@ -519,13 +467,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     EdgeEvent(tcx, ep, p1, triangle, p1);
                 }
                 else
-                {
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
-                }
                 if (tcx.IsDebugEnabled)
-                {
                     Debug.WriteLine("EdgeEvent - Point on constrained edge");
-                }
                 return;
             }
 
@@ -544,13 +488,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                     EdgeEvent(tcx, ep, p2, triangle, p2);
                 }
                 else
-                {
                     throw new PointOnEdgeException("EdgeEvent - Point on constrained edge not supported yet");
-                }
                 if (tcx.IsDebugEnabled)
-                {
                     Debug.WriteLine("EdgeEvent - Point on constrained edge");
-                }
                 return;
             }
 
@@ -559,13 +499,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 // Need to decide if we are rotating CW or CCW to get to a triangle
                 // that will cross edge
                 if (o1 == Orientation.CW)
-                {
                     triangle = triangle.NeighborCCW(point);
-                }
                 else
-                {
                     triangle = triangle.NeighborCW(point);
-                }
                 EdgeEvent(tcx, ep, eq, triangle, point);
             }
             else
@@ -588,9 +524,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             //}
 
             if (t.GetConstrainedEdgeAcross(p))
-            {
                 throw new Exception("Intersecting Constraints");
-            }
 
             TriangulationPoint op = ot.OppositePoint(t, p);
 
@@ -642,9 +576,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         }
 
         /// <summary>
-        /// When we need to traverse from one triangle to the next we need
-        /// the point in current triangle that is the opposite point to the next
-        /// triangle.
+        /// When we need to traverse from one triangle to the next we need the point in current triangle that is the
+        /// opposite point to the next triangle.
         /// </summary>
         private static TriangulationPoint NextFlipPoint(TriangulationPoint ep, TriangulationPoint eq, DelaunayTriangle ot, TriangulationPoint op)
         {
@@ -654,21 +587,19 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 // Right
                 return ot.PointCCW(op);
             }
-            else if (o2d == Orientation.CCW)
+            if (o2d == Orientation.CCW)
             {
                 // Left
                 return ot.PointCW(op);
             }
-            else
-            {
-                // TODO: implement support for point on constraint edge
-                throw new PointOnEdgeException("Point on constrained edge not supported yet");
-            }
+
+            // TODO: implement support for point on constraint edge
+            throw new PointOnEdgeException("Point on constrained edge not supported yet");
         }
 
         /// <summary>
-        /// After a flip we have two triangles and know that only one will still be
-        /// intersecting the edge. So decide which to contiune with and legalize the other
+        /// After a flip we have two triangles and know that only one will still be intersecting the edge. So decide which
+        /// to contiune with and legalize the other
         /// </summary>
         /// <param name="tcx"></param>
         /// <param name="o">should be the result of an TriangulationUtil.orient2d( eq, op, ep )</param>
@@ -699,10 +630,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         }
 
         /// <summary>
-        /// Scan part of the FlipScan algorithm
-        /// When a triangle pair isn't flippable we will scan for the next
-        /// point that is inside the flip triangle scan area. When found
-        /// we generate a new flipEdgeEvent
+        /// Scan part of the FlipScan algorithm When a triangle pair isn't flippable we will scan for the next point that
+        /// is inside the flip triangle scan area. When found we generate a new flipEdgeEvent
         /// </summary>
         /// <param name="tcx"></param>
         /// <param name="ep">last point on the edge we are traversing</param>
@@ -745,9 +674,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             }
         }
 
-        /// <summary>
-        /// Fills holes in the Advancing Front
-        /// </summary>
+        /// <summary>Fills holes in the Advancing Front</summary>
         private static void FillAdvancingFront(DTSweepContext tcx, AdvancingFrontNode n)
         {
             double angle;
@@ -774,9 +701,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 
                 angle = HoleAngle(node);
                 if (angle > PI_div2 || angle < -PI_div2)
-                {
                     break;
-                }
                 Fill(tcx, node);
                 node = node.Prev;
             }
@@ -786,9 +711,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             {
                 angle = BasinAngle(n);
                 if (angle < PI_3div4)
-                {
                     FillBasin(tcx, n);
-                }
             }
         }
 
@@ -804,13 +727,13 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             AdvancingFrontNode next2Node = nextNode.Next;
 
             // "..Plus.." because only want angles on same side as point being added.
-            if ((next2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, next2Node.Point, prevNode.Point))
+            if (next2Node != null && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, next2Node.Point, prevNode.Point))
                 return false;
 
             AdvancingFrontNode prev2Node = prevNode.Prev;
 
             // "..Plus.." because only want angles on same side as point being added.
-            if ((prev2Node != null) && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, nextNode.Point, prev2Node.Point))
+            if (prev2Node != null && !AngleExceedsPlus90DegreesOrIsNegative(node.Point, nextNode.Point, prev2Node.Point))
                 return false;
 
             return true;
@@ -819,14 +742,14 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         private static bool AngleExceeds90Degrees(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
         {
             double angle = Angle(origin, pa, pb);
-            bool exceeds90Degrees = ((angle > PI_div2) || (angle < -PI_div2));
+            bool exceeds90Degrees = angle > PI_div2 || angle < -PI_div2;
             return exceeds90Degrees;
         }
 
         private static bool AngleExceedsPlus90DegreesOrIsNegative(TriangulationPoint origin, TriangulationPoint pa, TriangulationPoint pb)
         {
             double angle = Angle(origin, pa, pb);
-            bool exceedsPlus90DegreesOrIsNegative = (angle > PI_div2) || (angle < 0);
+            bool exceedsPlus90DegreesOrIsNegative = angle > PI_div2 || angle < 0;
             return exceedsPlus90DegreesOrIsNegative;
         }
 
@@ -853,10 +776,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         }
 
         /// <summary>
-        /// Fills a basin that has formed on the Advancing Front to the right
-        /// of given node.
-        /// First we decide a left,bottom and right node that forms the
-        /// boundaries of the basin. Then we do a reqursive fill.
+        /// Fills a basin that has formed on the Advancing Front to the right of given node. First we decide a left,bottom
+        /// and right node that forms the boundaries of the basin. Then we do a reqursive fill.
         /// </summary>
         /// <param name="tcx"></param>
         /// <param name="node">starting node, this or next node will be left node</param>
@@ -868,9 +789,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 tcx.Basin.leftNode = node;
             }
             else
-            {
                 tcx.Basin.leftNode = node.Next;
-            }
 
             // Find the bottom and right node
             tcx.Basin.bottomNode = tcx.Basin.leftNode;
@@ -903,51 +822,37 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             FillBasinReq(tcx, tcx.Basin.bottomNode);
         }
 
-        /// <summary>
-        /// Recursive algorithm to fill a Basin with triangles
-        /// </summary>
+        /// <summary>Recursive algorithm to fill a Basin with triangles</summary>
         private static void FillBasinReq(DTSweepContext tcx, AdvancingFrontNode node)
         {
             // if shallow stop filling
             if (IsShallow(tcx, node))
-            {
                 return;
-            }
 
             Fill(tcx, node);
             if (node.Prev == tcx.Basin.leftNode && node.Next == tcx.Basin.rightNode)
-            {
                 return;
-            }
-            else if (node.Prev == tcx.Basin.leftNode)
+            if (node.Prev == tcx.Basin.leftNode)
             {
                 Orientation o = TriangulationUtil.Orient2d(node.Point, node.Next.Point, node.Next.Next.Point);
                 if (o == Orientation.CW)
-                {
                     return;
-                }
                 node = node.Next;
             }
             else if (node.Next == tcx.Basin.rightNode)
             {
                 Orientation o = TriangulationUtil.Orient2d(node.Point, node.Prev.Point, node.Prev.Prev.Point);
                 if (o == Orientation.CCW)
-                {
                     return;
-                }
                 node = node.Prev;
             }
             else
             {
                 // Continue with the neighbor node with lowest Y value
                 if (node.Prev.Point.Y < node.Next.Point.Y)
-                {
                     node = node.Prev;
-                }
                 else
-                {
                     node = node.Next;
-                }
             }
             FillBasinReq(tcx, node);
         }
@@ -957,23 +862,15 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             double height;
 
             if (tcx.Basin.leftHighest)
-            {
                 height = tcx.Basin.leftNode.Point.Y - node.Point.Y;
-            }
             else
-            {
                 height = tcx.Basin.rightNode.Point.Y - node.Point.Y;
-            }
             if (tcx.Basin.width > height)
-            {
                 return true;
-            }
             return false;
         }
 
-        /// <summary>
-        /// ???
-        /// </summary>
+        /// <summary>???</summary>
         /// <param name="node">middle node</param>
         /// <returns>the angle between 3 front nodes</returns>
         private static double HoleAngle(AdvancingFrontNode node)
@@ -997,9 +894,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return Math.Atan2(ax * by - ay * bx, ax * bx + ay * by);
         }
 
-        /// <summary>
-        /// The basin angle is decided against the horizontal line [1,0]
-        /// </summary>
+        /// <summary>The basin angle is decided against the horizontal line [1,0]</summary>
         private static double BasinAngle(AdvancingFrontNode node)
         {
             double ax = node.Point.X - node.Next.Next.Point.X;
@@ -1007,9 +902,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return Math.Atan2(ay, ax);
         }
 
-        /// <summary>
-        /// Adds a triangle to the advancing front to fill a hole.
-        /// </summary>
+        /// <summary>Adds a triangle to the advancing front to fill a hole.</summary>
         /// <param name="tcx"></param>
         /// <param name="node">middle node, that is the bottom of the hole</param>
         private static void Fill(DTSweepContext tcx, AdvancingFrontNode node)
@@ -1029,14 +922,10 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 
             // If it was legalized the triangle has already been mapped
             if (!Legalize(tcx, triangle))
-            {
                 tcx.MapTriangleToNodes(triangle);
-            }
         }
 
-        /// <summary>
-        /// Returns true if triangle was legalized
-        /// </summary>
+        /// <summary>Returns true if triangle was legalized</summary>
         private static bool Legalize(DTSweepContext tcx, DelaunayTriangle t)
         {
             // To legalize a triangle we start by finding if any of the three edges
@@ -1046,9 +935,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 // TODO: fix so that cEdge is always valid when creating new triangles then we can check it here
                 //       instead of below with ot
                 if (t.EdgeIsDelaunay[i])
-                {
                     continue;
-                }
 
                 DelaunayTriangle ot = t.Neighbors[i];
                 if (ot != null)
@@ -1085,14 +972,10 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                         bool notLegalized = !Legalize(tcx, t);
 
                         if (notLegalized)
-                        {
                             tcx.MapTriangleToNodes(t);
-                        }
                         notLegalized = !Legalize(tcx, ot);
                         if (notLegalized)
-                        {
                             tcx.MapTriangleToNodes(ot);
-                        }
 
                         // Reset the Delaunay edges, since they only are valid Delaunay edges
                         // until we add a new triangle or point.

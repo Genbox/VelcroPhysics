@@ -94,9 +94,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.C))
-            {
                 CreateCircle();
-            }
 
             base.Keyboard(keyboardManager);
         }
@@ -106,17 +104,13 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             foreach (Body b in World.BodyList)
             {
                 if (b.BodyType != BodyType.Dynamic)
-                {
                     continue;
-                }
 
                 if (b.Awake) { }
             }
 
             if (StepCount == 180)
-            {
                 StepCount += 0;
-            }
 
             //if (sleeping)
             //{
@@ -128,15 +122,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             foreach (Body b in World.BodyList)
             {
                 if (b.BodyType != BodyType.Dynamic)
-                {
                     continue;
-                }
 
                 Vector2 p = b.Position;
                 if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
-                {
                     p.X += 0.0f;
-                }
             }
 
             DrawString("Press 'c' to create a circle.");

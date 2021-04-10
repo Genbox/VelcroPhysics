@@ -32,11 +32,8 @@
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
     /**
-     * 
      * @author Thomas Åhlén, thahlen@gmail.com
-     *
      */
-
     internal class DTSweepContext : TriangulationContext
     {
         // Inital triangle factor, seed triangle will extend 30% of 
@@ -86,9 +83,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 for (int i = 0; i < 3; i++)
                 {
                     if (!triangle.EdgeIsConstrained[i])
-                    {
                         MeshCleanReq(triangle.Neighbors[i]);
-                    }
                 }
             }
         }
@@ -143,10 +138,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             aFront.Tail.Prev = middle;
         }
 
-        /// <summary>
-        /// Try to map a node to all sides of this triangle that don't have
-        /// a neighbor.
-        /// </summary>
+        /// <summary>Try to map a node to all sides of this triangle that don't have a neighbor.</summary>
         public void MapTriangleToNodes(DelaunayTriangle t)
         {
             AdvancingFrontNode n;
@@ -156,9 +148,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
                 {
                     n = aFront.LocatePoint(t.PointCW(t.Points[i]));
                     if (n != null)
-                    {
                         n.Triangle = t;
-                    }
                 }
             }
         }
@@ -212,8 +202,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             return new DTSweepConstraint(a, b);
         }
 
-        #region Nested type: DTSweepBasin
-
         public class DTSweepBasin
         {
             public AdvancingFrontNode bottomNode;
@@ -223,16 +211,10 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             public double width;
         }
 
-        #endregion
-
-        #region Nested type: DTSweepEdgeEvent
-
         public class DTSweepEdgeEvent
         {
             public DTSweepConstraint ConstrainedEdge;
             public bool Right;
         }
-
-        #endregion
     }
 }

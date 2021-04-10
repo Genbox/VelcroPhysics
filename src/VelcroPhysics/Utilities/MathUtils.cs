@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -102,8 +102,8 @@ namespace VelcroPhysics.Utilities
         {
             float px = v.X - T.p.X;
             float py = v.Y - T.p.Y;
-            float x = (T.q.c * px + T.q.s * py);
-            float y = (-T.q.s * px + T.q.c * py);
+            float x = T.q.c * px + T.q.s * py;
+            float y = -T.q.s * px + T.q.c * py;
 
             return new Vector2(x, y);
         }
@@ -173,8 +173,8 @@ namespace VelcroPhysics.Utilities
         {
             float px = v.X - T.p.X;
             float py = v.Y - T.p.Y;
-            float x = (T.q.c * px + T.q.s * py);
-            float y = (-T.q.s * px + T.q.c * py);
+            float x = T.q.c * px + T.q.s * py;
+            float y = -T.q.s * px + T.q.c * py;
 
             return new Vector2(x, y);
         }
@@ -220,14 +220,9 @@ namespace VelcroPhysics.Utilities
             return new Vector2(-input.Y, input.X);
         }
 
-        /// <summary>
-        /// This function is used to ensure that a floating point number is
-        /// not a NaN or infinity.
-        /// </summary>
+        /// <summary>This function is used to ensure that a floating point number is not a NaN or infinity.</summary>
         /// <param name="x">The x.</param>
-        /// <returns>
-        /// <c>true</c> if the specified x is valid; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the specified x is valid; otherwise, <c>false</c>.</returns>
         public static bool IsValid(float x)
         {
             if (float.IsNaN(x))
@@ -244,9 +239,7 @@ namespace VelcroPhysics.Utilities
             return IsValid(x.X) && IsValid(x.Y);
         }
 
-        /// <summary>
-        /// This is a approximate yet fast inverse square-root.
-        /// </summary>
+        /// <summary>This is a approximate yet fast inverse square-root.</summary>
         /// <param name="x">The x.</param>
         /// <returns></returns>
         public static float InvSqrt(float x)
@@ -281,8 +274,7 @@ namespace VelcroPhysics.Utilities
         }
 
         /// <summary>
-        /// Return the angle between two vectors on a plane
-        /// The angle is from vector 1 to vector 2, positive anticlockwise
+        /// Return the angle between two vectors on a plane The angle is from vector 1 to vector 2, positive anticlockwise
         /// The result is between -pi -> pi
         /// </summary>
         public static double VectorAngle(ref Vector2 p1, ref Vector2 p2)
@@ -291,11 +283,15 @@ namespace VelcroPhysics.Utilities
             double theta2 = Math.Atan2(p2.Y, p2.X);
             double dtheta = theta2 - theta1;
             while (dtheta > Math.PI)
-                dtheta -= (2 * Math.PI);
+            {
+                dtheta -= 2 * Math.PI;
+            }
             while (dtheta < -Math.PI)
-                dtheta += (2 * Math.PI);
+            {
+                dtheta += 2 * Math.PI;
+            }
 
-            return (dtheta);
+            return dtheta;
         }
 
         /// Perform the dot product on two vectors.
@@ -309,33 +305,21 @@ namespace VelcroPhysics.Utilities
             return VectorAngle(ref p1, ref p2);
         }
 
-        /// <summary>
-        /// Returns a positive number if c is to the left of the line going from a to b.
-        /// </summary>
-        /// <returns>
-        /// Positive number if point is left, negative if point is right,
-        /// and 0 if points are collinear.
-        /// </returns>
+        /// <summary>Returns a positive number if c is to the left of the line going from a to b.</summary>
+        /// <returns>Positive number if point is left, negative if point is right, and 0 if points are collinear.</returns>
         public static float Area(Vector2 a, Vector2 b, Vector2 c)
         {
             return Area(ref a, ref b, ref c);
         }
 
-        /// <summary>
-        /// Returns a positive number if c is to the left of the line going from a to b.
-        /// </summary>
-        /// <returns>
-        /// Positive number if point is left, negative if point is right,
-        /// and 0 if points are collinear.
-        /// </returns>
+        /// <summary>Returns a positive number if c is to the left of the line going from a to b.</summary>
+        /// <returns>Positive number if point is left, negative if point is right, and 0 if points are collinear.</returns>
         public static float Area(ref Vector2 a, ref Vector2 b, ref Vector2 c)
         {
             return a.X * (b.Y - c.Y) + b.X * (c.Y - a.Y) + c.X * (a.Y - b.Y);
         }
 
-        /// <summary>
-        /// Determines if three vertices are collinear (ie. on a straight line)
-        /// </summary>
+        /// <summary>Determines if three vertices are collinear (ie. on a straight line)</summary>
         /// <param name="a">First vertex</param>
         /// <param name="b">Second vertex</param>
         /// <param name="c">Third vertex</param>
@@ -356,10 +340,7 @@ namespace VelcroPhysics.Utilities
             return Math.Abs(value1 - value2) <= Settings.Epsilon;
         }
 
-        /// <summary>
-        /// Checks if a floating point Value is equal to another,
-        /// within a certain tolerance.
-        /// </summary>
+        /// <summary>Checks if a floating point Value is equal to another, within a certain tolerance.</summary>
         /// <param name="value1">The first floating point Value.</param>
         /// <param name="value2">The second floating point Value.</param>
         /// <param name="delta">The floating point tolerance.</param>
@@ -369,20 +350,14 @@ namespace VelcroPhysics.Utilities
             return FloatInRange(value1, value2 - delta, value2 + delta);
         }
 
-        /// <summary>
-        /// Checks if a floating point Value is within a specified
-        /// range of values (inclusive).
-        /// </summary>
+        /// <summary>Checks if a floating point Value is within a specified range of values (inclusive).</summary>
         /// <param name="value">The Value to check.</param>
         /// <param name="min">The minimum Value.</param>
         /// <param name="max">The maximum Value.</param>
-        /// <returns>
-        /// True if the Value is within the range specified,
-        /// false otherwise.
-        /// </returns>
+        /// <returns>True if the Value is within the range specified, false otherwise.</returns>
         public static bool FloatInRange(float value, float min, float max)
         {
-            return (value >= min && value <= max);
+            return value >= min && value <= max;
         }
 
         public static Vector2 Mul(ref Rot rot, Vector2 axis)
@@ -395,8 +370,6 @@ namespace VelcroPhysics.Utilities
             return MulT(rot, axis);
         }
 
-        #region Nested type: FloatConverter
-
         [StructLayout(LayoutKind.Explicit)]
         private struct FloatConverter
         {
@@ -406,7 +379,5 @@ namespace VelcroPhysics.Utilities
             [FieldOffset(0)]
             public int i;
         }
-
-        #endregion
     }
 }

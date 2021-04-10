@@ -79,7 +79,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
         public Category CollisionCategories
         {
-            get { return _collisionCategories; }
+            get => _collisionCategories;
             set
             {
                 _collisionCategories = value;
@@ -93,7 +93,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
         public Category CollidesWith
         {
-            get { return _collidesWith; }
+            get => _collidesWith;
             set
             {
                 _collidesWith = value;

@@ -7,12 +7,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 {
     public abstract class AbstractForceController : Controller
     {
-        #region DecayModes enum
-
-        /// <summary>
-        /// Modes for Decay. Actual Decay must be implemented in inheriting
-        /// classes
-        /// </summary>
+        /// <summary>Modes for Decay. Actual Decay must be implemented in inheriting classes</summary>
         public enum DecayModes
         {
             None,
@@ -22,13 +17,9 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             Curve
         }
 
-        #endregion
-
-        #region ForceTypes enum
-
         /// <summary>
-        /// Forcetypes are used in the decay math to properly get the distance.
-        /// They are also used to draw a representation in DebugView
+        /// Forcetypes are used in the decay math to properly get the distance. They are also used to draw a
+        /// representation in DebugView
         /// </summary>
         public enum ForceTypes
         {
@@ -37,17 +28,10 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             Area
         }
 
-        #endregion
-
-        #region TimingModes enum
-
         /// <summary>
-        /// Timing Modes
-        /// Switched: Standard on/off mode using the baseclass enabled property
-        /// Triggered: When the Trigger() method is called the force is active
-        /// for a specified Impulse Length
-        /// Curve: Still to be defined. The basic idea is having a Trigger
-        /// combined with a curve for the strength
+        /// Timing Modes Switched: Standard on/off mode using the baseclass enabled property Triggered: When the Trigger()
+        /// method is called the force is active for a specified Impulse Length Curve: Still to be defined. The basic idea is
+        /// having a Trigger combined with a curve for the strength
         /// </summary>
         public enum TimingModes
         {
@@ -56,35 +40,22 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             Curve
         }
 
-        #endregion
-
-        /// <summary>
-        /// Curve to be used for Decay in Curve mode
-        /// </summary>
+        /// <summary>Curve to be used for Decay in Curve mode</summary>
         public Curve DecayCurve;
 
-        /// <summary>
-        /// The Forcetype of the instance
-        /// </summary>
+        /// <summary>The Forcetype of the instance</summary>
         public ForceTypes ForceType;
 
-        /// <summary>
-        /// Provided for reuse to provide Variation functionality in
-        /// inheriting classes
-        /// </summary>
+        /// <summary>Provided for reuse to provide Variation functionality in inheriting classes</summary>
         protected Random Randomize;
 
         /// <summary>
-        /// Curve used by Curve Mode as an animated multiplier for the force
-        /// strength.
-        /// Only positions between 0 and 1 are considered as that range is
-        /// stretched to have ImpulseLength.
+        /// Curve used by Curve Mode as an animated multiplier for the force strength. Only positions between 0 and 1 are
+        /// considered as that range is stretched to have ImpulseLength.
         /// </summary>
         public Curve StrengthCurve;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         public AbstractForceController()
             : base(ControllerType.AbstractForceController)
         {
@@ -111,9 +82,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             StrengthCurve.Keys.Add(new CurveKey(1f, 0));
         }
 
-        /// <summary>
-        /// Overloaded Contstructor with supplying Timing Mode
-        /// </summary>
+        /// <summary>Overloaded Contstructor with supplying Timing Mode</summary>
         /// <param name="mode"></param>
         public AbstractForceController(TimingModes mode)
             : base(ControllerType.AbstractForceController)
@@ -133,83 +102,51 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             }
         }
 
-        /// <summary>
-        /// Global Strength of the force to be applied
-        /// </summary>
+        /// <summary>Global Strength of the force to be applied</summary>
         public float Strength { get; set; }
 
-        /// <summary>
-        /// Position of the Force. Can be ignored (left at (0,0) for forces
-        /// that are not position-dependent
-        /// </summary>
+        /// <summary>Position of the Force. Can be ignored (left at (0,0) for forces that are not position-dependent</summary>
         public Vector2 Position { get; set; }
 
-        /// <summary>
-        /// Maximum speed of the bodies. Bodies that are travelling faster are
-        /// supposed to be ignored
-        /// </summary>
+        /// <summary>Maximum speed of the bodies. Bodies that are travelling faster are supposed to be ignored</summary>
         public float MaximumSpeed { get; set; }
 
         /// <summary>
-        /// Maximum Force to be applied. As opposed to Maximum Speed this is
-        /// independent of the velocity of
-        /// the affected body
+        /// Maximum Force to be applied. As opposed to Maximum Speed this is independent of the velocity of the affected
+        /// body
         /// </summary>
         public float MaximumForce { get; set; }
 
-        /// <summary>
-        /// Timing Mode of the force instance
-        /// </summary>
+        /// <summary>Timing Mode of the force instance</summary>
         public TimingModes TimingMode { get; set; }
 
-        /// <summary>
-        /// Time of the current impulse. Incremented in update till
-        /// ImpulseLength is reached
-        /// </summary>
+        /// <summary>Time of the current impulse. Incremented in update till ImpulseLength is reached</summary>
         public float ImpulseTime { get; private set; }
 
-        /// <summary>
-        /// Length of a triggered impulse. Used in both Triggered and Curve Mode
-        /// </summary>
+        /// <summary>Length of a triggered impulse. Used in both Triggered and Curve Mode</summary>
         public float ImpulseLength { get; set; }
 
-        /// <summary>
-        /// Indicating if we are currently during an Impulse
-        /// (Triggered and Curve Mode)
-        /// </summary>
+        /// <summary>Indicating if we are currently during an Impulse (Triggered and Curve Mode)</summary>
         public bool Triggered { get; private set; }
 
-        /// <summary>
-        /// Variation of the force applied to each body affected
-        /// !! Must be used in inheriting classes properly !!
-        /// </summary>
+        /// <summary>Variation of the force applied to each body affected !! Must be used in inheriting classes properly !!</summary>
         public float Variation { get; set; }
 
-        /// <summary>
-        /// See DecayModes
-        /// </summary>
+        /// <summary>See DecayModes</summary>
         public DecayModes DecayMode { get; set; }
 
-        /// <summary>
-        /// Start of the distance based Decay. To set a non decaying area
-        /// </summary>
+        /// <summary>Start of the distance based Decay. To set a non decaying area</summary>
         public float DecayStart { get; set; }
 
-        /// <summary>
-        /// Maximum distance a force should be applied
-        /// </summary>
+        /// <summary>Maximum distance a force should be applied</summary>
         public float DecayEnd { get; set; }
 
         /// <summary>
-        /// Calculate the Decay for a given body. Meant to ease force
-        /// development and stick to the DRY principle and provide unified and
-        /// predictable decay math.
+        /// Calculate the Decay for a given body. Meant to ease force development and stick to the DRY principle and
+        /// provide unified and predictable decay math.
         /// </summary>
         /// <param name="body">The body to calculate decay for</param>
-        /// <returns>
-        /// A multiplier to multiply the force with to add decay
-        /// support in inheriting classes
-        /// </returns>
+        /// <returns>A multiplier to multiply the force with to add decay support in inheriting classes</returns>
         protected float GetDecayMultiplier(Body body)
         {
             //TODO: Consider ForceType in distance calculation!
@@ -224,8 +161,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                 {
                     if (distance < DecayEnd)
                         return 1.0f;
-                    else
-                        return 0.0f;
+                    return 0.0f;
                 }
                 case DecayModes.Linear:
                 {
@@ -233,40 +169,33 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                         return 1.0f;
                     if (distance > DecayEnd)
                         return 0.0f;
-                    return (DecayEnd - DecayStart / distance - DecayStart);
+                    return DecayEnd - DecayStart / distance - DecayStart;
                 }
                 case DecayModes.InverseSquare:
                 {
                     if (distance < DecayStart)
                         return 1.0f;
-                    else
-                        return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
+                    return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
                 }
                 case DecayModes.Curve:
                 {
                     if (distance < DecayStart)
                         return 1.0f;
-                    else
-                        return DecayCurve.Evaluate(distance - DecayStart);
+                    return DecayCurve.Evaluate(distance - DecayStart);
                 }
                 default:
                     return 1.0f;
             }
         }
 
-        /// <summary>
-        /// Triggers the trigger modes (Trigger and Curve)
-        /// </summary>
+        /// <summary>Triggers the trigger modes (Trigger and Curve)</summary>
         public void Trigger()
         {
             Triggered = true;
             ImpulseTime = 0;
         }
 
-        /// <summary>
-        /// Inherited from Controller
-        /// Depending on the TimingMode perform timing logic and call ApplyForce()
-        /// </summary>
+        /// <summary>Inherited from Controller Depending on the TimingMode perform timing logic and call ApplyForce()</summary>
         /// <param name="dt"></param>
         public override void Update(float dt)
         {
@@ -275,9 +204,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                 case TimingModes.Switched:
                 {
                     if (Enabled)
-                    {
                         ApplyForce(dt, Strength);
-                    }
                     break;
                 }
                 case TimingModes.Triggered:
@@ -290,9 +217,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                             ImpulseTime += dt;
                         }
                         else
-                        {
                             Triggered = false;
-                        }
                     }
                     break;
                 }
@@ -306,19 +231,14 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
                             ImpulseTime += dt;
                         }
                         else
-                        {
                             Triggered = false;
-                        }
                     }
                     break;
                 }
             }
         }
 
-        /// <summary>
-        /// Apply the force supplying strength which is modified in Update()
-        /// according to the TimingMode
-        /// </summary>
+        /// <summary>Apply the force supplying strength which is modified in Update() according to the TimingMode</summary>
         /// <param name="dt"></param>
         /// <param name="strength">The strength</param>
         public abstract void ApplyForce(float dt, float strength);

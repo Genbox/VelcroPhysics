@@ -6,10 +6,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects
     {
         public bool Closed;
 
-        public VerticesExt()
-        {
-            
-        }
+        public VerticesExt() { }
 
         public VerticesExt(Vertices v, bool closed) : base(v)
         {

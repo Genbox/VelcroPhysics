@@ -3,16 +3,12 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Shared
 {
-    /// <summary>
-    /// A 3-by-3 matrix. Stored in column-major order.
-    /// </summary>
+    /// <summary>A 3-by-3 matrix. Stored in column-major order.</summary>
     public struct Mat33
     {
         public Vector3 ex, ey, ez;
 
-        /// <summary>
-        /// Construct this matrix using columns.
-        /// </summary>
+        /// <summary>Construct this matrix using columns.</summary>
         /// <param name="c1">The c1.</param>
         /// <param name="c2">The c2.</param>
         /// <param name="c3">The c3.</param>
@@ -23,9 +19,7 @@ namespace VelcroPhysics.Shared
             ez = c3;
         }
 
-        /// <summary>
-        /// Set this matrix to all zeros.
-        /// </summary>
+        /// <summary>Set this matrix to all zeros.</summary>
         public void SetZero()
         {
             ex = Vector3.Zero;
@@ -34,8 +28,8 @@ namespace VelcroPhysics.Shared
         }
 
         /// <summary>
-        /// Solve A * x = b, where b is a column vector. This is more efficient
-        /// than computing the inverse in one-shot cases.
+        /// Solve A * x = b, where b is a column vector. This is more efficient than computing the inverse in one-shot
+        /// cases.
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
@@ -43,17 +37,14 @@ namespace VelcroPhysics.Shared
         {
             float det = Vector3.Dot(ex, Vector3.Cross(ey, ez));
             if (det != 0.0f)
-            {
                 det = 1.0f / det;
-            }
 
             return new Vector3(det * Vector3.Dot(b, Vector3.Cross(ey, ez)), det * Vector3.Dot(ex, Vector3.Cross(b, ez)), det * Vector3.Dot(ex, Vector3.Cross(ey, b)));
         }
 
         /// <summary>
-        /// Solve A * x = b, where b is a column vector. This is more efficient
-        /// than computing the inverse in one-shot cases. Solve only the upper
-        /// 2-by-2 matrix equation.
+        /// Solve A * x = b, where b is a column vector. This is more efficient than computing the inverse in one-shot
+        /// cases. Solve only the upper 2-by-2 matrix equation.
         /// </summary>
         /// <param name="b">The b.</param>
         /// <returns></returns>
@@ -63,9 +54,7 @@ namespace VelcroPhysics.Shared
             float det = a11 * a22 - a12 * a21;
 
             if (det != 0.0f)
-            {
                 det = 1.0f / det;
-            }
 
             return new Vector2(det * (a22 * b.X - a12 * b.Y), det * (a11 * b.Y - a21 * b.X));
         }
@@ -77,9 +66,7 @@ namespace VelcroPhysics.Shared
             float a = ex.X, b = ey.X, c = ex.Y, d = ey.Y;
             float det = a * d - b * c;
             if (det != 0.0f)
-            {
                 det = 1.0f / det;
-            }
 
             M.ex.X = det * d;
             M.ey.X = -det * b;
@@ -98,9 +85,7 @@ namespace VelcroPhysics.Shared
         {
             float det = MathUtils.Dot(ex, MathUtils.Cross(ey, ez));
             if (det != 0.0f)
-            {
                 det = 1.0f / det;
-            }
 
             float a11 = ex.X, a12 = ey.X, a13 = ez.X;
             float a22 = ey.Y, a23 = ez.Y;

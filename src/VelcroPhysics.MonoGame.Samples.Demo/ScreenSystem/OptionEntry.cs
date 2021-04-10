@@ -37,10 +37,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public bool IsChecked { get; private set; }
 
-        public Vector2 Origin
-        {
-            get { return Size / 2f; }
-        }
+        public Vector2 Origin => Size / 2f;
 
         public Vector2 Size { get; }
 
@@ -48,15 +45,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public Color TileColor { get; private set; }
 
-        public float CheckedFade
-        {
-            get { return (float)_checkedFade; }
-        }
+        public float CheckedFade => (float)_checkedFade;
 
-        public float Scale
-        {
-            get { return 0.9f + 0.1f * (float)_hoverFade; }
-        }
+        public float Scale => 0.9f + 0.1f * (float)_hoverFade;
 
         public void Switch()
         {
@@ -74,21 +65,13 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public void Update(bool isHovered, GameTime gameTime)
         {
             if (isHovered)
-            {
                 _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
-            }
             else
-            {
                 _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
-            }
             if (IsChecked)
-            {
                 _checkedFade = Math.Min(_checkedFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
-            }
             else
-            {
                 _checkedFade = Math.Max(_checkedFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
-            }
 
             TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_hoverFade);
             TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Cyan * 0.6f, (float)_hoverFade);

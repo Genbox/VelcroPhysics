@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -9,9 +9,7 @@ namespace VelcroPhysics.Utilities
 {
     public static class PolygonUtils
     {
-        /// <summary>
-        /// Build vertices to represent an axis-aligned box.
-        /// </summary>
+        /// <summary>Build vertices to represent an axis-aligned box.</summary>
         /// <param name="hx">the half-width.</param>
         /// <param name="hy">the half-height.</param>
         public static Vertices CreateRectangle(float hx, float hy)
@@ -25,9 +23,7 @@ namespace VelcroPhysics.Utilities
             return vertices;
         }
 
-        /// <summary>
-        /// Build vertices to represent an oriented box.
-        /// </summary>
+        /// <summary>Build vertices to represent an oriented box.</summary>
         /// <param name="hx">the half-width.</param>
         /// <param name="hy">the half-height.</param>
         /// <param name="center">the center of the box in local coordinates.</param>
@@ -51,17 +47,14 @@ namespace VelcroPhysics.Utilities
 
         //Rounded rectangle contributed by Jonathan Smars - jsmars@gmail.com
 
-        /// <summary>
-        /// Creates a rounded rectangle with the specified width and height.
-        /// </summary>
+        /// <summary>Creates a rounded rectangle with the specified width and height.</summary>
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         /// <param name="xRadius">The rounding X radius.</param>
         /// <param name="yRadius">The rounding Y radius.</param>
         /// <param name="segments">The number of segments to subdivide the edges.</param>
         /// <returns></returns>
-        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius,
-                                                      int segments)
+        public static Vertices CreateRoundedRectangle(float width, float height, float xRadius, float yRadius, int segments)
         {
             if (yRadius > height / 2 || xRadius > width / 2)
                 throw new Exception("Rounding amount can't be more than half the height and width respectively.");
@@ -89,7 +82,7 @@ namespace VelcroPhysics.Utilities
             }
             else
             {
-                int numberOfEdges = (segments * 4 + 8);
+                int numberOfEdges = segments * 4 + 8;
 
                 float stepSize = MathHelper.TwoPi / (numberOfEdges - 4);
                 int perPhase = numberOfEdges / 4;
@@ -111,16 +104,14 @@ namespace VelcroPhysics.Utilities
                     }
 
                     vertices.Add(posOffset + new Vector2(xRadius * (float)Math.Cos(stepSize * -(i + phase)),
-                                     -yRadius * (float)Math.Sin(stepSize * -(i + phase))));
+                        -yRadius * (float)Math.Sin(stepSize * -(i + phase))));
                 }
             }
 
             return vertices;
         }
 
-        /// <summary>
-        /// Set this as a single edge.
-        /// </summary>
+        /// <summary>Set this as a single edge.</summary>
         /// <param name="start">The first point.</param>
         /// <param name="end">The second point.</param>
         public static Vertices CreateLine(Vector2 start, Vector2 end)
@@ -132,9 +123,7 @@ namespace VelcroPhysics.Utilities
             return vertices;
         }
 
-        /// <summary>
-        /// Creates a circle with the specified radius and number of edges.
-        /// </summary>
+        /// <summary>Creates a circle with the specified radius and number of edges.</summary>
         /// <param name="radius">The radius.</param>
         /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles a circle</param>
         /// <returns></returns>
@@ -143,9 +132,7 @@ namespace VelcroPhysics.Utilities
             return CreateEllipse(radius, radius, numberOfEdges);
         }
 
-        /// <summary>
-        /// Creates a ellipse with the specified width, height and number of edges.
-        /// </summary>
+        /// <summary>Creates a ellipse with the specified width, height and number of edges.</summary>
         /// <param name="xRadius">Width of the ellipse.</param>
         /// <param name="yRadius">Height of the ellipse.</param>
         /// <param name="numberOfEdges">The number of edges. The more edges, the more it resembles an ellipse</param>
@@ -158,8 +145,10 @@ namespace VelcroPhysics.Utilities
 
             vertices.Add(new Vector2(xRadius, 0));
             for (int i = numberOfEdges - 1; i > 0; --i)
+            {
                 vertices.Add(new Vector2(xRadius * (float)Math.Cos(stepSize * i),
                     -yRadius * (float)Math.Sin(stepSize * i)));
+            }
 
             return vertices;
         }
@@ -185,8 +174,8 @@ namespace VelcroPhysics.Utilities
         //Capsule contributed by Yobiv
 
         /// <summary>
-        /// Creates an capsule with the specified height, radius and number of edges.
-        /// A capsule has the same form as a pill capsule.
+        /// Creates an capsule with the specified height, radius and number of edges. A capsule has the same form as a
+        /// pill capsule.
         /// </summary>
         /// <param name="height">Height (inner height + 2 * radius) of the capsule.</param>
         /// <param name="endRadius">Radius of the capsule ends.</param>
@@ -195,16 +184,14 @@ namespace VelcroPhysics.Utilities
         public static Vertices CreateCapsule(float height, float endRadius, int edges)
         {
             if (endRadius >= height / 2)
-                throw new ArgumentException(
-                    "The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.",
-                    nameof(endRadius));
+                throw new ArgumentException("The radius must be lower than height / 2. Higher values of radius would create a circle, and not a half circle.", nameof(endRadius));
 
             return CreateCapsule(height, endRadius, edges, endRadius, edges);
         }
 
         /// <summary>
-        /// Creates an capsule with the specified  height, radius and number of edges.
-        /// A capsule has the same form as a pill capsule.
+        /// Creates an capsule with the specified  height, radius and number of edges. A capsule has the same form as a
+        /// pill capsule.
         /// </summary>
         /// <param name="height">Height (inner height + radii) of the capsule.</param>
         /// <param name="topRadius">Radius of the top.</param>
@@ -212,8 +199,7 @@ namespace VelcroPhysics.Utilities
         /// <param name="bottomRadius">Radius of bottom.</param>
         /// <param name="bottomEdges">The number of edges of the bottom. The more edges, the more it resembles an capsule</param>
         /// <returns></returns>
-        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius,
-                                             int bottomEdges)
+        public static Vertices CreateCapsule(float height, float topRadius, int topEdges, float bottomRadius, int bottomEdges)
         {
             if (height <= 0)
                 throw new ArgumentException("Height must be longer than 0", nameof(height));
@@ -231,14 +217,10 @@ namespace VelcroPhysics.Utilities
                 throw new ArgumentException("Bottom edges must be more than 0", nameof(bottomEdges));
 
             if (topRadius >= height / 2)
-                throw new ArgumentException(
-                    "The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.",
-                    nameof(topRadius));
+                throw new ArgumentException("The top radius must be lower than height / 2. Higher values of top radius would create a circle, and not a half circle.", nameof(topRadius));
 
             if (bottomRadius >= height / 2)
-                throw new ArgumentException(
-                    "The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.",
-                    nameof(bottomRadius));
+                throw new ArgumentException("The bottom radius must be lower than height / 2. Higher values of bottom radius would create a circle, and not a half circle.", nameof(bottomRadius));
 
             Vertices vertices = new Vertices();
 
@@ -271,9 +253,7 @@ namespace VelcroPhysics.Utilities
             return vertices;
         }
 
-        /// <summary>
-        /// Creates a gear shape with the specified radius and number of teeth.
-        /// </summary>
+        /// <summary>Creates a gear shape with the specified radius and number of teeth.</summary>
         /// <param name="radius">The radius.</param>
         /// <param name="numberOfTeeth">The number of teeth.</param>
         /// <param name="tipPercentage">The tip percentage.</param>
@@ -319,9 +299,7 @@ namespace VelcroPhysics.Utilities
             return vertices;
         }
 
-        /// <summary>
-        /// Detects the vertices by analyzing the texture data.
-        /// </summary>
+        /// <summary>Detects the vertices by analyzing the texture data.</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <returns></returns>
@@ -330,9 +308,7 @@ namespace VelcroPhysics.Utilities
             return TextureConverter.DetectVertices(data, width);
         }
 
-        /// <summary>
-        /// Detects the vertices by analyzing the texture data.
-        /// </summary>
+        /// <summary>Detects the vertices by analyzing the texture data.</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
@@ -342,9 +318,7 @@ namespace VelcroPhysics.Utilities
             return TextureConverter.DetectVertices(data, width, holeDetection);
         }
 
-        /// <summary>
-        /// Detects the vertices by analyzing the texture data.
-        /// </summary>
+        /// <summary>Detects the vertices by analyzing the texture data.</summary>
         /// <param name="data">The texture data.</param>
         /// <param name="width">The texture width.</param>
         /// <param name="hullTolerance">The hull tolerance.</param>
@@ -352,11 +326,9 @@ namespace VelcroPhysics.Utilities
         /// <param name="multiPartDetection">if set to <c>true</c> it will perform multi part detection.</param>
         /// <param name="holeDetection">if set to <c>true</c> it will perform hole detection.</param>
         /// <returns></returns>
-        public static List<Vertices> CreatePolygon(uint[] data, int width, float hullTolerance,
-                                                   byte alphaTolerance, bool multiPartDetection, bool holeDetection)
+        public static List<Vertices> CreatePolygon(uint[] data, int width, float hullTolerance, byte alphaTolerance, bool multiPartDetection, bool holeDetection)
         {
-            return TextureConverter.DetectVertices(data, width, hullTolerance, alphaTolerance,
-                multiPartDetection, holeDetection);
+            return TextureConverter.DetectVertices(data, width, hullTolerance, alphaTolerance, multiPartDetection, holeDetection);
         }
     }
 }

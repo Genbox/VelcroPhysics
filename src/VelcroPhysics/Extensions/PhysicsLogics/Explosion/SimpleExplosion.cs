@@ -7,9 +7,7 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
-    /// <summary>
-    /// Creates a simple explosion that ignores other bodies hiding behind static bodies.
-    /// </summary>
+    /// <summary>Creates a simple explosion that ignores other bodies hiding behind static bodies.</summary>
     public sealed class SimpleExplosion : PhysicsLogic
     {
         public SimpleExplosion(World world)
@@ -19,14 +17,12 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
         }
 
         /// <summary>
-        /// This is the power used in the power function. A value of 1 means the force
-        /// applied to bodies in the explosion is linear. A value of 2 means it is exponential.
+        /// This is the power used in the power function. A value of 1 means the force applied to bodies in the explosion
+        /// is linear. A value of 2 means it is exponential.
         /// </summary>
         public float Power { get; set; }
 
-        /// <summary>
-        /// Activate the explosion at the specified position.
-        /// </summary>
+        /// <summary>Activate the explosion at the specified position.</summary>
         /// <param name="pos">The position (center) of the explosion.</param>
         /// <param name="radius">The radius of the explosion.</param>
         /// <param name="force">The force applied</param>

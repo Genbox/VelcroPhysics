@@ -17,24 +17,16 @@ namespace VelcroPhysics.Collision.Narrowphase
     /// </summary>
     public struct ManifoldPoint
     {
-        /// <summary>
-        /// Uniquely identifies a contact point between two Shapes
-        /// </summary>
+        /// <summary>Uniquely identifies a contact point between two Shapes</summary>
         public ContactID Id;
 
-        /// <summary>
-        /// Usage depends on manifold type
-        /// </summary>
+        /// <summary>Usage depends on manifold type</summary>
         public Vector2 LocalPoint;
 
-        /// <summary>
-        /// The non-penetration impulse
-        /// </summary>
+        /// <summary>The non-penetration impulse</summary>
         public float NormalImpulse;
 
-        /// <summary>
-        /// The friction impulse
-        /// </summary>
+        /// <summary>The friction impulse</summary>
         public float TangentImpulse;
     }
 }

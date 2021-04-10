@@ -51,14 +51,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
             Value = point.X;
         }
 
-        public bool HasNext
-        {
-            get { return Next != null; }
-        }
+        public bool HasNext => Next != null;
 
-        public bool HasPrev
-        {
-            get { return Prev != null; }
-        }
+        public bool HasPrev => Prev != null;
     }
 }

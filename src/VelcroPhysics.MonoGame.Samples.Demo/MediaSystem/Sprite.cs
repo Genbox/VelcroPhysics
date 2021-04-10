@@ -22,7 +22,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public Texture2D Image
         {
-            get { return _image; }
+            get => _image;
             set
             {
                 _image = value;

@@ -29,9 +29,8 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Dynamics.Joints
 {
     /// <summary>
-    /// A motor joint is used to control the relative motion
-    /// between two bodies. A typical usage is to control the movement
-    /// of a dynamic body with respect to the ground.
+    /// A motor joint is used to control the relative motion between two bodies. A typical usage is to control the
+    /// movement of a dynamic body with respect to the ground.
     /// </summary>
     public class MotorJoint : Joint
     {
@@ -68,9 +67,7 @@ namespace VelcroPhysics.Dynamics.Joints
             JointType = JointType.Motor;
         }
 
-        /// <summary>
-        /// Constructor for MotorJoint.
-        /// </summary>
+        /// <summary>Constructor for MotorJoint.</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
@@ -97,19 +94,17 @@ namespace VelcroPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get { return BodyA.Position; }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyA.Position;
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public override Vector2 WorldAnchorB
         {
-            get { return BodyB.Position; }
-            set { Debug.Assert(false, "You can't set the world anchor on this joint type."); }
+            get => BodyB.Position;
+            set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
-        /// <summary>
-        /// The maximum amount of force that can be applied to BodyA
-        /// </summary>
+        /// <summary>The maximum amount of force that can be applied to BodyA</summary>
         public float MaxForce
         {
             set
@@ -117,12 +112,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
                 _maxForce = value;
             }
-            get { return _maxForce; }
+            get => _maxForce;
         }
 
-        /// <summary>
-        /// The maximum amount of torque that can be applied to BodyA
-        /// </summary>
+        /// <summary>The maximum amount of torque that can be applied to BodyA</summary>
         public float MaxTorque
         {
             set
@@ -130,12 +123,10 @@ namespace VelcroPhysics.Dynamics.Joints
                 Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
                 _maxTorque = value;
             }
-            get { return _maxTorque; }
+            get => _maxTorque;
         }
 
-        /// <summary>
-        /// The linear (translation) offset.
-        /// </summary>
+        /// <summary>The linear (translation) offset.</summary>
         public Vector2 LinearOffset
         {
             set
@@ -146,12 +137,10 @@ namespace VelcroPhysics.Dynamics.Joints
                     _linearOffset = value;
                 }
             }
-            get { return _linearOffset; }
+            get => _linearOffset;
         }
 
-        /// <summary>
-        /// Get or set the angular offset.
-        /// </summary>
+        /// <summary>Get or set the angular offset.</summary>
         public float AngularOffset
         {
             set
@@ -162,7 +151,7 @@ namespace VelcroPhysics.Dynamics.Joints
                     _angularOffset = value;
                 }
             }
-            get { return _angularOffset; }
+            get => _angularOffset;
         }
 
         //Velcro note: Used for serialization.
@@ -228,9 +217,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             _angularMass = iA + iB;
             if (_angularMass > 0.0f)
-            {
                 _angularMass = 1.0f / _angularMass;
-            }
 
             _linearError = cB + _rB - cA - _rA - MathUtils.Mul(qA, _linearOffset);
             _angularError = aB - aA - _angularOffset;

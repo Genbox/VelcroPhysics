@@ -147,22 +147,22 @@ namespace VelcroPhysics.Tools.Triangulation.Seidel
 
         private float Angle(Point p)
         {
-            Point a = (p.Next - p);
-            Point b = (p.Prev - p);
+            Point a = p.Next - p;
+            Point b = p.Prev - p;
             return (float)Math.Atan2(a.Cross(b), a.Dot(b));
         }
 
         private bool AngleSign()
         {
-            Point a = (_head.Next - _head);
-            Point b = (_tail - _head);
+            Point a = _head.Next - _head;
+            Point b = _tail - _head;
             return Math.Atan2(a.Cross(b), a.Dot(b)) >= 0;
         }
 
         // Determines if the inslide angle is convex or reflex
         private bool IsConvex(Point p)
         {
-            if (_positive != (Angle(p) >= 0))
+            if (_positive != Angle(p) >= 0)
                 return false;
             return true;
         }

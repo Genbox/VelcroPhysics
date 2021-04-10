@@ -64,14 +64,10 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA == _platform)
-            {
                 contact.TangentSpeed = 5.0f;
-            }
 
             if (fixtureB == _platform)
-            {
                 contact.TangentSpeed = -5.0f;
-            }
         }
 
         internal static Test Create()

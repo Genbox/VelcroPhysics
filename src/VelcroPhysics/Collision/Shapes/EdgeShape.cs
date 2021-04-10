@@ -27,17 +27,15 @@ using VelcroPhysics.Shared;
 namespace VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes.
-    /// The connectivity information is used to ensure correct contact normals.
+    /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes. The connectivity
+    /// information is used to ensure correct contact normals.
     /// </summary>
     public class EdgeShape : Shape
     {
         internal Vector2 _vertex1;
         internal Vector2 _vertex2;
 
-        /// <summary>
-        /// Create a new EdgeShape with the specified start and end.
-        /// </summary>
+        /// <summary>Create a new EdgeShape with the specified start and end.</summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
@@ -50,32 +48,22 @@ namespace VelcroPhysics.Collision.Shapes
 
         public override int ChildCount => 1;
 
-        /// <summary>
-        /// Is true if the edge is connected to an adjacent vertex before vertex 1.
-        /// </summary>
+        /// <summary>Is true if the edge is connected to an adjacent vertex before vertex 1.</summary>
         public bool HasVertex0 { get; set; }
 
-        /// <summary>
-        /// Is true if the edge is connected to an adjacent vertex after vertex2.
-        /// </summary>
+        /// <summary>Is true if the edge is connected to an adjacent vertex after vertex2.</summary>
         public bool HasVertex3 { get; set; }
 
-        /// <summary>
-        /// Optional adjacent vertices. These are used for smooth collision.
-        /// </summary>
+        /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
         public Vector2 Vertex0 { get; set; }
 
-        /// <summary>
-        /// Optional adjacent vertices. These are used for smooth collision.
-        /// </summary>
+        /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
         public Vector2 Vertex3 { get; set; }
 
-        /// <summary>
-        /// These are the edge vertices
-        /// </summary>
+        /// <summary>These are the edge vertices</summary>
         public Vector2 Vertex1
         {
-            get { return _vertex1; }
+            get => _vertex1;
             set
             {
                 _vertex1 = value;
@@ -83,12 +71,10 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// These are the edge vertices
-        /// </summary>
+        /// <summary>These are the edge vertices</summary>
         public Vector2 Vertex2
         {
-            get { return _vertex2; }
+            get => _vertex2;
             set
             {
                 _vertex2 = value;
@@ -96,9 +82,7 @@ namespace VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>
-        /// Set this as an isolated edge.
-        /// </summary>
+        /// <summary>Set this as an isolated edge.</summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
         public void Set(Vector2 start, Vector2 end)

@@ -37,15 +37,11 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             _basicEffect.VertexColorEnabled = true;
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         protected virtual void Dispose(bool disposing)
         {
@@ -88,9 +84,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
 
             if (texture == null)
-            {
                 _basicEffect.TextureEnabled = false;
-            }
             else
             {
                 _basicEffect.Texture = texture;
@@ -112,13 +106,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             for (int i = 0; i < 4; i++)
             {
                 if (color.Length > 0)
-                {
                     _verticesQuad[i].Color = color[i % color.Length];
-                }
                 else
-                {
                     _verticesQuad[i].Color = Color.White;
-                }
             }
 
             _basicEffect.CurrentTechnique.Passes[0].Apply();

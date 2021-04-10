@@ -63,9 +63,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsMenuSelect() || input.IsMenuCancel() || input.IsNewKeyPress(Keys.F1) || input.IsNewButtonPress(Buttons.Start))
-            {
                 ExitScreen();
-            }
         }
 
         /// <summary>

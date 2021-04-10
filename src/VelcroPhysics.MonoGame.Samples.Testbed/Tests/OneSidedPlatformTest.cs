@@ -77,21 +77,15 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Fixture fixtureB = contact.FixtureB;
 
             if (fixtureA != _platform && fixtureA != _character)
-            {
                 return;
-            }
 
             if (fixtureB != _platform && fixtureB != _character)
-            {
                 return;
-            }
 
             Vector2 position = _character.Body.Position;
 
             if (position.Y < _top + _radius - 3.0f * Settings.LinearSlop)
-            {
                 contact.Enabled = false;
-            }
         }
 
         internal static Test Create()

@@ -7,9 +7,7 @@ namespace VelcroPhysics.Templates.Shapes
     {
         public CircleShapeTemplate() : base(ShapeType.Circle) { }
 
-        /// <summary>
-        /// Get or set the position of the circle
-        /// </summary>
+        /// <summary>Get or set the position of the circle</summary>
         public Vector2 Position { get; set; }
     }
 }

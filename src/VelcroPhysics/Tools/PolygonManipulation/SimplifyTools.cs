@@ -7,14 +7,10 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Tools.PolygonManipulation
 {
-    /// <summary>
-    /// Provides a set of tools to simplify polygons in various ways.
-    /// </summary>
+    /// <summary>Provides a set of tools to simplify polygons in various ways.</summary>
     public static class SimplifyTools
     {
-        /// <summary>
-        /// Removes all collinear points on the polygon.
-        /// </summary>
+        /// <summary>Removes all collinear points on the polygon.</summary>
         /// <param name="vertices">The polygon that needs simplification.</param>
         /// <param name="collinearityTolerance">The collinearity tolerance.</param>
         /// <returns>A simplified polygon.</returns>
@@ -42,9 +38,8 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         }
 
         /// <summary>
-        /// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not use the
-        /// speed-up technique by using the Melkman convex hull.
-        /// If you pass in 0, it will remove all collinear points.
+        /// Ramer-Douglas-Peucker polygon simplification algorithm. This is the general recursive version that does not
+        /// use the speed-up technique by using the Melkman convex hull. If you pass in 0, it will remove all collinear points.
         /// </summary>
         /// <returns>The simplified polygon</returns>
         public static Vertices DouglasPeuckerSimplify(Vertices vertices, float distanceTolerance)
@@ -55,7 +50,9 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             bool[] usePoint = new bool[vertices.Count];
 
             for (int i = 0; i < vertices.Count; i++)
+            {
                 usePoint[i] = true;
+            }
 
             SimplifySection(vertices, 0, vertices.Count - 1, usePoint, distanceTolerance);
 
@@ -72,7 +69,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
 
         private static void SimplifySection(Vertices vertices, int i, int j, bool[] usePoint, float distanceTolerance)
         {
-            if ((i + 1) == j)
+            if (i + 1 == j)
                 return;
 
             Vector2 a = vertices[i];
@@ -107,9 +104,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             }
         }
 
-        /// <summary>
-        /// Merges all parallel edges in the list of vertices
-        /// </summary>
+        /// <summary>Merges all parallel edges in the list of vertices</summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
         public static Vertices MergeParallelEdges(Vertices vertices, float tolerance)
@@ -181,9 +176,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             return newVertices;
         }
 
-        /// <summary>
-        /// Merges the identical points in the polygon.
-        /// </summary>
+        /// <summary>Merges the identical points in the polygon.</summary>
         /// <param name="vertices">The vertices.</param>
         public static Vertices MergeIdenticalPoints(Vertices vertices)
         {
@@ -197,9 +190,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             return new Vertices(unique);
         }
 
-        /// <summary>
-        /// Reduces the polygon by distance.
-        /// </summary>
+        /// <summary>Reduces the polygon by distance.</summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="distance">The distance between points. Points closer than this will be removed.</param>
         public static Vertices ReduceByDistance(Vertices vertices, float distance)
@@ -226,9 +217,7 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             return simplified;
         }
 
-        /// <summary>
-        /// Reduces the polygon by removing the Nth vertex in the vertices list.
-        /// </summary>
+        /// <summary>Reduces the polygon by removing the Nth vertex in the vertices list.</summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="nth">The Nth point to remove. Example: 5.</param>
         /// <returns></returns>
@@ -254,8 +243,8 @@ namespace VelcroPhysics.Tools.PolygonManipulation
         }
 
         /// <summary>
-        /// Simplify the polygon by removing all points that in pairs of 3 have an area less than the tolerance.
-        /// Pass in 0 as tolerance, and it will only remove collinear points.
+        /// Simplify the polygon by removing all points that in pairs of 3 have an area less than the tolerance. Pass in 0
+        /// as tolerance, and it will only remove collinear points.
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="areaTolerance"></param>

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 */
@@ -27,9 +27,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
     /// </summary>
     internal static class CDTDecomposer
     {
-        /// <summary>
-        /// Decompose the polygon into several smaller non-concave polygon.
-        /// </summary>
+        /// <summary>Decompose the polygon into several smaller non-concave polygon.</summary>
         public static List<Vertices> ConvexPartition(Vertices vertices)
         {
             Debug.Assert(vertices.Count > 3);
@@ -37,7 +35,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
             Polygon.Polygon poly = new Polygon.Polygon();
 
             foreach (Vector2 vertex in vertices)
+            {
                 poly.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+            }
 
             if (vertices.Holes != null)
             {
@@ -46,7 +46,9 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay
                     Polygon.Polygon hole = new Polygon.Polygon();
 
                     foreach (Vector2 vertex in holeVertices)
+                    {
                         hole.Points.Add(new TriangulationPoint(vertex.X, vertex.Y));
+                    }
 
                     poly.AddHole(hole);
                 }

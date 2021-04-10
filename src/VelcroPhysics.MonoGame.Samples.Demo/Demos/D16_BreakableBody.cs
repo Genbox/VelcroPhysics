@@ -115,9 +115,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
                     }
                 }
                 else
-                {
                     Sprites.Draw(_completeSprite.Image, ConvertUnits.ToDisplayUnits(_breakableCookie[i].MainBody.Position), null, Color.White, _breakableCookie[i].MainBody.Rotation, _completeSprite.Origin, 1f, SpriteEffects.None, 0f);
-                }
             }
             Sprites.End();
 
@@ -125,8 +123,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             base.Draw(gameTime);
         }
-
-        #region Demo description
 
         public override string GetTitle()
         {
@@ -157,7 +153,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
 #endif
             return sb.ToString();
         }
-
-        #endregion
     }
 }

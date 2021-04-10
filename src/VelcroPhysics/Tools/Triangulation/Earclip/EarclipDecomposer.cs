@@ -1,4 +1,4 @@
-﻿/*
+/*
 * C# Version Ported by Matt Bettcher and Ian Qvist 2009-2010
 * 
 * Original C++ Version Copyright (c) 2007 Eric Jordan
@@ -40,8 +40,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         //box2D rev 32 - for details, see http://www.box2d.org/forum/viewtopic.php?f=4&t=83&start=50 
 
         /// <summary>
-        /// Decompose the polygon into several smaller non-concave polygon.
-        /// Each resulting polygon will have no more than Settings.MaxPolygonVertices vertices.
+        /// Decompose the polygon into several smaller non-concave polygon. Each resulting polygon will have no more than
+        /// Settings.MaxPolygonVertices vertices.
         /// </summary>
         /// <param name="vertices">The vertices.</param>
         /// <param name="tolerance">The tolerance.</param>
@@ -54,21 +54,14 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         }
 
         /// <summary>
-        /// Triangulates a polygon using simple ear-clipping algorithm. Returns
-        /// size of Triangle array unless the polygon can't be triangulated.
-        /// This should only happen if the polygon self-intersects,
-        /// though it will not _always_ return null for a bad polygon - it is the
-        /// caller's responsibility to check for self-intersection, and if it
-        /// doesn't, it should at least check that the return value is non-null
-        /// before using. You're warned!
-        /// Triangles may be degenerate, especially if you have identical points
-        /// in the input to the algorithm.  Check this before you use them.
-        /// This is totally unoptimized, so for large polygons it should not be part
-        /// of the simulation loop.
+        /// Triangulates a polygon using simple ear-clipping algorithm. Returns size of Triangle array unless the polygon
+        /// can't be triangulated. This should only happen if the polygon self-intersects, though it will not _always_ return null
+        /// for a bad polygon - it is the caller's responsibility to check for self-intersection, and if it doesn't, it should at
+        /// least check that the return value is non-null before using. You're warned! Triangles may be degenerate, especially if
+        /// you have identical points in the input to the algorithm.  Check this before you use them. This is totally unoptimized,
+        /// so for large polygons it should not be part of the simulation loop.
         /// </summary>
-        /// <remarks>
-        /// Only works on simple polygons.
-        /// </remarks>
+        /// <remarks>Only works on simple polygons.</remarks>
         private static List<Vertices> TriangulatePolygon(Vertices vertices, float tolerance)
         {
             //Velcro note: Check is needed as invalid triangles can be returned in recursive calls.
@@ -183,8 +176,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
                 }
 
                 // - add the clipped triangle to the triangle list
-                int under = (earIndex == 0) ? (vNum) : (earIndex - 1);
-                int over = (earIndex == vNum) ? 0 : (earIndex + 1);
+                int under = earIndex == 0 ? vNum : earIndex - 1;
+                int over = earIndex == vNum ? 0 : earIndex + 1;
                 Triangle toAdd = new Triangle(xrem[earIndex], yrem[earIndex], xrem[over], yrem[over], xrem[under],
                     yrem[under]);
                 buffer[bufferSize] = toAdd;
@@ -208,11 +201,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
         }
 
         /// <summary>
-        /// Finds and fixes "pinch points," points where two polygon
-        /// vertices are at the same point.
-        /// If a pinch point is found, pin is broken up into poutA and poutB
-        /// and true is returned; otherwise, returns false.
-        /// Mostly for internal use.
+        /// Finds and fixes "pinch points," points where two polygon vertices are at the same point. If a pinch point is
+        /// found, pin is broken up into poutA and poutB and true is returned; otherwise, returns false. Mostly for internal use.
         /// O(N^2) time, which sucks...
         /// </summary>
         /// <param name="pin">The pin.</param>
@@ -268,9 +258,7 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
             return hasPinchPoint;
         }
 
-        /// <summary>
-        /// Fix for obnoxious behavior for the % operator for negative numbers...
-        /// </summary>
+        /// <summary>Fix for obnoxious behavior for the % operator for negative numbers...</summary>
         /// <param name="x">The x.</param>
         /// <param name="modulus">The modulus.</param>
         /// <returns></returns>
@@ -284,26 +272,18 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
             return rem;
         }
 
-        /// <summary>
-        /// Checks if vertex i is the tip of an ear in polygon defined by xv[] and  yv[].
-        /// </summary>
+        /// <summary>Checks if vertex i is the tip of an ear in polygon defined by xv[] and  yv[].</summary>
         /// <param name="i">The i.</param>
         /// <param name="xv">The xv.</param>
         /// <param name="yv">The yv.</param>
         /// <param name="xvLength">Length of the xv.</param>
-        /// <remarks>
-        /// Assumes clockwise orientation of polygon.
-        /// </remarks>
-        /// <returns>
-        /// <c>true</c> if the specified i is ear; otherwise, <c>false</c>.
-        /// </returns>
+        /// <remarks>Assumes clockwise orientation of polygon.</remarks>
+        /// <returns><c>true</c> if the specified i is ear; otherwise, <c>false</c>.</returns>
         private static bool IsEar(int i, float[] xv, float[] yv, int xvLength)
         {
             float dx0, dy0, dx1, dy1;
             if (i >= xvLength || i < 0 || xvLength < 3)
-            {
                 return false;
-            }
             int upper = i + 1;
             int lower = i - 1;
             if (i == 0)

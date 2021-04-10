@@ -21,9 +21,7 @@ namespace VelcroPhysics.Collision
             {
                 float dot = Vector2.Dot(normals[i], pLocal - vertices[i]);
                 if (dot > 0.0f)
-                {
                     return false;
-                }
             }
 
             return true;
