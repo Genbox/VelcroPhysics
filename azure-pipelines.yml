@@ -14,7 +14,7 @@ steps:
     displayName: 'dotnet pack $(buildConfiguration)'
     inputs:
       command: 'pack'
-      packagesToPack: 'VelcroPhysics/*.csproj'
+      packagesToPack: 'src/VelcroPhysics/*.csproj'
       versioningScheme: 'byPrereleaseNumber'
       majorVersion: '$(Major)'
       minorVersion: '$(Minor)'
