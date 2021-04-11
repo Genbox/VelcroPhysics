@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
@@ -10,9 +10,9 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
     /// </summary>
     public sealed class MenuEntry : IComparable
     {
-        private const float MaxTranslation = 10f;
-        private const double HighlightTime = 0.3;
-        private const double FadeTime = 0.4;
+        private const float _maxTranslation = 10f;
+        private const double _highlightTime = 0.3;
+        private const double _fadeTime = 0.4;
 
         private static float _targetHiddenX;
         private static float _targetVisibleX;
@@ -99,26 +99,28 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public void Update(bool isSelected, bool isHovered, GameTime gameTime)
         {
             if (isHovered)
-                _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
+                _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 1.0);
             else
-                _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
+                _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 0.0);
+        
             if (isSelected)
-                _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 1.0);
+                _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 1.0);
             else
-                _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / HighlightTime, 0.0);
+                _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 0.0);
 
             TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
             TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
             if (Visible)
-                _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 1.0);
+                _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / _fadeTime, 1.0);
             else
-                _visibleFade = Math.Max(_visibleFade - gameTime.ElapsedGameTime.TotalSeconds / FadeTime, 0.0);
+                _visibleFade = Math.Max(_visibleFade - gameTime.ElapsedGameTime.TotalSeconds / _fadeTime, 0.0);
+       
             _currentPosition.X = MathHelper.SmoothStep(_targetHiddenX, _targetVisibleX, (float)_visibleFade);
 
             float deltaY = _targetY - _currentPosition.Y;
-            if (Math.Abs(deltaY) > MaxTranslation)
-                _currentPosition.Y += MaxTranslation * Math.Sign(deltaY);
+            if (Math.Abs(deltaY) > _maxTranslation)
+                _currentPosition.Y += _maxTranslation * Math.Sign(deltaY);
             else
                 _currentPosition.Y += deltaY;
         }
