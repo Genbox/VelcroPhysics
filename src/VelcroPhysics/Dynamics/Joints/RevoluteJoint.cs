@@ -360,8 +360,8 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
-                _impulse *= data.Step.dtRatio;
-                _motorImpulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
+                _motorImpulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
@@ -401,7 +401,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float Cdot = wB - wA - _motorSpeed;
                 float impulse = _motorMass * -Cdot;
                 float oldImpulse = _motorImpulse;
-                float maxImpulse = data.Step.dt * _maxMotorTorque;
+                float maxImpulse = data.Step.DeltaTime * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 

@@ -174,7 +174,7 @@ namespace VelcroPhysics.Dynamics.Joints
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
-            float h = data.Step.dt;
+            float h = data.Step.DeltaTime;
             Debug.Assert(d + h * k > Settings.Epsilon);
             _gamma = h * (d + h * k);
             if (_gamma != 0.0f)
@@ -204,7 +204,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             if (Settings.EnableWarmstarting)
             {
-                _impulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
                 vA += _invMassA * _impulse;
                 wA += _invIA * MathUtils.Cross(_rA, _impulse);
             }
@@ -226,7 +226,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = data.Step.dt * MaxForce;
+            float maxImpulse = data.Step.DeltaTime * MaxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
                 _impulse *= maxImpulse / _impulse.Length();
             impulse = _impulse - oldImpulse;

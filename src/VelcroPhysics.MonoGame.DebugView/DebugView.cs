@@ -29,7 +29,6 @@ namespace VelcroPhysics.MonoGame.DebugView
     {
         //Drawing
         private PrimitiveBatch _primitiveBatch;
-
         private SpriteBatch _batch;
         private SpriteFont _font;
         private GraphicsDevice _device;
@@ -39,7 +38,22 @@ namespace VelcroPhysics.MonoGame.DebugView
         private Matrix _localProjection;
         private Matrix _localView;
 
-        //Shapes
+        private readonly List<float> _graphValues = new List<float>(500);
+        private readonly Vector2[] _background = new Vector2[4];
+
+        //Contacts
+        private int _pointCount;
+
+        private const int _maxContactPoints = 2048;
+        private readonly ContactPoint[] _points = new ContactPoint[_maxContactPoints];
+
+        //Performance graph
+        private float _max;
+        private float _avg;
+        private float _min;
+        private readonly StringBuilder _debugPanelSb = new StringBuilder();
+
+        //Shape colors
         public Color DefaultShapeColor = new Color(0.9f, 0.7f, 0.7f);
 
         public Color InactiveShapeColor = new Color(0.5f, 0.5f, 0.3f);
@@ -48,35 +62,22 @@ namespace VelcroPhysics.MonoGame.DebugView
         public Color StaticShapeColor = new Color(0.5f, 0.9f, 0.5f);
         public Color TextColor = Color.White;
 
-        //Contacts
-        private int _pointCount;
-
-        private const int MaxContactPoints = 2048;
-        private readonly ContactPoint[] _points = new ContactPoint[MaxContactPoints];
-
         //Debug panel
         public Vector2 DebugPanelPosition = new Vector2(55, 100);
 
-        private float _max;
-        private float _avg;
-        private float _min;
-        private readonly StringBuilder _debugPanelSb = new StringBuilder();
-
-        //Performance graph
         public bool AdaptiveLimits = true;
-
         public int ValuesToGraph = 500;
         public float MinimumValue;
         public float MaximumValue = 10;
-        private readonly List<float> _graphValues = new List<float>(500);
-        public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
-        private readonly Vector2[] _background = new Vector2[4];
         public bool Enabled = true;
+        public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
+
+        public bool HighPrecisionCounters = false;
 
 #if XBOX
-        public const int CircleSegments = 16;
+        public int CircleSegments = 16;
 #else
-        public const int CircleSegments = 32;
+        public int CircleSegments = 32;
 #endif
 
         public DebugView(World world)
@@ -93,6 +94,8 @@ namespace VelcroPhysics.MonoGame.DebugView
         public void Dispose()
         {
             World.ContactManager.PreSolve -= PreSolve;
+            _primitiveBatch.Dispose();
+            _batch.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -111,7 +114,7 @@ namespace VelcroPhysics.MonoGame.DebugView
 
                 contact.GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points);
 
-                for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
+                for (int i = 0; i < manifold.PointCount && _pointCount < _maxContactPoints; ++i)
                 {
                     if (fixtureA == null)
                         _points[i] = new ContactPoint();
@@ -259,7 +262,7 @@ namespace VelcroPhysics.MonoGame.DebugView
 
         private void DrawPerformanceGraph()
         {
-            _graphValues.Add(World.UpdateTime / TimeSpan.TicksPerMillisecond);
+            _graphValues.Add(InternalTimings.UpdateTime / (float)TimeSpan.TicksPerMillisecond);
 
             if (_graphValues.Count > ValuesToGraph + 1)
                 _graphValues.RemoveAt(0);
@@ -297,9 +300,9 @@ namespace VelcroPhysics.MonoGame.DebugView
                 }
             }
 
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, string.Format("Max: {0} ms", _max));
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, string.Format("Avg: {0} ms", _avg));
-            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, string.Format("Min: {0} ms", _min));
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Top, $"Max: {_max} ms");
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Center.Y - 7, $"Avg: {_avg} ms");
+            DrawString(PerformancePanelBounds.Right + 10, PerformancePanelBounds.Bottom - 15, $"Min: {_min} ms");
 
             //Draw background.
             _background[0] = new Vector2(PerformancePanelBounds.X, PerformancePanelBounds.Y);
@@ -341,12 +344,28 @@ namespace VelcroPhysics.MonoGame.DebugView
             _debugPanelSb.Clear();
 #endif
             _debugPanelSb.AppendLine("Update time:");
-            _debugPanelSb.Append("- Body: ").AppendLine(string.Format("{0} ms", World.SolveUpdateTime / TimeSpan.TicksPerMillisecond));
-            _debugPanelSb.Append("- Contact: ").AppendLine(string.Format("{0} ms", World.ContactsUpdateTime / TimeSpan.TicksPerMillisecond));
-            _debugPanelSb.Append("- CCD: ").AppendLine(string.Format("{0} ms", World.ContinuousPhysicsTime / TimeSpan.TicksPerMillisecond));
-            _debugPanelSb.Append("- Joint: ").AppendLine(string.Format("{0} ms", World.Island.JointUpdateTime / TimeSpan.TicksPerMillisecond));
-            _debugPanelSb.Append("- Controller: ").AppendLine(string.Format("{0} ms", World.ControllersUpdateTime / TimeSpan.TicksPerMillisecond));
-            _debugPanelSb.Append("- Total: ").AppendLine(string.Format("{0} ms", World.UpdateTime / TimeSpan.TicksPerMillisecond));
+
+            string msStr = " ms";
+
+            if (HighPrecisionCounters)
+            {
+                _debugPanelSb.Append("- Body: ").Append(InternalTimings.SolveUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Contact: ").Append(InternalTimings.ContactsUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- CCD: ").Append(InternalTimings.ContinuousPhysicsTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Joint: ").Append(InternalTimings.JointUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Controller: ").Append(InternalTimings.ControllersUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Total: ").Append(InternalTimings.UpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+            }
+            else
+            {
+                _debugPanelSb.Append("- Body: ").Append(InternalTimings.SolveUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Contact: ").Append(InternalTimings.ContactsUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- CCD: ").Append(InternalTimings.ContinuousPhysicsTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Joint: ").Append(InternalTimings.JointUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Controller: ").Append(InternalTimings.ControllersUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Total: ").Append(InternalTimings.UpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+            }
+
             DrawString(x + 110, y, _debugPanelSb.ToString());
         }
 
@@ -361,7 +380,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             DrawPolygon(verts, 4, color);
         }
 
-        private void DrawJoint(Joint joint)
+        public void DrawJoint(Joint joint)
         {
             if (!joint.Enabled)
                 return;
@@ -446,52 +465,52 @@ namespace VelcroPhysics.MonoGame.DebugView
             switch (fixture.Shape.ShapeType)
             {
                 case ShapeType.Circle:
-                {
-                    CircleShape circle = (CircleShape)fixture.Shape;
+                    {
+                        CircleShape circle = (CircleShape)fixture.Shape;
 
-                    Vector2 center = MathUtils.Mul(ref xf, circle.Position);
-                    float radius = circle.Radius;
-                    Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
+                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                        float radius = circle.Radius;
+                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
 
-                    DrawSolidCircle(center, radius, axis, color);
-                }
+                        DrawSolidCircle(center, radius, axis, color);
+                    }
                     break;
 
                 case ShapeType.Polygon:
-                {
-                    PolygonShape poly = (PolygonShape)fixture.Shape;
-                    int vertexCount = poly.Vertices.Count;
-                    Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
-
-                    for (int i = 0; i < vertexCount; ++i)
                     {
-                        _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
-                    }
+                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        int vertexCount = poly.Vertices.Count;
+                        Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
 
-                    DrawSolidPolygon(_tempVertices, vertexCount, color);
-                }
+                        for (int i = 0; i < vertexCount; ++i)
+                        {
+                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
+                        }
+
+                        DrawSolidPolygon(_tempVertices, vertexCount, color);
+                    }
                     break;
 
                 case ShapeType.Edge:
-                {
-                    EdgeShape edge = (EdgeShape)fixture.Shape;
-                    Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
-                    Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
-                    DrawSegment(v1, v2, color);
-                }
+                    {
+                        EdgeShape edge = (EdgeShape)fixture.Shape;
+                        Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
+                        Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
+                        DrawSegment(v1, v2, color);
+                    }
                     break;
 
                 case ShapeType.Chain:
-                {
-                    ChainShape chain = (ChainShape)fixture.Shape;
-
-                    for (int i = 0; i < chain.Vertices.Count - 1; ++i)
                     {
-                        Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
-                        Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
-                        DrawSegment(v1, v2, color);
+                        ChainShape chain = (ChainShape)fixture.Shape;
+
+                        for (int i = 0; i < chain.Vertices.Count - 1; ++i)
+                        {
+                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
+                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
+                            DrawSegment(v1, v2, color);
+                        }
                     }
-                }
                     break;
             }
         }
@@ -557,7 +576,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             if (!_primitiveBatch.IsReady())
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
 
-            const double increment = Math.PI * 2.0 / CircleSegments;
+            double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 
             for (int i = 0; i < CircleSegments; i++)
@@ -582,7 +601,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             if (!_primitiveBatch.IsReady())
                 throw new InvalidOperationException("BeginCustomDraw must be called before drawing anything.");
 
-            const double increment = Math.PI * 2.0 / CircleSegments;
+            double increment = Math.PI * 2.0 / CircleSegments;
             double theta = 0.0;
 
             Color colorFill = color * 0.5f;

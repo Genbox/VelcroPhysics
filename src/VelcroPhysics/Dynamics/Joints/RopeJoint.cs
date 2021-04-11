@@ -184,7 +184,7 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = _impulse * _u;
                 vA -= _invMassA * P;
@@ -216,7 +216,7 @@ namespace VelcroPhysics.Dynamics.Joints
 
             // Predictive constraint.
             if (C < 0.0f)
-                Cdot += data.Step.inv_dt * C;
+                Cdot += data.Step.InvertedDeltaTime * C;
 
             float impulse = -_mass * Cdot;
             float oldImpulse = _impulse;

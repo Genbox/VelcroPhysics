@@ -180,8 +180,8 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support a variable time step.
-                _linearImpulse *= data.Step.dtRatio;
-                _angularImpulse *= data.Step.dtRatio;
+                _linearImpulse *= data.Step.DeltaTimeRatio;
+                _angularImpulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
                 vA -= mA * P;
@@ -211,7 +211,7 @@ namespace VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            float h = data.Step.dt;
+            float h = data.Step.DeltaTime;
 
             // Solve angular friction
             {

@@ -42,15 +42,15 @@ namespace VelcroPhysics.Dynamics
     public class World
     {
         private HashSet<Body> _bodyAddList = new HashSet<Body>();
+        private HashSet<Body> _bodyRemoveList = new HashSet<Body>();
+        private HashSet<Joint> _jointAddList = new HashSet<Joint>();
+        private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
 
         internal int _bodyIdCounter;
-        private HashSet<Body> _bodyRemoveList = new HashSet<Body>();
 
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
         internal int _fixtureIdCounter;
         private float _invDt0;
-        private HashSet<Joint> _jointAddList = new HashSet<Joint>();
-        private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
         private Fixture _myFixture;
         private Vector2 _point1;
         private Vector2 _point2;
@@ -63,6 +63,7 @@ namespace VelcroPhysics.Dynamics
         private List<Fixture> _testPointAllFixtures;
         private Stopwatch _watch = new Stopwatch();
         internal bool _worldHasNewFixture;
+        internal Island _island;
 
         /// <summary>Fires whenever a body has been added</summary>
         public BodyHandler BodyAdded;
@@ -95,7 +96,7 @@ namespace VelcroPhysics.Dynamics
         /// <summary>Initializes a new instance of the <see cref="World" /> class.</summary>
         public World(Vector2 gravity)
         {
-            Island = new Island();
+            _island = new Island();
             Enabled = true;
             ControllerList = new List<Controller>();
             BreakableBodyList = new List<BreakableBody>();
@@ -112,20 +113,6 @@ namespace VelcroPhysics.Dynamics
         public List<Controller> ControllerList { get; private set; }
 
         public List<BreakableBody> BreakableBodyList { get; private set; }
-
-        public float UpdateTime { get; private set; }
-
-        public float ContinuousPhysicsTime { get; private set; }
-
-        public float ControllersUpdateTime { get; private set; }
-
-        public float AddRemoveTime { get; private set; }
-
-        public float NewContactsTime { get; private set; }
-
-        public float ContactsUpdateTime { get; private set; }
-
-        public float SolveUpdateTime { get; private set; }
 
         /// <summary>Get the number of broad-phase proxies.</summary>
         /// <value>The proxy count.</value>
@@ -152,8 +139,6 @@ namespace VelcroPhysics.Dynamics
 
         /// <summary>If false, the whole simulation stops. It still processes added and removed geometries.</summary>
         public bool Enabled { get; set; }
-
-        public Island Island { get; private set; }
 
         private void ProcessRemovedJoints()
         {
@@ -388,7 +373,7 @@ namespace VelcroPhysics.Dynamics
         private void Solve(ref TimeStep step)
         {
             // Size the island for the worst case.
-            Island.Reset(BodyList.Count,
+            _island.Reset(BodyList.Count,
                 ContactManager.ContactList.Count,
                 JointList.Count,
                 ContactManager);
@@ -428,7 +413,7 @@ namespace VelcroPhysics.Dynamics
                     continue;
 
                 // Reset island and stack.
-                Island.Clear();
+                _island.Clear();
                 int stackCount = 0;
                 _stack[stackCount++] = seed;
 
@@ -440,7 +425,7 @@ namespace VelcroPhysics.Dynamics
                     // Grab the next body off the stack and add it to the island.
                     Body b = _stack[--stackCount];
                     Debug.Assert(b.Enabled);
-                    Island.Add(b);
+                    _island.Add(b);
 
                     // Make sure the body is awake (without resetting sleep timer).
                     b._flags |= BodyFlags.AwakeFlag;
@@ -469,7 +454,7 @@ namespace VelcroPhysics.Dynamics
                         if (sensorA || sensorB)
                             continue;
 
-                        Island.Add(contact);
+                        _island.Add(contact);
                         contact._flags |= ContactFlags.IslandFlag;
 
                         Body other = ce.Other;
@@ -500,7 +485,7 @@ namespace VelcroPhysics.Dynamics
                             if (!other.Enabled)
                                 continue;
 
-                            Island.Add(je.Joint);
+                            _island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
 
                             if (other.IsIsland)
@@ -513,19 +498,19 @@ namespace VelcroPhysics.Dynamics
                         }
                         else
                         {
-                            Island.Add(je.Joint);
+                            _island.Add(je.Joint);
                             je.Joint.IslandFlag = true;
                         }
                     }
                 }
 
-                Island.Solve(ref step, ref Gravity);
+                _island.Solve(ref step, ref Gravity);
 
                 // Post solve cleanup.
-                for (int i = 0; i < Island.BodyCount; ++i)
+                for (int i = 0; i < _island.BodyCount; ++i)
                 {
                     // Allow static bodies to participate in other islands.
-                    Body b = Island.Bodies[i];
+                    Body b = _island.Bodies[i];
                     if (b.BodyType == BodyType.Static)
                         b._flags &= ~BodyFlags.IslandFlag;
                 }
@@ -552,7 +537,7 @@ namespace VelcroPhysics.Dynamics
 
         private void SolveTOI(ref TimeStep step)
         {
-            Island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
+            _island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
 
             if (_stepComplete)
             {
@@ -575,7 +560,7 @@ namespace VelcroPhysics.Dynamics
             }
 
             // Find TOI events and solve them.
-            for (;;)
+            for (; ; )
             {
                 // Find the first TOI.
                 Contact minContact = null;
@@ -715,10 +700,10 @@ namespace VelcroPhysics.Dynamics
                 bB0.Awake = true;
 
                 // Build the island
-                Island.Clear();
-                Island.Add(bA0);
-                Island.Add(bB0);
-                Island.Add(minContact);
+                _island.Clear();
+                _island.Add(bA0);
+                _island.Add(bB0);
+                _island.Add(minContact);
 
                 bA0._flags |= BodyFlags.IslandFlag;
                 bB0._flags |= BodyFlags.IslandFlag;
@@ -735,10 +720,10 @@ namespace VelcroPhysics.Dynamics
                         {
                             Contact contact = ce.Contact;
 
-                            if (Island.BodyCount == Island.BodyCapacity)
+                            if (_island.BodyCount == _island.BodyCapacity)
                                 break;
 
-                            if (Island.ContactCount == Island.ContactCapacity)
+                            if (_island.ContactCount == _island.ContactCapacity)
                                 break;
 
                             // Has this contact already been added to the island?
@@ -781,7 +766,7 @@ namespace VelcroPhysics.Dynamics
 
                             // Add the contact to the island
                             minContact._flags |= ContactFlags.IslandFlag;
-                            Island.Add(contact);
+                            _island.Add(contact);
 
                             // Has the other body already been added to the island?
                             if (other.IsIsland)
@@ -793,21 +778,21 @@ namespace VelcroPhysics.Dynamics
                             if (other.BodyType != BodyType.Static)
                                 other.Awake = true;
 
-                            Island.Add(other);
+                            _island.Add(other);
                         }
                     }
                 }
 
                 TimeStep subStep;
-                subStep.dt = (1.0f - minAlpha) * step.dt;
-                subStep.inv_dt = 1.0f / subStep.dt;
-                subStep.dtRatio = 1.0f;
-                Island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
+                subStep.DeltaTime = (1.0f - minAlpha) * step.DeltaTime;
+                subStep.InvertedDeltaTime = 1.0f / subStep.DeltaTime;
+                subStep.DeltaTimeRatio = 1.0f;
+                _island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
-                for (int i = 0; i < Island.BodyCount; ++i)
+                for (int i = 0; i < _island.BodyCount; ++i)
                 {
-                    Body body = Island.Bodies[i];
+                    Body body = _island.Bodies[i];
                     body._flags &= ~BodyFlags.IslandFlag;
 
                     if (body.BodyType != BodyType.Dynamic)
@@ -910,7 +895,7 @@ namespace VelcroPhysics.Dynamics
             ProcessChanges();
 
             if (Settings.EnableDiagnostics)
-                AddRemoveTime = _watch.ElapsedTicks;
+                InternalTimings.AddRemoveTime = _watch.ElapsedTicks;
 
             // If new fixtures were added, we need to find the new contacts.
             if (_worldHasNewFixture)
@@ -920,13 +905,13 @@ namespace VelcroPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-                NewContactsTime = _watch.ElapsedTicks - AddRemoveTime;
+                InternalTimings.NewContactsTimeDelta = _watch.ElapsedTicks;
 
             //Velcro only: moved position and velocity iterations into Settings.cs
             TimeStep step;
-            step.inv_dt = dt > 0.0f ? 1.0f / dt : 0.0f;
-            step.dt = dt;
-            step.dtRatio = _invDt0 * dt;
+            step.InvertedDeltaTime = dt > 0.0f ? 1.0f / dt : 0.0f;
+            step.DeltaTime = dt;
+            step.DeltaTimeRatio = _invDt0 * dt;
 
             //Update controllers
             for (int i = 0; i < ControllerList.Count; i++)
@@ -935,26 +920,26 @@ namespace VelcroPhysics.Dynamics
             }
 
             if (Settings.EnableDiagnostics)
-                ControllersUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime);
+                InternalTimings.ControllersUpdateTimeDelta = _watch.ElapsedTicks;
 
             // Update contacts. This is where some contacts are destroyed.
             ContactManager.Collide();
 
             if (Settings.EnableDiagnostics)
-                ContactsUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime);
+                InternalTimings.ContactsUpdateTimeDelta = _watch.ElapsedTicks;
 
             // Integrate velocities, solve velocity constraints, and integrate positions.
             Solve(ref step);
 
             if (Settings.EnableDiagnostics)
-                SolveUpdateTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime + ContactsUpdateTime);
+                InternalTimings.SolveUpdateTimeDelta = _watch.ElapsedTicks;
 
             // Handle TOI events.
             if (Settings.ContinuousPhysics)
                 SolveTOI(ref step);
 
             if (Settings.EnableDiagnostics)
-                ContinuousPhysicsTime = _watch.ElapsedTicks - (AddRemoveTime + NewContactsTime + ControllersUpdateTime + ContactsUpdateTime + SolveUpdateTime);
+                InternalTimings.ContinuousPhysicsTimeDelta = _watch.ElapsedTicks;
 
             if (Settings.AutoClearForces)
                 ClearForces();
@@ -964,12 +949,12 @@ namespace VelcroPhysics.Dynamics
                 BreakableBodyList[i].Update();
             }
 
-            _invDt0 = step.inv_dt;
+            _invDt0 = step.InvertedDeltaTime;
 
             if (Settings.EnableDiagnostics)
             {
                 _watch.Stop();
-                UpdateTime = _watch.ElapsedTicks;
+                InternalTimings.UpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
         }
@@ -1046,7 +1031,7 @@ namespace VelcroPhysics.Dynamics
         {
             List<Fixture> affected = new List<Fixture>();
 
-            RayCast((f, p, n, fr) =>
+            RayCast((f, _, _, _) =>
             {
                 affected.Add(f);
                 return 1;
@@ -1149,10 +1134,10 @@ namespace VelcroPhysics.Dynamics
             return true;
         }
 
-        /// Shift the world origin. Useful for large worlds.
-        /// The body shift formula is: position -= newOrigin
-        /// @param newOrigin the new origin with respect to the old origin
-        /// Warning: Calling this method mid-update might cause a crash.
+        /// <summary>
+        /// Shift the world origin. Useful for large worlds. The body shift formula is: position -= newOrigin @param
+        /// newOrigin the new origin with respect to the old origin Warning: Calling this method mid-update might cause a crash.
+        /// </summary>
         public void ShiftOrigin(Vector2 newOrigin)
         {
             foreach (Body b in BodyList)

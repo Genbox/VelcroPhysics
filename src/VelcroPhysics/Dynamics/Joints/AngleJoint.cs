@@ -90,7 +90,7 @@ namespace VelcroPhysics.Dynamics.Joints
             float bW = data.Positions[indexB].A;
 
             _jointError = bW - aW - TargetAngle;
-            _bias = -BiasFactor * data.Step.inv_dt * _jointError;
+            _bias = -BiasFactor * data.Step.InvertedDeltaTime * _jointError;
             _massFactor = (1 - Softness) / (BodyA._invI + BodyB._invI);
         }
 

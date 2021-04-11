@@ -207,7 +207,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float k = _mass * omega * omega;
 
                 // magic formulas
-                float h = data.Step.dt;
+                float h = data.Step.DeltaTime;
                 _gamma = h * (d + h * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
                 _bias = C * h * k * _gamma;
@@ -224,7 +224,7 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
-                _impulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = _impulse * _u;
                 vA -= _invMassA * P;

@@ -242,7 +242,7 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Scale impulses to support variable time steps.
-                _impulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
 
                 // Warm starting.
                 Vector2 PA = -(_impulse) * _uA;

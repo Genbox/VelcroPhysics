@@ -488,8 +488,8 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
-                _impulse *= data.Step.dtRatio;
-                MotorImpulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
+                MotorImpulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = _impulse.X * _perp + (MotorImpulse + _impulse.Z) * _axis;
                 float LA = _impulse.X * _s1 + _impulse.Y + (MotorImpulse + _impulse.Z) * _a1;
@@ -529,7 +529,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float Cdot = Vector2.Dot(_axis, vB - vA) + _a2 * wB - _a1 * wA;
                 float impulse = _motorMass * (_motorSpeed - Cdot);
                 float oldImpulse = MotorImpulse;
-                float maxImpulse = data.Step.dt * _maxMotorForce;
+                float maxImpulse = data.Step.DeltaTime * _maxMotorForce;
                 MotorImpulse = MathUtils.Clamp(MotorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = MotorImpulse - oldImpulse;
 

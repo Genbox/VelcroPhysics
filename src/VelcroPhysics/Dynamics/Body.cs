@@ -41,19 +41,20 @@ namespace VelcroPhysics.Dynamics
 {
     public class Body
     {
+        private float _inertia;
+        private float _mass;
+        private BodyType _type;
+        
         internal float _angularVelocity;
-
         internal BodyFlags _flags;
         internal Vector2 _force;
-        private float _inertia;
         internal float _invI;
         internal float _invMass;
         internal Vector2 _linearVelocity;
-        private float _mass;
         internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
-        private BodyType _type;
         internal World _world;
+
         public Transform _xf; // the body origin transform
 
         internal Body(World world, BodyTemplate template)

@@ -30,7 +30,7 @@ using VelcroPhysics.Utilities;
 namespace VelcroPhysics.Dynamics.Solver
 {
     /// <summary>This is an internal class.</summary>
-    public class Island
+    internal class Island
     {
         private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
         private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
@@ -47,7 +47,6 @@ namespace VelcroPhysics.Dynamics.Solver
         public int ContactCount;
         public int JointCapacity;
         public int JointCount;
-        public float JointUpdateTime;
         public Position[] Positions;
         public Velocity[] Velocities;
 
@@ -85,7 +84,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
         public void Solve(ref TimeStep step, ref Vector2 gravity)
         {
-            float h = step.dt;
+            float h = step.DeltaTime;
 
             // Integrate velocities and apply damping. Initialize the body state.
             for (int i = 0; i < BodyCount; ++i)
@@ -168,7 +167,7 @@ namespace VelcroPhysics.Dynamics.Solver
                         _watch.Start();
 
                     joint.SolveVelocityConstraints(ref solverData);
-                    joint.Validate(step.inv_dt);
+                    joint.Validate(step.InvertedDeltaTime);
 
                     if (Settings.EnableDiagnostics)
                         _watch.Stop();
@@ -248,7 +247,7 @@ namespace VelcroPhysics.Dynamics.Solver
 
             if (Settings.EnableDiagnostics)
             {
-                JointUpdateTime = _watch.ElapsedTicks;
+                InternalTimings.JointUpdateTime = _watch.ElapsedTicks;
                 _watch.Reset();
             }
 
@@ -343,7 +342,7 @@ namespace VelcroPhysics.Dynamics.Solver
             // Don't store the TOI contact forces for warm starting
             // because they can be quite large.
 
-            float h = subStep.dt;
+            float h = subStep.DeltaTime;
 
             // Integrate positions.
             for (int i = 0; i < BodyCount; ++i)

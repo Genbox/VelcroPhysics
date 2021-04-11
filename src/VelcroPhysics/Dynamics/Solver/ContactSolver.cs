@@ -33,7 +33,7 @@ using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Dynamics.Solver
 {
-    public class ContactSolver
+    internal class ContactSolver
     {
         private Contact[] _contacts;
         private int _count;
@@ -124,8 +124,8 @@ namespace VelcroPhysics.Dynamics.Solver
 
                     if (Settings.EnableWarmstarting)
                     {
-                        vcp.NormalImpulse = _step.dtRatio * cp.NormalImpulse;
-                        vcp.TangentImpulse = _step.dtRatio * cp.TangentImpulse;
+                        vcp.NormalImpulse = _step.DeltaTimeRatio * cp.NormalImpulse;
+                        vcp.TangentImpulse = _step.DeltaTimeRatio * cp.TangentImpulse;
                     }
                     else
                     {

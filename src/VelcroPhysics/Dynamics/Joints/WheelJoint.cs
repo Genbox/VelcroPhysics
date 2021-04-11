@@ -352,7 +352,7 @@ namespace VelcroPhysics.Dynamics.Joints
                     float k = _springMass * omega * omega;
 
                     // magic formulas
-                    float h = data.Step.dt;
+                    float h = data.Step.DeltaTime;
                     _gamma = h * (d + h * k);
                     if (_gamma > 0.0f)
                         _gamma = 1.0f / _gamma;
@@ -383,9 +383,9 @@ namespace VelcroPhysics.Dynamics.Joints
             if (Settings.EnableWarmstarting)
             {
                 // Account for variable time step.
-                _impulse *= data.Step.dtRatio;
-                _springImpulse *= data.Step.dtRatio;
-                _motorImpulse *= data.Step.dtRatio;
+                _impulse *= data.Step.DeltaTimeRatio;
+                _springImpulse *= data.Step.DeltaTimeRatio;
+                _motorImpulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = _impulse * _ay + _springImpulse * _ax;
                 float LA = _impulse * _sAy + _springImpulse * _sAx + _motorImpulse;
@@ -443,7 +443,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 float impulse = -_motorMass * Cdot;
 
                 float oldImpulse = _motorImpulse;
-                float maxImpulse = data.Step.dt * _maxMotorTorque;
+                float maxImpulse = data.Step.DeltaTime * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
                 impulse = _motorImpulse - oldImpulse;
 
