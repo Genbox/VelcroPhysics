@@ -31,14 +31,13 @@
 
 using System;
 using VelcroPhysics.Tools.Triangulation.Delaunay.Polygon;
+using VelcroPhysics.Utilities;
 
 namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PolygonGenerator
     {
         private static readonly Random _rng = new Random();
-
-        private static double _pi2 = 2.0 * Math.PI;
 
         public static Polygon.Polygon RandomCircleSweep(double scale, int vertexCount)
         {
@@ -55,11 +54,12 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
                         radius += scale / 5 * (0.5 - _rng.NextDouble());
                     else
                         radius += 25 * scale / vertexCount * (0.5 - _rng.NextDouble());
+
                     radius = radius > scale / 2 ? scale / 2 : radius;
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                points[i] = new PolygonPoint(radius * Math.Cos(_pi2 * i / vertexCount), radius * Math.Sin(_pi2 * i / vertexCount));
+                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.Pi2 * i / vertexCount), radius * Math.Sin(MathConstants.Pi2 * i / vertexCount));
             }
             return new Polygon.Polygon(points);
         }
@@ -78,7 +78,7 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                points[i] = new PolygonPoint(radius * Math.Cos(_pi2 * i / vertexCount), radius * Math.Sin(_pi2 * i / vertexCount));
+                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.Pi2 * i / vertexCount), radius * Math.Sin(MathConstants.Pi2 * i / vertexCount));
             }
             return new Polygon.Polygon(points);
         }

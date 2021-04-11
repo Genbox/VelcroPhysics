@@ -9,8 +9,7 @@ using VelcroPhysics.Shared;
 
 namespace VelcroPhysics.Extensions.DebugView
 {
-    /// Implement and register this class with a World to provide debug drawing of physics
-    /// entities in your game.
+    /// <summary>Implement and register this class with a World to provide debug drawing of physics entities in your game.</summary>
     public abstract class DebugViewBase
     {
         protected DebugViewBase(World world)
@@ -39,46 +38,19 @@ namespace VelcroPhysics.Extensions.DebugView
         }
 
         /// <summary>Draw a closed polygon provided in CCW order.</summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <param name="count">The vertex count.</param>
-        /// <param name="red">The red value.</param>
-        /// <param name="blue">The blue value.</param>
-        /// <param name="green">The green value.</param>
-        public abstract void DrawPolygon(Vector2[] vertices, int count, float red, float blue, float green, bool closed = true);
+        public abstract void DrawPolygon(Vector2[] vertices, int count, Color color, bool closed = true);
 
         /// <summary>Draw a solid closed polygon provided in CCW order.</summary>
-        /// <param name="vertices">The vertices.</param>
-        /// <param name="count">The vertex count.</param>
-        /// <param name="red">The red value.</param>
-        /// <param name="blue">The blue value.</param>
-        /// <param name="green">The green value.</param>
-        public abstract void DrawSolidPolygon(Vector2[] vertices, int count, float red, float blue, float green);
+        public abstract void DrawSolidPolygon(Vector2[] vertices, int count, Color color, bool outline = true);
 
         /// <summary>Draw a circle.</summary>
-        /// <param name="center">The center.</param>
-        /// <param name="radius">The radius.</param>
-        /// <param name="red">The red value.</param>
-        /// <param name="blue">The blue value.</param>
-        /// <param name="green">The green value.</param>
-        public abstract void DrawCircle(Vector2 center, float radius, float red, float blue, float green);
+        public abstract void DrawCircle(Vector2 center, float radius, Color color);
 
         /// <summary>Draw a solid circle.</summary>
-        /// <param name="center">The center.</param>
-        /// <param name="radius">The radius.</param>
-        /// <param name="axis">The axis.</param>
-        /// <param name="red">The red value.</param>
-        /// <param name="blue">The blue value.</param>
-        /// <param name="green">The green value.</param>
-        public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, float red, float blue,
-                                             float green);
+        public abstract void DrawSolidCircle(Vector2 center, float radius, Vector2 axis, Color color);
 
         /// <summary>Draw a line segment.</summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        /// <param name="red">The red value.</param>
-        /// <param name="blue">The blue value.</param>
-        /// <param name="green">The green value.</param>
-        public abstract void DrawSegment(Vector2 start, Vector2 end, float red, float blue, float green);
+        public abstract void DrawSegment(Vector2 start, Vector2 end, Color color);
 
         /// <summary>Draw a transform. Choose your own length scale.</summary>
         /// <param name="transform">The transform.</param>
