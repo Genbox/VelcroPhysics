@@ -9,7 +9,7 @@ namespace VelcroPhysics.Extensions.Controllers.ControllerBase
         public bool Enabled;
         public World World;
 
-        public Controller(ControllerType controllerType)
+        protected Controller(ControllerType controllerType)
         {
             _type = controllerType;
         }

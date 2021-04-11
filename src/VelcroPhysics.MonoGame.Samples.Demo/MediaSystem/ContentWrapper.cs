@@ -369,7 +369,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                         }
 
                         Vector2 vertsSize = new Vector2(polygonBounds.UpperBound.X - polygonBounds.LowerBound.X, polygonBounds.UpperBound.Y - polygonBounds.LowerBound.Y);
-                        result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, new VertexPositionColor[0]));
+                        result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, Array.Empty<VertexPositionColor>()));
                     }
                     else
                         result.Add(_textureList["Blank"]);

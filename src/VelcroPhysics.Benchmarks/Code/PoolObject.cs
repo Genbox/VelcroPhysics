@@ -1,4 +1,5 @@
-﻿using VelcroPhysics.Shared;
+﻿using System;
+using VelcroPhysics.Shared;
 using VelcroPhysics.Shared.Optimization;
 
 namespace VelcroPhysics.Benchmarks.Code
@@ -11,6 +12,7 @@ namespace VelcroPhysics.Benchmarks.Code
         public void Dispose()
         {
             Pool.ReturnToPool(this);
+            GC.SuppressFinalize(this);
         }
 
         public Pool<PoolObject> Pool { get; set; }

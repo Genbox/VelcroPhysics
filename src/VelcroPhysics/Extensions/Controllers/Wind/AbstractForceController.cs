@@ -56,8 +56,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
         public Curve StrengthCurve;
 
         /// <summary>Constructor</summary>
-        public AbstractForceController()
-            : base(ControllerType.AbstractForceController)
+        protected AbstractForceController() : base(ControllerType.AbstractForceController)
         {
             Enabled = true;
 
@@ -84,8 +83,7 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 
         /// <summary>Overloaded Contstructor with supplying Timing Mode</summary>
         /// <param name="mode"></param>
-        public AbstractForceController(TimingModes mode)
-            : base(ControllerType.AbstractForceController)
+        protected AbstractForceController(TimingModes mode) : base(ControllerType.AbstractForceController)
         {
             TimingMode = mode;
             switch (mode)
@@ -110,12 +108,6 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
 
         /// <summary>Maximum speed of the bodies. Bodies that are travelling faster are supposed to be ignored</summary>
         public float MaximumSpeed { get; set; }
-
-        /// <summary>
-        /// Maximum Force to be applied. As opposed to Maximum Speed this is independent of the velocity of the affected
-        /// body
-        /// </summary>
-        public float MaximumForce { get; set; }
 
         /// <summary>Timing Mode of the force instance</summary>
         public TimingModes TimingMode { get; set; }
@@ -154,35 +146,35 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             switch (DecayMode)
             {
                 case DecayModes.None:
-                {
-                    return 1.0f;
-                }
+                    {
+                        return 1.0f;
+                    }
                 case DecayModes.Step:
-                {
-                    if (distance < DecayEnd)
-                        return 1.0f;
-                    return 0.0f;
-                }
-                case DecayModes.Linear:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    if (distance > DecayEnd)
+                    {
+                        if (distance < DecayEnd)
+                            return 1.0f;
                         return 0.0f;
-                    return DecayEnd - DecayStart / distance - DecayStart;
-                }
+                    }
+                case DecayModes.Linear:
+                    {
+                        if (distance < DecayStart)
+                            return 1.0f;
+                        if (distance > DecayEnd)
+                            return 0.0f;
+                        return DecayEnd - DecayStart / distance - DecayStart;
+                    }
                 case DecayModes.InverseSquare:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
-                }
+                    {
+                        if (distance < DecayStart)
+                            return 1.0f;
+                        return 1.0f / ((distance - DecayStart) * (distance - DecayStart));
+                    }
                 case DecayModes.Curve:
-                {
-                    if (distance < DecayStart)
-                        return 1.0f;
-                    return DecayCurve.Evaluate(distance - DecayStart);
-                }
+                    {
+                        if (distance < DecayStart)
+                            return 1.0f;
+                        return DecayCurve.Evaluate(distance - DecayStart);
+                    }
                 default:
                     return 1.0f;
             }
@@ -202,39 +194,39 @@ namespace VelcroPhysics.Extensions.Controllers.Wind
             switch (TimingMode)
             {
                 case TimingModes.Switched:
-                {
-                    if (Enabled)
-                        ApplyForce(dt, Strength);
-                    break;
-                }
-                case TimingModes.Triggered:
-                {
-                    if (Enabled && Triggered)
                     {
-                        if (ImpulseTime < ImpulseLength)
-                        {
+                        if (Enabled)
                             ApplyForce(dt, Strength);
-                            ImpulseTime += dt;
-                        }
-                        else
-                            Triggered = false;
+                        break;
                     }
-                    break;
-                }
-                case TimingModes.Curve:
-                {
-                    if (Enabled && Triggered)
+                case TimingModes.Triggered:
                     {
-                        if (ImpulseTime < ImpulseLength)
+                        if (Enabled && Triggered)
                         {
-                            ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
-                            ImpulseTime += dt;
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength);
+                                ImpulseTime += dt;
+                            }
+                            else
+                                Triggered = false;
                         }
-                        else
-                            Triggered = false;
+                        break;
                     }
-                    break;
-                }
+                case TimingModes.Curve:
+                    {
+                        if (Enabled && Triggered)
+                        {
+                            if (ImpulseTime < ImpulseLength)
+                            {
+                                ApplyForce(dt, Strength * StrengthCurve.Evaluate(ImpulseTime));
+                                ImpulseTime += dt;
+                            }
+                            else
+                                Triggered = false;
+                        }
+                        break;
+                    }
             }
         }
 

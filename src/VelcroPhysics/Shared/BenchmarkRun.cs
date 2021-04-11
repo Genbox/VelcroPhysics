@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using VelcroPhysics.Shared.Optimization;
 
@@ -13,6 +14,7 @@ namespace VelcroPhysics.Shared
         {
             RecordResults();
             Pool.ReturnToPool(this);
+            GC.SuppressFinalize(this);
         }
 
         public void Reset()

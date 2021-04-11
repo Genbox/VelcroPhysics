@@ -27,7 +27,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
     {
         private bool _otherScreenHasFocus;
 
-        public GameScreen()
+        protected GameScreen()
         {
             ScreenState = ScreenState.TransitionOn;
             TransitionPosition = 1;

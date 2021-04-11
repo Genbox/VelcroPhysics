@@ -64,13 +64,13 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <!--<PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
+  <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <WarningLevel>5</WarningLevel>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\Global.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>-->
+  </PropertyGroup>
 
   <ItemGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3" PrivateAssets="all" />

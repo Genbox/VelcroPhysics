@@ -79,7 +79,6 @@
     <Rule Id="CS0108" Action="Error" />
     <Rule Id="CS0109" Action="Error" />
     <Rule Id="CS0114" Action="Error" />
-    <Rule Id="CS0162" Action="Error" />
     <Rule Id="CS0168" Action="Error" />
     <Rule Id="CS0251" Action="Error" />
     <Rule Id="CS0659" Action="Error" />

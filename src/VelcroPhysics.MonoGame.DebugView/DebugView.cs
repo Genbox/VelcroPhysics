@@ -93,6 +93,7 @@ namespace VelcroPhysics.MonoGame.DebugView
         public void Dispose()
         {
             World.ContactManager.PreSolve -= PreSolve;
+            GC.SuppressFinalize(this);
         }
 
         private void PreSolve(Contact contact, ref Manifold oldManifold)

@@ -7,7 +7,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
         private PhysicsLogicType _type;
         public World World;
 
-        public PhysicsLogic(World world, PhysicsLogicType type)
+        protected PhysicsLogic(World world, PhysicsLogicType type)
         {
             _type = type;
             World = world;
