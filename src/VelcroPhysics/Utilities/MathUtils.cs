@@ -249,7 +249,7 @@ namespace VelcroPhysics.Utilities
             float xhalf = 0.5f * x;
             convert.i = 0x5f3759df - (convert.i >> 1);
             x = convert.x;
-            x = x * (1.5f - xhalf * x * x);
+            x *= (1.5f - xhalf * x * x);
             return x;
         }
 

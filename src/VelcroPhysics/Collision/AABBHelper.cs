@@ -15,8 +15,8 @@ namespace VelcroPhysics.Collision
             aabb.UpperBound = Vector2.Max(v1, v2);
 
             Vector2 r = new Vector2(Settings.PolygonRadius, Settings.PolygonRadius);
-            aabb.LowerBound = aabb.LowerBound - r;
-            aabb.UpperBound = aabb.UpperBound + r;
+            aabb.LowerBound -= r;
+            aabb.UpperBound += r;
         }
 
         public static void ComputeCircleAABB(ref Vector2 pos, float radius, ref Transform transform, out AABB aabb)

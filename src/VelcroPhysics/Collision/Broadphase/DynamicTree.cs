@@ -192,8 +192,8 @@ namespace VelcroPhysics.Collision.Broadphase
             // Extend AABB.
             AABB b = aabb;
             Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
-            b.LowerBound = b.LowerBound - r;
-            b.UpperBound = b.UpperBound + r;
+            b.LowerBound -= r;
+            b.UpperBound += r;
 
             // Predict AABB displacement.
             Vector2 d = Settings.AABBMultiplier * displacement;

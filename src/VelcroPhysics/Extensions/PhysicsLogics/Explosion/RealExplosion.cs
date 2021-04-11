@@ -202,7 +202,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 else
                     midpt = vals[i + 1] + vals[i];
 
-                midpt = midpt / 2;
+                midpt /= 2;
 
                 Vector2 p1 = pos;
                 Vector2 p2 = radius * new Vector2((float)Math.Cos(midpt), (float)Math.Sin(midpt)) + pos;
