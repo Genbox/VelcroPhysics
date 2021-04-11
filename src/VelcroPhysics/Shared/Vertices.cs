@@ -304,7 +304,7 @@ namespace VelcroPhysics.Shared
                     Vector2 b1 = this[j];
                     Vector2 b2 = NextVertex(j);
 
-                    if (LineUtils.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out Vector2 temp))
+                    if (LineUtils.LineIntersect2(ref a1, ref a2, ref b1, ref b2, out _))
                         return false;
                 }
             }

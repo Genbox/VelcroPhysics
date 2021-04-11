@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -49,7 +49,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             input.TransformB = xfB;
             input.UseRadii = true;
 
-            DistanceGJK.ComputeDistance(ref input, out DistanceOutput output, out SimplexCache cache);
+            DistanceGJK.ComputeDistance(ref input, out DistanceOutput output, out _);
 
             return output.Distance < 10.0f * Settings.Epsilon;
         }

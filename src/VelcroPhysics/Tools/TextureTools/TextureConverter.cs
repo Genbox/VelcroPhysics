@@ -225,7 +225,7 @@ namespace VelcroPhysics.Tools.TextureTools
                                                 // Add first hole polygon vertex to close the hole polygon.
                                                 holePolygon.Add(holePolygon[0]);
 
-                                                if (SplitPolygonEdge(polygon, holeEntrance.Value, out int vertex1Index, out int vertex2Index))
+                                                if (SplitPolygonEdge(polygon, holeEntrance.Value, out _, out int vertex2Index))
                                                     polygon.InsertRange(vertex2Index, holePolygon);
 
                                                 break;

@@ -107,7 +107,7 @@ namespace VelcroPhysics.MonoGame.DebugView
 
                 Fixture fixtureA = contact.FixtureA;
 
-                Collision.Narrowphase.Collision.GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2, ref oldManifold, ref manifold);
+                Collision.Narrowphase.Collision.GetPointStates(out _, out FixedArray2<PointState> state2, ref oldManifold, ref manifold);
 
                 contact.GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points);
 
