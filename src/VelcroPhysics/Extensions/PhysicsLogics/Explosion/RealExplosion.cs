@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
     // Original Code by Steven Lu - see http://www.box2d.org/forum/viewtopic.php?f=3&t=1688
     // Ported by Nicol�s Hormaz�bal

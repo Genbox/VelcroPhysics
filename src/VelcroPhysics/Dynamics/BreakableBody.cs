@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Factories;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Dynamics
+namespace Genbox.VelcroPhysics.Dynamics
 {
     /// <summary>A type of body that supports multiple fixtures that can break apart.</summary>
     public class BreakableBody

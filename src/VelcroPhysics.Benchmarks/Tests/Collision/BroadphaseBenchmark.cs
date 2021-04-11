@@ -1,12 +1,12 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using Genbox.VelcroPhysics.Benchmarks.Utilities;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Benchmarks.Utilities;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Benchmarks.Tests.Collision
+namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
 {
     [MemoryDiagnoser]
     [InProcess]

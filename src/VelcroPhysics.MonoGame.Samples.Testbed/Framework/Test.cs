@@ -21,15 +21,15 @@
 */
 
 using System;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Solver;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Dynamics.Solver;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public class Test
     {

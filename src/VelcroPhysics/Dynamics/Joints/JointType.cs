@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
     public enum JointType
     {

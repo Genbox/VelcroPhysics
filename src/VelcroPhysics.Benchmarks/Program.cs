@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace VelcroPhysics.Benchmarks
+namespace Genbox.VelcroPhysics.Benchmarks
 {
     internal class Program
     {

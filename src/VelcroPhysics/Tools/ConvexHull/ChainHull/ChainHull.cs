@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.ConvexHull.ChainHull
+namespace Genbox.VelcroPhysics.Tools.ConvexHull.ChainHull
 {
     /// <summary>
     /// Andrew's Monotone Chain Convex Hull algorithm. Used to get the convex hull of a point cloud. Source:

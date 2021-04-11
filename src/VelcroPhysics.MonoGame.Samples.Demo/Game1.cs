@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
-using VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
 {
     /// <summary>
     /// This is the main type for the samples

@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
 {
     [Flags]
     public enum PhysicsLogicType

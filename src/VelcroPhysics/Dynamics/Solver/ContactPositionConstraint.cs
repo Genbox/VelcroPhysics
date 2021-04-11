@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Narrowphase;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     public sealed class ContactPositionConstraint
     {

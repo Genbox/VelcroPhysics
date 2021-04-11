@@ -21,11 +21,11 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>
     /// A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use

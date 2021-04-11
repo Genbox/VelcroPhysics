@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Templates
+namespace Genbox.VelcroPhysics.Templates
 {
     public interface IDefaults
     {

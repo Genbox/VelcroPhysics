@@ -21,13 +21,13 @@
 */
 
 using System.Collections.Generic;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Collision.Handlers;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Handlers;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Collision.Handlers;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Handlers;
 
-namespace VelcroPhysics.Collision.ContactSystem
+namespace Genbox.VelcroPhysics.Collision.ContactSystem
 {
     public class ContactManager
     {

@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     public sealed class VelocityConstraintPoint
     {

@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.PolygonManipulation;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.PolygonManipulation;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     public class SimplificationTest : Test
     {

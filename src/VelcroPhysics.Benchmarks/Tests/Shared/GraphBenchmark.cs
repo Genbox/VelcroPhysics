@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
-using VelcroPhysics.Benchmarks.Code;
-using VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Benchmarks.Code;
+using Genbox.VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Benchmarks.Tests.Shared
+namespace Genbox.VelcroPhysics.Benchmarks.Tests.Shared
 {
     [MemoryDiagnoser]
     [InProcess]

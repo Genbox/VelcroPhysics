@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     public class BenchmarkRun : IPoolable<BenchmarkRun>
     {

@@ -21,13 +21,13 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.ConvexHull.GiftWrap;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.ConvexHull.GiftWrap;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>Represents a simple non-self intersecting convex polygon. Create a convex hull from the given array of points.</summary>
     public class PolygonShape : Shape

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
+﻿using Genbox.VelcroPhysics.Collision.Shapes;
+using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Templates.Shapes
 {
     public class CircleShapeTemplate : ShapeTemplate
     {

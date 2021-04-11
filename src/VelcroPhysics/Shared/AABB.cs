@@ -1,9 +1,9 @@
 using System;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>An axis aligned bounding box.</summary>
     public struct AABB

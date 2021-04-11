@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Factories;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
-using VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 {
     public class TheoJansenWalker
     {

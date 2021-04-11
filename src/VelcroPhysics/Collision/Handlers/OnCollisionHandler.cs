@@ -1,7 +1,7 @@
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Collision.Handlers
+namespace Genbox.VelcroPhysics.Collision.Handlers
 {
     public delegate void OnCollisionHandler(Fixture fixtureA, Fixture fixtureB, Contact contact);
 }

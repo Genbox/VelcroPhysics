@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace VelcroPhysics.Tools.Triangulation.Seidel
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Seidel
 {
     internal class MonotoneMountain
     {

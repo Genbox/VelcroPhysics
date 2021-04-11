@@ -1,8 +1,8 @@
 ﻿using System;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.

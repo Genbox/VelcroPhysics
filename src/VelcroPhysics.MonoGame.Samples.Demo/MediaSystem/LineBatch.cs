@@ -1,10 +1,10 @@
 ﻿using System;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
     public class LineBatch : IDisposable
     {

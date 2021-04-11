@@ -1,4 +1,4 @@
-﻿namespace VelcroPhysics.Benchmarks.Code
+﻿namespace Genbox.VelcroPhysics.Benchmarks.Code
 {
     public struct Struct64
     {

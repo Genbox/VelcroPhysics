@@ -1,6 +1,6 @@
-using VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Collision.ContactSystem
+namespace Genbox.VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// A contact edge is used to connect bodies and contacts together in a contact graph where each body is a node

@@ -1,4 +1,4 @@
-﻿namespace VelcroPhysics.Collision.Filtering
+﻿namespace Genbox.VelcroPhysics.Collision.Filtering
 {
     public class Filter
     {

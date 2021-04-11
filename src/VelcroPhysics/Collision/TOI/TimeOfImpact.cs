@@ -22,12 +22,12 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Distance;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Distance;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Collision.TOI
+namespace Genbox.VelcroPhysics.Collision.TOI
 {
     public static class TimeOfImpact
     {

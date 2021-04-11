@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace VelcroPhysics.Benchmarks.Tests.Primitives
+namespace Genbox.VelcroPhysics.Benchmarks.Tests.Primitives
 {
     [InProcess]
     public class AABBBenchmark

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Extensions.DebugView;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Extensions.DebugView;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can

@@ -30,10 +30,10 @@
  */
 
 using System;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Polygon;
-using VelcroPhysics.Utilities;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Polygon;
+using Genbox.VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PolygonGenerator
     {

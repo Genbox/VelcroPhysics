@@ -20,12 +20,12 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
-using VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     public class MobileBalancedTest : Test
     {

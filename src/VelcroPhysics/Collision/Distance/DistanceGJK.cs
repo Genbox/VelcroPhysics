@@ -22,12 +22,12 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.Distance
+namespace Genbox.VelcroPhysics.Collision.Distance
 {
     /// <summary>
     /// The Gilbert–Johnson–Keerthi distance algorithm that provides the distance between shapes. Using Voronoi

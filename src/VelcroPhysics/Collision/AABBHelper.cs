@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
+﻿using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
+using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision
+namespace Genbox.VelcroPhysics.Collision
 {
     public static class AABBHelper
     {

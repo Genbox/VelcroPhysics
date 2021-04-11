@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Collision.Filtering
+namespace Genbox.VelcroPhysics.Collision.Filtering
 {
     [Flags]
     public enum Category

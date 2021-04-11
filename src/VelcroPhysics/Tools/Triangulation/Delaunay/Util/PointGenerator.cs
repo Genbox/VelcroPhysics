@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Util
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Util
 {
     internal class PointGenerator
     {

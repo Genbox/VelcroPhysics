@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.Utilities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.HelloWorld
+namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
 {
     public class Game1 : Game
     {

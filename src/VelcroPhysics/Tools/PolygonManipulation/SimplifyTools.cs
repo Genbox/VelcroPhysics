@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.PolygonManipulation
+namespace Genbox.VelcroPhysics.Tools.PolygonManipulation
 {
     /// <summary>Provides a set of tools to simplify polygons in various ways.</summary>
     public static class SimplifyTools

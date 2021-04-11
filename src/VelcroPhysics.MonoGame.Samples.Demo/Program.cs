@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
 {
     public static class Program
     {

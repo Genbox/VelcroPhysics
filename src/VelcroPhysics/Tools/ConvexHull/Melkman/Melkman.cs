@@ -1,8 +1,8 @@
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.ConvexHull.Melkman
+namespace Genbox.VelcroPhysics.Tools.ConvexHull.Melkman
 {
     /// <summary>
     /// Creates a convex hull.

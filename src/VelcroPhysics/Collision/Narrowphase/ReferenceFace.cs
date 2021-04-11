@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>Reference face used for clipping</summary>
     public struct ReferenceFace

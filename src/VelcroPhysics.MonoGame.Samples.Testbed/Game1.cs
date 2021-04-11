@@ -1,12 +1,12 @@
 ﻿using System;
+using Genbox.VelcroPhysics.Extensions.DebugView;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Extensions.DebugView;
-using VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using VelcroPhysics.MonoGame.Samples.Testbed.Tests;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 {
     public class Game1 : Game
     {

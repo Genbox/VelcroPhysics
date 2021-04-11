@@ -1,10 +1,10 @@
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     public static class PositionSolverManifold
     {

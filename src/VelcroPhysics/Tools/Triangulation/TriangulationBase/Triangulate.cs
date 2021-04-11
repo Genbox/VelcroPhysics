@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.ConvexHull.GiftWrap;
-using VelcroPhysics.Tools.Triangulation.Bayazit;
-using VelcroPhysics.Tools.Triangulation.Delaunay;
-using VelcroPhysics.Tools.Triangulation.Earclip;
-using VelcroPhysics.Tools.Triangulation.FlipCode;
-using VelcroPhysics.Tools.Triangulation.Seidel;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.ConvexHull.GiftWrap;
+using Genbox.VelcroPhysics.Tools.Triangulation.Bayazit;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay;
+using Genbox.VelcroPhysics.Tools.Triangulation.Earclip;
+using Genbox.VelcroPhysics.Tools.Triangulation.FlipCode;
+using Genbox.VelcroPhysics.Tools.Triangulation.Seidel;
 
-namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
+namespace Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase
 {
     public static class Triangulate
     {

@@ -21,12 +21,12 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
     // Gear Joint:
     // C0 = (coordinate1 + ratio * coordinate2)_initial

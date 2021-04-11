@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Extensions.DebugView;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Extensions.Controllers.Buoyancy;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Extensions.DebugView;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.DebugView
+namespace Genbox.VelcroPhysics.MonoGame.DebugView
 {
     /// <summary>
     /// A debug view shows you what happens inside the physics engine. You can view

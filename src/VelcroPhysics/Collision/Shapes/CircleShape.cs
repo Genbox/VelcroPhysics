@@ -20,11 +20,11 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>A circle shape.</summary>
     public class CircleShape : Shape

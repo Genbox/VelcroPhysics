@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
     /// <summary>Creates a simple explosion that ignores other bodies hiding behind static bodies.</summary>
     public sealed class SimpleExplosion : PhysicsLogic

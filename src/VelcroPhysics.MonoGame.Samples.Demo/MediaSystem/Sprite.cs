@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
     public class Sprite
     {

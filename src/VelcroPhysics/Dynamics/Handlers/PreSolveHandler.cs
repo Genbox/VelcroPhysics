@@ -1,7 +1,7 @@
-﻿using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Narrowphase;
+﻿using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
 
-namespace VelcroPhysics.Dynamics.Handlers
+namespace Genbox.VelcroPhysics.Dynamics.Handlers
 {
     public delegate void PreSolveHandler(Contact contact, ref Manifold oldManifold);
 }

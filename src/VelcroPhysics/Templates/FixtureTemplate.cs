@@ -1,7 +1,7 @@
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Collision.Shapes;
 
-namespace VelcroPhysics.Templates
+namespace Genbox.VelcroPhysics.Templates
 {
     public class FixtureTemplate : IDefaults
     {

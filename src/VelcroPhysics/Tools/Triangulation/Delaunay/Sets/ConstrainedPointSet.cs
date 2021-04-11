@@ -31,7 +31,7 @@
 
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Sets
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Sets
 {
     /*
      * Extends the PointSet by adding some Constraints on how it will be triangulated<br>

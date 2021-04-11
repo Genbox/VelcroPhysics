@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VelcroPhysics.Tools.Triangulation.Seidel
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Seidel
 {
     internal class TrapezoidalMap
     {

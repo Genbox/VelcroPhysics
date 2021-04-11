@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     public sealed class ContactVelocityConstraint
     {

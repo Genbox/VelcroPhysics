@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.PathGenerator
+namespace Genbox.VelcroPhysics.Tools.PathGenerator
 {
     //Contributed by Matthew Bettcher
 

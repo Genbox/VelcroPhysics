@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.Explosion
 {
     /// <summary>This is a comparer used for detecting angle difference between rays</summary>
     internal class RayDataComparer : IComparer<float>

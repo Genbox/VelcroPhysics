@@ -21,9 +21,9 @@
 */
 
 using System;
-using VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Collision.Filtering;
 
-namespace VelcroPhysics
+namespace Genbox.VelcroPhysics
 {
     public static class Settings
     {

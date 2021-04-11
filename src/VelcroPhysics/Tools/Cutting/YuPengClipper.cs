@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.Cutting.Simple;
+using Genbox.VelcroPhysics.Tools.PolygonManipulation;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.Cutting.Simple;
-using VelcroPhysics.Tools.PolygonManipulation;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.Cutting
+namespace Genbox.VelcroPhysics.Tools.Cutting
 {
     //Clipper contributed by Helge Backhaus
 

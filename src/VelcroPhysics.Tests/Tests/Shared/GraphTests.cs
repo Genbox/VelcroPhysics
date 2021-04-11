@@ -1,8 +1,8 @@
-﻿using VelcroPhysics.Shared;
-using VelcroPhysics.Tests.Code;
+﻿using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tests.Code;
 using Xunit;
 
-namespace VelcroPhysics.Tests.Tests.Shared
+namespace Genbox.VelcroPhysics.Tests.Tests.Shared
 {
     public class GraphTests
     {

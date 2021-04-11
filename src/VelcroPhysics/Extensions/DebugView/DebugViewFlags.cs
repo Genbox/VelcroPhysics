@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Extensions.DebugView
+namespace Genbox.VelcroPhysics.Extensions.DebugView
 {
     [Flags]
     public enum DebugViewFlags

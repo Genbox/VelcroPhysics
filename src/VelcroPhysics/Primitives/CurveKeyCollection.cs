@@ -38,7 +38,7 @@ namespace Microsoft.Xna.Framework
         public void Add(CurveKey item)
         {
             if (item == null)
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException(nameof(item));
 
             if (_keys.Count == 0)
             {

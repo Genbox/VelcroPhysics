@@ -21,12 +21,12 @@
 */
 
 using System;
+using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
     // Limit:
     // C = norm(pB - pA) - L

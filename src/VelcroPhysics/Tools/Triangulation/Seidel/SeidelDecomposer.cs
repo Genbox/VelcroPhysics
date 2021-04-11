@@ -5,10 +5,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.Triangulation.Seidel
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Seidel
 {
     /// <summary>
     /// Convex decomposition algorithm created by Raimund Seidel

@@ -34,7 +34,7 @@
 // Future possibilities
 //   Documentation!
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
 {
     internal class PolygonPoint : TriangulationPoint
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
 
-namespace VelcroPhysics.Collision.Distance
+namespace Genbox.VelcroPhysics.Collision.Distance
 {
     /// <summary>A distance proxy is used by the GJK algorithm. It encapsulates any shape.</summary>
     public struct DistanceProxy

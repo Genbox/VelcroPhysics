@@ -21,10 +21,10 @@
 */
 
 using System;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Utilities
+namespace Genbox.VelcroPhysics.Utilities
 {
     public static class MathUtils
     {

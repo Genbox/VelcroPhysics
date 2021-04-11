@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VelcroPhysics.Shared.Contracts
+namespace Genbox.VelcroPhysics.Shared.Contracts
 {
     public class RequiredException : Exception
     {

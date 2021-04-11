@@ -5,12 +5,12 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay
 {
     /// <summary>
     /// 2D constrained Delaunay triangulation algorithm.

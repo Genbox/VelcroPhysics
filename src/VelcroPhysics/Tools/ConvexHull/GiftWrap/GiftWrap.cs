@@ -1,8 +1,8 @@
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.ConvexHull.GiftWrap
+namespace Genbox.VelcroPhysics.Tools.ConvexHull.GiftWrap
 {
     /// <summary>
     /// Giftwrap convex hull algorithm. O(n * h) time complexity, where n is the number of points and h is the number

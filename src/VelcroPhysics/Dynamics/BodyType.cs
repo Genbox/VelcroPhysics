@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Dynamics
+namespace Genbox.VelcroPhysics.Dynamics
 {
     /// <summary>The body type.</summary>
     public enum BodyType

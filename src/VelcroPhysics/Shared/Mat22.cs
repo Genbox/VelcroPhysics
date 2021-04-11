@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>A 2-by-2 matrix. Stored in column-major order.</summary>
     public struct Mat22

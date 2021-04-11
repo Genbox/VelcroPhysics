@@ -1,10 +1,10 @@
 ﻿using System;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     public class Camera2D
     {

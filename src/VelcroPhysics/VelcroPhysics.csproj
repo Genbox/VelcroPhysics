@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Authors>Ian Qvist</Authors>
     <DefineConstants>STANDARD_IMPLEMENTATION</DefineConstants>
   </PropertyGroup>
 

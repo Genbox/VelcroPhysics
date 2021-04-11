@@ -23,15 +23,15 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     internal class ContactSolver
     {

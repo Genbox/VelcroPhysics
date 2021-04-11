@@ -31,7 +31,7 @@
 
 using System;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
     internal class PointOnEdgeException : NotImplementedException
     {

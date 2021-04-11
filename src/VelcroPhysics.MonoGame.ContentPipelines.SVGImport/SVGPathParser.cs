@@ -24,11 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
+namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport
 {
     public class SVGPathParser
     {

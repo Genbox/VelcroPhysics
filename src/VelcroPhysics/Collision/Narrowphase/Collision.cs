@@ -20,14 +20,14 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Distance;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Distance;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>Collision methods</summary>
     public static class Collision

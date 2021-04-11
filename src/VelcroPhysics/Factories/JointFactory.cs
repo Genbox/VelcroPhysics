@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
+﻿using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Factories
+namespace Genbox.VelcroPhysics.Factories
 {
     /// <summary>An easy to use factory for using joints.</summary>
     public static class JointFactory

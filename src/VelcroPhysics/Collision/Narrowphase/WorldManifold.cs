@@ -1,9 +1,9 @@
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
     public static class WorldManifold
     {

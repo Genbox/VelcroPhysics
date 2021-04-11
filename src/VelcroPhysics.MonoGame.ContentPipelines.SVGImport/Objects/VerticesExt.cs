@@ -1,6 +1,6 @@
-using VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared;
 
-namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects
+namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects
 {
     public class VerticesExt : Vertices
     {

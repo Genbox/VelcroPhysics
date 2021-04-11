@@ -23,20 +23,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Distance;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Collision.TOI;
+using Genbox.VelcroPhysics.Dynamics.Handlers;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Distance;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Dynamics.Handlers;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Dynamics.Solver;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.Dynamics
+namespace Genbox.VelcroPhysics.Dynamics
 {
     /// <summary>The world class manages all physics entities, dynamic simulation, and asynchronous queries.</summary>
     public class World

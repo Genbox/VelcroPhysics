@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// an enum of all available mouse buttons.

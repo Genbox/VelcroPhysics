@@ -41,9 +41,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
 {
     internal class Polygon : Triangulatable
     {

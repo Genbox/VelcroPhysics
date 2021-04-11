@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.TOI
+namespace Genbox.VelcroPhysics.Collision.TOI
 {
     /// <summary>
     /// This describes the motion of a body/shape for TOI computation. Shapes are defined with respect to the body

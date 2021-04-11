@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.Benchmarks.Utilities
+namespace Genbox.VelcroPhysics.Benchmarks.Utilities
 {
     public static class RandomExtensions
     {

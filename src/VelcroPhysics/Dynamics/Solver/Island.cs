@@ -22,12 +22,12 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics.Solver
+namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     /// <summary>This is an internal class.</summary>
     internal class Island

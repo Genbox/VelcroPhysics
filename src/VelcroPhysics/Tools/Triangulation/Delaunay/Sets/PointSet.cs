@@ -30,9 +30,9 @@
  */
 
 using System.Collections.Generic;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Sets
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Sets
 {
     internal class PointSet : Triangulatable
     {

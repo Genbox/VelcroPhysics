@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
 
-namespace VelcroPhysics.Extensions.Controllers.Gravity
+namespace Genbox.VelcroPhysics.Extensions.Controllers.Gravity
 {
     public class GravityController : Controller
     {

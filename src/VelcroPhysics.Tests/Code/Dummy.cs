@@ -1,4 +1,4 @@
-﻿namespace VelcroPhysics.Tests.Code
+﻿namespace Genbox.VelcroPhysics.Tests.Code
 {
     public class Dummy { }
 }

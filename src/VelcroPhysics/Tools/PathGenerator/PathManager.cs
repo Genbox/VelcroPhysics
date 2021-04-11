@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Factories;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.Tools.PathGenerator
+namespace Genbox.VelcroPhysics.Tools.PathGenerator
 {
     /// <summary>An easy to use manager for creating paths.</summary>
     public static class PathManager

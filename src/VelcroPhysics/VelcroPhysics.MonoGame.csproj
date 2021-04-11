@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>VelcroPhysics</RootNamespace>
-    <AssemblyName>VelcroPhysics.MonoGame</AssemblyName>
+    <RootNamespace>Genbox.VelcroPhysics</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>

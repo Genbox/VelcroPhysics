@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision.ContactSystem
+namespace Genbox.VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>The features that intersect to form the contact point This must be 4 bytes or less.</summary>
     public struct ContactFeature

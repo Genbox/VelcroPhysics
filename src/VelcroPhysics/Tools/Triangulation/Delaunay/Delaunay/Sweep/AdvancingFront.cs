@@ -38,7 +38,7 @@
 using System;
 using System.Text;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 {
     /**
      * @author Thomas Åhlen (thahlen@gmail.com)

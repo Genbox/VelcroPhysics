@@ -1,6 +1,6 @@
-using VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Collision.Narrowphase
+namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>Used to warm start ComputeDistance. Set count to zero on first call.</summary>
     public struct SimplexCache

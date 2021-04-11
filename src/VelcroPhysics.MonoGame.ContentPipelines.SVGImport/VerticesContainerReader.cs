@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework.Content;
-using VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
+namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport
 {
     public class VerticesContainerReader : ContentTypeReader<VerticesContainer>
     {

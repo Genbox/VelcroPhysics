@@ -1,6 +1,6 @@
-using VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
 {
     public abstract class PhysicsLogic : FilterData
     {

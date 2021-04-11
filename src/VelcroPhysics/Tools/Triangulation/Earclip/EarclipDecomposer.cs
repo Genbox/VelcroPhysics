@@ -21,11 +21,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.Triangulation.Earclip
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Earclip
 {
     /// <summary>
     /// Convex decomposition algorithm using ear clipping

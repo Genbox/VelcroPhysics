@@ -1,10 +1,10 @@
 ﻿using System;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"

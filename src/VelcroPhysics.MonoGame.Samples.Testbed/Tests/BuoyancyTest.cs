@@ -1,11 +1,11 @@
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.Controllers.Buoyancy;
-using VelcroPhysics.Factories;
-using VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     public class BuoyancyTest : Test
     {

@@ -5,10 +5,10 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Solver;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Solver;
 
-namespace VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
     /// <summary>Maintains a fixed angle between two bodies</summary>
     public class AngleJoint : Joint

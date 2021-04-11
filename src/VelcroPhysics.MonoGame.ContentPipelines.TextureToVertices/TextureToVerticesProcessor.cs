@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices
+namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices
 {
     [ContentProcessor(DisplayName = "Texture to Vertices")]
     public class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, Vertices>

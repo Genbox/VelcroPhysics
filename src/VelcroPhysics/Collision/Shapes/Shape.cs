@@ -21,11 +21,11 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>
     /// A shape is used for collision detection. You can create a shape however you like. Shapes used for simulation

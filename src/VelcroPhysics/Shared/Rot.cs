@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>Rotation</summary>
     public struct Rot

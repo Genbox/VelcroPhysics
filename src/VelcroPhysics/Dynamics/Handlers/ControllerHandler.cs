@@ -1,6 +1,6 @@
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 
-namespace VelcroPhysics.Dynamics.Handlers
+namespace Genbox.VelcroPhysics.Dynamics.Handlers
 {
     public delegate void ControllerHandler(Controller controller);
 }

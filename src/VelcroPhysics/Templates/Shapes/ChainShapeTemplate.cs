@@ -1,8 +1,8 @@
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Templates.Shapes
 {
     /// <summary>
     /// A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use

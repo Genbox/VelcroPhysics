@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     public enum ShapeType
     {

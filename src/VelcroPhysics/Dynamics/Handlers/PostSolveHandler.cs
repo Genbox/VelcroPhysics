@@ -1,7 +1,7 @@
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Dynamics.Solver;
 
-namespace VelcroPhysics.Dynamics.Handlers
+namespace Genbox.VelcroPhysics.Dynamics.Handlers
 {
     public delegate void PostSolveHandler(Contact contact, ContactVelocityConstraint impulse);
 }

@@ -32,10 +32,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Shared.Optimization;
-using VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
+using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay
 {
     internal class DelaunayTriangle
     {

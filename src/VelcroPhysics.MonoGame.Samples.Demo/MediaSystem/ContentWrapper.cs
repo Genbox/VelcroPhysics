@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.Triangulation.TriangulationBase;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
     public class ContentWrapper : GameComponent
     {

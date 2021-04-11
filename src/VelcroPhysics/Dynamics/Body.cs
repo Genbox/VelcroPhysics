@@ -23,21 +23,21 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Collision.Handlers;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Collision.TOI;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Collision.Handlers;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Dynamics
+namespace Genbox.VelcroPhysics.Dynamics
 {
     public class Body
     {

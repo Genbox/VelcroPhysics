@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
-using VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D05_CollisionCategories : PhysicsDemoScreen
     {

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
+﻿using Genbox.VelcroPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Extensions.Controllers.Wind
+namespace Genbox.VelcroPhysics.Extensions.Controllers.Wind
 {
     /// <summary>
     /// Reference implementation for forces based on AbstractForceController It supports all features provided by the

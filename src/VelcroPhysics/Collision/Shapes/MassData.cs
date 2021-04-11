@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Collision.Shapes
+namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>This holds the mass data computed for a shape.</summary>
     public struct MassData : IEquatable<MassData>

@@ -1,11 +1,11 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Genbox.VelcroPhysics.Collision.Distance;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Collision.TOI;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Distance;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Collision.TOI;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Benchmarks.Tests.Collision
+namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
 {
     [MemoryDiagnoser]
     [InProcess]

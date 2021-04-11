@@ -1,9 +1,9 @@
 ﻿using System;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
 
-namespace VelcroPhysics.Extensions.Controllers.Wind
+namespace Genbox.VelcroPhysics.Extensions.Controllers.Wind
 {
     public abstract class AbstractForceController : Controller
     {

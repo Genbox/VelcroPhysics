@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.Triangulation.Earclip
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Earclip
 {
     public class Triangle : Vertices
     {

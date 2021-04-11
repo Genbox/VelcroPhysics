@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 
-namespace VelcroPhysics.Extensions.Controllers.Velocity
+namespace Genbox.VelcroPhysics.Extensions.Controllers.Velocity
 {
     /// <summary>
     /// Put a limit on the linear (translation - the move speed) and angular (rotation) velocity of bodies added to

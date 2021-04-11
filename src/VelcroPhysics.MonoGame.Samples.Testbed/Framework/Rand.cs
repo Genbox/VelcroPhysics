@@ -1,6 +1,6 @@
 using System;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public static class Rand
     {

@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>
     /// A transform contains translation and rotation. It is used to represent the position and orientation of rigid

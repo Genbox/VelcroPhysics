@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Tools.Triangulation.FlipCode
+namespace Genbox.VelcroPhysics.Tools.Triangulation.FlipCode
 {
     /// <summary>
     /// Convex decomposition algorithm created by unknown

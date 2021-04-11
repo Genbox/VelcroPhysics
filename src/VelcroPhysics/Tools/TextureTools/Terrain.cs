@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.PolygonManipulation;
+using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.PolygonManipulation;
-using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.Tools.TextureTools
+namespace Genbox.VelcroPhysics.Tools.TextureTools
 {
     /// <summary>Simple class to maintain a terrain. It can keep track</summary>
     public class Terrain

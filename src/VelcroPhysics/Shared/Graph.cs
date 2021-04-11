@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using VelcroPhysics.Shared.Contracts;
+using Genbox.VelcroPhysics.Shared.Contracts;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>This graph is a doubly linked circular list. It is circular to avoid branches in Add/Remove methods.</summary>
     public class Graph<T> : IEnumerable<T>

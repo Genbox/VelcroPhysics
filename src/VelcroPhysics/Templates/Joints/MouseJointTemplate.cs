@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Joints;
 
-namespace VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Templates.Joints
 {
     /// <summary>Mouse joint definition. This requires a world target point, tuning parameters, and the time step.</summary>
     public class MouseJointTemplate : JointTemplate

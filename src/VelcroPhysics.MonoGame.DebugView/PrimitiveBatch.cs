@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace VelcroPhysics.MonoGame.DebugView
+namespace Genbox.VelcroPhysics.MonoGame.DebugView
 {
     public class PrimitiveBatch : IDisposable
     {

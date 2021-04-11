@@ -21,17 +21,17 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Broadphase;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Collision.Handlers;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Broadphase;
-using VelcroPhysics.Collision.ContactSystem;
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Collision.Handlers;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
 
-namespace VelcroPhysics.Dynamics
+namespace Genbox.VelcroPhysics.Dynamics
 {
     /// <summary>
     /// A fixture is used to attach a Shape to a body for collision detection. A fixture inherits its transform from

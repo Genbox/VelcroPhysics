@@ -1,11 +1,11 @@
 ﻿using System;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Extensions.DebugView;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Dynamics.Joints;
-using VelcroPhysics.Extensions.DebugView;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     public class PhysicsDemoScreen : GameScreen
     {

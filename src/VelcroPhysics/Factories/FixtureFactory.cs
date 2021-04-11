@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Templates;
-using VelcroPhysics.Tools.Triangulation.TriangulationBase;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Factories
+namespace Genbox.VelcroPhysics.Factories
 {
     /// <summary>An easy to use factory for creating bodies</summary>
     public static class FixtureFactory

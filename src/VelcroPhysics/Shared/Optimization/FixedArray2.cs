@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Shared.Optimization
+namespace Genbox.VelcroPhysics.Shared.Optimization
 {
     public struct FixedArray2<T> : IEnumerable<T>
     {

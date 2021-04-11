@@ -1,7 +1,7 @@
-using VelcroPhysics.Collision.Filtering;
-using VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Dynamics;
 
-namespace VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
+namespace Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase
 {
     /// <summary>Contains filter data that can determine whether an object should be processed or not.</summary>
     public abstract class FilterData

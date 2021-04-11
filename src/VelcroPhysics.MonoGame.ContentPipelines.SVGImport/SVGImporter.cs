@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
-using VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
 
-namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
+namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport
 {
     [ContentImporter(".svg", DisplayName = "SVG Importer", DefaultProcessor = "PathContainerProcessor")]
     public class SVGImporter : ContentImporter<List<PathDefinition>>

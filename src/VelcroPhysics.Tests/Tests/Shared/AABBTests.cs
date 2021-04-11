@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
+﻿using Genbox.VelcroPhysics.Shared;
+using Microsoft.Xna.Framework;
 using Xunit;
 
-namespace VelcroPhysics.Tests.Tests.Shared
+namespace Genbox.VelcroPhysics.Tests.Tests.Shared
 {
     public class AABBTests
     {

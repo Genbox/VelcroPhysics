@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
-using VelcroPhysics.Benchmarks.Code;
+using Genbox.VelcroPhysics.Benchmarks.Code;
 
-namespace VelcroPhysics.Benchmarks.Tests.CLR
+namespace Genbox.VelcroPhysics.Benchmarks.Tests.CLR
 {
     [InProcess]
     public class StructBenchmarks

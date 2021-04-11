@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VelcroPhysics.Utilities
+namespace Genbox.VelcroPhysics.Utilities
 {
     public static class MathConstants
     {

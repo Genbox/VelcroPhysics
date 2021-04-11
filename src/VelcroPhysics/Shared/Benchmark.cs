@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     public static class Benchmark
     {

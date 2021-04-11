@@ -1,7 +1,7 @@
-﻿using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
+﻿using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Tests.Code
+namespace Genbox.VelcroPhysics.Tests.Code
 {
     internal class PoolObject : IPoolable<PoolObject>
     {

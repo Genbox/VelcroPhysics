@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Joints;
 
-namespace VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Templates.Joints
 {
     /// <summary>
     /// Wheel joint definition. This requires defining a line of motion using an axis and an anchor point. The

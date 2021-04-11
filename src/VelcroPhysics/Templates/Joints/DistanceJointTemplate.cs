@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics.Joints;
 
-namespace VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Templates.Joints
 {
     /// <summary>
     /// Distance joint definition. This requires defining an anchor point on both bodies and the non-zero length of

@@ -1,4 +1,4 @@
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public class GameSettings
     {

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using VelcroPhysics.Dynamics;
+﻿using Genbox.VelcroPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 
-namespace VelcroPhysics.Templates
+namespace Genbox.VelcroPhysics.Templates
 {
     public class BodyTemplate : IDefaults
     {

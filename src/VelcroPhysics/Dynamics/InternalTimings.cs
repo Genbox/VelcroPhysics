@@ -1,4 +1,4 @@
-﻿namespace VelcroPhysics.Dynamics
+﻿namespace Genbox.VelcroPhysics.Dynamics
 {
     public struct InternalTimings
     {

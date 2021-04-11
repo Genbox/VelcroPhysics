@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
     /// <summary>
     /// A joint edge is used to connect bodies and joints together in a joint graph where each body is a node and each

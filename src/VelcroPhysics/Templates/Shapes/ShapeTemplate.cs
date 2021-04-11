@@ -1,6 +1,6 @@
-﻿using VelcroPhysics.Collision.Shapes;
+﻿using Genbox.VelcroPhysics.Collision.Shapes;
 
-namespace VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Templates.Shapes
 {
     public class ShapeTemplate
     {

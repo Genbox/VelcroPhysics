@@ -1,8 +1,8 @@
 ﻿using System;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Benchmarks.Code
+namespace Genbox.VelcroPhysics.Benchmarks.Code
 {
     public class PoolObject : IPoolable<PoolObject>
     {

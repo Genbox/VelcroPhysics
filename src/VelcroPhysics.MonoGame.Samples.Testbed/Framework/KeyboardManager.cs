@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public class KeyboardManager
     {

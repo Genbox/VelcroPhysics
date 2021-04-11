@@ -1,7 +1,7 @@
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     /// <summary>A 3-by-3 matrix. Stored in column-major order.</summary>
     public struct Mat33

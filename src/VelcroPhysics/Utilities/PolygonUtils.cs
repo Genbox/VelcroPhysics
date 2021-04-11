@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Tools.TextureTools;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Tools.TextureTools;
 
-namespace VelcroPhysics.Utilities
+namespace Genbox.VelcroPhysics.Utilities
 {
     public static class PolygonUtils
     {

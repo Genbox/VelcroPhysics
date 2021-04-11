@@ -1,8 +1,8 @@
 using System;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Utilities
+namespace Genbox.VelcroPhysics.Utilities
 {
     /// <summary>
     /// Collection of helper methods for misc collisions. Does float tolerance and line collisions with lines and

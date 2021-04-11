@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.TextureTools
+namespace Genbox.VelcroPhysics.Tools.TextureTools
 {
     // Ported by Matthew Bettcher - Feb 2011
 

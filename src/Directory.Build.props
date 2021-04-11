@@ -16,6 +16,8 @@
     <LangVersion>latest</LangVersion>
     <!--<Nullable>enable</Nullable>-->
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <RootNamespace>Genbox.$(MSBuildProjectName)</RootNamespace>
+    <AssemblyName>Genbox.$(MSBuildProjectName)</AssemblyName>
     <DebugType>portable</DebugType>
     <RepositoryType>Git</RepositoryType>
     <PackageProjectUrl>https://github.com/Genbox/SimpleS3</PackageProjectUrl>

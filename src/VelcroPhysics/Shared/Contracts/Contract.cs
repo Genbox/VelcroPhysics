@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace VelcroPhysics.Shared.Contracts
+namespace Genbox.VelcroPhysics.Shared.Contracts
 {
     public static class Contract
     {

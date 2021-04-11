@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Collision.Narrowphase
+namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
     /// <summary>This is used for determining the state of contact points.</summary>
     public enum PointState

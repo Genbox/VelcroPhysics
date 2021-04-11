@@ -23,12 +23,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.RayCast;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.RayCast;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Collision.Broadphase
+namespace Genbox.VelcroPhysics.Collision.Broadphase
 {
     /// <summary>
     /// A dynamic tree arranges data in a binary tree to accelerate queries such as volume queries and ray casts.

@@ -20,10 +20,10 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Shared;
 
-namespace VelcroPhysics.Tools.PolygonManipulation
+namespace Genbox.VelcroPhysics.Tools.PolygonManipulation
 {
     /// <summary>
     /// Combines a list of triangles into a list of convex polygons. Starts with a seed triangle, keep adding

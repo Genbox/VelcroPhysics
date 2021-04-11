@@ -1,14 +1,14 @@
 ﻿using System.Text;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Factories;
-using VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
-using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
-using VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D10_Ragdoll : PhysicsDemoScreen
     {

@@ -37,7 +37,7 @@
 
 using System.Collections.Generic;
 
-namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
+namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
 {
     internal class PolygonSet
     {

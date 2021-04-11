@@ -23,14 +23,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Shared.Optimization;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Narrowphase;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Collision.ContactSystem
+namespace Genbox.VelcroPhysics.Collision.ContactSystem
 {
     /// <summary>
     /// The class manages contact between two shapes. A contact exists for each overlapping AABB in the broad-phase

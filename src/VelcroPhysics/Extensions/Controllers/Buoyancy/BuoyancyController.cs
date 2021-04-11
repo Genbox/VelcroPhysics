@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using VelcroPhysics.Collision.Shapes;
-using VelcroPhysics.Dynamics;
-using VelcroPhysics.Extensions.Controllers.ControllerBase;
-using VelcroPhysics.Shared;
-using VelcroPhysics.Utilities;
 
-namespace VelcroPhysics.Extensions.Controllers.Buoyancy
+namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
 {
     public sealed class BuoyancyController : Controller
     {

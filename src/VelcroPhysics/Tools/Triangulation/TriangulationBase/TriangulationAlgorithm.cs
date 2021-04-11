@@ -1,4 +1,4 @@
-namespace VelcroPhysics.Tools.Triangulation.TriangulationBase
+namespace Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase
 {
     public enum TriangulationAlgorithm
     {

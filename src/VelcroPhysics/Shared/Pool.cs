@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Shared.Optimization;
 
-namespace VelcroPhysics.Shared
+namespace Genbox.VelcroPhysics.Shared
 {
     public class Pool<T> where T : IPoolable<T>
     {
