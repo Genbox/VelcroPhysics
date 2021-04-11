@@ -1,6 +1,12 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <BaseIntermediateOutputPath>obj\$(Configuration)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\$(MSBuildProjectName)\</IntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Authors>Ian Qvist</Authors>
     <Copyright>Copyright 2021, by Ian Qvist. All rights reserved.</Copyright>
     <Description>High performance 2D collision detection system with realistic physics responses.</Description>
