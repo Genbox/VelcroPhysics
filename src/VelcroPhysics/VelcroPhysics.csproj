@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <DefineConstants>STANDARD_IMPLEMENTATION</DefineConstants>
+    <DefineConstants>$(DefineConstants);STANDARD_IMPLEMENTATION</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
