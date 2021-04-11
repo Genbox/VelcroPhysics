@@ -95,8 +95,7 @@ namespace VelcroPhysics.Extensions.Controllers.Buoyancy
 
                     Shape shape = fixture.Shape;
 
-                    Vector2 sc;
-                    float sarea = ComputeSubmergedArea(shape, ref _normal, _offset, ref body._xf, out sc);
+                    float sarea = ComputeSubmergedArea(shape, ref _normal, _offset, ref body._xf, out Vector2 sc);
                     area += sarea;
                     areac.X += sarea * sc.X;
                     areac.Y += sarea * sc.Y;

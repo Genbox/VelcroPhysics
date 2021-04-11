@@ -43,10 +43,8 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.Demos
             List<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "Cookie");
             for (int i = 0; i < _breakableCookie[0].Parts.Count; i++)
             {
-                AABB bounds;
-                Transform transform;
-                _breakableCookie[0].Parts[i].Body.GetTransform(out transform);
-                _breakableCookie[0].Parts[i].Shape.ComputeAABB(ref transform, 0, out bounds);
+                _breakableCookie[0].Parts[i].Body.GetTransform(out Transform transform);
+                _breakableCookie[0].Parts[i].Shape.ComputeAABB(ref transform, 0, out AABB bounds);
                 Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableCookie[0].Parts[i].Body.Position - bounds.LowerBound);
                 _breakableSprite.Add(new Sprite(textures[i], origin));
             }

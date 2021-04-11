@@ -177,9 +177,7 @@ namespace VelcroPhysics.Tools.Cutting.Simple
                 if (fixtures[i].Body.BodyType != BodyType.Static)
                 {
                     //Split the shape up into two shapes
-                    Vertices first;
-                    Vertices second;
-                    SplitShape(fixtures[i], entryPoints[i], exitPoints[i], out first, out second);
+                    SplitShape(fixtures[i], entryPoints[i], exitPoints[i], out Vertices first, out Vertices second);
 
                     //Delete the original shape and create two new. Retain the properties of the body.
                     if (first.CheckPolygon() == PolygonError.NoError)

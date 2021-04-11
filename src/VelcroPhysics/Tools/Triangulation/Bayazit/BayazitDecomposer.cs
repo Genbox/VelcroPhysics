@@ -199,9 +199,7 @@ namespace VelcroPhysics.Tools.Triangulation.Bayazit
                 if ((k + 1) % vertices.Count == i || k == i || (k + 1) % vertices.Count == j || k == j)
                     continue; // ignore incident edges
 
-                Vector2 intersectionPoint;
-
-                if (LineUtils.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices), out intersectionPoint))
+                if (LineUtils.LineIntersect(At(i, vertices), At(j, vertices), At(k, vertices), At(k + 1, vertices), out Vector2 intersectionPoint))
                     return false;
             }
             return true;

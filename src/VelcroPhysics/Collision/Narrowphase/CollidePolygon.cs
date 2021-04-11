@@ -22,13 +22,11 @@ namespace VelcroPhysics.Collision.Narrowphase
             manifold.PointCount = 0;
             float totalRadius = polyA.Radius + polyB.Radius;
 
-            int edgeA;
-            float separationA = FindMaxSeparation(out edgeA, polyA, ref xfA, polyB, ref xfB);
+            float separationA = FindMaxSeparation(out int edgeA, polyA, ref xfA, polyB, ref xfB);
             if (separationA > totalRadius)
                 return;
 
-            int edgeB;
-            float separationB = FindMaxSeparation(out edgeB, polyB, ref xfB, polyA, ref xfA);
+            float separationB = FindMaxSeparation(out int edgeB, polyB, ref xfB, polyA, ref xfA);
             if (separationB > totalRadius)
                 return;
 
@@ -60,8 +58,7 @@ namespace VelcroPhysics.Collision.Narrowphase
                 flip = false;
             }
 
-            FixedArray2<ClipVertex> incidentEdge;
-            FindIncidentEdge(out incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
+            FindIncidentEdge(out FixedArray2<ClipVertex> incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
 
             int count1 = poly1.Vertices.Count;
             Vertices vertices1 = poly1.Vertices;
@@ -92,17 +89,15 @@ namespace VelcroPhysics.Collision.Narrowphase
             float sideOffset2 = Vector2.Dot(tangent, v12) + totalRadius;
 
             // Clip incident edge against extruded edge1 side edges.
-            FixedArray2<ClipVertex> clipPoints1;
-            FixedArray2<ClipVertex> clipPoints2;
 
             // Clip to box side 1
-            int np = Collision.ClipSegmentToLine(out clipPoints1, ref incidentEdge, -tangent, sideOffset1, iv1);
+            int np = Collision.ClipSegmentToLine(out FixedArray2<ClipVertex> clipPoints1, ref incidentEdge, -tangent, sideOffset1, iv1);
 
             if (np < 2)
                 return;
 
             // Clip to negative box side 1
-            np = Collision.ClipSegmentToLine(out clipPoints2, ref clipPoints1, tangent, sideOffset2, iv2);
+            np = Collision.ClipSegmentToLine(out FixedArray2<ClipVertex> clipPoints2, ref clipPoints1, tangent, sideOffset2, iv2);
 
             if (np < 2)
                 return;

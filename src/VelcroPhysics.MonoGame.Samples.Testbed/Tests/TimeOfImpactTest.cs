@@ -74,8 +74,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             input.SweepB = sweepB;
             input.TMax = 1.0f;
 
-            TOIOutput output;
-            TimeOfImpact.CalculateTimeOfImpact(ref input, out output);
+            TimeOfImpact.CalculateTimeOfImpact(ref input, out TOIOutput output);
 
             DrawString("TOI = " + output.T);
             DrawString(string.Format("Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters, TimeOfImpact.TOIMaxRootIters));
@@ -83,16 +82,14 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            Transform transformA;
-            sweepA.GetTransform(out transformA, 0.0f);
+            sweepA.GetTransform(out Transform transformA, 0.0f);
             for (int i = 0; i < _shapeA.Vertices.Count; ++i)
             {
                 vertices[i] = MathUtils.Mul(ref transformA, _shapeA.Vertices[i]);
             }
             DebugView.DrawPolygon(vertices, _shapeA.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
 
-            Transform transformB;
-            sweepB.GetTransform(out transformB, 0.0f);
+            sweepB.GetTransform(out Transform transformB, 0.0f);
 
             for (int i = 0; i < _shapeB.Vertices.Count; ++i)
             {

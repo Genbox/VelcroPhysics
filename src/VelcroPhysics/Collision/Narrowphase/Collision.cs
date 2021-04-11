@@ -49,9 +49,7 @@ namespace VelcroPhysics.Collision.Narrowphase
             input.TransformB = xfB;
             input.UseRadii = true;
 
-            SimplexCache cache;
-            DistanceOutput output;
-            DistanceGJK.ComputeDistance(ref input, out output, out cache);
+            DistanceGJK.ComputeDistance(ref input, out DistanceOutput output, out SimplexCache cache);
 
             return output.Distance < 10.0f * Settings.Epsilon;
         }

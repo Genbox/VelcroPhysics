@@ -96,8 +96,7 @@ namespace VelcroPhysics.Tools.PathGenerator
         /// <param name="value">The amount to rotate by in radians.</param>
         public void Rotate(float value)
         {
-            Matrix rotationMatrix;
-            Matrix.CreateRotationZ(value, out rotationMatrix);
+            Matrix.CreateRotationZ(value, out Matrix rotationMatrix);
 
             for (int i = 0; i < ControlPoints.Count; i++)
             {
@@ -207,9 +206,9 @@ namespace VelcroPhysics.Tools.PathGenerator
             Vector2 a = GetPosition(time);
             Vector2 b = GetPosition(offsetTime);
 
-            Vector2 output, temp;
+            Vector2 output;
 
-            Vector2.Subtract(ref a, ref b, out temp);
+            Vector2.Subtract(ref a, ref b, out Vector2 temp);
 
 #if XBOX
             output = new Vector2();

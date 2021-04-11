@@ -269,14 +269,11 @@ namespace VelcroPhysics.Tools.PolygonManipulation
             {
                 v3 = i == vertices.Count - 1 ? simplified[0] : vertices[i];
 
-                float old1;
-                MathUtils.Cross(ref v1, ref v2, out old1);
+                MathUtils.Cross(ref v1, ref v2, out float old1);
 
-                float old2;
-                MathUtils.Cross(ref v2, ref v3, out old2);
+                MathUtils.Cross(ref v2, ref v3, out float old2);
 
-                float new1;
-                MathUtils.Cross(ref v1, ref v3, out new1);
+                MathUtils.Cross(ref v1, ref v3, out float new1);
 
                 if (Math.Abs(new1 - (old1 + old2)) > areaTolerance)
                 {

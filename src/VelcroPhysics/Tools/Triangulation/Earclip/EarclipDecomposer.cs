@@ -71,9 +71,8 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
             List<Vertices> results = new List<Vertices>();
 
             //Recurse and split on pinch points
-            Vertices pA, pB;
             Vertices pin = new Vertices(vertices);
-            if (ResolvePinchPoint(pin, out pA, out pB, tolerance))
+            if (ResolvePinchPoint(pin, out Vertices pA, out Vertices pB, tolerance))
             {
                 List<Vertices> mergeA = TriangulatePolygon(pA, tolerance);
                 List<Vertices> mergeB = TriangulatePolygon(pB, tolerance);
@@ -123,16 +122,13 @@ namespace VelcroPhysics.Tools.Triangulation.Earclip
                         d1.Normalize();
                         d2.Normalize();
                         d3.Normalize();
-                        float cross12;
-                        MathUtils.Cross(ref d1, ref d2, out cross12);
+                        MathUtils.Cross(ref d1, ref d2, out float cross12);
                         cross12 = Math.Abs(cross12);
 
-                        float cross23;
-                        MathUtils.Cross(ref d2, ref d3, out cross23);
+                        MathUtils.Cross(ref d2, ref d3, out float cross23);
                         cross23 = Math.Abs(cross23);
 
-                        float cross31;
-                        MathUtils.Cross(ref d3, ref d1, out cross31);
+                        MathUtils.Cross(ref d3, ref d1, out float cross31);
                         cross31 = Math.Abs(cross31);
 
                         //Find the maximum minimum angle

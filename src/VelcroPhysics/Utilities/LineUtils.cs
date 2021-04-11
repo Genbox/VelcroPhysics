@@ -235,8 +235,7 @@ namespace VelcroPhysics.Utilities
 
             for (int i = 0; i < vertices.Count; i++)
             {
-                Vector2 point;
-                if (LineIntersect(vertices[i], vertices[vertices.NextIndex(i)], point1, point2, true, true, out point))
+                if (LineIntersect(vertices[i], vertices[vertices.NextIndex(i)], point1, point2, true, true, out Vector2 point))
                     intersectionPoints.Add(point);
             }
 

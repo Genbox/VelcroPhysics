@@ -159,8 +159,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             Actor actor = _tree.GetUserData(proxyid);
 
-            RayCastOutput output;
-            bool hit = actor.AABB.RayCast(out output, ref input);
+            bool hit = actor.AABB.RayCast(out RayCastOutput output, ref input);
 
             if (hit)
             {
@@ -304,8 +303,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 if (_actors[i].ProxyId == -1)
                     continue;
 
-                RayCastOutput output;
-                bool hit = _actors[i].AABB.RayCast(out output, ref input);
+                bool hit = _actors[i].AABB.RayCast(out RayCastOutput output, ref input);
                 if (hit)
                 {
                     bruteActor = _actors[i];

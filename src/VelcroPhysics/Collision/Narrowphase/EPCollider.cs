@@ -395,18 +395,14 @@ namespace VelcroPhysics.Collision.Narrowphase
             rf.SideOffset2 = Vector2.Dot(rf.SideNormal2, rf.v2);
 
             // Clip incident edge against extruded edge1 side edges.
-            FixedArray2<ClipVertex> clipPoints1;
-            FixedArray2<ClipVertex> clipPoints2;
-            int np;
-
             // Clip to box side 1
-            np = Collision.ClipSegmentToLine(out clipPoints1, ref ie, rf.SideNormal1, rf.SideOffset1, rf.i1);
+            int np = Collision.ClipSegmentToLine(out FixedArray2<ClipVertex> clipPoints1, ref ie, rf.SideNormal1, rf.SideOffset1, rf.i1);
 
             if (np < Settings.MaxManifoldPoints)
                 return;
 
             // Clip to negative box side 1
-            np = Collision.ClipSegmentToLine(out clipPoints2, ref clipPoints1, rf.SideNormal2, rf.SideOffset2, rf.i2);
+            np = Collision.ClipSegmentToLine(out FixedArray2<ClipVertex> clipPoints2, ref clipPoints1, rf.SideNormal2, rf.SideOffset2, rf.i2);
 
             if (np < Settings.MaxManifoldPoints)
                 return;

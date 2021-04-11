@@ -367,9 +367,8 @@ namespace VelcroPhysics.Dynamics
                 FixtureProxy proxy = Proxies[i];
 
                 // Compute an AABB that covers the swept Shape (may miss some rotation effect).
-                AABB aabb1, aabb2;
-                Shape.ComputeAABB(ref transform1, proxy.ChildIndex, out aabb1);
-                Shape.ComputeAABB(ref transform2, proxy.ChildIndex, out aabb2);
+                Shape.ComputeAABB(ref transform1, proxy.ChildIndex, out AABB aabb1);
+                Shape.ComputeAABB(ref transform2, proxy.ChildIndex, out AABB aabb2);
 
                 proxy.AABB.Combine(ref aabb1, ref aabb2);
 

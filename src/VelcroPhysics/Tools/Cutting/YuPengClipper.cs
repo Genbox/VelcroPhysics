@@ -48,19 +48,16 @@ namespace VelcroPhysics.Tools.Cutting
             Debug.Assert(subject.IsSimple() && clip.IsSimple(), "Non simple input!", "Input polygons must be simple (cannot intersect themselves).");
 
             // Copy polygons
-            Vertices slicedSubject;
-            Vertices slicedClip;
 
             // Calculate the intersection and touch points between
             // subject and clip and add them to both
-            CalculateIntersections(subject, clip, out slicedSubject, out slicedClip);
+            CalculateIntersections(subject, clip, out Vertices slicedSubject, out Vertices slicedClip);
 
             // Translate polygons into upper right quadrant
             // as the algorithm depends on it
             Vector2 lbSubject = subject.GetAABB().LowerBound;
             Vector2 lbClip = clip.GetAABB().LowerBound;
-            Vector2 translate;
-            Vector2.Min(ref lbSubject, ref lbClip, out translate);
+            Vector2.Min(ref lbSubject, ref lbClip, out Vector2 translate);
             translate = Vector2.One - translate;
             if (translate != Vector2.Zero)
             {
@@ -72,28 +69,19 @@ namespace VelcroPhysics.Tools.Cutting
             slicedSubject.ForceCounterClockWise();
             slicedClip.ForceCounterClockWise();
 
-            List<Edge> subjectSimplices;
-            List<float> subjectCoeff;
-            List<Edge> clipSimplices;
-            List<float> clipCoeff;
-
             // Build simplical chains from the polygons and calculate the
             // the corresponding coefficients
-            CalculateSimplicalChain(slicedSubject, out subjectCoeff, out subjectSimplices);
-            CalculateSimplicalChain(slicedClip, out clipCoeff, out clipSimplices);
-
-            List<Edge> resultSimplices;
+            CalculateSimplicalChain(slicedSubject, out List<float> subjectCoeff, out List<Edge> subjectSimplices);
+            CalculateSimplicalChain(slicedClip, out List<float> clipCoeff, out List<Edge> clipSimplices);
 
             // Determine the characteristics function for all non-original edges
             // in subject and clip simplical chain and combine the edges contributing
             // to the result, depending on the clipType
             CalculateResultChain(subjectCoeff, subjectSimplices, clipCoeff, clipSimplices, clipType,
-                out resultSimplices);
-
-            List<Vertices> result;
+                out List<Edge> resultSimplices);
 
             // Convert result chain back to polygon(s)
-            error = BuildPolygonsFromChain(resultSimplices, out result);
+            error = BuildPolygonsFromChain(resultSimplices, out List<Vertices> result);
 
             // Reverse the polygon translation from the beginning
             // and remove collinear points from output
@@ -129,10 +117,8 @@ namespace VelcroPhysics.Tools.Cutting
                     Vector2 c = polygon2[j];
                     Vector2 d = polygon2[polygon2.NextIndex(j)];
 
-                    Vector2 intersectionPoint;
-
                     // Check if the edges intersect
-                    if (LineUtils.LineIntersect(a, b, c, d, out intersectionPoint))
+                    if (LineUtils.LineIntersect(a, b, c, d, out Vector2 intersectionPoint))
                     {
                         // calculate alpha values for sorting multiple intersections points on a edge
                         float alpha;

@@ -192,9 +192,8 @@ namespace VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                Transform xf1, xf2;
-                BodyA.GetTransform(out xf1);
-                BodyB.GetTransform(out xf2);
+                BodyA.GetTransform(out Transform xf1);
+                BodyB.GetTransform(out Transform xf2);
 
                 Vector2 r1 = MathUtils.Mul(ref xf1.q, LocalAnchorA - BodyA.LocalCenter);
                 Vector2 r2 = MathUtils.Mul(ref xf2.q, LocalAnchorB - BodyB.LocalCenter);

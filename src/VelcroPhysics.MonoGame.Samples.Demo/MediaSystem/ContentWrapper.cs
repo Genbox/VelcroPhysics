@@ -143,15 +143,13 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         public static Vector2 CalculateOrigin(Body body)
         {
             Vector2 lowerBound = new Vector2(float.MaxValue);
-            Transform transform;
-            body.GetTransform(out transform);
+            body.GetTransform(out Transform transform);
 
             for (int i = 0; i < body.FixtureList.Count; i++)
             {
                 for (int j = 0; j < body.FixtureList[i].Shape.ChildCount; j++)
                 {
-                    AABB bounds;
-                    body.FixtureList[i].Shape.ComputeAABB(ref transform, j, out bounds);
+                    body.FixtureList[i].Shape.ComputeAABB(ref transform, j, out AABB bounds);
                     Vector2.Min(ref lowerBound, ref bounds.LowerBound, out lowerBound);
                 }
             }

@@ -306,8 +306,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                         ri.Point2 = p2;
                         ri.MaxFraction = 50f;
 
-                        RayCastOutput ro;
-                        if (f.RayCast(out ro, ref ri, 0))
+                        if (f.RayCast(out RayCastOutput ro, ref ri, 0))
                         {
                             if (minlambda > ro.Fraction)
                             {

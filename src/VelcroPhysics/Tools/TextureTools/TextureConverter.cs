@@ -225,8 +225,7 @@ namespace VelcroPhysics.Tools.TextureTools
                                                 // Add first hole polygon vertex to close the hole polygon.
                                                 holePolygon.Add(holePolygon[0]);
 
-                                                int vertex1Index, vertex2Index;
-                                                if (SplitPolygonEdge(polygon, holeEntrance.Value, out vertex1Index, out vertex2Index))
+                                                if (SplitPolygonEdge(polygon, holeEntrance.Value, out int vertex1Index, out int vertex2Index))
                                                     polygon.InsertRange(vertex2Index, holePolygon);
 
                                                 break;
@@ -765,8 +764,7 @@ namespace VelcroPhysics.Tools.TextureTools
                     }
                     else
                     {
-                        Vector2 temp;
-                        if (SearchNearPixels(false, ref entrance, out temp))
+                        if (SearchNearPixels(false, ref entrance, out Vector2 temp))
                         {
                             current = temp;
                             entranceFound = true;
@@ -789,8 +787,7 @@ namespace VelcroPhysics.Tools.TextureTools
                 do
                 {
                     // Search in the pre vision list for an outstanding point.
-                    Vector2 outstanding;
-                    if (SearchForOutstandingVertex(hullArea, out outstanding))
+                    if (SearchForOutstandingVertex(hullArea, out Vector2 outstanding))
                     {
                         if (endOfHull)
                         {

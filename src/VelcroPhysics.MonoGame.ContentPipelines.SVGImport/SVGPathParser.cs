@@ -57,8 +57,7 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
 
             while (!string.IsNullOrEmpty(path))
             {
-                string item;
-                path = GetNextPathItem(path, out item);
+                path = GetNextPathItem(path, out string item);
 
                 if (string.IsNullOrEmpty(item))
                     break;

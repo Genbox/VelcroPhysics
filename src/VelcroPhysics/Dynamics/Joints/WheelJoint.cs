@@ -208,11 +208,9 @@ namespace VelcroPhysics.Dynamics.Joints
                 Body bA = BodyA;
                 Body bB = BodyB;
 
-                Transform xfA;
-                bA.GetTransform(out xfA);
+                bA.GetTransform(out Transform xfA);
 
-                Transform xfB;
-                bB.GetTransform(out xfB);
+                bB.GetTransform(out Transform xfB);
 
                 Vector2 rA = MathUtils.Mul(xfA.q, LocalAnchorA - bA._sweep.LocalCenter);
                 Vector2 rB = MathUtils.Mul(xfB.q, LocalAnchorB - bB._sweep.LocalCenter);

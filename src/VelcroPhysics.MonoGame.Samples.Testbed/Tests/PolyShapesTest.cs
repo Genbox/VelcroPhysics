@@ -52,8 +52,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         private void DrawFixture(Fixture fixture)
         {
             Color color = new Color(0.95f, 0.95f, 0.6f);
-            Transform xf;
-            fixture.Body.GetTransform(out xf);
+            fixture.Body.GetTransform(out Transform xf);
 
             switch (fixture.Shape.ShapeType)
             {
@@ -99,8 +98,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body body = fixture.Body;
             Shape shape = fixture.Shape;
 
-            Transform xf;
-            body.GetTransform(out xf);
+            body.GetTransform(out Transform xf);
 
             bool overlap = Collision.Narrowphase.Collision.TestOverlap(shape, 0, Circle, 0, ref xf, ref Transform);
 
@@ -258,8 +256,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             callback.Transform.SetIdentity();
             callback.DebugDraw = DebugView;
 
-            AABB aabb;
-            callback.Circle.ComputeAABB(ref callback.Transform, 0, out aabb);
+            callback.Circle.ComputeAABB(ref callback.Transform, 0, out AABB aabb);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             World.QueryAABB(callback.ReportFixture, ref aabb);

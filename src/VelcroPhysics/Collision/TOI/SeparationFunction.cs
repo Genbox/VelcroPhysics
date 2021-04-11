@@ -14,9 +14,8 @@ namespace VelcroPhysics.Collision.TOI
             int count = cache.Count;
             Debug.Assert(0 < count && count < 3);
 
-            Transform xfA, xfB;
-            sweepA.GetTransform(out xfA, t1);
-            sweepB.GetTransform(out xfB, t1);
+            sweepA.GetTransform(out Transform xfA, t1);
+            sweepB.GetTransform(out Transform xfB, t1);
 
             if (count == 1)
             {
@@ -79,9 +78,8 @@ namespace VelcroPhysics.Collision.TOI
 
         public static float FindMinSeparation(out int indexA, out int indexB, float t, DistanceProxy proxyA, ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, ref Vector2 axis, ref Vector2 localPoint, SeparationFunctionType type)
         {
-            Transform xfA, xfB;
-            sweepA.GetTransform(out xfA, t);
-            sweepB.GetTransform(out xfB, t);
+            sweepA.GetTransform(out Transform xfA, t);
+            sweepB.GetTransform(out Transform xfB, t);
 
             switch (type)
             {
@@ -147,9 +145,8 @@ namespace VelcroPhysics.Collision.TOI
 
         public static float Evaluate(int indexA, int indexB, float t, DistanceProxy proxyA, ref Sweep sweepA, DistanceProxy proxyB, ref Sweep sweepB, ref Vector2 axis, ref Vector2 localPoint, SeparationFunctionType type)
         {
-            Transform xfA, xfB;
-            sweepA.GetTransform(out xfA, t);
-            sweepB.GetTransform(out xfB, t);
+            sweepA.GetTransform(out Transform xfA, t);
+            sweepB.GetTransform(out Transform xfB, t);
 
             switch (type)
             {

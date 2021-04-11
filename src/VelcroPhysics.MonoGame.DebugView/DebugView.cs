@@ -107,12 +107,9 @@ namespace VelcroPhysics.MonoGame.DebugView
 
                 Fixture fixtureA = contact.FixtureA;
 
-                FixedArray2<PointState> state1, state2;
-                Collision.Narrowphase.Collision.GetPointStates(out state1, out state2, ref oldManifold, ref manifold);
+                Collision.Narrowphase.Collision.GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2, ref oldManifold, ref manifold);
 
-                FixedArray2<Vector2> points;
-                Vector2 normal;
-                contact.GetWorldManifold(out normal, out points);
+                contact.GetWorldManifold(out Vector2 normal, out FixedArray2<Vector2> points);
 
                 for (int i = 0; i < manifold.PointCount && _pointCount < MaxContactPoints; ++i)
                 {
@@ -138,8 +135,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             {
                 foreach (Body b in World.BodyList)
                 {
-                    Transform xf;
-                    b.GetTransform(out xf);
+                    b.GetTransform(out Transform xf);
                     foreach (Fixture f in b.FixtureList)
                     {
                         if (!b.Enabled)
@@ -189,8 +185,7 @@ namespace VelcroPhysics.MonoGame.DebugView
                         PolygonShape polygon = f.Shape as PolygonShape;
                         if (polygon != null)
                         {
-                            Transform xf;
-                            body.GetTransform(out xf);
+                            body.GetTransform(out Transform xf);
 
                             for (int i = 0; i < polygon.Vertices.Count; i++)
                             {
@@ -225,8 +220,7 @@ namespace VelcroPhysics.MonoGame.DebugView
                         for (int t = 0; t < f.ProxyCount; ++t)
                         {
                             FixtureProxy proxy = f.Proxies[t];
-                            AABB aabb;
-                            bp.GetFatAABB(proxy.ProxyId, out aabb);
+                            bp.GetFatAABB(proxy.ProxyId, out AABB aabb);
 
                             DrawAABB(ref aabb, color);
                         }
@@ -238,8 +232,7 @@ namespace VelcroPhysics.MonoGame.DebugView
             {
                 foreach (Body b in World.BodyList)
                 {
-                    Transform xf;
-                    b.GetTransform(out xf);
+                    b.GetTransform(out Transform xf);
                     xf.p = b.WorldCenter;
                     DrawTransform(ref xf);
                 }
@@ -375,16 +368,14 @@ namespace VelcroPhysics.MonoGame.DebugView
 
             Body b1 = joint.BodyA;
             Body b2 = joint.BodyB;
-            Transform xf1;
-            b1.GetTransform(out xf1);
+            b1.GetTransform(out Transform xf1);
 
             Vector2 x2 = Vector2.Zero;
 
             // WIP David
             if (!joint.IsFixedType())
             {
-                Transform xf2;
-                b2.GetTransform(out xf2);
+                b2.GetTransform(out Transform xf2);
                 x2 = xf2.p;
             }
 

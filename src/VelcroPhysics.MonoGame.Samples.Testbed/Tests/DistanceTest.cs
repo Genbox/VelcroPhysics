@@ -71,8 +71,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             input.UseRadii = true;
             SimplexCache cache;
             cache.Count = 0;
-            DistanceOutput output;
-            DistanceGJK.ComputeDistance(ref input, out output, out cache);
+            DistanceGJK.ComputeDistance(ref input, out DistanceOutput output, out cache);
 
             DrawString("Distance = " + output.Distance);
             DrawString("Iterations = " + output.Iterations);
