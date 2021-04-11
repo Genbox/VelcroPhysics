@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VelcroPhysics.MonoGame.ContentPipelines.SVGImport\VelcroPhysics.MonoGame.ContentPipelines.SVGImport.csproj" />
+    <ProjectReference Include="..\VelcroPhysics.MonoGame.ContentPipelines.SVGImport\VelcroPhysics.MonoGame.Content.SVGImport.csproj" />
     <ProjectReference Include="..\VelcroPhysics.MonoGame.DebugView\VelcroPhysics.MonoGame.DebugView.csproj" />
     <ProjectReference Include="..\VelcroPhysics\VelcroPhysics.MonoGame.csproj" />
   </ItemGroup>

@@ -10,9 +10,8 @@
 
 #-------------------------------- References --------------------------------#
 
-
-/reference:..\..\VelcroPhysics.MonoGame.ContentPipelines.SVGImport\bin\Debug\netstandard2.0\VelcroPhysics.MonoGame.ContentPipelines.SVGImport.dll
-/reference:..\..\VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices\bin\Debug\netstandard2.0\VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices.dll
+/reference:..\..\bin\netstandard2.0\Genbox.VelcroPhysics.MonoGame.Content.SVGImport.dll
+/reference:..\..\bin\netstandard2.0\Genbox.VelcroPhysics.MonoGame.Content.TextureToVertices.dll
 
 #---------------------------------- Content ---------------------------------#
 
