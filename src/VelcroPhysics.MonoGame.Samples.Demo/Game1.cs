@@ -27,17 +27,25 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
         private QuadRenderer _quadRenderer;
         private SpriteBatch _spriteBatch;
 
+#if WINDOWS
+        private FrameRateCounter _counter;
+        private bool _showFps;
+#endif
+
         public Game1()
         {
             Window.Title = "Velcro Physics Samples";
-
             _graphics = new GraphicsDeviceManager(this);
-
-            //_graphics.PreferMultiSampling = true; // See https://github.com/MonoGame/MonoGame/issues/5532
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
             ConvertUnits.SetDisplayUnitToSimUnitRatio(24f);
             IsFixedTimeStep = true;
+            Content.RootDirectory = "Content";
+        }
+
+        protected override void Initialize()
+        {
+            _graphics.PreferMultiSampling = true;
+            _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width - 80;
+            _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - 120;
 
 #if WINDOWS
             _graphics.IsFullScreen = false;
@@ -45,17 +53,15 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             _graphics.IsFullScreen = true;
 #endif
 
-            Content.RootDirectory = "Content";
-        }
+            _graphics.ApplyChanges();
 
-        protected override void Initialize()
-        {
             _input = new InputHelper();
+            _isExiting = false;
+
 #if WINDOWS
             _counter = new FrameRateCounter();
-            _showFPS = false;
+            _showFps = false;
 #endif
-            _isExiting = false;
 
             base.Initialize();
         }
@@ -71,6 +77,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             _quadRenderer = new QuadRenderer(GraphicsDevice);
 
             _input.LoadContent(GraphicsDevice.Viewport);
+
 #if WINDOWS
             _counter.LoadContent();
 #endif
@@ -81,23 +88,22 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
 
             _menuScreen = new MenuScreen();
 
-            List<Type> DemosToLoad = new List<Type>();
+            List<Type> demosToLoad = new List<Type>();
             Assembly samplesFramework = Assembly.GetExecutingAssembly();
             foreach (Type sampleType in samplesFramework.GetTypes())
             {
                 if (sampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
-                    DemosToLoad.Add(sampleType);
+                    demosToLoad.Add(sampleType);
             }
-            DemosToLoad.Add(DemosToLoad[0]); // HACK: Load the first sample two times, since some delayed creation stuff with the rendertargets always breaks the first preview picture.
+            demosToLoad.Add(demosToLoad[0]); // HACK: Load the first sample two times, since some delayed creation stuff with the rendertargets always breaks the first preview picture.
+
             bool firstPreview = true;
-            foreach (Type sampleType in DemosToLoad)
+            foreach (Type sampleType in demosToLoad)
             {
                 PhysicsDemoScreen demoScreen = samplesFramework.CreateInstance(sampleType.ToString()) as PhysicsDemoScreen;
 #if WINDOWS
                 if (!firstPreview)
-                {
                     Console.WriteLine("Loading demo: " + demoScreen.GetTitle());
-                }
 #endif
                 RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth / 2, pp.BackBufferHeight / 2, false, SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
@@ -134,6 +140,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
 
                 demoScreen.ExitScreen();
                 demoScreen.Update(new GameTime(demoScreen.TransitionOffTime, demoScreen.TransitionOffTime), true, false);
+
                 if (!firstPreview)
                     _menuScreen.AddMenuItem(demoScreen, preview);
                 else
@@ -143,7 +150,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             AddScreen(new BackgroundScreen());
             AddScreen(_menuScreen);
 
-            //TODO: This can't be called at this point in time in MonoGame
+            //TODO: Can't call this in MonoGame at the moment
             //ResetElapsedTime();
         }
 
@@ -164,15 +171,17 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             // Read the keyboard and gamepad.
             _input.Update(gameTime);
 
-            // Update the framerate counter
 #if WINDOWS
+            // Update the framerate counter
             _counter.Update(gameTime);
 #endif
+
             if ((_input.IsNewButtonPress(Buttons.Y) || _input.IsNewKeyPress(Keys.F5)) && !(_screens[_screens.Count - 1] is OptionsScreen))
                 AddScreen(new OptionsScreen());
+
 #if WINDOWS
             if (_input.IsNewKeyPress(Keys.F11))
-                _showFPS = !_showFPS;
+                _showFps = !_showFps;
 
             if (_input.IsNewKeyPress(Keys.F12))
                 _graphics.ToggleFullScreen();
@@ -260,6 +269,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
                     }
                     else
                         _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
+              
                     _spriteBatch.End();
 
                     transitionCount++;
@@ -269,11 +279,10 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             }
 
             _input.Draw(_spriteBatch);
+
 #if WINDOWS
-            if (_showFPS)
-            {
+            if (_showFps)
                 _counter.Draw(_spriteBatch);
-            }
 #endif
             base.Draw(gameTime);
         }
@@ -303,7 +312,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             screen.LoadContent();
 
             // Loading my take a while so elapsed time is reset to prevent hick-ups
-            //TODO: This can't be called at this point in time in MonoGame
+            //TODO: Can't call this in MonoGame at the moment
             //ResetElapsedTime();
 
             _screens.Add(screen);
@@ -322,10 +331,5 @@ namespace VelcroPhysics.MonoGame.Samples.Demo
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
         }
-
-#if WINDOWS
-        private FrameRateCounter _counter;
-        private bool _showFPS;
-#endif
     }
 }

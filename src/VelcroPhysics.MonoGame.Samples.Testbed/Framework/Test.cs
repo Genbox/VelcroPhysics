@@ -154,24 +154,6 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Framework
 
         protected virtual void PostSolve(Contact contact, ContactVelocityConstraint impulse) { }
 
-#if WINDOWS
-        protected Vertices LoadDataFile(string filename)
-        {
-            string[] lines = File.ReadAllLines(filename);
-
-            Vertices vertices = new Vertices(lines.Length);
-
-            foreach (string line in lines)
-            {
-                string[] split = line.Split(' ');
-                vertices.Add(new Vector2(float.Parse(split[0]), float.Parse(split[1])));
-            }
-
-            return vertices;
-        }
-
-#endif
-
         protected void DrawString(string text)
         {
             DebugView.DrawString(50, TextLine, text);

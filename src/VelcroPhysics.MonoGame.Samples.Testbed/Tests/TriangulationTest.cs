@@ -5,11 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using VelcroPhysics.Dynamics;
 using VelcroPhysics.Factories;
-using VelcroPhysics.Samples.Testbed.Framework;
+using VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using VelcroPhysics.Shared;
 using VelcroPhysics.Tools.Triangulation.TriangulationBase;
 
-namespace VelcroPhysics.Samples.Testbed.Tests
+namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     public class TriangulationTest : Test
     {
