@@ -767,7 +767,7 @@ namespace VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We always wake the body. You told it to move.
-            if (Awake == false)
+            if (!Awake)
                 Awake = true;
 
             _force += force;
@@ -784,7 +784,7 @@ namespace VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We always wake the body. You told it to move.
-            if (Awake == false)
+            if (!Awake)
                 Awake = true;
 
             _torque += torque;
@@ -816,7 +816,7 @@ namespace VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We always wake the body. You told it to move.
-            if (Awake == false)
+            if (!Awake)
                 Awake = true;
 
             _linearVelocity += _invMass * impulse;
@@ -834,7 +834,7 @@ namespace VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We always wake the body. You told it to move.
-            if (Awake == false)
+            if (!Awake)
                 Awake = true;
 
             _linearVelocity += _invMass * impulse;
@@ -849,7 +849,7 @@ namespace VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We always wake the body. You told it to move.
-            if (Awake == false)
+            if (!Awake)
                 Awake = true;
 
             _angularVelocity += _invI * impulse;
@@ -1077,7 +1077,7 @@ namespace VelcroPhysics.Dynamics
             {
                 if (jn.Other == other)
                 {
-                    if (jn.Joint.CollideConnected == false)
+                    if (!jn.Joint.CollideConnected)
                         return false;
                 }
             }

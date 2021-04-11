@@ -349,7 +349,7 @@ namespace VelcroPhysics.Dynamics.Solver
                 }
 
                 // Solve normal constraints
-                if (pointCount == 1 || Settings.BlockSolve == false)
+                if (pointCount == 1 || !Settings.BlockSolve)
                 {
                     for (int j = 0; j < pointCount; ++j)
                     {

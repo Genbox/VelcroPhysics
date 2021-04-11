@@ -103,22 +103,22 @@ namespace VelcroPhysics.Collision.ContactSystem
             }
 
             // Does a joint override collision? Is at least one body dynamic?
-            if (bodyB.ShouldCollide(bodyA) == false)
+            if (!bodyB.ShouldCollide(bodyA))
                 return;
 
             //Check default filter
-            if (ShouldCollide(fixtureA, fixtureB) == false)
+            if (!ShouldCollide(fixtureA, fixtureB))
                 return;
 
             // Check user filtering.
-            if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
+            if (ContactFilter != null && !ContactFilter(fixtureA, fixtureB))
                 return;
 
             //Velcro: BeforeCollision delegate
-            if (fixtureA.BeforeCollision != null && fixtureA.BeforeCollision(fixtureA, fixtureB) == false)
+            if (fixtureA.BeforeCollision != null && !fixtureA.BeforeCollision(fixtureA, fixtureB))
                 return;
 
-            if (fixtureB.BeforeCollision != null && fixtureB.BeforeCollision(fixtureB, fixtureA) == false)
+            if (fixtureB.BeforeCollision != null && !fixtureB.BeforeCollision(fixtureB, fixtureA))
                 return;
 
             // Call the factory.
@@ -159,7 +159,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             bodyB.ContactList = c._nodeB;
 
             // Wake up the bodies
-            if (fixtureA.IsSensor == false && fixtureB.IsSensor == false)
+            if (!fixtureA.IsSensor && !fixtureB.IsSensor)
             {
                 bodyA.Awake = true;
                 bodyB.Awake = true;
@@ -242,7 +242,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 if (c.FilterFlag)
                 {
                     // Should these bodies collide?
-                    if (bodyB.ShouldCollide(bodyA) == false)
+                    if (!bodyB.ShouldCollide(bodyA))
                     {
                         Contact cNuke = c;
                         Destroy(cNuke);
@@ -250,7 +250,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     }
 
                     // Check default filtering
-                    if (ShouldCollide(fixtureA, fixtureB) == false)
+                    if (!ShouldCollide(fixtureA, fixtureB))
                     {
                         Contact cNuke = c;
                         Destroy(cNuke);
@@ -258,7 +258,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     }
 
                     // Check user filtering.
-                    if (ContactFilter != null && ContactFilter(fixtureA, fixtureB) == false)
+                    if (ContactFilter != null && !ContactFilter(fixtureA, fixtureB))
                     {
                         Contact cNuke = c;
                         Destroy(cNuke);
@@ -273,7 +273,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 bool activeB = bodyB.Awake && bodyB.BodyType != BodyType.Static;
 
                 // At least one body must be awake and it must be dynamic or kinematic.
-                if (activeA == false && activeB == false)
+                if (!activeA && !activeB)
                     continue;
 
                 int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
@@ -281,7 +281,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                 bool overlap = BroadPhase.TestOverlap(proxyIdA, proxyIdB);
 
                 // Here we destroy contacts that cease to overlap in the broad-phase.
-                if (overlap == false)
+                if (!overlap)
                 {
                     Contact cNuke = c;
                     Destroy(cNuke);

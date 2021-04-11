@@ -88,7 +88,7 @@ namespace VelcroPhysics
             }
 
             // Cache velocities to improve movement on breakage.
-            if (Broken == false)
+            if (!Broken)
             {
                 //Enlarge the cache if needed
                 if (Parts.Count > _angularVelocitiesCache.Length)

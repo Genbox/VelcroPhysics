@@ -328,10 +328,10 @@ namespace VelcroPhysics.Dynamics.Joints
             if (_motorMass > 0.0f)
                 _motorMass = 1.0f / _motorMass;
 
-            if (_enableMotor == false || fixedRotation)
+            if (!_enableMotor || fixedRotation)
                 _motorImpulse = 0.0f;
 
-            if (_enableLimit && fixedRotation == false)
+            if (_enableLimit && !fixedRotation)
             {
                 float jointAngle = aB - aA - ReferenceAngle;
                 if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
@@ -396,7 +396,7 @@ namespace VelcroPhysics.Dynamics.Joints
             bool fixedRotation = iA + iB == 0.0f;
 
             // Solve motor constraint.
-            if (_enableMotor && _limitState != LimitState.Equal && fixedRotation == false)
+            if (_enableMotor && _limitState != LimitState.Equal && !fixedRotation)
             {
                 float Cdot = wB - wA - _motorSpeed;
                 float impulse = _motorMass * -Cdot;
@@ -410,7 +410,7 @@ namespace VelcroPhysics.Dynamics.Joints
             }
 
             // Solve limit constraint.
-            if (_enableLimit && _limitState != LimitState.Inactive && fixedRotation == false)
+            if (_enableLimit && _limitState != LimitState.Inactive && !fixedRotation)
             {
                 Vector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
                 float Cdot2 = wB - wA;
@@ -500,7 +500,7 @@ namespace VelcroPhysics.Dynamics.Joints
             bool fixedRotation = _invIA + _invIB == 0.0f;
 
             // Solve angular limit constraint.
-            if (_enableLimit && _limitState != LimitState.Inactive && fixedRotation == false)
+            if (_enableLimit && _limitState != LimitState.Inactive && !fixedRotation)
             {
                 float angle = aB - aA - ReferenceAngle;
                 float limitImpulse = 0.0f;

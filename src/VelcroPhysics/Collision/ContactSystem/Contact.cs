@@ -261,7 +261,7 @@ namespace VelcroPhysics.Collision.ContactSystem
             else
                 _flags &= ~ContactFlags.TouchingFlag;
 
-            if (wasTouching == false && touching)
+            if (!wasTouching && touching)
             {
                 FixtureA.OnCollision?.Invoke(FixtureA, FixtureB, this);
                 FixtureB.OnCollision?.Invoke(FixtureB, FixtureA, this);
@@ -274,7 +274,7 @@ namespace VelcroPhysics.Collision.ContactSystem
                     touching = false;
             }
 
-            if (wasTouching && touching == false)
+            if (wasTouching && !touching)
             {
                 FixtureA?.OnSeparation?.Invoke(FixtureA, FixtureB, this);
                 FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
@@ -361,7 +361,7 @@ namespace VelcroPhysics.Collision.ContactSystem
         {
             FixtureA.Body._world._contactPool.Enqueue(this);
 
-            if (Manifold.PointCount > 0 && FixtureA.IsSensor == false && FixtureB.IsSensor == false)
+            if (Manifold.PointCount > 0 && !FixtureA.IsSensor && !FixtureB.IsSensor)
             {
                 FixtureA.Body.Awake = true;
                 FixtureB.Body.Awake = true;

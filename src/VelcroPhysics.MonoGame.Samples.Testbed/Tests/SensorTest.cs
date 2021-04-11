@@ -110,7 +110,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // that overlap the sensor.
             for (int i = 0; i < Count; ++i)
             {
-                if (_touching[i] == false)
+                if (!_touching[i])
                     continue;
 
                 Body body = _bodies[i];

@@ -140,7 +140,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            bool advanceRay = settings.Pause == false || settings.SingleStep;
+            bool advanceRay = !settings.Pause || settings.SingleStep;
 
             base.Update(settings, gameTime);
 

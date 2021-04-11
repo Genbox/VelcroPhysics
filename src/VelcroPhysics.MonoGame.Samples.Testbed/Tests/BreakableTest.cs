@@ -156,7 +156,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             // Cache velocities to improve movement on breakage.
-            if (_broke == false)
+            if (!_broke)
             {
                 _velocity = _body1.LinearVelocity;
                 _angularVelocity = _body1.AngularVelocity;

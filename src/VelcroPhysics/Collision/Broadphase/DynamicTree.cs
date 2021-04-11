@@ -124,7 +124,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     if (node.Height <= 1)
                         continue;
 
-                    Debug.Assert(node.IsLeaf() == false);
+                    Debug.Assert(!node.IsLeaf());
 
                     int child1 = node.Child1;
                     int child2 = node.Child2;
@@ -257,7 +257,7 @@ namespace VelcroPhysics.Collision.Broadphase
                     if (node.IsLeaf())
                     {
                         bool proceed = callback(nodeId);
-                        if (proceed == false)
+                        if (!proceed)
                             return;
                     }
                     else
@@ -311,7 +311,7 @@ namespace VelcroPhysics.Collision.Broadphase
 
                 TreeNode<T> node = _nodes[nodeId];
 
-                if (AABB.TestOverlap(ref node.AABB, ref segmentAABB) == false)
+                if (!AABB.TestOverlap(ref node.AABB, ref segmentAABB))
                     continue;
 
                 // Separating axis for segment (Gino, p80).
@@ -415,7 +415,7 @@ namespace VelcroPhysics.Collision.Broadphase
             // Find the best sibling for this node
             AABB leafAABB = _nodes[leaf].AABB;
             int index = _root;
-            while (_nodes[index].IsLeaf() == false)
+            while (!_nodes[index].IsLeaf())
             {
                 int child1 = _nodes[index].Child1;
                 int child2 = _nodes[index].Child2;

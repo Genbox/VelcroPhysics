@@ -220,7 +220,7 @@ namespace VelcroPhysics.Dynamics.Joints
             get => _enableLimit;
             set
             {
-                Debug.Assert(BodyA.FixedRotation == false || BodyB.FixedRotation == false, "Warning: limits does currently not work with fixed rotation");
+                Debug.Assert(!BodyA.FixedRotation || !BodyB.FixedRotation, "Warning: limits does currently not work with fixed rotation");
 
                 if (value == _enableLimit)
                     return;
@@ -483,7 +483,7 @@ namespace VelcroPhysics.Dynamics.Joints
                 _impulse.Z = 0.0f;
             }
 
-            if (_enableMotor == false)
+            if (!_enableMotor)
                 MotorImpulse = 0.0f;
 
             if (Settings.EnableWarmstarting)

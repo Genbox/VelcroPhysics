@@ -207,7 +207,7 @@ namespace VelcroPhysics.Dynamics
                         joint.EdgeB.Next = null;
 
                         // If the joint prevents collisions, then flag any contacts for filtering.
-                        if (collideConnected == false)
+                        if (!collideConnected)
                         {
                             ContactEdge edge = bodyB.ContactList;
                             while (edge != null)
@@ -268,7 +268,7 @@ namespace VelcroPhysics.Dynamics
                         Body bodyB = joint.BodyB;
 
                         // If the joint prevents collisions, then flag any contacts for filtering.
-                        if (joint.CollideConnected == false)
+                        if (!joint.CollideConnected)
                         {
                             ContactEdge edge = bodyB.ContactList;
                             while (edge != null)
@@ -421,7 +421,7 @@ namespace VelcroPhysics.Dynamics
                 if ((seed._flags & BodyFlags.IslandFlag) == BodyFlags.IslandFlag)
                     continue;
 
-                if (seed.Awake == false || seed.Enabled == false)
+                if (!seed.Awake || !seed.Enabled)
                     continue;
 
                 // The seed can be dynamic or kinematic.
@@ -461,7 +461,7 @@ namespace VelcroPhysics.Dynamics
                             continue;
 
                         // Is this contact solid and touching?
-                        if (ce.Contact.Enabled == false || ce.Contact.IsTouching == false)
+                        if (!ce.Contact.Enabled || !ce.Contact.IsTouching)
                             continue;
 
                         // Skip sensors.
@@ -498,7 +498,7 @@ namespace VelcroPhysics.Dynamics
                         if (other != null)
                         {
                             // Don't simulate joints connected to inactive bodies.
-                            if (other.Enabled == false)
+                            if (!other.Enabled)
                                 continue;
 
                             Island.Add(je.Joint);
@@ -587,7 +587,7 @@ namespace VelcroPhysics.Dynamics
                     Contact c = ContactManager.ContactList[i];
 
                     // Is this contact disabled?
-                    if (c.Enabled == false)
+                    if (!c.Enabled)
                         continue;
 
                     // Prevent excessive sub-stepping.
@@ -620,14 +620,14 @@ namespace VelcroPhysics.Dynamics
                         bool activeB = bB.Awake && typeB != BodyType.Static;
 
                         // Is at least one body active (awake and dynamic or kinematic)?
-                        if (activeA == false && activeB == false)
+                        if (!activeA && !activeB)
                             continue;
 
                         bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && (fA.IgnoreCCDWith & fB.CollisionCategories) == 0 && !bA.IgnoreCCD;
                         bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && (fB.IgnoreCCDWith & fA.CollisionCategories) == 0 && !bB.IgnoreCCD;
 
                         // Are these two non-bullet dynamic bodies?
-                        if (collideA == false && collideB == false)
+                        if (!collideA && !collideB)
                             continue;
 
                         // Compute the TOI for this contact.
@@ -702,7 +702,7 @@ namespace VelcroPhysics.Dynamics
                 ++minContact._toiCount;
 
                 // Is the contact solid?
-                if (minContact.Enabled == false || minContact.IsTouching == false)
+                if (!minContact.Enabled || !minContact.IsTouching)
                 {
                     // Restore the sweeps.
                     minContact._flags &= ~ContactFlags.EnabledFlag;
@@ -750,7 +750,7 @@ namespace VelcroPhysics.Dynamics
                             // Only add static, kinematic, or bullet bodies.
                             Body other = ce.Other;
                             if (other.BodyType == BodyType.Dynamic &&
-                                body.IsBullet == false && other.IsBullet == false)
+                                !body.IsBullet && !other.IsBullet)
                                 continue;
 
                             // Skip sensors.
@@ -766,7 +766,7 @@ namespace VelcroPhysics.Dynamics
                             contact.Update(ContactManager);
 
                             // Was the contact disabled by the user?
-                            if (contact.Enabled == false)
+                            if (!contact.Enabled)
                             {
                                 other._sweep = backup;
                                 other.SynchronizeTransform();
@@ -774,7 +774,7 @@ namespace VelcroPhysics.Dynamics
                             }
 
                             // Are there contact points?
-                            if (contact.IsTouching == false)
+                            if (!contact.IsTouching)
                             {
                                 other._sweep = backup;
                                 other.SynchronizeTransform();

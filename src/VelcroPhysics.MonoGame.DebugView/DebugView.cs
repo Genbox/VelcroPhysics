@@ -142,13 +142,13 @@ namespace VelcroPhysics.MonoGame.DebugView
                     b.GetTransform(out xf);
                     foreach (Fixture f in b.FixtureList)
                     {
-                        if (b.Enabled == false)
+                        if (!b.Enabled)
                             DrawShape(f, xf, InactiveShapeColor);
                         else if (b.BodyType == BodyType.Static)
                             DrawShape(f, xf, StaticShapeColor);
                         else if (b.BodyType == BodyType.Kinematic)
                             DrawShape(f, xf, KinematicShapeColor);
-                        else if (b.Awake == false)
+                        else if (!b.Awake)
                             DrawShape(f, xf, SleepingShapeColor);
                         else
                             DrawShape(f, xf, DefaultShapeColor);
@@ -217,7 +217,7 @@ namespace VelcroPhysics.MonoGame.DebugView
 
                 foreach (Body body in World.BodyList)
                 {
-                    if (body.Enabled == false)
+                    if (!body.Enabled)
                         continue;
 
                     foreach (Fixture f in body.FixtureList)
