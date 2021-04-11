@@ -35,9 +35,8 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
         private void ParseSVGNode(XmlNode currentNode)
         {
             bool popTransform = false;
-            XmlElement currentElement = currentNode as XmlElement;
 
-            if (currentElement != null)
+            if (currentNode is XmlElement currentElement)
             {
                 if (currentElement.HasAttribute("transform"))
                 {
@@ -50,10 +49,9 @@ namespace VelcroPhysics.MonoGame.ContentPipelines.SVGImport
                     PathDefinition path = new PathDefinition();
 
                     string currentId = currentElement.HasAttribute("velcro_id") ? currentElement.Attributes["velcro_id"].Value : null;
-                    XmlElement parent = currentElement.ParentNode as XmlElement;
 
                     //Take the attribute from the parent if it is a group, otherwise just take it from the current element
-                    if (currentId == null && parent != null && parent.HasAttribute("velcro_id"))
+                    if (currentId == null && currentElement.ParentNode is XmlElement parent && parent.HasAttribute("velcro_id"))
                         path.Id = parent.Attributes["velcro_id"].Value;
                     else
                         path.Id = currentElement.HasAttribute("velcro_id") ? currentElement.Attributes["velcro_id"].Value : "empty_id";

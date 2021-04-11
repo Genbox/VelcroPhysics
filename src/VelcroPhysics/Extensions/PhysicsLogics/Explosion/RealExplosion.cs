@@ -117,8 +117,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
             for (int i = 0; i < shapeCount; ++i)
             {
                 PolygonShape ps;
-                CircleShape cs = shapes[i].Shape as CircleShape;
-                if (cs != null)
+                if (shapes[i].Shape is CircleShape cs)
                 {
                     // We create a "diamond" approximation of the circle
                     Vertices v = new Vertices();
@@ -346,8 +345,7 @@ namespace VelcroPhysics.Extensions.PhysicsLogics.Explosion
                 float impulse = MinRays * maxForce * 180.0f / MathHelper.Pi;
                 Vector2 hitPoint;
 
-                CircleShape circShape = fix.Shape as CircleShape;
-                if (circShape != null)
+                if (fix.Shape is CircleShape circShape)
                     hitPoint = fix.Body.GetWorldPoint(circShape.Position);
                 else
                 {

@@ -24,10 +24,8 @@ namespace VelcroPhysics.Tools.Cutting.Simple
             Vector2 localEntryPoint = fixture.Body.GetLocalPoint(ref entryPoint);
             Vector2 localExitPoint = fixture.Body.GetLocalPoint(ref exitPoint);
 
-            PolygonShape shape = fixture.Shape as PolygonShape;
-
             //We can only cut polygons at the moment
-            if (shape == null)
+            if (!(fixture.Shape is PolygonShape shape))
             {
                 first = new Vertices();
                 second = new Vertices();

@@ -185,8 +185,7 @@ namespace VelcroPhysics.MonoGame.DebugView
                 {
                     foreach (Fixture f in body.FixtureList)
                     {
-                        PolygonShape polygon = f.Shape as PolygonShape;
-                        if (polygon != null)
+                        if (f.Shape is PolygonShape polygon)
                         {
                             body.GetTransform(out Transform xf);
 
@@ -247,8 +246,7 @@ namespace VelcroPhysics.MonoGame.DebugView
                 {
                     Controller controller = World.ControllerList[i];
 
-                    BuoyancyController buoyancy = controller as BuoyancyController;
-                    if (buoyancy != null)
+                    if (controller is BuoyancyController buoyancy)
                     {
                         AABB container = buoyancy.Container;
                         DrawAABB(ref container, Color.LightBlue);

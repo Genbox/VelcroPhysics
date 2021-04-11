@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
@@ -73,10 +73,10 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public int CompareTo(object obj)
         {
-            MenuEntry entry = obj as MenuEntry;
-            if (entry == null)
-                return 0;
-            return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
+            if (obj is MenuEntry entry)
+                return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
+            
+            return 0;
         }
 
         public static void InitializeEntries(float hiddenX, float visibleX)
