@@ -238,9 +238,9 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             DrawString("Keys: left = a, brake = s, right = d, hz down = q, hz up = e");
 
-            DrawString(string.Format("frequency = {0} hz, damping ratio = {1}", _hz, _zeta));
+            DrawString($"frequency = {_hz} hz, damping ratio = {_zeta}");
 
-            DrawString(string.Format("actual speed = {0} rad/sec", _spring1.JointAngularSpeed));
+            DrawString($"actual speed = {_spring1.JointAngularSpeed} rad/sec");
 
             GameInstance.ViewCenter = _car.Position;
 

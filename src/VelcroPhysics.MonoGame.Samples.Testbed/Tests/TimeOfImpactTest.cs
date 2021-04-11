@@ -77,7 +77,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             TimeOfImpact.CalculateTimeOfImpact(ref input, out TOIOutput output);
 
             DrawString("TOI = " + output.T);
-            DrawString(string.Format("Max TOI iters = {0:n}, Max root iters = {1:n}", TimeOfImpact.TOIMaxIters, TimeOfImpact.TOIMaxRootIters));
+            DrawString($"Max TOI iters = {TimeOfImpact.TOIMaxIters:n}, Max root iters = {TimeOfImpact.TOIMaxRootIters:n}");
 
             Vector2[] vertices = new Vector2[Settings.MaxPolygonVertices];
 

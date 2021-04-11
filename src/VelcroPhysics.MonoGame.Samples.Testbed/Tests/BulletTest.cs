@@ -60,13 +60,13 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             base.Update(settings, gameTime);
 
             if (DistanceGJK.GJKCalls > 0)
-                DrawString(string.Format("GJK calls = {0:n}, Ave GJK iters = {1:n}, Max GJK iters = {2:n}", DistanceGJK.GJKCalls, DistanceGJK.GJKIters / (float)DistanceGJK.GJKCalls, DistanceGJK.GJKMaxIters));
+                DrawString($"GJK calls = {DistanceGJK.GJKCalls:n}, Ave GJK iters = {DistanceGJK.GJKIters / (float)DistanceGJK.GJKCalls:n}, Max GJK iters = {DistanceGJK.GJKMaxIters:n}");
 
             if (TimeOfImpact.TOICalls > 0)
             {
-                DrawString(string.Format("TOI calls = {0:n}, Ave TOI iters = {1:n}, Max TOI iters = {2:n}", TimeOfImpact.TOICalls, TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
+                DrawString($"TOI calls = {TimeOfImpact.TOICalls:n}, Ave TOI iters = {TimeOfImpact.TOIIters / (float)TimeOfImpact.TOICalls:n}, Max TOI iters = {TimeOfImpact.TOIMaxRootIters:n}");
 
-                DrawString(string.Format("Ave TOI root iters = {0:n}, Max TOI root iters = {1:n}", TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls, TimeOfImpact.TOIMaxRootIters));
+                DrawString($"Ave TOI root iters = {TimeOfImpact.TOIRootIters / (float)TimeOfImpact.TOICalls:n}, Max TOI root iters = {TimeOfImpact.TOIMaxRootIters:n}");
             }
 
             if (StepCount % 60 == 0)

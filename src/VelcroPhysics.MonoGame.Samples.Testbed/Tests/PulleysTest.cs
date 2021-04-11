@@ -75,7 +75,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             float ratio = _joint1.Ratio;
             float l = _joint1.LengthA + ratio * _joint1.LengthB;
-            DrawString(string.Format("L1 + {0:n} * L2 = {1:n}", ratio, l));
+            DrawString($"L1 + {ratio:n} * L2 = {l:n}");
         }
 
         internal static Test Create()

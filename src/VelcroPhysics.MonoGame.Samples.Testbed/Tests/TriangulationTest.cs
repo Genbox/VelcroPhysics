@@ -101,7 +101,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             for (int i = 0; i < _names.Length; i++)
             {
-                string title = string.Format("{0}: {1} ms - {2} triangles", _names[i], _timings[i], _bodies[i].FixtureList.Count);
+                string title = $"{_names[i]}: {_timings[i]} ms - {_bodies[i].FixtureList.Count} triangles";
 
                 Vector2 screenPosition = GameInstance.ConvertWorldToScreen(_bodies[i].Position + offset);
                 DebugView.DrawString((int)screenPosition.X, (int)screenPosition.Y, title);

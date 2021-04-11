@@ -112,15 +112,15 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DrawString(string.Format("Center ({0}): Original polygon", _twoShape.Count));
+            DrawString($"Center ({_twoShape.Count}): Original polygon");
 
-            DrawString(string.Format("Upper left ({0}): Simplified by removing points with an area of below 0.1", _upperLeft.Count));
+            DrawString($"Upper left ({_upperLeft.Count}): Simplified by removing points with an area of below 0.1");
 
-            DrawString(string.Format("Upper right ({0}): Simplified by removing every 3 point", _upperRight.Count));
+            DrawString($"Upper right ({_upperRight.Count}): Simplified by removing every 3 point");
 
-            DrawString(string.Format("Lower left ({0}): Simplified by removing points with a distance of less than 1", _lowerLeft.Count));
+            DrawString($"Lower left ({_lowerLeft.Count}): Simplified by removing points with a distance of less than 1");
 
-            DrawString(string.Format("Lower right ({0}): Simplified with Douglas Peucker", _lowerRight.Count));
+            DrawString($"Lower right ({_lowerRight.Count}): Simplified with Douglas Peucker");
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 

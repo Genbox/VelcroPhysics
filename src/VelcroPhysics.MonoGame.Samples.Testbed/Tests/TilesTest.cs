@@ -111,8 +111,8 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
             int leafCount = dt.ProxyCount;
             float minimumNodeCount = 2 * leafCount - 1;
             float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
-            DrawString(string.Format("dynamic tree height = {0}, min = {1}", height, (int)minimumHeight));
-            DrawString(string.Format("create time = {0} ms, fixture count = {1}", _createTime, _fixtureCount));
+            DrawString($"dynamic tree height = {height}, min = {(int)minimumHeight}");
+            DrawString($"create time = {_createTime} ms, fixture count = {_fixtureCount}");
 
             base.Update(settings, gameTime);
         }

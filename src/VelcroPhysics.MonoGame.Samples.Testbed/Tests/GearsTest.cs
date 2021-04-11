@@ -119,11 +119,11 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             float ratio = _joint4.Ratio;
             float value = _joint1.JointAngle + ratio * _joint2.JointAngle;
-            DrawString(string.Format("theta1 + {0} * theta2 = {1}", ratio, value));
+            DrawString($"theta1 + {ratio} * theta2 = {value}");
 
             ratio = _joint5.Ratio;
             value = _joint2.JointAngle + ratio * _joint3.JointTranslation;
-            DrawString(string.Format("theta2 + {0} * delta = {1}", ratio, value));
+            DrawString($"theta2 + {ratio} * delta = {value}");
         }
 
         internal static Test Create()
