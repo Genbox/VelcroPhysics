@@ -16,6 +16,6 @@ jobs:
       with:
         dotnet-version: '5.0.x'
     - name: Pack release
-      run: dotnet pack -c Release src/VelcroPhysics.All.sln -o Temp
+      run: dotnet pack -c WindowsRelease src/VelcroPhysics.All.sln -o Temp
     - name: Upload to nuget
       run: dotnet nuget push --skip-duplicate -k ${{secrets.NUGET_KEY}} -s https://api.nuget.org/v3/index.json Temp/*

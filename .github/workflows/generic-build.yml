@@ -13,4 +13,4 @@ jobs:
       with:
         dotnet-version: '5.0.x'
     - name: Build free
-      run: dotnet build -c Release src/VelcroPhysics.All.sln
+      run: dotnet build -c WindowsRelease src/VelcroPhysics.All.sln
