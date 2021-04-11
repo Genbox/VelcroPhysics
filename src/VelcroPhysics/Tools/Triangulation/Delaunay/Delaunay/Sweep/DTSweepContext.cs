@@ -115,17 +115,17 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
 
         public void CreateAdvancingFront()
         {
-            AdvancingFrontNode head, tail, middle;
-
             // Initial triangle
             DelaunayTriangle iTriangle = new DelaunayTriangle(Points[0], Tail, Head);
             Triangles.Add(iTriangle);
 
-            head = new AdvancingFrontNode(iTriangle.Points[1]);
+            AdvancingFrontNode head = new AdvancingFrontNode(iTriangle.Points[1]);
             head.Triangle = iTriangle;
-            middle = new AdvancingFrontNode(iTriangle.Points[0]);
+
+            AdvancingFrontNode middle = new AdvancingFrontNode(iTriangle.Points[0]);
             middle.Triangle = iTriangle;
-            tail = new AdvancingFrontNode(iTriangle.Points[2]);
+
+            AdvancingFrontNode tail = new AdvancingFrontNode(iTriangle.Points[2]);
 
             aFront = new AdvancingFront(head, tail);
             aFront.AddNode(middle);
@@ -157,11 +157,11 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Delaunay.Sweep
         {
             base.PrepareTriangulation(t);
 
-            double xmax, xmin;
-            double ymax, ymin;
+            double xmin;
+            double ymin;
 
-            xmax = xmin = Points[0].X;
-            ymax = ymin = Points[0].Y;
+            double xmax = xmin = Points[0].X;
+            double ymax = ymin = Points[0].Y;
 
             // Calculate bounds. Should be combined with the sorting
             foreach (TriangulationPoint p in Points)

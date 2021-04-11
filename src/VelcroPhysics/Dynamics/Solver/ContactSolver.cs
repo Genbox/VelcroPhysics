@@ -429,8 +429,6 @@ namespace VelcroPhysics.Dynamics.Solver
                     b.X = vn1 - cp1.VelocityBias;
                     b.Y = vn2 - cp2.VelocityBias;
 
-                    const float k_errorTol = 1e-3f;
-
                     // Compute b'
                     b -= MathUtils.Mul(ref vc.K, a);
 

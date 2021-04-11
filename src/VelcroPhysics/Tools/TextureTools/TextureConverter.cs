@@ -309,7 +309,6 @@ namespace VelcroPhysics.Tools.TextureTools
             Vector2? entrance;
 
             int startY;
-            int endY;
 
             int lastSolid = 0;
             bool foundSolid;
@@ -328,7 +327,7 @@ namespace VelcroPhysics.Tools.TextureTools
             }
 
             // Set the end y coordinate.
-            endY = (int)GetBottomMostCoord(polygon);
+            int endY = (int)GetBottomMostCoord(polygon);
 
             if (startY > 0 && startY < _height && endY > 0 && endY < _height)
             {

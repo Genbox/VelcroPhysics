@@ -67,8 +67,7 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public void LoadContent(Viewport viewport)
         {
-            Texture2D cursorTexture;
-            cursorTexture = ContentWrapper.GetTexture("Cursor");
+            Texture2D cursorTexture = ContentWrapper.GetTexture("Cursor");
             _cursorSprite = new Sprite(cursorTexture, Vector2.One);
             _viewport = viewport;
         }
@@ -87,7 +86,6 @@ namespace VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             MouseState = Mouse.GetState();
 
             // Update cursor
-            Vector2 oldCursor = Cursor;
             if (GamePadState.IsConnected && GamePadState.ThumbSticks.Left != Vector2.Zero)
             {
                 Cursor += GamePadState.ThumbSticks.Left * new Vector2(300f, -300f) * (float)gameTime.ElapsedGameTime.TotalSeconds;

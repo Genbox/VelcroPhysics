@@ -131,7 +131,6 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
         /// <param name="list"></param>
         public void AddPoints(IEnumerable<PolygonPoint> list)
         {
-            PolygonPoint first;
             foreach (PolygonPoint p in list)
             {
                 p.Previous = _last;
@@ -143,7 +142,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
                 _last = p;
                 _points.Add(p);
             }
-            first = (PolygonPoint)_points[0];
+
+            PolygonPoint first = (PolygonPoint)_points[0];
             _last.Next = first;
             first.Previous = _last;
         }
@@ -162,10 +162,8 @@ namespace VelcroPhysics.Tools.Triangulation.Delaunay.Polygon
         /// <param name="p"></param>
         public void RemovePoint(PolygonPoint p)
         {
-            PolygonPoint next, prev;
-
-            next = p.Next;
-            prev = p.Previous;
+            PolygonPoint next = p.Next;
+            PolygonPoint prev = p.Previous;
             prev.Next = next;
             next.Previous = prev;
             _points.Remove(p);

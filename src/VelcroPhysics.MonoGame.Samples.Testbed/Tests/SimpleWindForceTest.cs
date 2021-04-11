@@ -69,8 +69,7 @@ namespace VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public void DrawLineForce()
         {
-            Vector2 drawVector;
-            drawVector = _simpleWind.Direction;
+            Vector2 drawVector = _simpleWind.Direction;
             drawVector.Normalize();
             drawVector *= _strength;
             DebugView.DrawArrow(_simpleWind.Position, _simpleWind.Position + drawVector, 2, 1f, true, Color.Red);

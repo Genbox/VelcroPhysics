@@ -121,10 +121,9 @@ namespace VelcroPhysics.Tools.Cutting
                     if (LineUtils.LineIntersect(a, b, c, d, out Vector2 intersectionPoint))
                     {
                         // calculate alpha values for sorting multiple intersections points on a edge
-                        float alpha;
+                        float alpha = GetAlpha(a, b, intersectionPoint);
 
                         // Insert intersection point into first polygon
-                        alpha = GetAlpha(a, b, intersectionPoint);
                         if (alpha > 0f && alpha < 1f)
                         {
                             int index = slicedPoly1.IndexOf(a) + 1;
