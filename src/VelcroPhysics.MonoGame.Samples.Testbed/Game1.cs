@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 {
-    public class Game1 : Game
+    public sealed class Game1 : Game
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly KeyboardManager _keyboardManager = new KeyboardManager();
@@ -86,6 +86,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
             _testSelection = _testIndex;
             StartTest(_testIndex);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                _graphics.Dispose();
+
+            base.Dispose(disposing);
         }
 
         private void CreateProjection()

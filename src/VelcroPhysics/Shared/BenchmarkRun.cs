@@ -1,10 +1,9 @@
-using System;
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Shared.Optimization;
 
 namespace Genbox.VelcroPhysics.Shared
 {
-    public class BenchmarkRun : IPoolable<BenchmarkRun>
+    public sealed class BenchmarkRun : IPoolable<BenchmarkRun>
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
         private string _area;
@@ -14,7 +13,6 @@ namespace Genbox.VelcroPhysics.Shared
         {
             RecordResults();
             Pool.ReturnToPool(this);
-            GC.SuppressFinalize(this);
         }
 
         public void Reset()

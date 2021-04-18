@@ -13,7 +13,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
     /// <summary>
     /// This is the main type for the samples
     /// </summary>
-    public class Game1 : Game
+    public sealed class Game1 : Game
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly List<GameScreen> _screens = new List<GameScreen>();
@@ -100,12 +100,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
             bool firstPreview = true;
             foreach (Type sampleType in demosToLoad)
             {
-                PhysicsDemoScreen demoScreen = samplesFramework.CreateInstance(sampleType.ToString()) as PhysicsDemoScreen;
+                PhysicsDemoScreen demoScreen = (PhysicsDemoScreen)samplesFramework.CreateInstance(sampleType.ToString());
+
 #if WINDOWS
                 if (!firstPreview)
                     Console.WriteLine("Loading demo: " + demoScreen.GetTitle());
 #endif
-                RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth / 2, pp.BackBufferHeight / 2, false, SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
                 demoScreen.Framework = this;
                 demoScreen.IsExiting = false;
@@ -129,22 +129,25 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                 demoScreen.Draw(new GameTime());
                 demoScreen.Draw(new GameTime());
 
-                GraphicsDevice.SetRenderTarget(preview);
-                GraphicsDevice.Clear(Color.Transparent);
+                using (RenderTarget2D preview = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth / 2, pp.BackBufferHeight / 2, false, SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents))
+                {
+                    GraphicsDevice.SetRenderTarget(preview);
+                    GraphicsDevice.Clear(Color.Transparent);
 
-                _spriteBatch.Begin();
-                _spriteBatch.Draw(_transitions[0], preview.Bounds, Color.White);
-                _spriteBatch.End();
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(_transitions[0], preview.Bounds, Color.White);
+                    _spriteBatch.End();
 
-                GraphicsDevice.SetRenderTarget(null);
+                    GraphicsDevice.SetRenderTarget(null);
 
-                demoScreen.ExitScreen();
-                demoScreen.Update(new GameTime(demoScreen.TransitionOffTime, demoScreen.TransitionOffTime), true, false);
+                    demoScreen.ExitScreen();
+                    demoScreen.Update(new GameTime(demoScreen.TransitionOffTime, demoScreen.TransitionOffTime), true, false);
 
-                if (!firstPreview)
-                    _menuScreen.AddMenuItem(demoScreen, preview);
-                else
-                    firstPreview = false;
+                    if (!firstPreview)
+                        _menuScreen.AddMenuItem(demoScreen, preview);
+                    else
+                        firstPreview = false;
+                }
             }
 
             AddScreen(new BackgroundScreen());
@@ -269,7 +272,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                     }
                     else
                         _spriteBatch.Draw(_transitions[transitionCount], Vector2.Zero, Color.White * screen.TransitionAlpha);
-              
+
                     _spriteBatch.End();
 
                     transitionCount++;
@@ -330,6 +333,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
             screen.UnloadContent();
             _screens.Remove(screen);
             _screensToUpdate.Remove(screen);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _graphics.Dispose();
+                _lineBatch.Dispose();
+                _quadRenderer.Dispose();
+                _spriteBatch.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.Shared.Optimization;
 
 namespace Genbox.VelcroPhysics.Tests.Code
 {
-    internal class PoolObject : IPoolable<PoolObject>
+    internal sealed class PoolObject : IPoolable<PoolObject>
     {
         public PoolObject()
         {

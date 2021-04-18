@@ -1,3 +1,4 @@
+using System;
 using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
@@ -9,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 {
-    public class Border
+    public sealed class Border : IDisposable
     {
         private readonly Body _anchor;
 
@@ -79,6 +80,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _lines.Begin(projection, view);
             _lines.DrawLineShape(_anchor.FixtureList[0].Shape);
             _lines.End();
+        }
+
+        public void Dispose()
+        {
+            _basicEffect?.Dispose();
         }
     }
 }

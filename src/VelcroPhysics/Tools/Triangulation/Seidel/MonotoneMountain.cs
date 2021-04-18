@@ -103,27 +103,29 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Seidel
         {
             while (_convexPoints.Count != 0)
             {
-                IEnumerator<Point> e = _convexPoints.GetEnumerator();
-                e.MoveNext();
-                Point ear = e.Current;
+                using (IEnumerator<Point> e = _convexPoints.GetEnumerator())
+                {
+                    e.MoveNext();
+                    Point ear = e.Current;
 
-                _convexPoints.Remove(ear);
-                Point a = ear.Prev;
-                Point b = ear;
-                Point c = ear.Next;
-                List<Point> triangle = new List<Point>(3);
-                triangle.Add(a);
-                triangle.Add(b);
-                triangle.Add(c);
+                    _convexPoints.Remove(ear);
+                    Point a = ear.Prev;
+                    Point b = ear;
+                    Point c = ear.Next;
+                    List<Point> triangle = new List<Point>(3);
+                    triangle.Add(a);
+                    triangle.Add(b);
+                    triangle.Add(c);
 
-                Triangles.Add(triangle);
+                    Triangles.Add(triangle);
 
-                // Remove ear, update angles and convex list
-                Remove(ear);
-                if (Valid(a))
-                    _convexPoints.Add(a);
-                if (Valid(c))
-                    _convexPoints.Add(c);
+                    // Remove ear, update angles and convex list
+                    Remove(ear);
+                    if (Valid(a))
+                        _convexPoints.Add(a);
+                    if (Valid(c))
+                        _convexPoints.Add(c);
+                }
             }
 
             Debug.Assert(_size <= 3, "Triangulation bug, please report");

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
 {
-    public class Game1 : Game
+    public sealed class Game1 : Game
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _batch;
@@ -36,7 +36,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
         private const string Text = "Press A or D to rotate the ball\n" +
                                     "Press Space to jump\n" +
                                     "Use arrow keys to move the camera";
-
 #else
                 const string Text = "Use left stick to move\n" +
                                     "Use right stick to move camera\n" +
@@ -112,6 +111,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
             _world.Step((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f);
 
             base.Update(gameTime);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _graphics.Dispose();
+                _batch.Dispose();
+                _circleSprite.Dispose();
+                _groundSprite.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void HandleGamePad()

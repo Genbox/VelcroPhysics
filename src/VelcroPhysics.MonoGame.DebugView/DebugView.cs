@@ -80,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         public const int CircleSegments = 32;
 #endif
 
-        private const float _circleIncrement = (float)(MathConstants.Pi2 / CircleSegments);
+        private const float _circleIncrement = MathConstants.Pi2 / CircleSegments;
 
         public DebugView(World world)
             : base(world)
@@ -93,11 +93,19 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             AppendFlags(DebugViewFlags.Joint);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                World.ContactManager.PreSolve -= PreSolve;
+                _primitiveBatch.Dispose();
+                _batch.Dispose();
+            }
+        }
+
         public void Dispose()
         {
-            World.ContactManager.PreSolve -= PreSolve;
-            _primitiveBatch.Dispose();
-            _batch.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 

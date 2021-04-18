@@ -1,4 +1,4 @@
-﻿/* Poly2Tri
+/* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
  *
@@ -75,13 +75,15 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Sets
             if (_constrainedPointList != null)
             {
                 TriangulationPoint p1, p2;
-                List<TriangulationPoint>.Enumerator iterator = _constrainedPointList.GetEnumerator();
-                while (iterator.MoveNext())
+                using (List<TriangulationPoint>.Enumerator iterator = _constrainedPointList.GetEnumerator())
                 {
-                    p1 = iterator.Current;
-                    iterator.MoveNext();
-                    p2 = iterator.Current;
-                    tcx.NewConstraint(p1, p2);
+                    while (iterator.MoveNext())
+                    {
+                        p1 = iterator.Current;
+                        iterator.MoveNext();
+                        p2 = iterator.Current;
+                        tcx.NewConstraint(p1, p2);
+                    }
                 }
             }
             else

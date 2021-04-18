@@ -31,7 +31,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
-    public class Test
+    public class Test : IDisposable
     {
         private FixedMouseJoint _fixedMouseJoint;
         internal DebugView.DebugView DebugView;
@@ -158,6 +158,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
         {
             DebugView.DrawString(50, TextLine, text);
             TextLine += 15;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                DebugView?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
