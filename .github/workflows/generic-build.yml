@@ -8,9 +8,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core 5.0
+    - name: Setup .NET Core 5.0.x
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
-    - name: Build free
-      run: dotnet build -c WindowsRelease src/VelcroPhysics.All.sln
+    - name: Setup .NET Core 3.1.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: Build VelcroPhysics
+      run: dotnet build -c LinuxRelease src/VelcroPhysics.All.sln

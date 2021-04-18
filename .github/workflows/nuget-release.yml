@@ -11,11 +11,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core 5.0
+    - name: Setup .NET Core 5.0.x
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
-    - name: Pack release
-      run: dotnet pack -c WindowsRelease src/VelcroPhysics.All.sln -o Temp
+    - name: Setup .NET Core 3.1.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: Build VelcroPhysics
+      run: dotnet build -c LinuxRelease src/VelcroPhysics.All.sln -i Temp
     - name: Upload to nuget
       run: dotnet nuget push --skip-duplicate -k ${{secrets.NUGET_KEY}} -s https://api.nuget.org/v3/index.json Temp/*
