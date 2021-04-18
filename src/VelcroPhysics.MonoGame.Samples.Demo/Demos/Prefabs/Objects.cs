@@ -9,14 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 {
-    public enum ObjectType
-    {
-        Circle,
-        Rectangle,
-        Gear,
-        Star
-    }
-
     public class Objects
     {
         private readonly List<Body> _bodies;
