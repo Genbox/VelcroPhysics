@@ -1,4 +1,4 @@
-# Welcome to Velcro Physics (Formerly Farseer Physics Engine)
+# Velcro Physics (Formerly Farseer Physics)
 
 ## Warning: Under construction
 It has been years since this code was last touched, and technology has moved a lot since. The code is currently under construction and subject to change. If you need a physics engine right now, please use the [previous release](https://farseerphysics.codeplex.com/releases/view/110074).
