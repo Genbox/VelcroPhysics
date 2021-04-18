@@ -1,4 +1,4 @@
-﻿namespace Genbox.VelcroPhysics.Benchmarks.Code
+﻿namespace Genbox.VelcroPhysics.Benchmarks.Code.TestClasses
 {
     public class Class32
     {

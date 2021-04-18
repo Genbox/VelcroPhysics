@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using Genbox.VelcroPhysics.Benchmarks.Code;
+using Genbox.VelcroPhysics.Benchmarks.Code.TestClasses;
 using Genbox.VelcroPhysics.Shared;
 
 namespace Genbox.VelcroPhysics.Benchmarks.Tests.Shared
 {
-    [MemoryDiagnoser]
-    [InProcess]
-    public class GraphBenchmark
+    public class GraphBenchmark : UnmeasuredBenchmark
     {
         private Graph<Dummy> _graph;
         private List<Dummy> _list;

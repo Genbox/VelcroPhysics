@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Genbox.VelcroPhysics.Benchmarks.Code;
 using Genbox.VelcroPhysics.Collision.Distance;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Shared;
@@ -7,9 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
 {
-    [MemoryDiagnoser]
-    [InProcess]
-    public class DistanceBenchmark
+    public class DistanceBenchmark : MeasuredBenchmark
     {
         private PolygonShape _polygonA;
         private PolygonShape _polygonB;

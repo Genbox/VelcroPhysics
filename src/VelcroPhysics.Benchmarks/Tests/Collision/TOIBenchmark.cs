@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Genbox.VelcroPhysics.Benchmarks.Code;
 using Genbox.VelcroPhysics.Collision.Distance;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.TOI;
@@ -7,9 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
 {
-    [MemoryDiagnoser]
-    [InProcess]
-    public class TOIBenchmark
+    public class ToiBenchmark : MeasuredBenchmark
     {
         private PolygonShape _shapeA;
         private PolygonShape _shapeB;
@@ -35,7 +34,6 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
             _sweepB.C = new Vector2(54.595478f, -51.083473f);
             _sweepB.A = 513.62781f;
             _sweepB.LocalCenter = Vector2.Zero;
-
         }
 
         [Benchmark]
@@ -48,8 +46,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
             input.SweepB = _sweepB;
             input.TMax = 1.0f;
 
-            TOIOutput output;
-            TimeOfImpact.CalculateTimeOfImpact(ref input, out output);
+            TimeOfImpact.CalculateTimeOfImpact(ref input, out _);
         }
     }
 }

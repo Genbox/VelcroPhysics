@@ -1,5 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using Genbox.VelcroPhysics.Benchmarks.Code;
 using Genbox.VelcroPhysics.Benchmarks.Utilities;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.RayCast;
@@ -8,9 +9,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
 {
-    [MemoryDiagnoser]
-    [InProcess]
-    public class BroadphaseBenchmark
+    public class BroadphaseBenchmark : MeasuredBenchmark
     {
         private Actor[] _actors;
         private float _proxyExtent;

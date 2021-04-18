@@ -1,11 +1,12 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Genbox.VelcroPhysics.Benchmarks.Code;
+using Genbox.VelcroPhysics.Benchmarks.Code.TestClasses;
 
 namespace Genbox.VelcroPhysics.Benchmarks.Tests.CLR
 {
-    [InProcess]
-    public class ClassBenchmarks
+    public class ClassBenchmarks : UnmeasuredBenchmark
     {
+        private const int _size = 1000;
         private Class32[] _class32;
         private Class64[] _class64;
         private Class8[] _class8;
@@ -13,8 +14,6 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.CLR
         private Struct32[] _struct32;
         private Struct64[] _struct64;
         private Struct8[] _struct8;
-
-        private const int _size = 1000;
 
         [GlobalSetup]
         public void Setup()
