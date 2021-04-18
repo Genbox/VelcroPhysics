@@ -33,18 +33,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             //Default view
             ResetView();
 
+            Window.Title = "Velcro Physics Testbed";
             _graphics = new GraphicsDeviceManager(this);
-
-            //_graphics.PreferMultiSampling = true; // https://github.com/MonoGame/MonoGame/issues/5532
-            _graphics.PreferredBackBufferWidth = 1024;
-            _graphics.PreferredBackBufferHeight = 768;
-
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(24f);
             IsFixedTimeStep = true;
-
-            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsMouseVisible = true;
+            Content.RootDirectory = "Content";
         }
 
         public float ViewZoom
@@ -74,6 +68,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             //Set window defaults. Parent game can override in constructor
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowClientSizeChanged;
+
+            _graphics.PreferMultiSampling = true;
+            _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width - 80;
+            _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height - 120;
+
+            _graphics.ApplyChanges();
 
             CreateProjection();
 
