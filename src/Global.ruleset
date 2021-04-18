@@ -9,6 +9,7 @@
     <Rule Id="CAC002" Action="None" />
   </Rules>
   <Rules AnalyzerId="IDisposableAnalyzers" RuleNamespace="IDisposableAnalyzers">
+    <Rule Id="IDISP003" Action="None" />
     <Rule Id="IDISP013" Action="Error" />
     <Rule Id="IDISP014" Action="None" />
   </Rules>
