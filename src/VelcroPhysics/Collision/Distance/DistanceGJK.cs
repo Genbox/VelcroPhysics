@@ -72,9 +72,6 @@ namespace Genbox.VelcroPhysics.Collision.Distance
             FixedArray3<int> saveA = new FixedArray3<int>();
             FixedArray3<int> saveB = new FixedArray3<int>();
 
-            //Velcro: This code was not used anyway.
-            //float distanceSqr1 = MathConstants.MaxFloat;
-
             // Main iteration loop.
             int iter = 0;
             while (iter < Settings.MaxGJKIterations)
