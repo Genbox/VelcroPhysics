@@ -27,7 +27,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                     normal = new Vector2(1.0f, 0.0f);
                     Vector2 pointA = MathUtils.Mul(ref xfA, manifold.LocalPoint);
                     Vector2 pointB = MathUtils.Mul(ref xfB, manifold.Points.Value0.LocalPoint);
-                    if (Vector2.DistanceSquared(pointA, pointB) > Settings.Epsilon * Settings.Epsilon)
+                    if (Vector2.DistanceSquared(pointA, pointB) > MathConstants.Epsilon * MathConstants.Epsilon)
                     {
                         normal = pointB - pointA;
                         normal.Normalize();

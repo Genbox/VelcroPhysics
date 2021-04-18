@@ -266,7 +266,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
             if (Settings.AllowSleep)
             {
-                float minSleepTime = Settings.MaxFloat;
+                float minSleepTime = MathConstants.MaxFloat;
 
                 for (int i = 0; i < BodyCount; ++i)
                 {

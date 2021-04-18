@@ -36,10 +36,10 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
             foreach (Vector2 vertex in shape.Vertices)
             {
                 if (vertex.Equals(localEntryPoint))
-                    localEntryPoint -= new Vector2(0, Settings.Epsilon);
+                    localEntryPoint -= new Vector2(0, MathConstants.Epsilon);
 
                 if (vertex.Equals(localExitPoint))
-                    localExitPoint += new Vector2(0, Settings.Epsilon);
+                    localExitPoint += new Vector2(0, MathConstants.Epsilon);
             }
 
             Vertices vertices = new Vertices(shape.Vertices);
@@ -57,7 +57,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                 int n;
 
                 //Find out if this vertex is on the old or new shape.
-                if (Vector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) > Settings.Epsilon)
+                if (Vector2.Dot(MathUtils.Cross(localExitPoint - localEntryPoint, 1), vertices[i] - localEntryPoint) > MathConstants.Epsilon)
                     n = 0;
                 else
                     n = 1;
@@ -111,7 +111,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                 if (!offset.IsValid())
                     offset = Vector2.One;
 
-                newPolygon[n][cutAdded[n]] += Settings.Epsilon * offset;
+                newPolygon[n][cutAdded[n]] += MathConstants.Epsilon * offset;
 
                 if (cutAdded[n] < newPolygon[n].Count - 2)
                     offset = newPolygon[n][cutAdded[n] + 2] - newPolygon[n][cutAdded[n] + 1];
@@ -122,7 +122,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                 if (!offset.IsValid())
                     offset = Vector2.One;
 
-                newPolygon[n][cutAdded[n] + 1] += Settings.Epsilon * offset;
+                newPolygon[n][cutAdded[n] + 1] += MathConstants.Epsilon * offset;
             }
 
             first = newPolygon[0];

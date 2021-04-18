@@ -185,7 +185,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             float x = Rand.RandomFloat(-2.0f, 2.0f);
 
             _bodies[_bodyIndex].Position = new Vector2(x, 10.0f);
-            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
 
             if (index == 4)
                 _bodies[_bodyIndex].AngularDamping = 0.02f;

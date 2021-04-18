@@ -163,7 +163,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mass = BodyA.Mass;
 
             // Frequency
-            float omega = 2.0f * Settings.Pi * Frequency;
+            float omega = 2.0f * MathConstants.Pi * Frequency;
 
             // Damping coefficient
             float d = 2.0f * mass * DampingRatio * omega;
@@ -175,7 +175,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             // gamma has units of inverse mass.
             // beta has units of inverse time.
             float h = data.Step.DeltaTime;
-            Debug.Assert(d + h * k > Settings.Epsilon);
+            Debug.Assert(d + h * k > MathConstants.Epsilon);
             _gamma = h * (d + h * k);
             if (_gamma != 0.0f)
                 _gamma = 1.0f / _gamma;

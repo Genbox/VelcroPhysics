@@ -97,8 +97,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 body.CreateFixture(box);
 
                 RevoluteJoint jd = JointFactory.CreateRevoluteJoint(World, ground, body, Vector2.Zero);
-                jd.LowerLimit = -8.0f * Settings.Pi / 180.0f;
-                jd.UpperLimit = 8.0f * Settings.Pi / 180.0f;
+                jd.LowerLimit = -8.0f * MathConstants.Pi / 180.0f;
+                jd.UpperLimit = 8.0f * MathConstants.Pi / 180.0f;
                 jd.LimitEnabled = true;
 
                 body.ApplyAngularImpulse(100.0f);

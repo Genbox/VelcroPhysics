@@ -204,7 +204,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 float C = aB - aA - ReferenceAngle;
 
                 // Frequency
-                float omega = 2.0f * Settings.Pi * FrequencyHz;
+                float omega = 2.0f * MathConstants.Pi * FrequencyHz;
 
                 // Damping coefficient
                 float d = 2.0f * m * DampingRatio * omega;

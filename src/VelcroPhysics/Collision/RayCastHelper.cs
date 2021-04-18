@@ -83,7 +83,7 @@ namespace Genbox.VelcroPhysics.Collision
             float sigma = c * c - rr * b;
 
             // Check for negative discriminant and short segment.
-            if (sigma < 0.0f || rr < Settings.Epsilon)
+            if (sigma < 0.0f || rr < MathConstants.Epsilon)
                 return false;
 
             // Find the point of intersection of the line with the circle.

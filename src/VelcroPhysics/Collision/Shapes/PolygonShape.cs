@@ -84,7 +84,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                     int i1 = i;
                     int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
                     Vector2 edge = _vertices[i2] - _vertices[i1];
-                    Debug.Assert(edge.LengthSquared() > Settings.Epsilon * Settings.Epsilon);
+                    Debug.Assert(edge.LengthSquared() > MathConstants.Epsilon * MathConstants.Epsilon);
                     Vector2 temp = MathUtils.Cross(edge, 1.0f);
                     temp.Normalize();
                     _normals.Add(temp);
@@ -175,7 +175,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             }
 
             //The area is too small for the engine to handle.
-            Debug.Assert(area > Settings.Epsilon);
+            Debug.Assert(area > MathConstants.Epsilon);
 
             // We save the area
             MassData.Area = area;

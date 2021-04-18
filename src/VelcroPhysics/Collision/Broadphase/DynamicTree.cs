@@ -856,7 +856,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
 
             while (count > 1)
             {
-                float minCost = Settings.MaxFloat;
+                float minCost = MathConstants.MaxFloat;
                 int iMin = -1, jMin = -1;
                 for (int i = 0; i < count; ++i)
                 {

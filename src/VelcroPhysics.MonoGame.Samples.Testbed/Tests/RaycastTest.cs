@@ -274,7 +274,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             if (advanceRay)
-                _angle += 0.25f * Settings.Pi / 180.0f;
+                _angle += 0.25f * MathConstants.Pi / 180.0f;
         }
 
         private void Create(int index)
@@ -291,7 +291,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
 
             _bodies[_bodyIndex].Position = new Vector2(x, y);
-            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-Settings.Pi, Settings.Pi);
+            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
             _bodies[_bodyIndex].UserData = index;
 
             if (index == 4)

@@ -73,7 +73,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
             FixedArray3<int> saveB = new FixedArray3<int>();
 
             //Velcro: This code was not used anyway.
-            //float distanceSqr1 = Settings.MaxFloat;
+            //float distanceSqr1 = MathConstants.MaxFloat;
 
             // Main iteration loop.
             int iter = 0;
@@ -110,7 +110,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 Vector2 d = simplex.GetSearchDirection();
 
                 // Ensure the search direction is numerically fit.
-                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
+                if (d.LengthSquared() < MathConstants.Epsilon * MathConstants.Epsilon)
                 {
                     // The origin is probably contained by a line segment
                     // or triangle. Thus the shapes are overlapped.
@@ -173,7 +173,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 float rA = input.ProxyA.Radius;
                 float rB = input.ProxyB.Radius;
 
-                if (output.Distance > rA + rB && output.Distance > Settings.Epsilon)
+                if (output.Distance > rA + rB && output.Distance > MathConstants.Epsilon)
                 {
                     // Shapes are still no overlapped.
                     // Move the witness points to the outer surface.

@@ -114,9 +114,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             if (keyboardManager.IsNewKeyPress(Keys.W))
                 _positionB.Y += 0.1f;
             if (keyboardManager.IsNewKeyPress(Keys.Q))
-                _angleB += 0.1f * Settings.Pi;
+                _angleB += 0.1f * MathConstants.Pi;
             if (keyboardManager.IsNewKeyPress(Keys.E))
-                _angleB -= 0.1f * Settings.Pi;
+                _angleB -= 0.1f * MathConstants.Pi;
 
             _transformB.Set(_positionB, _angleB);
         }

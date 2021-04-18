@@ -327,7 +327,7 @@ namespace Genbox.VelcroPhysics.Utilities
 
         public static bool FloatEquals(float value1, float value2)
         {
-            return Math.Abs(value1 - value2) <= Settings.Epsilon;
+            return Math.Abs(value1 - value2) <= MathConstants.Epsilon;
         }
 
         /// <summary>Checks if a floating point Value is equal to another, within a certain tolerance.</summary>

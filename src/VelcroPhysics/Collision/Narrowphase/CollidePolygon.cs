@@ -147,7 +147,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             Transform xf = MathUtils.MulT(xf2, xf1);
 
             int bestIndex = 0;
-            float maxSeparation = -Settings.MaxFloat;
+            float maxSeparation = -MathConstants.MaxFloat;
             for (int i = 0; i < count1; ++i)
             {
                 // Get poly1 normal in frame2.
@@ -155,7 +155,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                 Vector2 v1 = MathUtils.Mul(ref xf, v1s[i]);
 
                 // Find deepest point for normal i.
-                float si = Settings.MaxFloat;
+                float si = MathConstants.MaxFloat;
                 for (int j = 0; j < count2; ++j)
                 {
                     float sij = Vector2.Dot(n, v2s[j] - v1);
@@ -189,7 +189,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             // Find the incident edge on poly2.
             int index = 0;
-            float minDot = Settings.MaxFloat;
+            float minDot = MathConstants.MaxFloat;
             for (int i = 0; i < count2; ++i)
             {
                 float dot = Vector2.Dot(normal1, normals2[i]);

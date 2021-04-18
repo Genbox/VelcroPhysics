@@ -22,6 +22,7 @@
 
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Collision.Shapes
@@ -78,7 +79,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         private void ComputeMass()
         {
             //Velcro: We calculate area for later consumption
-            float area = Settings.Pi * _2radius;
+            float area = MathConstants.Pi * _2radius;
             MassData.Area = area;
             MassData.Mass = Density * area;
         }

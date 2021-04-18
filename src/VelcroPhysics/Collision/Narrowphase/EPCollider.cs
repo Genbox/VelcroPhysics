@@ -239,7 +239,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             EPAxis edgeAxis;
             edgeAxis.Type = EPAxisType.EdgeA;
             edgeAxis.Index = front ? 0 : 1;
-            edgeAxis.Separation = Settings.MaxFloat;
+            edgeAxis.Separation = MathConstants.MaxFloat;
 
             for (int i = 0; i < count; ++i)
             {
@@ -259,7 +259,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             EPAxis polygonAxis;
             polygonAxis.Type = EPAxisType.Unknown;
             polygonAxis.Index = -1;
-            polygonAxis.Separation = -Settings.MaxFloat;
+            polygonAxis.Separation = -MathConstants.MaxFloat;
 
             Vector2 perp = new Vector2(-normal.Y, normal.X);
 

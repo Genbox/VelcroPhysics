@@ -126,7 +126,7 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.FlipCode
         /// <returns>True if a triangle was found</returns>
         private static bool Snip(Vertices contour, int u, int v, int w, int n, int[] V)
         {
-            if (Settings.Epsilon > MathUtils.Area(ref _tmpA, ref _tmpB, ref _tmpC))
+            if (MathConstants.Epsilon > MathUtils.Area(ref _tmpA, ref _tmpB, ref _tmpC))
                 return false;
 
             for (int p = 0; p < n; p++)

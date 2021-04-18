@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Extensions.Controllers.Gravity
@@ -53,7 +54,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Gravity
                     Vector2 d = controllerBody.Position - worldBody.Position;
                     float r2 = d.LengthSquared();
 
-                    if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
+                    if (r2 <= MathConstants.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
                         continue;
 
                     switch (GravityType)
@@ -74,7 +75,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Gravity
                     Vector2 d = point - worldBody.Position;
                     float r2 = d.LengthSquared();
 
-                    if (r2 <= Settings.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
+                    if (r2 <= MathConstants.Epsilon || r2 > MaxRadius * MaxRadius || r2 < MinRadius * MinRadius)
                         continue;
 
                     switch (GravityType)

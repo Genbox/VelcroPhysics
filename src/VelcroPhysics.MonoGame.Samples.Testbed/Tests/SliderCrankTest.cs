@@ -64,7 +64,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     body.CreateFixture(shape);
 
                     _joint1 = new RevoluteJoint(prevBody, body, new Vector2(0f, 5f), true);
-                    _joint1.MotorSpeed = 1.0f * Settings.Pi;
+                    _joint1.MotorSpeed = 1.0f * MathConstants.Pi;
                     _joint1.MaxMotorTorque = 10000.0f;
                     _joint1.MotorEnabled = true;
                     World.AddJoint(_joint1);

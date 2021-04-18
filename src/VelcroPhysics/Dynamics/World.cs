@@ -34,6 +34,7 @@ using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics
@@ -660,7 +661,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
                 }
 
-                if (minContact == null || 1.0f - 10.0f * Settings.Epsilon < minAlpha)
+                if (minContact == null || 1.0f - 10.0f * MathConstants.Epsilon < minAlpha)
                 {
                     // No more TOI events. Done!
                     _stepComplete = true;
@@ -1079,7 +1080,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         public Fixture TestPoint(Vector2 point)
         {
             AABB aabb;
-            Vector2 d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 
@@ -1111,7 +1112,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         public List<Fixture> TestPointAll(Vector2 point)
         {
             AABB aabb;
-            Vector2 d = new Vector2(Settings.Epsilon, Settings.Epsilon);
+            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
             aabb.LowerBound = point - d;
             aabb.UpperBound = point + d;
 

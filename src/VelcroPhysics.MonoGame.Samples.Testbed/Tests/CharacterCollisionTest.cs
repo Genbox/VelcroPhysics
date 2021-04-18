@@ -61,7 +61,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vs.Add(new Vector2(8.0f, 7.0f));
 
                 Body body = BodyFactory.CreateChainShape(World, vs);
-                body.Rotation = 0.25f * Settings.Pi;
+                body.Rotation = 0.25f * MathConstants.Pi;
             }
 
             // Square tiles. This shows that adjacency shapes may
@@ -114,7 +114,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             // Hexagon character
             float angle = 0.0f;
-            const float delta = Settings.Pi / 3.0f;
+            const float delta = MathConstants.Pi / 3.0f;
             vertices = new Vertices(6);
 
             for (int i = 0; i < 6; ++i)

@@ -110,7 +110,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
                 massc.X /= mass;
                 massc.Y /= mass;
 
-                if (area < Settings.Epsilon)
+                if (area < MathConstants.Epsilon)
                     continue;
 
                 //Buoyancy
@@ -139,7 +139,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
 
                     Vector2 p = MathUtils.Mul(ref xf, circleShape.Position);
                     float l = -(Vector2.Dot(normal, p) - offset);
-                    if (l < -circleShape.Radius + Settings.Epsilon)
+                    if (l < -circleShape.Radius + MathConstants.Epsilon)
                     {
                         //Completely dry
                         return 0;
@@ -148,12 +148,12 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
                     {
                         //Completely wet
                         sc = p;
-                        return Settings.Pi * circleShape._2radius;
+                        return MathConstants.Pi * circleShape._2radius;
                     }
 
                     //Magic
                     float l2 = l * l;
-                    float area = circleShape._2radius * (float)(Math.Asin(l / circleShape.Radius) + Settings.Pi / 2 + l * Math.Sqrt(circleShape._2radius - l2));
+                    float area = circleShape._2radius * (float)(Math.Asin(l / circleShape.Radius) + MathConstants.Pi / 2 + l * Math.Sqrt(circleShape._2radius - l2));
                     float com = -2.0f / 3.0f * (float)Math.Pow(circleShape._2radius - l2, 1.5f) / area;
 
                     sc.X = p.X + normal.X * com;
@@ -184,7 +184,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
                     for (i = 0; i < polygonShape.Vertices.Count; i++)
                     {
                         depths[i] = Vector2.Dot(normalL, polygonShape.Vertices[i]) - offsetL;
-                        bool isSubmerged = depths[i] < -Settings.Epsilon;
+                        bool isSubmerged = depths[i] < -MathConstants.Epsilon;
                         if (i > 0)
                         {
                             if (isSubmerged)

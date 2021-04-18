@@ -113,8 +113,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 _board.CreateFixture(box);
 
                 RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(World, _ground, _board, Vector2.Zero);
-                teeterAxis.LowerLimit = -8.0f * Settings.Pi / 180.0f;
-                teeterAxis.UpperLimit = 8.0f * Settings.Pi / 180.0f;
+                teeterAxis.LowerLimit = -8.0f * MathConstants.Pi / 180.0f;
+                teeterAxis.UpperLimit = 8.0f * MathConstants.Pi / 180.0f;
                 teeterAxis.LimitEnabled = true;
 
                 _board.ApplyAngularImpulse(-100.0f);

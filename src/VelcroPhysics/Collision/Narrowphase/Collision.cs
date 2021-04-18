@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Collision.Distance;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Shared.Optimization;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Collision.Narrowphase
@@ -50,7 +51,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             DistanceGJK.ComputeDistance(ref input, out DistanceOutput output, out _);
 
-            return output.Distance < 10.0f * Settings.Epsilon;
+            return output.Distance < 10.0f * MathConstants.Epsilon;
         }
 
         public static void GetPointStates(out FixedArray2<PointState> state1, out FixedArray2<PointState> state2, ref Manifold manifold1, ref Manifold manifold2)

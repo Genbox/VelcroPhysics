@@ -22,15 +22,12 @@
 
 using System;
 using Genbox.VelcroPhysics.Collision.Filtering;
+using Genbox.VelcroPhysics.Utilities;
 
 namespace Genbox.VelcroPhysics
 {
     public static class Settings
     {
-        public const float MaxFloat = float.MaxValue;
-        public const float Epsilon = 1.192092896e-07f;
-        public const float Pi = 3.14159265359f;
-
         // Common
 
         /// <summary>
@@ -77,7 +74,7 @@ namespace Genbox.VelcroPhysics
         /// A small angle used as a collision and constraint tolerance. Usually it is chosen to be numerically
         /// significant, but visually insignificant.
         /// </summary>
-        public const float AngularSlop = 2.0f / 180.0f * Pi;
+        public const float AngularSlop = 2.0f / 180.0f * MathConstants.Pi;
 
         /// <summary>
         /// The radius of the polygon/edge shape skin. This should not be modified. Making this smaller means polygons
@@ -100,7 +97,7 @@ namespace Genbox.VelcroPhysics
         public const float MaxLinearCorrection = 0.2f;
 
         /// <summary>The maximum angular position correction used when solving constraints. This helps to prevent overshoot.</summary>
-        public const float MaxAngularCorrection = 8.0f / 180.0f * Pi;
+        public const float MaxAngularCorrection = 8.0f / 180.0f * MathConstants.Pi;
 
         /// <summary>
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so that overlap is removed in
@@ -116,7 +113,7 @@ namespace Genbox.VelcroPhysics
         public const float LinearSleepTolerance = 0.01f;
 
         /// <summary>A body cannot sleep if its angular velocity is above this tolerance.</summary>
-        public const float AngularSleepTolerance = 2.0f / 180.0f * Pi;
+        public const float AngularSleepTolerance = 2.0f / 180.0f * MathConstants.Pi;
 
         /// <summary>
         /// The maximum linear velocity of a body. This limit is very large and is used to prevent numerical problems. You
@@ -130,7 +127,7 @@ namespace Genbox.VelcroPhysics
         /// The maximum angular velocity of a body. This limit is very large and is used to prevent numerical problems.
         /// You shouldn't need to adjust this.
         /// </summary>
-        public const float MaxRotation = 0.5f * Pi;
+        public const float MaxRotation = 0.5f * MathConstants.Pi;
 
         public const float MaxRotationSquared = MaxRotation * MaxRotation;
 

@@ -80,8 +80,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _leftJoint.LimitEnabled = true;
                 _leftJoint.MotorEnabled = true;
                 _leftJoint.MotorSpeed = 0.0f;
-                _leftJoint.LowerLimit = -30.0f * Settings.Pi / 180.0f;
-                _leftJoint.UpperLimit = 5.0f * Settings.Pi / 180.0f;
+                _leftJoint.LowerLimit = -30.0f * MathConstants.Pi / 180.0f;
+                _leftJoint.UpperLimit = 5.0f * MathConstants.Pi / 180.0f;
                 World.AddJoint(_leftJoint);
 
                 _rightJoint = new RevoluteJoint(ground, rightFlipper, p2, Vector2.Zero);
@@ -89,8 +89,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _rightJoint.LimitEnabled = true;
                 _rightJoint.MotorEnabled = true;
                 _rightJoint.MotorSpeed = 0.0f;
-                _rightJoint.LowerLimit = -5.0f * Settings.Pi / 180.0f;
-                _rightJoint.UpperLimit = 30.0f * Settings.Pi / 180.0f;
+                _rightJoint.LowerLimit = -5.0f * MathConstants.Pi / 180.0f;
+                _rightJoint.UpperLimit = 30.0f * MathConstants.Pi / 180.0f;
                 World.AddJoint(_rightJoint);
             }
 

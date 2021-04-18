@@ -62,7 +62,7 @@ namespace Genbox.VelcroPhysics.Utilities
             float ua = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
             float ub = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
             float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-            if (Math.Abs(denom) < Settings.Epsilon)
+            if (Math.Abs(denom) < MathConstants.Epsilon)
             {
                 //Lines are too close to parallel to call
                 return false;
@@ -133,7 +133,7 @@ namespace Genbox.VelcroPhysics.Utilities
             float denom = (a * b) - (c * d);
 
             // if denominator is 0, then lines are parallel
-            if (!(denom >= -Settings.Epsilon && denom <= Settings.Epsilon))
+            if (!(denom >= -MathConstants.Epsilon && denom <= MathConstants.Epsilon))
             {
                 float e = point1.Y - point3.Y;
                 float f = point1.X - point3.X;

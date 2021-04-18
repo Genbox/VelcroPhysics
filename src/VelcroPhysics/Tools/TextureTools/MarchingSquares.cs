@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Tools.TextureTools
@@ -188,7 +189,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
 
                     //combine above (but disallow the hole thingies
                     CxFastListNode<Vector2> bi = bp.Begin();
-                    while (Square(bi.Elem().Y - ay) > Settings.Epsilon || bi.Elem().X < ax)
+                    while (Square(bi.Elem().Y - ay) > MathConstants.Epsilon || bi.Elem().X < ax)
                     {
                         bi = bi.Next();
                     }
@@ -196,7 +197,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
                     //NOTE: Unused
                     //Vector2 b0 = bi.elem();
                     Vector2 b1 = bi.Next().Elem();
-                    if (Square(b1.Y - ay) > Settings.Epsilon)
+                    if (Square(b1.Y - ay) > MathConstants.Epsilon)
                     {
                         x++;
                         continue;
@@ -206,7 +207,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
                     CxFastListNode<Vector2> ai = ap.Begin();
                     while (ai != ap.End())
                     {
-                        if (VecDsq(ai.Elem(), b1) < Settings.Epsilon)
+                        if (VecDsq(ai.Elem(), b1) < MathConstants.Epsilon)
                         {
                             brk = false;
                             break;
@@ -290,7 +291,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
         {
             float dv = v0 - v1;
             float t;
-            if (dv * dv < Settings.Epsilon)
+            if (dv * dv < MathConstants.Epsilon)
                 t = 0.5f;
             else
                 t = v0 / dv;
@@ -426,7 +427,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
             while (ai != ap.End())
             {
                 Vector2 a = ai.Elem();
-                if (VecDsq(a, b) < Settings.Epsilon)
+                if (VecDsq(a, b) < MathConstants.Epsilon)
                 {
                     //ignore shared vertex if parallel
                     if (prea != null)
@@ -441,7 +442,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
 
                         //vec_new(v); vec_sub(b.p.p, a.p.p, v);
                         float dot = VecCross(u, v);
-                        if (dot * dot < Settings.Epsilon)
+                        if (dot * dot < MathConstants.Epsilon)
                         {
                             ap.Erase(prea, ai);
                             polya.Length--;
@@ -480,7 +481,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
 
                     //vec_new(v); vec_sub(a2.p, a1.p, v);
                     float dot1 = VecCross(uu, vv);
-                    if (dot1 * dot1 < Settings.Epsilon)
+                    if (dot1 * dot1 < MathConstants.Epsilon)
                     {
                         ap.Erase(preb, preb.Next());
                         polya.Length--;

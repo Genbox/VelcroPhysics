@@ -113,7 +113,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             }
 
             Debug.Assert(ratio != 0.0f);
-            Debug.Assert(ratio > Settings.Epsilon);
+            Debug.Assert(ratio > MathConstants.Epsilon);
 
             Ratio = ratio;
             Constant = LengthA + ratio * LengthB;

@@ -24,6 +24,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -48,7 +49,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             RevoluteJoint joint = JointFactory.CreateRevoluteJoint(World, ground, tumblerBody, new Vector2(0, 10), Vector2.Zero);
             joint.ReferenceAngle = 0.0f;
-            joint.MotorSpeed = 0.05f * Settings.Pi;
+            joint.MotorSpeed = 0.05f * MathConstants.Pi;
             joint.MaxMotorTorque = 1e8f;
             joint.MotorEnabled = true;
         }

@@ -144,8 +144,8 @@ namespace Genbox.VelcroPhysics.Shared
 
             output = new RayCastOutput();
 
-            float tmin = -Settings.MaxFloat;
-            float tmax = Settings.MaxFloat;
+            float tmin = -MathConstants.MaxFloat;
+            float tmax = MathConstants.MaxFloat;
 
             Vector2 p = input.Point1;
             Vector2 d = input.Point2 - input.Point1;
@@ -160,7 +160,7 @@ namespace Genbox.VelcroPhysics.Shared
                 float upperBound_i = i == 0 ? UpperBound.X : UpperBound.Y;
                 float p_i = i == 0 ? p.X : p.Y;
 
-                if (absD_i < Settings.Epsilon)
+                if (absD_i < MathConstants.Epsilon)
                 {
                     // Parallel.
                     if (p_i < lowerBound_i || upperBound_i < p_i)

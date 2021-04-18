@@ -49,7 +49,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             // Find the min separating edge.
             int normalIndex = 0;
-            float separation = -Settings.MaxFloat;
+            float separation = -MathConstants.MaxFloat;
             float radius = polygonA.Radius + circleB.Radius;
             int vertexCount = polygonA.Vertices.Count;
             Vertices vertices = polygonA.Vertices;
@@ -79,7 +79,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             Vector2 v2 = vertices[vertIndex2];
 
             // If the center is inside the polygon ...
-            if (separation < Settings.Epsilon)
+            if (separation < MathConstants.Epsilon)
             {
                 manifold.PointCount = 1;
                 manifold.Type = ManifoldType.FaceA;

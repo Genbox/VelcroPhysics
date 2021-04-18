@@ -69,7 +69,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             {
                 Transform xf1 = new Transform();
-                xf1.q.Set(0.3524f * Settings.Pi);
+                xf1.q.Set(0.3524f * MathConstants.Pi);
                 xf1.p = MathUtils.Mul(ref xf1.q, new Vector2(1.0f, 0.0f));
 
                 Vertices vertices = new Vertices(3);
@@ -80,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 PolygonShape poly1 = new PolygonShape(vertices, 4);
 
                 Transform xf2 = new Transform();
-                xf2.q.Set(-0.3524f * Settings.Pi);
+                xf2.q.Set(-0.3524f * MathConstants.Pi);
                 xf2.p = MathUtils.Mul(ref xf2.q, new Vector2(-1.0f, 0.0f));
 
                 vertices[0] = MathUtils.Mul(ref xf2, new Vector2(-1.0f, 0.0f));
@@ -92,7 +92,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _body = BodyFactory.CreateBody(World);
                 _body.BodyType = BodyType.Dynamic;
                 _body.Position = new Vector2(0.0f, 2.0f);
-                _body.Rotation = Settings.Pi;
+                _body.Rotation = MathConstants.Pi;
                 _body.AngularDamping = 5.0f;
                 _body.LinearDamping = 0.8f;
                 _body.SleepingAllowed = true;

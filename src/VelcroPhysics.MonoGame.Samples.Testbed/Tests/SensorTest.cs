@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -122,7 +123,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 Vector2 position = body.Position;
 
                 Vector2 d = center - position;
-                if (d.LengthSquared() < Settings.Epsilon * Settings.Epsilon)
+                if (d.LengthSquared() < MathConstants.Epsilon * MathConstants.Epsilon)
                     continue;
 
                 d.Normalize();

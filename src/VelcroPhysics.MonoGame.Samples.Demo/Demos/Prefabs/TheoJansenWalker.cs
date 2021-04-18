@@ -87,11 +87,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             CreateLeg(world, -1f, wheelAnchor, 0);
             CreateLeg(world, 1f, wheelAnchor, 0);
 
-            _wheel.SetTransform(_wheel.Position, 120f * Settings.Pi / 180f);
+            _wheel.SetTransform(_wheel.Position, 120f * MathConstants.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 1);
             CreateLeg(world, 1f, wheelAnchor, 1);
 
-            _wheel.SetTransform(_wheel.Position, -120f * Settings.Pi / 180f);
+            _wheel.SetTransform(_wheel.Position, -120f * MathConstants.Pi / 180f);
             CreateLeg(world, -1f, wheelAnchor, 2);
             CreateLeg(world, 1f, wheelAnchor, 2);
 

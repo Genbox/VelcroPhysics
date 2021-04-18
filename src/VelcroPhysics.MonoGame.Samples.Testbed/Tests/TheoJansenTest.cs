@@ -105,11 +105,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.Position, 120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, 120.0f * MathConstants.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
 
-            _wheel.SetTransform(_wheel.Position, -120.0f * Settings.Pi / 180.0f);
+            _wheel.SetTransform(_wheel.Position, -120.0f * MathConstants.Pi / 180.0f);
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
         }

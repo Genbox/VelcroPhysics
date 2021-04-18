@@ -39,7 +39,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             {
                 float metric1 = cache.Metric;
                 float metric2 = GetMetric();
-                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < Settings.Epsilon)
+                if (metric2 < 0.5f * metric1 || 2.0f * metric1 < metric2 || metric2 < MathConstants.Epsilon)
                 {
                     // Reset the simplex.
                     Count = 0;

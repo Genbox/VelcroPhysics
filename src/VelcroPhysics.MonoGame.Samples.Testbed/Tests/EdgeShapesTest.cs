@@ -212,7 +212,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             DebugView.EndCustomDraw();
 
             if (advanceRay)
-                _angle += 0.25f * Settings.Pi / 180.0f;
+                _angle += 0.25f * MathConstants.Pi / 180.0f;
         }
 
         internal static Test Create()

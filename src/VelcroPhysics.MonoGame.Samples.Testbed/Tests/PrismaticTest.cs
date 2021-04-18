@@ -45,7 +45,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
             body.Position = new Vector2(-10.0f, 10.0f);
-            body.Rotation = 0.5f * Settings.Pi;
+            body.Rotation = 0.5f * MathConstants.Pi;
             body.CreateFixture(shape);
 
             // Bouncy limit
