@@ -39,6 +39,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
         private Body _wheelFront;
         private float _zeta;
 
+        public D14_RacingCar() : base(false) { }
+
         public override void LoadContent()
         {
             base.LoadContent();

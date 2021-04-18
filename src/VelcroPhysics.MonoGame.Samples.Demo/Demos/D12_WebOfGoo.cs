@@ -8,7 +8,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D12_WebOfGoo : PhysicsDemoScreen
     {
-        private Border _border;
         private WebOfGoo _webOfGoo;
 
         public override void LoadContent()
@@ -16,8 +15,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0, 9.82f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _webOfGoo = new WebOfGoo(World, Vector2.Zero, ConvertUnits.ToSimUnits(12), 5, 12);
         }
@@ -27,8 +24,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             _webOfGoo.Draw(Sprites);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

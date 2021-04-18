@@ -14,7 +14,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     {
         private readonly Body[] _obstacles = new Body[5];
         private Agent _agent;
-        private Border _border;
         private Sprite _obstacle;
 
         public override void LoadContent()
@@ -22,8 +21,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _agent = new Agent(World, new Vector2(-6.9f, -11f));
 
@@ -59,8 +56,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             _agent.Draw(Sprites);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

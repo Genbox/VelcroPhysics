@@ -3,7 +3,6 @@ using System.Text;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
@@ -19,7 +18,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     internal class D16_BreakableBody : PhysicsDemoScreen
     {
         private readonly BreakableBody[] _breakableCookie = new BreakableBody[3];
-        private Border _border;
         private List<Sprite> _breakableSprite;
         private Sprite _completeSprite;
 
@@ -29,7 +27,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             World.Gravity = Vector2.Zero;
 
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
             for (int i = 0; i < 3; i++)
             {
                 VerticesContainer verticesContainer = Framework.Content.Load<VerticesContainer>("Pipeline/BreakableBody");
@@ -116,8 +113,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                     Sprites.Draw(_completeSprite.Image, ConvertUnits.ToDisplayUnits(_breakableCookie[i].MainBody.Position), null, Color.White, _breakableCookie[i].MainBody.Rotation, _completeSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

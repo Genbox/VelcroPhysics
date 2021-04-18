@@ -9,7 +9,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     internal class D05_CollisionCategories : PhysicsDemoScreen
     {
         private Agent _agent;
-        private Border _border;
         private Objects _circles;
         private Objects _gears;
         private Objects _rectangles;
@@ -20,8 +19,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = Vector2.Zero;
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             // Cat1=Circles, Cat2=Rectangles, Cat3=Gears, Cat4=Stars
             _agent = new Agent(World, Vector2.Zero);
@@ -74,8 +71,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _stars.Draw(Sprites);
             _gears.Draw(Sprites);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

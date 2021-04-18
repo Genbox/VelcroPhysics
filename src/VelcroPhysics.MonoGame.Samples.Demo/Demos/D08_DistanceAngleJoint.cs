@@ -2,7 +2,6 @@
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
@@ -17,7 +16,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
         private readonly Body[] _distanceBody = new Body[4];
 
         private Sprite _angleCube;
-        private Border _border;
         private Sprite _distanceCube;
         private Body _obstacles;
 
@@ -26,8 +24,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _obstacles = BodyFactory.CreateBody(World);
             FixtureFactory.AttachEdge(new Vector2(-16f, -1f), new Vector2(-14f, 1f), _obstacles);
@@ -112,8 +108,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Lines.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

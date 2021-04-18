@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
@@ -12,7 +11,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D01_SingleFixture : PhysicsDemoScreen
     {
-        private Border _border;
         private Body _rectangle;
         private Sprite _rectangleSprite;
 
@@ -21,8 +19,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = Vector2.Zero;
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _rectangle = BodyFactory.CreateRectangle(World, 5f, 5f, 1f);
             _rectangle.BodyType = BodyType.Dynamic;
@@ -38,8 +34,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangle.Position), null, Color.White, _rectangle.Rotation, _rectangleSprite.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

@@ -15,7 +15,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
         private Agent _agent;
         private Pyramid _pyramid;
-        private Border _border;
 
         public override string GetTitle()
         {
@@ -56,8 +55,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             World.Gravity = new Vector2(0f, 20f);
 
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
-
             _agent = new Agent(World, new Vector2(5f, -10f));
 
             _pyramid = new Pyramid(World, new Vector2(0f, 15f), PyramidBaseBodyCount, 1f);
@@ -71,8 +68,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _agent.Draw(Sprites);
             _pyramid.Draw(Sprites);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

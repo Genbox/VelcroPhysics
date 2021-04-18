@@ -4,7 +4,6 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
@@ -17,8 +16,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D11_SoftBody : PhysicsDemoScreen
     {
-        private Border _border;
-
         private List<Body> _bridgeBodies;
 
         private Sprite _bridgeBox;
@@ -31,8 +28,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0, 9.82f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             // Bridge
             // We make a path using 2 points.
@@ -101,8 +96,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

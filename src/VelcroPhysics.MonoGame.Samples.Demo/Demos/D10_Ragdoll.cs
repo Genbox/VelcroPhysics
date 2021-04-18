@@ -12,7 +12,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D10_Ragdoll : PhysicsDemoScreen
     {
-        private Border _border;
         private Sprite _obstacle;
         private Body[] _obstacles;
         private Ragdoll _ragdoll;
@@ -22,8 +21,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _ragdoll = new Ragdoll(World, new Vector2(-20f, -10f));
 
@@ -54,8 +51,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             _ragdoll.Draw(Sprites);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

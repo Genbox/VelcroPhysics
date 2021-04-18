@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
@@ -13,7 +12,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     internal class D06_Restitution : PhysicsDemoScreen
     {
         private readonly Body[] _circle = new Body[6];
-        private Border _border;
         private Sprite _circleSprite;
 
         public override void LoadContent()
@@ -21,8 +19,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             Vector2 position = new Vector2(-15f, -8f);
             float restitution = 0f;
@@ -50,8 +46,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

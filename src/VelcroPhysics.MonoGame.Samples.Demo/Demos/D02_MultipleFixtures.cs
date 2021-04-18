@@ -2,7 +2,6 @@
 using System.Text;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
@@ -14,7 +13,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D02_MultipleFixtures : PhysicsDemoScreen
     {
-        private Border _border;
         private Vector2 _offset;
         private Body _rectangles;
         private Sprite _rectangleSprite;
@@ -24,8 +22,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = Vector2.Zero;
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             Vertices rectangle1 = PolygonUtils.CreateRectangle(2f, 2f);
             Vertices rectangle2 = PolygonUtils.CreateRectangle(2f, 2f);
@@ -59,8 +55,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             // draw second rectangle
             Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

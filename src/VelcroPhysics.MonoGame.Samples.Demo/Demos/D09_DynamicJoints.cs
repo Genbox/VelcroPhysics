@@ -8,7 +8,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     public class D09_DynamicJoints : PhysicsDemoScreen
     {
         private Agent _agent;
-        private Border _border;
         private JumpySpider[] _spiders;
 
         public override void LoadContent()
@@ -16,8 +15,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _agent = new Agent(World, new Vector2(0f, 10f));
             _spiders = new JumpySpider[8];
@@ -54,8 +51,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Sprites.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

@@ -14,7 +14,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D13_TheoJansenWalker : PhysicsDemoScreen
     {
-        private Border _border;
         private Body[] _circles;
 
         private Sprite _grain;
@@ -27,8 +26,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             HasCursor = false;
 
             World.Gravity = new Vector2(0, 9.82f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             CircleShape shape = new CircleShape(0.25f, 1);
             _grain = new Sprite(ContentWrapper.CircleTexture(0.25f, ContentWrapper.Gold, ContentWrapper.Grey));
@@ -63,7 +60,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.End();
 
             _walker.Draw(Sprites, Lines, Camera);
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

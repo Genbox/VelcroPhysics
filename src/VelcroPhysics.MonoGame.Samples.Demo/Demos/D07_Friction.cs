@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
@@ -13,7 +12,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
     internal class D07_Friction : PhysicsDemoScreen
     {
         private readonly Body[] _rectangle = new Body[5];
-        private Border _border;
         private Body _ramps;
         private Sprite _rectangleSprite;
 
@@ -22,8 +20,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 20f);
-
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _ramps = BodyFactory.CreateBody(World);
             FixtureFactory.AttachEdge(new Vector2(-20f, -11.2f), new Vector2(10f, -3.8f), _ramps);
@@ -66,8 +62,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Lines.End();
-
-            _border.Draw(Camera.SimProjection, Camera.SimView);
 
             base.Draw(gameTime);
         }

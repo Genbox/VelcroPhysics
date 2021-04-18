@@ -2,12 +2,13 @@
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Extensions.DebugView;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    public class PhysicsDemoScreen : GameScreen
+    public class PhysicsDemoScreen : GameScreen, IDisposable
     {
         private static DebugViewFlags _flags = DebugViewFlags.DebugPanel;
         private static bool _flagsChanged;
@@ -20,17 +21,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         protected Camera2D Camera;
         protected DebugView.DebugView DebugView;
         protected World World;
+        private Border _border;
+        private readonly bool _hasBorder;
 
-        protected PhysicsDemoScreen()
+        protected PhysicsDemoScreen(bool hasBorder = true)
         {
+            _hasBorder = hasBorder;
             TransitionOnTime = TimeSpan.FromSeconds(0.75);
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
             EnableCameraControl = true;
-            _userAgent = null;
-            World = null;
-            Camera = null;
-            DebugView = null;
             RenderDebug = true;
         }
 
@@ -62,13 +62,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             else
                 World.Clear();
 
-            if (DebugView == null)
-            {
-                DebugView = new DebugView.DebugView(World);
-                DebugView.DefaultShapeColor = Color.White;
-                DebugView.SleepingShapeColor = Color.LightGray;
-                DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
-            }
+            if (_hasBorder)
+                _border = new Border(World, Lines, Framework.GraphicsDevice);
+
+            DebugView = new DebugView.DebugView(World);
+            DebugView.DefaultShapeColor = Color.White;
+            DebugView.SleepingShapeColor = Color.LightGray;
+            DebugView.LoadContent(Framework.GraphicsDevice, Framework.Content);
 
             DebugView.Flags = _flags;
             _flagsChanged = false;
@@ -215,6 +215,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             Matrix projection = Camera.SimProjection;
             Matrix view = Camera.SimView;
 
+            if (_hasBorder)
+                _border.Draw(Camera.SimProjection, Camera.SimView);
+
             if (RenderDebug)
             {
                 if (_flagsChanged)
@@ -235,6 +238,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public virtual string GetDetails()
         {
             return "GetDetails() not implemented, override it for a proper demo description.";
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DebugView?.Dispose();
+                _border?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

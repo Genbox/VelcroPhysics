@@ -3,7 +3,6 @@ using System.Text;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
@@ -16,7 +15,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 {
     internal class D15_SVGtoBody : PhysicsDemoScreen
     {
-        private Border _border;
         private Sprite _club;
         private Body _clubBody;
         private Sprite _diamond;
@@ -32,7 +30,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.LoadContent();
 
             World.Gravity = new Vector2(0f, 10f);
-            _border = new Border(World, Lines, Framework.GraphicsDevice);
 
             _loadedVertices = Framework.Content.Load<VerticesContainer>("Pipeline/Body");
 
@@ -76,7 +73,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.Draw(_diamond.Image, ConvertUnits.ToDisplayUnits(_diamondBody.Position), null, Color.White, _diamondBody.Rotation, _diamond.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 
-            _border.Draw(Camera.SimProjection, Camera.SimView);
             base.Draw(gameTime);
         }
 
