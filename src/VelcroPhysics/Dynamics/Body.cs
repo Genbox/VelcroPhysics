@@ -87,7 +87,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             LinearDamping = template.LinearDamping;
             AngularDamping = template.AngularDamping;
-            GravityScale = 1.0f;
+            GravityScale = template.GravityScale;
 
             _type = template.Type;
 
