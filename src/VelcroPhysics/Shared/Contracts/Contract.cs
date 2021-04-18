@@ -8,6 +8,16 @@ namespace Genbox.VelcroPhysics.Shared.Contracts
     public static class Contract
     {
         [Conditional("DEBUG")]
+        public static void RequireNotNull(object? obj, string message)
+        {
+            if (obj != null)
+                return;
+
+            message = BuildMessage("REQUIRED", message);
+            throw new RequiredException(message);
+        }
+
+        [Conditional("DEBUG")]
         public static void Requires(bool condition, string message)
         {
             if (condition)

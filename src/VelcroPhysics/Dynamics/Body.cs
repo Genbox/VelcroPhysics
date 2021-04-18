@@ -613,7 +613,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             return f;
         }
 
-        public Fixture CreateFixture(Shape shape, object userData = null)
+        public Fixture CreateFixture(Shape shape, object? userData = null)
         {
             FixtureTemplate template = new FixtureTemplate();
             template.Shape = shape;

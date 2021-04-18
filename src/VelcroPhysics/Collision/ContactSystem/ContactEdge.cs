@@ -10,15 +10,15 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
     public sealed class ContactEdge
     {
         /// <summary>The contact</summary>
-        public Contact Contact;
+        public Contact? Contact;
 
         /// <summary>The next contact edge in the body's contact list</summary>
-        public ContactEdge Next;
+        public ContactEdge? Next;
 
         /// <summary>Provides quick access to the other body attached.</summary>
-        public Body Other;
+        public Body? Other;
 
         /// <summary>The previous contact edge in the body's contact list</summary>
-        public ContactEdge Prev;
+        public ContactEdge? Prev;
     }
 }
