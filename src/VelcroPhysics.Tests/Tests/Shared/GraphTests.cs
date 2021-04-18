@@ -11,11 +11,11 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         {
             Graph<int> graph = new Graph<int>();
             Assert.Equal(0, graph.Count);
-            Assert.Equal(null, graph.First);
+            Assert.Null(graph.First);
 
             Graph<Dummy> graph2 = new Graph<Dummy>();
             Assert.Equal(0, graph2.Count);
-            Assert.Equal(null, graph2.First);
+            Assert.Null(graph2.First);
         }
 
         [Fact]
@@ -24,9 +24,9 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
             Graph<int> graph = new Graph<int>();
             GraphNode<int> node = graph.Add(10);
 
-            Assert.Equal(node.Item, 10);
-            Assert.Equal(node.Prev, node);
-            Assert.Equal(node.Next, node);
+            Assert.Equal(10, node.Item);
+            Assert.Equal(node, node.Prev);
+            Assert.Equal(node, node.Next);
         }
 
         [Fact]
@@ -38,9 +38,9 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
 
             GraphNode<Dummy> node = graph.Add(instance);
 
-            Assert.Equal(node.Item, instance);
-            Assert.Equal(node.Prev, node);
-            Assert.Equal(node.Next, node);
+            Assert.Equal(instance, node.Item);
+            Assert.Equal(node, node.Prev);
+            Assert.Equal(node, node.Next);
         }
 
         [Fact]
@@ -49,15 +49,15 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
             Graph<int> graph = new Graph<int>();
             GraphNode<int> node = graph.Add(10);
 
-            Assert.Equal(graph.Count, 1);
+            Assert.Equal(1, graph.Count);
 
             graph.Remove(node);
 
-            Assert.Equal(graph.Count, 0);
+            Assert.Equal(0, graph.Count);
 
             //Check that the node was cleared;
-            Assert.Equal(node.Prev, null);
-            Assert.Equal(node.Next, null);
+            Assert.Null(node.Prev);
+            Assert.Null(node.Next);
         }
 
         [Fact]
@@ -66,15 +66,15 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
             Graph<Dummy> graph = new Graph<Dummy>();
             GraphNode<Dummy> node = graph.Add(new Dummy());
 
-            Assert.Equal(graph.Count, 1);
+            Assert.Equal(1, graph.Count);
 
             graph.Remove(node);
 
-            Assert.Equal(graph.Count, 0);
+            Assert.Equal(0, graph.Count);
 
             //Check that the node was cleared;
-            Assert.Equal(node.Prev, null);
-            Assert.Equal(node.Next, null);
+            Assert.Null(node.Prev);
+            Assert.Null(node.Next);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
                 graph.Add(i);
             }
 
-            Assert.Equal(graph.Count, 10);
+            Assert.Equal(10, graph.Count);
 
             int count = 0;
 
