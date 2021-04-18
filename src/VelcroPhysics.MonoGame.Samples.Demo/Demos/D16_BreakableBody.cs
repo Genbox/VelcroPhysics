@@ -2,7 +2,7 @@
 using System.Text;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
+using Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;

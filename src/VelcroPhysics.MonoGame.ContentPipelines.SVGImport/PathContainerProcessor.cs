@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
+using Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 
-namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport
+namespace Genbox.VelcroPhysics.MonoGame.Content.SVGImport
 {
     [ContentProcessor(DisplayName = "PathContainer Processor")]
     public class PathContainerProcessor : ContentProcessor<List<PathDefinition>, VerticesContainer>

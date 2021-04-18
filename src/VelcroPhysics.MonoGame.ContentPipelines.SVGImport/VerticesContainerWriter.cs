@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects;
+using Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 
-namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport
+namespace Genbox.VelcroPhysics.MonoGame.Content.SVGImport
 {
     [ContentTypeWriter]
     public class VerticesContainerWriter : ContentTypeWriter<VerticesContainer>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.SVGImport.Objects
+namespace Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects
 {
     public class PathDefinition
     {

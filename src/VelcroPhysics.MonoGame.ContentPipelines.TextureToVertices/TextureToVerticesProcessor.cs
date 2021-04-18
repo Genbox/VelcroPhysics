@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.ContentPipelines.TextureToVertices
+namespace Genbox.VelcroPhysics.MonoGame.Content.TextureToVertices
 {
     [ContentProcessor(DisplayName = "Texture to Vertices")]
     public class TextureToVerticesProcessor : ContentProcessor<Texture2DContent, Vertices>
