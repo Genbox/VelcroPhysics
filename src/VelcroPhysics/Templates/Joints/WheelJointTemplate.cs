@@ -31,7 +31,7 @@ namespace Genbox.VelcroPhysics.Templates.Joints
         /// <summary>The local translation axis in bodyA.</summary>
         public Vector2 LocalAxisA { get; set; }
 
-        /// <summary>The maximum motor torque, usually in N-m.
+        /// <summary>The maximum motor torque, usually in N-m.</summary>
         public float MaxMotorTorque { get; set; }
 
         /// <summary>The desired motor speed in radians per second.</summary>

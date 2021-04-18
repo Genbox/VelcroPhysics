@@ -21,7 +21,7 @@ namespace Genbox.VelcroPhysics.Shared.Optimization
                     case 2:
                         return Value2;
                     default:
-                        throw new IndexOutOfRangeException();
+                        throw new IndexOutOfRangeException(nameof(index));
                 }
             }
             set
@@ -38,7 +38,7 @@ namespace Genbox.VelcroPhysics.Shared.Optimization
                         Value2 = value;
                         break;
                     default:
-                        throw new IndexOutOfRangeException();
+                        throw new IndexOutOfRangeException(nameof(index));
                 }
             }
         }

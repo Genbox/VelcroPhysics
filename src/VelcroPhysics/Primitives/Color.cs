@@ -19,7 +19,6 @@ namespace Microsoft.Xna.Framework
     {
         static Color()
         {
-            TransparentBlack = new Color(0);
             Transparent = new Color(0);
             AliceBlue = new Color(0xfffff8f0);
             AntiqueWhite = new Color(0xffd7ebfa);
@@ -173,7 +172,6 @@ namespace Microsoft.Xna.Framework
         /// significant octet.
         /// </summary>
         /// <param name="packedValue">The packed value.</param>
-        [CLSCompliant(false)]
         public Color(uint packedValue)
         {
             PackedValue = packedValue;
@@ -1423,7 +1421,6 @@ namespace Microsoft.Xna.Framework
         }
 
         /// <summary>Gets or sets packed value of this <see cref="Color" />.</summary>
-        [CLSCompliant(false)]
         public uint PackedValue { get; set; }
 
         internal string DebugDisplayString =>

@@ -580,9 +580,10 @@ namespace Microsoft.Xna.Framework
             result.M44 = 1;
         }
 
+
+        /// <summary>
         /// Creates a new viewing
         /// <see cref="Matrix" />
-        /// .
         /// </summary>
         /// <param name="cameraPosition">Position of the camera.</param>
         /// <param name="cameraTarget">Lookup vector of the camera.</param>

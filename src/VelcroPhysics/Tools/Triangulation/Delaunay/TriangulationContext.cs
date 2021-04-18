@@ -38,9 +38,8 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay
     {
         public readonly List<TriangulationPoint> Points = new List<TriangulationPoint>(200);
         public readonly List<DelaunayTriangle> Triangles = new List<DelaunayTriangle>();
-        private int _stepTime = -1;
 
-        public TriangulationContext()
+        protected TriangulationContext()
         {
             Terminated = false;
         }
@@ -48,11 +47,10 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay
         public TriangulationMode TriangulationMode { get; protected set; }
         public Triangulatable Triangulatable { get; private set; }
 
-        public bool WaitUntilNotified { get; private set; }
         public bool Terminated { get; set; }
 
         public int StepCount { get; private set; }
-        public virtual bool IsDebugEnabled { get; protected set; }
+        public bool IsDebugEnabled { get; protected set; }
 
         public void Done()
         {

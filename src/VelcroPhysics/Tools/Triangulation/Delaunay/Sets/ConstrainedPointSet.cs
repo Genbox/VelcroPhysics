@@ -1,4 +1,4 @@
-/* Poly2Tri
+﻿/* Poly2Tri
  * Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
  *
@@ -94,18 +94,6 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Sets
                     tcx.NewConstraint(Points[EdgeIndex[i]], Points[EdgeIndex[i + 1]]);
                 }
             }
-        }
-
-        /**
-         * TODO: TO BE IMPLEMENTED!
-         * Peforms a validation on given input<br>
-         * 1. Check's if there any constraint edges are crossing or collinear<br>
-         * 2. 
-         * @return
-         */
-        public bool isValid()
-        {
-            return true;
         }
     }
 }
