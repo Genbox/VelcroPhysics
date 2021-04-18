@@ -63,14 +63,15 @@
     <MonoGamePlatform>Windows</MonoGamePlatform>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(DefineConstants.Contains('Debug'))">
+  <PropertyGroup Condition="$(DefineConstants.Contains('DEBUG'))">
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(DefineConstants.Contains('Release'))">
+  <PropertyGroup Condition="$(DefineConstants.Contains('RELEASE'))">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' == 'true'">
