@@ -316,11 +316,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             AfterCollision = null;
 
             Body._world.FixtureRemoved?.Invoke(this);
-
-            Body._world.FixtureAdded = null;
-            Body._world.FixtureRemoved = null;
-            OnSeparation = null;
-            OnCollision = null;
         }
 
         // These support body activation/deactivation.
