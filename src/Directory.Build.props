@@ -1,9 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- This is a hack to get shared projects to output their build files in different directories -->
   <PropertyGroup>
     <BaseIntermediateOutputPath>obj\$(Configuration)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\$(MSBuildProjectName)\</IntermediateOutputPath>
-    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj/**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj/**;**/Content/bin/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -51,7 +52,7 @@
     <DefineConstants>$(DefineConstants);DEBUG;LINUX</DefineConstants>
     <MonoGamePlatform>Linux</MonoGamePlatform>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="$(Configuration) == 'WindowsRelease'">
     <DefineConstants>$(DefineConstants);RELEASE;WINDOWS</DefineConstants>
     <MonoGamePlatform>Windows</MonoGamePlatform>
