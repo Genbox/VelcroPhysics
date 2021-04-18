@@ -38,7 +38,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Primitives
             input.Point1 = Vector2.Zero;
             input.Point2 = _a.Center;
 
-            return _a.RayCast(out _, ref input);
+            return _a.RayCast(ref input, out _);
         }
     }
 }

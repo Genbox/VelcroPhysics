@@ -101,7 +101,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
             Actor actor = _tree.GetUserData(proxyId);
 
             RayCastOutput output;
-            bool hit = actor.AABB.RayCast(out output, ref input);
+            bool hit = actor.AABB.RayCast(ref input, out output);
             return hit ? output.Fraction : input.MaxFraction;
         }
 

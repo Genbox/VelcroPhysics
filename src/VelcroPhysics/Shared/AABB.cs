@@ -135,10 +135,11 @@ namespace Genbox.VelcroPhysics.Shared
         }
 
         /// <summary>Raycast against this AABB using the specified points and maxfraction (found in input)</summary>
-        /// <param name="output">The results of the raycast.</param>
         /// <param name="input">The parameters for the raycast.</param>
+        /// <param name="output">The results of the raycast.</param>
+        /// <param name="doInteriorCheck"></param>
         /// <returns>True if the ray intersects the AABB</returns>
-        public bool RayCast(out RayCastOutput output, ref RayCastInput input, bool doInteriorCheck = true)
+        public bool RayCast(ref RayCastInput input, out RayCastOutput output, bool doInteriorCheck = true)
         {
             // From Real-time Collision Detection, p179.
 
