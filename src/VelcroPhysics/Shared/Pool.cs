@@ -21,7 +21,6 @@ namespace Genbox.VelcroPhysics.Shared
             for (int i = 0; i < capacity; i++)
             {
                 T obj = objectCreator();
-                obj.Pool = this;
                 _queue.Enqueue(obj);
             }
         }
