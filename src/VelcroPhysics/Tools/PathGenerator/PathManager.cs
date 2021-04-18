@@ -13,12 +13,6 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
     /// <summary>An easy to use manager for creating paths.</summary>
     public static class PathManager
     {
-        public enum LinkType
-        {
-            Revolute,
-            Slider
-        }
-
         //Contributed by Matthew Bettcher
 
         /// <summary>Convert a path into a set of edges and attaches them to the specified body. Note: use only for static edges.</summary>
@@ -71,7 +65,7 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
         /// <param name="copies">The copies.</param>
         /// <param name="userData"></param>
         /// <returns></returns>
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes, BodyType type, int copies, object userData = null)
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, IEnumerable<Shape> shapes, BodyType type, int copies, object? userData = null)
         {
             List<Vector3> centers = path.SubdivideEvenly(copies);
             List<Body> bodyList = new List<Body>();
@@ -99,18 +93,12 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
         /// <param name="type">The type.</param>
         /// <param name="copies">The copies.</param>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type, int copies, object userData)
+        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type, int copies, object? userData = null)
         {
             List<Shape> shapes = new List<Shape>(1);
             shapes.Add(shape);
 
             return EvenlyDistributeShapesAlongPath(world, path, shapes, type, copies, userData);
-        }
-
-        public static List<Body> EvenlyDistributeShapesAlongPath(World world, Path path, Shape shape, BodyType type, int copies)
-        {
-            return EvenlyDistributeShapesAlongPath(world, path, shape, type, copies, null);
         }
 
         /// <summary>Moves the given body along the defined path.</summary>
