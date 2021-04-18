@@ -28,7 +28,7 @@
     <RepositoryType>Git</RepositoryType>
     <PackageProjectUrl>https://github.com/Genbox/SimpleS3</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Configurations>WindowsDebug;WindowsRelease</Configurations>
+    <Configurations>WindowsDebug;WindowsRelease;LinuxDebug;LinuxRelease</Configurations>
 
     <!--SourceLink stuff-->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -42,6 +42,16 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
   </ItemGroup>
 
+  <PropertyGroup Condition="$(Configuration) == 'LinuxRelease'">
+    <DefineConstants>$(DefineConstants);RELEASE;LINUX</DefineConstants>
+    <MonoGamePlatform>Linux</MonoGamePlatform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'LinuxDebug'">
+    <DefineConstants>$(DefineConstants);DEBUG;LINUX</DefineConstants>
+    <MonoGamePlatform>Linux</MonoGamePlatform>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="$(Configuration) == 'WindowsRelease'">
     <DefineConstants>$(DefineConstants);RELEASE;WINDOWS</DefineConstants>
     <MonoGamePlatform>Windows</MonoGamePlatform>
