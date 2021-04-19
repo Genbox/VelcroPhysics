@@ -3,7 +3,7 @@ name: Nuget release
 on:
   push:
     tags:
-    - '[0-9]+\.[0-9]+\.[0-9]+(?:\-(?:alpha|beta)(?:\.\d+))?'
+    - '[0-9]+\.[0-9]+\.[0-9]+(?:\-(?:alpha|beta)(?:\.\d+)?)?'
 
 jobs:
   build:
