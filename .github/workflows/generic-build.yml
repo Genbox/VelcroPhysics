@@ -16,5 +16,5 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-    - name: Build VelcroPhysics
+    - name: Build VelcroPhysics and samples
       run: dotnet build -c LinuxRelease src/VelcroPhysics.All.sln
