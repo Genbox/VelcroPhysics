@@ -58,7 +58,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
         /// <summary>Normalize the angles.</summary>
         public void Normalize()
         {
-            float d = MathHelper.TwoPi * (float)Math.Floor(A0 / MathHelper.TwoPi);
+            float d = MathConstants.TwoPi * (float)Math.Floor(A0 / MathConstants.TwoPi);
             A0 -= d;
             A -= d;
         }

@@ -80,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         public const int CircleSegments = 32;
 #endif
 
-        private const float _circleIncrement = MathConstants.Pi2 / CircleSegments;
+        private const float _circleIncrement = MathConstants.TwoPi / CircleSegments;
 
         public DebugView(World world)
             : base(world)

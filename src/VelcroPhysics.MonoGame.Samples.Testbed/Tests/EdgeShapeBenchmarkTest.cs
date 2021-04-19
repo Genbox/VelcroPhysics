@@ -4,6 +4,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -20,11 +21,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 Body ground = BodyFactory.CreateBody(World);
 
                 float x1 = -20.0f;
-                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * (float)Math.PI);
+                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * MathConstants.Pi);
                 for (int i = 0; i < 80; ++i)
                 {
                     float x2 = x1 + 0.5f;
-                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * (float)Math.PI);
+                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * MathConstants.Pi);
 
                     EdgeShape shape = new EdgeShape(new Vector2(x1, y1), new Vector2(x2, y2));
                     ground.CreateFixture(shape);

@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -42,13 +43,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             fB.BodyType = BodyType.Dynamic;
 
             AngleJoint joint = new AngleJoint(fA, fB);
-            joint.TargetAngle = (float)Math.PI / 2;
+            joint.TargetAngle = MathConstants.Pi / 2;
             World.AddJoint(joint);
 
             //Keep a body at a fixed angle without a joint 
             Body fC = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(10, 4));
             fC.BodyType = BodyType.Dynamic;
-            fC.Rotation = (float)(Math.PI / 3);
+            fC.Rotation = MathConstants.Pi / 3;
             fC.FixedRotation = true; // Or set the Inertia to float.MaxValue
         }
 

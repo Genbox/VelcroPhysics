@@ -59,7 +59,7 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Util
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.Pi2 * i / vertexCount), radius * Math.Sin(MathConstants.Pi2 * i / vertexCount));
+                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.TwoPi * i / vertexCount), radius * Math.Sin(MathConstants.TwoPi * i / vertexCount));
             }
             return new Polygon.Polygon(points);
         }
@@ -78,7 +78,7 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.Delaunay.Util
                     radius = radius < scale / 10 ? scale / 10 : radius;
                 } while (radius < scale / 10 || radius > scale / 2);
 
-                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.Pi2 * i / vertexCount), radius * Math.Sin(MathConstants.Pi2 * i / vertexCount));
+                points[i] = new PolygonPoint(radius * Math.Cos(MathConstants.TwoPi * i / vertexCount), radius * Math.Sin(MathConstants.TwoPi * i / vertexCount));
             }
             return new Polygon.Polygon(points);
         }

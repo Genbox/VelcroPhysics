@@ -276,14 +276,14 @@ namespace Genbox.VelcroPhysics.Utilities
             double theta2 = Math.Atan2(p2.Y, p2.X);
             double dtheta = theta2 - theta1;
 
-            while (dtheta > Math.PI)
+            while (dtheta > MathConstants.Pi)
             {
-                dtheta -= MathConstants.Pi2;
+                dtheta -= MathConstants.TwoPi;
             }
 
-            while (dtheta < -Math.PI)
+            while (dtheta < -MathConstants.Pi)
             {
-                dtheta += MathConstants.Pi2;
+                dtheta += MathConstants.TwoPi;
             }
 
             return dtheta;

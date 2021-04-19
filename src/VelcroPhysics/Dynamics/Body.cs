@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -44,7 +44,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         private float _inertia;
         private float _mass;
         private BodyType _type;
-        
+
         internal float _angularVelocity;
         internal BodyFlags _flags;
         internal Vector2 _force;
@@ -140,7 +140,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Gets the total number revolutions the body has made.</summary>
         /// <value>The revolutions.</value>
-        public float Revolutions => Rotation / (float)Math.PI;
+        public float Revolutions => Rotation / MathConstants.Pi;
 
         /// <summary>Gets or sets the body type. Warning: Calling this mid-update might cause a crash.</summary>
         /// <value>The type of body.</value>

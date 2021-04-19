@@ -153,13 +153,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 Body fA = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(-5, 4));
                 fA.BodyType = BodyType.Dynamic;
-                fA.Rotation = (float)(Math.PI / 3);
+                fA.Rotation = MathConstants.Pi / 3;
 
                 Body fB = BodyFactory.CreateRectangle(World, 4, 4, 1, new Vector2(5, 4));
                 fB.BodyType = BodyType.Dynamic;
 
                 AngleJoint joint = new AngleJoint(fA, fB);
-                joint.TargetAngle = (float)Math.PI / 2;
+                joint.TargetAngle = MathConstants.Pi / 2;
                 World.AddJoint(joint);
             }
 
@@ -173,7 +173,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 motorJoint.MaxForce = 1000.0f;
                 motorJoint.MaxTorque = 1000.0f;
                 motorJoint.LinearOffset = new Vector2(0, 35);
-                motorJoint.AngularOffset = (float)(Math.PI / 3f);
+                motorJoint.AngularOffset = MathConstants.Pi / 3f;
             }
         }
 

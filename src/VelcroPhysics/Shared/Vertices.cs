@@ -429,7 +429,7 @@ namespace Genbox.VelcroPhysics.Shared
                 angle += MathUtils.VectorAngle(ref p1, ref p2);
             }
 
-            if (Math.Abs(angle) < Math.PI)
+            if (Math.Abs(angle) < MathConstants.Pi)
                 return false;
 
             return true;

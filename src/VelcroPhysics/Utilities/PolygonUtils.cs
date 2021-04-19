@@ -84,7 +84,7 @@ namespace Genbox.VelcroPhysics.Utilities
             {
                 int numberOfEdges = segments * 4 + 8;
 
-                float stepSize = MathHelper.TwoPi / (numberOfEdges - 4);
+                float stepSize = MathConstants.TwoPi / (numberOfEdges - 4);
                 int perPhase = numberOfEdges / 4;
 
                 Vector2 posOffset = new Vector2(width / 2 - xRadius, height / 2 - yRadius);
@@ -141,7 +141,7 @@ namespace Genbox.VelcroPhysics.Utilities
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = MathHelper.TwoPi / numberOfEdges;
+            float stepSize = MathConstants.TwoPi / numberOfEdges;
 
             vertices.Add(new Vector2(xRadius, 0));
             for (int i = numberOfEdges - 1; i > 0; --i)
@@ -229,7 +229,7 @@ namespace Genbox.VelcroPhysics.Utilities
             // top
             vertices.Add(new Vector2(topRadius, newHeight));
 
-            float stepSize = MathHelper.Pi / topEdges;
+            float stepSize = MathConstants.Pi / topEdges;
             for (int i = 1; i < topEdges; i++)
             {
                 vertices.Add(new Vector2(topRadius * (float)Math.Cos(stepSize * i),
@@ -241,7 +241,7 @@ namespace Genbox.VelcroPhysics.Utilities
             // bottom
             vertices.Add(new Vector2(-bottomRadius, -newHeight));
 
-            stepSize = MathHelper.Pi / bottomEdges;
+            stepSize = MathConstants.Pi / bottomEdges;
             for (int i = 1; i < bottomEdges; i++)
             {
                 vertices.Add(new Vector2(-bottomRadius * (float)Math.Cos(stepSize * i),
@@ -258,12 +258,11 @@ namespace Genbox.VelcroPhysics.Utilities
         /// <param name="numberOfTeeth">The number of teeth.</param>
         /// <param name="tipPercentage">The tip percentage.</param>
         /// <param name="toothHeight">Height of the tooth.</param>
-        /// <returns></returns>
         public static Vertices CreateGear(float radius, int numberOfTeeth, float tipPercentage, float toothHeight)
         {
             Vertices vertices = new Vertices();
 
-            float stepSize = MathHelper.TwoPi / numberOfTeeth;
+            float stepSize = MathConstants.TwoPi / numberOfTeeth;
             tipPercentage /= 100f;
             MathHelper.Clamp(tipPercentage, 0f, 1f);
             float toothTipStepSize = (stepSize / 2f) * tipPercentage;
