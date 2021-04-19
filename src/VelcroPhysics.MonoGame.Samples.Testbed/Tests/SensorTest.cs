@@ -76,7 +76,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         }
 
         // Implement contact listener.
-        private bool BeginContact(Contact contact)
+        private void BeginContact(Contact contact)
         {
             Fixture fixtureA = contact.FixtureA;
             Fixture fixtureB = contact.FixtureB;
@@ -86,8 +86,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             if (fixtureB == _sensor && fixtureA.Body.UserData != null)
                 _touching[(int)fixtureA.Body.UserData] = true;
-
-            return true;
         }
 
         // Implement contact listener.

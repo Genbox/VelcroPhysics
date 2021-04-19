@@ -73,6 +73,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             new TestEntry { Name = "Chain", CreateTest = ChainTest.Create },
             new TestEntry { Name = "Collision Filtering", CreateTest = CollisionFilteringTest.Create },
             new TestEntry { Name = "Collision Processing", CreateTest = CollisionProcessingTest.Create },
+            new TestEntry { Name = "Collision Callbacks", CreateTest = CollisionCallbackTest.Create },
             new TestEntry { Name = "Compound Shapes", CreateTest = CompoundShapesTest.Create },
             new TestEntry { Name = "Distance Test", CreateTest = DistanceTest.Create },
             new TestEntry { Name = "Dominos", CreateTest = DominosTest.Create },

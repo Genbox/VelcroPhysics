@@ -261,10 +261,17 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             else
                 _flags &= ~ContactFlags.TouchingFlag;
 
-            if (!wasTouching && touching)
+            if (touching)
             {
+                // Report the collision to both participants:
                 FixtureA.OnCollision?.Invoke(FixtureA, FixtureB, this);
                 FixtureB.OnCollision?.Invoke(FixtureB, FixtureA, this);
+
+                // Report the collision to both bodies:
+                bodyA.OnCollision?.Invoke(FixtureA, FixtureB, this);
+                bodyB.OnCollision?.Invoke(FixtureB, FixtureA, this);
+
+                // Call BeginContact. It can disable the contact as well.
                 contactManager.BeginContact?.Invoke(this);
 
                 // Velcro: If the user disabled the contact (needed to exclude it in TOI solver) at any point by
@@ -276,8 +283,14 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
             if (wasTouching && !touching)
             {
-                FixtureA?.OnSeparation?.Invoke(FixtureA, FixtureB, this);
-                FixtureB?.OnSeparation?.Invoke(FixtureB, FixtureA, this);
+                //Report the separation to both participants:
+                FixtureA.OnSeparation?.Invoke(FixtureA, FixtureB, this);
+                FixtureB.OnSeparation?.Invoke(FixtureB, FixtureA, this);
+
+                //Report the separation to both bodies:
+                bodyA.OnSeparation?.Invoke(FixtureA, FixtureB, this);
+                bodyB.OnSeparation?.Invoke(FixtureB, FixtureA, this);
+
                 contactManager.EndContact?.Invoke(this);
             }
 

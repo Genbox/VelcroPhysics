@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -108,6 +108,19 @@ namespace Genbox.VelcroPhysics.Dynamics
         public ControllerFilter ControllerFilter { get; set; }
 
         public PhysicsLogicFilter PhysicsLogicFilter { get; set; }
+
+        /// <summary>
+        /// Fires when two shapes collide and a contact is created between them. Note that the first fixture argument is
+        /// always the fixture that the delegate is subscribed to.
+        /// </summary>
+        public OnCollisionHandler OnCollision;
+
+        /// <summary>
+        /// Fires when two shapes separate and a contact is removed between them. Note: This can in some cases be called
+        /// multiple times, as a fixture can have multiple contacts. Note The first fixture argument is always the fixture that the
+        /// delegate is subscribed to.
+        /// </summary>
+        public OnSeparationHandler OnSeparation;
 
         /// <summary>A unique id for this body.</summary>
         public int BodyId { get; internal set; }
@@ -1094,42 +1107,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             _sweep.A = _sweep.A0;
             _xf.q.Set(_sweep.A);
             _xf.p = _sweep.C - MathUtils.Mul(_xf.q, _sweep.LocalCenter);
-        }
-
-        public event OnCollisionHandler OnCollision
-        {
-            add
-            {
-                foreach (Fixture f in FixtureList)
-                {
-                    f.OnCollision += value;
-                }
-            }
-            remove
-            {
-                foreach (Fixture f in FixtureList)
-                {
-                    f.OnCollision -= value;
-                }
-            }
-        }
-
-        public event OnSeparationHandler OnSeparation
-        {
-            add
-            {
-                foreach (Fixture f in FixtureList)
-                {
-                    f.OnSeparation += value;
-                }
-            }
-            remove
-            {
-                foreach (Fixture f in FixtureList)
-                {
-                    f.OnSeparation -= value;
-                }
-            }
         }
     }
 }
