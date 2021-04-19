@@ -54,8 +54,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Sweep _sweep; // the swept motion for CCD
         internal float _torque;
         internal World _world;
-
-        public Transform _xf; // the body origin transform
+        internal Transform _xf; // the body origin transform
 
         internal Body(World world, BodyTemplate template)
         {
