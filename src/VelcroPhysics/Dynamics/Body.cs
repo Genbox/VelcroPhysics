@@ -68,7 +68,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _flags |= BodyFlags.AutoSleepFlag;
             if (template.Awake)
                 _flags |= BodyFlags.AwakeFlag;
-            if (template.Active)
+            if (template.Enabled)
                 _flags |= BodyFlags.Enabled;
 
             _world = world;

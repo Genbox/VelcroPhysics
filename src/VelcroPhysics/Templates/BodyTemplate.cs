@@ -14,7 +14,7 @@ namespace Genbox.VelcroPhysics.Templates
         }
 
         /// <summary>Does this body start out active?</summary>
-        public bool Active { get; set; }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Is this a fast moving body that should be prevented from tunneling through other moving bodies? Note that all
@@ -72,7 +72,7 @@ namespace Genbox.VelcroPhysics.Templates
             AllowSleep = true;
             Awake = true;
             Type = BodyType.Static;
-            Active = true;
+            Enabled = true;
             GravityScale = 1.0f;
         }
     }
