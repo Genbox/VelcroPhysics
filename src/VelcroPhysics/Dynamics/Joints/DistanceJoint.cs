@@ -146,7 +146,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         /// <summary>Get the reaction torque given the inverse time step. Unit is N*m. This is always zero for a distance joint.</summary>
         /// <param name="invDt"></param>
-        /// <returns></returns>
         public override float GetReactionTorque(float invDt)
         {
             return 0.0f;
@@ -208,6 +207,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
                 // magic formulas
                 float h = data.Step.DeltaTime;
+
+                // gamma = 1 / (h * (d + h * k)), the extra factor of h in the denominator is since the lambda is an impulse, not a force
                 _gamma = h * (d + h * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
                 _bias = C * h * k * _gamma;
