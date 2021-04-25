@@ -1,28 +1,33 @@
 ﻿/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
+* Velcro Physics
+* Copyright (c) 2021 Ian Qvist
 * 
 * Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
+* Copyright (c) 2019 Erin Catto
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
 */
 
 using System;
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Collision.Narrowphase;
+using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Shared.Optimization;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -74,6 +79,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
 
             // Main iteration loop.
             int iter = 0;
+
+            //Velcro: Moved the max iterations to settings
             while (iter < Settings.MaxGJKIterations)
             {
                 // Copy simplex so we can identify duplicates.
@@ -190,6 +197,153 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                     output.Distance = 0.0f;
                 }
             }
+        }
+
+        // GJK-raycast
+        // Algorithm by Gino van den Bergen.
+        // "Smooth Mesh Contacts with GJK" in Game Physics Pearls. 2010
+        public static bool ShapeCast(ref ShapeCastInput input, out ShapeCastOutput output)
+        {
+            output = new ShapeCastOutput();
+            output.Iterations = 0;
+            output.Lambda = 1.0f;
+            output.Normal = Vector2.Zero;
+            output.Point = Vector2.Zero;
+
+            DistanceProxy proxyA = input.ProxyA;
+            DistanceProxy proxyB = input.ProxyB;
+
+            float radiusA = MathUtils.Max(proxyA.Radius, Settings.PolygonRadius);
+            float radiusB = MathUtils.Max(proxyB.Radius, Settings.PolygonRadius);
+            float radius = radiusA + radiusB;
+
+            Transform xfA = input.TransformA;
+            Transform xfB = input.TransformB;
+
+            Vector2 r = input.TranslationB;
+            Vector2 n = new Vector2(0.0f, 0.0f);
+            float lambda = 0.0f;
+
+            // Initial simplex
+            Simplex simplex = new Simplex();
+            simplex.Count = 0;
+
+            // Get simplex vertices as an array.
+            //SimplexVertex vertices = simplex.V.Value0; //Velcro: we don't need this as we have an indexer instead
+
+            // Get support point in -r direction
+            int indexA = proxyA.GetSupport(MathUtils.MulT(xfA.q, -r));
+            Vector2 wA = MathUtils.Mul(ref xfA, proxyA.GetVertex(indexA));
+            int indexB = proxyB.GetSupport(MathUtils.MulT(xfB.q, r));
+            Vector2 wB = MathUtils.Mul(ref xfB, proxyB.GetVertex(indexB));
+            Vector2 v = wA - wB;
+
+            // Sigma is the target distance between polygons
+            float sigma = MathUtils.Max(Settings.PolygonRadius, radius - Settings.PolygonRadius);
+            const float tolerance = 0.5f * Settings.LinearSlop;
+
+            // Main iteration loop.
+            int iter = 0;
+
+            //Velcro: We have moved the max iterations into settings
+            while (iter < Settings.MaxGJKIterations && v.Length() - sigma > tolerance)
+            {
+                Debug.Assert(simplex.Count < 3);
+
+                output.Iterations += 1;
+
+                // Support in direction -v (A - B)
+                indexA = proxyA.GetSupport(MathUtils.MulT(xfA.q, -v));
+                wA = MathUtils.Mul(ref xfA, proxyA.GetVertex(indexA));
+                indexB = proxyB.GetSupport(MathUtils.MulT(xfB.q, v));
+                wB = MathUtils.Mul(ref xfB, proxyB.GetVertex(indexB));
+                Vector2 p = wA - wB;
+
+                // -v is a normal at p
+                v.Normalize();
+
+                // Intersect ray with plane
+                float vp = MathUtils.Dot(ref v, ref p);
+                float vr = MathUtils.Dot(ref v, ref r);
+                if (vp - sigma > lambda * vr)
+                {
+                    if (vr <= 0.0f)
+                        return false;
+
+                    lambda = (vp - sigma) / vr;
+                    if (lambda > 1.0f)
+                        return false;
+
+                    n = -v;
+                    simplex.Count = 0;
+                }
+
+                // Reverse simplex since it works with B - A.
+                // Shift by lambda * r because we want the closest point to the current clip point.
+                // Note that the support point p is not shifted because we want the plane equation
+                // to be formed in unshifted space.
+                SimplexVertex vertex = simplex.V[simplex.Count];
+                vertex.IndexA = indexB;
+                vertex.WA = wB + lambda * r;
+                vertex.IndexB = indexA;
+                vertex.WB = wA;
+                vertex.W = vertex.WB - vertex.WA;
+                vertex.A = 1.0f;
+                simplex.V[simplex.Count] = vertex; //Velcro: we have to copy the value back
+                simplex.Count += 1;
+
+                switch (simplex.Count)
+                {
+                    case 1:
+                        break;
+
+                    case 2:
+                        simplex.Solve2();
+                        break;
+
+                    case 3:
+                        simplex.Solve3();
+                        break;
+
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
+
+                // If we have 3 points, then the origin is in the corresponding triangle.
+                if (simplex.Count == 3)
+                {
+                    // Overlap
+                    return false;
+                }
+
+                // Get search direction.
+                v = simplex.GetClosestPoint();
+
+                // Iteration count is equated to the number of support point calls.
+                ++iter;
+            }
+
+            if (iter == 0)
+            {
+                // Initial overlap
+                return false;
+            }
+
+            // Prepare output.
+            simplex.GetWitnessPoints(out _, out Vector2 pointB);
+
+            if (v.LengthSquared() > 0.0f)
+            {
+                n = -v;
+                n.Normalize();
+            }
+
+            output.Point = pointB + radiusA * n;
+            output.Normal = n;
+            output.Lambda = lambda;
+            output.Iterations = iter;
+            return true;
         }
     }
 }

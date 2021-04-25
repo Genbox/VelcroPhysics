@@ -82,18 +82,18 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                     return -V[0].W;
 
                 case 2:
-                {
-                    Vector2 e12 = V[1].W - V[0].W;
-                    float sgn = MathUtils.Cross(e12, -V[0].W);
-                    if (sgn > 0.0f)
                     {
-                        // Origin is left of e12.
-                        return MathUtils.Cross(1.0f, e12);
-                    }
+                        Vector2 e12 = V[1].W - V[0].W;
+                        float sgn = MathUtils.Cross(e12, -V[0].W);
+                        if (sgn > 0.0f)
+                        {
+                            // Origin is left of e12.
+                            return MathUtils.Cross(1.0f, e12);
+                        }
 
-                    // Origin is right of e12.
-                    return MathUtils.Cross(e12, 1.0f);
-                }
+                        // Origin is right of e12.
+                        return MathUtils.Cross(e12, 1.0f);
+                    }
 
                 default:
                     Debug.Assert(false);
@@ -165,7 +165,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                     return 0.0f;
 
                 case 2:
-                    return (V[0].W - V[1].W).Length();
+                    return MathUtils.Distance(V[0].W, V[1].W);
 
                 case 3:
                     return MathUtils.Cross(V[1].W - V[0].W, V[2].W - V[0].W);

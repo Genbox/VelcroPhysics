@@ -295,6 +295,12 @@ namespace Genbox.VelcroPhysics.Utilities
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
 
+        /// Perform the dot product on two vectors.
+        public static float Dot(ref Vector2 a, ref Vector2 b)
+        {
+            return a.X * b.X + a.Y * b.Y;
+        }
+
         public static double VectorAngle(Vector2 p1, Vector2 p2)
         {
             return VectorAngle(ref p1, ref p2);
@@ -355,6 +361,29 @@ namespace Genbox.VelcroPhysics.Utilities
         public static Vector2 MulT(ref Rot rot, Vector2 axis)
         {
             return MulT(rot, axis);
+        }
+
+        public static float Distance(Vector2 a, Vector2 b)
+        {
+            Vector2 c = a - b;
+            return c.Length();
+        }
+
+        public static float Distance(ref Vector2 a, ref Vector2 b)
+        {
+            Vector2 c = a - b;
+            return c.Length();
+        }
+
+        public static float DistanceSquared(ref Vector2 a, ref Vector2 b)
+        {
+            Vector2 c = a - b;
+            return Dot(ref c, ref c);
+        }
+
+        public static float Max(float valueA, float valueB)
+        {
+            return Math.Max(valueA, valueB);
         }
     }
 }
