@@ -13,7 +13,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         Wheel,
         Weld,
         Friction,
-        Rope,
         Motor,
 
         //Velcro note: From here on and down, it is only FPE joints

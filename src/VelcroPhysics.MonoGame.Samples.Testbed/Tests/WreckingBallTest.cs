@@ -33,28 +33,28 @@ using Microsoft.Xna.Framework.Input;
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     /// <summary>
-    /// This test shows how a rope joint can be used to stabilize a chain of
-    /// bodies with a heavy payload. Notice that the rope joint just prevents
+    /// This test shows how a distance joint can be used to stabilize a chain of
+    /// bodies with a heavy payload. Notice that the distance joint just prevents
     /// excessive stretching and has no other effect.
-    /// By disabling the rope joint you can see that the Box2D solver has trouble
+    /// By disabling the distance joint you can see that the Box2D solver has trouble
     /// supporting heavy bodies with light bodies. Try playing around with the
     /// densities, time step, and iterations to see how they affect stability.
     /// This test also shows how to use contact filtering. Filtering is configured
     /// so that the payload does not collide with the chain.
     /// </summary>
-    public class RopeTest : Test
+    public class WreckingBallTest : Test
     {
-        private readonly RopeJoint _rj;
-        private bool _useRopeJoint = true;
+        private readonly DistanceJoint _dj;
+        private bool _stabilize = true;
 
-        private RopeTest()
+        private WreckingBallTest()
         {
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
             {
                 Body prevBody = ground;
-                PolygonShape largeShape = new PolygonShape(PolygonUtils.CreateRectangle(1.5f, 1.5f), 100);
-                PolygonShape smallShape = new PolygonShape(PolygonUtils.CreateRectangle(0.5f, 0.125f), 20);
+                CircleShape largeShape = new CircleShape(1.5f, 100);
+                CircleShape smallShape = new CircleShape(0.5f, 20);
 
                 const int N = 10;
                 const float y = 15;
@@ -91,13 +91,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     prevBody = body;
                 }
 
-                _rj = new RopeJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
+                _dj = new DistanceJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
 
-                //FPE: The two following lines are actually not needed as FPE sets the MaxLength to a default value
+                //Velcro: The two following lines are actually not needed as Velcro sets the MaxLength to a default value
                 const float extraLength = 0.01f;
-                _rj.MaxLength = N - 1.0f + extraLength;
+                _dj.MaxLength = N - 1.0f + extraLength;
 
-                World.AddJoint(_rj);
+                World.AddJoint(_dj);
             }
         }
 
@@ -105,15 +105,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             if (keyboardManager.IsNewKeyPress(Keys.J))
             {
-                if (_useRopeJoint)
+                if (_stabilize)
                 {
-                    _useRopeJoint = false;
-                    World.RemoveJoint(_rj);
+                    _stabilize = false;
+                    World.RemoveJoint(_dj);
                 }
                 else
                 {
-                    _useRopeJoint = true;
-                    World.AddJoint(_rj);
+                    _stabilize = true;
+                    World.AddJoint(_dj);
                 }
             }
 
@@ -123,14 +123,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Press (j) to toggle the rope joint.");
-            DrawString(_useRopeJoint ? "Rope ON" : "Rope OFF");
+            DrawString(_stabilize ? "Rope ON" : "Rope OFF");
 
             base.Update(settings, gameTime);
         }
 
         internal static Test Create()
         {
-            return new RopeTest();
+            return new WreckingBallTest();
         }
     }
 }

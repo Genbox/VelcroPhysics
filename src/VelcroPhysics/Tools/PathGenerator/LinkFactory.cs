@@ -22,7 +22,6 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
         /// Creates a rope joint between start and end. This enforces the length of the rope. Said in
         /// another way: it makes the rope less bouncy.
         /// </param>
-        /// <returns></returns>
         public static Path CreateChain(World world, Vector2 start, Vector2 end, float linkWidth, float linkHeight, int numberOfLinks, float linkDensity, bool attachRopeJoint)
         {
             Debug.Assert(numberOfLinks >= 2);
@@ -58,7 +57,7 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
             PathManager.AttachBodiesWithRevoluteJoint(world, chainLinks, new Vector2(0, -linkHeight), new Vector2(0, linkHeight), false, false);
 
             if (attachRopeJoint)
-                JointFactory.CreateRopeJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], Vector2.Zero, Vector2.Zero);
+                JointFactory.CreateDistanceJoint(world, chainLinks[0], chainLinks[chainLinks.Count - 1], Vector2.Zero, Vector2.Zero);
 
             return path;
         }
