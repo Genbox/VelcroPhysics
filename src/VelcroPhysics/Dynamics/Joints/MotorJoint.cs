@@ -222,7 +222,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _linearError = cB + _rB - cA - _rA - MathUtils.Mul(qA, _linearOffset);
             _angularError = aB - aA - _angularOffset;
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
             {
                 // Scale impulses to support a variable time step.
                 _linearImpulse *= data.Step.DeltaTimeRatio;

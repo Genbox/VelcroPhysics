@@ -138,7 +138,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _contactSolver.Reset(step, ContactCount, _contacts, Positions, Velocities);
             _contactSolver.InitializeVelocityConstraints();
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
                 _contactSolver.WarmStart();
 
             if (Settings.EnableDiagnostics)

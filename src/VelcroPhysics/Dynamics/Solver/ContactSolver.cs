@@ -122,7 +122,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                     ManifoldPoint cp = manifold.Points[j];
                     VelocityConstraintPoint vcp = vc.Points[j];
 
-                    if (Settings.EnableWarmstarting)
+                    if (Settings.EnableWarmStarting)
                     {
                         vcp.NormalImpulse = _step.DeltaTimeRatio * cp.NormalImpulse;
                         vcp.TangentImpulse = _step.DeltaTimeRatio * cp.TangentImpulse;

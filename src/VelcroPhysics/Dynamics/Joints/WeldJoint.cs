@@ -234,7 +234,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _bias = 0.0f;
             }
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
             {
                 // Scale impulses to support a variable time step.
                 _impulse *= data.Step.DeltaTimeRatio;

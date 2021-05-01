@@ -357,7 +357,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             else
                 _limitState = LimitState.Inactive;
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
             {
                 // Scale impulses to support a variable time step.
                 _impulse *= data.Step.DeltaTimeRatio;

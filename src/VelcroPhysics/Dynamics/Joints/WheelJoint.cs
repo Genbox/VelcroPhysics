@@ -380,7 +380,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _motorImpulse = 0.0f;
             }
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
             {
                 // Account for variable time step.
                 _impulse *= data.Step.DeltaTimeRatio;

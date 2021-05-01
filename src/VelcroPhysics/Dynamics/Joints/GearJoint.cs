@@ -306,7 +306,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             // Compute effective mass.
             _mass = _mass > 0.0f ? 1.0f / _mass : 0.0f;
 
-            if (Settings.EnableWarmstarting)
+            if (Settings.EnableWarmStarting)
             {
                 vA += (_mA * _impulse) * _JvAC;
                 wA += _iA * _impulse * _JwA;

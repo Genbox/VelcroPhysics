@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -47,7 +47,6 @@ namespace Genbox.VelcroPhysics
         public static int MaxSubSteps = 8;
 
         /// <summary>Enable/Disable warm-starting</summary>
-        public static bool EnableWarmstarting = true;
 
         /// <summary>The maximum number of contact points between two convex shapes. DO NOT CHANGE THIS VALUE!</summary>
         public static int MaxManifoldPoints = 2;
@@ -189,6 +188,7 @@ namespace Genbox.VelcroPhysics
 
         /// <summary>This is used by the Fixture constructor as the default value for Fixture.CollidesWith member.</summary>
         public static Category DefaultFixtureCollidesWith = Category.All;
+        internal const bool EnableWarmStarting = true;
 
         /// <summary>This is used by the Fixture constructor as the default value for Fixture.IgnoreCCDWith member.</summary>
         public static Category DefaultFixtureIgnoreCCDWith = Category.None;
