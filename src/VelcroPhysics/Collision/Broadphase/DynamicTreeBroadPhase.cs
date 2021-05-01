@@ -146,9 +146,9 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
             _pairCount = 0;
 
             // Perform tree queries for all moving proxies.
-            for (int j = 0; j < _moveCount; ++j)
+            for (int i = 0; i < _moveCount; ++i)
             {
-                _queryProxyId = _moveBuffer[j];
+                _queryProxyId = _moveBuffer[i];
                 if (_queryProxyId == NullProxy)
                     continue;
 
@@ -160,36 +160,27 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
                 _tree.Query(_queryCallback, ref fatAABB);
             }
 
-            // Reset move buffer
-            _moveCount = 0;
-
-            // Sort the pair buffer to expose duplicates.
-            Array.Sort(_pairBuffer, 0, _pairCount);
-
-            // Send the pairs back to the client.
-            int i = 0;
-            while (i < _pairCount)
+            for (int i = 0; i < _pairCount; ++i)
             {
                 Pair primaryPair = _pairBuffer[i];
                 FixtureProxy userDataA = _tree.GetUserData(primaryPair.ProxyIdA);
                 FixtureProxy userDataB = _tree.GetUserData(primaryPair.ProxyIdB);
 
                 callback(ref userDataA, ref userDataB);
-                ++i;
-
-                // Skip any duplicate pairs.
-                while (i < _pairCount)
-                {
-                    Pair pair = _pairBuffer[i];
-                    if (pair.ProxyIdA != primaryPair.ProxyIdA || pair.ProxyIdB != primaryPair.ProxyIdB)
-                        break;
-
-                    ++i;
-                }
             }
 
-            // Try to keep the tree balanced.
-            //_tree.Rebalance(4);
+            // Clear move flags
+            for (int i = 0; i < _moveCount; ++i)
+            {
+                int proxyId = _moveBuffer[i];
+                if (proxyId == NullProxy)
+                    continue;
+
+                _tree.ClearMoved(proxyId);
+            }
+
+            // Reset move buffer
+            _moveCount = 0;
         }
 
         /// <summary>
@@ -251,11 +242,18 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
             if (proxyId == _queryProxyId)
                 return true;
 
+            bool moved = _tree.WasMoved(proxyId);
+            if (moved && proxyId > _queryProxyId)
+            {
+                // Both proxies are moving. Avoid duplicate pairs.
+                return true;
+            }
+
             // Grow the pair buffer as needed.
             if (_pairCount == _pairCapacity)
             {
                 Pair[] oldBuffer = _pairBuffer;
-                _pairCapacity *= 2;
+                _pairCapacity += (_pairCapacity >> 1);
                 _pairBuffer = new Pair[_pairCapacity];
                 Array.Copy(oldBuffer, _pairBuffer, _pairCount);
             }

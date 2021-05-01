@@ -1060,14 +1060,25 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         internal void SynchronizeFixtures()
         {
-            Transform xf1 = new Transform();
-            xf1.q.Set(_sweep.A0);
-            xf1.p = _sweep.C0 - MathUtils.Mul(xf1.q, _sweep.LocalCenter);
-
             IBroadPhase broadPhase = _world.ContactManager.BroadPhase;
-            for (int i = 0; i < FixtureList.Count; i++)
+
+            if ((_flags & BodyFlags.AwakeFlag) == BodyFlags.AwakeFlag)
             {
-                FixtureList[i].Synchronize(broadPhase, ref xf1, ref _xf);
+                Transform xf1 = new Transform();
+                xf1.q.Set(_sweep.A0);
+                xf1.p = _sweep.C0 - MathUtils.Mul(xf1.q, _sweep.LocalCenter);
+
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].Synchronize(broadPhase, ref xf1, ref _xf);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < FixtureList.Count; i++)
+                {
+                    FixtureList[i].Synchronize(broadPhase, ref _xf, ref _xf);
+                }
             }
         }
 

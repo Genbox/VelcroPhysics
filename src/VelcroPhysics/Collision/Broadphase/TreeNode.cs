@@ -14,6 +14,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
         internal int Height;
         internal int ParentOrNext;
         internal T? UserData;
+        internal bool Moved;
 
         internal bool IsLeaf()
         {

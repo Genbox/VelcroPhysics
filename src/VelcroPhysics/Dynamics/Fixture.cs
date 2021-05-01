@@ -367,7 +367,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
                 proxy.AABB.Combine(ref aabb1, ref aabb2);
 
-                Vector2 displacement = transform2.p - transform1.p;
+                Vector2 displacement = aabb2.Center - aabb1.Center;
 
                 broadPhase.MoveProxy(proxy.ProxyId, ref proxy.AABB, displacement);
             }

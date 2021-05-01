@@ -153,6 +153,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
             _nodes[proxyId].AABB.UpperBound = aabb.UpperBound + r;
             _nodes[proxyId].UserData = userData;
             _nodes[proxyId].Height = 0;
+            _nodes[proxyId].Moved = true;
 
             InsertLeaf(proxyId);
 
@@ -184,34 +185,66 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
 
             Debug.Assert(_nodes[proxyId].IsLeaf());
 
-            if (_nodes[proxyId].AABB.Contains(ref aabb))
-                return false;
-
-            RemoveLeaf(proxyId);
-
-            // Extend AABB.
-            AABB b = aabb;
+            // Extend AABB
+            AABB fatAABB = new AABB();
             Vector2 r = new Vector2(Settings.AABBExtension, Settings.AABBExtension);
-            b.LowerBound -= r;
-            b.UpperBound += r;
+            fatAABB.LowerBound = aabb.LowerBound - r;
+            fatAABB.UpperBound = aabb.UpperBound + r;
 
-            // Predict AABB displacement.
+            // Predict AABB movement
             Vector2 d = Settings.AABBMultiplier * displacement;
 
             if (d.X < 0.0f)
-                b.LowerBound.X += d.X;
+                fatAABB.LowerBound.X += d.X;
             else
-                b.UpperBound.X += d.X;
+                fatAABB.UpperBound.X += d.X;
 
             if (d.Y < 0.0f)
-                b.LowerBound.Y += d.Y;
+                fatAABB.LowerBound.Y += d.Y;
             else
-                b.UpperBound.Y += d.Y;
+                fatAABB.UpperBound.Y += d.Y;
 
-            _nodes[proxyId].AABB = b;
+            AABB treeAABB = _nodes[proxyId].AABB;
+            if (treeAABB.Contains(ref aabb))
+            {
+                // The tree AABB still contains the object, but it might be too large.
+                // Perhaps the object was moving fast but has since gone to sleep.
+                // The huge AABB is larger than the new fat AABB.
+                AABB hugeAABB = new AABB();
+                hugeAABB.LowerBound = fatAABB.LowerBound - 4.0f * r;
+                hugeAABB.UpperBound = fatAABB.UpperBound + 4.0f * r;
+
+                if (hugeAABB.Contains(ref treeAABB))
+                {
+                    // The tree AABB contains the object AABB and the tree AABB is
+                    // not too large. No tree update needed.
+                    return false;
+                }
+
+                // Otherwise the tree AABB is huge and needs to be shrunk
+            }
+
+            RemoveLeaf(proxyId);
+
+            _nodes[proxyId].AABB = fatAABB;
 
             InsertLeaf(proxyId);
+
+            _nodes[proxyId].Moved = true;
+
             return true;
+        }
+
+        public bool WasMoved(int proxyId)
+        {
+            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            return _nodes[proxyId].Moved;
+        }
+
+        public void ClearMoved(int proxyId)
+        {
+            Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
+            _nodes[proxyId].Moved = false;
         }
 
         /// <summary>Get proxy user data.</summary>
@@ -389,6 +422,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
             _nodes[nodeId].Child2 = NullNode;
             _nodes[nodeId].Height = 0;
             _nodes[nodeId].UserData = default;
+            _nodes[nodeId].Moved = false;
             ++_nodeCount;
             return nodeId;
         }
