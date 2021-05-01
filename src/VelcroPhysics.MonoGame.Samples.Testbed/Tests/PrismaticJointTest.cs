@@ -20,48 +20,46 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System.ComponentModel;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class PrismaticTest : Test
+    public class PrismaticJointTest : Test
     {
         private readonly PrismaticJoint _joint;
+        private readonly bool _enableLimit = true;
+        private readonly bool _enableMotor = false;
+        private readonly float _motorSpeed = 10.0f;
 
-        private PrismaticTest()
+        private PrismaticJointTest()
         {
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-            PolygonShape shape = new PolygonShape(5);
-            shape.Vertices = PolygonUtils.CreateRectangle(2.0f, 0.5f);
+            PolygonShape shape = new PolygonShape(PolygonUtils.CreateRectangle(1.0f, 1f), 5);
 
             Body body = BodyFactory.CreateBody(World);
             body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(-10.0f, 10.0f);
+            body.Position = new Vector2(0.0f, 10.0f);
             body.Rotation = 0.5f * MathConstants.Pi;
             body.CreateFixture(shape);
 
-            // Bouncy limit
-            Vector2 axis = new Vector2(2.0f, 1.0f);
-            axis.Normalize();
-            _joint = new PrismaticJoint(ground, body, Vector2.Zero, Vector2.Zero, axis, true);
+            _joint = new PrismaticJoint(ground, body, body.Position, new Vector2(1.0f, 0.0f), true);
 
-            // Non-bouncy limit
-            //_joint = new PrismaticJoint(ground, body2, body2.Position, new Vector2(-10.0f, 10.0f), new Vector2(1.0f, 0.0f));
-
-            _joint.MotorSpeed = 5.0f;
-            _joint.MaxMotorForce = 1000.0f;
-            _joint.MotorEnabled = true;
+            _joint.MotorSpeed = _motorSpeed;
+            _joint.MaxMotorForce = 10000.0f;
+            _joint.MotorEnabled = _enableMotor;
             _joint.LowerLimit = -10.0f;
-            _joint.UpperLimit = 20.0f;
-            _joint.LimitEnabled = true;
+            _joint.UpperLimit = 10.0f;
+            _joint.LimitEnabled = _enableLimit;
 
             World.AddJoint(_joint);
         }
@@ -75,7 +73,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _joint.MotorEnabled = !_joint.MotorEnabled;
 
             if (keyboardManager.IsNewKeyPress(Keys.S))
-                _joint.MotorSpeed = -_joint.MotorSpeed;
+                _joint.MotorSpeed -= 0.1f;
 
             base.Keyboard(keyboardManager);
         }
@@ -88,7 +86,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         internal static Test Create()
         {
-            return new PrismaticTest();
+            return new PrismaticJointTest();
         }
     }
 }

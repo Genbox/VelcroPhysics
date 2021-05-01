@@ -143,7 +143,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _localAnchorC = prismatic.LocalAnchorA;
                 _localAnchorA = prismatic.LocalAnchorB;
                 _referenceAngleA = prismatic.ReferenceAngle;
-                _localAxisC = prismatic.LocalXAxis;
+                _localAxisC = prismatic.LocalXAxisA;
 
                 Vector2 pC = _localAnchorC;
                 Vector2 pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
@@ -175,7 +175,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _localAnchorD = prismatic.LocalAnchorA;
                 _localAnchorB = prismatic.LocalAnchorB;
                 _referenceAngleB = prismatic.ReferenceAngle;
-                _localAxisD = prismatic.LocalXAxis;
+                _localAxisD = prismatic.LocalXAxisA;
 
                 Vector2 pD = _localAnchorD;
                 Vector2 pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));

@@ -393,77 +393,113 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             if (!joint.Enabled)
                 return;
 
-            Body b1 = joint.BodyA;
-            Body b2 = joint.BodyB;
-            b1.GetTransform(out Transform xf1);
+            Body bA = joint.BodyA;
+            Body bB = joint.BodyB;
+            bA.GetTransform(out Transform xfA);
+            Vector2 x1 = xfA.p;
 
             Vector2 x2 = Vector2.Zero;
+            Transform xfB = default;
 
             if (!joint.IsFixedType())
             {
-                b2.GetTransform(out Transform xf2);
-                x2 = xf2.p;
+                bB.GetTransform(out xfB);
+                x2 = xfB.p;
             }
 
             Vector2 p1 = joint.WorldAnchorA;
             Vector2 p2 = joint.WorldAnchorB;
-            Vector2 x1 = xf1.p;
 
             Color color = new Color(0.5f, 0.8f, 0.8f);
 
-            switch (joint.JointType)
+            if (joint is PrismaticJoint pj)
             {
-                case JointType.Distance:
-                    DrawSegment(p1, p2, color);
-                    break;
-                case JointType.Pulley:
-                    PulleyJoint pulley = (PulleyJoint)joint;
-                    Vector2 s1 = b1.GetWorldPoint(pulley.LocalAnchorA);
-                    Vector2 s2 = b2.GetWorldPoint(pulley.LocalAnchorB);
-                    DrawSegment(p1, p2, color);
-                    DrawSegment(p1, s1, color);
-                    DrawSegment(p2, s2, color);
-                    break;
-                case JointType.FixedMouse:
-                    DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
-                    DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
-                    break;
-                case JointType.Revolute:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
-                    DrawSegment(x2, p2, color);
+                Vector2 pA = MathUtils.Mul(ref xfA, pj.LocalAnchorA);
+                Vector2 pB = MathUtils.Mul(ref xfB, pj.LocalAnchorB);
 
-                    DrawSolidCircle(p2, 0.1f, Vector2.Zero, Color.Red);
-                    DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
-                    break;
-                case JointType.FixedAngle:
+                Vector2 axis = MathUtils.Mul(ref xfA.q, pj.LocalXAxisA);
 
-                    //Should not draw anything.
-                    break;
-                case JointType.FixedRevolute:
-                    DrawSegment(x1, p1, color);
-                    DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Pink);
-                    break;
-                case JointType.FixedLine:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
-                    break;
-                case JointType.FixedDistance:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
-                    break;
-                case JointType.FixedPrismatic:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
-                    break;
-                case JointType.Gear:
-                    DrawSegment(x1, x2, color);
-                    break;
-                default:
-                    DrawSegment(x1, p1, color);
-                    DrawSegment(p1, p2, color);
-                    DrawSegment(x2, p2, color);
-                    break;
+                Color c1 = new Color(0.7f, 0.7f, 0.7f);
+                Color c2 = new Color(0.3f, 0.9f, 0.3f);
+                Color c3 = new Color(0.9f, 0.3f, 0.3f);
+                Color c4 = new Color(0.3f, 0.3f, 0.9f);
+                Color c5 = new Color(0.4f, 0.4f, 0.4f);
+
+                DrawSegment(pA, pB, c5);
+
+                if (pj.LimitEnabled)
+                {
+                    Vector2 lower = pA + pj.LowerLimit * axis;
+                    Vector2 upper = pA + pj.UpperLimit * axis;
+                    Vector2 perp = MathUtils.Mul(xfA.q, pj.LocalYAxisA);
+                    DrawSegment(lower, upper, c1);
+                    DrawSegment(lower - 0.5f * perp, lower + 0.5f * perp, c2);
+                    DrawSegment(upper - 0.5f * perp, upper + 0.5f * perp, c3);
+                }
+                else
+                {
+                    DrawSegment(pA - 1.0f * axis, pA + 1.0f * axis, c1);
+                }
+
+                DrawPoint(pA, 1.0f, c1);
+                DrawPoint(pB, 1.0f, c4);
+            }
+            else
+            {
+                switch (joint.JointType)
+                {
+                    case JointType.Distance:
+                        DrawSegment(p1, p2, color);
+                        break;
+                    case JointType.Pulley:
+                        PulleyJoint pulley = (PulleyJoint)joint;
+                        Vector2 s1 = bA.GetWorldPoint(pulley.LocalAnchorA);
+                        Vector2 s2 = bB.GetWorldPoint(pulley.LocalAnchorB);
+                        DrawSegment(p1, p2, color);
+                        DrawSegment(p1, s1, color);
+                        DrawSegment(p2, s2, color);
+                        break;
+                    case JointType.FixedMouse:
+                        DrawPoint(p1, 0.5f, new Color(0.0f, 1.0f, 0.0f));
+                        DrawSegment(p1, p2, new Color(0.8f, 0.8f, 0.8f));
+                        break;
+                    case JointType.Revolute:
+                        DrawSegment(x1, p1, color);
+                        DrawSegment(p1, p2, color);
+                        DrawSegment(x2, p2, color);
+
+                        DrawSolidCircle(p2, 0.1f, Vector2.Zero, Color.Red);
+                        DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Blue);
+                        break;
+                    case JointType.FixedAngle:
+
+                        //Should not draw anything.
+                        break;
+                    case JointType.FixedRevolute:
+                        DrawSegment(x1, p1, color);
+                        DrawSolidCircle(p1, 0.1f, Vector2.Zero, Color.Pink);
+                        break;
+                    case JointType.FixedLine:
+                        DrawSegment(x1, p1, color);
+                        DrawSegment(p1, p2, color);
+                        break;
+                    case JointType.FixedDistance:
+                        DrawSegment(x1, p1, color);
+                        DrawSegment(p1, p2, color);
+                        break;
+                    case JointType.FixedPrismatic:
+                        DrawSegment(x1, p1, color);
+                        DrawSegment(p1, p2, color);
+                        break;
+                    case JointType.Gear:
+                        DrawSegment(x1, x2, color);
+                        break;
+                    default:
+                        DrawSegment(x1, p1, color);
+                        DrawSegment(p1, p2, color);
+                        DrawSegment(x2, p2, color);
+                        break;
+                }
             }
         }
 

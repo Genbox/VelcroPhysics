@@ -396,5 +396,10 @@ namespace Genbox.VelcroPhysics.Utilities
         {
             return Math.Max(valueA, valueB);
         }
+
+        public static float Min(float a, float b)
+        {
+            return a < b ? a : b;
+        }
     }
 }

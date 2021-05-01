@@ -54,7 +54,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             new TestEntry { Name = "Shape Editing", CreateTest = ShapeEditingTest.Create },
             new TestEntry { Name = "Car", CreateTest = CarTest.Create },
             new TestEntry { Name = "Apply Force", CreateTest = ApplyForceTest.Create },
-            new TestEntry { Name = "Prismatic", CreateTest = PrismaticTest.Create },
+            new TestEntry { Name = "Prismatic Joint", CreateTest = PrismaticJointTest.Create },
             new TestEntry { Name = "Vertical Stack", CreateTest = VerticalStackTest.Create },
             new TestEntry { Name = "SphereStack", CreateTest = SphereStackTest.Create },
             new TestEntry { Name = "Revolute", CreateTest = RevoluteTest.Create },
