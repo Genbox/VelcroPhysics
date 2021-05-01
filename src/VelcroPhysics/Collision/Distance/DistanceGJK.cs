@@ -240,7 +240,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
 
             // Sigma is the target distance between polygons
             float sigma = MathUtils.Max(Settings.PolygonRadius, radius - Settings.PolygonRadius);
-            const float tolerance = 0.5f * Settings.LinearSlop;
+            float tolerance = 0.5f * Settings.LinearSlop;
 
             // Main iteration loop.
             int iter = 0;

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -32,8 +32,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
     /// <summary>This is an internal class.</summary>
     internal class Island
     {
-        private const float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-        private const float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+        private float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
         private ContactManager _contactManager;
         private Contact[] _contacts;
         private ContactSolver _contactSolver = new ContactSolver();

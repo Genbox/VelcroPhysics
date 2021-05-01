@@ -18,7 +18,7 @@ namespace Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase
             if (vertices.Count <= 3)
                 return new List<Vertices> { vertices };
 
-            List<Vertices> results;
+            List<Vertices> results = null;
 
             switch (algorithm)
             {
