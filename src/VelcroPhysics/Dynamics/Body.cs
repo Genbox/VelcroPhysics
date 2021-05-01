@@ -90,16 +90,8 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             _type = template.Type;
 
-            if (_type == BodyType.Dynamic)
-            {
-                _mass = 1.0f;
-                _invMass = 1.0f;
-            }
-            else
-            {
-                _mass = 0.0f;
-                _invMass = 0.0f;
-            }
+            _mass = 0.0f;
+            _invMass = 0.0f;
 
             UserData = template.UserData;
         }
@@ -918,12 +910,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             {
                 _invMass = 1.0f / _mass;
                 localCenter *= _invMass;
-            }
-            else
-            {
-                // Force all bodies to have a positive mass.
-                _mass = 1.0f;
-                _invMass = 1.0f;
             }
 
             if (_inertia > 0.0f && (_flags & BodyFlags.FixedRotationFlag) == 0)

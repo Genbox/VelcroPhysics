@@ -102,13 +102,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
                 if (b.BodyType == BodyType.Dynamic)
                 {
-                    // Integrate velocities.
-
                     //Velcro: Only apply gravity if the body wants it.
+                    // Integrate velocities.
                     if (b.IgnoreGravity)
-                        v += h * (b._invMass * b._force);
+                        v += h * b._invMass * b.Mass * b._force;
                     else
-                        v += h * (b.GravityScale * gravity + b._invMass * b._force);
+                        v += h * b._invMass * (b.GravityScale * b.Mass * gravity + b._force);
 
                     w += h * b._invI * b._torque;
 
