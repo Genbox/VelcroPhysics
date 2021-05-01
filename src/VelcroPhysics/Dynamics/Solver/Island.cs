@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -189,14 +189,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
                 // Check for large velocities
                 Vector2 translation = h * v;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                if (Vector2.Dot(translation, translation) > Settings.MaxTranslation * Settings.MaxTranslation)
                 {
                     float ratio = Settings.MaxTranslation / translation.Length();
                     v *= ratio;
                 }
 
                 float rotation = h * w;
-                if (rotation * rotation > Settings.MaxRotationSquared)
+                if (rotation * rotation > Settings.MaxRotation * Settings.MaxRotation)
                 {
                     float ratio = Settings.MaxRotation / Math.Abs(rotation);
                     w *= ratio;
@@ -354,14 +354,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
                 // Check for large velocities
                 Vector2 translation = h * v;
-                if (Vector2.Dot(translation, translation) > Settings.MaxTranslationSquared)
+                if (Vector2.Dot(translation, translation) > Settings.MaxTranslation * Settings.MaxTranslation)
                 {
                     float ratio = Settings.MaxTranslation / translation.Length();
                     v *= ratio;
                 }
 
                 float rotation = h * w;
-                if (rotation * rotation > Settings.MaxRotationSquared)
+                if (rotation * rotation > Settings.MaxRotation * Settings.MaxRotation)
                 {
                     float ratio = Settings.MaxRotation / Math.Abs(rotation);
                     w *= ratio;
