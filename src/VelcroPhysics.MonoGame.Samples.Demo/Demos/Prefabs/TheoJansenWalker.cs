@@ -178,33 +178,37 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             Fixture shoulderFixture = shoulder.CreateFixture(shoulderPolygon);
             shoulderFixture.CollisionGroup = -1;
 
+            float dampingRatio = 0.5f;
+            float frequencyHz = 10.0f;
+
             // Using a soft distancejoint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
             DistanceJoint djd = new DistanceJoint(leg, shoulder, points[1] + _position, points[4] + _position, true);
-            djd.DampingRatio = 0.5f;
-            djd.Frequency = 10f;
+            JointHelper.LinearStiffness(frequencyHz, dampingRatio, djd.BodyA, djd.BodyB, out float stiffness, out float damping);
+            djd.Damping = damping;
+            djd.Stiffness = stiffness;
 
             world.AddJoint(djd);
             _walkerJoints.Add(djd);
 
             DistanceJoint djd2 = new DistanceJoint(leg, shoulder, points[2] + _position, points[3] + _position, true);
-            djd2.DampingRatio = 0.5f;
-            djd2.Frequency = 10f;
+            djd2.Damping = damping;
+            djd2.Stiffness = stiffness;
 
             world.AddJoint(djd2);
             _walkerJoints.Add(djd2);
 
             DistanceJoint djd3 = new DistanceJoint(leg, _wheel, points[2] + _position, wheelAnchor + _position, true);
-            djd3.DampingRatio = 0.5f;
-            djd3.Frequency = 10f;
+            djd3.Damping = damping;
+            djd3.Stiffness = stiffness;
 
             world.AddJoint(djd3);
             _walkerJoints.Add(djd3);
 
             DistanceJoint djd4 = new DistanceJoint(shoulder, _wheel, points[5] + _position, wheelAnchor + _position, true);
-            djd4.DampingRatio = 0.5f;
-            djd4.Frequency = 10f;
+            djd4.Damping = damping;
+            djd4.Stiffness = stiffness;
 
             world.AddJoint(djd4);
             _walkerJoints.Add(djd4);

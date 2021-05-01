@@ -24,6 +24,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -48,64 +49,70 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground = BodyFactory.CreateEdge(World, new Vector2(-40, 0), new Vector2(40, 0));
 
             {
-                _bodies[0] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 5.0f));
-                _bodies[0].BodyType = BodyType.Dynamic;
+                _bodies[0] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 5.0f), bodyType: BodyType.Dynamic);
+                _bodies[1] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 5.0f), bodyType: BodyType.Dynamic);
+                _bodies[2] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 15.0f), bodyType: BodyType.Dynamic);
+                _bodies[3] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 15.0f), bodyType: BodyType.Dynamic);
 
-                _bodies[1] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 5.0f));
-                _bodies[1].BodyType = BodyType.Dynamic;
+                Vector2 p1, p2, d;
 
-                _bodies[2] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(5.0f, 15.0f));
-                _bodies[2].BodyType = BodyType.Dynamic;
-
-                _bodies[3] = BodyFactory.CreateRectangle(World, 1f, 1f, 5, new Vector2(-5.0f, 15.0f));
-                _bodies[3].BodyType = BodyType.Dynamic;
+                float frequencyHz = 2.0f;
+                float dampingRatio = 0.0f;
 
                 DistanceJoint dj = new DistanceJoint(ground, _bodies[0], new Vector2(-10.0f, 0.0f), new Vector2(-0.5f, -0.5f));
+
+                p1 = dj.BodyA.GetWorldPoint(dj.LocalAnchorA);
+                p2 = dj.BodyB.GetWorldPoint(dj.LocalAnchorB);
+                d = p2 - p1;
+                dj.Length = d.Length();
+
+                //Velcro: We only calculate this once as the mass is identical for all bodies
+                JointHelper.LinearStiffness(frequencyHz, dampingRatio, dj.BodyA, dj.BodyB, out float stiffness, out float damping);
+                dj.Stiffness = stiffness;
+                dj.Damping = damping;
                 _joints[0] = dj;
-                dj.Frequency = 2.0f;
-                dj.DampingRatio = 0.0f;
                 World.AddJoint(_joints[0]);
 
                 DistanceJoint dj1 = new DistanceJoint(ground, _bodies[1], new Vector2(10.0f, 0.0f), new Vector2(0.5f, -0.5f));
+                dj1.Stiffness = stiffness;
+                dj1.Damping = damping;
                 _joints[1] = dj1;
-                dj1.Frequency = 2.0f;
-                dj1.DampingRatio = 0.0f;
                 World.AddJoint(_joints[1]);
 
                 DistanceJoint dj2 = new DistanceJoint(ground, _bodies[2], new Vector2(10.0f, 20.0f), new Vector2(0.5f, 0.5f));
+                dj2.Stiffness = stiffness;
+                dj2.Damping = damping;
                 _joints[2] = dj2;
-                dj2.Frequency = 2.0f;
-                dj2.DampingRatio = 0.0f;
                 World.AddJoint(_joints[2]);
 
                 DistanceJoint dj3 = new DistanceJoint(ground, _bodies[3], new Vector2(-10.0f, 20.0f), new Vector2(-0.5f, 0.5f));
+                dj3.Stiffness = stiffness;
+                dj3.Damping = damping;
                 _joints[3] = dj3;
-                dj3.Frequency = 2.0f;
-                dj3.DampingRatio = 0.0f;
                 World.AddJoint(_joints[3]);
 
                 DistanceJoint dj4 = new DistanceJoint(_bodies[0], _bodies[1], new Vector2(0.5f, 0.0f), new Vector2(-0.5f, 0.0f));
+                dj4.Stiffness = stiffness;
+                dj4.Damping = damping;
                 _joints[4] = dj4;
-                dj4.Frequency = 2.0f;
-                dj4.DampingRatio = 0.0f;
                 World.AddJoint(_joints[4]);
 
                 DistanceJoint dj5 = new DistanceJoint(_bodies[1], _bodies[2], new Vector2(0.0f, 0.5f), new Vector2(0.0f, -0.5f));
+                dj5.Stiffness = stiffness;
+                dj5.Damping = damping;
                 _joints[5] = dj5;
-                dj5.Frequency = 2.0f;
-                dj5.DampingRatio = 0.0f;
                 World.AddJoint(_joints[5]);
 
                 DistanceJoint dj6 = new DistanceJoint(_bodies[2], _bodies[3], new Vector2(-0.5f, 0.0f), new Vector2(0.5f, 0.0f));
+                dj6.Stiffness = stiffness;
+                dj6.Damping = damping;
                 _joints[6] = dj6;
-                dj6.Frequency = 2.0f;
-                dj6.DampingRatio = 0.0f;
                 World.AddJoint(_joints[6]);
 
                 DistanceJoint dj7 = new DistanceJoint(_bodies[3], _bodies[0], new Vector2(0.0f, -0.5f), new Vector2(0.0f, 0.5f));
+                dj7.Stiffness = stiffness;
+                dj7.Damping = damping;
                 _joints[7] = dj7;
-                dj7.Frequency = 2.0f;
-                dj7.DampingRatio = 0.0f;
                 World.AddJoint(_joints[7]);
             }
         }

@@ -169,34 +169,33 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Fixture f2 = body2.CreateFixture(poly2);
             f2.CollisionGroup = -1;
 
-            // Using a soft distanceraint can reduce some jitter.
+            // Using a soft distance constraint can reduce some jitter.
             // It also makes the structure seem a bit more fluid by
             // acting like a suspension system.
-            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset, true);
-            djd.DampingRatio = 0.5f;
-            djd.Frequency = 10.0f;
+            float dampingRatio = 0.5f;
+            float frequencyHz = 10.0f;
 
+            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset, true);
+            JointHelper.LinearStiffness(frequencyHz, dampingRatio, djd.BodyA, djd.BodyB, out var stiffness, out var damping);
+            djd.Damping = damping;
+            djd.Stiffness = stiffness;
             World.AddJoint(djd);
 
             DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset, true);
-            djd2.DampingRatio = 0.5f;
-            djd2.Frequency = 10.0f;
-
+            djd2.Damping = damping;
+            djd2.Stiffness = stiffness;
             World.AddJoint(djd2);
 
             DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset, true);
-            djd3.DampingRatio = 0.5f;
-            djd3.Frequency = 10.0f;
-
+            djd3.Damping = damping;
+            djd3.Stiffness = stiffness;
             World.AddJoint(djd3);
 
             DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset, true);
-            djd4.DampingRatio = 0.5f;
-            djd4.Frequency = 10.0f;
-
+            djd4.Damping = damping;
+            djd4.Stiffness = stiffness;
             World.AddJoint(djd4);
 
-            Vector2 anchor = p4 - new Vector2(0.0f, 0.8f) /*+ _offset*/;
             RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset, true);
             World.AddJoint(rjd);
         }

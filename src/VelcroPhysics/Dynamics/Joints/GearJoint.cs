@@ -57,8 +57,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class GearJoint : Joint
     {
-        private Body _bodyA;
-        private Body _bodyB;
         private Body _bodyC;
         private Body _bodyD;
 

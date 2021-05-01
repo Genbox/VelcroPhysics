@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -60,6 +60,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             new TestEntry { Name = "Revolute", CreateTest = RevoluteTest.Create },
             new TestEntry { Name = "Pulleys", CreateTest = PulleysTest.Create },
             new TestEntry { Name = "Polygon Shapes", CreateTest = PolyShapesTest.Create },
+            new TestEntry { Name = "DistanceJoint", CreateTest = DistanceJointTest.Create },
             new TestEntry { Name = "Web", CreateTest = WebTest.Create },
             new TestEntry { Name = "RopeJoint", CreateTest = RopeTest.Create },
             new TestEntry { Name = "Pinball", CreateTest = PinballTest.Create },

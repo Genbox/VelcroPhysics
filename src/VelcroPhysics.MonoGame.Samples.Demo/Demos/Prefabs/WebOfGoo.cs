@@ -44,8 +44,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                     current.BodyType = BodyType.Dynamic;
 
                     DistanceJoint joint = new DistanceJoint(previous, current, Vector2.Zero, Vector2.Zero);
-                    joint.Frequency = 4.0f;
-                    joint.DampingRatio = 0.5f;
+                    joint.Stiffness = 4.0f;
+                    joint.Damping = 0.5f;
                     joint.Breakpoint = Breakpoint;
                     world.AddJoint(joint);
                     _ringJoints.Add(joint);
@@ -56,8 +56,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
                 //Connect the first and the last goo
                 DistanceJoint jointClose = new DistanceJoint(bodies[0], bodies[bodies.Count - 1], Vector2.Zero, Vector2.Zero);
-                jointClose.Frequency = 4.0f;
-                jointClose.DampingRatio = 0.5f;
+                JointHelper.LinearStiffness(4.0f, 0.5f, jointClose.BodyA, jointClose.BodyB, out var stiffness, out var damping);
+                jointClose.Stiffness = stiffness;
+                jointClose.Damping = damping;
                 jointClose.Breakpoint = Breakpoint;
                 world.AddJoint(jointClose);
                 _ringJoints.Add(jointClose);
@@ -76,8 +77,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             for (int i = 0; i < _ringBodys[rings - 2].Count; i++)
             {
                 DistanceJoint joint = new DistanceJoint(anchor, _ringBodys[rings - 2][i], frame[i], _ringBodys[rings - 2][i].Position, true);
-                joint.Frequency = 8.0f;
-                joint.DampingRatio = 0.5f;
+                JointHelper.LinearStiffness(8.0f, 0.5f, joint.BodyA, joint.BodyB, out var stiffness, out var damping);
+                joint.Stiffness = stiffness;
+                joint.Damping = damping;
                 joint.Breakpoint = Breakpoint;
                 world.AddJoint(joint);
                 _ringJoints.Add(joint);
@@ -89,8 +91,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 for (int j = 0; j < sides; j++)
                 {
                     DistanceJoint joint = new DistanceJoint(_ringBodys[i - 1][j], _ringBodys[i][j], Vector2.Zero, Vector2.Zero);
-                    joint.Frequency = 4.0f;
-                    joint.DampingRatio = 0.5f;
+                    JointHelper.LinearStiffness(4.0f, 0.5f, joint.BodyA, joint.BodyB, out var stiffness, out var damping);
+                    joint.Stiffness = stiffness;
+                    joint.Damping = damping;
                     joint.Breakpoint = Breakpoint;
                     world.AddJoint(joint);
                     _ringJoints.Add(joint);

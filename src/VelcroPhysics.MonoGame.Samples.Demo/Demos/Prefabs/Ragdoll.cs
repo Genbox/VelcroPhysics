@@ -5,6 +5,7 @@ using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PVRTexLibNET;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 {
@@ -48,10 +49,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             Body.BodyType = BodyType.Dynamic;
             Body.Mass = 1f;
             Body.SetTransform(position + new Vector2(0f, 1.75f), MathHelper.Pi / 2f);
+
             _middleBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
             _middleBody.BodyType = BodyType.Dynamic;
             _middleBody.Mass = 1f;
             _middleBody.SetTransform(position + new Vector2(0f, 3f), MathHelper.Pi / 2f);
+
             _lowerBody = BodyFactory.CreateCapsule(world, 0.5f, 0.75f, LegDensity);
             _lowerBody.BodyType = BodyType.Dynamic;
             _lowerBody.Mass = 1f;
@@ -113,73 +116,83 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _upperRightLeg.Mass = 2f;
             _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
 
+
             // head -> upper body
             DistanceJoint jointHeadBody = new DistanceJoint(_head, Body, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointHeadBody.BodyA, jointHeadBody.BodyB, out var stiffness, out var damping);
             jointHeadBody.CollideConnected = true;
-            jointHeadBody.DampingRatio = DampingRatio;
-            jointHeadBody.Frequency = Frequency;
+            jointHeadBody.Damping = damping;
+            jointHeadBody.Stiffness = stiffness;
             jointHeadBody.Length = 0.025f;
             world.AddJoint(jointHeadBody);
 
             // lowerLeftArm -> upperLeftArm
             DistanceJoint jointLeftArm = new DistanceJoint(_lowerLeftArm, _upperLeftArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointLeftArm.BodyA, jointLeftArm.BodyB, out stiffness, out damping);
             jointLeftArm.CollideConnected = true;
-            jointLeftArm.DampingRatio = DampingRatio;
-            jointLeftArm.Frequency = Frequency;
+            jointLeftArm.Damping = damping;
+            jointLeftArm.Stiffness = stiffness;
             jointLeftArm.Length = 0.02f;
             world.AddJoint(jointLeftArm);
 
             // upperLeftArm -> upper body
             DistanceJoint jointLeftArmBody = new DistanceJoint(_upperLeftArm, Body, new Vector2(0f, -1f), new Vector2(-0.15f, 1f));
-            jointLeftArmBody.DampingRatio = DampingRatio;
-            jointLeftArmBody.Frequency = Frequency;
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointLeftArmBody.BodyA, jointLeftArmBody.BodyB, out stiffness, out damping);
+            jointLeftArmBody.Damping = damping;
+            jointLeftArmBody.Stiffness = stiffness;
             jointLeftArmBody.Length = 0.02f;
             world.AddJoint(jointLeftArmBody);
 
             // lowerRightArm -> upperRightArm
             DistanceJoint jointRightArm = new DistanceJoint(_lowerRightArm, _upperRightArm, new Vector2(0f, -1f), new Vector2(0f, 1f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointRightArm.BodyA, jointRightArm.BodyB, out stiffness, out damping);
             jointRightArm.CollideConnected = true;
-            jointRightArm.DampingRatio = DampingRatio;
-            jointRightArm.Frequency = Frequency;
+            jointRightArm.Damping = damping;
+            jointRightArm.Stiffness = stiffness;
             jointRightArm.Length = 0.02f;
             world.AddJoint(jointRightArm);
 
             // upperRightArm -> upper body
             DistanceJoint jointRightArmBody = new DistanceJoint(_upperRightArm, Body, new Vector2(0f, -1f), new Vector2(-0.15f, -1f));
-            jointRightArmBody.DampingRatio = DampingRatio;
-            jointRightArmBody.Frequency = 25;
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointRightArmBody.BodyA, jointRightArmBody.BodyB, out stiffness, out damping);
+            jointRightArmBody.Damping = damping;
+            jointRightArmBody.Stiffness = stiffness;
             jointRightArmBody.Length = 0.02f;
             world.AddJoint(jointRightArmBody);
 
             // lowerLeftLeg -> upperLeftLeg
             DistanceJoint jointLeftLeg = new DistanceJoint(_lowerLeftLeg, _upperLeftLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointLeftLeg.BodyA, jointLeftLeg.BodyB, out stiffness, out damping);
             jointLeftLeg.CollideConnected = true;
-            jointLeftLeg.DampingRatio = DampingRatio;
-            jointLeftLeg.Frequency = Frequency;
+            jointLeftLeg.Damping = damping;
+            jointLeftLeg.Stiffness = stiffness;
             jointLeftLeg.Length = 0.05f;
             world.AddJoint(jointLeftLeg);
 
             // upperLeftLeg -> lower body
             DistanceJoint jointLeftLegBody = new DistanceJoint(_upperLeftLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, 0.8f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointLeftLegBody.BodyA, jointLeftLegBody.BodyB, out stiffness, out damping);
             jointLeftLegBody.CollideConnected = true;
-            jointLeftLegBody.DampingRatio = DampingRatio;
-            jointLeftLegBody.Frequency = Frequency;
+            jointLeftLegBody.Damping = damping;
+            jointLeftLegBody.Stiffness = stiffness;
             jointLeftLegBody.Length = 0.02f;
             world.AddJoint(jointLeftLegBody);
 
             // lowerRightleg -> upperRightleg
             DistanceJoint jointRightLeg = new DistanceJoint(_lowerRightLeg, _upperRightLeg, new Vector2(0f, -1.1f), new Vector2(0f, 1f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointRightLeg.BodyA, jointRightLeg.BodyB, out stiffness, out damping);
             jointRightLeg.CollideConnected = true;
-            jointRightLeg.DampingRatio = DampingRatio;
-            jointRightLeg.Frequency = Frequency;
+            jointRightLeg.Damping = damping;
+            jointRightLeg.Stiffness = stiffness;
             jointRightLeg.Length = 0.05f;
             world.AddJoint(jointRightLeg);
 
             // upperRightleg -> lower body
             DistanceJoint jointRightLegBody = new DistanceJoint(_upperRightLeg, _lowerBody, new Vector2(0f, -1.1f), new Vector2(0.7f, -0.8f));
+            JointHelper.LinearStiffness(Frequency, DampingRatio, jointRightLegBody.BodyA, jointRightLegBody.BodyB, out stiffness, out damping);
             jointRightLegBody.CollideConnected = true;
-            jointRightLegBody.DampingRatio = DampingRatio;
-            jointRightLegBody.Frequency = Frequency;
+            jointRightLegBody.Damping = damping;
+            jointRightLegBody.Stiffness = stiffness;
             jointRightLegBody.Length = 0.02f;
             world.AddJoint(jointRightLegBody);
 

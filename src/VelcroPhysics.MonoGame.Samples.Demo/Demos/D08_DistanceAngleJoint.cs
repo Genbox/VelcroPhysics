@@ -66,8 +66,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _distanceBody[3].Position = new Vector2(16.5f, -6f);
 
             DistanceJoint softDistance = new DistanceJoint(_distanceBody[0], _distanceBody[1], Vector2.Zero, Vector2.Zero);
-            softDistance.DampingRatio = 0.3f;
-            softDistance.Frequency = 5f;
+            JointHelper.LinearStiffness(5f, 0.3f, softDistance.BodyA, softDistance.BodyB, out var stiffness, out var damping);
+            softDistance.Damping = damping;
+            softDistance.Stiffness = stiffness;
             World.AddJoint(softDistance);
             World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero));
 

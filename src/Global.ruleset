@@ -108,6 +108,9 @@
     <Rule Id="CS8629" Action="Error" />
     <Rule Id="CS8767" Action="Error" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0032" Action="None" />
+  </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1012" Action="Error" />
     <Rule Id="CA1018" Action="Error" />
@@ -171,6 +174,7 @@
     <Rule Id="RCS1066" Action="Error" />
     <Rule Id="RCS1075" Action="None" />
     <Rule Id="RCS1079" Action="Error" />
+    <Rule Id="RCS1085" Action="None" />
     <Rule Id="RCS1090" Action="None" />
     <Rule Id="RCS1093" Action="Warning" />
     <Rule Id="RCS1096" Action="None" />

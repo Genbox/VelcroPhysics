@@ -1,26 +1,29 @@
 /*
 * Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
+* Copyright (c) 2021 Ian Qvist
 * 
 * Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
+* Copyright (c) 2019 Erin Catto
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
 */
 
-using System;
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
@@ -29,7 +32,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
-    // 1-D rained system
+    // 1-D constrained system
     // m (v2 - v1) = lambda
     // v2 + (beta/h) * x1 + gamma * lambda = 0, gamma has units of inverse mass.
     // x2 = x1 + h * v2
@@ -45,31 +48,39 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     //   = invMass1 + invI1 * cross(r1, u)^2 + invMass2 + invI2 * cross(r2, u)^2
 
     /// <summary>
-    /// A distance joint rains two points on two bodies to remain at a fixed distance from each other. You can view
-    /// this as a massless, rigid rod.
+    /// A distance joint constrains two points on two bodies to remain at a fixed distance from each other. You can
+    /// view this as a massless, rigid rod.
     /// </summary>
     public class DistanceJoint : Joint
     {
-        // Solver shared
         private float _bias;
-
+        private float _currentLength;
         private float _gamma;
         private float _impulse;
 
         // Solver temp
         private int _indexA;
-
         private int _indexB;
         private float _invIA;
         private float _invIB;
         private float _invMassA;
         private float _invMassB;
+        private float _length;
+
+        // Solver shared
         private Vector2 _localCenterA;
         private Vector2 _localCenterB;
+        private float _lowerImpulse;
         private float _mass;
+        private float _maxLength;
+        private float _minLength;
         private Vector2 _rA;
         private Vector2 _rB;
+        private float _softMass;
         private Vector2 _u;
+        private float _upperImpulse;
+        private float _stiffness;
+        private float _damping;
 
         internal DistanceJoint()
         {
@@ -103,6 +114,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 LocalAnchorB = anchorB;
                 Length = (BodyB.GetWorldPoint(ref anchorB) - BodyA.GetWorldPoint(ref anchorA)).Length();
             }
+
+            _minLength = 0;
+            _maxLength = float.MaxValue;
         }
 
         /// <summary>The local anchor point relative to bodyA's origin.</summary>
@@ -111,41 +125,82 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <summary>The local anchor point relative to bodyB's origin.</summary>
         public Vector2 LocalAnchorB { get; set; }
 
+        /// <summary>The anchor on <see cref="Joint.BodyA" /> in world coordinates</summary>
         public sealed override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
+            get => _bodyA.GetWorldPoint(LocalAnchorA);
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
+        /// <summary>The anchor on <see cref="Joint.BodyB" /> in world coordinates</summary>
         public sealed override Vector2 WorldAnchorB
         {
-            get => BodyB.GetWorldPoint(LocalAnchorB);
+            get => _bodyB.GetWorldPoint(LocalAnchorB);
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
-        /// <summary>
-        /// The natural length between the anchor points. Manipulating the length can lead to non-physical behavior when
-        /// the frequency is zero.
-        /// </summary>
-        public float Length { get; set; }
+        /// <summary>The rest length of this joint. Clamped to a stable minimum value.</summary>
+        public float Length
+        {
+            get
+            {
+                Vector2 pA = _bodyA.GetWorldPoint(LocalAnchorA);
+                Vector2 pB = _bodyB.GetWorldPoint(LocalAnchorB);
+                Vector2 d = pB - pA;
+                float length = d.Length();
+                return length;
+            }
+            set
+            {
+                _impulse = 0.0f;
+                _length = MathUtils.Max(Settings.LinearSlop, value);
+            }
+        }
 
-        /// <summary>The mass-spring-damper frequency in Hertz. A value of 0 disables softness.</summary>
-        public float Frequency { get; set; }
+        /// <summary>Set/get the linear stiffness in N/m</summary>
+        public float Stiffness
+        {
+            get => _stiffness;
+            set => _stiffness = value;
+        }
 
-        /// <summary>The damping ratio. 0 = no damping, 1 = critical damping.</summary>
-        public float DampingRatio { get; set; }
+        /// <summary>Set/get linear damping in N*s/m</summary>
+        public float Damping
+        {
+            get => _damping;
+            set => _damping = value;
+        }
+
+        /// <summary>Minimum length. Clamped to a stable minimum value.</summary>
+        public float MinLength
+        {
+            get => _minLength;
+            set
+            {
+                _lowerImpulse = 0.0f;
+                _minLength = MathUtils.Clamp(value, Settings.LinearSlop, _maxLength);
+            }
+        }
+
+        /// <summary>Maximum length. Must be greater than or equal to the minimum length.</summary>
+        public float MaxLength
+        {
+            get => _maxLength;
+            set
+            {
+                _upperImpulse = 0.0f;
+                _maxLength = MathUtils.Max(value, _minLength);
+            }
+        }
 
         /// <summary>Get the reaction force given the inverse time step. Unit is N.</summary>
-        /// <param name="invDt"></param>
-        /// <returns></returns>
         public override Vector2 GetReactionForce(float invDt)
         {
-            Vector2 F = (invDt * _impulse) * _u;
+            Vector2 F = invDt * (_impulse + _lowerImpulse - _upperImpulse) * _u;
             return F;
         }
 
         /// <summary>Get the reaction torque given the inverse time step. Unit is N*m. This is always zero for a distance joint.</summary>
-        /// <param name="invDt"></param>
         public override float GetReactionTorque(float invDt)
         {
             return 0.0f;
@@ -174,64 +229,70 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(ref qA, LocalAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(ref qB, LocalAnchorB - _localCenterB);
             _u = cB + _rB - cA - _rA;
 
             // Handle singularity.
-            float length = _u.Length();
-            if (length > Settings.LinearSlop)
-                _u *= 1.0f / length;
+            _currentLength = _u.Length();
+            if (_currentLength > Settings.LinearSlop)
+                _u *= 1.0f / _currentLength;
             else
+            {
                 _u = Vector2.Zero;
+                _mass = 0.0f;
+                _impulse = 0.0f;
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+            }
 
             float crAu = MathUtils.Cross(_rA, _u);
             float crBu = MathUtils.Cross(_rB, _u);
             float invMass = _invMassA + _invIA * crAu * crAu + _invMassB + _invIB * crBu * crBu;
-
-            // Compute the effective mass matrix.
             _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
 
-            if (Frequency > 0.0f)
+            if (_stiffness > 0.0f && _minLength < _maxLength)
             {
-                float C = length - Length;
+                float C = _currentLength - _length;
 
                 // Frequency
-                float omega = 2.0f * MathConstants.Pi * Frequency;
+                float omega = 2.0f * MathConstants.Pi * _stiffness;
 
-                // Damping coefficient
-                float d = 2.0f * _mass * DampingRatio * omega;
-
-                // Spring stiffness
-                float k = _mass * omega * omega;
+                float d = _damping;
+                float k = _stiffness;
 
                 // magic formulas
                 float h = data.Step.DeltaTime;
 
-                // gamma = 1 / (h * (d + h * k)), the extra factor of h in the denominator is since the lambda is an impulse, not a force
+                // gamma = 1 / (h * (d + h * k))
+                // the extra factor of h in the denominator is since the lambda is an impulse, not a force
                 _gamma = h * (d + h * k);
                 _gamma = _gamma != 0.0f ? 1.0f / _gamma : 0.0f;
                 _bias = C * h * k * _gamma;
 
                 invMass += _gamma;
-                _mass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
+                _softMass = invMass != 0.0f ? 1.0f / invMass : 0.0f;
             }
             else
             {
+                // rigid
                 _gamma = 0.0f;
                 _bias = 0.0f;
+                _softMass = _mass;
             }
 
             if (Settings.EnableWarmstarting)
             {
                 // Scale the impulse to support a variable time step.
                 _impulse *= data.Step.DeltaTimeRatio;
+                _lowerImpulse *= data.Step.DeltaTimeRatio;
+                _upperImpulse *= data.Step.DeltaTimeRatio;
 
-                Vector2 P = _impulse * _u;
+                Vector2 P = (_impulse + _lowerImpulse - _upperImpulse) * _u;
                 vA -= _invMassA * P;
-                wA -= _invIA * MathUtils.Cross(_rA, P);
+                wA -= _invIA * MathUtils.Cross(ref _rA, ref P);
                 vB += _invMassB * P;
-                wB += _invIB * MathUtils.Cross(_rB, P);
+                wB += _invIB * MathUtils.Cross(ref _rB, ref P);
             }
             else
                 _impulse = 0.0f;
@@ -249,19 +310,85 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Vector2 vB = data.Velocities[_indexB].V;
             float wB = data.Velocities[_indexB].W;
 
-            // Cdot = dot(u, v + cross(w, r))
-            Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
-            Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
-            float Cdot = Vector2.Dot(_u, vpB - vpA);
+            if (_minLength < _maxLength)
+            {
+                if (_stiffness > 0.0f)
+                {
+                    // Cdot = dot(u, v + cross(w, r))
+                    Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
+                    Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
+                    float Cdot = MathUtils.Dot(_u, vpB - vpA);
 
-            float impulse = -_mass * (Cdot + _bias + _gamma * _impulse);
-            _impulse += impulse;
+                    float impulse = -_softMass * (Cdot + _bias + _gamma * _impulse);
+                    _impulse += impulse;
 
-            Vector2 P = impulse * _u;
-            vA -= _invMassA * P;
-            wA -= _invIA * MathUtils.Cross(_rA, P);
-            vB += _invMassB * P;
-            wB += _invIB * MathUtils.Cross(_rB, P);
+                    Vector2 P = impulse * _u;
+                    vA -= _invMassA * P;
+                    wA -= _invIA * MathUtils.Cross(_rA, P);
+                    vB += _invMassB * P;
+                    wB += _invIB * MathUtils.Cross(_rB, P);
+                }
+
+                // lower
+                {
+                    float C = _currentLength - _minLength;
+                    float bias = MathUtils.Max(0.0f, C) * data.Step.InvertedDeltaTime;
+
+                    Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
+                    Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
+                    float Cdot = MathUtils.Dot(_u, vpB - vpA);
+
+                    float impulse = -_mass * (Cdot + bias);
+                    float oldImpulse = _lowerImpulse;
+                    _lowerImpulse = MathUtils.Max(0.0f, _lowerImpulse + impulse);
+                    impulse = _lowerImpulse - oldImpulse;
+                    Vector2 P = impulse * _u;
+
+                    vA -= _invMassA * P;
+                    wA -= _invIA * MathUtils.Cross(_rA, P);
+                    vB += _invMassB * P;
+                    wB += _invIB * MathUtils.Cross(_rB, P);
+                }
+
+                // upper
+                {
+                    float C = _maxLength - _currentLength;
+                    float bias = MathUtils.Max(0.0f, C) * data.Step.InvertedDeltaTime;
+
+                    Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
+                    Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
+                    float Cdot = MathUtils.Dot(_u, vpA - vpB);
+
+                    float impulse = -_mass * (Cdot + bias);
+                    float oldImpulse = _upperImpulse;
+                    _upperImpulse = MathUtils.Max(0.0f, _upperImpulse + impulse);
+                    impulse = _upperImpulse - oldImpulse;
+                    Vector2 P = -impulse * _u;
+
+                    vA -= _invMassA * P;
+                    wA -= _invIA * MathUtils.Cross(_rA, P);
+                    vB += _invMassB * P;
+                    wB += _invIB * MathUtils.Cross(_rB, P);
+                }
+            }
+            else
+            {
+                // Equal limits
+
+                // Cdot = dot(u, v + cross(w, r))
+                Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
+                Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
+                float Cdot = MathUtils.Dot(_u, vpB - vpA);
+
+                float impulse = -_mass * Cdot;
+                _impulse += impulse;
+
+                Vector2 P = impulse * _u;
+                vA -= _invMassA * P;
+                wA -= _invIA * MathUtils.Cross(_rA, P);
+                vB += _invMassB * P;
+                wB += _invIB * MathUtils.Cross(_rB, P);
+            }
 
             data.Velocities[_indexA].V = vA;
             data.Velocities[_indexA].W = wA;
@@ -271,12 +398,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal override bool SolvePositionConstraints(ref SolverData data)
         {
-            if (Frequency > 0.0f)
-            {
-                // There is no position correction for soft distance constraints.
-                return true;
-            }
-
             Vector2 cA = data.Positions[_indexA].C;
             float aA = data.Positions[_indexA].A;
             Vector2 cB = data.Positions[_indexB].C;
@@ -290,8 +411,16 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             float length = u.Length();
             u.Normalize();
-            float C = length - Length;
-            C = MathUtils.Clamp(C, -Settings.MaxLinearCorrection, Settings.MaxLinearCorrection);
+
+            float C;
+            if (_minLength == _maxLength)
+                C = length - _minLength;
+            else if (length < _minLength)
+                C = length - _minLength;
+            else if (_maxLength < length)
+                C = length - _maxLength;
+            else
+                return true;
 
             float impulse = -_mass * C;
             Vector2 P = impulse * u;
@@ -306,7 +435,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             data.Positions[_indexB].C = cB;
             data.Positions[_indexB].A = aB;
 
-            return Math.Abs(C) < Settings.LinearSlop;
+            return MathUtils.Abs(C) < Settings.LinearSlop;
         }
     }
 }

@@ -39,6 +39,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public bool Enabled = true;
 
         internal bool IslandFlag;
+        protected Body _bodyA;
+        protected Body _bodyB;
 
         protected Joint()
         {
@@ -68,10 +70,18 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public JointType JointType { get; protected set; }
 
         /// <summary>Get the first body attached to this joint.</summary>
-        public Body BodyA { get; internal set; }
+        public Body BodyA
+        {
+            get => _bodyA;
+            internal set => _bodyA = value;
+        }
 
         /// <summary>Get the second body attached to this joint.</summary>
-        public Body BodyB { get; internal set; }
+        public Body BodyB
+        {
+            get => _bodyB;
+            internal set => _bodyB = value;
+        }
 
         /// <summary>
         /// Get the anchor point on bodyA in world coordinates. On some joints, this value indicate the anchor point

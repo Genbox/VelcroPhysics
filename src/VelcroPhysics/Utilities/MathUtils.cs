@@ -63,6 +63,11 @@ namespace Genbox.VelcroPhysics.Utilities
             return new Vector2(Math.Abs(v.X), Math.Abs(v.Y));
         }
 
+        public static float Abs(float value)
+        {
+            return Math.Abs(value);
+        }
+
         public static Vector2 Mul(ref Mat22 a, Vector2 v)
         {
             return Mul(ref a, ref v);
@@ -80,8 +85,8 @@ namespace Genbox.VelcroPhysics.Utilities
 
         public static Vector2 Mul(ref Transform T, ref Vector2 v)
         {
-            float x = (T.q.c * v.X - T.q.s * v.Y) + T.p.X;
-            float y = (T.q.s * v.X + T.q.c * v.Y) + T.p.Y;
+            float x = T.q.c * v.X - T.q.s * v.Y + T.p.X;
+            float y = T.q.s * v.X + T.q.c * v.Y + T.p.Y;
 
             return new Vector2(x, y);
         }
@@ -295,8 +300,14 @@ namespace Genbox.VelcroPhysics.Utilities
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
         }
 
-        /// Perform the dot product on two vectors.
+        /// <summary>Perform the dot product on two vectors.</summary>
         public static float Dot(ref Vector2 a, ref Vector2 b)
+        {
+            return a.X * b.X + a.Y * b.Y;
+        }
+
+        /// <summary>Perform the dot product on two vectors.</summary>
+        public static float Dot(Vector2 a, Vector2 b)
         {
             return a.X * b.X + a.Y * b.Y;
         }
