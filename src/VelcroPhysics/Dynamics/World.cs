@@ -937,10 +937,12 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             // Handle TOI events.
             if (Settings.ContinuousPhysics)
+            {
                 SolveTOI(ref step);
 
-            if (Settings.EnableDiagnostics)
-                InternalTimings.ContinuousPhysicsTimeDelta = _watch.ElapsedTicks;
+                if (Settings.EnableDiagnostics)
+                    InternalTimings.ContinuousPhysicsTimeDelta = _watch.ElapsedTicks;
+            }
 
             if (Settings.AutoClearForces)
                 ClearForces();
