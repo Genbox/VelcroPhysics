@@ -1,23 +1,28 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
+* MIT License
+*
+* Copyright (c) 2019 Erin Catto
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
 */
 
 using System;
@@ -28,14 +33,14 @@ namespace Genbox.VelcroPhysics
 {
     public static class Settings
     {
-        // Common
+        /* Velcro */
 
         /// <summary>
         /// Enabling diagnostics causes the engine to gather timing information. You can see how much time it took to
         /// solve the contacts, solve CCD and update the controllers. NOTE: If you are using a debug view that shows performance
         /// counters, you might want to enable this.
         /// </summary>
-        public static bool EnableDiagnostics = true;
+        public static bool EnableDiagnostics = false;
 
         /// <summary>
         /// Set this to true to skip sanity checks in the engine. This will speed up the tools by removing the overhead of
@@ -43,13 +48,56 @@ namespace Genbox.VelcroPhysics
         /// </summary>
         public static bool SkipSanityChecks = false;
 
-        /// <summary>Maximum number of sub-steps per contact in continuous physics simulation.</summary>
-        public static int MaxSubSteps = 8;
+        //Velcro: Moved AllowSleep from World to Settings
+        /// <summary>Enable/Disable sleeping</summary>
+        public static bool AllowSleep = true;
 
-        /// <summary>Enable/Disable warm-starting</summary>
+        /// <summary>The number of velocity iterations used in the solver.</summary>
+        public static int VelocityIterations = 8;
 
-        /// <summary>The maximum number of contact points between two convex shapes. DO NOT CHANGE THIS VALUE!</summary>
-        public static int MaxManifoldPoints = 2;
+        /// <summary>The number of position iterations used in the solver.</summary>
+        public static int PositionIterations = 3;
+
+        /// <summary>The number of velocity iterations in the TOI solver</summary>
+        public static int TOIVelocityIterations = 8;
+
+        /// <summary>The number of position iterations in the TOI solver</summary>
+        public static int TOIPositionIterations = 20;
+
+        /// <summary>
+        /// If true, it will run a GiftWrap convex hull on all polygon inputs. This makes for a more stable engine when
+        /// given random input, but if speed of the creation of polygons are more important, you might want to set this to false.
+        /// </summary>
+        public static bool UseConvexHullPolygons = true;
+
+        /// <summary>
+        /// Velcro Physics has a different way of filtering fixtures than Box2d. We have both FPE and Box2D filtering in
+        /// the engine. If you are upgrading from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
+        /// to Category.All.
+        /// </summary>
+        public static bool UseFPECollisionCategories;
+
+        /// <summary>
+        /// This is used by the Fixture constructor as the default value for Fixture.CollisionCategories member. Note that
+        /// you may need to change this depending on the setting of UseFPECollisionCategories, above.
+        /// </summary>
+        public static Category DefaultFixtureCollisionCategories = Category.Cat1;
+
+        /// <summary>This is used by the Fixture constructor as the default value for Fixture.CollidesWith member.</summary>
+        public static Category DefaultFixtureCollidesWith = Category.All;
+
+        /// <summary>This is used by the Fixture constructor as the default value for Fixture.IgnoreCCDWith member.</summary>
+        public static Category DefaultFixtureIgnoreCCDWith = Category.None;
+
+        //Velcro: Moved the maximum number of iterations to Settings
+        /// <summary>Defines the maximum number of iterations made by the GJK algorithm.</summary>
+        public static int MaxGJKIterations = 20;
+
+        //Velcro: Moved ContinuousPhysics to Settings and made it public. People might want ot disable it.
+        /// <summary>Enable/Disable Continuous Collision Detection (CCD)</summary>
+        public static bool ContinuousPhysics = true;
+
+        /* Common */
 
         /// <summary>
         /// This is used to fatten AABBs in the dynamic tree. This allows proxies to move by a small amount without
@@ -61,7 +109,7 @@ namespace Genbox.VelcroPhysics
         /// This is used to fatten AABBs in the dynamic tree. This is used to predict the future position based on the
         /// current displacement. This is a dimensionless multiplier.
         /// </summary>
-        public static float AABBMultiplier = 2.0f;
+        public static float AABBMultiplier = 4.0f;
 
         /// <summary>
         /// A small length used as a collision and constraint tolerance. Usually it is chosen to be numerically
@@ -81,16 +129,13 @@ namespace Genbox.VelcroPhysics
         /// </summary>
         public static float PolygonRadius = 2.0f * LinearSlop;
 
+        /// <summary>Maximum number of sub-steps per contact in continuous physics simulation.</summary>
+        public static int MaxSubSteps = 8;
+
         // Dynamics
 
         /// <summary>Maximum number of contacts to be handled to solve a TOI impact.</summary>
         public static int MaxTOIContacts = 32;
-
-        /// <summary>
-        /// A velocity threshold for elastic collisions. Any collision with a relative linear velocity below this
-        /// threshold will be treated as inelastic.
-        /// </summary>
-        public static float VelocityThreshold = 1.0f;
 
         /// <summary>The maximum linear position correction used when solving constraints. This helps to prevent overshoot.</summary>
         public static float MaxLinearCorrection = 0.2f;
@@ -99,12 +144,32 @@ namespace Genbox.VelcroPhysics
         public static float MaxAngularCorrection = 8.0f / 180.0f * MathConstants.Pi;
 
         /// <summary>
+        /// The maximum linear velocity of a body. This limit is very large and is used to prevent numerical problems. You
+        /// shouldn't need to adjust this.
+        /// </summary>
+        public static float MaxTranslation = 2.0f;
+
+        /// <summary>
+        /// The maximum angular velocity of a body. This limit is very large and is used to prevent numerical problems.
+        /// You shouldn't need to adjust this.
+        /// </summary>
+        public static float MaxRotation = 0.5f * MathConstants.Pi;
+
+        /// <summary>
+        /// A velocity threshold for elastic collisions. Any collision with a relative linear velocity below this
+        /// threshold will be treated as inelastic.
+        /// </summary>
+        public static float VelocityThreshold = 1.0f;
+
+        /// <summary>
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so that overlap is removed in
         /// one time step. However using values close to 1 often lead to overshoot.
         /// </summary>
         public static float Baumgarte = 0.2f;
+        public static float TOIBaumgarte = 0.75f;
 
-        // Sleep
+        /* Sleep */
+
         /// <summary>The time that a body must be still before it will go to sleep.</summary>
         public static float TimeToSleep = 0.5f;
 
@@ -115,28 +180,6 @@ namespace Genbox.VelcroPhysics
         public static float AngularSleepTolerance = 2.0f / 180.0f * MathConstants.Pi;
 
         /// <summary>
-        /// The maximum linear velocity of a body. This limit is very large and is used to prevent numerical problems. You
-        /// shouldn't need to adjust this.
-        /// </summary>
-        public static float MaxTranslation = 2.0f;
-
-        public static float MaxTranslationSquared = MaxTranslation * MaxTranslation;
-
-        /// <summary>
-        /// The maximum angular velocity of a body. This limit is very large and is used to prevent numerical problems.
-        /// You shouldn't need to adjust this.
-        /// </summary>
-        public static float MaxRotation = 0.5f * MathConstants.Pi;
-
-        public static float MaxRotationSquared = MaxRotation * MaxRotation;
-
-        /// <summary>Defines the maximum number of iterations made by the GJK algorithm.</summary>
-        public static int MaxGJKIterations = 20;
-
-        /// <summary>This is only for debugging the solver</summary>
-        public static bool EnableSubStepping = false;
-
-        /// <summary>
         /// By default, forces are cleared automatically after each call to Step. The default behavior is modified with
         /// this setting. The purpose of this setting is to support sub-stepping. Sub-stepping is often used to maintain a fixed
         /// sized time step under a variable frame-rate. When you perform sub-stepping you should disable auto clearing of forces
@@ -144,68 +187,37 @@ namespace Genbox.VelcroPhysics
         /// </summary>
         public static bool AutoClearForces = true;
 
-        public static bool BlockSolve = true;
-
-        /// <summary>The number of velocity iterations used in the solver.</summary>
-        public static int VelocityIterations = 8;
-
-        /// <summary>The number of position iterations used in the solver.</summary>
-        public static int PositionIterations = 3;
-
-        /// <summary>Enable/Disable Continuous Collision Detection (CCD)</summary>
-        public static bool ContinuousPhysics = true;
-
-        /// <summary>
-        /// If true, it will run a GiftWrap convex hull on all polygon inputs. This makes for a more stable engine when
-        /// given random input, but if speed of the creation of polygons are more important, you might want to set this to false.
-        /// </summary>
-        public static bool UseConvexHullPolygons = true;
-
-        /// <summary>The number of velocity iterations in the TOI solver</summary>
-        public static int TOIVelocityIterations = VelocityIterations;
-
-        /// <summary>The number of position iterations in the TOI solver</summary>
-        public static int TOIPositionIterations = 20;
-
-        /// <summary>Enable/Disable sleeping</summary>
-        public static bool AllowSleep = true;
-
         /// <summary>The maximum number of vertices on a convex polygon.</summary>
         public static int MaxPolygonVertices = 8;
 
-        /// <summary>
-        /// Velcro Physics has a different way of filtering fixtures than Box2d. We have both FPE and Box2D filtering in
-        /// the engine. If you are upgrading from earlier versions of FPE, set this to true and DefaultFixtureCollisionCategories
-        /// to Category.All.
-        /// </summary>
-        public static bool UseFPECollisionCategories;
+        /* Internals */
 
-        /// <summary>
-        /// This is used by the Fixture constructor as the default value for Fixture.CollisionCategories member. Note that
-        /// you may need to change this depending on the setting of UseFPECollisionCategories, above.
-        /// </summary>
-        public static Category DefaultFixtureCollisionCategories = Category.Cat1;
+        /// <summary>The maximum number of contact points between two convex shapes. DO NOT CHANGE THIS VALUE!</summary>
+        internal const int MaxManifoldPoints = 2;
 
-        /// <summary>This is used by the Fixture constructor as the default value for Fixture.CollidesWith member.</summary>
-        public static Category DefaultFixtureCollidesWith = Category.All;
+        //Velcro: Moved EnableSubStepping from TimeStep to Settings
+        /// <summary>Enable or disable sub stepping. Used for debugging.</summary>
+        internal const bool EnableSubStepping = false;
+
+        //Velcro: Moved EnableWarmStarting from TimeStep to Settings
+        /// <summary>Enable/Disable warm-starting. Used for debugging.</summary>
         internal const bool EnableWarmStarting = true;
 
-        /// <summary>This is used by the Fixture constructor as the default value for Fixture.IgnoreCCDWith member.</summary>
-        public static Category DefaultFixtureIgnoreCCDWith = Category.None;
+        //Velcro: Moved this value out of the contact solver and into Settings
+        /// <summary>Enable or disable the block contact solver. Used for debugging.</summary>
+        internal const bool BlockSolve = true;
 
-        /// <summary>Friction mixing law. Feel free to customize this.</summary>
-        /// <param name="friction1">The friction1.</param>
-        /// <param name="friction2">The friction2.</param>
-        /// <returns></returns>
+        /// <summary>Friction mixing law</summary>
+        /// <param name="friction1">Friction from the first body.</param>
+        /// <param name="friction2">Friction from the second body.</param>
         public static float MixFriction(float friction1, float friction2)
         {
             return (float)Math.Sqrt(friction1 * friction2);
         }
 
-        /// <summary>Restitution mixing law. Feel free to customize this.</summary>
-        /// <param name="restitution1">The restitution1.</param>
-        /// <param name="restitution2">The restitution2.</param>
-        /// <returns></returns>
+        /// <summary>Restitution mixing law</summary>
+        /// <param name="restitution1">Restitution from the first body.</param>
+        /// <param name="restitution2">Restitution from the second body.</param>
         public static float MixRestitution(float restitution1, float restitution2)
         {
             return restitution1 > restitution2 ? restitution1 : restitution2;
