@@ -153,6 +153,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     _angularVelocity = 0.0f;
                     _sweep.A0 = _sweep.A;
                     _sweep.C0 = _sweep.C;
+                    _flags &= ~BodyFlags.AwakeFlag;
                     SynchronizeFixtures();
                 }
 
@@ -269,6 +270,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             get => (_flags & BodyFlags.AwakeFlag) == BodyFlags.AwakeFlag;
             set
             {
+                if (_type == BodyType.Static)
+                    return;
+
                 if (value)
                 {
                     _flags |= BodyFlags.AwakeFlag;

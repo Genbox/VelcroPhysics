@@ -428,13 +428,13 @@ namespace Genbox.VelcroPhysics.Dynamics
                     Debug.Assert(b.Enabled);
                     _island.Add(b);
 
-                    // Make sure the body is awake (without resetting sleep timer).
-                    b._flags |= BodyFlags.AwakeFlag;
-
                     // To keep islands as small as possible, we don't
                     // propagate islands across static bodies.
                     if (b.BodyType == BodyType.Static)
                         continue;
+
+                    // Make sure the body is awake (without resetting sleep timer).
+                    b._flags |= BodyFlags.AwakeFlag;
 
                     // Search all contacts connected to this body.
                     for (ContactEdge ce = b.ContactList; ce != null; ce = ce.Next)
