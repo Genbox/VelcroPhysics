@@ -158,12 +158,6 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                 bodyB.ContactList.Prev = c._nodeB;
             bodyB.ContactList = c._nodeB;
 
-            // Wake up the bodies
-            if (!fixtureA.IsSensor && !fixtureB.IsSensor)
-            {
-                bodyA.Awake = true;
-                bodyB.Awake = true;
-            }
         }
 
         internal void FindNewContacts()
