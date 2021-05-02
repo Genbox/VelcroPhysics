@@ -9,7 +9,7 @@ namespace Genbox.VelcroPhysics.Collision
 {
     public static class RayCastHelper
     {
-        public static bool RayCastEdge(ref Vector2 start, ref Vector2 end, ref RayCastInput input, ref Transform transform, out RayCastOutput output)
+        public static bool RayCastEdge(ref Vector2 start, ref Vector2 end, bool oneSided, ref RayCastInput input, ref Transform transform, out RayCastOutput output)
         {
             // p = p1 + t * d
             // v = v1 + s * e
@@ -26,13 +26,20 @@ namespace Genbox.VelcroPhysics.Collision
             Vector2 v1 = start;
             Vector2 v2 = end;
             Vector2 e = v2 - v1;
-            Vector2 normal = new Vector2(e.Y, -e.X); //TODO: Could possibly cache the normal.
+
+            // Normal points to the right, looking from v1 at v2
+            Vector2 normal = new Vector2(e.Y, -e.X); //Velcro TODO: Could possibly cache the normal.
             normal.Normalize();
 
             // q = p1 + t * d
             // dot(normal, q - v1) = 0
             // dot(normal, p1 - v1) + t * dot(normal, d) = 0
             float numerator = Vector2.Dot(normal, v1 - p1);
+            if (oneSided && numerator > 0.0f)
+            {
+                return false;
+            }
+
             float denominator = Vector2.Dot(normal, d);
 
             if (denominator == 0.0f)

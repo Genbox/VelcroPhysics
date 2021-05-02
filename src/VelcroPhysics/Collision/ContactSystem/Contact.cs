@@ -232,7 +232,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     ManifoldPoint mp2 = Manifold.Points[i];
                     mp2.NormalImpulse = 0.0f;
                     mp2.TangentImpulse = 0.0f;
-                    ContactID id2 = mp2.Id;
+                    ContactId id2 = mp2.Id;
 
                     for (int j = 0; j < oldManifold.PointCount; ++j)
                     {

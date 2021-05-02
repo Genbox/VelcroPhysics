@@ -6,7 +6,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
     /// <summary>Used for computing contact manifolds.</summary>
     internal struct ClipVertex
     {
-        public ContactID ID;
+        public ContactId Id;
         public Vector2 V;
     }
 }

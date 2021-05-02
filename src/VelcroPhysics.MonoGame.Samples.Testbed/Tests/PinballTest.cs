@@ -49,11 +49,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 ground = BodyFactory.CreateBody(World);
 
                 Vertices vertices = new Vertices(5);
-                vertices.Add(new Vector2(0.0f, -2.0f));
-                vertices.Add(new Vector2(8.0f, 6.0f));
-                vertices.Add(new Vector2(8.0f, 20.0f));
-                vertices.Add(new Vector2(-8.0f, 20.0f));
                 vertices.Add(new Vector2(-8.0f, 6.0f));
+                vertices.Add(new Vector2(-8.0f, 20.0f));
+                vertices.Add(new Vector2(8.0f, 20.0f));
+                vertices.Add(new Vector2(8.0f, 6.0f));
+                vertices.Add(new Vector2(0.0f, -2.0f));
 
                 ChainShape chain = new ChainShape(vertices, true);
                 ground.CreateFixture(chain);

@@ -32,8 +32,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
     /// </summary>
     public class EdgeShape : Shape
     {
+        internal Vector2 _vertex0;
         internal Vector2 _vertex1;
         internal Vector2 _vertex2;
+        internal Vector2 _vertex3;
+        internal bool _oneSided;
 
         /// <summary>
         /// Create a new EdgeShape with the specified start and end. This edge supports two-sided collision.
@@ -42,7 +45,8 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
-            Set(start, end);
+            _vertex1 = start;
+            _vertex2 = end;
             ComputeProperties();
         }
 
@@ -51,10 +55,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// </summary>
         public EdgeShape(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
-            Set(v1, v2);
-            Vertex0 = v0;
-            Vertex3 = v3;
-            OneSided = true;
+            _vertex0 = v0;
+            _vertex1 = v1;
+            _vertex2 = v2;
+            _vertex3 = v3;
+            _oneSided = true;
             ComputeProperties();
         }
 
@@ -63,13 +68,24 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         public override int ChildCount => 1;
 
         /// <summary>Is true if the edge is connected to an adjacent vertex before vertex 1.</summary>
-        public bool OneSided { get; internal set; }
+        public bool OneSided
+        {
+            get => _oneSided;
+        }
 
         /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
-        public Vector2 Vertex0 { get; set; }
+        public Vector2 Vertex0
+        {
+            get => _vertex0;
+            set => _vertex0 = value;
+        }
 
         /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
-        public Vector2 Vertex3 { get; set; }
+        public Vector2 Vertex3
+        {
+            get => _vertex3;
+            set => _vertex3 = value;
+        }
 
         /// <summary>These are the edge vertices</summary>
         public Vector2 Vertex1
@@ -111,7 +127,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
-            return RayCastHelper.RayCastEdge(ref _vertex1, ref _vertex2, ref input, ref transform, out output);
+            return RayCastHelper.RayCastEdge(ref _vertex1, ref _vertex2, _oneSided, ref input, ref transform, out output);
         }
 
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
@@ -126,11 +142,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public bool CompareTo(EdgeShape shape)
         {
-            return OneSided == shape.OneSided &&
-                   Vertex0 == shape.Vertex0 &&
-                   Vertex1 == shape.Vertex1 &&
-                   Vertex2 == shape.Vertex2 &&
-                   Vertex3 == shape.Vertex3;
+            return _oneSided == shape._oneSided &&
+                   _vertex0 == shape._vertex0 &&
+                   _vertex1 == shape._vertex1 &&
+                   _vertex2 == shape._vertex2 &&
+                   _vertex3 == shape._vertex3;
         }
 
         public override Shape Clone()
@@ -139,11 +155,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             clone.ShapeType = ShapeType;
             clone._radius = _radius;
             clone._density = _density;
-            clone.OneSided = OneSided;
-            clone.Vertex0 = Vertex0;
+            clone._oneSided = _oneSided;
+            clone._vertex0 = _vertex0;
             clone._vertex1 = _vertex1;
             clone._vertex2 = _vertex2;
-            clone.Vertex3 = Vertex3;
+            clone._vertex3 = _vertex3;
             clone.MassData = MassData;
             return clone;
         }

@@ -68,7 +68,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             // Detect persists and removes.
             for (int i = 0; i < manifold1.PointCount; ++i)
             {
-                ContactID id = manifold1.Points[i].Id;
+                ContactId id = manifold1.Points[i].Id;
 
                 state1[i] = PointState.Remove;
 
@@ -85,7 +85,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             // Detect persists and adds.
             for (int i = 0; i < manifold2.PointCount; ++i)
             {
-                ContactID id = manifold2.Points[i].Id;
+                ContactId id = manifold2.Points[i].Id;
 
                 state2[i] = PointState.Add;
 
@@ -112,15 +112,15 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             vOut = new FixedArray2<ClipVertex>();
 
             // Start with no output points
-            int numOut = 0;
+            int count = 0;
 
             // Calculate the distance of end points to the line
             float distance0 = Vector2.Dot(normal, vIn.Value0.V) - offset;
             float distance1 = Vector2.Dot(normal, vIn.Value1.V) - offset;
 
             // If the points are behind the plane
-            if (distance0 <= 0.0f) vOut[numOut++] = vIn.Value0;
-            if (distance1 <= 0.0f) vOut[numOut++] = vIn.Value1;
+            if (distance0 <= 0.0f) vOut[count++] = vIn.Value0;
+            if (distance1 <= 0.0f) vOut[count++] = vIn.Value1;
 
             // If the points are on different sides of the plane
             if (distance0 * distance1 < 0.0f)
@@ -128,20 +128,20 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                 // Find intersection point of edge and plane
                 float interp = distance0 / (distance0 - distance1);
 
-                ClipVertex cv = vOut[numOut];
+                ClipVertex cv = vOut[count];
                 cv.V = vIn.Value0.V + interp * (vIn.Value1.V - vIn.Value0.V);
 
                 // VertexA is hitting edgeB.
-                cv.ID.ContactFeature.IndexA = (byte)vertexIndexA;
-                cv.ID.ContactFeature.IndexB = vIn.Value0.ID.ContactFeature.IndexB;
-                cv.ID.ContactFeature.TypeA = ContactFeatureType.Vertex;
-                cv.ID.ContactFeature.TypeB = ContactFeatureType.Face;
-                vOut[numOut] = cv;
+                cv.Id.ContactFeature.IndexA = (byte)vertexIndexA;
+                cv.Id.ContactFeature.IndexB = vIn.Value0.Id.ContactFeature.IndexB;
+                cv.Id.ContactFeature.TypeA = ContactFeatureType.Vertex;
+                cv.Id.ContactFeature.TypeB = ContactFeatureType.Face;
+                vOut[count] = cv;
 
-                ++numOut;
+                ++count;
             }
 
-            return numOut;
+            return count;
         }
     }
 }

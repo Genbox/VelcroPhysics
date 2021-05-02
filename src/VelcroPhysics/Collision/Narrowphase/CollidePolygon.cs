@@ -115,7 +115,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                 {
                     ManifoldPoint cp = manifold.Points[pointCount];
                     cp.LocalPoint = MathUtils.MulT(ref xf2, clipPoints2[i].V);
-                    cp.Id = clipPoints2[i].ID;
+                    cp.Id = clipPoints2[i].Id;
 
                     if (flip)
                     {
@@ -206,16 +206,16 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             c = new FixedArray2<ClipVertex>();
             c.Value0.V = MathUtils.Mul(ref xf2, vertices2[i1]);
-            c.Value0.ID.ContactFeature.IndexA = (byte)edge1;
-            c.Value0.ID.ContactFeature.IndexB = (byte)i1;
-            c.Value0.ID.ContactFeature.TypeA = ContactFeatureType.Face;
-            c.Value0.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
+            c.Value0.Id.ContactFeature.IndexA = (byte)edge1;
+            c.Value0.Id.ContactFeature.IndexB = (byte)i1;
+            c.Value0.Id.ContactFeature.TypeA = ContactFeatureType.Face;
+            c.Value0.Id.ContactFeature.TypeB = ContactFeatureType.Vertex;
 
             c.Value1.V = MathUtils.Mul(ref xf2, vertices2[i2]);
-            c.Value1.ID.ContactFeature.IndexA = (byte)edge1;
-            c.Value1.ID.ContactFeature.IndexB = (byte)i2;
-            c.Value1.ID.ContactFeature.TypeA = ContactFeatureType.Face;
-            c.Value1.ID.ContactFeature.TypeB = ContactFeatureType.Vertex;
+            c.Value1.Id.ContactFeature.IndexA = (byte)edge1;
+            c.Value1.Id.ContactFeature.IndexB = (byte)i2;
+            c.Value1.Id.ContactFeature.TypeA = ContactFeatureType.Face;
+            c.Value1.Id.ContactFeature.TypeB = ContactFeatureType.Vertex;
         }
     }
 }

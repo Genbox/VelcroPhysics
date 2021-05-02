@@ -32,8 +32,8 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
     /// <summary>Represents a simple non-self intersecting convex polygon. Create a convex hull from the given array of points.</summary>
     public class PolygonShape : Shape
     {
-        private Vertices _normals;
-        private Vertices _vertices;
+        internal Vertices _normals;
+        internal Vertices _vertices;
 
         /// <summary>Initializes a new instance of the <see cref="PolygonShape" /> class.</summary>
         /// <param name="vertices">The vertices.</param>

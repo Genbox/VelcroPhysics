@@ -18,7 +18,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
     public struct ManifoldPoint
     {
         /// <summary>Uniquely identifies a contact point between two Shapes</summary>
-        public ContactID Id;
+        public ContactId Id;
 
         /// <summary>Usage depends on manifold type</summary>
         public Vector2 LocalPoint;

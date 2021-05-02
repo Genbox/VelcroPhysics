@@ -103,19 +103,19 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             edge.ShapeType = ShapeType.Edge;
             edge._radius = _radius;
 
-            edge.Vertex1 = Vertices[index + 0];
-            edge.Vertex2 = Vertices[index + 1];
-            edge.OneSided = true;
+            edge._vertex1 = Vertices[index + 0];
+            edge._vertex2 = Vertices[index + 1];
+            edge._oneSided = true;
 
             if (index > 0)
-                edge.Vertex0 = Vertices[index - 1];
+                edge._vertex0 = Vertices[index - 1];
             else
-                edge.Vertex0 = _prevVertex;
+                edge._vertex0 = _prevVertex;
 
             if (index < Vertices.Count - 2)
-                edge.Vertex3 = Vertices[index + 2];
+                edge._vertex3 = Vertices[index + 2];
             else
-                edge.Vertex3 = _nextVertex;
+                edge._vertex3 = _nextVertex;
         }
 
         public EdgeShape GetChildEdge(int index)
@@ -143,7 +143,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             Vector2 v1 = Vertices[i1];
             Vector2 v2 = Vertices[i2];
 
-            return RayCastHelper.RayCastEdge(ref v1, ref v2, ref input, ref transform, out output);
+            return RayCastHelper.RayCastEdge(ref v1, ref v2, false, ref input, ref transform, out output);
         }
 
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
