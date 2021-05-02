@@ -31,8 +31,11 @@ We have tons of features!
 * Tools to decompose concave polygons, find convex hulls and boolean operations
 * Factories to simplify the creation of bodies
 
-## Integration
-You can run VelcroPhysics in a console application without any dependency on third party game libraries. See VelcroPhysics.sln for an example. We have zero-copy integration with [MonoGame](http://www.monogame.net/), which means if you already use MonoGame for your game, VelcroPhysics uses the same Vector2 clases and you don't have to copy between different vector types. See VelcroPhysics.MonoGame.sln for an example on how to use MonoGame with VelcroPhysics.
+## Packages
+You can use VelcroPhysics as a normal .NET library. We also have zero-copy integration with [MonoGame](http://www.monogame.net/).
+
+* [![NuGet](https://img.shields.io/nuget/v/Genbox.VelcroPhysics.svg?style=flat-square&label=Library)](https://www.nuget.org/packages/Genbox.VelcroPhysics/)
+* [![NuGet](https://img.shields.io/nuget/v/Genbox.VelcroPhysics.MonoGame.svg?style=flat-square&label=MonoGame)](https://www.nuget.org/packages/Genbox.VelcroPhysics.MonoGame/)
 
 ## Sponsored Project
 This is a [sponsored project](https://github.com/sponsors/Genbox). That means in order to create issues and pull requests, or use the project commercially, you must become a sponsor. Projects like this take up a lot of time and effort, so please help keeping open-source projects alive by becoming a sponsor today. You can stop your sponsorship anytime you want.
