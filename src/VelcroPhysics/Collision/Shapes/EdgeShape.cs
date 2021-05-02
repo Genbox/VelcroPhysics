@@ -27,8 +27,8 @@ using Microsoft.Xna.Framework;
 namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes. The connectivity
-    /// information is used to ensure correct contact normals.
+    /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes. Edges created
+    /// independently are two-sided and do no provide smooth movement across junctions.
     /// </summary>
     public class EdgeShape : Shape
     {
@@ -38,9 +38,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         internal Vector2 _vertex3;
         internal bool _oneSided;
 
-        /// <summary>
-        /// Create a new EdgeShape with the specified start and end. This edge supports two-sided collision.
-        /// </summary>
+        /// <summary>Create a new EdgeShape with the specified start and end. This edge supports two-sided collision.</summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
@@ -50,9 +48,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             ComputeProperties();
         }
 
-        /// <summary>
-        /// Create a new EdgeShape with ghost vertices for smooth collision. This edge only supports one-sided collision.
-        /// </summary>
+        /// <summary>Create a new EdgeShape with ghost vertices for smooth collision. This edge only supports one-sided collision.</summary>
         public EdgeShape(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
             _vertex0 = v0;
@@ -68,10 +64,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         public override int ChildCount => 1;
 
         /// <summary>Is true if the edge is connected to an adjacent vertex before vertex 1.</summary>
-        public bool OneSided
-        {
-            get => _oneSided;
-        }
+        public bool OneSided => _oneSided;
 
         /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
         public Vector2 Vertex0

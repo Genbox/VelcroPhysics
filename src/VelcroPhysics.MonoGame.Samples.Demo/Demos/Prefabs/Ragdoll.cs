@@ -5,7 +5,6 @@ using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PVRTexLibNET;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 {

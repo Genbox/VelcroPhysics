@@ -25,7 +25,6 @@
 * SOFTWARE.
 */
 
-using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
