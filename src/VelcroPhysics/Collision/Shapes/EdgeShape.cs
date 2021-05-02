@@ -35,7 +35,9 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         internal Vector2 _vertex1;
         internal Vector2 _vertex2;
 
-        /// <summary>Create a new EdgeShape with the specified start and end.</summary>
+        /// <summary>
+        /// Create a new EdgeShape with the specified start and end. This edge supports two-sided collision.
+        /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
@@ -44,15 +46,24 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             ComputeProperties();
         }
 
+        /// <summary>
+        /// Create a new EdgeShape with ghost vertices for smooth collision. This edge only supports one-sided collision.
+        /// </summary>
+        public EdgeShape(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3) : base(ShapeType.Edge, Settings.PolygonRadius)
+        {
+            Set(v1, v2);
+            Vertex0 = v0;
+            Vertex3 = v3;
+            OneSided = true;
+            ComputeProperties();
+        }
+
         internal EdgeShape() : base(ShapeType.Edge, Settings.PolygonRadius) { }
 
         public override int ChildCount => 1;
 
         /// <summary>Is true if the edge is connected to an adjacent vertex before vertex 1.</summary>
-        public bool HasVertex0 { get; set; }
-
-        /// <summary>Is true if the edge is connected to an adjacent vertex after vertex2.</summary>
-        public bool HasVertex3 { get; set; }
+        public bool OneSided { get; internal set; }
 
         /// <summary>Optional adjacent vertices. These are used for smooth collision.</summary>
         public Vector2 Vertex0 { get; set; }
@@ -89,8 +100,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         {
             _vertex1 = start;
             _vertex2 = end;
-            HasVertex0 = false;
-            HasVertex3 = false;
 
             ComputeProperties();
         }
@@ -117,8 +126,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public bool CompareTo(EdgeShape shape)
         {
-            return HasVertex0 == shape.HasVertex0 &&
-                   HasVertex3 == shape.HasVertex3 &&
+            return OneSided == shape.OneSided &&
                    Vertex0 == shape.Vertex0 &&
                    Vertex1 == shape.Vertex1 &&
                    Vertex2 == shape.Vertex2 &&
@@ -131,8 +139,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             clone.ShapeType = ShapeType;
             clone._radius = _radius;
             clone._density = _density;
-            clone.HasVertex0 = HasVertex0;
-            clone.HasVertex3 = HasVertex3;
+            clone.OneSided = OneSided;
             clone.Vertex0 = Vertex0;
             clone._vertex1 = _vertex1;
             clone._vertex2 = _vertex2;

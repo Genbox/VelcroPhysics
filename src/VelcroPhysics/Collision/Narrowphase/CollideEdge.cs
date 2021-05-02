@@ -25,6 +25,14 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             Vector2 A = edgeA.Vertex1, B = edgeA.Vertex2;
             Vector2 e = B - A;
 
+            // Normal points to the right for a CCW winding
+            Vector2 n = new Vector2(e.Y, -e.X);
+            float offset = MathUtils.Dot(n, Q - A);
+
+            bool oneSided = edgeA.OneSided;
+            if (oneSided && offset < 0.0f)
+                return;
+
             // Barycentric coordinates
             float u = Vector2.Dot(e, B - Q);
             float v = Vector2.Dot(e, Q - A);
@@ -45,7 +53,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                     return;
 
                 // Is there an edge connected to A?
-                if (edgeA.HasVertex0)
+                if (edgeA.OneSided)
                 {
                     Vector2 A1 = edgeA.Vertex0;
                     Vector2 B1 = A;
@@ -79,7 +87,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                     return;
 
                 // Is there an edge connected to B?
-                if (edgeA.HasVertex3)
+                if (edgeA.OneSided)
                 {
                     Vector2 B2 = edgeA.Vertex3;
                     Vector2 A2 = B;
@@ -112,9 +120,9 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             if (dd > radius * radius)
                 return;
 
-            Vector2 n = new Vector2(-e.Y, e.X);
-            if (Vector2.Dot(n, Q - A) < 0.0f)
+            if (offset < 0.0f)
                 n = new Vector2(-n.X, -n.Y);
+
             n.Normalize();
 
             cf.IndexA = 0;

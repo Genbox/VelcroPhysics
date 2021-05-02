@@ -28,13 +28,13 @@ using Microsoft.Xna.Framework;
 namespace Genbox.VelcroPhysics.Collision.Shapes
 {
     /// <summary>
-    /// A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use
-    /// inside and outside collision. Therefore, you may use any winding order. Connectivity information is used to create
-    /// smooth collisions. WARNING: The chain will not collide properly if there are self-intersections.
+    /// A chain shape is a free form sequence of line segments. The chain has one-sided collision, with the surface
+    /// normal pointing to the right of the edge. This provides a counter-clockwise winding like the polygon shape.
+    /// Connectivity information is used to create smooth collisions. Warning: the chain will not collide properly if there are
+    /// self-intersections.
     /// </summary>
     public class ChainShape : Shape
     {
-        private bool _hasPrevVertex, _hasNextVertex;
         private Vector2 _prevVertex, _nextVertex;
 
         /// <summary>Create a new ChainShape from the vertices.</summary>
@@ -82,7 +82,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             set
             {
                 _prevVertex = value;
-                _hasPrevVertex = true;
             }
         }
 
@@ -93,7 +92,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             set
             {
                 _nextVertex = value;
-                _hasNextVertex = true;
             }
         }
 
@@ -107,28 +105,17 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
             edge.Vertex1 = Vertices[index + 0];
             edge.Vertex2 = Vertices[index + 1];
+            edge.OneSided = true;
 
             if (index > 0)
-            {
                 edge.Vertex0 = Vertices[index - 1];
-                edge.HasVertex0 = true;
-            }
             else
-            {
                 edge.Vertex0 = _prevVertex;
-                edge.HasVertex0 = _hasPrevVertex;
-            }
 
             if (index < Vertices.Count - 2)
-            {
                 edge.Vertex3 = Vertices[index + 2];
-                edge.HasVertex3 = true;
-            }
             else
-            {
                 edge.Vertex3 = _nextVertex;
-                edge.HasVertex3 = _hasNextVertex;
-            }
         }
 
         public EdgeShape GetChildEdge(int index)
@@ -205,8 +192,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             clone._radius = _radius;
             clone.PrevVertex = _prevVertex;
             clone.NextVertex = _nextVertex;
-            clone._hasNextVertex = _hasNextVertex;
-            clone._hasPrevVertex = _hasPrevVertex;
             clone.Vertices = new Vertices(Vertices);
             return clone;
         }

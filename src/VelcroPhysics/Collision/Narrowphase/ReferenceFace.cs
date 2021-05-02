@@ -6,9 +6,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
     public struct ReferenceFace
     {
         public int i1, i2;
-
         public Vector2 v1, v2;
-
         public Vector2 Normal;
 
         public Vector2 SideNormal1;

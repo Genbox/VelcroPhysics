@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Collision.Narrowphase
 {
+    /// <summary>
+    /// Compute contact points for edge versus circle.
+    /// This accounts for edge connectivity.
+    /// </summary>
     public static class EPCollider
     {
         public static void Collide(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
