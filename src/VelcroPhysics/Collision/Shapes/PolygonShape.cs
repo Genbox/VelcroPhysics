@@ -132,30 +132,27 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 return;
 
             //Velcro optimization: Consolidated the calculate centroid and mass code to a single method.
-            Vector2 center = Vector2.Zero;
+            Vector2 centroid = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;
 
-            //Velcro: We change the reference point to be inside the polygon
+            // Get a reference point for forming triangles.
+            // Use the first vertex to reduce round-off errors.
+            Vector2 s = Vertices[0];
 
-            // pRef is the reference point for forming triangles.
-            // It's location doesn't change the result (except for rounding error).
-            Vector2 s = Vector2.Zero;
+            const float inv3 = 1.0f / 3.0f;
 
-            // This code would put the reference point inside the polygon.
-            for (int i = 0; i < Vertices.Count; ++i)
-            {
-                s += Vertices[i];
-            }
-            s *= 1.0f / Vertices.Count;
+            int count = Vertices.Count;
 
-            const float k_inv3 = 1.0f / 3.0f;
-
-            for (int i = 0; i < Vertices.Count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 // Triangle vertices.
-                Vector2 e1 = Vertices[i] - s;
-                Vector2 e2 = i + 1 < Vertices.Count ? Vertices[i + 1] - s : Vertices[0] - s;
+                Vector2 p1 = Vertices[0] - s;
+                Vector2 p2 = Vertices[i] - s;
+                Vector2 p3 = i + 1 < count ? Vertices[i + 1] - s : Vertices[0] - s;
+
+                Vector2 e1 = p2 - p1;
+                Vector2 e2 = p3 - p1;
 
                 float D = MathUtils.Cross(e1, e2);
 
@@ -163,7 +160,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 area += triangleArea;
 
                 // Area weighted centroid
-                center += triangleArea * k_inv3 * (e1 + e2);
+                centroid += triangleArea * inv3 * (e1 + e2);
 
                 float ex1 = e1.X, ey1 = e1.Y;
                 float ex2 = e2.X, ey2 = e2.Y;
@@ -171,7 +168,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 float intx2 = ex1 * ex1 + ex2 * ex1 + ex2 * ex2;
                 float inty2 = ey1 * ey1 + ey2 * ey1 + ey2 * ey2;
 
-                I += 0.25f * k_inv3 * D * (intx2 + inty2);
+                I += 0.25f * inv3 * D * (intx2 + inty2);
             }
 
             //The area is too small for the engine to handle.
@@ -184,14 +181,14 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             MassData.Mass = _density * area;
 
             // Center of mass
-            center *= 1.0f / area;
-            MassData.Centroid = center + s;
+            centroid *= 1.0f / area;
+            MassData.Centroid = centroid + s;
 
             // Inertia tensor relative to the local origin (point s).
             MassData.Inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
-            MassData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(center, center));
+            MassData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(centroid, centroid));
         }
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
