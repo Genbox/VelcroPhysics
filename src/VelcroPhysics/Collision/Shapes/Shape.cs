@@ -36,6 +36,20 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         internal float _2radius;
         internal float _density;
         internal float _radius;
+        internal ShapeType _shapeType;
+        internal MassData _massData;
+
+        protected Shape(ShapeType type, float radius = 0, float density = 0)
+        {
+            Debug.Assert(radius >= 0);
+            Debug.Assert(density >= 0);
+
+            _shapeType = type;
+            _radius = radius;
+            _2radius = _radius * _radius;
+            _density = density;
+            _massData = new MassData();
+        }
 
         /// <summary>
         /// Contains the properties of the shape such as:
@@ -44,22 +58,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// - Inertia
         /// - Mass
         /// </summary>
-        public MassData MassData;
-
-        protected Shape(ShapeType type, float radius = 0, float density = 0)
-        {
-            Debug.Assert(radius >= 0);
-            Debug.Assert(density >= 0);
-
-            ShapeType = type;
-            _radius = radius;
-            _2radius = _radius * _radius;
-            _density = density;
-        }
+        public MassData MassData => _massData;
 
         /// <summary>Get the type of this shape.</summary>
         /// <value>The type of the shape.</value>
-        public ShapeType ShapeType { get; internal set; }
+        public ShapeType ShapeType => _shapeType;
 
         /// <summary>Get the number of child primitives.</summary>
         /// <value></value>

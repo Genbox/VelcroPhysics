@@ -130,7 +130,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         protected sealed override void ComputeProperties()
         {
-            MassData.Centroid = 0.5f * (_vertex1 + _vertex2);
+            _massData.Centroid = 0.5f * (_vertex1 + _vertex2);
         }
 
         public bool CompareTo(EdgeShape shape)
@@ -145,7 +145,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         public override Shape Clone()
         {
             EdgeShape clone = new EdgeShape();
-            clone.ShapeType = ShapeType;
+            clone._shapeType = _shapeType;
             clone._radius = _radius;
             clone._density = _density;
             clone._oneSided = _oneSided;
@@ -153,7 +153,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             clone._vertex1 = _vertex1;
             clone._vertex2 = _vertex2;
             clone._vertex3 = _vertex3;
-            clone.MassData = MassData;
+            clone._massData = _massData;
             return clone;
         }
     }

@@ -125,7 +125,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             //
             // The rest of the derivation is handled by computer algebra.
 
-            Debug.Assert(Vertices.Count >= 3);
+            Debug.Assert(_vertices.Count >= 3);
 
             //Velcro optimization: Early exit as polygons with 0 density does not have any properties.
             if (_density <= 0)
@@ -138,11 +138,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
             // Get a reference point for forming triangles.
             // Use the first vertex to reduce round-off errors.
-            Vector2 s = Vertices[0];
+            Vector2 s = _vertices[0];
 
             const float inv3 = 1.0f / 3.0f;
 
-            int count = Vertices.Count;
+            int count = _vertices.Count;
 
             for (int i = 0; i < count; ++i)
             {
@@ -175,20 +175,20 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             Debug.Assert(area > MathConstants.Epsilon);
 
             // We save the area
-            MassData.Area = area;
+            _massData.Area = area;
 
             // Total mass
-            MassData.Mass = _density * area;
+            _massData.Mass = _density * area;
 
             // Center of mass
             centroid *= 1.0f / area;
-            MassData.Centroid = centroid + s;
+            _massData.Centroid = centroid + s;
 
             // Inertia tensor relative to the local origin (point s).
-            MassData.Inertia = _density * I;
+            _massData.Inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
-            MassData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(centroid, centroid));
+            _massData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(centroid, centroid));
         }
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
@@ -212,27 +212,27 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public bool CompareTo(PolygonShape shape)
         {
-            if (Vertices.Count != shape.Vertices.Count)
+            if (_vertices.Count != shape._vertices.Count)
                 return false;
 
-            for (int i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < _vertices.Count; i++)
             {
-                if (Vertices[i] != shape.Vertices[i])
+                if (_vertices[i] != shape._vertices[i])
                     return false;
             }
 
-            return Radius == shape.Radius && MassData == shape.MassData;
+            return _radius == shape._radius && _massData == shape._massData;
         }
 
         public override Shape Clone()
         {
             PolygonShape clone = new PolygonShape();
-            clone.ShapeType = ShapeType;
+            clone._shapeType = _shapeType;
             clone._radius = _radius;
             clone._density = _density;
             clone._vertices = new Vertices(_vertices);
             clone._normals = new Vertices(_normals);
-            clone.MassData = MassData;
+            clone._massData = _massData;
             return clone;
         }
     }

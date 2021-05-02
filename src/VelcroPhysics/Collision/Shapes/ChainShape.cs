@@ -35,7 +35,8 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
     /// </summary>
     public class ChainShape : Shape
     {
-        private Vector2 _prevVertex, _nextVertex;
+        internal Vector2 _prevVertex, _nextVertex;
+        internal Vertices _vertices;
 
         /// <summary>Create a new ChainShape from the vertices.</summary>
         /// <param name="vertices">The vertices to use. Must contain 2 or more vertices.</param>
@@ -54,14 +55,14 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 Debug.Assert(Vector2.DistanceSquared(vertices[i - 1], vertices[i]) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
-            Vertices = new Vertices(vertices);
+            _vertices = new Vertices(vertices);
 
             //Velcro: I merged CreateLoop() and CreateChain() to this
             if (createLoop)
             {
-                Vertices.Add(vertices[0]);
-                PrevVertex = Vertices[Vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
-                NextVertex = Vertices[1]; //Velcro: We use the properties instead of the private fields here to set _hasNextVertex
+                _vertices.Add(vertices[0]);
+                PrevVertex = _vertices[_vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
+                NextVertex = _vertices[1]; //Velcro: We use the properties instead of the private fields here to set _hasNextVertex
             }
 
             ComputeProperties();
@@ -70,50 +71,44 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         internal ChainShape() : base(ShapeType.Chain, Settings.PolygonRadius) { }
 
         /// <summary>The vertices. These are not owned/freed by the chain Shape.</summary>
-        public Vertices Vertices { get; set; }
+        public Vertices Vertices => _vertices;
 
         /// <summary>Edge count = vertex count - 1</summary>
-        public override int ChildCount => Vertices.Count - 1;
+        public override int ChildCount => _vertices.Count - 1;
 
         /// <summary>Establish connectivity to a vertex that precedes the first vertex. Don't call this for loops.</summary>
         public Vector2 PrevVertex
         {
             get => _prevVertex;
-            set
-            {
-                _prevVertex = value;
-            }
+            set => _prevVertex = value;
         }
 
         /// <summary>Establish connectivity to a vertex that follows the last vertex. Don't call this for loops.</summary>
         public Vector2 NextVertex
         {
             get => _nextVertex;
-            set
-            {
-                _nextVertex = value;
-            }
+            set => _nextVertex = value;
         }
 
         internal void GetChildEdge(EdgeShape edge, int index)
         {
-            Debug.Assert(0 <= index && index < Vertices.Count - 1);
+            Debug.Assert(0 <= index && index < _vertices.Count - 1);
             Debug.Assert(edge != null);
 
-            edge.ShapeType = ShapeType.Edge;
+            edge._shapeType = ShapeType.Edge;
             edge._radius = _radius;
 
-            edge._vertex1 = Vertices[index + 0];
-            edge._vertex2 = Vertices[index + 1];
+            edge._vertex1 = _vertices[index + 0];
+            edge._vertex2 = _vertices[index + 1];
             edge._oneSided = true;
 
             if (index > 0)
-                edge._vertex0 = Vertices[index - 1];
+                edge._vertex0 = _vertices[index - 1];
             else
                 edge._vertex0 = _prevVertex;
 
-            if (index < Vertices.Count - 2)
-                edge._vertex3 = Vertices[index + 2];
+            if (index < _vertices.Count - 2)
+                edge._vertex3 = _vertices[index + 2];
             else
                 edge._vertex3 = _nextVertex;
         }
@@ -132,32 +127,32 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
-            Debug.Assert(childIndex < Vertices.Count);
+            Debug.Assert(childIndex < _vertices.Count);
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
 
-            if (i2 == Vertices.Count)
+            if (i2 == _vertices.Count)
                 i2 = 0;
 
-            Vector2 v1 = Vertices[i1];
-            Vector2 v2 = Vertices[i2];
+            Vector2 v1 = _vertices[i1];
+            Vector2 v2 = _vertices[i2];
 
             return RayCastHelper.RayCastEdge(ref v1, ref v2, false, ref input, ref transform, out output);
         }
 
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
-            Debug.Assert(childIndex < Vertices.Count);
+            Debug.Assert(childIndex < _vertices.Count);
 
             int i1 = childIndex;
             int i2 = childIndex + 1;
 
-            if (i2 == Vertices.Count)
+            if (i2 == _vertices.Count)
                 i2 = 0;
 
-            Vector2 v1 = Vertices[i1];
-            Vector2 v2 = Vertices[i2];
+            Vector2 v1 = _vertices[i1];
+            Vector2 v2 = _vertices[i2];
 
             AABBHelper.ComputeEdgeAABB(ref v1, ref v2, ref transform, out aabb);
         }
@@ -172,27 +167,27 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <returns>True if the two chain shapes are the same</returns>
         public bool CompareTo(ChainShape shape)
         {
-            if (Vertices.Count != shape.Vertices.Count)
+            if (_vertices.Count != shape._vertices.Count)
                 return false;
 
-            for (int i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < _vertices.Count; i++)
             {
-                if (Vertices[i] != shape.Vertices[i])
+                if (_vertices[i] != shape._vertices[i])
                     return false;
             }
 
-            return PrevVertex == shape.PrevVertex && NextVertex == shape.NextVertex;
+            return _prevVertex == shape._prevVertex && _nextVertex == shape._nextVertex;
         }
 
         public override Shape Clone()
         {
             ChainShape clone = new ChainShape();
-            clone.ShapeType = ShapeType;
+            clone._shapeType = _shapeType;
             clone._density = _density;
             clone._radius = _radius;
-            clone.PrevVertex = _prevVertex;
-            clone.NextVertex = _nextVertex;
-            clone.Vertices = new Vertices(Vertices);
+            clone._prevVertex = _prevVertex;
+            clone._nextVertex = _nextVertex;
+            clone._vertices = new Vertices(_vertices);
             return clone;
         }
     }
