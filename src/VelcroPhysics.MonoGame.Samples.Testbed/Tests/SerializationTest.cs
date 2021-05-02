@@ -62,15 +62,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 spring1.MotorSpeed = 0.0f;
                 spring1.MaxMotorTorque = 20.0f;
                 spring1.MotorEnabled = true;
-                spring1.Frequency = 4;
-                spring1.DampingRatio = 0.7f;
+
+                JointHelper.LinearStiffness(4, 0.8f, spring1.BodyA, spring1.BodyB, out float stiffness, out float damping);
+
+                spring1.Stiffness = stiffness;
+                spring1.Damping = damping;
 
                 WheelJoint spring2 = JointFactory.CreateWheelJoint(World, carBody, wheel2, axis);
                 spring2.MotorSpeed = 0.0f;
                 spring2.MaxMotorTorque = 10.0f;
                 spring2.MotorEnabled = false;
-                spring2.Frequency = 4;
-                spring2.DampingRatio = 0.7f;
+                spring2.Stiffness = stiffness;
+                spring2.Damping = damping;
             }
 
             //Prismatic joint

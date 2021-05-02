@@ -36,6 +36,11 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The desired motor speed in radians per second.</summary>
         public float MotorSpeed { get; set; }
+        public float Damping { get; set; }
+        public float Stiffness { get; set; }
+        public bool EnableLimit { get; set; }
+        public float UpperTranslation { get; set; }
+        public float LowerTranslation { get; set; }
 
         public override void SetDefaults()
         {

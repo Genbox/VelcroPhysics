@@ -444,6 +444,38 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
                 DrawPoint(pA, 1.0f, c1);
                 DrawPoint(pB, 1.0f, c4);
             }
+            else if (joint is WheelJoint wj)
+            {
+                Vector2 pA = MathUtils.Mul(ref xfA, wj.LocalAnchorA);
+                Vector2 pB = MathUtils.Mul(ref xfB, wj.LocalAnchorB);
+
+                Vector2 axis = MathUtils.Mul(xfA.q, wj.LocalXAxisA);
+
+                Color c1 = new Color(0.7f, 0.7f, 0.7f);
+                Color c2 = new Color(0.3f, 0.9f, 0.3f);
+                Color c3 = new Color(0.9f, 0.3f, 0.3f);
+                Color c4 = new Color(0.3f, 0.3f, 0.9f);
+                Color c5 = new Color(0.4f, 0.4f, 0.4f);
+
+                DrawSegment(pA, pB, c5);
+
+                if (wj.EnableLimit)
+                {
+                    Vector2 lower = pA + wj.LowerLimit * axis;
+                    Vector2 upper = pA + wj.UpperLimit * axis;
+                    Vector2 perp = MathUtils.Mul(xfA.q, wj.LocalYAxisA);
+                    DrawSegment(lower, upper, c1);
+                    DrawSegment(lower - 0.5f * perp, lower + 0.5f * perp, c2);
+                    DrawSegment(upper - 0.5f * perp, upper + 0.5f * perp, c3);
+                }
+                else
+                {
+                    DrawSegment(pA - 1.0f * axis, pA + 1.0f * axis, c1);
+                }
+
+                DrawPoint(pA, 0.1f, c1);
+                DrawPoint(pB, 0.1f, c4);
+            }
             else
             {
                 switch (joint.JointType)

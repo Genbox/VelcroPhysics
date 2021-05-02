@@ -21,8 +21,10 @@
 */
 
 using System;
+using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -46,45 +48,56 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
     /// <summary>
     /// A wheel joint. This joint provides two degrees of freedom: translation along an axis fixed in bodyA and
-    /// rotation in the plane. You can use a joint limit to restrict the range of motion and a joint motor to drive the
-    /// rotation or to model rotational friction. This joint is designed for vehicle suspensions.
+    /// rotation in the plane. In other words, it is a point to line constraint with a rotational motor and a linear
+    /// spring/damper. The spring/damper is initialized upon creation. This joint is designed for vehicle suspensions.
     /// </summary>
     public class WheelJoint : Joint
     {
-        private Vector2 _ax, _ay;
-        private Vector2 _axis;
+        Vector2 _localAnchorA;
+        Vector2 _localAnchorB;
+        Vector2 _localXAxisA;
+        Vector2 _localYAxisA;
 
-        private float _bias;
-        private bool _enableMotor;
-        private float _gamma;
+        float _impulse;
+        float _motorImpulse;
+        float _springImpulse;
 
-        private float _impulse;
+        float _lowerImpulse;
+        float _upperImpulse;
+        float _translation;
+        float _lowerTranslation;
+        float _upperTranslation;
+
+        float _maxMotorTorque;
+        float _motorSpeed;
+
+        bool _enableLimit;
+        bool _enableMotor;
+
+        float _stiffness;
+        float _damping;
 
         // Solver temp
-        private int _indexA;
+        int _indexA;
+        int _indexB;
+        Vector2 _localCenterA;
+        Vector2 _localCenterB;
+        float _invMassA;
+        float _invMassB;
+        float _invIA;
+        float _invIB;
 
-        private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private Vector2 _localCenterA;
+        Vector2 _ax, _ay;
+        float _sAx, _sBx;
+        float _sAy, _sBy;
 
-        private Vector2 _localCenterB;
+        float _mass;
+        float _motorMass;
+        float _axialMass;
+        float _springMass;
 
-        // Solver shared
-        private Vector2 _localYAxis;
-
-        private float _mass;
-
-        private float _maxMotorTorque;
-        private float _motorImpulse;
-        private float _motorMass;
-        private float _motorSpeed;
-        private float _sAx, _sBx;
-        private float _sAy, _sBy;
-        private float _springImpulse;
-        private float _springMass;
+        float _bias;
+        float _gamma;
 
         internal WheelJoint()
         {
@@ -104,46 +117,68 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(anchor);
-                LocalAnchorB = bodyB.GetLocalPoint(anchor);
+                _localAnchorA = bodyA.GetLocalPoint(anchor);
+                _localAnchorB = bodyB.GetLocalPoint(anchor);
+                _localXAxisA = bodyA.GetLocalVector(axis);
             }
             else
             {
-                LocalAnchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
-                LocalAnchorB = anchor;
+                _localAnchorA = bodyA.GetLocalPoint(bodyB.GetWorldPoint(anchor));
+                _localAnchorB = anchor;
+                _localXAxisA = bodyA.GetLocalVector(axis);
             }
 
-            Axis = axis; //Velcro only: We maintain the original value as it is supposed to.
+            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
         }
 
+        public WheelJoint(WheelJointTemplate def)
+        {
+            JointType = JointType.Wheel;
+
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _localXAxisA = def.LocalAxisA;
+            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+
+            _lowerTranslation = def.LowerTranslation;
+            _upperTranslation = def.UpperTranslation;
+            _enableLimit = def.EnableLimit;
+
+            _maxMotorTorque = def.MaxMotorTorque;
+            _motorSpeed = def.MotorSpeed;
+            _enableMotor = def.EnableMotor;
+
+            _stiffness = def.Stiffness;
+            _damping = def.Damping;
+        }
+
+        public Vector2 LocalXAxisA => _localXAxisA;
+        public Vector2 LocalYAxisA => _localYAxisA;
+
         /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point on BodyB</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => LocalAnchorA = BodyA.GetLocalPoint(value);
+            get => _bodyA.GetWorldPoint(LocalAnchorA);
+            set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.GetWorldPoint(LocalAnchorB);
-            set => LocalAnchorB = BodyB.GetLocalPoint(value);
-        }
-
-        /// <summary>The axis at which the suspension moves.</summary>
-        public Vector2 Axis
-        {
-            get => _axis;
-            set
-            {
-                _axis = value;
-                LocalXAxis = BodyA.GetLocalVector(_axis);
-                _localYAxis = MathUtils.Cross(1.0f, LocalXAxis);
-            }
+            get => _bodyB.GetWorldPoint(LocalAnchorB);
+            set => _localAnchorB = _bodyB.GetLocalPoint(value);
         }
 
         /// <summary>The axis in local coordinates relative to BodyA</summary>
@@ -177,19 +212,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             }
         }
 
-        /// <summary>Suspension frequency, zero indicates no suspension</summary>
-        public float Frequency { get; set; }
-
-        /// <summary>Suspension damping ratio, one indicates critical damping</summary>
-        public float DampingRatio { get; set; }
-
         /// <summary>Gets the translation along the axis</summary>
         public float JointTranslation
         {
             get
             {
-                Body bA = BodyA;
-                Body bB = BodyB;
+                Body bA = _bodyA;
+                Body bB = _bodyB;
 
                 Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
                 Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
@@ -205,26 +234,22 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                Body bA = BodyA;
-                Body bB = BodyB;
+                Body bA = _bodyA;
+                Body bB = _bodyB;
 
-                bA.GetTransform(out Transform xfA);
-
-                bB.GetTransform(out Transform xfB);
-
-                Vector2 rA = MathUtils.Mul(xfA.q, LocalAnchorA - bA._sweep.LocalCenter);
-                Vector2 rB = MathUtils.Mul(xfB.q, LocalAnchorB - bB._sweep.LocalCenter);
+                Vector2 rA = MathUtils.Mul(bA._xf.q, _localAnchorA - bA._sweep.LocalCenter);
+                Vector2 rB = MathUtils.Mul(bB._xf.q, _localAnchorB - bB._sweep.LocalCenter);
                 Vector2 p1 = bA._sweep.C + rA;
                 Vector2 p2 = bB._sweep.C + rB;
                 Vector2 d = p2 - p1;
-                Vector2 axis = MathUtils.Mul(xfA.q, LocalXAxis);
+                Vector2 axis = MathUtils.Mul(bA._xf.q, _localXAxisA);
 
-                Vector2 vA = bA.LinearVelocity;
-                Vector2 vB = bB.LinearVelocity;
-                float wA = bA.AngularVelocity;
-                float wB = bB.AngularVelocity;
+                Vector2 vA = bA._linearVelocity;
+                Vector2 vB = bB._linearVelocity;
+                float wA = bA._angularVelocity;
+                float wB = bB._angularVelocity;
 
-                float speed = Vector2.Dot(d, MathUtils.Cross(wA, axis)) + Vector2.Dot(axis, vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA));
+                float speed = MathUtils.Dot(d, MathUtils.Cross(wA, axis)) + MathUtils.Dot(axis, vB + MathUtils.Cross(wB, rB) - vA - MathUtils.Cross(wA, rA));
                 return speed;
             }
         }
@@ -233,8 +258,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                Body bA = BodyA;
-                Body bB = BodyB;
+                Body bA = _bodyA;
+                Body bB = _bodyB;
                 return bB._sweep.A - bA._sweep.A;
             }
         }
@@ -244,8 +269,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                float wA = BodyA.AngularVelocity;
-                float wB = BodyB.AngularVelocity;
+                float wA = _bodyA.AngularVelocity;
+                float wB = _bodyB.AngularVelocity;
                 return wB - wA;
             }
         }
@@ -264,6 +289,74 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             }
         }
 
+        public float UpperLimit
+        {
+            get => _upperTranslation;
+            set
+            {
+                if (_upperTranslation != value)
+                {
+                    WakeBodies();
+                    _upperTranslation = value;
+                    _upperImpulse = 0.0f;
+                }
+            }
+        }
+
+        public float LowerLimit
+        {
+            get => _lowerTranslation;
+            set
+            {
+                if (_lowerTranslation != value)
+                {
+                    WakeBodies();
+                    _lowerTranslation = value;
+                    _lowerImpulse = 0.0f;
+                }
+            }
+        }
+
+        public bool EnableLimit
+        {
+            get => _enableLimit;
+            set
+            {
+                if (_enableLimit != value)
+                {
+                    WakeBodies();
+                    _enableLimit = value;
+                    _lowerImpulse = 0.0f;
+                    _upperImpulse = 0.0f;
+                }
+            }
+        }
+
+        public float Damping
+        {
+            get => _damping;
+            set => _damping = value;
+        }
+
+        public float Stiffness
+        {
+            get => _stiffness;
+            set => _stiffness = value;
+        }
+
+        public void SetLimits(float lower, float upper)
+        {
+            Debug.Assert(lower <= upper);
+            if (lower != _lowerTranslation || upper != _upperTranslation)
+            {
+                WakeBodies();
+                _lowerTranslation = lower;
+                _upperTranslation = upper;
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+            }
+        }
+
         /// <summary>Gets the torque of the motor</summary>
         /// <param name="invDt">inverse delta time</param>
         public float GetMotorTorque(float invDt)
@@ -273,7 +366,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            return invDt * (_impulse * _ay + _springImpulse * _ax);
+            return invDt * (_impulse * _ay + (_springImpulse + _lowerImpulse - _upperImpulse) * _ax);
         }
 
         public override float GetReactionTorque(float invDt)
@@ -283,14 +376,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            _indexA = BodyA.IslandIndex;
-            _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA._sweep.LocalCenter;
-            _localCenterB = BodyB._sweep.LocalCenter;
-            _invMassA = BodyA._invMass;
-            _invMassB = BodyB._invMass;
-            _invIA = BodyA._invI;
-            _invIB = BodyB._invI;
+            _indexA = _bodyA.IslandIndex;
+            _indexB = _bodyB.IslandIndex;
+            _localCenterA = _bodyA._sweep.LocalCenter;
+            _localCenterB = _bodyB._sweep.LocalCenter;
+            _invMassA = _bodyA._invMass;
+            _invMassB = _bodyB._invMass;
+            _invIA = _bodyA._invI;
+            _invIB = _bodyB._invI;
 
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
@@ -308,71 +401,87 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective masses.
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
-            Vector2 d1 = cB + rB - cA - rA;
+            Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
+            Vector2 d = cB + rB - cA - rA;
 
             // Point to line constraint
             {
-                _ay = MathUtils.Mul(qA, _localYAxis);
-                _sAy = MathUtils.Cross(d1 + rA, _ay);
+                _ay = MathUtils.Mul(qA, _localYAxisA);
+                _sAy = MathUtils.Cross(d + rA, _ay);
                 _sBy = MathUtils.Cross(rB, _ay);
 
                 _mass = mA + mB + iA * _sAy * _sAy + iB * _sBy * _sBy;
 
                 if (_mass > 0.0f)
+                {
                     _mass = 1.0f / _mass;
+                }
             }
 
             // Spring constraint
+            _ax = MathUtils.Mul(qA, _localXAxisA);
+            _sAx = MathUtils.Cross(d + rA, _ax);
+            _sBx = MathUtils.Cross(rB, _ax);
+
+            float invMass = mA + mB + iA * _sAx * _sAx + iB * _sBx * _sBx;
+            if (invMass > 0.0f)
+            {
+                _axialMass = 1.0f / invMass;
+            }
+            else
+            {
+                _axialMass = 0.0f;
+            }
+
             _springMass = 0.0f;
             _bias = 0.0f;
             _gamma = 0.0f;
-            if (Frequency > 0.0f)
+
+            if (_stiffness > 0.0f && invMass > 0.0f)
             {
-                _ax = MathUtils.Mul(qA, LocalXAxis);
-                _sAx = MathUtils.Cross(d1 + rA, _ax);
-                _sBx = MathUtils.Cross(rB, _ax);
+                _springMass = 1.0f / invMass;
 
-                float invMass = mA + mB + iA * _sAx * _sAx + iB * _sBx * _sBx;
+                float C = MathUtils.Dot(d, _ax);
 
-                if (invMass > 0.0f)
+                // magic formulas
+                float h = data.Step.DeltaTime;
+                _gamma = h * (_damping + h * _stiffness);
+                if (_gamma > 0.0f)
                 {
-                    _springMass = 1.0f / invMass;
+                    _gamma = 1.0f / _gamma;
+                }
 
-                    float C = Vector2.Dot(d1, _ax);
+                _bias = C * h * _stiffness * _gamma;
 
-                    // Frequency
-                    float omega = 2.0f * MathConstants.Pi * Frequency;
-
-                    // Damping coefficient
-                    float d = 2.0f * _springMass * DampingRatio * omega;
-
-                    // Spring stiffness
-                    float k = _springMass * omega * omega;
-
-                    // magic formulas
-                    float h = data.Step.DeltaTime;
-                    _gamma = h * (d + h * k);
-                    if (_gamma > 0.0f)
-                        _gamma = 1.0f / _gamma;
-
-                    _bias = C * h * k * _gamma;
-
-                    _springMass = invMass + _gamma;
-                    if (_springMass > 0.0f)
-                        _springMass = 1.0f / _springMass;
+                _springMass = invMass + _gamma;
+                if (_springMass > 0.0f)
+                {
+                    _springMass = 1.0f / _springMass;
                 }
             }
             else
+            {
                 _springImpulse = 0.0f;
+            }
 
-            // Rotational motor
+            if (_enableLimit)
+            {
+                _translation = MathUtils.Dot(_ax, d);
+            }
+            else
+            {
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+            }
+
             if (_enableMotor)
             {
                 _motorMass = iA + iB;
                 if (_motorMass > 0.0f)
+                {
                     _motorMass = 1.0f / _motorMass;
+                }
             }
             else
             {
@@ -387,9 +496,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _springImpulse *= data.Step.DeltaTimeRatio;
                 _motorImpulse *= data.Step.DeltaTimeRatio;
 
-                Vector2 P = _impulse * _ay + _springImpulse * _ax;
-                float LA = _impulse * _sAy + _springImpulse * _sAx + _motorImpulse;
-                float LB = _impulse * _sBy + _springImpulse * _sBx + _motorImpulse;
+                float axialImpulse = _springImpulse + _lowerImpulse - _upperImpulse;
+                Vector2 P = _impulse * _ay + axialImpulse * _ax;
+                float LA = _impulse * _sAy + axialImpulse * _sAx + _motorImpulse;
+                float LB = _impulse * _sBy + axialImpulse * _sBx + _motorImpulse;
 
                 vA -= _invMassA * P;
                 wA -= _invIA * LA;
@@ -402,6 +512,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _impulse = 0.0f;
                 _springImpulse = 0.0f;
                 _motorImpulse = 0.0f;
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -422,7 +534,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             // Solve spring constraint
             {
-                float Cdot = Vector2.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
+                float Cdot = MathUtils.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
                 float impulse = -_springMass * (Cdot + _bias + _gamma * _springImpulse);
                 _springImpulse += impulse;
 
@@ -451,9 +563,52 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 wB += iB * impulse;
             }
 
+            if (_enableLimit)
+            {
+                // Lower limit
+                {
+                    float C = _translation - _lowerTranslation;
+                    float Cdot = MathUtils.Dot(_ax, vB - vA) + _sBx * wB - _sAx * wA;
+                    float impulse = -_axialMass * (Cdot + MathUtils.Max(C, 0.0f) * data.Step.InvertedDeltaTime);
+                    float oldImpulse = _lowerImpulse;
+                    _lowerImpulse = MathUtils.Max(_lowerImpulse + impulse, 0.0f);
+                    impulse = _lowerImpulse - oldImpulse;
+
+                    Vector2 P = impulse * _ax;
+                    float LA = impulse * _sAx;
+                    float LB = impulse * _sBx;
+
+                    vA -= mA * P;
+                    wA -= iA * LA;
+                    vB += mB * P;
+                    wB += iB * LB;
+                }
+
+                // Upper limit
+                // Note: signs are flipped to keep C positive when the constraint is satisfied.
+                // This also keeps the impulse positive when the limit is active.
+                {
+                    float C = _upperTranslation - _translation;
+                    float Cdot = MathUtils.Dot(_ax, vA - vB) + _sAx * wA - _sBx * wB;
+                    float impulse = -_axialMass * (Cdot + MathUtils.Max(C, 0.0f) * data.Step.InvertedDeltaTime);
+                    float oldImpulse = _upperImpulse;
+                    _upperImpulse = MathUtils.Max(_upperImpulse + impulse, 0.0f);
+                    impulse = _upperImpulse - oldImpulse;
+
+                    Vector2 P = impulse * _ax;
+                    float LA = impulse * _sAx;
+                    float LB = impulse * _sBx;
+
+                    vA += mA * P;
+                    wA += iA * LA;
+                    vB -= mB * P;
+                    wB -= iB * LB;
+                }
+            }
+
             // Solve point to line constraint
             {
-                float Cdot = Vector2.Dot(_ay, vB - vA) + _sBy * wB - _sAy * wA;
+                float Cdot = MathUtils.Dot(_ay, vB - vA) + _sBy * wB - _sAy * wA;
                 float impulse = -_mass * Cdot;
                 _impulse += impulse;
 
@@ -481,42 +636,99 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Vector2 cB = data.Positions[_indexB].C;
             float aB = data.Positions[_indexB].A;
 
-            Rot qA = new Rot(aA), qB = new Rot(aB);
+            float linearError = 0.0f;
 
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
-            Vector2 d = (cB - cA) + rB - rA;
+            if (_enableLimit)
+            {
+                Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            Vector2 ay = MathUtils.Mul(qA, _localYAxis);
+                Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+                Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
+                Vector2 d = (cB - cA) + rB - rA;
 
-            float sAy = MathUtils.Cross(d + rA, ay);
-            float sBy = MathUtils.Cross(rB, ay);
+                Vector2 ax = MathUtils.Mul(qA, _localXAxisA);
+                float sAx = MathUtils.Cross(d + rA, _ax);
+                float sBx = MathUtils.Cross(rB, _ax);
 
-            float C = Vector2.Dot(d, ay);
+                float C = 0.0f;
+                float translation = MathUtils.Dot(ax, d);
+                if (MathUtils.Abs(_upperTranslation - _lowerTranslation) < 2.0f * Settings.LinearSlop)
+                {
+                    C = translation;
+                }
+                else if (translation <= _lowerTranslation)
+                {
+                    C = MathUtils.Min(translation - _lowerTranslation, 0.0f);
+                }
+                else if (translation >= _upperTranslation)
+                {
+                    C = MathUtils.Max(translation - _upperTranslation, 0.0f);
+                }
 
-            float k = _invMassA + _invMassB + _invIA * _sAy * _sAy + _invIB * _sBy * _sBy;
+                if (C != 0.0f)
+                {
 
-            float impulse;
-            if (k != 0.0f)
-                impulse = -C / k;
-            else
-                impulse = 0.0f;
+                    float invMass = _invMassA + _invMassB + _invIA * sAx * sAx + _invIB * sBx * sBx;
+                    float impulse = 0.0f;
+                    if (invMass != 0.0f)
+                    {
+                        impulse = -C / invMass;
+                    }
 
-            Vector2 P = impulse * ay;
-            float LA = impulse * sAy;
-            float LB = impulse * sBy;
+                    Vector2 P = impulse * ax;
+                    float LA = impulse * sAx;
+                    float LB = impulse * sBx;
 
-            cA -= _invMassA * P;
-            aA -= _invIA * LA;
-            cB += _invMassB * P;
-            aB += _invIB * LB;
+                    cA -= _invMassA * P;
+                    aA -= _invIA * LA;
+                    cB += _invMassB * P;
+                    aB += _invIB * LB;
+
+                    linearError = MathUtils.Abs(C);
+                }
+            }
+
+            // Solve perpendicular constraint
+            {
+                Rot qA = new Rot(aA), qB = new Rot(aB);
+
+                Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+                Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
+                Vector2 d = (cB - cA) + rB - rA;
+
+                Vector2 ay = MathUtils.Mul(qA, _localYAxisA);
+
+                float sAy = MathUtils.Cross(d + rA, ay);
+                float sBy = MathUtils.Cross(rB, ay);
+
+                float C = MathUtils.Dot(d, ay);
+
+                float invMass = _invMassA + _invMassB + _invIA * _sAy * _sAy + _invIB * _sBy * _sBy;
+
+                float impulse = 0.0f;
+                if (invMass != 0.0f)
+                {
+                    impulse = -C / invMass;
+                }
+
+                Vector2 P = impulse * ay;
+                float LA = impulse * sAy;
+                float LB = impulse * sBy;
+
+                cA -= _invMassA * P;
+                aA -= _invIA * LA;
+                cB += _invMassB * P;
+                aB += _invIB * LB;
+
+                linearError = MathUtils.Max(linearError, MathUtils.Abs(C));
+            }
 
             data.Positions[_indexA].C = cA;
             data.Positions[_indexA].A = aA;
             data.Positions[_indexB].C = cB;
             data.Positions[_indexB].A = aB;
 
-            return Math.Abs(C) <= Settings.LinearSlop;
+            return linearError <= Settings.LinearSlop;
         }
     }
 }

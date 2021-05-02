@@ -196,16 +196,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _spring1.MotorSpeed = 0.0f;
                 _spring1.MaxMotorTorque = 20.0f;
                 _spring1.MotorEnabled = true;
-                _spring1.Frequency = _hz;
-                _spring1.DampingRatio = _zeta;
+
+                JointHelper.LinearStiffness(_hz, _zeta, _spring1.BodyA, _spring1.BodyB, out float stiffness, out float damping);
+                _spring1.Stiffness = stiffness;
+                _spring1.Damping = damping;
                 World.AddJoint(_spring1);
 
                 _spring2 = new WheelJoint(_car, _wheel2, _wheel2.Position, axis, true);
                 _spring2.MotorSpeed = 0.0f;
                 _spring2.MaxMotorTorque = 10.0f;
                 _spring2.MotorEnabled = false;
-                _spring2.Frequency = _hz;
-                _spring2.DampingRatio = _zeta;
+
+                JointHelper.LinearStiffness(_hz, _zeta, _spring2.BodyA, _spring1.BodyB, out stiffness, out damping);
+                _spring2.Stiffness = stiffness;
+                _spring2.Damping = damping;
                 World.AddJoint(_spring2);
             }
         }
@@ -221,14 +225,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             else if (keyboardManager.IsNewKeyPress(Keys.Q))
             {
                 _hz = Math.Max(0.0f, _hz - 1.0f);
-                _spring1.Frequency = _hz;
-                _spring2.Frequency = _hz;
+
+                JointHelper.LinearStiffness(_hz, 0, _spring1.BodyA, _spring1.BodyB, out float stiffness, out _);
+                _spring1.Stiffness = stiffness;
+                _spring2.Stiffness = stiffness;
             }
             else if (keyboardManager.IsNewKeyPress(Keys.E))
             {
                 _hz += 1.0f;
-                _spring1.Frequency = _hz;
-                _spring2.Frequency = _hz;
+                JointHelper.LinearStiffness(_hz, 0, _spring1.BodyA, _spring1.BodyB, out float stiffness, out _);
+                _spring1.Stiffness = stiffness;
+                _spring2.Stiffness = stiffness;
             }
 
             base.Keyboard(keyboardManager);

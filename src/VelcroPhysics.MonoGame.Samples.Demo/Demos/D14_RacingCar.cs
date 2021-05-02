@@ -209,16 +209,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 _springBack.MotorSpeed = 0.0f;
                 _springBack.MaxMotorTorque = 20.0f;
                 _springBack.MotorEnabled = true;
-                _springBack.Frequency = _hzBack;
-                _springBack.DampingRatio = _zeta;
+
+                JointHelper.LinearStiffness(_hzBack, _zeta, _springBack.BodyA, _springBack.BodyB, out float stiffness, out float damping);
+                _springBack.Stiffness = stiffness;
+                _springBack.Damping = damping;
                 World.AddJoint(_springBack);
 
                 _springFront = new WheelJoint(_car, _wheelFront, _wheelFront.Position, axis, true);
                 _springFront.MotorSpeed = 0.0f;
                 _springFront.MaxMotorTorque = 10.0f;
                 _springFront.MotorEnabled = false;
-                _springFront.Frequency = _hzFront;
-                _springFront.DampingRatio = _zeta;
+
+                JointHelper.LinearStiffness(_hzFront, _zeta, _springFront.BodyA, _springFront.BodyB, out stiffness, out damping);
+                _springFront.Stiffness = stiffness;
+                _springFront.Damping = damping;
                 World.AddJoint(_springFront);
 
                 // GFX
