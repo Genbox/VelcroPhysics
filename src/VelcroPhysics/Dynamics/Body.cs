@@ -1047,6 +1047,12 @@ namespace Genbox.VelcroPhysics.Dynamics
             return GetLinearVelocityFromWorldPoint(GetWorldPoint(ref localPoint));
         }
 
+        /// <summary> Calling this will remove the body from its associated world.</summary>
+        public void RemoveFromWorld()
+        {
+            _world.RemoveBody(this);
+        }
+
         internal void SynchronizeFixtures()
         {
             IBroadPhase broadPhase = _world.ContactManager.BroadPhase;

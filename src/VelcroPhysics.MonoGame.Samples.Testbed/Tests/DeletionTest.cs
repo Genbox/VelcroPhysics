@@ -20,7 +20,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         private void OnSeparation(Fixture fixtureA, Fixture fixtureB, Contact contact)
         {
-            //fixtureB.Body.Dispose(); //TODO: issue #4
+            fixtureB.Body.RemoveFromWorld();
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
