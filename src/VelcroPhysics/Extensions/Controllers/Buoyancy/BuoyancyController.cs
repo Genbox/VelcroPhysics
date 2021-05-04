@@ -16,7 +16,7 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
         private Vector2 _gravity;
         private Vector2 _normal;
         private float _offset;
-        private Dictionary<int, Body> _uniqueBodies = new Dictionary<int, Body>();
+        private HashSet<Body> _uniqueBodies = new HashSet<Body>();
 
         /// <summary>
         /// Controls the rotational drag that the fluid exerts on the bodies within it. Use higher values will simulate
@@ -71,16 +71,14 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy
                 if (fixture.Body.IsStatic || !fixture.Body.Awake)
                     return true;
 
-                if (!_uniqueBodies.ContainsKey(fixture.Body.BodyId))
-                    _uniqueBodies.Add(fixture.Body.BodyId, fixture.Body);
+                if (!_uniqueBodies.Contains(fixture.Body))
+                    _uniqueBodies.Add(fixture.Body);
 
                 return true;
             }, ref _container);
 
-            foreach (KeyValuePair<int, Body> kv in _uniqueBodies)
+            foreach (Body body in _uniqueBodies)
             {
-                Body body = kv.Value;
-
                 Vector2 areac = Vector2.Zero;
                 Vector2 massc = Vector2.Zero;
                 float area = 0;
