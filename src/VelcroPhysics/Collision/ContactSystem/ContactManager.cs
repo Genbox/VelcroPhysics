@@ -81,8 +81,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             {
                 if (edge.Other == bodyA)
                 {
-                    Fixture fA = edge.Contact.FixtureA;
-                    Fixture fB = edge.Contact.FixtureB;
+                    Fixture fA = edge.Contact._fixtureA;
+                    Fixture fB = edge.Contact._fixtureB;
                     int iA = edge.Contact.ChildIndexA;
                     int iB = edge.Contact.ChildIndexB;
 
@@ -128,8 +128,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                 return;
 
             // Contact creation may swap fixtures.
-            fixtureA = c.FixtureA;
-            fixtureB = c.FixtureB;
+            fixtureA = c._fixtureA;
+            fixtureB = c._fixtureB;
             bodyA = fixtureA.Body;
             bodyB = fixtureB.Body;
 
@@ -167,11 +167,11 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
         internal void Destroy(Contact contact)
         {
-            if (contact.FixtureA == null || contact.FixtureB == null)
+            if (contact._fixtureA == null || contact._fixtureB == null)
                 return;
 
-            Fixture fixtureA = contact.FixtureA;
-            Fixture fixtureB = contact.FixtureB;
+            Fixture fixtureA = contact._fixtureA;
+            Fixture fixtureB = contact._fixtureB;
 
             //Velcro: When contacts are removed, we invoke OnSeparation
             if (contact.IsTouching)
@@ -221,8 +221,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             for (int i = 0; i < ContactList.Count; i++)
             {
                 Contact c = ContactList[i];
-                Fixture fixtureA = c.FixtureA;
-                Fixture fixtureB = c.FixtureB;
+                Fixture fixtureA = c._fixtureA;
+                Fixture fixtureB = c._fixtureB;
                 int indexA = c.ChildIndexA;
                 int indexB = c.ChildIndexB;
                 Body bodyA = fixtureA.Body;

@@ -10,6 +10,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
     public interface IBroadPhase
     {
         int ProxyCount { get; }
+
         void UpdatePairs(BroadphaseHandler callback);
 
         bool TestOverlap(int proxyIdA, int proxyIdB);

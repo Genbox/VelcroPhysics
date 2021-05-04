@@ -73,8 +73,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             {
                 Contact contact = contacts[i];
 
-                Fixture fixtureA = contact.FixtureA;
-                Fixture fixtureB = contact.FixtureB;
+                Fixture fixtureA = contact._fixtureA;
+                Fixture fixtureB = contact._fixtureB;
                 Shape shapeA = fixtureA.Shape;
                 Shape shapeB = fixtureB.Shape;
                 float radiusA = shapeA.Radius;
@@ -617,7 +617,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                     manifold.Points[j] = point;
                 }
 
-                _contacts[vc.ContactIndex].Manifold = manifold;
+                _contacts[vc.ContactIndex]._manifold = manifold;
             }
         }
 

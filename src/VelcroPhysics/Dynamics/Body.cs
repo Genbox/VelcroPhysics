@@ -656,8 +656,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 Contact c = edge.Contact;
                 edge = edge.Next;
 
-                Fixture fixtureA = c.FixtureA;
-                Fixture fixtureB = c.FixtureB;
+                Fixture fixtureA = c._fixtureA;
+                Fixture fixtureB = c._fixtureB;
 
                 if (fixture == fixtureA || fixture == fixtureB)
                 {

@@ -43,9 +43,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
-        private float _friction;
-        private bool _isSensor;
-        private float _restitution;
+        internal float _friction;
+        internal bool _isSensor;
+        internal float _restitution;
 
         /// <summary>Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.</summary>
         public AfterCollisionHandler AfterCollision;
@@ -221,8 +221,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             while (edge != null)
             {
                 Contact contact = edge.Contact;
-                Fixture fixtureA = contact.FixtureA;
-                Fixture fixtureB = contact.FixtureB;
+                Fixture fixtureA = contact._fixtureA;
+                Fixture fixtureB = contact._fixtureB;
                 if (fixtureA == this || fixtureB == this)
                     contact._flags |= ContactFlags.FilterFlag;
 

@@ -58,7 +58,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             if (!Broken)
             {
-                if (Parts.Contains(contact.FixtureA) || Parts.Contains(contact.FixtureB))
+                if (Parts.Contains(contact._fixtureA) || Parts.Contains(contact._fixtureB))
                 {
                     float maxImpulse = 0.0f;
                     int count = contact.Manifold.PointCount;

@@ -32,40 +32,41 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
     /// <summary>This is an internal class.</summary>
     internal class Island
     {
-        private float LinTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
-        private float AngTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
+        private float _linTolSqr = Settings.LinearSleepTolerance * Settings.LinearSleepTolerance;
+        private float _angTolSqr = Settings.AngularSleepTolerance * Settings.AngularSleepTolerance;
         private ContactManager _contactManager;
-        private Contact[] _contacts;
         private ContactSolver _contactSolver = new ContactSolver();
-        private Joint[] _joints;
         private Stopwatch _watch = new Stopwatch();
 
-        public Body[] Bodies;
-        public int BodyCapacity;
-        public int BodyCount;
-        public int ContactCapacity;
-        public int ContactCount;
-        public int JointCapacity;
-        public int JointCount;
-        public Position[] Positions;
-        public Velocity[] Velocities;
+        private Contact[] _contacts;
+        private Joint[] _joints;
+        internal Body[] _bodies;
+        internal int _bodyCount;
+        internal int _bodyCapacity;
+        internal int _contactCapacity;
+        internal int _contactCount;
+
+        private int _jointCapacity;
+        private int _jointCount;
+        private Position[] _positions;
+        private Velocity[] _velocities;
 
         public void Reset(int bodyCapacity, int contactCapacity, int jointCapacity, ContactManager contactManager)
         {
-            BodyCapacity = bodyCapacity;
-            ContactCapacity = contactCapacity;
-            JointCapacity = jointCapacity;
-            BodyCount = 0;
-            ContactCount = 0;
-            JointCount = 0;
+            _bodyCapacity = bodyCapacity;
+            _contactCapacity = contactCapacity;
+            _jointCapacity = jointCapacity;
+            _bodyCount = 0;
+            _contactCount = 0;
+            _jointCount = 0;
 
             _contactManager = contactManager;
 
-            if (Bodies == null || Bodies.Length < bodyCapacity)
+            if (_bodies == null || _bodies.Length < bodyCapacity)
             {
-                Bodies = new Body[bodyCapacity];
-                Velocities = new Velocity[bodyCapacity];
-                Positions = new Position[bodyCapacity];
+                _bodies = new Body[bodyCapacity];
+                _velocities = new Velocity[bodyCapacity];
+                _positions = new Position[bodyCapacity];
             }
 
             if (_contacts == null || _contacts.Length < contactCapacity)
@@ -77,9 +78,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
         public void Clear()
         {
-            BodyCount = 0;
-            ContactCount = 0;
-            JointCount = 0;
+            _bodyCount = 0;
+            _contactCount = 0;
+            _jointCount = 0;
         }
 
         public void Solve(ref TimeStep step, ref Vector2 gravity)
@@ -87,9 +88,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             float h = step.DeltaTime;
 
             // Integrate velocities and apply damping. Initialize the body state.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
+                Body b = _bodies[i];
 
                 Vector2 c = b._sweep.C;
                 float a = b._sweep.A;
@@ -122,19 +123,19 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                     w *= MathUtils.Clamp(1.0f - h * b.AngularDamping, 0.0f, 1.0f);
                 }
 
-                Positions[i].C = c;
-                Positions[i].A = a;
-                Velocities[i].V = v;
-                Velocities[i].W = w;
+                _positions[i].C = c;
+                _positions[i].A = a;
+                _velocities[i].V = v;
+                _velocities[i].W = w;
             }
 
             // Solver data
             SolverData solverData = new SolverData();
             solverData.Step = step;
-            solverData.Positions = Positions;
-            solverData.Velocities = Velocities;
+            solverData.Positions = _positions;
+            solverData.Velocities = _velocities;
 
-            _contactSolver.Reset(step, ContactCount, _contacts, Positions, Velocities);
+            _contactSolver.Reset(step, _contactCount, _contacts, _positions, _velocities);
             _contactSolver.InitializeVelocityConstraints();
 
             if (Settings.EnableWarmStarting)
@@ -143,7 +144,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             if (Settings.EnableDiagnostics)
                 _watch.Start();
 
-            for (int i = 0; i < JointCount; ++i)
+            for (int i = 0; i < _jointCount; ++i)
             {
                 if (_joints[i].Enabled)
                     _joints[i].InitVelocityConstraints(ref solverData);
@@ -155,7 +156,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             // Solve velocity constraints.
             for (int i = 0; i < Settings.VelocityIterations; ++i)
             {
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
                     Joint joint = _joints[j];
 
@@ -179,12 +180,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _contactSolver.StoreImpulses();
 
             // Integrate positions
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Vector2 c = Positions[i].C;
-                float a = Positions[i].A;
-                Vector2 v = Velocities[i].V;
-                float w = Velocities[i].W;
+                Vector2 c = _positions[i].C;
+                float a = _positions[i].A;
+                Vector2 v = _velocities[i].V;
+                float w = _velocities[i].W;
 
                 // Check for large velocities
                 Vector2 translation = h * v;
@@ -205,10 +206,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 c += h * v;
                 a += h * w;
 
-                Positions[i].C = c;
-                Positions[i].A = a;
-                Velocities[i].V = v;
-                Velocities[i].W = w;
+                _positions[i].C = c;
+                _positions[i].A = a;
+                _velocities[i].V = v;
+                _velocities[i].W = w;
             }
 
             // Solve position constraints
@@ -218,7 +219,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 bool contactsOkay = _contactSolver.SolvePositionConstraints();
 
                 bool jointsOkay = true;
-                for (int j = 0; j < JointCount; ++j)
+                for (int j = 0; j < _jointCount; ++j)
                 {
                     Joint joint = _joints[j];
 
@@ -251,13 +252,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             }
 
             // Copy state buffers back to the bodies
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body body = Bodies[i];
-                body._sweep.C = Positions[i].C;
-                body._sweep.A = Positions[i].A;
-                body._linearVelocity = Velocities[i].V;
-                body._angularVelocity = Velocities[i].W;
+                Body body = _bodies[i];
+                body._sweep.C = _positions[i].C;
+                body._sweep.A = _positions[i].A;
+                body._linearVelocity = _velocities[i].V;
+                body._angularVelocity = _velocities[i].W;
                 body.SynchronizeTransform();
             }
 
@@ -267,14 +268,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             {
                 float minSleepTime = MathConstants.MaxFloat;
 
-                for (int i = 0; i < BodyCount; ++i)
+                for (int i = 0; i < _bodyCount; ++i)
                 {
-                    Body b = Bodies[i];
+                    Body b = _bodies[i];
 
                     if (b.BodyType == BodyType.Static)
                         continue;
 
-                    if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > AngTolSqr || Vector2.Dot(b._linearVelocity, b._linearVelocity) > LinTolSqr)
+                    if (!b.SleepingAllowed || b._angularVelocity * b._angularVelocity > _angTolSqr || Vector2.Dot(b._linearVelocity, b._linearVelocity) > _linTolSqr)
                     {
                         b.SleepTime = 0.0f;
                         minSleepTime = 0.0f;
@@ -288,9 +289,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
                 if (minSleepTime >= Settings.TimeToSleep && positionSolved)
                 {
-                    for (int i = 0; i < BodyCount; ++i)
+                    for (int i = 0; i < _bodyCount; ++i)
                     {
-                        Body b = Bodies[i];
+                        Body b = _bodies[i];
                         b.Awake = false;
                     }
                 }
@@ -299,20 +300,20 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
         internal void SolveTOI(ref TimeStep subStep, int toiIndexA, int toiIndexB)
         {
-            Debug.Assert(toiIndexA < BodyCount);
-            Debug.Assert(toiIndexB < BodyCount);
+            Debug.Assert(toiIndexA < _bodyCount);
+            Debug.Assert(toiIndexB < _bodyCount);
 
             // Initialize the body state.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Body b = Bodies[i];
-                Positions[i].C = b._sweep.C;
-                Positions[i].A = b._sweep.A;
-                Velocities[i].V = b._linearVelocity;
-                Velocities[i].W = b._angularVelocity;
+                Body b = _bodies[i];
+                _positions[i].C = b._sweep.C;
+                _positions[i].A = b._sweep.A;
+                _velocities[i].V = b._linearVelocity;
+                _velocities[i].W = b._angularVelocity;
             }
 
-            _contactSolver.Reset(subStep, ContactCount, _contacts, Positions, Velocities);
+            _contactSolver.Reset(subStep, _contactCount, _contacts, _positions, _velocities);
 
             // Solve position constraints.
             for (int i = 0; i < Settings.TOIPositionIterations; ++i)
@@ -323,10 +324,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             }
 
             // Leap of faith to new safe state.
-            Bodies[toiIndexA]._sweep.C0 = Positions[toiIndexA].C;
-            Bodies[toiIndexA]._sweep.A0 = Positions[toiIndexA].A;
-            Bodies[toiIndexB]._sweep.C0 = Positions[toiIndexB].C;
-            Bodies[toiIndexB]._sweep.A0 = Positions[toiIndexB].A;
+            _bodies[toiIndexA]._sweep.C0 = _positions[toiIndexA].C;
+            _bodies[toiIndexA]._sweep.A0 = _positions[toiIndexA].A;
+            _bodies[toiIndexB]._sweep.C0 = _positions[toiIndexB].C;
+            _bodies[toiIndexB]._sweep.A0 = _positions[toiIndexB].A;
 
             // No warm starting is needed for TOI events because warm
             // starting impulses were applied in the discrete solver.
@@ -344,12 +345,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             float h = subStep.DeltaTime;
 
             // Integrate positions.
-            for (int i = 0; i < BodyCount; ++i)
+            for (int i = 0; i < _bodyCount; ++i)
             {
-                Vector2 c = Positions[i].C;
-                float a = Positions[i].A;
-                Vector2 v = Velocities[i].V;
-                float w = Velocities[i].W;
+                Vector2 c = _positions[i].C;
+                float a = _positions[i].A;
+                Vector2 v = _velocities[i].V;
+                float w = _velocities[i].W;
 
                 // Check for large velocities
                 Vector2 translation = h * v;
@@ -370,13 +371,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 c += h * v;
                 a += h * w;
 
-                Positions[i].C = c;
-                Positions[i].A = a;
-                Velocities[i].V = v;
-                Velocities[i].W = w;
+                _positions[i].C = c;
+                _positions[i].A = a;
+                _velocities[i].V = v;
+                _velocities[i].W = w;
 
                 // Sync bodies
-                Body body = Bodies[i];
+                Body body = _bodies[i];
                 body._sweep.C = c;
                 body._sweep.A = a;
                 body._linearVelocity = v;
@@ -389,21 +390,21 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
         public void Add(Body body)
         {
-            Debug.Assert(BodyCount < BodyCapacity);
-            body.IslandIndex = BodyCount;
-            Bodies[BodyCount++] = body;
+            Debug.Assert(_bodyCount < _bodyCapacity);
+            body.IslandIndex = _bodyCount;
+            _bodies[_bodyCount++] = body;
         }
 
         public void Add(Contact contact)
         {
-            Debug.Assert(ContactCount < ContactCapacity);
-            _contacts[ContactCount++] = contact;
+            Debug.Assert(_contactCount < _contactCapacity);
+            _contacts[_contactCount++] = contact;
         }
 
         public void Add(Joint joint)
         {
-            Debug.Assert(JointCount < JointCapacity);
-            _joints[JointCount++] = joint;
+            Debug.Assert(_jointCount < _jointCapacity);
+            _joints[_jointCount++] = joint;
         }
 
         private void Report(ContactVelocityConstraint[] constraints)
@@ -411,15 +412,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             if (_contactManager == null)
                 return;
 
-            for (int i = 0; i < ContactCount; ++i)
+            for (int i = 0; i < _contactCount; ++i)
             {
                 Contact c = _contacts[i];
 
                 //Velcro optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
                 //Velcro feature: added after collision
-                c.FixtureA.AfterCollision?.Invoke(c.FixtureA, c.FixtureB, c, constraints[i]);
-
-                c.FixtureB.AfterCollision?.Invoke(c.FixtureB, c.FixtureA, c, constraints[i]);
+                c._fixtureA.AfterCollision?.Invoke(c._fixtureA, c._fixtureB, c, constraints[i]);
+                c._fixtureB.AfterCollision?.Invoke(c._fixtureB, c._fixtureA, c, constraints[i]);
 
                 _contactManager.PostSolve?.Invoke(c, constraints[i]);
             }

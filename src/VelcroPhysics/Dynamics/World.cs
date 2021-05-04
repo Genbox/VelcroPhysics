@@ -55,6 +55,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         private Fixture _myFixture;
         private Vector2 _point1;
         private Vector2 _point2;
+        private Vector2 _gravity;
         private Func<Fixture, bool> _queryAABBCallback;
         private Func<int, bool> _queryAABBCallbackWrapper;
         private Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
@@ -84,15 +85,19 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary>Fires whenever a fixture has been removed</summary>
         public FixtureHandler FixtureRemoved;
 
-        /// <summary>Change the global gravity vector.</summary>
-        /// <value>The gravity.</value>
-        public Vector2 Gravity;
-
         /// <summary>Fires whenever a joint has been added</summary>
         public JointHandler JointAdded;
 
         /// <summary>Fires whenever a joint has been removed</summary>
         public JointHandler JointRemoved;
+
+        /// <summary>Change the global gravity vector.</summary>
+        /// <value>The gravity.</value>
+        public Vector2 Gravity
+        {
+            get => _gravity;
+            set => _gravity = value;
+        }
 
         /// <summary>Initializes a new instance of the <see cref="World" /> class.</summary>
         public World(Vector2 gravity)
@@ -108,12 +113,12 @@ namespace Genbox.VelcroPhysics.Dynamics
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
             ContactManager = new ContactManager(new DynamicTreeBroadPhase());
-            Gravity = gravity;
+            _gravity = gravity;
         }
 
-        public List<Controller> ControllerList { get; private set; }
+        public List<Controller> ControllerList { get; }
 
-        public List<BreakableBody> BreakableBodyList { get; private set; }
+        public List<BreakableBody> BreakableBodyList { get; }
 
         /// <summary>Get the number of broad-phase proxies.</summary>
         /// <value>The proxy count.</value>
@@ -121,15 +126,15 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Get the contact manager for testing.</summary>
         /// <value>The contact manager.</value>
-        public ContactManager ContactManager { get; private set; }
+        public ContactManager ContactManager { get; }
 
         /// <summary>Get the world body list.</summary>
         /// <value>The head of the world body list.</value>
-        public List<Body> BodyList { get; private set; }
+        public List<Body> BodyList { get; }
 
         /// <summary>Get the world joint list.</summary>
         /// <value>The joint list.</value>
-        public List<Joint> JointList { get; private set; }
+        public List<Joint> JointList { get; }
 
         /// <summary>
         /// Get the world contact list. With the returned contact, use Contact.GetNext to get the next contact in the
@@ -450,8 +455,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                             continue;
 
                         // Skip sensors.
-                        bool sensorA = contact.FixtureA.IsSensor;
-                        bool sensorB = contact.FixtureB.IsSensor;
+                        bool sensorA = contact._fixtureA.IsSensor;
+                        bool sensorB = contact._fixtureB.IsSensor;
                         if (sensorA || sensorB)
                             continue;
 
@@ -505,13 +510,13 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
                 }
 
-                _island.Solve(ref step, ref Gravity);
+                _island.Solve(ref step, ref _gravity);
 
                 // Post solve cleanup.
-                for (int i = 0; i < _island.BodyCount; ++i)
+                for (int i = 0; i < _island._bodyCount; ++i)
                 {
                     // Allow static bodies to participate in other islands.
-                    Body b = _island.Bodies[i];
+                    Body b = _island._bodies[i];
                     if (b.BodyType == BodyType.Static)
                         b._flags &= ~BodyFlags.IslandFlag;
                 }
@@ -587,8 +592,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
                     else
                     {
-                        Fixture fA = c.FixtureA;
-                        Fixture fB = c.FixtureB;
+                        Fixture fA = c._fixtureA;
+                        Fixture fB = c._fixtureB;
 
                         // Is there a sensor?
                         if (fA.IsSensor || fB.IsSensor)
@@ -669,8 +674,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 }
 
                 // Advance the bodies to the TOI.
-                Fixture fA1 = minContact.FixtureA;
-                Fixture fB1 = minContact.FixtureB;
+                Fixture fA1 = minContact._fixtureA;
+                Fixture fB1 = minContact._fixtureB;
                 Body bA0 = fA1.Body;
                 Body bB0 = fB1.Body;
 
@@ -721,10 +726,10 @@ namespace Genbox.VelcroPhysics.Dynamics
                         {
                             Contact contact = ce.Contact;
 
-                            if (_island.BodyCount == _island.BodyCapacity)
+                            if (_island._bodyCount == _island._bodyCapacity)
                                 break;
 
-                            if (_island.ContactCount == _island.ContactCapacity)
+                            if (_island._contactCount == _island._contactCapacity)
                                 break;
 
                             // Has this contact already been added to the island?
@@ -738,7 +743,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                                 continue;
 
                             // Skip sensors.
-                            if (contact.FixtureA.IsSensor || contact.FixtureB.IsSensor)
+                            if (contact._fixtureA.IsSensor || contact._fixtureB.IsSensor)
                                 continue;
 
                             // Tentatively advance the body to the TOI.
@@ -791,9 +796,9 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
-                for (int i = 0; i < _island.BodyCount; ++i)
+                for (int i = 0; i < _island._bodyCount; ++i)
                 {
-                    Body body = _island.Bodies[i];
+                    Body body = _island._bodies[i];
                     body._flags &= ~BodyFlags.IslandFlag;
 
                     if (body.BodyType != BodyType.Dynamic)
@@ -822,7 +827,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         }
 
         /// <summary>Add a rigid body.</summary>
-        /// <returns></returns>
         internal void AddBody(Body body)
         {
             Debug.Assert(!_bodyAddList.Contains(body), "You are adding the same body more than once.");
@@ -1034,11 +1038,13 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             List<Fixture> affected = new List<Fixture>();
 
-            RayCast((f, _, _, _) =>
+            float RayCastCallback(Fixture f, Vector2 vector2, Vector2 vector3, float f1)
             {
                 affected.Add(f);
                 return 1;
-            }, point1, point2);
+            }
+
+            RayCast(RayCastCallback, point1, point2);
 
             return affected;
         }
@@ -1110,7 +1116,6 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Returns a list of fixtures that are at the specified point.</summary>
         /// <param name="point">The point.</param>
-        /// <returns></returns>
         public List<Fixture> TestPointAll(Vector2 point)
         {
             AABB aabb;
