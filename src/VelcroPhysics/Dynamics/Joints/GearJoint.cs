@@ -121,6 +121,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _bodyC = JointA.BodyA;
             _bodyA = JointA.BodyB;
 
+            // Body B on joint1 must be dynamic
+            Debug.Assert(_bodyA._type == BodyType.Dynamic);
+
             // Get geometry of joint1
             Transform xfA = _bodyA._xf;
             float aA = _bodyA._sweep.A;
@@ -152,6 +155,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             _bodyD = JointB.BodyA;
             _bodyB = JointB.BodyB;
+
+            // Body B on joint2 must be dynamic
+            Debug.Assert(_bodyB._type == BodyType.Dynamic);
 
             // Get geometry of joint2
             Transform xfB = _bodyB._xf;

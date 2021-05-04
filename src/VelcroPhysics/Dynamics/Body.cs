@@ -42,7 +42,7 @@ namespace Genbox.VelcroPhysics.Dynamics
     {
         private float _inertia;
         private float _mass;
-        private BodyType _type;
+        internal BodyType _type;
 
         internal float _angularVelocity;
         internal BodyFlags _flags;

@@ -61,7 +61,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 body3.BodyType = BodyType.Dynamic;
                 body3.CreateFixture(circle2);
 
-                RevoluteJoint joint1 = new RevoluteJoint(body2, body1, body1.Position, true);
+                RevoluteJoint joint1 = new RevoluteJoint(body1, body2, body1.Position, true);
                 World.AddJoint(joint1);
 
                 RevoluteJoint joint2 = new RevoluteJoint(body2, body3, body3.Position, true);
