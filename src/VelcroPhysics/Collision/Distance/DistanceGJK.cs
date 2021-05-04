@@ -202,6 +202,12 @@ namespace Genbox.VelcroPhysics.Collision.Distance
         // GJK-raycast
         // Algorithm by Gino van den Bergen.
         // "Smooth Mesh Contacts with GJK" in Game Physics Pearls. 2010
+
+        /// <summary>
+        /// Perform a linear shape cast of shape B moving and shape A fixed. Determines the hit point, normal, and
+        /// translation fraction.
+        /// </summary>
+        /// <returns>true if hit, false if there is no hit or an initial overlap</returns>
         public static bool ShapeCast(ref ShapeCastInput input, out ShapeCastOutput output)
         {
             output = new ShapeCastOutput();
