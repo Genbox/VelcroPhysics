@@ -8,7 +8,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 {
     public static class PositionSolverManifold
     {
-        public static void Initialize(ContactPositionConstraint pc, Transform xfA, Transform xfB, int index, out Vector2 normal, out Vector2 point, out float separation)
+        public static void Initialize(ContactPositionConstraint pc, ref Transform xfA, ref Transform xfB, int index, out Vector2 normal, out Vector2 point, out float separation)
         {
             Debug.Assert(pc.PointCount > 0);
 

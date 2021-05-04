@@ -655,7 +655,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                     xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                     xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                    PositionSolverManifold.Initialize(pc, xfA, xfB, j, out Vector2 normal, out Vector2 point, out float separation);
+                    PositionSolverManifold.Initialize(pc, ref xfA, ref xfB, j, out Vector2 normal, out Vector2 point, out float separation);
 
                     Vector2 rA = point - cA;
                     Vector2 rB = point - cB;
@@ -742,7 +742,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                     xfA.p = cA - MathUtils.Mul(xfA.q, localCenterA);
                     xfB.p = cB - MathUtils.Mul(xfB.q, localCenterB);
 
-                    PositionSolverManifold.Initialize(pc, xfA, xfB, j, out Vector2 normal, out Vector2 point, out float separation);
+                    PositionSolverManifold.Initialize(pc, ref xfA, ref xfB, j, out Vector2 normal, out Vector2 point, out float separation);
 
                     Vector2 rA = point - cA;
                     Vector2 rB = point - cB;
