@@ -23,14 +23,14 @@ namespace Genbox.VelcroPhysics.Tests.Tests
             sweep.GetTransform(out Transform transform, 0.0f);
             Assert.Equal(transform.p.X, sweep.C0.X);
             Assert.Equal(transform.p.Y, sweep.C0.Y);
-            Assert.Equal(transform.q.c, Math.Cos(sweep.A0));
-            Assert.Equal(transform.q.s, Math.Sin(sweep.A0));
+            Assert.Equal(transform.q.c, (float)Math.Cos(sweep.A0));
+            Assert.Equal(transform.q.s, (float)Math.Sin(sweep.A0));
 
             sweep.GetTransform(out transform, 1.0f);
             Assert.Equal(transform.p.X, sweep.C.X);
             Assert.Equal(transform.p.Y, sweep.C.Y);
-            Assert.Equal(transform.q.c, Math.Cos(sweep.A));
-            Assert.Equal(transform.q.s, Math.Sin(sweep.A));
+            Assert.Equal(transform.q.c, (float)Math.Cos(sweep.A));
+            Assert.Equal(transform.q.s, (float)Math.Sin(sweep.A));
         }
     }
 }
