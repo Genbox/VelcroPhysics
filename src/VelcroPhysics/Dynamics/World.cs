@@ -343,6 +343,11 @@ namespace Genbox.VelcroPhysics.Dynamics
 
                     body.FixtureList = null;
 
+                    //Velcro: We make sure to cleanup the references and delegates
+                    body._world = null;
+                    body.OnCollision = null;
+                    body.OnSeparation = null;
+
                     // Remove world body list.
                     BodyList.Remove(body);
 
