@@ -66,6 +66,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _localCenterB;
         private Vector2 _rA;
         private Vector2 _rB;
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
+        private float _maxForce;
+        private float _maxTorque;
 
         /// <summary>Constructor for FrictionJoint.</summary>
         /// <param name="bodyA"></param>
@@ -88,28 +92,44 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point on BodyB</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => LocalAnchorA = BodyA.GetLocalPoint(value);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
+            set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.GetWorldPoint(LocalAnchorB);
-            set => LocalAnchorB = BodyB.GetLocalPoint(value);
+            get => _bodyB.GetWorldPoint(_localAnchorB);
+            set => _localAnchorB = _bodyB.GetLocalPoint(value);
         }
 
         /// <summary>The maximum friction force in N.</summary>
-        public float MaxForce { get; set; }
+        public float MaxForce
+        {
+            get => _maxForce;
+            set => _maxForce = value;
+        }
 
         /// <summary>The maximum friction torque in N-m.</summary>
-        public float MaxTorque { get; set; }
+        public float MaxTorque
+        {
+            get => _maxTorque;
+            set => _maxTorque = value;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -123,14 +143,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            _indexA = BodyA.IslandIndex;
-            _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA._sweep.LocalCenter;
-            _localCenterB = BodyB._sweep.LocalCenter;
-            _invMassA = BodyA._invMass;
-            _invMassB = BodyB._invMass;
-            _invIA = BodyA._invI;
-            _invIB = BodyB._invI;
+            _indexA = _bodyA.IslandIndex;
+            _indexB = _bodyB.IslandIndex;
+            _localCenterA = _bodyA._sweep.LocalCenter;
+            _localCenterB = _bodyB._sweep.LocalCenter;
+            _invMassA = _bodyA._invMass;
+            _invMassB = _bodyB._invMass;
+            _invIA = _bodyA._invI;
+            _invIB = _bodyB._invI;
 
             float aA = data.Positions[_indexA].A;
             Vector2 vA = data.Velocities[_indexA].V;
@@ -143,8 +163,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
             // Compute the effective mass matrix.
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
