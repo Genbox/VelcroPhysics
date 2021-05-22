@@ -169,13 +169,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
             else
             {
-                if (_keyboardManager.IsKeyDown(Keys.Left) || _keyboardManager.IsKeyDown(Keys.A)) // Press left/A to pan left.
+                if (_keyboardManager.IsKeyDown(Keys.Left)) // Press left to pan left.
                     ViewCenter = new Vector2(ViewCenter.X - moveScale, ViewCenter.Y);
-                if (_keyboardManager.IsKeyDown(Keys.Right) || _keyboardManager.IsKeyDown(Keys.D)) // Press right/D to pan right.
+                if (_keyboardManager.IsKeyDown(Keys.Right)) // Press right to pan right.
                     ViewCenter = new Vector2((ViewCenter.X + moveScale), ViewCenter.Y);
-                if (_keyboardManager.IsKeyDown(Keys.Down) || _keyboardManager.IsKeyDown(Keys.S)) // Press down/S to pan down.
+                if (_keyboardManager.IsKeyDown(Keys.Down)) // Press down to pan down.
                     ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - moveScale);
-                if (_keyboardManager.IsKeyDown(Keys.Up) || _keyboardManager.IsKeyDown(Keys.W)) // Press up/W to pan up.
+                if (_keyboardManager.IsKeyDown(Keys.Up)) // Press up to pan up.
                     ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + moveScale);
 
                 if (_keyboardManager.IsKeyDown(Keys.OemMinus) || _keyboardManager.IsKeyDown(Keys.Subtract)) // Press '-' to zoom out.
@@ -184,7 +184,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
                     ViewZoom *= 1.051271f;
                 else if (_mouseManager.NewScrollValue != 0) // Zoom with mouse wheel
                     ViewZoom *= Math.Sign(_mouseManager.NewScrollValue) == -1 ? 0.85f : 1.15f;
-                
+
                 ViewZoom = MathUtils.Clamp(ViewZoom, minZoom, maxZoom);
 
                 _test?.Keyboard(_keyboardManager);
