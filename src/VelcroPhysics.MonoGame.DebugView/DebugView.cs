@@ -37,7 +37,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         private Matrix _localProjection;
         private Matrix _localView;
 
-        private readonly List<float> _graphValues = new List<float>(500);
+        private readonly LinkedList<float> _graphValues = new LinkedList<float>();
         private readonly Vector2[] _background = new Vector2[4];
 
         //Contacts
@@ -47,9 +47,10 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         private readonly ContactPoint[] _points = new ContactPoint[_maxContactPoints];
 
         //Performance graph
+        private float _min;
         private float _max;
         private float _avg;
-        private float _min;
+
         private readonly StringBuilder _debugPanelSb = new StringBuilder();
 
         //Shape colors
@@ -269,10 +270,10 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
 
         private void DrawPerformanceGraph()
         {
-            _graphValues.Add(InternalTimings.UpdateTime / (float)TimeSpan.TicksPerMillisecond);
+            _graphValues.AddLast(InternalTimings.UpdateTime / (float)TimeSpan.TicksPerMillisecond);
 
             if (_graphValues.Count > ValuesToGraph + 1)
-                _graphValues.RemoveAt(0);
+                _graphValues.RemoveFirst();
 
             float x = PerformancePanelBounds.X;
             float deltaX = PerformancePanelBounds.Width / (float)ValuesToGraph;
@@ -285,9 +286,8 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
                 _max = 0;
                 _avg = 0;
 
-                for (int i = 0; i < _graphValues.Count; i++)
+                foreach (float val in _graphValues)
                 {
-                    float val = _graphValues[i];
                     _min = MathUtils.Min(_min, val);
                     _max = MathUtils.Max(_max, val);
                     _avg += val;
@@ -301,12 +301,14 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
                     MinimumValue = 0;
                 }
 
-                // start at last value (newest value added)
-                // continue until no values are left
-                for (int i = _graphValues.Count - 1; i > 0; i--)
+                // start at the last value (newest value added) and go back until no values are left
+                LinkedListNode<float> current = _graphValues.Last;
+                LinkedListNode<float> previous = _graphValues.Last.Previous;
+
+                while (previous != null)
                 {
-                    float y1 = PerformancePanelBounds.Bottom - _graphValues[i] / (MaximumValue - MinimumValue) * yScale;
-                    float y2 = PerformancePanelBounds.Bottom - _graphValues[i - 1] / (MaximumValue - MinimumValue) * yScale;
+                    float y1 = PerformancePanelBounds.Bottom - current.Value / (MaximumValue - MinimumValue) * yScale;
+                    float y2 = PerformancePanelBounds.Bottom - previous.Value / (MaximumValue - MinimumValue) * yScale;
 
                     Vector2 x1 = new Vector2(MathHelper.Clamp(x, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y1, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
                     Vector2 x2 = new Vector2(MathHelper.Clamp(x + deltaX, PerformancePanelBounds.Left, PerformancePanelBounds.Right), MathHelper.Clamp(y2, PerformancePanelBounds.Top, PerformancePanelBounds.Bottom));
@@ -314,6 +316,9 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
                     DrawSegment(x1, x2, Color.LightGreen);
 
                     x += deltaX;
+
+                    current = current.Previous;
+                    previous = current?.Previous;
                 }
             }
 
