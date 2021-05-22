@@ -98,11 +98,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         float _bias;
         float _gamma;
 
-        internal WheelJoint()
-        {
-            JointType = JointType.Wheel;
-        }
-
         /// <summary>Constructor for WheelJoint</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
@@ -110,7 +105,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="axis">The axis</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public WheelJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Wheel)
         {
             JointType = JointType.Wheel;
 
@@ -130,10 +125,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
         }
 
-        public WheelJoint(WheelJointTemplate def)
+        public WheelJoint(WheelJointTemplate def) : base(JointType.Wheel)
         {
-            JointType = JointType.Wheel;
-
             _localAnchorA = def.LocalAnchorA;
             _localAnchorB = def.LocalAnchorB;
             _localXAxisA = def.LocalAxisA;

@@ -119,11 +119,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _translation;
         private float _axialMass;
 
-        internal PrismaticJoint()
-        {
-            JointType = JointType.Prismatic;
-        }
-
         /// <summary>
         /// This requires defining a line of motion using an axis and an anchor point. The definition uses local anchor
         /// points and a local axis so that the initial configuration can violate the constraint slightly. The joint translation is
@@ -137,19 +132,19 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="axis">The axis.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 axis, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Prismatic)
         {
             Initialize(anchorA, anchorB, axis, useWorldCoordinates);
         }
 
         public PrismaticJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Prismatic)
         {
             Initialize(anchor, anchor, axis, useWorldCoordinates);
         }
 
         public PrismaticJoint(PrismaticJointTemplate template, bool useWorldCoordinates = false)
-            : base(template.BodyA, template.BodyB)
+            : base(template.BodyA, template.BodyB, JointType.Prismatic)
         {
             Initialize(template, useWorldCoordinates);
         }

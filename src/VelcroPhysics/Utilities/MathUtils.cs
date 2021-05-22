@@ -401,5 +401,27 @@ namespace Genbox.VelcroPhysics.Utilities
         {
             return Math.Min(valueA, valueB);
         }
+
+        public static int Sign(float value)
+        {
+            return Math.Sign(value);
+        }
+
+        /// <summary>
+        /// Convert this vector into a unit vector. Returns the length.
+        /// </summary>
+        public static float Normalize(ref Vector2 v)
+        {
+            float length = v.Length();
+            if (length < MathConstants.Epsilon)
+            {
+                return 0.0f;
+            }
+            float invLength = 1.0f / length;
+            v.X *= invLength;
+            v.Y *= invLength;
+
+            return length;
+        }
     }
 }

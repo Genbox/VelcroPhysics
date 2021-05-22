@@ -62,20 +62,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rA;
         private Vector2 _rB;
 
-        internal MotorJoint()
-        {
-            JointType = JointType.Motor;
-        }
-
         /// <summary>Constructor for MotorJoint.</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public MotorJoint(Body bodyA, Body bodyB, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Motor)
         {
-            JointType = JointType.Motor;
-
             Vector2 xB = BodyB.Position;
 
             if (useWorldCoordinates)

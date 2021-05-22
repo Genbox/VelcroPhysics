@@ -69,11 +69,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _uA;
         private Vector2 _uB;
 
-        internal PulleyJoint()
-        {
-            JointType = JointType.Pulley;
-        }
-
         /// <summary>Constructor for PulleyJoint.</summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
@@ -84,7 +79,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="ratio">The ratio.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public PulleyJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 worldAnchorA, Vector2 worldAnchorB, float ratio, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Pulley)
         {
             JointType = JointType.Pulley;
 

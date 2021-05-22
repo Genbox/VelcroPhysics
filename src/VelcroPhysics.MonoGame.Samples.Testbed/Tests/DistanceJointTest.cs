@@ -64,19 +64,26 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             base.Update(settings, gameTime);
 
-            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            DebugView.DrawString(30, TextLine, "Press + to increase and - to decrease max length");
-            DebugView.DrawString(30, TextLine += TextLine, "Max length: " + _joint.MaxLength);
-            DebugView.EndCustomDraw();
+            DrawString("Press Z to decrease and X to increase min length");
+            DrawString("Min length: " + _joint.MinLength);
+            DrawString(string.Empty);
+            DrawString("Press C to decrease and B to increase max length");
+            DrawString("Max length: " + _joint.MaxLength);
         }
 
         public override void Keyboard(KeyboardManager keyboardManager)
         {
-            if (keyboardManager.IsKeyDown(Keys.Add))
-                _joint.MaxLength += 0.1f;
-
-            if (keyboardManager.IsKeyDown(Keys.Subtract))
+            if (keyboardManager.IsKeyDown(Keys.Z))
                 _joint.MinLength -= 0.1f;
+
+            if (keyboardManager.IsKeyDown(Keys.X))
+                _joint.MinLength += 0.1f;
+
+            if (keyboardManager.IsKeyDown(Keys.C))
+                _joint.MaxLength -= 0.1f;
+
+            if (keyboardManager.IsKeyDown(Keys.V))
+                _joint.MaxLength += 0.1f;
 
             base.Keyboard(keyboardManager);
         }

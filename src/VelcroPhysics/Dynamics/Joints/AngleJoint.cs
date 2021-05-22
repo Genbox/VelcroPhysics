@@ -3,9 +3,9 @@
 * Copyright (c) 2017 Ian Qvist
 */
 
-using System;
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics.Joints
@@ -17,32 +17,26 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _jointError;
         private float _massFactor;
         private float _targetAngle;
+        private float _biasFactor;
+        private float _maxImpulse;
+        private float _softness;
 
-        internal AngleJoint()
-        {
-            JointType = JointType.Angle;
-        }
-
-        /// <summary>Constructor for AngleJoint</summary>
-        /// <param name="bodyA">The first body</param>
-        /// <param name="bodyB">The second body</param>
         public AngleJoint(Body bodyA, Body bodyB)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Angle)
         {
-            JointType = JointType.Angle;
-            BiasFactor = .2f;
-            MaxImpulse = float.MaxValue;
+            _biasFactor = .2f;
+            _maxImpulse = float.MaxValue;
         }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.Position;
+            get => _bodyA.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.Position;
+            get => _bodyB.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
@@ -52,7 +46,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _targetAngle;
             set
             {
-                if (value != _targetAngle)
+                if (_targetAngle != value)
                 {
                     _targetAngle = value;
                     WakeBodies();
@@ -61,18 +55,28 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>Gets or sets the bias factor. Defaults to 0.2</summary>
-        public float BiasFactor { get; set; }
+        public float BiasFactor
+        {
+            get => _biasFactor;
+            set => _biasFactor = value;
+        }
 
-        /// <summary>Gets or sets the maximum impulse Defaults to float.MaxValue</summary>
-        public float MaxImpulse { get; set; }
+        /// <summary>Gets or sets the maximum impulse. Defaults to float.MaxValue</summary>
+        public float MaxImpulse
+        {
+            get => _maxImpulse;
+            set => _maxImpulse = value;
+        }
 
-        /// <summary>Gets or sets the softness of the joint Defaults to 0</summary>
-        public float Softness { get; set; }
+        /// <summary>Gets or sets the softness of the joint. Defaults to 0</summary>
+        public float Softness
+        {
+            get => _softness;
+            set => _softness = value;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            //TODO
-            //return _inv_dt * _impulse;
             return Vector2.Zero;
         }
 
@@ -83,26 +87,26 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            int indexA = BodyA.IslandIndex;
-            int indexB = BodyB.IslandIndex;
+            int indexA = _bodyA.IslandIndex;
+            int indexB = _bodyB.IslandIndex;
 
             float aW = data.Positions[indexA].A;
             float bW = data.Positions[indexB].A;
 
-            _jointError = bW - aW - TargetAngle;
-            _bias = -BiasFactor * data.Step.InvertedDeltaTime * _jointError;
-            _massFactor = (1 - Softness) / (BodyA._invI + BodyB._invI);
+            _jointError = bW - aW - _targetAngle;
+            _bias = -_biasFactor * data.Step.InvertedDeltaTime * _jointError;
+            _massFactor = (1 - _softness) / (_bodyA._invI + _bodyB._invI);
         }
 
         internal override void SolveVelocityConstraints(ref SolverData data)
         {
-            int indexA = BodyA.IslandIndex;
-            int indexB = BodyB.IslandIndex;
+            int indexA = _bodyA.IslandIndex;
+            int indexB = _bodyB.IslandIndex;
 
             float p = (_bias - data.Velocities[indexB].W + data.Velocities[indexA].W) * _massFactor;
 
-            data.Velocities[indexA].W -= BodyA._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
-            data.Velocities[indexB].W += BodyB._invI * Math.Sign(p) * Math.Min(Math.Abs(p), MaxImpulse);
+            data.Velocities[indexA].W -= _bodyA._invI * MathUtils.Sign(p) * MathUtils.Min(MathUtils.Abs(p), _maxImpulse);
+            data.Velocities[indexB].W += _bodyB._invI * MathUtils.Sign(p) * MathUtils.Min(MathUtils.Abs(p), _maxImpulse);
         }
 
         internal override bool SolvePositionConstraints(ref SolverData data)

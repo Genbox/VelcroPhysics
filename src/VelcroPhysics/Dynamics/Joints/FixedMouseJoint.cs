@@ -68,9 +68,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="body">The body.</param>
         /// <param name="worldAnchor">The target.</param>
         public FixedMouseJoint(Body body, Vector2 worldAnchor)
-            : base(body)
+            : base(body, JointType.FixedMouse)
         {
-            JointType = JointType.FixedMouse;
             Frequency = 5.0f;
             DampingRatio = 0.7f;
             MaxForce = 1000 * body.Mass;

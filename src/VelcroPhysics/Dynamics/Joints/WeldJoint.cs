@@ -71,11 +71,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rA;
         private Vector2 _rB;
 
-        internal WeldJoint()
-        {
-            JointType = JointType.Weld;
-        }
-
         /// <summary>
         /// You need to specify an anchor point where they are attached. The position of the anchor point is important for
         /// computing the reaction torque.
@@ -86,10 +81,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="anchorB">The second body anchor.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public WeldJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Weld)
         {
-            JointType = JointType.Weld;
-
             if (useWorldCoordinates)
             {
                 LocalAnchorA = bodyA.GetLocalPoint(anchorA);

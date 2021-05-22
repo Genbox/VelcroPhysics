@@ -65,11 +65,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _referenceAngle;
         private float _upperAngle;
 
-        internal RevoluteJoint()
-        {
-            JointType = JointType.Revolute;
-        }
-
         /// <summary>Constructor of RevoluteJoint.</summary>
         /// <param name="bodyA">The first body.</param>
         /// <param name="bodyB">The second body.</param>
@@ -77,10 +72,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="anchorB">The second anchor.</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public RevoluteJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Revolute)
         {
-            JointType = JointType.Revolute;
-
             if (useWorldCoordinates)
             {
                 LocalAnchorA = BodyA.GetLocalPoint(anchorA);

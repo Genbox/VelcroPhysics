@@ -99,11 +99,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="ratio">The ratio.</param>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
-        public GearJoint(Body bodyA, Body bodyB, Joint jointA, Joint jointB, float ratio = 1f)
+        public GearJoint(Body bodyA, Body bodyB, Joint jointA, Joint jointB, float ratio = 1f) : base(bodyA, bodyB, JointType.Gear)
         {
-            JointType = JointType.Gear;
-            BodyA = bodyA;
-            BodyB = bodyB;
             JointA = jointA;
             JointB = jointB;
             Ratio = ratio;

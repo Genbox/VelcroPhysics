@@ -81,11 +81,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _upperImpulse;
         private float _stiffness;
         private float _damping;
-
-        internal DistanceJoint()
-        {
-            JointType = JointType.Distance;
-        }
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
 
         /// <summary>
         /// This requires defining an anchor point on both bodies and the non-zero length of the distance joint. If you
@@ -98,44 +95,55 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="anchorB">The second body anchor</param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public DistanceJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Distance)
         {
-            JointType = JointType.Distance;
+            Vector2 d;
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(ref anchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(ref anchorB);
-                Length = (anchorB - anchorA).Length();
+                _localAnchorA = bodyA.GetLocalPoint(ref anchorA);
+                _localAnchorB = bodyB.GetLocalPoint(ref anchorB);
+
+                d = anchorB - anchorA;
             }
             else
             {
-                LocalAnchorA = anchorA;
-                LocalAnchorB = anchorB;
-                Length = (BodyB.GetWorldPoint(ref anchorB) - BodyA.GetWorldPoint(ref anchorA)).Length();
+                _localAnchorA = anchorA;
+                _localAnchorB = anchorB;
+
+                d = bodyB.GetWorldPoint(ref anchorB) - bodyA.GetWorldPoint(ref anchorA);
             }
 
-            _minLength = 0;
-            _maxLength = float.MaxValue;
+            _length = MathUtils.Max(d.Length(), Settings.LinearSlop);
+            _minLength = _length;
+            _maxLength = _length;
         }
 
         /// <summary>The local anchor point relative to bodyA's origin.</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point relative to bodyB's origin.</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         /// <summary>The anchor on <see cref="Joint.BodyA" /> in world coordinates</summary>
         public sealed override Vector2 WorldAnchorA
         {
-            get => _bodyA.GetWorldPoint(LocalAnchorA);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         /// <summary>The anchor on <see cref="Joint.BodyB" /> in world coordinates</summary>
         public sealed override Vector2 WorldAnchorB
         {
-            get => _bodyB.GetWorldPoint(LocalAnchorB);
+            get => _bodyB.GetWorldPoint(_localAnchorB);
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
@@ -144,8 +152,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                Vector2 pA = _bodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 pB = _bodyB.GetWorldPoint(LocalAnchorB);
+                Vector2 pA = _bodyA.GetWorldPoint(_localAnchorA);
+                Vector2 pB = _bodyB.GetWorldPoint(_localAnchorB);
                 Vector2 d = pB - pA;
                 float length = d.Length();
                 return length;
@@ -229,8 +237,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            _rA = MathUtils.Mul(ref qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(ref qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(ref qA, _localAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(ref qB, _localAnchorB - _localCenterB);
             _u = cB + _rB - cA - _rA;
 
             // Handle singularity.
@@ -253,10 +261,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             if (_stiffness > 0.0f && _minLength < _maxLength)
             {
+                // soft
                 float C = _currentLength - _length;
-
-                // Frequency
-                float omega = 2.0f * MathConstants.Pi * _stiffness;
 
                 float d = _damping;
                 float k = _stiffness;
@@ -405,13 +411,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
             Vector2 u = cB + rB - cA - rA;
 
-            float length = u.Length();
-            u.Normalize();
-
+            float length = MathUtils.Normalize(ref u);
             float C;
             if (_minLength == _maxLength)
                 C = length - _minLength;

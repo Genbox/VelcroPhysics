@@ -42,15 +42,16 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         protected Body _bodyA;
         protected Body _bodyB;
 
-        protected Joint()
+        protected Joint(JointType jointType)
         {
+            JointType = jointType;
             Breakpoint = float.MaxValue;
 
             //Connected bodies should not collide by default
             CollideConnected = false;
         }
 
-        protected Joint(Body bodyA, Body bodyB) : this()
+        protected Joint(Body bodyA, Body bodyB, JointType jointType) : this(jointType)
         {
             //Can't connect a joint to the same body twice.
             Debug.Assert(bodyA != bodyB);
@@ -60,7 +61,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>Constructor for fixed joint</summary>
-        protected Joint(Body body) : this()
+        protected Joint(Body body, JointType jointType) : this(jointType)
         {
             BodyA = body;
         }

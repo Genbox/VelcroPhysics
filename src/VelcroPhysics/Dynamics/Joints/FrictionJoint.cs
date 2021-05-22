@@ -67,21 +67,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rA;
         private Vector2 _rB;
 
-        internal FrictionJoint()
-        {
-            JointType = JointType.Friction;
-        }
-
         /// <summary>Constructor for FrictionJoint.</summary>
         /// <param name="bodyA"></param>
         /// <param name="bodyB"></param>
         /// <param name="anchor"></param>
         /// <param name="useWorldCoordinates">Set to true if you are using world coordinates as anchors.</param>
         public FrictionJoint(Body bodyA, Body bodyB, Vector2 anchor, bool useWorldCoordinates = false)
-            : base(bodyA, bodyB)
+            : base(bodyA, bodyB, JointType.Friction)
         {
-            JointType = JointType.Friction;
-
             if (useWorldCoordinates)
             {
                 LocalAnchorA = BodyA.GetLocalPoint(anchor);
