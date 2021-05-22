@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -36,103 +35,89 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     // Identity used:
     // w k % (rx i + ry j) = w * (-ry i + rx j)
 
-    /// <summary>
-    /// A mouse joint is used to make a point on a body track a specified world point. This a soft constraint with a
+    /// <summary>A mouse joint is used to make a point on a body track a specified world point. This a soft constraint with a
     /// maximum force. This allows the constraint to stretch and without applying huge forces. NOTE: this joint is not
     /// documented in the manual because it was developed to be used in the testbed. If you want to learn how to use the mouse
-    /// joint, look at the testbed.
-    /// </summary>
+    /// joint, look at the testbed.</summary>
     public class FixedMouseJoint : Joint
     {
+        private Vector2 _localAnchorA;
+        private Vector2 _targetB;
+        private float _stiffness;
+        private float _damping;
         private float _beta;
-        private Vector2 _C;
-        private float _dampingRatio;
-        private float _frequency;
-        private float _gamma;
 
         // Solver shared
         private Vector2 _impulse;
+        private float _maxForce;
+        private float _gamma;
 
         // Solver temp
         private int _indexA;
-
-        private float _invIA;
-        private float _invMassA;
-        private Vector2 _localCenterA;
-        private Mat22 _mass;
-        private float _maxForce;
         private Vector2 _rA;
-        private Vector2 _worldAnchor;
+        private Vector2 _localCenterA;
+        private float _invMassA;
+        private float _invIA;
+        private Mat22 _mass;
+        private Vector2 _C;
 
         /// <summary>This requires a world target point, tuning parameters, and the time step.</summary>
         /// <param name="body">The body.</param>
-        /// <param name="worldAnchor">The target.</param>
-        public FixedMouseJoint(Body body, Vector2 worldAnchor)
+        /// <param name="target">The target.</param>
+        public FixedMouseJoint(Body body, Vector2 target)
             : base(body, JointType.FixedMouse)
         {
-            Frequency = 5.0f;
-            DampingRatio = 0.7f;
-            MaxForce = 1000 * body.Mass;
-
-            Debug.Assert(worldAnchor.IsValid());
-
-            _worldAnchor = worldAnchor;
-            LocalAnchorA = MathUtils.MulT(BodyA._xf, worldAnchor);
+            _targetB = target;
+            _localAnchorA = MathUtils.MulT(_bodyA._xf, _targetB);
         }
 
-        /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        /// <summary>The local anchor point on BodyB</summary>
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
+        /// <summary>Use this to update the target point.</summary>
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => LocalAnchorA = BodyA.GetLocalPoint(value);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
+            set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => _worldAnchor;
+            get => _targetB;
             set
             {
-                WakeBodies();
-                _worldAnchor = value;
+                if (_targetB != value)
+                {
+                    _bodyA.Awake = true;
+                    _targetB = value;
+                }
             }
         }
 
-        /// <summary>
-        /// The maximum constraint force that can be exerted to move the candidate body. Usually you will express as some
-        /// multiple of the weight (multiplier * mass * gravity).
-        /// </summary>
+        /// <summary>The maximum constraint force that can be exerted to move the candidate body. Usually you will express as some
+        /// multiple of the weight (multiplier * mass * gravity). Set/get the maximum force in Newtons.</summary>
         public float MaxForce
         {
             get => _maxForce;
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _maxForce = value;
-            }
+            set => _maxForce = value;
         }
 
-        /// <summary>The response speed.</summary>
-        public float Frequency
+        /// <summary>Set/get the linear stiffness in N/m</summary>
+        public float Stiffness
         {
-            get => _frequency;
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _frequency = value;
-            }
+            get => _stiffness;
+            set => _stiffness = value;
         }
 
-        /// <summary>The damping ratio. 0 = no damping, 1 = critical damping.</summary>
-        public float DampingRatio
+        /// <summary>Set/get linear damping in N*s/m</summary>
+        public float Damping
         {
-            get => _dampingRatio;
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _dampingRatio = value;
-            }
+            get => _damping;
+            set => _damping = value;
         }
 
         public override Vector2 GetReactionForce(float invDt)
@@ -142,15 +127,15 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         public override float GetReactionTorque(float invDt)
         {
-            return invDt * 0.0f;
+            return 0.0f;
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            _indexA = BodyA.IslandIndex;
-            _localCenterA = BodyA._sweep.LocalCenter;
-            _invMassA = BodyA._invMass;
-            _invIA = BodyA._invI;
+            _indexA = _bodyA.IslandIndex;
+            _localCenterA = _bodyA._sweep.LocalCenter;
+            _invMassA = _bodyA._invMass;
+            _invIA = _bodyA._invI;
 
             Vector2 cA = data.Positions[_indexA].C;
             float aA = data.Positions[_indexA].A;
@@ -159,22 +144,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA);
 
-            float mass = BodyA.Mass;
-
-            // Frequency
-            float omega = 2.0f * MathConstants.Pi * Frequency;
-
-            // Damping coefficient
-            float d = 2.0f * mass * DampingRatio * omega;
-
-            // Spring stiffness
-            float k = mass * (omega * omega);
+            float d = _damping;
+            float k = _stiffness;
 
             // magic formulas
             // gamma has units of inverse mass.
             // beta has units of inverse time.
             float h = data.Step.DeltaTime;
-            Debug.Assert(d + h * k > MathConstants.Epsilon);
             _gamma = h * (d + h * k);
             if (_gamma != 0.0f)
                 _gamma = 1.0f / _gamma;
@@ -182,11 +158,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _beta = h * k * _gamma;
 
             // Compute the effective mass matrix.
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
+            _rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
 
             // K    = [(1/m1 + 1/m2) * eye(2) - skew(r1) * invI1 * skew(r1) - skew(r2) * invI2 * skew(r2)]
-            //      = [1/m1+1/m2     0    ] + invI1 * [r1.Y*r1.Y -r1.X*r1.Y] + invI2 * [r1.Y*r1.Y -r1.X*r1.Y]
-            //        [    0     1/m1+1/m2]           [-r1.X*r1.Y r1.X*r1.X]           [-r1.X*r1.Y r1.X*r1.X]
+            //      = [1/m1+1/m2     0    ] + invI1 * [r1.y*r1.y -r1.x*r1.y] + invI2 * [r1.y*r1.y -r1.x*r1.y]
+            //        [    0     1/m1+1/m2]           [-r1.x*r1.y r1.x*r1.x]           [-r1.x*r1.y r1.x*r1.x]
             Mat22 K = new Mat22();
             K.ex.X = _invMassA + _invIA * _rA.Y * _rA.Y + _gamma;
             K.ex.Y = -_invIA * _rA.X * _rA.Y;
@@ -195,7 +171,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             _mass = K.Inverse;
 
-            _C = cA + _rA - _worldAnchor;
+            _C = cA + _rA - _targetB;
             _C *= _beta;
 
             // Cheat with some damping
@@ -225,9 +201,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Vector2 oldImpulse = _impulse;
             _impulse += impulse;
-            float maxImpulse = data.Step.DeltaTime * MaxForce;
+            float maxImpulse = data.Step.DeltaTime * _maxForce;
             if (_impulse.LengthSquared() > maxImpulse * maxImpulse)
                 _impulse *= maxImpulse / _impulse.Length();
+
             impulse = _impulse - oldImpulse;
 
             vA += _invMassA * impulse;

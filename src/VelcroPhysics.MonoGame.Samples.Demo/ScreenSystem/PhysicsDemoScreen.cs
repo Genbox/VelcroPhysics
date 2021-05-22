@@ -3,6 +3,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -125,6 +126,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     Body body = savedFixture.Body;
                     _fixedMouseJoint = new FixedMouseJoint(body, position);
                     _fixedMouseJoint.MaxForce = 1000.0f * body.Mass;
+
+                    JointHelper.LinearStiffness(5.0f, 0.7f, body, null, out float stiffness, out float damping);
+                    _fixedMouseJoint.Stiffness = stiffness;
+                    _fixedMouseJoint.Damping = damping;
+
                     World.AddJoint(_fixedMouseJoint);
                     body.Awake = true;
                 }

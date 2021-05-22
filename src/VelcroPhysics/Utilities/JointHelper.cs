@@ -7,7 +7,12 @@ namespace Genbox.VelcroPhysics.Utilities
         public static void LinearStiffness(float frequencyHertz, float dampingRatio, Body bodyA, Body bodyB, out float stiffness, out float damping)
         {
             float massA = bodyA.Mass;
-            float massB = bodyB.Mass;
+
+            float massB = 0;
+            
+            if (bodyB != null)
+                massB = bodyB.Mass;
+
             float mass;
 
             if (massA > 0.0f && massB > 0.0f)
