@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
@@ -282,9 +281,19 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             // we must have at least 2 values to start rendering
             if (_graphValues.Count > 2)
             {
-                _max = _graphValues.Max();
-                _avg = _graphValues.Average();
-                _min = _graphValues.Min();
+                _min = float.MaxValue;
+                _max = 0;
+                _avg = 0;
+
+                for (int i = 0; i < _graphValues.Count; i++)
+                {
+                    float val = _graphValues[i];
+                    _min = MathUtils.Min(_min, val);
+                    _max = MathUtils.Max(_max, val);
+                    _avg += val;
+                }
+
+                _avg /= _graphValues.Count;
 
                 if (AdaptiveLimits)
                 {

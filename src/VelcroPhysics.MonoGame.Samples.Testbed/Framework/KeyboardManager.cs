@@ -4,22 +4,33 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public class KeyboardManager
     {
-        internal KeyboardState _newKeyboardState;
-        internal KeyboardState _oldKeyboardState;
+        internal KeyboardState _oldState;
+        internal KeyboardState _newState;
+
+        public KeyboardManager()
+        {
+            _oldState = _newState = Keyboard.GetState();
+        }
+
+        public void Update()
+        {
+            _oldState = _newState;
+            _newState = Keyboard.GetState();
+        }
 
         public bool IsNewKeyPress(Keys key)
         {
-            return _newKeyboardState.IsKeyDown(key) && _oldKeyboardState.IsKeyUp(key);
+            return _newState.IsKeyDown(key) && _oldState.IsKeyUp(key);
         }
 
         public bool IsKeyDown(Keys key)
         {
-            return _newKeyboardState.IsKeyDown(key);
+            return _newState.IsKeyDown(key);
         }
 
         internal bool IsKeyUp(Keys key)
         {
-            return _newKeyboardState.IsKeyUp(key);
+            return _newState.IsKeyUp(key);
         }
     }
 }

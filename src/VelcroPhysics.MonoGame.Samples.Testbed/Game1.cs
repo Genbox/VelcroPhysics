@@ -12,11 +12,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
     {
         private readonly GraphicsDeviceManager _graphics;
         private readonly KeyboardManager _keyboardManager = new KeyboardManager();
+        private readonly GamePadManager _gamePadManager = new GamePadManager();
+        private readonly MouseManager _mouseManager = new MouseManager();
         private readonly GameSettings _settings = new GameSettings();
         private TestEntry _entry;
         private Vector2 _lower;
-        private GamePadState _oldGamePad;
-        private MouseState _oldMouseState;
         private Test _test;
         private int _testCount;
         private int _testIndex;
@@ -113,54 +113,37 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             _test.Initialize();
         }
 
-        protected override void LoadContent()
-        {
-            _keyboardManager._oldKeyboardState = Keyboard.GetState();
-            _oldMouseState = Mouse.GetState();
-            _oldGamePad = GamePad.GetState(PlayerIndex.One);
-        }
-
         protected override void Update(GameTime gameTime)
         {
             // clear graphics here because some tests already draw during update
             GraphicsDevice.Clear(Color.Black);
 
+            float maxZoom = 20f;
+            float minZoom = 0.5f;
+
+            float zoomScale = (ViewZoom - minZoom) / maxZoom;
+            float moveScale = 1 / MathHelper.Lerp(minZoom, maxZoom, zoomScale);
+
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (_gamePadManager.IsNewButtonPress(Buttons.Back))
                 Exit();
 
-            _keyboardManager._newKeyboardState = Keyboard.GetState();
-            GamePadState newGamePad = GamePad.GetState(PlayerIndex.One);
-            MouseState newMouseState = Mouse.GetState();
-
-            if (_keyboardManager.IsKeyDown(Keys.Z)) // Press 'z' to zoom out.
-                ViewZoom = Math.Min(1.1f * ViewZoom, 20.0f);
-            else if (_keyboardManager.IsKeyDown(Keys.X)) // Press 'x' to zoom in.
-                ViewZoom = Math.Max(0.9f * ViewZoom, 0.02f);
-            else if (_keyboardManager.IsNewKeyPress(Keys.R)) // Press 'r' to reset.
+            if (_keyboardManager.IsNewKeyPress(Keys.R)) // Press 'r' to reset.
                 Restart();
-            else if (_keyboardManager.IsNewKeyPress(Keys.P) || newGamePad.IsButtonDown(Buttons.Start) && _oldGamePad.IsButtonUp(Buttons.Start)) // Press I to prev test.
+            else if (_keyboardManager.IsNewKeyPress(Keys.P) || _gamePadManager.IsNewButtonPress(Buttons.Start)) // Press I to go to prev test.
                 _settings.Pause = !_settings.Pause;
-            else if (_keyboardManager.IsNewKeyPress(Keys.I) || newGamePad.IsButtonDown(Buttons.LeftShoulder) && _oldGamePad.IsButtonUp(Buttons.LeftShoulder))
+            else if (_keyboardManager.IsNewKeyPress(Keys.I) || _gamePadManager.IsNewButtonPress(Buttons.LeftShoulder))
             {
                 --_testSelection;
                 if (_testSelection < 0)
                     _testSelection = _testCount - 1;
             }
-            else if (_keyboardManager.IsNewKeyPress(Keys.O) || newGamePad.IsButtonDown(Buttons.RightShoulder) && _oldGamePad.IsButtonUp(Buttons.RightShoulder)) // Press O to next test.
+            else if (_keyboardManager.IsNewKeyPress(Keys.O) || _gamePadManager.IsNewButtonPress(Buttons.RightShoulder)) // Press O to go to next test.
             {
                 ++_testSelection;
                 if (_testSelection == _testCount)
                     _testSelection = 0;
             }
-            else if (_keyboardManager.IsKeyDown(Keys.Left)) // Press left to pan left.
-                ViewCenter = new Vector2(ViewCenter.X - 0.5f, ViewCenter.Y);
-            else if (_keyboardManager.IsKeyDown(Keys.Right)) // Press right to pan right.
-                ViewCenter = new Vector2(ViewCenter.X + 0.5f, ViewCenter.Y);
-            else if (_keyboardManager.IsKeyDown(Keys.Down)) // Press down to pan down.
-                ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - 0.5f);
-            else if (_keyboardManager.IsKeyDown(Keys.Up)) // Press up to pan up.
-                ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + 0.5f);
             else if (_keyboardManager.IsNewKeyPress(Keys.Home)) // Press home to reset the view.
                 ResetView();
             else if (_keyboardManager.IsNewKeyPress(Keys.F1))
@@ -186,21 +169,37 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
                 EnableOrDisableFlag(DebugViewFlags.PolygonPoints);
             else
             {
-                if (_test != null)
-                    _test.Keyboard(_keyboardManager);
+                if (_keyboardManager.IsKeyDown(Keys.Left) || _keyboardManager.IsKeyDown(Keys.A)) // Press left/A to pan left.
+                    ViewCenter = new Vector2(ViewCenter.X - moveScale, ViewCenter.Y);
+                if (_keyboardManager.IsKeyDown(Keys.Right) || _keyboardManager.IsKeyDown(Keys.D)) // Press right/D to pan right.
+                    ViewCenter = new Vector2((ViewCenter.X + moveScale), ViewCenter.Y);
+                if (_keyboardManager.IsKeyDown(Keys.Down) || _keyboardManager.IsKeyDown(Keys.S)) // Press down/S to pan down.
+                    ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - moveScale);
+                if (_keyboardManager.IsKeyDown(Keys.Up) || _keyboardManager.IsKeyDown(Keys.W)) // Press up/W to pan up.
+                    ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y + moveScale);
+
+                if (_keyboardManager.IsKeyDown(Keys.OemMinus) || _keyboardManager.IsKeyDown(Keys.Subtract)) // Press '-' to zoom out.
+                    ViewZoom *= 0.9512294f;
+                else if (_keyboardManager.IsKeyDown(Keys.OemPlus) || _keyboardManager.IsKeyDown(Keys.Add)) // Press '+' to zoom in.
+                    ViewZoom *= 1.051271f;
+                else if (_mouseManager.NewScrollValue != 0) // Zoom with mouse wheel
+                    ViewZoom *= Math.Sign(_mouseManager.NewScrollValue) == -1 ? 0.85f : 1.15f;
+                
+                ViewZoom = MathUtils.Clamp(ViewZoom, minZoom, maxZoom);
+
+                _test?.Keyboard(_keyboardManager);
             }
 
-            if (_test != null)
-                _test.Mouse(newMouseState, _oldMouseState);
+            _test?.Mouse(_mouseManager._newState, _mouseManager._oldState);
 
-            if (_test != null && newGamePad.IsConnected)
-                _test.Gamepad(newGamePad, _oldGamePad);
+            if (_gamePadManager.IsConnected)
+                _test?.Gamepad(_gamePadManager._newState, _gamePadManager._oldState);
 
             base.Update(gameTime);
 
-            _keyboardManager._oldKeyboardState = _keyboardManager._newKeyboardState;
-            _oldMouseState = newMouseState;
-            _oldGamePad = newGamePad;
+            _keyboardManager.Update();
+            _gamePadManager.Update();
+            _mouseManager.Update();
 
             if (_test != null)
             {
