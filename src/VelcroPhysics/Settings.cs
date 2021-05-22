@@ -211,18 +211,22 @@ namespace Genbox.VelcroPhysics
         /// <summary>Enable or disable the block contact solver. Used for debugging.</summary>
         internal const bool BlockSolve = true;
 
-        /// <summary>Friction mixing law</summary>
-        /// <param name="friction1">Friction from the first body.</param>
-        /// <param name="friction2">Friction from the second body.</param>
-        public static float MixFriction(float friction1, float friction2)
+        /// <summary>
+        /// Gets called when there is a collision between 2 fixtures. The first two parameters are the friction values of either fixture. The return value should be the desired friction value of the collection.
+        /// </summary>
+        public static Func<float, float, float> MixFriction = DefaultMixFriction;
+
+        /// <summary>
+        /// Gets called when there is a collision between 2 fixtures. The first two parameters are the restitution values of either fixture. The return value should be the desired restitution value of the collection.
+        /// </summary>
+        public static Func<float, float, float> MixRestitution = DefaultMixRestitution;
+
+        private static float DefaultMixFriction(float friction1, float friction2)
         {
             return (float)Math.Sqrt(friction1 * friction2);
         }
 
-        /// <summary>Restitution mixing law</summary>
-        /// <param name="restitution1">Restitution from the first body.</param>
-        /// <param name="restitution2">Restitution from the second body.</param>
-        public static float MixRestitution(float restitution1, float restitution2)
+        private static float DefaultMixRestitution(float restitution1, float restitution2)
         {
             return restitution1 > restitution2 ? restitution1 : restitution2;
         }
