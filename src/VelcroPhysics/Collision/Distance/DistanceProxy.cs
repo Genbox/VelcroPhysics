@@ -8,8 +8,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
     /// <summary>A distance proxy is used by the GJK algorithm. It encapsulates any shape.</summary>
     public struct DistanceProxy
     {
-        internal readonly float Radius;
-        internal readonly Vector2[] Vertices;
+        internal readonly float _radius;
+        internal readonly Vector2[] _vertices;
 
         public DistanceProxy(Shape shape, int index)
         {
@@ -18,23 +18,23 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 case ShapeType.Circle:
                     {
                         CircleShape circle = (CircleShape)shape;
-                        Vertices = new Vector2[1];
-                        Vertices[0] = circle.Position;
-                        Radius = circle.Radius;
+                        _vertices = new Vector2[1];
+                        _vertices[0] = circle._position;
+                        _radius = circle._radius;
                     }
                     break;
 
                 case ShapeType.Polygon:
                     {
                         PolygonShape polygon = (PolygonShape)shape;
-                        Vertices = new Vector2[polygon.Vertices.Count];
+                        _vertices = new Vector2[polygon._vertices.Count];
 
-                        for (int i = 0; i < polygon.Vertices.Count; i++)
+                        for (int i = 0; i < polygon._vertices.Count; i++)
                         {
-                            Vertices[i] = polygon.Vertices[i];
+                            _vertices[i] = polygon._vertices[i];
                         }
 
-                        Radius = polygon.Radius;
+                        _radius = polygon._radius;
                     }
                     break;
 
@@ -42,23 +42,23 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                     {
 
                         ChainShape chain = (ChainShape)shape;
-                        Debug.Assert(0 <= index && index < chain.Vertices.Count);
+                        Debug.Assert(0 <= index && index < chain._vertices.Count);
 
-                        Vertices = new Vector2[2];
-                        Vertices[0] = chain.Vertices[index];
-                        Vertices[1] = index + 1 < chain.Vertices.Count ? chain.Vertices[index + 1] : chain.Vertices[0];
+                        _vertices = new Vector2[2];
+                        _vertices[0] = chain._vertices[index];
+                        _vertices[1] = index + 1 < chain._vertices.Count ? chain._vertices[index + 1] : chain._vertices[0];
 
-                        Radius = chain.Radius;
+                        _radius = chain._radius;
                     }
                     break;
 
                 case ShapeType.Edge:
                     {
                         EdgeShape edge = (EdgeShape)shape;
-                        Vertices = new Vector2[2];
-                        Vertices[0] = edge.Vertex1;
-                        Vertices[1] = edge.Vertex2;
-                        Radius = edge.Radius;
+                        _vertices = new Vector2[2];
+                        _vertices[0] = edge._vertex1;
+                        _vertices[1] = edge._vertex2;
+                        _radius = edge._radius;
                     }
                     break;
 
@@ -69,8 +69,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
 
         public DistanceProxy(Vector2[] vertices, float radius)
         {
-            Vertices = vertices;
-            Radius = radius;
+            _vertices = vertices;
+            _radius = radius;
         }
 
         /// <summary>Get the supporting vertex index in the given direction.</summary>
@@ -78,10 +78,10 @@ namespace Genbox.VelcroPhysics.Collision.Distance
         public int GetSupport(Vector2 direction)
         {
             int bestIndex = 0;
-            float bestValue = Vector2.Dot(Vertices[0], direction);
-            for (int i = 1; i < Vertices.Length; ++i)
+            float bestValue = Vector2.Dot(_vertices[0], direction);
+            for (int i = 1; i < _vertices.Length; ++i)
             {
-                float value = Vector2.Dot(Vertices[i], direction);
+                float value = Vector2.Dot(_vertices[i], direction);
                 if (value > bestValue)
                 {
                     bestIndex = i;
@@ -94,8 +94,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
 
         public Vector2 GetVertex(int index)
         {
-            Debug.Assert(0 <= index && index < Vertices.Length);
-            return Vertices[index];
+            Debug.Assert(0 <= index && index < _vertices.Length);
+            return _vertices[index];
         }
     }
 }

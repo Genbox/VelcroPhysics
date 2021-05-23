@@ -77,8 +77,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 Fixture fixtureB = contact._fixtureB;
                 Shape shapeA = fixtureA.Shape;
                 Shape shapeB = fixtureB.Shape;
-                float radiusA = shapeA.Radius;
-                float radiusB = shapeB.Radius;
+                float radiusA = shapeA._radius;
+                float radiusB = shapeB._radius;
                 Body bodyA = fixtureA.Body;
                 Body bodyB = fixtureB.Body;
                 Manifold manifold = contact.Manifold;

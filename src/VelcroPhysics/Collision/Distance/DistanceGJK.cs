@@ -128,10 +128,10 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 // Compute a tentative new simplex vertex using support points.
                 SimplexVertex vertex = simplex.V[simplex.Count];
                 vertex.IndexA = input.ProxyA.GetSupport(MathUtils.MulT(input.TransformA.q, -d));
-                vertex.WA = MathUtils.Mul(ref input.TransformA, input.ProxyA.Vertices[vertex.IndexA]);
+                vertex.WA = MathUtils.Mul(ref input.TransformA, input.ProxyA._vertices[vertex.IndexA]);
 
                 vertex.IndexB = input.ProxyB.GetSupport(MathUtils.MulT(input.TransformB.q, d));
-                vertex.WB = MathUtils.Mul(ref input.TransformB, input.ProxyB.Vertices[vertex.IndexB]);
+                vertex.WB = MathUtils.Mul(ref input.TransformB, input.ProxyB._vertices[vertex.IndexB]);
                 vertex.W = vertex.WB - vertex.WA;
                 simplex.V[simplex.Count] = vertex;
 
@@ -174,8 +174,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
             // Apply radii if requested.
             if (input.UseRadii)
             {
-                float rA = input.ProxyA.Radius;
-                float rB = input.ProxyB.Radius;
+                float rA = input.ProxyA._radius;
+                float rB = input.ProxyB._radius;
 
                 if (output.Distance > rA + rB && output.Distance > MathConstants.Epsilon)
                 {
@@ -219,8 +219,8 @@ namespace Genbox.VelcroPhysics.Collision.Distance
             DistanceProxy proxyA = input.ProxyA;
             DistanceProxy proxyB = input.ProxyB;
 
-            float radiusA = MathUtils.Max(proxyA.Radius, Settings.PolygonRadius);
-            float radiusB = MathUtils.Max(proxyB.Radius, Settings.PolygonRadius);
+            float radiusA = MathUtils.Max(proxyA._radius, Settings.PolygonRadius);
+            float radiusB = MathUtils.Max(proxyB._radius, Settings.PolygonRadius);
             float radius = radiusA + radiusB;
 
             Transform xfA = input.TransformA;

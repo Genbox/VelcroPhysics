@@ -38,7 +38,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             float u = Vector2.Dot(e, B - Q);
             float v = Vector2.Dot(e, Q - A);
 
-            float radius = edgeA.Radius + circleB.Radius;
+            float radius = edgeA._radius + circleB._radius;
 
             ContactFeature cf;
             cf.IndexB = 0;
@@ -347,7 +347,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             Transform xf = MathUtils.MulT(xfA, xfB);
 
-            Vector2 centroidB = MathUtils.Mul(ref xf, polygonB.MassData.Centroid);
+            Vector2 centroidB = MathUtils.Mul(ref xf, polygonB._massData._centroid);
 
             Vector2 v1 = edgeA._vertex1;
             Vector2 v2 = edgeA._vertex2;
@@ -367,8 +367,8 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             // Get polygonB in frameA
             TempPolygon tempPolygonB = new TempPolygon();
-            tempPolygonB.Count = polygonB.Vertices.Count;
-            for (int i = 0; i < polygonB.Vertices.Count; ++i)
+            tempPolygonB.Count = polygonB._vertices.Count;
+            for (int i = 0; i < polygonB._vertices.Count; ++i)
             {
                 tempPolygonB.Vertices[i] = MathUtils.Mul(ref xf, polygonB._vertices[i]);
                 tempPolygonB.Normals[i] = MathUtils.Mul(xf.q, polygonB._normals[i]);

@@ -402,6 +402,11 @@ namespace Genbox.VelcroPhysics.Utilities
             return Math.Min(valueA, valueB);
         }
 
+        public static int Min(int valueA, int valueB)
+        {
+            return Math.Min(valueA, valueB);
+        }
+
         public static int Sign(float value)
         {
             return Math.Sign(value);

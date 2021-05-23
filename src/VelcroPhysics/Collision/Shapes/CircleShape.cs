@@ -35,12 +35,14 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <summary>Create a new circle with the desired radius and density.</summary>
         /// <param name="radius">The radius of the circle.</param>
         /// <param name="density">The density of the circle.</param>
-        public CircleShape(float radius, float density) : base(ShapeType.Circle, radius, density)
+        /// <param name="position">Position of the shape</param>
+        public CircleShape(float radius, float density, Vector2 position = default) : base(ShapeType.Circle, radius, density)
         {
+            _position = position;
             ComputeProperties();
         }
 
-        internal CircleShape() : base(ShapeType.Circle) { }
+        private CircleShape() : base(ShapeType.Circle) { }
 
         public override int ChildCount => 1;
 
@@ -50,8 +52,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             get => _position;
             set
             {
-                _position = value;
-                ComputeInertia();
+                if (_position != value)
+                {
+                    _position = value;
+                    ComputeInertia();
+                }
             }
         }
 
@@ -62,7 +67,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         public override bool RayCast(ref RayCastInput input, ref Transform transform, int childIndex, out RayCastOutput output)
         {
-            return RayCastHelper.RayCastCircle(ref _position, Radius, ref input, ref transform, out output);
+            return RayCastHelper.RayCastCircle(ref _position, _radius, ref input, ref transform, out output);
         }
 
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
@@ -79,25 +84,17 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         private void ComputeMass()
         {
             //Velcro: We calculate area for later consumption
-            float area = MathConstants.Pi * _2radius;
-            _massData.Area = area;
-            _massData.Mass = _density * area;
+            float area = MathConstants.Pi * _radius * _radius;
+            _massData._area = area;
+            _massData._mass = _density * area;
         }
 
         private void ComputeInertia()
         {
-            _massData.Centroid = _position;
+            _massData._centroid = _position;
 
             // inertia about the local origin
-            _massData.Inertia = _massData.Mass * (0.5f * _2radius + Vector2.Dot(_position, _position));
-        }
-
-        /// <summary>Compare the circle to another circle</summary>
-        /// <param name="shape">The other circle</param>
-        /// <returns>True if the two circles are the same size and have the same position</returns>
-        public bool CompareTo(CircleShape shape)
-        {
-            return _radius == shape._radius && _position == shape._position;
+            _massData._inertia = _massData._mass * (0.5f * _radius * _radius + Vector2.Dot(_position, _position));
         }
 
         public override Shape Clone()
@@ -105,7 +102,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             CircleShape clone = new CircleShape();
             clone._shapeType = _shapeType;
             clone._radius = _radius;
-            clone._2radius = _2radius; //Velcro note: We also copy the cache
             clone._density = _density;
             clone._position = _position;
             clone._massData = _massData;

@@ -24,8 +24,8 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                 SimplexVertex v = V[i];
                 v.IndexA = cache.IndexA[i];
                 v.IndexB = cache.IndexB[i];
-                Vector2 wALocal = proxyA.Vertices[v.IndexA];
-                Vector2 wBLocal = proxyB.Vertices[v.IndexB];
+                Vector2 wALocal = proxyA._vertices[v.IndexA];
+                Vector2 wBLocal = proxyB._vertices[v.IndexB];
                 v.WA = MathUtils.Mul(ref transformA, wALocal);
                 v.WB = MathUtils.Mul(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;
@@ -52,8 +52,8 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
                 SimplexVertex v = V[0];
                 v.IndexA = 0;
                 v.IndexB = 0;
-                Vector2 wALocal = proxyA.Vertices[0];
-                Vector2 wBLocal = proxyB.Vertices[0];
+                Vector2 wALocal = proxyA._vertices[0];
+                Vector2 wBLocal = proxyB._vertices[0];
                 v.WA = MathUtils.Mul(ref transformA, wALocal);
                 v.WB = MathUtils.Mul(ref transformB, wBLocal);
                 v.W = v.WB - v.WA;

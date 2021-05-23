@@ -23,6 +23,7 @@
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Collision.Shapes
@@ -52,23 +53,25 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             for (int i = 1; i < vertices.Count; ++i)
             {
                 // If the code crashes here, it means your vertices are too close together.
-                Debug.Assert(Vector2.DistanceSquared(vertices[i - 1], vertices[i]) > Settings.LinearSlop * Settings.LinearSlop);
+                Vector2 current = vertices[i];
+                Vector2 prev = vertices[i - 1];
+                Debug.Assert(MathUtils.DistanceSquared(ref prev, ref current) > Settings.LinearSlop * Settings.LinearSlop);
             }
 
             _vertices = new Vertices(vertices);
 
-            //Velcro: I merged CreateLoop() and CreateChain() to this
+            //Velcro: Merged CreateLoop() and CreateChain() to this
             if (createLoop)
             {
                 _vertices.Add(vertices[0]);
-                PrevVertex = _vertices[_vertices.Count - 2]; //Velcro: We use the properties instead of the private fields here to set _hasPrevVertex
-                NextVertex = _vertices[1]; //Velcro: We use the properties instead of the private fields here to set _hasNextVertex
+                _prevVertex = _vertices[_vertices.Count - 2];
+                _nextVertex = _vertices[1];
             }
 
             ComputeProperties();
         }
 
-        internal ChainShape() : base(ShapeType.Chain, Settings.PolygonRadius) { }
+        private ChainShape() : base(ShapeType.Chain, Settings.PolygonRadius) { }
 
         /// <summary>The vertices. These are not owned/freed by the chain Shape.</summary>
         public Vertices Vertices => _vertices;
@@ -90,12 +93,14 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             set => _nextVertex = value;
         }
 
+        //Velcro: The original code returned an EdgeShape for each call. To reduce garbage we merge the properties onto an existing EdgeShape
         internal void GetChildEdge(EdgeShape edge, int index)
         {
             Debug.Assert(0 <= index && index < _vertices.Count - 1);
             Debug.Assert(edge != null);
 
-            edge._shapeType = ShapeType.Edge;
+            //Velcro: It is already an edge shape
+            //edge._shapeType = ShapeType.Edge;
             edge._radius = _radius;
 
             edge._vertex1 = _vertices[index + 0];
@@ -160,23 +165,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         protected sealed override void ComputeProperties()
         {
             //Does nothing. Chain shapes don't have properties.
-        }
-
-        /// <summary>Compare the chain to another chain</summary>
-        /// <param name="shape">The other chain</param>
-        /// <returns>True if the two chain shapes are the same</returns>
-        public bool CompareTo(ChainShape shape)
-        {
-            if (_vertices.Count != shape._vertices.Count)
-                return false;
-
-            for (int i = 0; i < _vertices.Count; i++)
-            {
-                if (_vertices[i] != shape._vertices[i])
-                    return false;
-            }
-
-            return _prevVertex == shape._prevVertex && _nextVertex == shape._nextVertex;
         }
 
         public override Shape Clone()

@@ -898,10 +898,10 @@ namespace Genbox.VelcroPhysics.Dynamics
                 if (f.Shape._density == 0.0f)
                     continue;
 
-                MassData massData = f.Shape.MassData;
-                _mass += massData.Mass;
-                localCenter += massData.Mass * massData.Centroid;
-                _inertia += massData.Inertia;
+                MassData massData = f.Shape._massData;
+                _mass += massData._mass;
+                localCenter += massData._mass * massData._centroid;
+                _inertia += massData._inertia;
             }
 
             //Velcro: Static bodies only have mass, they don't have other properties. A little hacky tho...

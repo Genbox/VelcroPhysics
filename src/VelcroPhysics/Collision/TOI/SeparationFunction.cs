@@ -21,8 +21,8 @@ namespace Genbox.VelcroPhysics.Collision.TOI
             {
                 localPoint = Vector2.Zero;
                 type = SeparationFunctionType.Points;
-                Vector2 localPointA = proxyA.Vertices[cache.IndexA[0]];
-                Vector2 localPointB = proxyB.Vertices[cache.IndexB[0]];
+                Vector2 localPointA = proxyA._vertices[cache.IndexA[0]];
+                Vector2 localPointB = proxyB._vertices[cache.IndexB[0]];
                 Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
                 Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
                 axis = pointB - pointA;
@@ -32,8 +32,8 @@ namespace Genbox.VelcroPhysics.Collision.TOI
             {
                 // Two points on B and one on A.
                 type = SeparationFunctionType.FaceB;
-                Vector2 localPointB1 = proxyB.Vertices[cache.IndexB[0]];
-                Vector2 localPointB2 = proxyB.Vertices[cache.IndexB[1]];
+                Vector2 localPointB1 = proxyB._vertices[cache.IndexB[0]];
+                Vector2 localPointB2 = proxyB._vertices[cache.IndexB[1]];
 
                 Vector2 a = localPointB2 - localPointB1;
                 axis = new Vector2(a.Y, -a.X);
@@ -43,7 +43,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                 localPoint = 0.5f * (localPointB1 + localPointB2);
                 Vector2 pointB = MathUtils.Mul(ref xfB, localPoint);
 
-                Vector2 localPointA = proxyA.Vertices[cache.IndexA[0]];
+                Vector2 localPointA = proxyA._vertices[cache.IndexA[0]];
                 Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
                 float s = Vector2.Dot(pointA - pointB, normal);
@@ -54,8 +54,8 @@ namespace Genbox.VelcroPhysics.Collision.TOI
             {
                 // Two points on A and one or two points on B.
                 type = SeparationFunctionType.FaceA;
-                Vector2 localPointA1 = proxyA.Vertices[cache.IndexA[0]];
-                Vector2 localPointA2 = proxyA.Vertices[cache.IndexA[1]];
+                Vector2 localPointA1 = proxyA._vertices[cache.IndexA[0]];
+                Vector2 localPointA2 = proxyA._vertices[cache.IndexA[1]];
 
                 Vector2 a = localPointA2 - localPointA1;
                 axis = new Vector2(a.Y, -a.X);
@@ -65,7 +65,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                 localPoint = 0.5f * (localPointA1 + localPointA2);
                 Vector2 pointA = MathUtils.Mul(ref xfA, localPoint);
 
-                Vector2 localPointB = proxyB.Vertices[cache.IndexB[0]];
+                Vector2 localPointB = proxyB._vertices[cache.IndexB[0]];
                 Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
                 float s = Vector2.Dot(pointB - pointA, normal);
@@ -91,8 +91,8 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                     indexA = proxyA.GetSupport(axisA);
                     indexB = proxyB.GetSupport(axisB);
 
-                    Vector2 localPointA = proxyA.Vertices[indexA];
-                    Vector2 localPointB = proxyB.Vertices[indexB];
+                    Vector2 localPointA = proxyA._vertices[indexA];
+                    Vector2 localPointB = proxyB._vertices[indexB];
 
                     Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
                     Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
@@ -111,7 +111,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                     indexA = -1;
                     indexB = proxyB.GetSupport(axisB);
 
-                    Vector2 localPointB = proxyB.Vertices[indexB];
+                    Vector2 localPointB = proxyB._vertices[indexB];
                     Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
                     float separation = Vector2.Dot(pointB - pointA, normal);
@@ -128,7 +128,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                     indexB = -1;
                     indexA = proxyA.GetSupport(axisA);
 
-                    Vector2 localPointA = proxyA.Vertices[indexA];
+                    Vector2 localPointA = proxyA._vertices[indexA];
                     Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
                     float separation = Vector2.Dot(pointA - pointB, normal);
@@ -152,8 +152,8 @@ namespace Genbox.VelcroPhysics.Collision.TOI
             {
                 case SeparationFunctionType.Points:
                 {
-                    Vector2 localPointA = proxyA.Vertices[indexA];
-                    Vector2 localPointB = proxyB.Vertices[indexB];
+                    Vector2 localPointA = proxyA._vertices[indexA];
+                    Vector2 localPointB = proxyB._vertices[indexB];
 
                     Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
                     Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
@@ -166,7 +166,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                     Vector2 normal = MathUtils.Mul(ref xfA.q, axis);
                     Vector2 pointA = MathUtils.Mul(ref xfA, localPoint);
 
-                    Vector2 localPointB = proxyB.Vertices[indexB];
+                    Vector2 localPointB = proxyB._vertices[indexB];
                     Vector2 pointB = MathUtils.Mul(ref xfB, localPointB);
 
                     float separation = Vector2.Dot(pointB - pointA, normal);
@@ -177,7 +177,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                     Vector2 normal = MathUtils.Mul(ref xfB.q, axis);
                     Vector2 pointB = MathUtils.Mul(ref xfB, localPoint);
 
-                    Vector2 localPointA = proxyA.Vertices[indexA];
+                    Vector2 localPointA = proxyA._vertices[indexA];
                     Vector2 pointA = MathUtils.Mul(ref xfA, localPointA);
 
                     float separation = Vector2.Dot(pointA - pointB, normal);

@@ -20,7 +20,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             // Clip
 
             manifold.PointCount = 0;
-            float totalRadius = polyA.Radius + polyB.Radius;
+            float totalRadius = polyA._radius + polyB._radius;
 
             float separationA = FindMaxSeparation(out int edgeA, polyA, ref xfA, polyB, ref xfB);
             if (separationA > totalRadius)
@@ -60,8 +60,8 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             FindIncidentEdge(out FixedArray2<ClipVertex> incidentEdge, poly1, ref xf1, edge1, poly2, ref xf2);
 
-            int count1 = poly1.Vertices.Count;
-            Vertices vertices1 = poly1.Vertices;
+            int count1 = poly1._vertices.Count;
+            Vertices vertices1 = poly1._vertices;
 
             int iv1 = edge1;
             int iv2 = edge1 + 1 < count1 ? edge1 + 1 : 0;
@@ -139,11 +139,11 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
         /// <summary>Find the max separation between poly1 and poly2 using edge normals from poly1.</summary>
         private static float FindMaxSeparation(out int edgeIndex, PolygonShape poly1, ref Transform xf1, PolygonShape poly2, ref Transform xf2)
         {
-            int count1 = poly1.Vertices.Count;
-            int count2 = poly2.Vertices.Count;
-            Vertices n1s = poly1.Normals;
-            Vertices v1s = poly1.Vertices;
-            Vertices v2s = poly2.Vertices;
+            int count1 = poly1._vertices.Count;
+            int count2 = poly2._vertices.Count;
+            Vertices n1s = poly1._normals;
+            Vertices v1s = poly1._vertices;
+            Vertices v2s = poly2._vertices;
             Transform xf = MathUtils.MulT(xf2, xf1);
 
             int bestIndex = 0;
@@ -176,13 +176,13 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
         private static void FindIncidentEdge(out FixedArray2<ClipVertex> c, PolygonShape poly1, ref Transform xf1, int edge1, PolygonShape poly2, ref Transform xf2)
         {
-            Vertices normals1 = poly1.Normals;
+            Vertices normals1 = poly1._normals;
 
-            int count2 = poly2.Vertices.Count;
-            Vertices vertices2 = poly2.Vertices;
-            Vertices normals2 = poly2.Normals;
+            int count2 = poly2._vertices.Count;
+            Vertices vertices2 = poly2._vertices;
+            Vertices normals2 = poly2._normals;
 
-            Debug.Assert(0 <= edge1 && edge1 < poly1.Vertices.Count);
+            Debug.Assert(0 <= edge1 && edge1 < poly1._vertices.Count);
 
             // Get the normal of the reference edge in poly2's frame.
             Vector2 normal1 = MathUtils.MulT(ref xf2.q, MathUtils.Mul(ref xf1.q, normals1[edge1]));

@@ -17,7 +17,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             Vector2 d = pB - pA;
             float distSqr = Vector2.Dot(d, d);
-            float rA = circleA.Radius, rB = circleB.Radius;
+            float rA = circleA._radius, rB = circleB._radius;
             float radius = rA + rB;
             if (distSqr > radius * radius)
                 return;
@@ -50,10 +50,10 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             // Find the min separating edge.
             int normalIndex = 0;
             float separation = -MathConstants.MaxFloat;
-            float radius = polygonA.Radius + circleB.Radius;
-            int vertexCount = polygonA.Vertices.Count;
-            Vertices vertices = polygonA.Vertices;
-            Vertices normals = polygonA.Normals;
+            float radius = polygonA._radius + circleB._radius;
+            int vertexCount = polygonA._vertices.Count;
+            Vertices vertices = polygonA._vertices;
+            Vertices normals = polygonA._normals;
 
             for (int i = 0; i < vertexCount; ++i)
             {

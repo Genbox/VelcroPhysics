@@ -33,7 +33,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
             }
 
             //Offset the entry and exit points if they are too close to the vertices
-            foreach (Vector2 vertex in shape.Vertices)
+            foreach (Vector2 vertex in shape._vertices)
             {
                 if (vertex.Equals(localEntryPoint))
                     localEntryPoint -= new Vector2(0, MathConstants.Epsilon);
@@ -42,7 +42,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                     localExitPoint += new Vector2(0, MathConstants.Epsilon);
             }
 
-            Vertices vertices = new Vertices(shape.Vertices);
+            Vertices vertices = new Vertices(shape._vertices);
             Vertices[] newPolygon = new Vertices[2];
 
             for (int i = 0; i < newPolygon.Length; i++)
@@ -180,7 +180,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                     //Delete the original shape and create two new. Retain the properties of the body.
                     if (first.CheckPolygon() == PolygonError.NoError)
                     {
-                        Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape.Density, fixtures[i].Body.Position);
+                        Body firstFixture = BodyFactory.CreatePolygon(world, first, fixtures[i].Shape._density, fixtures[i].Body.Position);
                         firstFixture.Rotation = fixtures[i].Body.Rotation;
                         firstFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
                         firstFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;
@@ -189,7 +189,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
 
                     if (second.CheckPolygon() == PolygonError.NoError)
                     {
-                        Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape.Density, fixtures[i].Body.Position);
+                        Body secondFixture = BodyFactory.CreatePolygon(world, second, fixtures[i].Shape._density, fixtures[i].Body.Position);
                         secondFixture.Rotation = fixtures[i].Body.Rotation;
                         secondFixture.LinearVelocity = fixtures[i].Body.LinearVelocity;
                         secondFixture.AngularVelocity = fixtures[i].Body.AngularVelocity;

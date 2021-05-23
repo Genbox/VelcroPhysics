@@ -40,14 +40,17 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <param name="density">The density.</param>
         public PolygonShape(Vertices vertices, float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
         {
-            Vertices = vertices; //This assignment will call ComputeProperties()
+            //Velcro: We must call the property here in order to modify the input and compute mass properties
+            Vertices = vertices;
         }
 
-        /// <summary>Create a new PolygonShape with the specified density.</summary>
+        /// <summary>Initializes a new instance of the <see cref="PolygonShape" /> class.</summary>
         /// <param name="density">The density.</param>
-        public PolygonShape(float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density) { }
+        public PolygonShape(float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
+        {
+        }
 
-        internal PolygonShape() : base(ShapeType.Polygon, Settings.PolygonRadius) { }
+        private PolygonShape() : base(ShapeType.Polygon, Settings.PolygonRadius) { }
 
         /// <summary>
         /// Create a convex hull from the given array of local points. The number of vertices must be in the range [3,
@@ -59,22 +62,55 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             get => _vertices;
             set
             {
-                Debug.Assert(value.Count >= 3 && value.Count <= Settings.MaxPolygonVertices);
+                Vertices vertices = value;
 
-                if (Settings.UseConvexHullPolygons)
+                Debug.Assert(vertices.Count >= 3 && vertices.Count <= Settings.MaxPolygonVertices);
+
+                int n = MathUtils.Min(vertices.Count, Settings.MaxPolygonVertices);
+
+                // Perform welding and copy vertices into local buffer.
+                Vector2[] ps = new Vector2[n]; //Velcro: The temp buffer is n long instead of Settings.MaxPolygonVertices
+                int tempCount = 0;
+                for (int i = 0; i < n; ++i)
                 {
-                    //Velcro: This check is required as the GiftWrap algorithm early exits on triangles
-                    //So instead of giftwrapping a triangle, we just force it to be clock wise.
-                    if (value.Count <= 3)
+                    Vector2 v = vertices[i];
+
+                    bool unique = true;
+                    for (int j = 0; j < tempCount; ++j)
                     {
-                        _vertices = new Vertices(value);
-                        _vertices.ForceCounterClockWise();
+                        Vector2 temp = ps[j];
+                        if (MathUtils.DistanceSquared(ref v, ref temp) < (0.5f * Settings.LinearSlop) * (0.5f * Settings.LinearSlop))
+                        {
+                            unique = false;
+                            break;
+                        }
                     }
-                    else
-                        _vertices = GiftWrap.GetConvexHull(value);
+
+                    if (unique)
+                    {
+                        ps[tempCount++] = v;
+                    }
                 }
-                else
-                    _vertices = new Vertices(value);
+
+                n = tempCount;
+                if (n < 3)
+                {
+                    // Polygon is degenerate.
+                    _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
+                    Debug.Assert(false);
+                    goto Normals;
+                }
+
+                _vertices = GiftWrap.GetConvexHull(vertices);
+
+                if (_vertices.Count < 3)
+                {
+                    // Polygon is degenerate.
+                    _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
+                    Debug.Assert(false);
+                }
+
+            Normals:
 
                 _normals = new Vertices(_vertices.Count);
 
@@ -90,6 +126,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                     _normals.Add(temp);
                 }
 
+                //Velcro: We compute all the mass data properties up front
                 // Compute the polygon mass data
                 ComputeProperties();
             }
@@ -147,9 +184,9 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             for (int i = 0; i < count; ++i)
             {
                 // Triangle vertices.
-                Vector2 p1 = Vertices[0] - s;
-                Vector2 p2 = Vertices[i] - s;
-                Vector2 p3 = i + 1 < count ? Vertices[i + 1] - s : Vertices[0] - s;
+                Vector2 p1 = _vertices[0] - s;
+                Vector2 p2 = _vertices[i] - s;
+                Vector2 p3 = i + 1 < count ? _vertices[i + 1] - s : _vertices[0] - s;
 
                 Vector2 e1 = p2 - p1;
                 Vector2 e2 = p3 - p1;
@@ -175,20 +212,20 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             Debug.Assert(area > MathConstants.Epsilon);
 
             // We save the area
-            _massData.Area = area;
+            _massData._area = area;
 
             // Total mass
-            _massData.Mass = _density * area;
+            _massData._mass = _density * area;
 
             // Center of mass
             centroid *= 1.0f / area;
-            _massData.Centroid = centroid + s;
+            _massData._centroid = centroid + s;
 
             // Inertia tensor relative to the local origin (point s).
-            _massData.Inertia = _density * I;
+            _massData._inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
-            _massData.Inertia += MassData.Mass * (Vector2.Dot(MassData.Centroid, MassData.Centroid) - Vector2.Dot(centroid, centroid));
+            _massData._inertia += _massData._mass * (Vector2.Dot(_massData._centroid, _massData._centroid) - Vector2.Dot(centroid, centroid));
         }
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
@@ -208,20 +245,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         public override void ComputeAABB(ref Transform transform, int childIndex, out AABB aabb)
         {
             AABBHelper.ComputePolygonAABB(_vertices, ref transform, out aabb);
-        }
-
-        public bool CompareTo(PolygonShape shape)
-        {
-            if (_vertices.Count != shape._vertices.Count)
-                return false;
-
-            for (int i = 0; i < _vertices.Count; i++)
-            {
-                if (_vertices[i] != shape._vertices[i])
-                    return false;
-            }
-
-            return _radius == shape._radius && _massData == shape._massData;
         }
 
         public override Shape Clone()

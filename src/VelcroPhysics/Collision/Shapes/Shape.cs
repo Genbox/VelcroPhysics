@@ -33,7 +33,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
     /// </summary>
     public abstract class Shape
     {
-        internal float _2radius;
         internal float _density;
         internal float _radius;
         internal ShapeType _shapeType;
@@ -46,7 +45,6 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
             _shapeType = type;
             _radius = radius;
-            _2radius = _radius * _radius;
             _density = density;
             _massData = new MassData();
         }
@@ -58,29 +56,17 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// - Inertia
         /// - Mass
         /// </summary>
-        public MassData MassData => _massData;
+        public void GetMassData(out MassData massData)
+        {
+            massData = _massData;
+        }
 
         /// <summary>Get the type of this shape.</summary>
         /// <value>The type of the shape.</value>
         public ShapeType ShapeType => _shapeType;
 
         /// <summary>Get the number of child primitives.</summary>
-        /// <value></value>
         public abstract int ChildCount { get; }
-
-        /// <summary>Gets or sets the density. Changing the density causes a recalculation of shape properties.</summary>
-        /// <value>The density.</value>
-        public float Density
-        {
-            get => _density;
-            set
-            {
-                Debug.Assert(value >= 0);
-
-                _density = value;
-                ComputeProperties();
-            }
-        }
 
         /// <summary>Radius of the Shape Changing the radius causes a recalculation of shape properties.</summary>
         public float Radius
@@ -90,10 +76,29 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             {
                 Debug.Assert(value >= 0);
 
-                _radius = value;
-                _2radius = _radius * _radius;
+                if (_radius != value)
+                {
+                    _radius = value;
+                    ComputeProperties();
+                }
+            }
+        }
 
-                ComputeProperties();
+        //Velcro: Moved density to the base shape. Simplifies a lot of code everywhere else
+        /// <summary>Gets or sets the density. Changing the density causes a recalculation of shape properties.</summary>
+        /// <value>The density.</value>
+        public float Density
+        {
+            get => _density;
+            set
+            {
+                Debug.Assert(value >= 0);
+
+                if (_density != value)
+                {
+                    _density = value;
+                    ComputeProperties();
+                }
             }
         }
 

@@ -70,7 +70,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
 
             float tMax = input.TMax;
 
-            float totalRadius = input.ProxyA.Radius + input.ProxyB.Radius;
+            float totalRadius = input.ProxyA._radius + input.ProxyB._radius;
             float target = Math.Max(Settings.LinearSlop, totalRadius - 3.0f * Settings.LinearSlop);
             float tolerance = 0.25f * Settings.LinearSlop;
             Debug.Assert(target > tolerance);
