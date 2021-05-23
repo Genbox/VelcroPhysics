@@ -21,6 +21,7 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Templates.Joints;
@@ -52,51 +53,51 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class WheelJoint : Joint
     {
-        Vector2 _localAnchorA;
-        Vector2 _localAnchorB;
-        Vector2 _localXAxisA;
-        Vector2 _localYAxisA;
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
+        private Vector2 _localXAxisA;
+        private Vector2 _localYAxisA;
 
-        float _impulse;
-        float _motorImpulse;
-        float _springImpulse;
+        private float _impulse;
+        private float _motorImpulse;
+        private float _springImpulse;
 
-        float _lowerImpulse;
-        float _upperImpulse;
-        float _translation;
-        float _lowerTranslation;
-        float _upperTranslation;
+        private float _lowerImpulse;
+        private float _upperImpulse;
+        private float _translation;
+        private float _lowerTranslation;
+        private float _upperTranslation;
 
-        float _maxMotorTorque;
-        float _motorSpeed;
+        private float _maxMotorTorque;
+        private float _motorSpeed;
 
-        bool _enableLimit;
-        bool _enableMotor;
+        private bool _enableLimit;
+        private bool _enableMotor;
 
-        float _stiffness;
-        float _damping;
+        private float _stiffness;
+        private float _damping;
 
         // Solver temp
-        int _indexA;
-        int _indexB;
-        Vector2 _localCenterA;
-        Vector2 _localCenterB;
-        float _invMassA;
-        float _invMassB;
-        float _invIA;
-        float _invIB;
+        private int _indexA;
+        private int _indexB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _invIA;
+        private float _invIB;
 
-        Vector2 _ax, _ay;
-        float _sAx, _sBx;
-        float _sAy, _sBy;
+        private Vector2 _ax, _ay;
+        private float _sAx, _sBx;
+        private float _sAy, _sBy;
 
-        float _mass;
-        float _motorMass;
-        float _axialMass;
-        float _springMass;
+        private float _mass;
+        private float _motorMass;
+        private float _axialMass;
+        private float _springMass;
 
-        float _bias;
-        float _gamma;
+        private float _bias;
+        private float _gamma;
 
         /// <summary>Constructor for WheelJoint</summary>
         /// <param name="bodyA">The first body</param>
@@ -107,8 +108,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public WheelJoint(Body bodyA, Body bodyB, Vector2 anchor, Vector2 axis, bool useWorldCoordinates = false)
             : base(bodyA, bodyB, JointType.Wheel)
         {
-            JointType = JointType.Wheel;
-
             if (useWorldCoordinates)
             {
                 _localAnchorA = bodyA.GetLocalPoint(anchor);
@@ -163,13 +162,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         public override Vector2 WorldAnchorA
         {
-            get => _bodyA.GetWorldPoint(LocalAnchorA);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
             set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => _bodyB.GetWorldPoint(LocalAnchorB);
+            get => _bodyB.GetWorldPoint(_localAnchorB);
             set => _localAnchorB = _bodyB.GetLocalPoint(value);
         }
 
@@ -182,11 +181,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _motorSpeed;
             set
             {
-                if (value == _motorSpeed)
-                    return;
-
-                WakeBodies();
-                _motorSpeed = value;
+                if (value != _motorSpeed)
+                {
+                    WakeBodies();
+                    _motorSpeed = value;
+                }
             }
         }
 
@@ -196,11 +195,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _maxMotorTorque;
             set
             {
-                if (value == _maxMotorTorque)
-                    return;
-
-                WakeBodies();
-                _maxMotorTorque = value;
+                if (value != _maxMotorTorque)
+                {
+                    WakeBodies();
+                    _maxMotorTorque = value;
+                }
             }
         }
 
@@ -212,10 +211,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 Body bA = _bodyA;
                 Body bB = _bodyB;
 
-                Vector2 pA = bA.GetWorldPoint(LocalAnchorA);
-                Vector2 pB = bB.GetWorldPoint(LocalAnchorB);
+                Vector2 pA = bA.GetWorldPoint(_localAnchorA);
+                Vector2 pB = bB.GetWorldPoint(_localAnchorB);
                 Vector2 d = pB - pA;
-                Vector2 axis = bA.GetWorldVector(LocalXAxis);
+                Vector2 axis = bA.GetWorldVector(_localXAxisA);
 
                 float translation = Vector2.Dot(d, axis);
                 return translation;
@@ -273,11 +272,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _enableMotor;
             set
             {
-                if (value == _enableMotor)
-                    return;
-
-                WakeBodies();
-                _enableMotor = value;
+                if (value != _enableMotor)
+                {
+                    WakeBodies();
+                    _enableMotor = value;
+                }
             }
         }
 

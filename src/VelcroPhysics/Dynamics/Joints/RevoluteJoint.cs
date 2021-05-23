@@ -20,7 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -28,6 +28,19 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
+    // Point-to-point constraint
+    // C = p2 - p1
+    // Cdot = v2 - v1
+    //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
+    // J = [-I -r1_skew I r2_skew ]
+    // Identity used:
+    // w k % (rx i + ry j) = w * (-ry i + rx j)
+
+    // Motor constraint
+    // Cdot = w2 - w1
+    // J = [0 0 -1 0 0 1]
+    // K = invI1 + invI2
+
     /// <summary>
     /// A revolute joint constrains to bodies to share a common point while they are free to rotate about the point.
     /// The relative rotation about the shared point is the joint angle. You can limit the relative rotation with a joint limit
@@ -36,34 +49,35 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class RevoluteJoint : Joint
     {
-        private bool _enableLimit;
-
-        private bool _enableMotor;
-
         // Solver shared
-        private Vector3 _impulse;
+        internal Vector2 _localAnchorA;
+        internal Vector2 _localAnchorB;
+        private Vector2 _impulse;
+        private float _motorImpulse;
+        private float _lowerImpulse;
+        private float _upperImpulse;
+        private bool _enableMotor;
+        private float _maxMotorTorque;
+        private float _motorSpeed;
+        private bool _enableLimit;
+        internal float _referenceAngle;
+        private float _lowerAngle;
+        private float _upperAngle;
 
         // Solver temp
         private int _indexA;
-
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private LimitState _limitState;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _lowerAngle;
-        private Mat33 _mass; // effective mass for point-to-point constraint.
-        private float _maxMotorTorque;
-        private float _motorImpulse;
-        private float _motorMass; // effective mass for motor/limit angular constraint.
-        private float _motorSpeed;
         private Vector2 _rA;
         private Vector2 _rB;
-        private float _referenceAngle;
-        private float _upperAngle;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _invIA;
+        private float _invIB;
+        private Mat22 _K;
+        private float _angle;
+        private float _axialMass;
 
         /// <summary>Constructor of RevoluteJoint.</summary>
         /// <param name="bodyA">The first body.</param>
@@ -76,19 +90,16 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             if (useWorldCoordinates)
             {
-                LocalAnchorA = BodyA.GetLocalPoint(anchorA);
-                LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+                _localAnchorA = bodyA.GetLocalPoint(anchorA);
+                _localAnchorB = bodyB.GetLocalPoint(anchorB);
             }
             else
             {
-                LocalAnchorA = anchorA;
-                LocalAnchorB = anchorB;
+                _localAnchorA = anchorA;
+                _localAnchorB = anchorB;
             }
 
-            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
-
-            _impulse = Vector3.Zero;
-            _limitState = LimitState.Inactive;
+            _referenceAngle = bodyB._sweep.A - bodyA._sweep.A;
         }
 
         /// <summary>Constructor of RevoluteJoint.</summary>
@@ -100,39 +111,43 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             : this(bodyA, bodyB, anchor, anchor, useWorldCoordinates) { }
 
         /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point on BodyB</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => LocalAnchorA = BodyA.GetLocalPoint(value);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
+            set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.GetWorldPoint(LocalAnchorB);
-            set => LocalAnchorB = BodyB.GetLocalPoint(value);
+            get => _bodyB.GetWorldPoint(_localAnchorB);
+            set => _localAnchorB = _bodyB.GetLocalPoint(value);
         }
 
         /// <summary>The referance angle computed as BodyB angle minus BodyA angle.</summary>
         public float ReferenceAngle
         {
             get => _referenceAngle;
-            set
-            {
-                WakeBodies();
-                _referenceAngle = value;
-            }
+            set => _referenceAngle = value;
         }
 
         /// <summary>Get the current joint angle in radians.</summary>
-        public float JointAngle => BodyB._sweep.A - BodyA._sweep.A - ReferenceAngle;
+        public float JointAngle => _bodyB._sweep.A - _bodyA._sweep.A - _referenceAngle;
 
         /// <summary>Get the current joint angle speed in radians per second.</summary>
-        public float JointSpeed => BodyB._angularVelocity - BodyA._angularVelocity;
+        public float JointSpeed => _bodyB._angularVelocity - _bodyA._angularVelocity;
 
         /// <summary>Is the joint limit enabled?</summary>
         /// <value><c>true</c> if [limit enabled]; otherwise, <c>false</c>.</value>
@@ -141,12 +156,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _enableLimit;
             set
             {
-                if (_enableLimit == value)
-                    return;
-
-                WakeBodies();
-                _enableLimit = value;
-                _impulse.Z = 0.0f;
+                if (_enableLimit != value)
+                {
+                    WakeBodies();
+                    _enableLimit = value;
+                    _lowerImpulse = 0.0f;
+                    _upperImpulse = 0.0f;
+                }
             }
         }
 
@@ -156,12 +172,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _lowerAngle;
             set
             {
-                if (_lowerAngle == value)
-                    return;
-
-                WakeBodies();
-                _lowerAngle = value;
-                _impulse.Z = 0.0f;
+                if (_lowerAngle != value)
+                {
+                    WakeBodies();
+                    _lowerAngle = value;
+                    _lowerImpulse = 0.0f;
+                }
             }
         }
 
@@ -171,12 +187,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _upperAngle;
             set
             {
-                if (_upperAngle == value)
-                    return;
-
-                WakeBodies();
-                _upperAngle = value;
-                _impulse.Z = 0.0f;
+                if (_upperAngle != value)
+                {
+                    WakeBodies();
+                    _upperAngle = value;
+                    _upperImpulse = 0.0f;
+                }
             }
         }
 
@@ -187,11 +203,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _enableMotor;
             set
             {
-                if (value == _enableMotor)
-                    return;
-
-                WakeBodies();
-                _enableMotor = value;
+                if (value != _enableMotor)
+                {
+                    WakeBodies();
+                    _enableMotor = value;
+                }
             }
         }
 
@@ -200,11 +216,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             set
             {
-                if (value == _motorSpeed)
-                    return;
-
-                WakeBodies();
-                _motorSpeed = value;
+                if (value != _motorSpeed)
+                {
+                    WakeBodies();
+                    _motorSpeed = value;
+                }
             }
             get => _motorSpeed;
         }
@@ -214,27 +230,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             set
             {
-                if (value == _maxMotorTorque)
-                    return;
-
-                WakeBodies();
-                _maxMotorTorque = value;
+                if (value != _maxMotorTorque)
+                {
+                    WakeBodies();
+                    _maxMotorTorque = value;
+                }
             }
             get => _maxMotorTorque;
-        }
-
-        /// <summary>Get or set the current motor impulse, usually in N-m.</summary>
-        public float MotorImpulse
-        {
-            get => _motorImpulse;
-            set
-            {
-                if (value == _motorImpulse)
-                    return;
-
-                WakeBodies();
-                _motorImpulse = value;
-            }
         }
 
         /// <summary>Set the joint limits, usually in meters.</summary>
@@ -242,13 +244,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
         {
-            if (lower == _lowerAngle && upper == _upperAngle)
-                return;
-
-            WakeBodies();
-            _upperAngle = upper;
-            _lowerAngle = lower;
-            _impulse.Z = 0.0f;
+            if (lower != _lowerAngle || upper != _upperAngle)
+            {
+                WakeBodies();
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+                _upperAngle = upper;
+                _lowerAngle = lower;
+            }
         }
 
         /// <summary>Gets the motor torque in N-m.</summary>
@@ -266,19 +269,19 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         public override float GetReactionTorque(float invDt)
         {
-            return invDt * _impulse.Z;
+            return invDt * (_motorImpulse + _lowerImpulse - _upperImpulse);
         }
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            _indexA = BodyA.IslandIndex;
-            _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA._sweep.LocalCenter;
-            _localCenterB = BodyB._sweep.LocalCenter;
-            _invMassA = BodyA._invMass;
-            _invMassB = BodyB._invMass;
-            _invIA = BodyA._invI;
-            _invIB = BodyB._invI;
+            _indexA = _bodyA.IslandIndex;
+            _indexB = _bodyB.IslandIndex;
+            _localCenterA = _bodyA._sweep.LocalCenter;
+            _localCenterB = _bodyB._sweep.LocalCenter;
+            _invMassA = _bodyA._invMass;
+            _invMassB = _bodyB._invMass;
+            _invIA = _bodyA._invI;
+            _invIB = _bodyB._invI;
 
             float aA = data.Positions[_indexA].A;
             Vector2 vA = data.Velocities[_indexA].V;
@@ -290,84 +293,71 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
             // J = [-I -r1_skew I r2_skew]
-            //     [ 0       -1 0       1]
             // r_skew = [-ry; rx]
 
             // Matlab
-            // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x,          -r1y*iA-r2y*iB]
-            //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB,           r1x*iA+r2x*iB]
-            //     [          -r1y*iA-r2y*iB,           r1x*iA+r2x*iB,                   iA+iB]
+            // K = [ mA+r1y^2*iA+mB+r2y^2*iB,  -r1y*iA*r1x-r2y*iB*r2x]
+            //     [  -r1y*iA*r1x-r2y*iB*r2x, mA+r1x^2*iA+mB+r2x^2*iB]
 
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            bool fixedRotation = (iA + iB == 0.0f);
+            _K.ex.X = mA + mB + _rA.Y * _rA.Y * iA + _rB.Y * _rB.Y * iB;
+            _K.ey.X = -_rA.Y * _rA.X * iA - _rB.Y * _rB.X * iB;
+            _K.ex.Y = _K.ey.X;
+            _K.ey.Y = mA + mB + _rA.X * _rA.X * iA + _rB.X * _rB.X * iB;
 
-            _mass.ex.X = mA + mB + _rA.Y * _rA.Y * iA + _rB.Y * _rB.Y * iB;
-            _mass.ey.X = -_rA.Y * _rA.X * iA - _rB.Y * _rB.X * iB;
-            _mass.ez.X = -_rA.Y * iA - _rB.Y * iB;
-            _mass.ex.Y = _mass.ey.X;
-            _mass.ey.Y = mA + mB + _rA.X * _rA.X * iA + _rB.X * _rB.X * iB;
-            _mass.ez.Y = _rA.X * iA + _rB.X * iB;
-            _mass.ex.Z = _mass.ez.X;
-            _mass.ey.Z = _mass.ez.Y;
-            _mass.ez.Z = iA + iB;
-
-            _motorMass = iA + iB;
-            if (_motorMass > 0.0f)
-                _motorMass = 1.0f / _motorMass;
-
-            if (!_enableMotor || fixedRotation)
-                _motorImpulse = 0.0f;
-
-            if (_enableLimit && !fixedRotation)
+            _axialMass = iA + iB;
+            bool fixedRotation;
+            if (_axialMass > 0.0f)
             {
-                float jointAngle = aB - aA - ReferenceAngle;
-                if (Math.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
-                    _limitState = LimitState.Equal;
-                else if (jointAngle <= _lowerAngle)
-                {
-                    if (_limitState != LimitState.AtLower)
-                        _impulse.Z = 0.0f;
-                    _limitState = LimitState.AtLower;
-                }
-                else if (jointAngle >= _upperAngle)
-                {
-                    if (_limitState != LimitState.AtUpper)
-                        _impulse.Z = 0.0f;
-                    _limitState = LimitState.AtUpper;
-                }
-                else
-                {
-                    _limitState = LimitState.Inactive;
-                    _impulse.Z = 0.0f;
-                }
+                _axialMass = 1.0f / _axialMass;
+                fixedRotation = false;
             }
             else
-                _limitState = LimitState.Inactive;
+            {
+                fixedRotation = true;
+            }
+
+            _angle = aB - aA - _referenceAngle;
+            if (_enableLimit == false || fixedRotation)
+            {
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+            }
+
+            if (_enableMotor == false || fixedRotation)
+            {
+                _motorImpulse = 0.0f;
+            }
 
             if (Settings.EnableWarmStarting)
             {
                 // Scale impulses to support a variable time step.
                 _impulse *= data.Step.DeltaTimeRatio;
                 _motorImpulse *= data.Step.DeltaTimeRatio;
+                _lowerImpulse *= data.Step.DeltaTimeRatio;
+                _upperImpulse *= data.Step.DeltaTimeRatio;
 
+                float axialImpulse = _motorImpulse + _lowerImpulse - _upperImpulse;
                 Vector2 P = new Vector2(_impulse.X, _impulse.Y);
 
                 vA -= mA * P;
-                wA -= iA * (MathUtils.Cross(_rA, P) + MotorImpulse + _impulse.Z);
+                wA -= iA * (MathUtils.Cross(_rA, P) + axialImpulse);
 
                 vB += mB * P;
-                wB += iB * (MathUtils.Cross(_rB, P) + MotorImpulse + _impulse.Z);
+                wB += iB * (MathUtils.Cross(_rB, P) + axialImpulse);
             }
             else
             {
-                _impulse = Vector3.Zero;
+                _impulse = Vector2.Zero;
                 _motorImpulse = 0.0f;
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
             }
 
             data.Velocities[_indexA].V = vA;
@@ -386,13 +376,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            bool fixedRotation = iA + iB == 0.0f;
+            bool fixedRotation = (iA + iB == 0.0f);
 
             // Solve motor constraint.
-            if (_enableMotor && _limitState != LimitState.Equal && !fixedRotation)
+            if (_enableMotor && fixedRotation == false)
             {
                 float Cdot = wB - wA - _motorSpeed;
-                float impulse = _motorMass * -Cdot;
+                float impulse = -_axialMass * Cdot;
                 float oldImpulse = _motorImpulse;
                 float maxImpulse = data.Step.DeltaTime * _maxMotorTorque;
                 _motorImpulse = MathUtils.Clamp(_motorImpulse + impulse, -maxImpulse, maxImpulse);
@@ -402,65 +392,41 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 wB += iB * impulse;
             }
 
-            // Solve limit constraint.
-            if (_enableLimit && _limitState != LimitState.Inactive && !fixedRotation)
+            if (_enableLimit && fixedRotation == false)
             {
-                Vector2 Cdot1 = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
-                float Cdot2 = wB - wA;
-                Vector3 Cdot = new Vector3(Cdot1.X, Cdot1.Y, Cdot2);
-
-                Vector3 impulse = -_mass.Solve33(Cdot);
-
-                if (_limitState == LimitState.Equal)
-                    _impulse += impulse;
-                else if (_limitState == LimitState.AtLower)
+                // Lower limit
                 {
-                    float newImpulse = _impulse.Z + impulse.Z;
-                    if (newImpulse < 0.0f)
-                    {
-                        Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.ez.X, _mass.ez.Y);
-                        Vector2 reduced = _mass.Solve22(rhs);
-                        impulse.X = reduced.X;
-                        impulse.Y = reduced.Y;
-                        impulse.Z = -_impulse.Z;
-                        _impulse.X += reduced.X;
-                        _impulse.Y += reduced.Y;
-                        _impulse.Z = 0.0f;
-                    }
-                    else
-                        _impulse += impulse;
-                }
-                else if (_limitState == LimitState.AtUpper)
-                {
-                    float newImpulse = _impulse.Z + impulse.Z;
-                    if (newImpulse > 0.0f)
-                    {
-                        Vector2 rhs = -Cdot1 + _impulse.Z * new Vector2(_mass.ez.X, _mass.ez.Y);
-                        Vector2 reduced = _mass.Solve22(rhs);
-                        impulse.X = reduced.X;
-                        impulse.Y = reduced.Y;
-                        impulse.Z = -_impulse.Z;
-                        _impulse.X += reduced.X;
-                        _impulse.Y += reduced.Y;
-                        _impulse.Z = 0.0f;
-                    }
-                    else
-                        _impulse += impulse;
+                    float C = _angle - _lowerAngle;
+                    float Cdot = wB - wA;
+                    float impulse = -_axialMass * (Cdot + MathUtils.Max(C, 0.0f) * data.Step.InvertedDeltaTime);
+                    float oldImpulse = _lowerImpulse;
+                    _lowerImpulse = MathUtils.Max(_lowerImpulse + impulse, 0.0f);
+                    impulse = _lowerImpulse - oldImpulse;
+
+                    wA -= iA * impulse;
+                    wB += iB * impulse;
                 }
 
-                Vector2 P = new Vector2(impulse.X, impulse.Y);
+                // Upper limit
+                // Note: signs are flipped to keep C positive when the constraint is satisfied.
+                // This also keeps the impulse positive when the limit is active.
+                {
+                    float C = _upperAngle - _angle;
+                    float Cdot = wA - wB;
+                    float impulse = -_axialMass * (Cdot + MathUtils.Max(C, 0.0f) * data.Step.InvertedDeltaTime);
+                    float oldImpulse = _upperImpulse;
+                    _upperImpulse = MathUtils.Max(_upperImpulse + impulse, 0.0f);
+                    impulse = _upperImpulse - oldImpulse;
 
-                vA -= mA * P;
-                wA -= iA * (MathUtils.Cross(_rA, P) + impulse.Z);
-
-                vB += mB * P;
-                wB += iB * (MathUtils.Cross(_rB, P) + impulse.Z);
+                    wA += iA * impulse;
+                    wB -= iB * impulse;
+                }
             }
-            else
+
+            // Solve point-to-point constraint
             {
-                // Solve point-to-point constraint
                 Vector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA);
-                Vector2 impulse = _mass.Solve22(-Cdot);
+                Vector2 impulse = _K.Solve(-Cdot);
 
                 _impulse.X += impulse.X;
                 _impulse.Y += impulse.Y;
@@ -488,52 +454,44 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
             float angularError = 0.0f;
-            float positionError;
+            float positionError = 0.0f;
 
-            bool fixedRotation = _invIA + _invIB == 0.0f;
+            bool fixedRotation = (_invIA + _invIB == 0.0f);
 
-            // Solve angular limit constraint.
-            if (_enableLimit && _limitState != LimitState.Inactive && !fixedRotation)
+            // Solve angular limit constraint
+            if (_enableLimit && fixedRotation == false)
             {
-                float angle = aB - aA - ReferenceAngle;
-                float limitImpulse = 0.0f;
+                float angle = aB - aA - _referenceAngle;
+                float C = 0.0f;
 
-                if (_limitState == LimitState.Equal)
+                if (MathUtils.Abs(_upperAngle - _lowerAngle) < 2.0f * Settings.AngularSlop)
                 {
                     // Prevent large angular corrections
-                    float C = MathUtils.Clamp(angle - _lowerAngle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
-                    limitImpulse = -_motorMass * C;
-                    angularError = Math.Abs(C);
+                    C = MathUtils.Clamp(angle - _lowerAngle, -Settings.MaxAngularCorrection, Settings.MaxAngularCorrection);
                 }
-                else if (_limitState == LimitState.AtLower)
+                else if (angle <= _lowerAngle)
                 {
-                    float C = angle - _lowerAngle;
-                    angularError = -C;
-
                     // Prevent large angular corrections and allow some slop.
-                    C = MathUtils.Clamp(C + Settings.AngularSlop, -Settings.MaxAngularCorrection, 0.0f);
-                    limitImpulse = -_motorMass * C;
+                    C = MathUtils.Clamp(angle - _lowerAngle + Settings.AngularSlop, -Settings.MaxAngularCorrection, 0.0f);
                 }
-                else if (_limitState == LimitState.AtUpper)
+                else if (angle >= _upperAngle)
                 {
-                    float C = angle - _upperAngle;
-                    angularError = C;
-
                     // Prevent large angular corrections and allow some slop.
-                    C = MathUtils.Clamp(C - Settings.AngularSlop, 0.0f, Settings.MaxAngularCorrection);
-                    limitImpulse = -_motorMass * C;
+                    C = MathUtils.Clamp(angle - _upperAngle - Settings.AngularSlop, 0.0f, Settings.MaxAngularCorrection);
                 }
 
+                float limitImpulse = -_axialMass * C;
                 aA -= _invIA * limitImpulse;
                 aB += _invIB * limitImpulse;
+                angularError = MathUtils.Abs(C);
             }
 
             // Solve point-to-point constraint.
             {
                 qA.Set(aA);
                 qB.Set(aB);
-                Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-                Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+                Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+                Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
                 Vector2 C = cB + rB - cA - rA;
                 positionError = C.Length();
@@ -541,7 +499,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 float mA = _invMassA, mB = _invMassB;
                 float iA = _invIA, iB = _invIB;
 
-                Mat22 K = new Mat22();
+                Mat22 K;
                 K.ex.X = mA + mB + iA * rA.Y * rA.Y + iB * rB.Y * rB.Y;
                 K.ex.Y = -iA * rA.X * rA.Y - iB * rB.X * rB.Y;
                 K.ey.X = K.ex.Y;

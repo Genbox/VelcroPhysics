@@ -8,6 +8,7 @@ using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Extensions.DebugView;

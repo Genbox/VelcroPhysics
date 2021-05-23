@@ -1,4 +1,4 @@
-namespace Genbox.VelcroPhysics.Dynamics.Joints
+namespace Genbox.VelcroPhysics.Dynamics.Joints.Misc
 {
     public enum LimitState
     {

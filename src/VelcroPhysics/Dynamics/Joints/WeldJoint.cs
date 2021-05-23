@@ -21,6 +21,7 @@
 */
 
 using System;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -50,26 +51,29 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class WeldJoint : Joint
     {
+        private float _stiffness;
+        private float _damping;
         private float _bias;
 
-        private float _gamma;
-
         // Solver shared
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
+        private float _referenceAngle;
+        private float _gamma;
         private Vector3 _impulse;
 
         // Solver temp
         private int _indexA;
-
         private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private Mat33 _mass;
         private Vector2 _rA;
         private Vector2 _rB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _invIA;
+        private float _invIB;
+        private Mat33 _mass;
 
         /// <summary>
         /// You need to specify an anchor point where they are attached. The position of the anchor point is important for
@@ -85,54 +89,71 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             if (useWorldCoordinates)
             {
-                LocalAnchorA = bodyA.GetLocalPoint(anchorA);
-                LocalAnchorB = bodyB.GetLocalPoint(anchorB);
+                _localAnchorA = bodyA.GetLocalPoint(anchorA);
+                _localAnchorB = bodyB.GetLocalPoint(anchorB);
             }
             else
             {
-                LocalAnchorA = anchorA;
-                LocalAnchorB = anchorB;
+                _localAnchorA = anchorA;
+                _localAnchorB = anchorB;
             }
 
-            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
+            _referenceAngle = bodyB._sweep.A - bodyA._sweep.A;
         }
 
         /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point on BodyB</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.GetWorldPoint(LocalAnchorA);
-            set => LocalAnchorA = BodyA.GetLocalPoint(value);
+            get => _bodyA.GetWorldPoint(_localAnchorA);
+            set => _localAnchorA = _bodyA.GetLocalPoint(value);
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.GetWorldPoint(LocalAnchorB);
-            set => LocalAnchorB = BodyB.GetLocalPoint(value);
+            get => _bodyB.GetWorldPoint(_localAnchorB);
+            set => _localAnchorB = _bodyB.GetLocalPoint(value);
         }
 
         /// <summary>The bodyB angle minus bodyA angle in the reference state (radians).</summary>
-        public float ReferenceAngle { get; set; }
+        public float ReferenceAngle => _referenceAngle;
 
         /// <summary>
         /// The frequency of the joint. A higher frequency means a stiffer joint, but a too high value can cause the joint
         /// to oscillate. Default is 0, which means the joint does no spring calculations.
         /// </summary>
-        public float FrequencyHz { get; set; }
+        public float Stiffness
+        {
+            get => _stiffness;
+            set => _stiffness = value;
+        }
 
         /// <summary>
         /// The damping on the joint. The damping is only used when the joint has a frequency (> 0). A higher value means
         /// more damping.
         /// </summary>
-        public float DampingRatio { get; set; }
+        public float Damping
+        {
+            get => _damping;
+            set => _damping = value;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
-            return invDt * new Vector2(_impulse.X, _impulse.Y);
+            Vector2 P = new Vector2(_impulse.X, _impulse.Y);
+            return invDt * P;
         }
 
         public override float GetReactionTorque(float invDt)
@@ -161,8 +182,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
             // J = [-I -r1_skew I r2_skew]
             //     [ 0       -1 0       1]
@@ -176,7 +197,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            Mat33 K = new Mat33();
+            Mat33 K;
             K.ex.X = mA + mB + _rA.Y * _rA.Y * iA + _rB.Y * _rB.Y * iB;
             K.ey.X = -_rA.Y * _rA.X * iA - _rB.Y * _rB.X * iB;
             K.ez.X = -_rA.Y * iA - _rB.Y * iB;
@@ -187,23 +208,19 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             K.ey.Z = K.ez.Y;
             K.ez.Z = iA + iB;
 
-            if (FrequencyHz > 0.0f)
+            if (_stiffness > 0.0f)
             {
                 K.GetInverse22(ref _mass);
 
                 float invM = iA + iB;
-                float m = invM > 0.0f ? 1.0f / invM : 0.0f;
 
-                float C = aB - aA - ReferenceAngle;
-
-                // Frequency
-                float omega = 2.0f * MathConstants.Pi * FrequencyHz;
+                float C = aB - aA - _referenceAngle;
 
                 // Damping coefficient
-                float d = 2.0f * m * DampingRatio * omega;
+                float d = _damping;
 
                 // Spring stiffness
-                float k = m * omega * omega;
+                float k = _stiffness;
 
                 // magic formulas
                 float h = data.Step.DeltaTime;
@@ -259,7 +276,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
-            if (FrequencyHz > 0.0f)
+            if (_stiffness > 0.0f)
             {
                 float Cdot2 = wB - wA;
 
@@ -335,7 +352,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             K.ey.Z = K.ez.Y;
             K.ez.Z = iA + iB;
 
-            if (FrequencyHz > 0.0f)
+            if (_stiffness > 0.0f)
             {
                 Vector2 C1 = cB + rB - cA - rA;
 
@@ -353,7 +370,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             else
             {
                 Vector2 C1 = cB + rB - cA - rA;
-                float C2 = aB - aA - ReferenceAngle;
+                float C2 = aB - aA - _referenceAngle;
 
                 positionError = C1.Length();
                 angularError = Math.Abs(C2);

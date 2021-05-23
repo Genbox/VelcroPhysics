@@ -21,6 +21,7 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -74,7 +75,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         // Solver shared
         private Vector2 _localAnchorA;
-
         private Vector2 _localAnchorB;
         private Vector2 _localAnchorC;
         private Vector2 _localAnchorD;
@@ -103,7 +103,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             JointA = jointA;
             JointB = jointB;
-            Ratio = ratio;
 
             _typeA = jointA.JointType;
             _typeB = jointB.JointType;
@@ -130,9 +129,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             if (_typeA == JointType.Revolute)
             {
                 RevoluteJoint revolute = (RevoluteJoint)jointA;
-                _localAnchorC = revolute.LocalAnchorA;
-                _localAnchorA = revolute.LocalAnchorB;
-                _referenceAngleA = revolute.ReferenceAngle;
+                _localAnchorC = revolute._localAnchorA;
+                _localAnchorA = revolute._localAnchorB;
+                _referenceAngleA = revolute._referenceAngle;
                 _localAxisC = Vector2.Zero;
 
                 coordinateA = aA - aC - _referenceAngleA;
@@ -140,10 +139,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             else
             {
                 PrismaticJoint prismatic = (PrismaticJoint)jointA;
-                _localAnchorC = prismatic.LocalAnchorA;
-                _localAnchorA = prismatic.LocalAnchorB;
-                _referenceAngleA = prismatic.ReferenceAngle;
-                _localAxisC = prismatic.LocalXAxisA;
+                _localAnchorC = prismatic._localAnchorA;
+                _localAnchorA = prismatic._localAnchorB;
+                _referenceAngleA = prismatic._referenceAngle;
+                _localAxisC = prismatic._localXAxisA;
 
                 Vector2 pC = _localAnchorC;
                 Vector2 pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
@@ -165,9 +164,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             if (_typeB == JointType.Revolute)
             {
                 RevoluteJoint revolute = (RevoluteJoint)jointB;
-                _localAnchorD = revolute.LocalAnchorA;
-                _localAnchorB = revolute.LocalAnchorB;
-                _referenceAngleB = revolute.ReferenceAngle;
+                _localAnchorD = revolute._localAnchorA;
+                _localAnchorB = revolute._localAnchorB;
+                _referenceAngleB = revolute._referenceAngle;
                 _localAxisD = Vector2.Zero;
 
                 coordinateB = aB - aD - _referenceAngleB;
@@ -175,10 +174,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             else
             {
                 PrismaticJoint prismatic = (PrismaticJoint)jointB;
-                _localAnchorD = prismatic.LocalAnchorA;
-                _localAnchorB = prismatic.LocalAnchorB;
-                _referenceAngleB = prismatic.ReferenceAngle;
-                _localAxisD = prismatic.LocalXAxisA;
+                _localAnchorD = prismatic._localAnchorA;
+                _localAnchorB = prismatic._localAnchorB;
+                _referenceAngleB = prismatic._referenceAngle;
+                _localAxisD = prismatic._localXAxisA;
 
                 Vector2 pD = _localAnchorD;
                 Vector2 pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));
@@ -206,18 +205,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public float Ratio
         {
             get => _ratio;
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value));
-                _ratio = value;
-            }
+            set => _ratio = value;
         }
 
         /// <summary>The first revolute/prismatic joint attached to the gear joint.</summary>
-        public Joint JointA { get; private set; }
+        public Joint JointA { get; }
 
         /// <summary>The second revolute/prismatic joint attached to the gear joint.</summary>
-        public Joint JointB { get; private set; }
+        public Joint JointB { get; }
 
         public override Vector2 GetReactionForce(float invDt)
         {

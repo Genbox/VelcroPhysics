@@ -1,5 +1,6 @@
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {

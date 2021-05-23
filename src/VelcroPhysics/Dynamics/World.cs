@@ -30,6 +30,7 @@ using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Collision.TOI;
 using Genbox.VelcroPhysics.Dynamics.Handlers;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Shared;

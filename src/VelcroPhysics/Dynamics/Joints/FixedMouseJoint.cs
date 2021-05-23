@@ -20,6 +20,7 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;

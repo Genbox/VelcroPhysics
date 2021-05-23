@@ -21,6 +21,7 @@
 */
 
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -28,6 +29,21 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics.Joints
 {
+    // Point-to-point constraint
+    // Cdot = v2 - v1
+    //      = v2 + cross(w2, r2) - v1 - cross(w1, r1)
+    // J = [-I -r1_skew I r2_skew ]
+    // Identity used:
+    // w k % (rx i + ry j) = w * (-ry i + rx j)
+    //
+    // r1 = offset - c1
+    // r2 = -c2
+
+    // Angle constraint
+    // Cdot = w2 - w1
+    // J = [0 0 -1 0 0 1]
+    // K = invI1 + invI2
+
     /// <summary>
     /// A motor joint is used to control the relative motion between two bodies. A typical usage is to control the
     /// movement of a dynamic body with respect to the ground.
@@ -62,6 +78,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rA;
         private Vector2 _rB;
 
+        private float _correctionFactor;
+
         /// <summary>Constructor for MotorJoint.</summary>
         /// <param name="bodyA">The first body</param>
         /// <param name="bodyB">The second body</param>
@@ -69,54 +87,53 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public MotorJoint(Body bodyA, Body bodyB, bool useWorldCoordinates = false)
             : base(bodyA, bodyB, JointType.Motor)
         {
-            Vector2 xB = BodyB.Position;
+            Vector2 xB = bodyB.Position;
 
             if (useWorldCoordinates)
-                _linearOffset = BodyA.GetLocalPoint(xB);
+                _linearOffset = bodyA.GetLocalPoint(xB);
             else
                 _linearOffset = xB;
 
-            //Defaults
-            //_angularOffset = 0.0f;
             _maxForce = 1.0f;
             _maxTorque = 1.0f;
-            CorrectionFactor = 0.3f;
+            _correctionFactor = 0.3f;
 
-            _angularOffset = BodyB.Rotation - BodyA.Rotation;
+            _angularOffset = bodyB.Rotation - bodyA.Rotation;
         }
 
         public override Vector2 WorldAnchorA
         {
-            get => BodyA.Position;
+            get => _bodyA.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
         public override Vector2 WorldAnchorB
         {
-            get => BodyB.Position;
+            get => _bodyB.Position;
             set => Debug.Assert(false, "You can't set the world anchor on this joint type.");
         }
 
-        /// <summary>The maximum amount of force that can be applied to BodyA</summary>
+        /// <summary>Get/set the maximum friction force in N.</summary>
         public float MaxForce
         {
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _maxForce = value;
-            }
+            set => _maxForce = value;
             get => _maxForce;
         }
 
-        /// <summary>The maximum amount of torque that can be applied to BodyA</summary>
+        /// <summary>Get/set the maximum friction torque in N*m.</summary>
         public float MaxTorque
         {
-            set
-            {
-                Debug.Assert(MathUtils.IsValid(value) && value >= 0.0f);
-                _maxTorque = value;
-            }
+            set => _maxTorque = value;
             get => _maxTorque;
+        }
+
+        /// <summary>
+        /// Get/set the position correction factor in the range [0,1].
+        /// </summary>
+        public float CorrectionFactor
+        {
+            set => _correctionFactor = value;
+            get => _correctionFactor;
         }
 
         /// <summary>The linear (translation) offset.</summary>
@@ -124,7 +141,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             set
             {
-                if (_linearOffset.X != value.X || _linearOffset.Y != value.Y)
+                if (_linearOffset != value)
                 {
                     WakeBodies();
                     _linearOffset = value;
@@ -146,9 +163,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             }
             get => _angularOffset;
         }
-
-        //Velcro note: Used for serialization.
-        internal float CorrectionFactor { get; set; }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -185,7 +199,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Rot qB = new Rot(aB);
 
             // Compute the effective mass matrix.
-            _rA = MathUtils.Mul(qA, -_localCenterA);
+            _rA = MathUtils.Mul(qA, _linearOffset -_localCenterA);
             _rB = MathUtils.Mul(qB, -_localCenterB);
 
             // J = [-I -r1_skew I r2_skew]
@@ -200,6 +214,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA, mB = _invMassB;
             float iA = _invIA, iB = _invIB;
 
+            // Upper 2 by 2 of K for point to point
             Mat22 K = new Mat22();
             K.ex.X = mA + mB + iA * _rA.Y * _rA.Y + iB * _rB.Y * _rB.Y;
             K.ex.Y = -iA * _rA.X * _rA.Y - iB * _rB.X * _rB.Y;
@@ -212,7 +227,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             if (_angularMass > 0.0f)
                 _angularMass = 1.0f / _angularMass;
 
-            _linearError = cB + _rB - cA - _rA - MathUtils.Mul(qA, _linearOffset);
+            _linearError = cB + _rB - cA - _rA;
             _angularError = aB - aA - _angularOffset;
 
             if (Settings.EnableWarmStarting)
@@ -222,7 +237,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 _angularImpulse *= data.Step.DeltaTimeRatio;
 
                 Vector2 P = new Vector2(_linearImpulse.X, _linearImpulse.Y);
-
                 vA -= mA * P;
                 wA -= iA * (MathUtils.Cross(_rA, P) + _angularImpulse);
                 vB += mB * P;
@@ -255,7 +269,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             // Solve angular friction
             {
-                float Cdot = wB - wA + inv_h * CorrectionFactor * _angularError;
+                float Cdot = wB - wA + inv_h * _correctionFactor * _angularError;
                 float impulse = -_angularMass * Cdot;
 
                 float oldImpulse = _angularImpulse;
@@ -269,7 +283,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             // Solve linear friction
             {
-                Vector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA) + inv_h * CorrectionFactor * _linearError;
+                Vector2 Cdot = vB + MathUtils.Cross(wB, _rB) - vA - MathUtils.Cross(wA, _rA) + inv_h * _correctionFactor * _linearError;
 
                 Vector2 impulse = -MathUtils.Mul(ref _linearMass, ref Cdot);
                 Vector2 oldImpulse = _linearImpulse;

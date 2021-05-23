@@ -27,6 +27,7 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Templates.Joints;
@@ -87,11 +88,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class PrismaticJoint : Joint
     {
-        private Vector2 _localAnchorA;
-        private Vector2 _localAnchorB;
-        private Vector2 _localXAxisA;
+        internal Vector2 _localAnchorA;
+        internal Vector2 _localAnchorB;
+        internal Vector2 _localXAxisA;
         private Vector2 _localYAxisA;
-        private float _referenceAngle;
+        internal float _referenceAngle;
         private Vector2 _impulse;
         private float _motorImpulse;
         private float _lowerImpulse;
@@ -222,15 +223,13 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _enableLimit;
             set
             {
-                Debug.Assert(!_bodyA.FixedRotation || !_bodyB.FixedRotation, "Warning: limits does currently not work with fixed rotation");
-
-                if (value == _enableLimit)
-                    return;
-
-                WakeBodies();
-                _enableLimit = value;
-                _lowerImpulse = 0.0f;
-                _upperImpulse = 0.0f;
+                if (value != _enableLimit)
+                {
+                    WakeBodies();
+                    _enableLimit = value;
+                    _lowerImpulse = 0.0f;
+                    _upperImpulse = 0.0f;
+                }
             }
         }
 
@@ -240,12 +239,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _lowerTranslation;
             set
             {
-                if (value == _lowerTranslation)
-                    return;
-
-                WakeBodies();
-                _lowerTranslation = value;
-                _lowerImpulse = 0.0f;
+                if (value != _lowerTranslation)
+                {
+                    WakeBodies();
+                    _lowerTranslation = value;
+                    _lowerImpulse = 0.0f;
+                }
             }
         }
 
@@ -255,12 +254,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _upperTranslation;
             set
             {
-                if (value == _upperTranslation)
-                    return;
-
-                WakeBodies();
-                _upperTranslation = value;
-                _upperImpulse = 0.0f;
+                if (value != _upperTranslation)
+                {
+                    WakeBodies();
+                    _upperTranslation = value;
+                    _upperImpulse = 0.0f;
+                }
             }
         }
 
@@ -271,11 +270,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _enableMotor;
             set
             {
-                if (value == _enableMotor)
-                    return;
-
-                WakeBodies();
-                _enableMotor = value;
+                if (value != _enableMotor)
+                {
+                    WakeBodies();
+                    _enableMotor = value;
+                }
             }
         }
 
@@ -285,11 +284,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             set
             {
-                if (value == _motorSpeed)
-                    return;
-
-                WakeBodies();
-                _motorSpeed = value;
+                if (value != _motorSpeed)
+                {
+                    WakeBodies();
+                    _motorSpeed = value;
+                }
             }
             get => _motorSpeed;
         }
@@ -301,11 +300,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             get => _maxMotorForce;
             set
             {
-                if (value == _maxMotorForce)
-                    return;
-
-                WakeBodies();
-                _maxMotorForce = value;
+                if (value != _maxMotorForce)
+                {
+                    WakeBodies();
+                    _maxMotorForce = value;
+                }
             }
         }
 
@@ -328,14 +327,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="upper">The upper limit</param>
         public void SetLimits(float lower, float upper)
         {
-            if (upper == _upperTranslation && lower == _lowerTranslation)
-                return;
-
-            WakeBodies();
-            _upperTranslation = upper;
-            _lowerTranslation = lower;
-            _lowerImpulse = 0.0f;
-            _upperImpulse = 0.0f;
+            if (upper != _upperTranslation || lower != _lowerTranslation)
+            {
+                WakeBodies();
+                _upperTranslation = upper;
+                _lowerTranslation = lower;
+                _lowerImpulse = 0.0f;
+                _upperImpulse = 0.0f;
+            }
         }
 
         public override Vector2 GetReactionForce(float invDt)
@@ -350,14 +349,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal override void InitVelocityConstraints(ref SolverData data)
         {
-            _indexA = BodyA.IslandIndex;
-            _indexB = BodyB.IslandIndex;
-            _localCenterA = BodyA._sweep.LocalCenter;
-            _localCenterB = BodyB._sweep.LocalCenter;
-            _invMassA = BodyA._invMass;
-            _invMassB = BodyB._invMass;
-            _invIA = BodyA._invI;
-            _invIB = BodyB._invI;
+            _indexA = _bodyA.IslandIndex;
+            _indexB = _bodyB.IslandIndex;
+            _localCenterA = _bodyA._sweep.LocalCenter;
+            _localCenterB = _bodyB._sweep.LocalCenter;
+            _invMassA = _bodyA._invMass;
+            _invMassB = _bodyB._invMass;
+            _invIA = _bodyA._invI;
+            _invIB = _bodyB._invI;
 
             Vector2 cA = data.Positions[_indexA].C;
             float aA = data.Positions[_indexA].A;
@@ -588,12 +587,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float s2 = MathUtils.Cross(rB, perp);
 
             Vector3 impulse;
-            Vector2 C1 = new Vector2();
+            Vector2 C1;
             C1.X = Vector2.Dot(perp, d);
             C1.Y = aB - aA - _referenceAngle;
 
-            float linearError = Math.Abs(C1.X);
-            float angularError = Math.Abs(C1.Y);
+            float linearError = MathUtils.Abs(C1.X);
+            float angularError = MathUtils.Abs(C1.Y);
 
             bool active = false;
             float C2 = 0.0f;
@@ -634,12 +633,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 float k23 = iA * a1 + iB * a2;
                 float k33 = mA + mB + iA * a1 * a1 + iB * a2 * a2;
 
-                Mat33 K = new Mat33();
+                Mat33 K;
                 K.ex = new Vector3(k11, k12, k13);
                 K.ey = new Vector3(k12, k22, k23);
                 K.ez = new Vector3(k13, k23, k33);
 
-                Vector3 C = new Vector3();
+                Vector3 C;
                 C.X = C1.X;
                 C.Y = C1.Y;
                 C.Z = C2;
@@ -654,12 +653,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
                 if (k22 == 0.0f)
                     k22 = 1.0f;
 
-                Mat22 K = new Mat22();
+                Mat22 K;
                 K.ex = new Vector2(k11, k12);
                 K.ey = new Vector2(k12, k22);
 
                 Vector2 impulse1 = K.Solve(-C1);
-                impulse = new Vector3();
                 impulse.X = impulse1.X;
                 impulse.Y = impulse1.Y;
                 impulse.Z = 0.0f;
@@ -685,8 +683,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         //Velcro: We support initializing without a template
         private void Initialize(Vector2 localAnchorA, Vector2 localAnchorB, Vector2 axis, bool useWorldCoordinates)
         {
-            JointType = JointType.Prismatic;
-
             //Velcro: We support setting anchors in world coordinates
             if (useWorldCoordinates)
             {
@@ -708,8 +704,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         private void Initialize(PrismaticJointTemplate def, bool useWorldCoordinates)
         {
-            JointType = JointType.Prismatic;
-
             //Velcro: We support setting anchors in world coordinates
             if (useWorldCoordinates)
             {

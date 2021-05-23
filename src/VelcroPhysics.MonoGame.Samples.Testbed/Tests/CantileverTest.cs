@@ -63,6 +63,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 PolygonShape shape = new PolygonShape(20f);
                 shape.Vertices = PolygonUtils.CreateRectangle(1f, 0.125f);
 
+                float frequencyHz = 5.0f;
+                float dampingRatio = 0.7f;
+
                 Body prevBody = ground;
                 for (int i = 0; i < 3; ++i)
                 {
@@ -73,8 +76,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                     Vector2 anchor = new Vector2(-15.0f + 2.0f * i, 15.0f);
                     WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
-                    jd.FrequencyHz = 5.0f;
-                    jd.DampingRatio = 0.7f;
+
+                    JointHelper.AngularStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
+                    jd.Stiffness = stiffness;
+                    jd.Damping = damping;
+
                     World.AddJoint(jd);
 
                     prevBody = body;
@@ -109,6 +115,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 PolygonShape shape = new PolygonShape(20f);
                 shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
 
+                float frequencyHz = 8.0f;
+                float dampingRatio = 0.7f;
+
                 Body prevBody = ground;
                 for (int i = 0; i < Count; ++i)
                 {
@@ -122,8 +131,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
                         WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
-                        jd.FrequencyHz = 8.0f;
-                        jd.DampingRatio = 0.7f;
+
+                        JointHelper.AngularStiffness(frequencyHz, dampingRatio, prevBody, body, out float stiffness, out float damping);
+                        jd.Stiffness = stiffness;
+                        jd.Damping = damping;
 
                         World.AddJoint(jd);
                     }

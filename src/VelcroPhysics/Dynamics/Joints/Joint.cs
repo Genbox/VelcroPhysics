@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Microsoft.Xna.Framework;
 
@@ -68,20 +69,20 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         /// <summary>Gets or sets the type of the joint.</summary>
         /// <value>The type of the joint.</value>
-        public JointType JointType { get; protected set; }
+        public JointType JointType { get; }
 
         /// <summary>Get the first body attached to this joint.</summary>
         public Body BodyA
         {
             get => _bodyA;
-            internal set => _bodyA = value;
+            private set => _bodyA = value;
         }
 
         /// <summary>Get the second body attached to this joint.</summary>
         public Body BodyB
         {
             get => _bodyB;
-            internal set => _bodyB = value;
+            private set => _bodyB = value;
         }
 
         /// <summary>

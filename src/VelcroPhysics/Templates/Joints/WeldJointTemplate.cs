@@ -1,4 +1,5 @@
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints

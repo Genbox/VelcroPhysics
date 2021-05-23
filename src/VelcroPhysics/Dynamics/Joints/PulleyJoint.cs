@@ -22,6 +22,7 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -68,6 +69,14 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rB;
         private Vector2 _uA;
         private Vector2 _uB;
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
+        private Vector2 _worldAnchorA;
+        private Vector2 _worldAnchorB;
+        private float _lengthA;
+        private float _lengthB;
+        private float _ratio;
+        private float _constant;
 
         /// <summary>Constructor for PulleyJoint.</summary>
         /// <param name="bodyA">The first body.</param>
@@ -81,69 +90,87 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         public PulleyJoint(Body bodyA, Body bodyB, Vector2 anchorA, Vector2 anchorB, Vector2 worldAnchorA, Vector2 worldAnchorB, float ratio, bool useWorldCoordinates = false)
             : base(bodyA, bodyB, JointType.Pulley)
         {
-            JointType = JointType.Pulley;
-
-            WorldAnchorA = worldAnchorA;
-            WorldAnchorB = worldAnchorB;
+            _worldAnchorA = worldAnchorA;
+            _worldAnchorB = worldAnchorB;
 
             if (useWorldCoordinates)
             {
-                LocalAnchorA = BodyA.GetLocalPoint(anchorA);
-                LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+                _localAnchorA = bodyA.GetLocalPoint(anchorA);
+                _localAnchorB = bodyB.GetLocalPoint(anchorB);
 
                 Vector2 dA = anchorA - worldAnchorA;
-                LengthA = dA.Length();
+                _lengthA = dA.Length();
                 Vector2 dB = anchorB - worldAnchorB;
-                LengthB = dB.Length();
+                _lengthB = dB.Length();
             }
             else
             {
-                LocalAnchorA = anchorA;
-                LocalAnchorB = anchorB;
+                _localAnchorA = anchorA;
+                _localAnchorB = anchorB;
 
-                Vector2 dA = anchorA - BodyA.GetLocalPoint(worldAnchorA);
-                LengthA = dA.Length();
-                Vector2 dB = anchorB - BodyB.GetLocalPoint(worldAnchorB);
-                LengthB = dB.Length();
+                Vector2 dA = anchorA - bodyA.GetLocalPoint(worldAnchorA);
+                _lengthA = dA.Length();
+                Vector2 dB = anchorB - bodyB.GetLocalPoint(worldAnchorB);
+                _lengthB = dB.Length();
             }
 
             Debug.Assert(ratio != 0.0f);
             Debug.Assert(ratio > MathConstants.Epsilon);
 
-            Ratio = ratio;
-            Constant = LengthA + ratio * LengthB;
+            _ratio = ratio;
+            _constant = _lengthA + ratio * _lengthB;
             _impulse = 0.0f;
         }
 
         /// <summary>The local anchor point on BodyA</summary>
-        public Vector2 LocalAnchorA { get; set; }
+        public Vector2 LocalAnchorA
+        {
+            get => _localAnchorA;
+            set => _localAnchorA = value;
+        }
 
         /// <summary>The local anchor point on BodyB</summary>
-        public Vector2 LocalAnchorB { get; set; }
+        public Vector2 LocalAnchorB
+        {
+            get => _localAnchorB;
+            set => _localAnchorB = value;
+        }
 
         /// <summary>Get the first world anchor.</summary>
-        /// <value></value>
-        public sealed override Vector2 WorldAnchorA { get; set; }
+        public sealed override Vector2 WorldAnchorA
+        {
+            get => _worldAnchorA;
+            set => _worldAnchorA = value;
+        }
 
         /// <summary>Get the second world anchor.</summary>
-        /// <value></value>
-        public sealed override Vector2 WorldAnchorB { get; set; }
+        public sealed override Vector2 WorldAnchorB
+        {
+            get => _worldAnchorB;
+            set => _worldAnchorB = value;
+        }
 
-        /// <summary>Get the current length of the segment attached to body1.</summary>
-        /// <value></value>
-        public float LengthA { get; set; }
+        /// <summary>Get the current length of the segment attached to BodyA.</summary>
+        public float LengthA
+        {
+            get => _lengthA;
+            set => _lengthA = value;
+        }
 
-        /// <summary>Get the current length of the segment attached to body2.</summary>
-        /// <value></value>
-        public float LengthB { get; set; }
+        /// <summary>Get the current length of the segment attached to BodyB.</summary>
+        public float LengthB
+        {
+            get => _lengthB;
+            set => _lengthB = value;
+        }
 
         /// <summary>The current length between the anchor point on BodyA and WorldAnchorA</summary>
         public float CurrentLengthA
         {
             get
             {
-                Vector2 p = BodyA.GetWorldPoint(LocalAnchorA);
-                Vector2 s = WorldAnchorA;
+                Vector2 p = _bodyA.GetWorldPoint(_localAnchorA);
+                Vector2 s = _worldAnchorA;
                 Vector2 d = p - s;
                 return d.Length();
             }
@@ -154,19 +181,19 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         {
             get
             {
-                Vector2 p = BodyB.GetWorldPoint(LocalAnchorB);
-                Vector2 s = WorldAnchorB;
+                Vector2 p = _bodyB.GetWorldPoint(_localAnchorB);
+                Vector2 s = _worldAnchorB;
                 Vector2 d = p - s;
                 return d.Length();
             }
         }
 
         /// <summary>Get the pulley ratio.</summary>
-        /// <value></value>
-        public float Ratio { get; set; }
-
-        //Velcro note: Only used for serialization.
-        internal float Constant { get; set; }
+        public float Ratio
+        {
+            get => _ratio;
+            set => _ratio = value;
+        }
 
         public override Vector2 GetReactionForce(float invDt)
         {
@@ -202,12 +229,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            _rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            _rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            _rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            _rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
             // Get the pulley axes.
-            _uA = cA + _rA - WorldAnchorA;
-            _uB = cB + _rB - WorldAnchorB;
+            _uA = cA + _rA - _worldAnchorA;
+            _uB = cB + _rB - _worldAnchorB;
 
             float lengthA = _uA.Length();
             float lengthB = _uB.Length();
@@ -229,7 +256,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA + _invIA * ruA * ruA;
             float mB = _invMassB + _invIB * ruB * ruB;
 
-            _mass = mA + Ratio * Ratio * mB;
+            _mass = mA + _ratio * _ratio * mB;
 
             if (_mass > 0.0f)
                 _mass = 1.0f / _mass;
@@ -241,7 +268,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
                 // Warm starting.
                 Vector2 PA = -(_impulse) * _uA;
-                Vector2 PB = (-Ratio * _impulse) * _uB;
+                Vector2 PB = (-_ratio * _impulse) * _uB;
 
                 vA += _invMassA * PA;
                 wA += _invIA * MathUtils.Cross(_rA, PA);
@@ -269,12 +296,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Vector2 vpA = vA + MathUtils.Cross(wA, _rA);
             Vector2 vpB = vB + MathUtils.Cross(wB, _rB);
 
-            float Cdot = -Vector2.Dot(_uA, vpA) - Ratio * Vector2.Dot(_uB, vpB);
+            float Cdot = -Vector2.Dot(_uA, vpA) - _ratio * Vector2.Dot(_uB, vpB);
             float impulse = -_mass * Cdot;
             _impulse += impulse;
 
             Vector2 PA = -impulse * _uA;
-            Vector2 PB = -Ratio * impulse * _uB;
+            Vector2 PB = -_ratio * impulse * _uB;
             vA += _invMassA * PA;
             wA += _invIA * MathUtils.Cross(_rA, PA);
             vB += _invMassB * PB;
@@ -295,12 +322,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
             Rot qA = new Rot(aA), qB = new Rot(aB);
 
-            Vector2 rA = MathUtils.Mul(qA, LocalAnchorA - _localCenterA);
-            Vector2 rB = MathUtils.Mul(qB, LocalAnchorB - _localCenterB);
+            Vector2 rA = MathUtils.Mul(qA, _localAnchorA - _localCenterA);
+            Vector2 rB = MathUtils.Mul(qB, _localAnchorB - _localCenterB);
 
             // Get the pulley axes.
-            Vector2 uA = cA + rA - WorldAnchorA;
-            Vector2 uB = cB + rB - WorldAnchorB;
+            Vector2 uA = cA + rA - _worldAnchorA;
+            Vector2 uB = cB + rB - _worldAnchorB;
 
             float lengthA = uA.Length();
             float lengthB = uB.Length();
@@ -322,18 +349,18 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             float mA = _invMassA + _invIA * ruA * ruA;
             float mB = _invMassB + _invIB * ruB * ruB;
 
-            float mass = mA + Ratio * Ratio * mB;
+            float mass = mA + _ratio * _ratio * mB;
 
             if (mass > 0.0f)
                 mass = 1.0f / mass;
 
-            float C = Constant - lengthA - Ratio * lengthB;
+            float C = _constant - lengthA - _ratio * lengthB;
             float linearError = Math.Abs(C);
 
             float impulse = -mass * C;
 
             Vector2 PA = -impulse * uA;
-            Vector2 PB = -Ratio * impulse * uB;
+            Vector2 PB = -_ratio * impulse * uB;
 
             cA += _invMassA * PA;
             aA += _invIA * MathUtils.Cross(rA, PA);
