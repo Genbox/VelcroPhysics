@@ -260,17 +260,12 @@ namespace Genbox.VelcroPhysics.Dynamics
             if (Shape._density > 0.0f)
                 Body.ResetMassData();
 
-            // Let the world know we have a new fixture. This will cause new contacts
-            // to be created at the beginning of the next time step.
-            Body._world._worldHasNewFixture = true;
-
-            //Velcro: Added event
-            Body._world.FixtureAdded?.Invoke(this);
+            //Velcro: Moved this to World.CreateNewFixture()
+            //Body._world._worldHasNewFixture = true;
         }
 
         /// <summary>Test a point for containment in this fixture.</summary>
         /// <param name="point">A point in world coordinates.</param>
-        /// <returns></returns>
         public bool TestPoint(ref Vector2 point)
         {
             return Shape.TestPoint(ref Body._xf, ref point);
@@ -280,7 +275,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="output">The ray-cast results.</param>
         /// <param name="input">The ray-cast input parameters.</param>
         /// <param name="childIndex">Index of the child.</param>
-        /// <returns></returns>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
             return Shape.RayCast(ref input, ref Body._xf, childIndex, out output);
@@ -314,8 +308,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             OnCollision = null;
             OnSeparation = null;
             AfterCollision = null;
-
-            Body._world.FixtureRemoved?.Invoke(this);
         }
 
         // These support body activation/deactivation.

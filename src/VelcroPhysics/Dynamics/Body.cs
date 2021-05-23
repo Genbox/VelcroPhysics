@@ -28,7 +28,6 @@ using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Handlers;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.TOI;
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
@@ -43,8 +42,8 @@ namespace Genbox.VelcroPhysics.Dynamics
     {
         private float _inertia;
         private float _mass;
-        internal BodyType _type;
 
+        internal BodyType _type;
         internal float _angularVelocity;
         internal BodyFlags _flags;
         internal Vector2 _force;
@@ -59,7 +58,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Body(World world, BodyDef def)
         {
             FixtureList = new List<Fixture>(1);
-
+            
             if (def.AllowCCD)
                 _flags |= BodyFlags.BulletFlag;
             if (def.AllowRotation)
@@ -617,7 +616,10 @@ namespace Genbox.VelcroPhysics.Dynamics
         public Fixture CreateFixture(FixtureDef template)
         {
             Fixture f = new Fixture(this, template);
-            f.FixtureId = _world._fixtureIdCounter++;
+
+            //Velcro: Added this code to raise the FixtureAdded event and get an identifier
+            f.FixtureId = _world.CreateFixture(f);
+
             return f;
         }
 

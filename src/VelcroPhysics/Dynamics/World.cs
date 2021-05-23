@@ -49,9 +49,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
 
         internal int _bodyIdCounter;
+        internal int _fixtureIdCounter;
 
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
-        internal int _fixtureIdCounter;
         private float _invDt0;
         private Fixture _myFixture;
         private Vector2 _point1;
@@ -69,28 +69,28 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Island _island;
 
         /// <summary>Fires whenever a body has been added</summary>
-        public BodyHandler BodyAdded;
+        public event BodyHandler BodyAdded;
 
         /// <summary>Fires whenever a body has been removed</summary>
-        public BodyHandler BodyRemoved;
+        public event BodyHandler BodyRemoved;
 
         /// <summary>Fires every time a controller is added to the World.</summary>
-        public ControllerHandler ControllerAdded;
+        public event ControllerHandler ControllerAdded;
 
         /// <summary>Fires every time a controller is removed form the World.</summary>
-        public ControllerHandler ControllerRemoved;
+        public event ControllerHandler ControllerRemoved;
 
         /// <summary>Fires whenever a fixture has been added</summary>
-        public FixtureHandler FixtureAdded;
+        public event FixtureHandler FixtureAdded;
 
         /// <summary>Fires whenever a fixture has been removed</summary>
-        public FixtureHandler FixtureRemoved;
+        public event FixtureHandler FixtureRemoved;
 
         /// <summary>Fires whenever a joint has been added</summary>
-        public JointHandler JointAdded;
+        public event JointHandler JointAdded;
 
         /// <summary>Fires whenever a joint has been removed</summary>
-        public JointHandler JointRemoved;
+        public event JointHandler JointRemoved;
 
         /// <summary>Change the global gravity vector.</summary>
         /// <value>The gravity.</value>
@@ -338,8 +338,12 @@ namespace Genbox.VelcroPhysics.Dynamics
                     // Delete the attached fixtures. This destroys broad-phase proxies.
                     for (int i = 0; i < body.FixtureList.Count; i++)
                     {
-                        body.FixtureList[i].DestroyProxies(ContactManager.BroadPhase);
-                        body.FixtureList[i].Destroy();
+                        Fixture fixture = body.FixtureList[i];
+                        fixture.DestroyProxies(ContactManager.BroadPhase);
+                        fixture.Destroy();
+
+                        //Velcro: Added event
+                        FixtureRemoved?.Invoke(fixture);
                     }
 
                     body.FixtureList = null;
@@ -865,8 +869,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             if (doCheck)
             {
-                Debug.Assert(!_jointRemoveList.Contains(joint),
-                    "The joint is already marked for removal. You are removing the joint more than once.");
+                Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
             }
 
             if (!_jointRemoveList.Contains(joint))
@@ -1198,6 +1201,18 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             AddBody(b);
             return b;
+        }
+
+        internal int CreateFixture(Fixture fixture)
+        {
+            // Let the world know we have a new fixture. This will cause new contacts
+            // to be created at the beginning of the next time step.
+            _worldHasNewFixture = true;
+
+            //Velcro: Added event
+            FixtureAdded?.Invoke(fixture);
+
+            return _fixtureIdCounter++;
         }
     }
 }
