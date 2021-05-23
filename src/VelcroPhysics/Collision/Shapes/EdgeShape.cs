@@ -43,20 +43,13 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <param name="end">The end of the edge.</param>
         public EdgeShape(Vector2 start, Vector2 end) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
-            _vertex1 = start;
-            _vertex2 = end;
-            ComputeProperties();
+            SetTwoSided(start, end);
         }
 
         /// <summary>Create a new EdgeShape with ghost vertices for smooth collision. This edge only supports one-sided collision.</summary>
         public EdgeShape(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3) : base(ShapeType.Edge, Settings.PolygonRadius)
         {
-            _vertex0 = v0;
-            _vertex1 = v1;
-            _vertex2 = v2;
-            _vertex3 = v3;
-            _oneSided = true;
-            ComputeProperties();
+            SetOneSided(v0, v1, v2, v3);
         }
 
         internal EdgeShape() : base(ShapeType.Edge, Settings.PolygonRadius) { }
@@ -102,13 +95,22 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             }
         }
 
-        /// <summary>Set this as an isolated edge.</summary>
-        /// <param name="start">The start.</param>
-        /// <param name="end">The end.</param>
-        public void Set(Vector2 start, Vector2 end)
+        public void SetOneSided(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            _vertex0 = v0;
+            _vertex1 = v1;
+            _vertex2 = v2;
+            _vertex3 = v3;
+            _oneSided = true;
+
+            ComputeProperties();
+        }
+
+        public void SetTwoSided(Vector2 start, Vector2 end)
         {
             _vertex1 = start;
             _vertex2 = end;
+            _oneSided = false;
 
             ComputeProperties();
         }
