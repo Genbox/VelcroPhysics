@@ -30,7 +30,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             //Original tests
             new TestEntry { Name = "Shape cast", CreateTest = ShapeCastTest.Create },
-            new TestEntry { Name = "Template Test", CreateTest = TemplatesTest.Create },
 
             new TestEntry { Name = "Continuous Test", CreateTest = ContinuousTest.Create },
             new TestEntry { Name = "Time of Impact", CreateTest = TimeOfImpactTest.Create },
