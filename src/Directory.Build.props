@@ -88,6 +88,8 @@
     <PackageReference Include="Roslynator.Analyzers" Version="3.1.0" PrivateAssets="all" />
     <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="all" />
     <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="5.0.0" PrivateAssets="all" />
+    <PackageReference Include="ErrorProne.NET.CoreAnalyzers" Version="0.3.0-beta.0" PrivateAssets="all" />
+    <PackageReference Include="ErrorProne.NET.Structs" Version="0.3.0-beta.0" PrivateAssets="all" />
   </ItemGroup>
 
   <Target Name="ModifyAssemblyVersion" AfterTargets="MinVer" >
