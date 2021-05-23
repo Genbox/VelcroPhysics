@@ -7,7 +7,7 @@ using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class CloneTest : Test
     {

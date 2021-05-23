@@ -5,7 +5,7 @@ using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class BuoyancyTest : Test
     {

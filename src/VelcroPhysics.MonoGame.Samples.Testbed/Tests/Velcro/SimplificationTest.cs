@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.PolygonManipulation;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class SimplificationTest : Test
     {

@@ -5,7 +5,7 @@ using Genbox.VelcroPhysics.Tools.ConvexHull.GiftWrap;
 using Genbox.VelcroPhysics.Tools.ConvexHull.Melkman;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class ConvexHullTest2 : Test
     {

@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class CheckPolygonTest : Test
     {

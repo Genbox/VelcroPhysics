@@ -7,7 +7,7 @@ using Genbox.VelcroPhysics.Tools.PathGenerator;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
     public class PathTest : Test
     {

@@ -21,6 +21,7 @@
 */
 
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
