@@ -1,5 +1,6 @@
-﻿#if WINDOWS
+#if WINDOWS
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
@@ -87,7 +88,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             foreach (string line in lines)
             {
                 string[] split = line.Split(' ');
-                vertices.Add(new Vector2(float.Parse(split[0]), float.Parse(split[1])));
+                vertices.Add(new Vector2(float.Parse(split[0], NumberFormatInfo.InvariantInfo), float.Parse(split[1], NumberFormatInfo.InvariantInfo)));
             }
 
             return vertices;
