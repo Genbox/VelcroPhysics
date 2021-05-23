@@ -52,6 +52,74 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
         private PolygonShape() : base(ShapeType.Polygon, Settings.PolygonRadius) { }
 
+        private void SetVertices(Vertices vertices)
+        {
+            Debug.Assert(vertices.Count >= 3 && vertices.Count <= Settings.MaxPolygonVertices);
+
+            int n = MathUtils.Min(vertices.Count, Settings.MaxPolygonVertices);
+
+            // Perform welding and copy vertices into local buffer.
+            Vertices ps = new Vertices(n); //Velcro: The temp buffer is n long instead of Settings.MaxPolygonVertices
+
+            for (int i = 0; i < n; ++i)
+            {
+                Vector2 v = vertices[i];
+
+                bool unique = true;
+                for (int j = 0; j < ps.Count; ++j)
+                {
+                    Vector2 temp = ps[j];
+                    if (MathUtils.DistanceSquared(ref v, ref temp) < (0.5f * Settings.LinearSlop) * (0.5f * Settings.LinearSlop))
+                    {
+                        unique = false;
+                        break;
+                    }
+                }
+
+                if (unique)
+                {
+                    ps.Add(v);
+                }
+            }
+
+            if (ps.Count < 3)
+            {
+                // Polygon is degenerate.
+                _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
+                Debug.Assert(false);
+                goto Normals;
+            }
+
+            _vertices = GiftWrap.GetConvexHull(ps);
+
+            if (_vertices.Count < 3)
+            {
+                // Polygon is degenerate.
+                _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
+                Debug.Assert(false);
+            }
+
+        Normals:
+
+            _normals = new Vertices(_vertices.Count);
+
+            // Compute normals. Ensure the edges have non-zero length.
+            for (int i = 0; i < _vertices.Count; ++i)
+            {
+                int i1 = i;
+                int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
+                Vector2 edge = _vertices[i2] - _vertices[i1];
+                Debug.Assert(edge.LengthSquared() > MathConstants.Epsilon * MathConstants.Epsilon);
+                Vector2 temp = MathUtils.Cross(edge, 1.0f);
+                temp.Normalize();
+                _normals.Add(temp);
+            }
+
+            //Velcro: We compute all the mass data properties up front
+            // Compute the polygon mass data
+            ComputeProperties();
+        }
+
         /// <summary>
         /// Create a convex hull from the given array of local points. The number of vertices must be in the range [3,
         /// Settings.MaxPolygonVertices]. Warning: the points may be re-ordered, even if they form a convex polygon Warning:
@@ -60,81 +128,51 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         public Vertices Vertices
         {
             get => _vertices;
-            set
-            {
-                Vertices vertices = value;
-
-                Debug.Assert(vertices.Count >= 3 && vertices.Count <= Settings.MaxPolygonVertices);
-
-                int n = MathUtils.Min(vertices.Count, Settings.MaxPolygonVertices);
-
-                // Perform welding and copy vertices into local buffer.
-                Vector2[] ps = new Vector2[n]; //Velcro: The temp buffer is n long instead of Settings.MaxPolygonVertices
-                int tempCount = 0;
-                for (int i = 0; i < n; ++i)
-                {
-                    Vector2 v = vertices[i];
-
-                    bool unique = true;
-                    for (int j = 0; j < tempCount; ++j)
-                    {
-                        Vector2 temp = ps[j];
-                        if (MathUtils.DistanceSquared(ref v, ref temp) < (0.5f * Settings.LinearSlop) * (0.5f * Settings.LinearSlop))
-                        {
-                            unique = false;
-                            break;
-                        }
-                    }
-
-                    if (unique)
-                    {
-                        ps[tempCount++] = v;
-                    }
-                }
-
-                n = tempCount;
-                if (n < 3)
-                {
-                    // Polygon is degenerate.
-                    _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                    Debug.Assert(false);
-                    goto Normals;
-                }
-
-                _vertices = GiftWrap.GetConvexHull(vertices);
-
-                if (_vertices.Count < 3)
-                {
-                    // Polygon is degenerate.
-                    _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                    Debug.Assert(false);
-                }
-
-            Normals:
-
-                _normals = new Vertices(_vertices.Count);
-
-                // Compute normals. Ensure the edges have non-zero length.
-                for (int i = 0; i < _vertices.Count; ++i)
-                {
-                    int i1 = i;
-                    int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
-                    Vector2 edge = _vertices[i2] - _vertices[i1];
-                    Debug.Assert(edge.LengthSquared() > MathConstants.Epsilon * MathConstants.Epsilon);
-                    Vector2 temp = MathUtils.Cross(edge, 1.0f);
-                    temp.Normalize();
-                    _normals.Add(temp);
-                }
-
-                //Velcro: We compute all the mass data properties up front
-                // Compute the polygon mass data
-                ComputeProperties();
-            }
+            set => SetVertices(value);
         }
 
         public Vertices Normals => _normals;
 
         public override int ChildCount => 1;
+
+        public void SetAsBox(float hx, float hy)
+        {
+            _vertices = PolygonUtils.CreateRectangle(hx, hy);
+
+            _normals = new Vertices(4);
+            _normals.Add(new Vector2(0.0f, -1.0f));
+            _normals.Add(new Vector2(1.0f, 0.0f));
+            _normals.Add(new Vector2(0.0f, 1.0f));
+            _normals.Add(new Vector2(-1.0f, 0.0f));
+
+            ComputeProperties();
+        }
+
+        public void SetAsBox(float hx, float hy, Vector2 center, float angle)
+        {
+            _vertices = PolygonUtils.CreateRectangle(hx, hy);
+
+            _normals = new Vertices(4);
+            _normals.Add(new Vector2(0.0f, -1.0f));
+            _normals.Add(new Vector2(1.0f, 0.0f));
+            _normals.Add(new Vector2(0.0f, 1.0f));
+            _normals.Add(new Vector2(-1.0f, 0.0f));
+
+            _massData._centroid = center;
+
+            Transform xf = new Transform();
+            xf.p = center;
+            xf.q.Set(angle);
+
+            // Transform vertices and normals.
+            for (int i = 0; i < 4; ++i)
+            {
+                _vertices[i] = MathUtils.Mul(ref xf, _vertices[i]);
+                _normals[i] = MathUtils.Mul(ref xf.q, _normals[i]);
+            }
+
+            ComputeProperties();
+        }
 
         protected sealed override void ComputeProperties()
         {
