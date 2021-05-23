@@ -144,10 +144,27 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Initialize(anchor, anchor, axis, useWorldCoordinates);
         }
 
-        public PrismaticJoint(PrismaticJointDef def, bool useWorldCoordinates = false)
-            : base(def.BodyA, def.BodyB, JointType.Prismatic)
+        public PrismaticJoint(PrismaticJointDef def)
+            : base(def)
         {
-            Initialize(def, useWorldCoordinates);
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _localXAxisA = def.LocalAxisA;
+
+            _localXAxisA.Normalize();
+            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
+            _referenceAngle = def.ReferenceAngle;
+
+
+            _lowerTranslation = def.LowerTranslation;
+            _upperTranslation = def.UpperTranslation;
+
+            Debug.Assert(_lowerTranslation <= _upperTranslation);
+
+            _maxMotorForce = def.MaxMotorForce;
+            _motorSpeed = def.MotorSpeed;
+            _enableLimit = def.EnableLimit;
+            _enableMotor = def.EnableMotor;
         }
 
         /// <summary>The local anchor point on BodyA</summary>
@@ -700,47 +717,6 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _referenceAngle = _bodyB.Rotation - _bodyA.Rotation;
             _localXAxisA.Normalize();
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
-        }
-
-        private void Initialize(PrismaticJointDef def, bool useWorldCoordinates)
-        {
-            //Velcro: We support setting anchors in world coordinates
-            if (useWorldCoordinates)
-            {
-                _localAnchorA = BodyA.GetLocalPoint(def.LocalAnchorA);
-                _localAnchorB = BodyB.GetLocalPoint(def.LocalAnchorB);
-                _localXAxisA = _bodyA.GetLocalVector(def.LocalAxisA);
-            }
-            else
-            {
-                _localAnchorA = def.LocalAnchorA;
-                _localAnchorB = def.LocalAnchorB;
-                _localXAxisA = def.LocalAxisA;
-            }
-
-            _localXAxisA.Normalize();
-            _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
-            _referenceAngle = def.ReferenceAngle;
-
-            _impulse = Vector2.Zero;
-            _axialMass = 0.0f;
-            _motorImpulse = 0.0f;
-            _lowerImpulse = 0.0f;
-            _upperImpulse = 0.0f;
-
-            _lowerTranslation = def.LowerTranslation;
-            _upperTranslation = def.UpperTranslation;
-
-            Debug.Assert(_lowerTranslation <= _upperTranslation);
-
-            _maxMotorForce = def.MaxMotorForce;
-            _motorSpeed = def.MotorSpeed;
-            _enableLimit = def.EnableLimit;
-            _enableMotor = def.EnableMotor;
-
-            _translation = 0.0f;
-            _axis = Vector2.Zero;
-            _perp = Vector2.Zero;
         }
     }
 }

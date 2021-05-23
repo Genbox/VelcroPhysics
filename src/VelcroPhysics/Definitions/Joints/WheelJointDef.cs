@@ -1,3 +1,4 @@
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
@@ -46,6 +47,15 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The lower translation limit, usually in meters.</summary>
         public float LowerTranslation { get; set; }
+
+        public void Initialize(Body bA, Body bB, Vector2 anchor, Vector2 axis)
+        {
+            BodyA = bA;
+            BodyB = bB;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            LocalAxisA = BodyA.GetLocalVector(axis);
+        }
 
         public override void SetDefaults()
         {

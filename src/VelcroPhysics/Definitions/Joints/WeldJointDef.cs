@@ -1,3 +1,4 @@
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
@@ -26,6 +27,15 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The bodyB angle minus bodyA angle in the reference state (radians).</summary>
         public float ReferenceAngle { get; set; }
+
+        public void Initialize(Body bA, Body bB, Vector2 anchor)
+        {
+            BodyA = bA;
+            BodyB = bB;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor);
+            ReferenceAngle = BodyB.Rotation - BodyA.Rotation;
+        }
 
         public override void SetDefaults()
         {

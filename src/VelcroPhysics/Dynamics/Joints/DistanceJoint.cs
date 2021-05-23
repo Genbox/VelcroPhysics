@@ -86,7 +86,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _localAnchorA;
         private Vector2 _localAnchorB;
 
-        public DistanceJoint(DistanceJointDef def) : base(def.BodyA, def.BodyB, JointType.Distance)
+        public DistanceJoint(DistanceJointDef def) : base(def)
         {
             _localAnchorA = def.LocalAnchorA;
             _localAnchorB = def.LocalAnchorB;
