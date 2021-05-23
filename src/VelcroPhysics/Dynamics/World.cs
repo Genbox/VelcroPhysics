@@ -1191,9 +1191,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             ProcessChanges();
         }
 
-        internal Body CreateBody(BodyTemplate template)
+        internal Body CreateBody(BodyDef def)
         {
-            Body b = new Body(this, template);
+            Body b = new Body(this, def);
             b.BodyId = _bodyIdCounter++;
 
             AddBody(b);

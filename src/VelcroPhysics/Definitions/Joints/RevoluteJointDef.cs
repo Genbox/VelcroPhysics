@@ -1,25 +1,19 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    /// <summary>
-    /// Revolute joint definition. This requires defining an
-    /// anchor point where the bodies are joined. The definition
-    /// uses local anchor points so that the initial configuration
-    /// can violate the constraint slightly. You also need to
-    /// specify the initial relative angle for joint limits. This
-    /// helps when saving and loading a game.
-    /// The local anchor points are measured from the body's origin
-    /// rather than the center of mass because:
-    /// 1. you might not know where the center of mass will be.
-    /// 2. if you add/remove shapes from a body and recompute the mass,
-    /// the joints will be broken.
-    /// </summary>
-    public class RevoluteJointTemplate : JointTemplate
+    /// <summary>Revolute joint definition. This requires defining an anchor point where the bodies are joined. The definition
+    /// uses local anchor points so that the initial configuration can violate the constraint slightly. You also need to
+    /// specify the initial relative angle for joint limits. This helps when saving and loading a game. The local anchor points
+    /// are measured from the body's origin rather than the center of mass because: 1. you might not know where the center of
+    /// mass will be. 2. if you add/remove shapes from a body and recompute the mass, the joints will be broken.</summary>
+    public sealed class RevoluteJointDef : JointDef
     {
-        public RevoluteJointTemplate() : base(JointType.Revolute) { }
+        public RevoluteJointDef() : base(JointType.Revolute)
+        {
+            SetDefaults();
+        }
 
         /// <summary>A flag to enable joint limits.</summary>
         public bool EnableLimit { get; set; }
@@ -47,5 +41,20 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The upper angle for the joint limit (radians).</summary>
         public float UpperAngle { get; set; }
+
+        public override void SetDefaults()
+        {
+            LocalAnchorA = Vector2.Zero;
+            LocalAnchorB = Vector2.Zero;
+            ReferenceAngle = 0.0f;
+            LowerAngle = 0.0f;
+            UpperAngle = 0.0f;
+            MaxMotorTorque = 0.0f;
+            MotorSpeed = 0.0f;
+            EnableLimit = false;
+            EnableMotor = false;
+
+            base.SetDefaults();
+        }
     }
 }

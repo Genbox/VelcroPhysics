@@ -4,15 +4,17 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Shapes
 {
-    /// <summary>
-    /// A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use
+    /// <summary>A chain shape is a free form sequence of line segments. The chain has two-sided collision, so you can use
     /// inside and outside collision. Therefore, you may use any winding order. Connectivity information is used to create
     /// smooth collisions.
     /// <remarks>WARNING: The chain will not collide properly if there are self-intersections.</remarks>
     /// </summary>
-    public class ChainShapeTemplate : ShapeTemplate
+    public sealed class ChainShapeDef : ShapeDef
     {
-        public ChainShapeTemplate() : base(ShapeType.Chain) { }
+        public ChainShapeDef() : base(ShapeType.Chain)
+        {
+            SetDefaults();
+        }
 
         /// <summary>Establish connectivity to a vertex that follows the last vertex.
         /// <remarks>Don't call this for loops.</remarks>
@@ -26,5 +28,14 @@ namespace Genbox.VelcroPhysics.Templates.Shapes
 
         /// <summary>The vertices. These are not owned/freed by the chain Shape.</summary>
         public Vertices Vertices { get; set; }
+
+        public override void SetDefaults()
+        {
+            NextVertex = Vector2.Zero;
+            PrevVertex = Vector2.Zero;
+            Vertices = null;
+
+            base.SetDefaults();
+        }
     }
 }

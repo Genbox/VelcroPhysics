@@ -2,6 +2,13 @@
 {
     public class Filter
     {
+        public Filter()
+        {
+            Group = 0;
+            Category = Category.Cat1;
+            CategoryMask = Category.All;
+        }
+
         public Filter(short group, Category category, Category mask)
         {
             Group = group;
@@ -9,32 +16,14 @@
             CategoryMask = mask;
         }
 
-        /// <summary>
-        /// Defaults to 0
-        /// If Settings.UseFPECollisionCategories is set to false:
-        /// Collision groups allow a certain group of objects to never collide (negative)
-        /// or always collide (positive). Zero means no collision group. Non-zero group
-        /// filtering always wins against the mask bits.
-        /// If Settings.UseFPECollisionCategories is set to true:
-        /// If 2 fixtures are in the same collision group, they will not collide.
-        /// </summary>
+        /// <summary>Collision groups allow a certain group of objects to never collide(negative) or always collide (positive).
+        /// Zero means no collision group. Non-zero group filtering always wins against the mask bits.</summary>
         public short Group { get; set; }
 
-        /// <summary>
-        /// Defaults to Category.All
-        /// The collision mask bits. This states the categories that this
-        /// fixture would accept for collision.
-        /// Use Settings.UseFPECollisionCategories to change the behavior.
-        /// </summary>
+        /// <summary>The collision category bits. Normally you would just set one bit.</summary>
         public Category Category { get; set; }
 
-        /// <summary>
-        /// The collision categories this fixture is a part of.
-        /// If Settings.UseFPECollisionCategories is set to false:
-        /// Defaults to Category.Cat1
-        /// If Settings.UseFPECollisionCategories is set to true:
-        /// Defaults to Category.All
-        /// </summary>
+        /// <summary>The collision mask bits. This states the categories that this shape would accept for collision.</summary>
         public Category CategoryMask { get; set; }
     }
 }

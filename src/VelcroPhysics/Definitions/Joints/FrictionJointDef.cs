@@ -1,12 +1,14 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    public class FrictionJointTemplate : JointTemplate
+    public sealed class FrictionJointDef : JointDef
     {
-        public FrictionJointTemplate() : base(JointType.Friction) { }
+        public FrictionJointDef() : base(JointType.Friction)
+        {
+            SetDefaults();
+        }
 
         /// <summary>The local anchor point relative to bodyA's origin.</summary>
         public Vector2 LocalAnchorA { get; set; }
@@ -19,5 +21,15 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The maximum friction torque in N-m.</summary>
         public float MaxTorque { get; set; }
+
+        public override void SetDefaults()
+        {
+            LocalAnchorA = Vector2.Zero;
+            LocalAnchorB = Vector2.Zero;
+            MaxForce = 0.0f;
+            MaxTorque = 0.0f;
+
+            base.SetDefaults();
+        }
     }
 }

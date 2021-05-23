@@ -122,9 +122,9 @@ namespace Genbox.VelcroPhysics.Factories
             return AttachCompoundPolygon(triangles, density, body);
         }
 
-        public static Fixture CreateFromTemplate(Body body, FixtureTemplate f1)
+        public static Fixture CreateFromDef(Body body, FixtureDef fixtureDef)
         {
-            return body.CreateFixture(f1);
+            return body.CreateFixture(fixtureDef);
         }
     }
 }

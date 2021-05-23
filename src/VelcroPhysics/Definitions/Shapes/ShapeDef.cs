@@ -2,9 +2,9 @@
 
 namespace Genbox.VelcroPhysics.Templates.Shapes
 {
-    public class ShapeTemplate
+    public abstract class ShapeDef : IDef
     {
-        public ShapeTemplate(ShapeType type)
+        protected ShapeDef(ShapeType type)
         {
             ShapeType = type;
         }
@@ -17,5 +17,11 @@ namespace Genbox.VelcroPhysics.Templates.Shapes
 
         /// <summary>Get the type of this shape.</summary>
         public ShapeType ShapeType { get; }
+
+        public virtual void SetDefaults()
+        {
+            Density = 0;
+            Radius = 0;
+        }
     }
 }

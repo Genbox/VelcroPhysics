@@ -124,7 +124,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
         }
 
-        public WheelJoint(WheelJointTemplate def) : base(JointType.Wheel)
+        public WheelJoint(WheelJointDef def) : base(JointType.Wheel)
         {
             _localAnchorA = def.LocalAnchorA;
             _localAnchorB = def.LocalAnchorB;

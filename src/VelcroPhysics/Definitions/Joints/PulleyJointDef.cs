@@ -1,13 +1,15 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
     /// <summary>Pulley joint definition. This requires two ground anchors, two dynamic body anchor points, and a pulley ratio.</summary>
-    public class PulleyJointTemplate : JointTemplate
+    public sealed class PulleyJointDef : JointDef
     {
-        public PulleyJointTemplate() : base(JointType.Pulley) { }
+        public PulleyJointDef() : base(JointType.Pulley)
+        {
+            SetDefaults();
+        }
 
         /// <summary>The first ground anchor in world coordinates. This point never moves.</summary>
         public Vector2 GroundAnchorA { get; set; }
@@ -36,6 +38,8 @@ namespace Genbox.VelcroPhysics.Templates.Joints
             GroundAnchorB = new Vector2(1.0f, 1.0f);
             LocalAnchorA = new Vector2(-1.0f, 0.0f);
             LocalAnchorB = new Vector2(1.0f, 0.0f);
+            LengthA = 0.0f;
+            LengthB = 0.0f;
             Ratio = 1.0f;
             CollideConnected = true;
         }

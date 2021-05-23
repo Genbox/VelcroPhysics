@@ -1,6 +1,6 @@
 namespace Genbox.VelcroPhysics.Templates
 {
-    public interface IDefaults
+    public interface IDef
     {
         void SetDefaults();
     }

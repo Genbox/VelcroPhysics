@@ -3,9 +3,9 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 
 namespace Genbox.VelcroPhysics.Templates
 {
-    public class FixtureTemplate : IDefaults
+    public class FixtureDef : IDef
     {
-        public FixtureTemplate()
+        public FixtureDef()
         {
             SetDefaults();
         }
@@ -25,6 +25,11 @@ namespace Genbox.VelcroPhysics.Templates
         /// <summary>The restitution (elasticity) usually in the range [0,1].</summary>
         public float Restitution { get; set; }
 
+        /// <summary>
+        /// Restitution velocity threshold, usually in m/s. Collisions above this speed have restitution applied (will bounce).
+        /// </summary>
+        //public float RestitutionThreshold { get; set; }
+
         /// <summary>The shape, this must be set. The shape will be cloned, so you can create the shape on the stack.</summary>
         public Shape Shape { get; set; }
 
@@ -33,7 +38,13 @@ namespace Genbox.VelcroPhysics.Templates
 
         public void SetDefaults()
         {
+            Shape = null;
             Friction = 0.2f;
+            Restitution = 0.0f;
+            //RestitutionThreshold = 1.0f * b2_lengthUnitsPerMeter;
+            Density = 0.0f;
+            IsSensor = false;
+            Filter = null;
         }
     }
 }

@@ -56,44 +56,44 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal World _world;
         internal Transform _xf; // the body origin transform
 
-        internal Body(World world, BodyTemplate template)
+        internal Body(World world, BodyDef def)
         {
             FixtureList = new List<Fixture>(1);
 
-            if (template.AllowCCD)
+            if (def.AllowCCD)
                 _flags |= BodyFlags.BulletFlag;
-            if (template.AllowRotation)
+            if (def.AllowRotation)
                 _flags |= BodyFlags.FixedRotationFlag;
-            if (template.AllowSleep)
+            if (def.AllowSleep)
                 _flags |= BodyFlags.AutoSleepFlag;
-            if (template.Awake)
+            if (def.Awake)
                 _flags |= BodyFlags.AwakeFlag;
-            if (template.Enabled)
+            if (def.Enabled)
                 _flags |= BodyFlags.Enabled;
 
             _world = world;
 
-            _xf.p = template.Position;
-            _xf.q.Set(template.Angle);
+            _xf.p = def.Position;
+            _xf.q.Set(def.Angle);
 
             _sweep.C0 = _xf.p;
             _sweep.C = _xf.p;
-            _sweep.A0 = template.Angle;
-            _sweep.A = template.Angle;
+            _sweep.A0 = def.Angle;
+            _sweep.A = def.Angle;
 
-            _linearVelocity = template.LinearVelocity;
-            _angularVelocity = template.AngularVelocity;
+            _linearVelocity = def.LinearVelocity;
+            _angularVelocity = def.AngularVelocity;
 
-            LinearDamping = template.LinearDamping;
-            AngularDamping = template.AngularDamping;
-            GravityScale = template.GravityScale;
+            LinearDamping = def.LinearDamping;
+            AngularDamping = def.AngularDamping;
+            GravityScale = def.GravityScale;
 
-            _type = template.Type;
+            _type = def.Type;
 
             _mass = 0.0f;
             _invMass = 0.0f;
 
-            UserData = template.UserData;
+            UserData = def.UserData;
         }
 
         public ControllerFilter ControllerFilter { get; set; }
@@ -614,7 +614,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// the mass of the body. Contacts are not created until the next time step. Warning: This function is locked during
         /// callbacks.
         /// </summary>
-        public Fixture CreateFixture(FixtureTemplate template)
+        public Fixture CreateFixture(FixtureDef template)
         {
             Fixture f = new Fixture(this, template);
             f.FixtureId = _world._fixtureIdCounter++;
@@ -623,7 +623,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public Fixture CreateFixture(Shape shape, object? userData = null)
         {
-            FixtureTemplate template = new FixtureTemplate();
+            FixtureDef template = new FixtureDef();
             template.Shape = shape;
             template.UserData = userData;
 

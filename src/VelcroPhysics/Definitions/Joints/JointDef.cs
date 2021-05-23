@@ -1,12 +1,11 @@
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    public class JointTemplate : IDefaults
+    public abstract class JointDef : IDef
     {
-        public JointTemplate(JointType type)
+        protected JointDef(JointType type)
         {
             Type = type;
         }
@@ -26,6 +25,12 @@ namespace Genbox.VelcroPhysics.Templates.Joints
         /// <summary>Use this to attach application specific data.</summary>
         public object UserData { get; set; }
 
-        public virtual void SetDefaults() { }
+        public virtual void SetDefaults()
+        {
+            BodyA = null;
+            BodyB = null;
+            CollideConnected = false;
+            UserData = null;
+        }
     }
 }

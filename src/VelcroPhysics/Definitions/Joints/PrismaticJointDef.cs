@@ -1,18 +1,18 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    /// <summary>
-    /// Prismatic joint definition. This requires defining a line of motion using an axis and an anchor point. The
+    /// <summary>Prismatic joint definition. This requires defining a line of motion using an axis and an anchor point. The
     /// definition uses local anchor points and a local axis so that the initial configuration can violate the constraint
     /// slightly. The joint translation is zero when the local anchor points coincide in world space. Using local anchors and a
-    /// local axis helps when saving and loading a game.
-    /// </summary>
-    public class PrismaticJointTemplate : JointTemplate
+    /// local axis helps when saving and loading a game.</summary>
+    public sealed class PrismaticJointDef : JointDef
     {
-        public PrismaticJointTemplate() : base(JointType.Prismatic) { }
+        public PrismaticJointDef() : base(JointType.Prismatic)
+        {
+            SetDefaults();
+        }
 
         /// <summary>Enable/disable the joint limit.</summary>
         public bool EnableLimit { get; set; }
@@ -46,7 +46,16 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         public override void SetDefaults()
         {
+            LocalAnchorA = Vector2.Zero;
+            LocalAnchorB = Vector2.Zero;
             LocalAxisA = new Vector2(1.0f, 0.0f);
+            ReferenceAngle = 0.0f;
+            EnableLimit = false;
+            LowerTranslation = 0.0f;
+            UpperTranslation = 0.0f;
+            EnableMotor = false;
+            MaxMotorForce = 0.0f;
+            MotorSpeed = 0.0f;
         }
     }
 }

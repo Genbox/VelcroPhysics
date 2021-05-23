@@ -83,7 +83,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
         }
 
-        internal Fixture(Body body, FixtureTemplate template) : this()
+        internal Fixture(Body body, FixtureDef template) : this()
         {
             UserData = template.UserData;
             Friction = template.Friction;

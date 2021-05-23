@@ -1,12 +1,14 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    public class MotorJointTemplate : JointTemplate
+    public sealed class MotorJointDef : JointDef
     {
-        public MotorJointTemplate() : base(JointType.Motor) { }
+        public MotorJointDef() : base(JointType.Motor)
+        {
+            SetDefaults();
+        }
 
         /// <summary>The bodyB angle minus bodyA angle in radians.</summary>
         public float AngularOffset { get; set; }
@@ -25,6 +27,8 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         public override void SetDefaults()
         {
+            LinearOffset = Vector2.Zero;
+            AngularOffset = 0.0f;
             MaxForce = 1.0f;
             MaxTorque = 1.0f;
             CorrectionFactor = 0.3f;

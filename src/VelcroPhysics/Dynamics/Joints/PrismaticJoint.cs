@@ -144,10 +144,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Initialize(anchor, anchor, axis, useWorldCoordinates);
         }
 
-        public PrismaticJoint(PrismaticJointTemplate template, bool useWorldCoordinates = false)
-            : base(template.BodyA, template.BodyB, JointType.Prismatic)
+        public PrismaticJoint(PrismaticJointDef def, bool useWorldCoordinates = false)
+            : base(def.BodyA, def.BodyB, JointType.Prismatic)
         {
-            Initialize(template, useWorldCoordinates);
+            Initialize(def, useWorldCoordinates);
         }
 
         /// <summary>The local anchor point on BodyA</summary>
@@ -702,7 +702,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             _localYAxisA = MathUtils.Cross(1.0f, _localXAxisA);
         }
 
-        private void Initialize(PrismaticJointTemplate def, bool useWorldCoordinates)
+        private void Initialize(PrismaticJointDef def, bool useWorldCoordinates)
         {
             //Velcro: We support setting anchors in world coordinates
             if (useWorldCoordinates)

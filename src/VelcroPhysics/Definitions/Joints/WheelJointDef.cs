@@ -1,27 +1,21 @@
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    /// <summary>
-    /// Wheel joint definition. This requires defining a line of motion using an axis and an anchor point. The
+    /// <summary>Wheel joint definition. This requires defining a line of motion using an axis and an anchor point. The
     /// definition uses local anchor points and a local axis so that the initial configuration can violate the constraint
     /// slightly. The joint translation is zero when the local anchor points coincide in world space. Using local anchors and a
-    /// local axis helps when saving and loading a game.
-    /// </summary>
-    public class WheelJointTemplate : JointTemplate
+    /// local axis helps when saving and loading a game.</summary>
+    public sealed class WheelJointDef : JointDef
     {
-        public WheelJointTemplate() : base(JointType.Wheel) { }
-
-        /// <summary>Suspension damping ratio, one indicates critical damping</summary>
-        public float DampingRatio { get; set; }
+        public WheelJointDef() : base(JointType.Wheel)
+        {
+            SetDefaults();
+        }
 
         /// <summary>Enable/disable the joint motor.</summary>
         public bool EnableMotor { get; set; }
-
-        /// <summary>Suspension frequency, zero indicates no suspension</summary>
-        public float FrequencyHz { get; set; }
 
         /// <summary>The local anchor point relative to bodyA's origin.</summary>
         public Vector2 LocalAnchorA { get; set; }
@@ -37,17 +31,35 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The desired motor speed in radians per second.</summary>
         public float MotorSpeed { get; set; }
+
+        /// <summary>Suspension damping. Typically in units of N*s/m.</summary>
         public float Damping { get; set; }
+
+        /// <summary>Suspension stiffness. Typically in units N/m.</summary>
         public float Stiffness { get; set; }
+
+        /// <summary>Enable/disable the joint limit.</summary>
         public bool EnableLimit { get; set; }
+
+        /// <summary>The upper translation limit, usually in meters.</summary>
         public float UpperTranslation { get; set; }
+
+        /// <summary>The lower translation limit, usually in meters.</summary>
         public float LowerTranslation { get; set; }
 
         public override void SetDefaults()
         {
+            LocalAnchorA = Vector2.Zero;
+            LocalAnchorB = Vector2.Zero;
             LocalAxisA = new Vector2(1.0f, 0.0f);
-            FrequencyHz = 2.0f;
-            DampingRatio = 0.7f;
+            EnableLimit = false;
+            LowerTranslation = 0.0f;
+            UpperTranslation = 0.0f;
+            EnableMotor = false;
+            MaxMotorTorque = 0.0f;
+            MotorSpeed = 0.0f;
+            Stiffness = 0.0f;
+            Damping = 0.0f;
         }
     }
 }

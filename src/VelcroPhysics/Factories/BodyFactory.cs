@@ -14,13 +14,13 @@ namespace Genbox.VelcroPhysics.Factories
     {
         public static Body CreateBody(World world, Vector2 position = new Vector2(), float rotation = 0, BodyType bodyType = BodyType.Static, object userData = null)
         {
-            BodyTemplate template = new BodyTemplate();
-            template.Position = position;
-            template.Angle = rotation;
-            template.Type = bodyType;
-            template.UserData = userData;
+            BodyDef def = new BodyDef();
+            def.Position = position;
+            def.Angle = rotation;
+            def.Type = bodyType;
+            def.UserData = userData;
 
-            return world.CreateBody(template);
+            return world.CreateBody(def);
         }
 
         public static Body CreateEdge(World world, Vector2 start, Vector2 end, object userData = null)
@@ -196,9 +196,9 @@ namespace Genbox.VelcroPhysics.Factories
             return breakableBody;
         }
 
-        public static Body CreateFromTemplate(World world, BodyTemplate bodyTemplate)
+        public static Body CreateFromDef(World world, BodyDef bodyDef)
         {
-            return world.CreateBody(bodyTemplate);
+            return world.CreateBody(bodyDef);
         }
     }
 }

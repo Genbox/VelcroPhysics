@@ -3,9 +3,12 @@ using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
-    public class GearJointTemplate : JointTemplate
+    public sealed class GearJointDef : JointDef
     {
-        public GearJointTemplate() : base(JointType.Gear) { }
+        public GearJointDef() : base(JointType.Gear)
+        {
+            SetDefaults();
+        }
 
         /// <summary>The first revolute/prismatic joint attached to the gear joint.</summary>
         public Joint JointA { get; set; }
@@ -18,6 +21,8 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         public override void SetDefaults()
         {
+            JointA = null;
+            JointB = null;
             Ratio = 1.0f;
         }
     }
