@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -61,6 +62,15 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _invIA;
         private Mat22 _mass;
         private Vector2 _C;
+
+        public FixedMouseJoint(FixedMouseJointDef def) : base(def)
+        {
+            _targetB = def.Target;
+            _localAnchorA = MathUtils.MulT(_bodyB._xf, _targetB);
+            _maxForce = def.MaxForce;
+            _stiffness = def.Stiffness;
+            _damping = def.Damping;
+        }
 
         /// <summary>This requires a world target point, tuning parameters, and the time step.</summary>
         /// <param name="body">The body.</param>

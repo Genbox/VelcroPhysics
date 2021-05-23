@@ -10,8 +10,7 @@ namespace Genbox.VelcroPhysics.Templates
             SetDefaults();
         }
 
-        /// <summary>The density, usually in kg/m^2.</summary>
-        public float Density { get; set; }
+        //Velcro: removed density from fixtures. It is only present on shapes
 
         /// <summary>Contact filtering data.</summary>
         public Filter Filter { get; set; }
@@ -42,7 +41,7 @@ namespace Genbox.VelcroPhysics.Templates
             Friction = 0.2f;
             Restitution = 0.0f;
             //RestitutionThreshold = 1.0f * b2_lengthUnitsPerMeter;
-            Density = 0.0f;
+            //Density = 0.0f;
             IsSensor = false;
             Filter = null;
         }

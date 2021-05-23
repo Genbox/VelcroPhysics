@@ -28,6 +28,7 @@ using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -84,6 +85,17 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _damping;
         private Vector2 _localAnchorA;
         private Vector2 _localAnchorB;
+
+        public DistanceJoint(DistanceJointDef def) : base(def.BodyA, def.BodyB, JointType.Distance)
+        {
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _length = MathUtils.Max(def.Length, Settings.LinearSlop);
+            _minLength = MathUtils.Max(def.MinLength, Settings.LinearSlop);
+            _maxLength = MathUtils.Max(def.MaxLength, _minLength);
+            _stiffness = def.Stiffness;
+            _damping = def.Damping;
+        }
 
         /// <summary>
         /// This requires defining an anchor point on both bodies and the non-zero length of the distance joint. If you

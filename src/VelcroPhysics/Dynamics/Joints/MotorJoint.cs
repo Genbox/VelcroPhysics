@@ -24,6 +24,7 @@ using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -79,6 +80,17 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _rB;
 
         private float _correctionFactor;
+
+        public MotorJoint(MotorJointDef def)
+            : base(def)
+        {
+            _linearOffset = def.LinearOffset;
+            _angularOffset = def.AngularOffset;
+
+            _maxForce = def.MaxForce;
+            _maxTorque = def.MaxTorque;
+            _correctionFactor = def.CorrectionFactor;
+        }
 
         /// <summary>Constructor for MotorJoint.</summary>
         /// <param name="bodyA">The first body</param>
@@ -199,7 +211,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             Rot qB = new Rot(aB);
 
             // Compute the effective mass matrix.
-            _rA = MathUtils.Mul(qA, _linearOffset -_localCenterA);
+            _rA = MathUtils.Mul(qA, _linearOffset - _localCenterA);
             _rB = MathUtils.Mul(qB, -_localCenterB);
 
             // J = [-I -r1_skew I r2_skew]

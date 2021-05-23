@@ -35,6 +35,7 @@ using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -407,7 +408,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             foreach (Joint j in JointList)
             {
-                j.IslandFlag = false;
+                j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
@@ -488,7 +489,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     // Search all joints connect to this body.
                     for (JointEdge je = b.JointList; je != null; je = je.Next)
                     {
-                        if (je.Joint.IslandFlag)
+                        if (je.Joint._islandFlag)
                             continue;
 
                         Body other = je.Other;
@@ -502,7 +503,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                                 continue;
 
                             _island.Add(je.Joint);
-                            je.Joint.IslandFlag = true;
+                            je.Joint._islandFlag = true;
 
                             if (other.IsIsland)
                                 continue;
@@ -515,7 +516,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                         else
                         {
                             _island.Add(je.Joint);
-                            je.Joint.IslandFlag = true;
+                            je.Joint._islandFlag = true;
                         }
                     }
                 }
@@ -1194,13 +1195,20 @@ namespace Genbox.VelcroPhysics.Dynamics
             ProcessChanges();
         }
 
-        internal Body CreateBody(BodyDef def)
+        public Body CreateBody(BodyDef def)
         {
             Body b = new Body(this, def);
             b.BodyId = _bodyIdCounter++;
 
             AddBody(b);
             return b;
+        }
+
+        public Joint CreateJoint(JointDef def)
+        {
+            Joint joint = Joint.Create(def);
+            AddJoint(joint);
+            return joint;
         }
 
         internal int CreateFixture(Fixture fixture)

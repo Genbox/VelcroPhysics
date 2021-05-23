@@ -59,7 +59,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             FixtureList = new List<Fixture>(1);
             
-            if (def.AllowCCD)
+            if (def.IsBullet)
                 _flags |= BodyFlags.BulletFlag;
             if (def.AllowRotation)
                 _flags |= BodyFlags.FixedRotationFlag;

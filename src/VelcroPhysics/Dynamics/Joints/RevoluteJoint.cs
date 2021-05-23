@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -78,6 +79,23 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Mat22 _K;
         private float _angle;
         private float _axialMass;
+
+        public RevoluteJoint(RevoluteJointDef def)
+            : base(def)
+        {
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _referenceAngle = def.ReferenceAngle;
+
+            _lowerAngle = def.LowerAngle;
+            _upperAngle = def.UpperAngle;
+            _maxMotorTorque = def.MaxMotorTorque;
+            _motorSpeed = def.MotorSpeed;
+            _enableLimit = def.EnableLimit;
+            _enableMotor = def.EnableMotor;
+
+            _angle = 0.0f;
+        }
 
         /// <summary>Constructor of RevoluteJoint.</summary>
         /// <param name="bodyA">The first body.</param>

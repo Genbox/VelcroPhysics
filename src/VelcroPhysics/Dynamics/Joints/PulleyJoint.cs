@@ -25,6 +25,7 @@ using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -77,6 +78,23 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _lengthB;
         private float _ratio;
         private float _constant;
+
+        public PulleyJoint(PulleyJointDef def)
+            : base(def)
+        {
+            _worldAnchorA = def.GroundAnchorA;
+            _worldAnchorB = def.GroundAnchorB;
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+
+            _lengthA = def.LengthA;
+            _lengthB = def.LengthB;
+
+            Debug.Assert(def.Ratio != 0.0f);
+            _ratio = def.Ratio;
+
+            _constant = def.LengthA + _ratio * def.LengthB;
+        }
 
         /// <summary>Constructor for PulleyJoint.</summary>
         /// <param name="bodyA">The first body.</param>

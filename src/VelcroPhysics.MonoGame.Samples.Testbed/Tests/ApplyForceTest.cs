@@ -20,13 +20,12 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -45,94 +44,132 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             Body ground;
             {
-                ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(0.0f, 20.0f);
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(0.0f, 20.0f);
+                ground = World.CreateBody(bd);
 
-                EdgeShape shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
+                FixtureDef sd = new FixtureDef();
+                sd.Restitution = restitution;
 
                 // Left vertical
-                Fixture fixture = ground.CreateFixture(shape);
-                fixture.Restitution = restitution;
+                sd.Shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(-20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
                 // Right vertical
-                shape = new EdgeShape(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
-                ground.CreateFixture(shape);
+                sd.Shape = new EdgeShape(new Vector2(20.0f, -20.0f), new Vector2(20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
                 // Top horizontal
-                shape = new EdgeShape(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
-                ground.CreateFixture(shape);
+                sd.Shape = new EdgeShape(new Vector2(-20.0f, 20.0f), new Vector2(20.0f, 20.0f));
+                ground.CreateFixture(sd);
 
                 // Bottom horizontal
-                shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
-                ground.CreateFixture(shape);
+                sd.Shape = new EdgeShape(new Vector2(-20.0f, -20.0f), new Vector2(20.0f, -20.0f));
+                ground.CreateFixture(sd);
             }
 
             {
                 Transform xf1 = new Transform();
                 xf1.q.Set(0.3524f * MathConstants.Pi);
-                xf1.p = MathUtils.Mul(ref xf1.q, new Vector2(1.0f, 0.0f));
+                xf1.p = xf1.q.GetXAxis();
 
                 Vertices vertices = new Vertices(3);
                 vertices.Add(MathUtils.Mul(ref xf1, new Vector2(-1.0f, 0.0f)));
                 vertices.Add(MathUtils.Mul(ref xf1, new Vector2(1.0f, 0.0f)));
                 vertices.Add(MathUtils.Mul(ref xf1, new Vector2(0.0f, 0.5f)));
 
-                PolygonShape poly1 = new PolygonShape(vertices, 4);
+                PolygonShape poly1 = new PolygonShape(vertices, 2.0f);
+
+                FixtureDef sd1 = new FixtureDef();
+                sd1.Shape = poly1;
 
                 Transform xf2 = new Transform();
                 xf2.q.Set(-0.3524f * MathConstants.Pi);
-                xf2.p = MathUtils.Mul(ref xf2.q, new Vector2(-1.0f, 0.0f));
+                xf2.p = -xf2.q.GetXAxis();
 
                 vertices[0] = MathUtils.Mul(ref xf2, new Vector2(-1.0f, 0.0f));
                 vertices[1] = MathUtils.Mul(ref xf2, new Vector2(1.0f, 0.0f));
                 vertices[2] = MathUtils.Mul(ref xf2, new Vector2(0.0f, 0.5f));
 
-                PolygonShape poly2 = new PolygonShape(vertices, 2);
+                PolygonShape poly2 = new PolygonShape(vertices, 2.0f);
 
-                _body = BodyFactory.CreateBody(World);
-                _body.BodyType = BodyType.Dynamic;
-                _body.Position = new Vector2(0.0f, 2.0f);
-                _body.Rotation = MathConstants.Pi;
-                _body.AngularDamping = 5.0f;
-                _body.LinearDamping = 0.8f;
-                _body.SleepingAllowed = true;
+                FixtureDef sd2 = new FixtureDef();
+                sd2.Shape = poly2;
 
-                _body.CreateFixture(poly1);
-                _body.CreateFixture(poly2);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+
+                bd.Position = new Vector2(0.0f, 3.0f);
+                bd.Angle = MathConstants.Pi;
+                bd.AllowSleep = false;
+
+                _body = World.CreateBody(bd);
+                _body.CreateFixture(sd1);
+                _body.CreateFixture(sd2);
+
+                float gravity = 10.0f;
+                float I = _body.Inertia;
+                float mass = _body.Mass;
+
+                // Compute an effective radius that can be used to
+                // set the max torque for a friction joint
+                // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
+                float radius = MathUtils.Sqrt(2.0f * I / mass);
+
+                FrictionJointDef jd = new FrictionJointDef();
+                jd.BodyA = ground;
+                jd.BodyB = _body;
+                jd.LocalAnchorA = Vector2.Zero;
+                jd.LocalAnchorB = _body.LocalCenter;
+                jd.CollideConnected = true;
+                jd.MaxForce = 0.5f * mass * gravity;
+                jd.MaxTorque = 0.2f * mass * radius * gravity;
+
+                World.CreateJoint(jd);
             }
 
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                PolygonShape shape = new PolygonShape(box, 1);
+                PolygonShape shape = new PolygonShape(1.0f);
+                shape.SetAsBox(0.5f, 0.5f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.3f;
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.Position = new Vector2(0.0f, 5.0f + 1.54f * i);
-                    body.BodyType = BodyType.Dynamic;
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
 
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.3f;
+                    bd.Position = new Vector2(0.0f, 7.0f + 1.54f * i);
+                    Body body = World.CreateBody(bd);
 
-                    const float gravity = 10.0f;
+                    body.CreateFixture(fd);
+
+                    float gravity = 10.0f;
                     float I = body.Inertia;
                     float mass = body.Mass;
 
                     // For a circle: I = 0.5 * m * r * r ==> r = sqrt(2 * I / m)
-                    float radius = (float)Math.Sqrt(2.0 * (I / mass));
+                    float radius = MathUtils.Sqrt(2.0f * I / mass);
 
-                    FrictionJoint jd = new FrictionJoint(ground, body, Vector2.Zero);
+                    FrictionJointDef jd = new FrictionJointDef();
+                    jd.LocalAnchorA = Vector2.Zero;
+                    jd.LocalAnchorB = Vector2.Zero;
+                    jd.BodyA = ground;
+                    jd.BodyB = body;
                     jd.CollideConnected = true;
                     jd.MaxForce = mass * gravity;
-                    jd.MaxTorque = mass * radius * gravity;
+                    jd.MaxTorque = 0.1f * mass * radius * gravity;
 
-                    World.AddJoint(jd);
+                    World.CreateJoint(jd);
                 }
             }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            DrawString("Forward (W), Turn (A) and (D)");
             DrawString("Note: The left side of the ship has a different density than the right side of the ship");
 
             base.Update(settings, gameTime);
@@ -141,13 +178,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Keyboard(KeyboardManager keyboardManager)
         {
             if (keyboardManager.IsKeyDown(Keys.W))
-                _body.ApplyForce(_body.GetWorldVector(new Vector2(0.0f, -200.0f)));
+            {
+                Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -50.0f));
+                Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 3.0f));
+                _body.ApplyForce(f, p);
+            }
 
             if (keyboardManager.IsKeyDown(Keys.A))
-                _body.ApplyTorque(50.0f);
+                _body.ApplyTorque(10.0f);
 
             if (keyboardManager.IsKeyDown(Keys.D))
-                _body.ApplyTorque(-50.0f);
+                _body.ApplyTorque(-10.0f);
 
             base.Keyboard(keyboardManager);
         }

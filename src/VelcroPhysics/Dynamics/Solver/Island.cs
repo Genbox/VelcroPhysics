@@ -146,7 +146,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
             for (int i = 0; i < _jointCount; ++i)
             {
-                if (_joints[i].Enabled)
+                if (_joints[i]._enabled)
                     _joints[i].InitVelocityConstraints(ref solverData);
             }
 
@@ -160,7 +160,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 {
                     Joint joint = _joints[j];
 
-                    if (!joint.Enabled)
+                    if (!joint._enabled)
                         continue;
 
                     if (Settings.EnableDiagnostics)
@@ -223,7 +223,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 {
                     Joint joint = _joints[j];
 
-                    if (!joint.Enabled)
+                    if (!joint._enabled)
                         continue;
 
                     if (Settings.EnableDiagnostics)

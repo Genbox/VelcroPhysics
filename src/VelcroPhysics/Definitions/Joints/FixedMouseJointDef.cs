@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 namespace Genbox.VelcroPhysics.Templates.Joints
 {
     /// <summary>Mouse joint definition. This requires a world target point, tuning parameters, and the time step.</summary>
-    public sealed class MouseJointDef : JointDef
+    public sealed class FixedMouseJointDef : JointDef
     {
-        public MouseJointDef() : base(JointType.FixedMouse)
+        public FixedMouseJointDef() : base(JointType.FixedMouse)
         {
             SetDefaults();
         }

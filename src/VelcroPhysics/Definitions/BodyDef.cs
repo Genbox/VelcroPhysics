@@ -21,7 +21,7 @@ namespace Genbox.VelcroPhysics.Templates
         /// bodies.
         /// <remarks>Warning: You should use this flag sparingly since it increases processing time.</remarks>
         /// </summary>
-        public bool AllowCCD { get; set; }
+        public bool IsBullet { get; set; }
 
         /// <summary>Should this body be prevented from rotating?</summary>
         public bool AllowRotation { get; set; }
@@ -76,7 +76,7 @@ namespace Genbox.VelcroPhysics.Templates
             AllowSleep = true;
             Awake = true;
             FixedRotation = false;
-            AllowCCD = false;
+            IsBullet = false;
             Type = BodyType.Static;
             Enabled = true;
             GravityScale = 1.0f;

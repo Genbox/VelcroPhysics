@@ -20,9 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -33,22 +34,36 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             World.Gravity = Vector2.Zero;
 
-            const float minX = -6.0f;
-            const float maxX = 0.0f;
-            const float minY = 4.0f;
-            const float maxY = 6.0f;
-
-            for (int i = 0; i < 400; ++i)
             {
-                Body body = BodyFactory.CreateCircle(World, 0.1f, 0.01f, new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY)));
-                body.BodyType = BodyType.Dynamic;
+                CircleShape shape = new CircleShape(0.1f, 0.01f, Vector2.Zero);
+
+                const float minX = -6.0f;
+                const float maxX = 0.0f;
+                const float minY = 4.0f;
+                const float maxY = 6.0f;
+
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+
+                for (int i = 0; i < 400; ++i)
+                {
+                    bd.Position = new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY));
+
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(shape);
+                }
             }
 
             {
-                Body body = BodyFactory.CreateRectangle(World, 3, 3, 1, new Vector2(-40, 5));
-                body.BodyType = BodyType.Dynamic;
-                body.IsBullet = true;
-                body.LinearVelocity = new Vector2(150.0f, 0.0f);
+                PolygonShape shape = new PolygonShape(1.0f);
+                shape.SetAsBox(1.5f, 1.5f);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-40.0f, 5.0f);
+                bd.IsBullet = true;
+                Body body = World.CreateBody(bd);
+                body.CreateFixture(shape);
+                body.LinearVelocity = new Vector2(10.0f, 0.0f);
             }
         }
 

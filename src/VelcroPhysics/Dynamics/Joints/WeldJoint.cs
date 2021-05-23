@@ -24,6 +24,7 @@ using System;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -74,6 +75,18 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _invIA;
         private float _invIB;
         private Mat33 _mass;
+
+        public WeldJoint(WeldJointDef def)
+            : base(def)
+        {
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+            _referenceAngle = def.ReferenceAngle;
+            _stiffness = def.Stiffness;
+            _damping = def.Damping;
+
+            _impulse = Vector3.Zero;
+        }
 
         /// <summary>
         /// You need to specify an anchor point where they are attached. The position of the anchor point is important for

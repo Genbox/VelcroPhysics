@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -71,6 +72,16 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private Vector2 _localAnchorB;
         private float _maxForce;
         private float _maxTorque;
+
+        public FrictionJoint(FrictionJointDef def)
+            : base(def)
+        {
+            _localAnchorA = def.LocalAnchorA;
+            _localAnchorB = def.LocalAnchorB;
+
+            _maxForce = def.MaxForce;
+            _maxTorque = def.MaxTorque;
+        }
 
         /// <summary>Constructor for FrictionJoint.</summary>
         /// <param name="bodyA"></param>

@@ -24,6 +24,7 @@ using System.Diagnostics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -89,6 +90,100 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         private float _referenceAngleB;
         private JointType _typeA;
         private JointType _typeB;
+        private readonly Joint _jointB;
+        private readonly Joint _jointA;
+
+        public GearJoint(GearJointDef def) : base(def)
+        {
+            _jointA = def.JointA;
+            _jointB = def.JointB;
+
+            _typeA = _jointA.JointType;
+            _typeB = _jointB.JointType;
+
+            Debug.Assert(_typeA == JointType.Revolute || _typeA == JointType.Prismatic);
+            Debug.Assert(_typeB == JointType.Revolute || _typeB == JointType.Prismatic);
+
+            float coordinateA, coordinateB;
+
+            // TODO_ERIN there might be some problem with the joint edges in b2Joint.
+
+            _bodyC = _jointA.BodyA;
+            _bodyA = _jointA.BodyB;
+
+            // Body B on joint1 must be dynamic
+            Debug.Assert(_bodyA._type == BodyType.Dynamic);
+
+            // Get geometry of joint1
+            Transform xfA = _bodyA._xf;
+            float aA = _bodyA._sweep.A;
+            Transform xfC = _bodyC._xf;
+            float aC = _bodyC._sweep.A;
+
+            if (_typeA == JointType.Revolute)
+            {
+                RevoluteJoint revolute = (RevoluteJoint)def.JointA;
+                _localAnchorC = revolute._localAnchorA;
+                _localAnchorA = revolute._localAnchorB;
+                _referenceAngleA = revolute._referenceAngle;
+                _localAxisC = Vector2.Zero;
+
+                coordinateA = aA - aC - _referenceAngleA;
+            }
+            else
+            {
+                PrismaticJoint prismatic = (PrismaticJoint)def.JointA;
+                _localAnchorC = prismatic._localAnchorA;
+                _localAnchorA = prismatic._localAnchorB;
+                _referenceAngleA = prismatic._referenceAngle;
+                _localAxisC = prismatic._localXAxisA;
+
+                Vector2 pC = _localAnchorC;
+                Vector2 pA = MathUtils.MulT(xfC.q, MathUtils.Mul(xfA.q, _localAnchorA) + (xfA.p - xfC.p));
+                coordinateA = MathUtils.Dot(pA - pC, _localAxisC);
+            }
+
+            _bodyD = _jointB.BodyA;
+            _bodyB = _jointB.BodyB;
+
+            // Body B on joint2 must be dynamic
+            Debug.Assert(_bodyB._type == BodyType.Dynamic);
+
+            // Get geometry of joint2
+            Transform xfB = _bodyB._xf;
+            float aB = _bodyB._sweep.A;
+            Transform xfD = _bodyD._xf;
+            float aD = _bodyD._sweep.A;
+
+            if (_typeB == JointType.Revolute)
+            {
+                RevoluteJoint revolute = (RevoluteJoint)def.JointB;
+                _localAnchorD = revolute._localAnchorA;
+                _localAnchorB = revolute._localAnchorB;
+                _referenceAngleB = revolute._referenceAngle;
+                _localAxisD = Vector2.Zero;
+
+                coordinateB = aB - aD - _referenceAngleB;
+            }
+            else
+            {
+                PrismaticJoint prismatic = (PrismaticJoint)def.JointB;
+                _localAnchorD = prismatic._localAnchorA;
+                _localAnchorB = prismatic._localAnchorB;
+                _referenceAngleB = prismatic._referenceAngle;
+                _localAxisD = prismatic._localXAxisA;
+
+                Vector2 pD = _localAnchorD;
+                Vector2 pB = MathUtils.MulT(xfD.q, MathUtils.Mul(xfB.q, _localAnchorB) + (xfB.p - xfD.p));
+                coordinateB = MathUtils.Dot(pB - pD, _localAxisD);
+            }
+
+            _ratio = def.Ratio;
+
+            _constant = coordinateA + _ratio * coordinateB;
+
+            _impulse = 0.0f;
+        }
 
         /// <summary>
         /// Requires two existing revolute or prismatic joints (any combination will work). The provided joints must
@@ -101,8 +196,8 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="bodyB">The second body</param>
         public GearJoint(Body bodyA, Body bodyB, Joint jointA, Joint jointB, float ratio = 1f) : base(bodyA, bodyB, JointType.Gear)
         {
-            JointA = jointA;
-            JointB = jointB;
+            _jointA = jointA;
+            _jointB = jointB;
 
             _typeA = jointA.JointType;
             _typeB = jointB.JointType;
@@ -209,10 +304,10 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         }
 
         /// <summary>The first revolute/prismatic joint attached to the gear joint.</summary>
-        public Joint JointA { get; }
+        public Joint JointA => _jointA;
 
         /// <summary>The second revolute/prismatic joint attached to the gear joint.</summary>
-        public Joint JointB { get; }
+        public Joint JointB => _jointB;
 
         public override Vector2 GetReactionForce(float invDt)
         {

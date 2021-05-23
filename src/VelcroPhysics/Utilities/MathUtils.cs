@@ -428,5 +428,10 @@ namespace Genbox.VelcroPhysics.Utilities
 
             return length;
         }
+
+        public static float Sqrt(float value)
+        {
+            return (float)Math.Sqrt(value);
+        }
     }
 }
