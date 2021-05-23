@@ -158,7 +158,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 
         protected virtual void PreSolve(Contact contact, ref Manifold oldManifold) { }
 
-        protected virtual void PostSolve(Contact contact, ContactVelocityConstraint impulse) { }
+        protected virtual void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint) { }
 
         protected void DrawString(string text)
         {

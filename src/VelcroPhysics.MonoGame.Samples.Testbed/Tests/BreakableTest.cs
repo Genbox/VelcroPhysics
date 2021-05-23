@@ -20,78 +20,63 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
-using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     public class BreakableTest : Test
     {
-        private readonly Body _body1;
-        private readonly Fixture _piece1;
-        private readonly PolygonShape _shape2;
-        private float _angularVelocity;
-        private bool _break;
-        private bool _broke;
-        private Fixture _piece2;
+        private Body _body1;
         private Vector2 _velocity;
+        private float _angularVelocity;
+        private PolygonShape _shape1;
+        private PolygonShape _shape2;
+        private Fixture _piece1;
+        private Fixture _piece2;
+
+        private bool _broke;
+        private bool _break;
 
         private BreakableTest()
         {
             // Ground body
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
             // Breakable dynamic body
-            _body1 = BodyFactory.CreateBody(World);
-            _body1.BodyType = BodyType.Dynamic;
-            _body1.Position = new Vector2(0.0f, 40.0f);
-            _body1.Rotation = 0.25f * MathConstants.Pi;
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 40.0f);
+                bd.Angle = 0.25f * MathConstants.Pi;
+                _body1 = World.CreateBody(bd);
 
-            Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
+                _shape1 = new PolygonShape(1.0f);
+                _shape1.SetAsBox(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
+                _piece1 = _body1.CreateFixture(_shape1);
 
-            PolygonShape shape1 = new PolygonShape(box, 1);
-            _piece1 = _body1.CreateFixture(shape1);
-
-            box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-            _shape2 = new PolygonShape(box, 1);
-
-            _piece2 = _body1.CreateFixture(_shape2);
+                _shape2 = new PolygonShape(1.0f);
+                _shape2.SetAsBox(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
+                _piece2 = _body1.CreateFixture(_shape2);
+            }
 
             _break = false;
             _broke = false;
         }
 
-        public override void Initialize()
-        {
-            //load texture that will represent the physics body
-            Texture2D polygonTexture = GameInstance.Content.Load<Texture2D>("Rock");
-
-            //Create an array to hold the data from the texture
-            uint[] data = new uint[polygonTexture.Width * polygonTexture.Height];
-
-            //Transfer the texture data to the array
-            polygonTexture.GetData(data);
-
-            Vertices verts = PolygonUtils.CreatePolygon(data, polygonTexture.Width);
-            Vector2 scale = new Vector2(0.07f, 0.07f);
-            verts.Scale(ref scale);
-
-            BodyFactory.CreateBreakableBody(World, verts, 50, new Vector2(-10, 25));
-
-            base.Initialize();
-        }
-
-        protected override void PostSolve(Contact contact, ContactVelocityConstraint impulse)
+        protected override void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint)
         {
             if (_broke)
             {
@@ -100,12 +85,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             }
 
             // Should the body break?
-            float maxImpulse = 0.0f;
-            Manifold manifold = contact.Manifold;
+            int count = contact.Manifold.PointCount;
 
-            for (int i = 0; i < manifold.PointCount; ++i)
+            float maxImpulse = 0.0f;
+            for (int i = 0; i < count; ++i)
             {
-                maxImpulse = Math.Max(maxImpulse, impulse.Points[i].NormalImpulse);
+                //Velcro: We have to do things slightly different here as the PostSolve delegate returns the whole contact
+                maxImpulse = MathUtils.Max(maxImpulse, contactConstraint.Points[i].NormalImpulse);
             }
 
             if (maxImpulse > 40.0f)
@@ -113,6 +99,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 // Flag the body for breaking.
                 _break = true;
             }
+
+            base.PostSolve(contact, contactConstraint);
         }
 
         private void Break()
@@ -124,11 +112,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             body1.DestroyFixture(_piece2);
             _piece2 = null;
 
-            Body body2 = BodyFactory.CreateBody(World);
-            body2.BodyType = BodyType.Dynamic;
-            body2.Position = body1.Position;
-            body2.Rotation = body1.Rotation;
+            BodyDef bd = new BodyDef();
+            bd.Type = BodyType.Dynamic;
+            bd.Position = body1.Position;
+            bd.Angle = body1.Rotation;
 
+            Body body2 = World.CreateBody(bd);
             _piece2 = body2.CreateFixture(_shape2);
 
             // Compute consistent velocities for new bodies based on
@@ -156,7 +145,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             }
 
             // Cache velocities to improve movement on breakage.
-            if (!_broke)
+            if (_broke == false)
             {
                 _velocity = _body1.LinearVelocity;
                 _angularVelocity = _body1.AngularVelocity;

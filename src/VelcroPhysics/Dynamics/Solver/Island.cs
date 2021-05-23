@@ -416,11 +416,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             {
                 Contact c = _contacts[i];
 
-                //Velcro optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
                 //Velcro feature: added after collision
                 c._fixtureA.AfterCollision?.Invoke(c._fixtureA, c._fixtureB, c, constraints[i]);
                 c._fixtureB.AfterCollision?.Invoke(c._fixtureB, c._fixtureA, c, constraints[i]);
 
+                //Velcro optimization: We don't store the impulses and send it to the delegate. We just send the whole contact.
                 _contactManager.PostSolve?.Invoke(c, constraints[i]);
             }
         }
