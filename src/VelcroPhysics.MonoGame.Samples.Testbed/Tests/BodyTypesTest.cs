@@ -20,11 +20,13 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -38,46 +40,81 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         private BodyTypesTest()
         {
-            //Ground
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+            Body ground;
+            {
+                BodyDef bd = new BodyDef();
+                ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                ground.CreateFixture(fd);
+            }
 
             // Define attachment
             {
-                _attachment = BodyFactory.CreateRectangle(World, 1, 4, 2);
-                _attachment.BodyType = BodyType.Dynamic;
-                _attachment.Position = new Vector2(0.0f, 3.0f);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 3.0f);
+                _attachment = World.CreateBody(bd);
+
+                PolygonShape shape = new PolygonShape(2.0f);
+                shape.SetAsBox(0.5f, 2.0f);
+                _attachment.CreateFixture(shape);
             }
 
             // Define platform
             {
-                _platform = BodyFactory.CreateRectangle(World, 8.0f, 1f, 2);
-                _platform.BodyType = BodyType.Dynamic;
-                _platform.Position = new Vector2(0.0f, 5.0f);
-                _platform.Friction = 0.6f;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-4.0f, 5.0f);
+                _platform = World.CreateBody(bd);
 
-                RevoluteJoint rjd = new RevoluteJoint(_attachment, _platform, new Vector2(0, 5), true);
+                PolygonShape shape = new PolygonShape(2.0f);
+                shape.SetAsBox(0.5f, 4.0f, new Vector2(4.0f, 0.0f), 0.5f * MathConstants.Pi);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.6f;
+                _platform.CreateFixture(fd);
+
+                RevoluteJointDef rjd = new RevoluteJointDef();
+                rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
                 rjd.MaxMotorTorque = 50.0f;
-                rjd.MotorEnabled = true;
-                World.AddJoint(rjd);
+                rjd.EnableMotor = true;
+                World.CreateJoint(rjd);
 
-                PrismaticJoint pjd = new PrismaticJoint(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f), true);
+                PrismaticJointDef pjd = new PrismaticJointDef();
+                pjd.Initialize(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
+
                 pjd.MaxMotorForce = 1000.0f;
-                pjd.MotorEnabled = true;
-                pjd.LowerLimit = -10.0f;
-                pjd.UpperLimit = 10.0f;
-                pjd.LimitEnabled = true;
+                pjd.EnableMotor = true;
+                pjd.LowerTranslation = -10.0f;
+                pjd.UpperTranslation = 10.0f;
+                pjd.EnableLimit = true;
 
-                World.AddJoint(pjd);
+                World.CreateJoint(pjd);
 
                 _speed = 3.0f;
             }
 
             // Create a payload
             {
-                Body body = BodyFactory.CreateRectangle(World, 1.5f, 1.5f, 2);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 8.0f);
-                body.Friction = 0.6f;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 8.0f);
+                Body body = World.CreateBody(bd);
+
+                PolygonShape shape = new PolygonShape(2.0f);
+                shape.SetAsBox(0.75f, 0.75f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.6f;
+
+                body.CreateFixture(fd);
             }
         }
 
@@ -115,6 +152,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             base.Update(settings, gameTime);
+
             DrawString("Keys: (d) dynamic, (s) static, (k) kinematic");
         }
 
