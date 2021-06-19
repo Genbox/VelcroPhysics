@@ -58,10 +58,10 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Body(World world, BodyDef def)
         {
             FixtureList = new List<Fixture>(1);
-            
+
             if (def.IsBullet)
                 _flags |= BodyFlags.BulletFlag;
-            if (def.AllowRotation)
+            if (def.FixedRotation)
                 _flags |= BodyFlags.FixedRotationFlag;
             if (def.AllowSleep)
                 _flags |= BodyFlags.AutoSleepFlag;
@@ -522,6 +522,14 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
         }
 
+        public void GetMassData(out MassData data)
+        {
+            data = new MassData();
+            data._mass = _mass;
+            data._inertia = _inertia + _mass * MathUtils.Dot(ref _sweep.LocalCenter, ref _sweep.LocalCenter);
+            data._centroid = _sweep.LocalCenter;
+        }
+
         public Category CollisionCategories
         {
             set
@@ -623,11 +631,10 @@ namespace Genbox.VelcroPhysics.Dynamics
             return f;
         }
 
-        public Fixture CreateFixture(Shape shape, object? userData = null)
+        public Fixture CreateFixture(Shape shape)
         {
             FixtureDef template = new FixtureDef();
             template.Shape = shape;
-            template.UserData = userData;
 
             return CreateFixture(template);
         }
@@ -1053,7 +1060,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary> Calling this will remove the body from its associated world.</summary>
         public void RemoveFromWorld()
         {
-            _world.RemoveBody(this);
+            _world.DestroyBody(this);
         }
 
         internal void SynchronizeFixtures()

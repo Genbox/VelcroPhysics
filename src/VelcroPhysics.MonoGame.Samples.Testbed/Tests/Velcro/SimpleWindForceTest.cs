@@ -34,19 +34,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             const int countY = 10;
 
             for (int x = 0; x < countX; x++)
+            for (int y = 0; y < countY; y++)
             {
-                for (int y = 0; y < countY; y++)
-                {
-                    Body currentFixture = BodyFactory.CreateRectangle(World, 1f, 1f, 5f,
-                        new Vector2(x * 2 - countX, y * 2 + 5));
+                Body currentFixture = BodyFactory.CreateRectangle(World, 1f, 1f, 5f,
+                    new Vector2(x * 2 - countX, y * 2 + 5));
 
-                    //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
-                    currentFixture.BodyType = BodyType.Dynamic;
-                    currentFixture.Friction = 0.5f;
-                    currentFixture.SetTransform(currentFixture.Position, 0.6f);
+                //Fixture currentFixture = BodyFactory.CreateCircle(World, 0.2f, 10f, new Vector2(x - countX, y  + 5));
+                currentFixture.BodyType = BodyType.Dynamic;
+                currentFixture.Friction = 0.5f;
+                currentFixture.SetTransform(currentFixture.Position, 0.6f);
 
-                    //currentFixture.CollidesWith = Category.Cat10;
-                }
+                //currentFixture.CollidesWith = Category.Cat10;
             }
 
             Body floor = BodyFactory.CreateRectangle(World, 100, 1, 1, new Vector2(0, 0));
@@ -94,21 +92,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsKeyDown(Keys.Q))
+            if (keyboard.IsKeyDown(Keys.Q))
                 _strength += 1f;
 
-            if (keyboardManager.IsKeyDown(Keys.A))
+            if (keyboard.IsKeyDown(Keys.A))
                 _strength -= 1f;
 
-            if (keyboardManager.IsKeyDown(Keys.W))
+            if (keyboard.IsKeyDown(Keys.W))
                 _simpleWind.Variation += 0.1f;
 
-            if (keyboardManager.IsKeyDown(Keys.S))
+            if (keyboard.IsKeyDown(Keys.S))
                 _simpleWind.Variation -= 0.1f;
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Mouse(MouseState state, MouseState oldState)

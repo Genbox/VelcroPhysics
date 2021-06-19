@@ -1,137 +1,225 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
+
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Utilities;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class CompoundShapesTest : Test
+    internal class CompoundShapesTest : Test
     {
+        private readonly Body _table1;
+        private readonly Body _table2;
+        private readonly Body _ship1;
+        private readonly Body _ship2;
+
         private CompoundShapesTest()
         {
-            BodyFactory.CreateEdge(World, new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
-
             {
-                CircleShape circle1 = new CircleShape(0.5f, 2);
-                circle1.Position = new Vector2(-0.5f, 0.5f);
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(0.0f, 0.0f);
+                Body body = World.CreateBody(bd);
 
-                CircleShape circle2 = new CircleShape(0.5f, 0);
-                circle2.Position = new Vector2(0.5f, 0.5f);
+                EdgeShape shape = new EdgeShape();
+                shape.SetTwoSided(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
 
-                for (int i = 0; i < 10; ++i)
-                {
-                    float x = Rand.RandomFloat(-0.1f, 0.1f);
-
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x + 5.0f, 1.05f + 2.5f * i);
-                    body.Rotation = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
-
-                    body.CreateFixture(circle1);
-                    body.CreateFixture(circle2);
-                }
+                body.CreateFixture(shape);
             }
 
+            // Table 1
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.25f, 0.5f);
-                PolygonShape polygon1 = new PolygonShape(box, 2);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-15.0f, 1.0f);
+                _table1 = World.CreateBody(bd);
 
-                box = PolygonUtils.CreateRectangle(0.25f, 0.5f, new Vector2(0.0f, -0.5f), 0.5f * MathConstants.Pi);
-                PolygonShape polygon2 = new PolygonShape(box, 2);
+                PolygonShape top = new PolygonShape(2.0f);
+                top.SetAsBox(3.0f, 0.5f, new Vector2(0.0f, 3.5f), 0.0f);
 
-                for (int i = 0; i < 10; ++i)
-                {
-                    float x = Rand.RandomFloat(-0.1f, 0.1f);
+                PolygonShape leftLeg = new PolygonShape(2.0f);
+                leftLeg.SetAsBox(0.5f, 1.5f, new Vector2(-2.5f, 1.5f), 0.0f);
 
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x - 5.0f, 1.05f + 2.5f * i);
-                    body.Rotation = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
+                PolygonShape rightLeg = new PolygonShape(2.0f);
+                rightLeg.SetAsBox(0.5f, 1.5f, new Vector2(2.5f, 1.5f), 0.0f);
 
-                    body.CreateFixture(polygon1);
-                    body.CreateFixture(polygon2);
-                }
+                _table1.CreateFixture(top);
+                _table1.CreateFixture(leftLeg);
+                _table1.CreateFixture(rightLeg);
             }
 
+            // Table 2
             {
-                Transform xf1 = new Transform();
-                xf1.q.Set(0.3524f * MathConstants.Pi);
-                xf1.p = MathUtils.Mul(ref xf1.q, new Vector2(1.0f, 0.0f));
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-5.0f, 1.0f);
+                _table2 = World.CreateBody(bd);
+
+                PolygonShape top = new PolygonShape(2.0f);
+                top.SetAsBox(3.0f, 0.5f, new Vector2(0.0f, 3.5f), 0.0f);
+
+                PolygonShape leftLeg = new PolygonShape(2.0f);
+                leftLeg.SetAsBox(0.5f, 2.0f, new Vector2(-2.5f, 2.0f), 0.0f);
+
+                PolygonShape rightLeg = new PolygonShape(2.0f);
+                rightLeg.SetAsBox(0.5f, 2.0f, new Vector2(2.5f, 2.0f), 0.0f);
+
+                _table2.CreateFixture(top);
+                _table2.CreateFixture(leftLeg);
+                _table2.CreateFixture(rightLeg);
+            }
+
+            // Spaceship 1
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(5.0f, 1.0f);
+                _ship1 = World.CreateBody(bd);
 
                 Vertices vertices = new Vertices(3);
 
-                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(-1.0f, 0.0f)));
-                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(1.0f, 0.0f)));
-                vertices.Add(MathUtils.Mul(ref xf1, new Vector2(0.0f, 0.5f)));
+                PolygonShape left = new PolygonShape(2.0f);
+                vertices.Add(new Vector2(-2.0f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 4.0f / 3.0f));
+                vertices.Add(new Vector2(0.0f, 4.0f));
+                left.Vertices = vertices;
 
-                PolygonShape triangle1 = new PolygonShape(vertices, 2);
+                PolygonShape right = new PolygonShape(2.0f);
+                vertices[0] = new Vector2(2.0f, 0.0f);
+                vertices[1] = new Vector2(0.0f, 4.0f / 3.0f);
+                vertices[2] = new Vector2(0.0f, 4.0f);
+                right.Vertices = vertices;
 
-                Transform xf2 = new Transform();
-                xf2.q.Set(-0.3524f * MathConstants.Pi);
-                xf2.p = MathUtils.Mul(ref xf2.q, new Vector2(-1.0f, 0.0f));
-
-                vertices[0] = MathUtils.Mul(ref xf2, new Vector2(-1.0f, 0.0f));
-                vertices[1] = MathUtils.Mul(ref xf2, new Vector2(1.0f, 0.0f));
-                vertices[2] = MathUtils.Mul(ref xf2, new Vector2(0.0f, 0.5f));
-
-                PolygonShape triangle2 = new PolygonShape(vertices, 2);
-
-                for (int i = 0; i < 10; ++i)
-                {
-                    float x = Rand.RandomFloat(-0.1f, 0.1f);
-
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(x, 2.05f + 2.5f * i);
-
-                    body.CreateFixture(triangle1);
-                    body.CreateFixture(triangle2);
-                }
+                _ship1.CreateFixture(left);
+                _ship1.CreateFixture(right);
             }
 
+            // Spaceship 2
             {
-                Vertices box = PolygonUtils.CreateRectangle(1.5f, 0.15f);
-                PolygonShape bottom = new PolygonShape(box, 4);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(15.0f, 1.0f);
+                _ship2 = World.CreateBody(bd);
 
-                box = PolygonUtils.CreateRectangle(0.15f, 2.7f, new Vector2(-1.45f, 2.35f), 0.2f);
-                PolygonShape left = new PolygonShape(box, 4);
+                Vertices vertices = new Vertices(3);
 
-                box = PolygonUtils.CreateRectangle(0.15f, 2.7f, new Vector2(1.45f, 2.35f), -0.2f);
-                PolygonShape right = new PolygonShape(box, 4);
+                PolygonShape left = new PolygonShape(2.0f);
+                vertices.Add(new Vector2(-2.0f, 0.0f));
+                vertices.Add(new Vector2(1.0f, 2.0f));
+                vertices.Add(new Vector2(0.0f, 4.0f));
+                left.Vertices = vertices;
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(0.0f, 2.0f);
+                PolygonShape right = new PolygonShape(2.0f);
+                vertices[0] = new Vector2(2.0f, 0.0f);
+                vertices[1] = new Vector2(-1.0f, 2.0f);
+                vertices[2] = new Vector2(0.0f, 4.0f);
+                right.Vertices = vertices;
 
-                body.CreateFixture(bottom);
-                body.CreateFixture(left);
-                body.CreateFixture(right);
+                _ship2.CreateFixture(left);
+                _ship2.CreateFixture(right);
             }
+        }
+
+        private void Spawn()
+        {
+            // Table 1 obstruction
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = _table1.Position;
+                bd.Angle = _table1.Rotation;
+
+                Body body = World.CreateBody(bd);
+
+                PolygonShape box = new PolygonShape(2.0f);
+                box.SetAsBox(4.0f, 0.1f, new Vector2(0.0f, 3.0f), 0.0f);
+
+                body.CreateFixture(box);
+            }
+
+            // Table 2 obstruction
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = _table2.Position;
+                bd.Angle = _table2.Rotation;
+
+                Body body = World.CreateBody(bd);
+
+                PolygonShape box = new PolygonShape(2.0f);
+                box.SetAsBox(4.0f, 0.1f, new Vector2(0.0f, 3.0f), 0.0f);
+
+                body.CreateFixture(box);
+            }
+
+            // Ship 1 obstruction
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = _ship1.Position;
+                bd.Angle = _ship1.Rotation;
+                bd.GravityScale = 0.0f;
+
+                Body body = World.CreateBody(bd);
+
+                CircleShape circle = new CircleShape(0.5f, 2.0f, new Vector2(0.0f, 2.0f));
+                body.CreateFixture(circle);
+            }
+
+            // Ship 2 obstruction
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = _ship2.Position;
+                bd.Angle = _ship2.Rotation;
+                bd.GravityScale = 0.0f;
+
+                Body body = World.CreateBody(bd);
+
+                CircleShape circle = new CircleShape(2.0f);
+                circle.Radius = 0.5f;
+                circle.Position = new Vector2(0.0f, 2.0f);
+
+                body.CreateFixture(circle);
+            }
+        }
+
+        public override void Keyboard(KeyboardManager keyboard)
+        {
+            if (keyboard.IsNewKeyPress(Keys.S))
+                Spawn();
+
+            base.Keyboard(keyboard);
+        }
+
+        public override void Update(GameSettings settings, GameTime gameTime)
+        {
+            DrawString("Press S to spawn");
+
+            base.Update(settings, gameTime);
         }
 
         internal static Test Create()

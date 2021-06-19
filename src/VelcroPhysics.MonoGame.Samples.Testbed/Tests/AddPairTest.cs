@@ -28,7 +28,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class AddPairTest : Test
+    internal class AddPairTest : Test
     {
         private AddPairTest()
         {
@@ -67,7 +67,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new AddPairTest();
         }

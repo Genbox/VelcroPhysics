@@ -85,57 +85,53 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             foreach (Vector2 entryPoint in entryPoints)
-            {
                 DebugView.DrawPoint(entryPoint, 0.5f, Color.Yellow);
-            }
 
             foreach (Vector2 exitPoint in exitPoints)
-            {
                 DebugView.DrawPoint(exitPoint, 0.5f, Color.PowderBlue);
-            }
             DebugView.EndCustomDraw();
 
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.Tab))
+            if (keyboard.IsNewKeyPress(Keys.Tab))
                 _switched = !_switched;
 
-            if (keyboardManager.IsNewKeyPress(Keys.Enter))
+            if (keyboard.IsNewKeyPress(Keys.Enter))
                 CuttingTools.Cut(World, _start, _end);
 
             if (_switched)
             {
-                if (keyboardManager.IsKeyDown(Keys.A))
+                if (keyboard.IsKeyDown(Keys.A))
                     _start.X -= MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.S))
+                if (keyboard.IsKeyDown(Keys.S))
                     _start.Y -= MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.W))
+                if (keyboard.IsKeyDown(Keys.W))
                     _start.Y += MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.D))
+                if (keyboard.IsKeyDown(Keys.D))
                     _start.X += MoveAmount;
             }
             else
             {
-                if (keyboardManager.IsKeyDown(Keys.A))
+                if (keyboard.IsKeyDown(Keys.A))
                     _end.X -= MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.S))
+                if (keyboard.IsKeyDown(Keys.S))
                     _end.Y -= MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.W))
+                if (keyboard.IsKeyDown(Keys.W))
                     _end.Y += MoveAmount;
 
-                if (keyboardManager.IsKeyDown(Keys.D))
+                if (keyboard.IsKeyDown(Keys.D))
                     _end.X += MoveAmount;
             }
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Gamepad(GamePadState state, GamePadState oldState)

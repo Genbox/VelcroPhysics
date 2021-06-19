@@ -142,13 +142,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 DebugView.DrawPolygon(vertices.ToArray(), vertices.Count, Color.Red);
 
                 foreach (Vector2 vector2 in vertices)
-                {
                     DebugView.DrawPoint(vector2, 0.1f, Color.Yellow);
-                }
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new SimplificationTest();
         }

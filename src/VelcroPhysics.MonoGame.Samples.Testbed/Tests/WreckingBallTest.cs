@@ -1,33 +1,33 @@
-﻿/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
+
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
@@ -41,90 +41,121 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
     /// This test also shows how to use contact filtering. Filtering is configured
     /// so that the payload does not collide with the chain.
     /// </summary>
-    public class WreckingBallTest : Test
+    internal class WreckingBallTest : Test
     {
-        private readonly DistanceJoint _dj;
-        private bool _stabilize = true;
+        private DistanceJointDef _distanceJointDef = new DistanceJointDef();
+        private readonly Joint _distanceJoint;
+        private bool _stabilize;
 
         private WreckingBallTest()
         {
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground;
+            {
+                BodyDef bd = new BodyDef();
+                ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape();
+                shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
             {
-                Body prevBody = ground;
-                CircleShape largeShape = new CircleShape(1.5f, 100);
-                CircleShape smallShape = new CircleShape(0.5f, 20);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.5f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.2f;
+                fd.Filter.Category = Category.Cat1;
+                fd.Filter.CategoryMask = Category.All & ~Category.Cat2;
+
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.CollideConnected = false;
 
                 const int N = 10;
-                const float y = 15;
+                const float y = 15.0f;
+                _distanceJointDef.LocalAnchorA = new Vector2(0.0f, y);
 
+                Body prevBody = ground;
                 for (int i = 0; i < N; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(0.5f + 1.0f * i, y);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(0.5f + 1.0f * i, y);
+                    if (i == N - 1)
+                    {
+                        bd.Position = new Vector2(1.0f * i, y);
+                        bd.AngularDamping = 0.4f;
+                    }
+
+                    Body body = World.CreateBody(bd);
 
                     if (i == N - 1)
                     {
-                        Fixture fixture = body.CreateFixture(largeShape);
-                        fixture.Friction = 0.2f;
-                        fixture.CollisionCategories = Category.Cat2;
-                        fixture.CollidesWith = Category.All & ~Category.Cat2;
-                        body.Position = new Vector2(1.0f * i, y);
-                        body.AngularDamping = 0.4f;
+                        CircleShape circleShape = new CircleShape(100.0f);
+                        circleShape.Radius = 1.5f;
+                        FixtureDef sfd = new FixtureDef();
+                        sfd.Shape = circleShape;
+                        sfd.Filter.Category = Category.Cat2;
+                        body.CreateFixture(sfd);
                     }
                     else
                     {
-                        Fixture fixture = body.CreateFixture(smallShape);
-                        fixture.Friction = 0.2f;
-                        fixture.CollisionCategories = Category.Cat1;
-                        fixture.CollidesWith = Category.All & ~Category.Cat2;
+                        body.CreateFixture(fd);
                     }
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, true);
-                    jd.CollideConnected = false;
-
-                    World.AddJoint(jd);
+                    jd.Initialize(prevBody, body, anchor);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }
 
-                _dj = new DistanceJoint(ground, prevBody, new Vector2(0, y), Vector2.Zero);
+                _distanceJointDef.LocalAnchorB = Vector2.Zero;
 
-                //Velcro: The two following lines are actually not needed as Velcro sets the MaxLength to a default value
-                const float extraLength = 0.01f;
-                _dj.MaxLength = N - 1.0f + extraLength;
-
-                World.AddJoint(_dj);
+                float extraLength = 0.01f;
+                _distanceJointDef.MinLength = 0.0f;
+                _distanceJointDef.MaxLength = N - 1.0f + extraLength;
+                _distanceJointDef.BodyB = prevBody;
             }
-        }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
-        {
-            if (keyboardManager.IsNewKeyPress(Keys.J))
             {
-                if (_stabilize)
-                {
-                    _stabilize = false;
-                    World.RemoveJoint(_dj);
-                }
-                else
-                {
-                    _stabilize = true;
-                    World.AddJoint(_dj);
-                }
+                _distanceJointDef.BodyA = ground;
+                _distanceJoint = World.CreateJoint(_distanceJointDef);
+                _stabilize = true;
             }
-
-            base.Keyboard(keyboardManager);
         }
+
+        //void UpdateUI()
+        //{
+        //	ImGui::SetNextWindowPos(ImVec2(10.0f, 100.0f));
+        //	ImGui::SetNextWindowSize(ImVec2(200.0f, 100.0f));
+        //	ImGui::Begin("Wrecking Ball Controls", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+        //	if (ImGui::Checkbox("Stabilize", _stabilize))
+        //	{
+        //		if (_stabilize == true && _distanceJoint == nullptr)
+        //		{
+        //			_distanceJoint = World.CreateJoint(_distanceJointDef);
+        //		}
+        //		else if (_stabilize == false && _distanceJoint != nullptr)
+        //		{
+        //			World.DestroyJoint(_distanceJoint);
+        //			_distanceJoint = nullptr;
+        //		}
+        //	}
+
+        //	ImGui::End();
+        //}
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            DrawString("Press (j) to toggle the rope joint.");
-            DrawString(_stabilize ? "Rope ON" : "Rope OFF");
-
             base.Update(settings, gameTime);
+
+            if (_distanceJoint != null)
+                DrawString("Distance Joint ON");
+            else
+                DrawString("Distance Joint OFF");
         }
 
         internal static Test Create()

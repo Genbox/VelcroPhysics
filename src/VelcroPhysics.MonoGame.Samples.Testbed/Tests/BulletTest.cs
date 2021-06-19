@@ -21,15 +21,16 @@
 */
 
 using Genbox.VelcroPhysics.Collision.Distance;
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.TOI;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class BulletTest : Test
+    internal class BulletTest : Test
     {
         private readonly Body _body;
         private readonly Body _bullet;
@@ -37,22 +38,43 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         private BulletTest()
         {
-            BodyFactory.CreateEdge(World, new Vector2(-10, 0), new Vector2(10, 0));
-            BodyFactory.CreateRectangle(World, 0.4f, 2f, 0, new Vector2(0.5f, 1.0f));
+            {
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(0.0f, 0.0f);
+                Body body = World.CreateBody(bd);
 
-            //Bar
-            _body = BodyFactory.CreateRectangle(World, 4f, 0.2f, 1, new Vector2(0.5f, 1.0f));
-            _body.Position = new Vector2(0, 4);
-            _body.BodyType = BodyType.Dynamic;
+                EdgeShape edge = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
+                body.CreateFixture(edge);
 
-            //Bullet
-            _bullet = BodyFactory.CreateRectangle(World, 0.5f, 0.5f, 100);
-            _bullet.IsBullet = true;
-            _bullet.BodyType = BodyType.Dynamic;
-            _x = 0.20352793f;
-            _bullet.Position = new Vector2(_x, 10);
+                PolygonShape shape = new PolygonShape(0.0f);
+                shape.SetAsBox(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0.0f);
+                body.CreateFixture(shape);
+            }
 
-            _bullet.LinearVelocity = new Vector2(0, -50);
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 4.0f);
+
+                PolygonShape box = new PolygonShape(1.0f);
+                box.SetAsBox(2.0f, 0.1f);
+
+                _body = World.CreateBody(bd);
+                _body.CreateFixture(box);
+
+                box.SetAsBox(0.25f, 0.25f);
+
+                _x = 0.20352793f;
+                bd.Position = new Vector2(_x, 10.0f);
+                bd.IsBullet = true;
+
+                box.Density = 100;
+
+                _bullet = World.CreateBody(bd);
+                _bullet.CreateFixture(box);
+
+                _bullet.LinearVelocity = new Vector2(0.0f, -50.0f);
+            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

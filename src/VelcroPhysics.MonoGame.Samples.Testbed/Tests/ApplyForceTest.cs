@@ -32,7 +32,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class ApplyForceTest : Test
+    internal class ApplyForceTest : Test
     {
         private readonly Body _body;
 
@@ -170,27 +170,26 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Forward (W), Turn (A) and (D)");
-            DrawString("Note: The left side of the ship has a different density than the right side of the ship");
 
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsKeyDown(Keys.W))
+            if (keyboard.IsKeyDown(Keys.W))
             {
                 Vector2 f = _body.GetWorldVector(new Vector2(0.0f, -50.0f));
                 Vector2 p = _body.GetWorldPoint(new Vector2(0.0f, 3.0f));
                 _body.ApplyForce(f, p);
             }
 
-            if (keyboardManager.IsKeyDown(Keys.A))
+            if (keyboard.IsKeyDown(Keys.A))
                 _body.ApplyTorque(10.0f);
 
-            if (keyboardManager.IsKeyDown(Keys.D))
+            if (keyboard.IsKeyDown(Keys.D))
                 _body.ApplyTorque(-10.0f);
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         internal static Test Create()

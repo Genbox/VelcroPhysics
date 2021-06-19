@@ -92,13 +92,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
                 ++StepCount;
         }
 
-        public virtual void Keyboard(KeyboardManager keyboardManager)
+        public virtual void Keyboard(KeyboardManager keyboard)
         {
             //TODO:
-            //if (keyboardManager.IsNewKeyPress(Keys.F11))
+            //if (keyboard.IsNewKeyPress(Keys.F11))
             //    WorldSerializer.Serialize(World, "out.xml");
 
-            //if (keyboardManager.IsNewKeyPress(Keys.F12))
+            //if (keyboard.IsNewKeyPress(Keys.F12))
             //{
             //    World = WorldSerializer.Deserialize("out.xml");
             //    Initialize();

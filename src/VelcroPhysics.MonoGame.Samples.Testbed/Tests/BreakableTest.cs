@@ -31,14 +31,14 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class BreakableTest : Test
+    internal class BreakableTest : Test
     {
-        private Body _body1;
+        private readonly Body _body1;
         private Vector2 _velocity;
         private float _angularVelocity;
-        private PolygonShape _shape1;
-        private PolygonShape _shape2;
-        private Fixture _piece1;
+        private readonly PolygonShape _shape1;
+        private readonly PolygonShape _shape2;
+        private readonly Fixture _piece1;
         private Fixture _piece2;
 
         private bool _broke;
@@ -79,26 +79,23 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         protected override void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint)
         {
             if (_broke)
-            {
+
                 // The body already broke.
                 return;
-            }
 
             // Should the body break?
             int count = contact.Manifold.PointCount;
 
             float maxImpulse = 0.0f;
             for (int i = 0; i < count; ++i)
-            {
+
                 //Velcro: We have to do things slightly different here as the PostSolve delegate returns the whole contact
                 maxImpulse = MathUtils.Max(maxImpulse, contactConstraint.Points[i].NormalImpulse);
-            }
 
             if (maxImpulse > 40.0f)
-            {
+
                 // Flag the body for breaking.
                 _break = true;
-            }
 
             base.PostSolve(contact, contactConstraint);
         }

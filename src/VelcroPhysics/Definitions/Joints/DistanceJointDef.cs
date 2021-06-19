@@ -1,4 +1,6 @@
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
@@ -35,6 +37,18 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The local anchor point relative to bodyB's origin.</summary>
         public Vector2 LocalAnchorB { get; set; }
+
+        public void Initialize(Body b1, Body b2, Vector2 anchor1, Vector2 anchor2)
+        {
+            BodyA = b1;
+            BodyB = b2;
+            LocalAnchorA = BodyA.GetLocalPoint(anchor1);
+            LocalAnchorB = BodyB.GetLocalPoint(anchor2);
+            Vector2 d = anchor2 - anchor1;
+            Length = MathUtils.Max(d.Length(), Settings.LinearSlop);
+            MinLength = Length;
+            MaxLength = Length;
+        }
 
         public override void SetDefaults()
         {

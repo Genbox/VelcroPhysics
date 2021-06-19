@@ -29,7 +29,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
-    public class AngleJointTest : Test
+    internal class AngleJointTest : Test
     {
         private AngleJointTest()
         {

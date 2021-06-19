@@ -22,18 +22,19 @@
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class CantileverTest : Test
+    internal class CantileverTest : Test
     {
-        private const int Count = 8;
+        private const int _count = 8;
 
         private CantileverTest()
         {
@@ -41,27 +42,38 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             {
                 PolygonShape shape = new PolygonShape(20);
-                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
+                shape.SetAsBox(0.5f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
-                    body.CreateFixture(shape);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
-                    World.AddJoint(jd);
+                    jd.Initialize(prevBody, body, anchor);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }
             }
 
             {
-                PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonUtils.CreateRectangle(1f, 0.125f);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(1.0f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                WeldJointDef jd = new WeldJointDef();
 
                 float frequencyHz = 5.0f;
                 float dampingRatio = 0.7f;
@@ -69,42 +81,47 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 Body prevBody = ground;
                 for (int i = 0; i < 3; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.0f + 2.0f * i, 15.0f);
-                    body.CreateFixture(shape);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-14.0f + 2.0f * i, 15.0f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
 
                     Vector2 anchor = new Vector2(-15.0f + 2.0f * i, 15.0f);
-                    WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
-
+                    jd.Initialize(prevBody, body, anchor);
                     JointHelper.AngularStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
                     jd.Stiffness = stiffness;
                     jd.Damping = damping;
 
-                    World.AddJoint(jd);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }
             }
 
             {
-                PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.5f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                WeldJointDef jd = new WeldJointDef();
 
                 Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
-
-                    body.CreateFixture(shape);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
 
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
-                        World.AddJoint(jd);
+                        jd.Initialize(prevBody, body, anchor);
+                        World.CreateJoint(jd);
                     }
 
                     prevBody = body;
@@ -112,64 +129,72 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             {
-                PolygonShape shape = new PolygonShape(20f);
-                shape.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.125f);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.5f, 0.125f);
 
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                WeldJointDef jd = new WeldJointDef();
                 float frequencyHz = 8.0f;
                 float dampingRatio = 0.7f;
 
                 Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
-
-                    body.CreateFixture(shape);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
 
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(5.0f + 1.0f * i, 10.0f);
-                        WeldJoint jd = new WeldJoint(prevBody, body, anchor, anchor, true);
+                        jd.Initialize(prevBody, body, anchor);
 
-                        JointHelper.AngularStiffness(frequencyHz, dampingRatio, prevBody, body, out float stiffness, out float damping);
+                        JointHelper.AngularStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
                         jd.Stiffness = stiffness;
                         jd.Damping = damping;
 
-                        World.AddJoint(jd);
+                        World.CreateJoint(jd);
                     }
 
                     prevBody = body;
                 }
             }
 
-            //Triangels
-            Vertices vertices = new Vertices(3);
-            vertices.Add(new Vector2(-0.5f, 0.0f));
-            vertices.Add(new Vector2(0.5f, 0.0f));
-            vertices.Add(new Vector2(0.0f, 1.5f));
-
             for (int i = 0; i < 2; ++i)
             {
-                PolygonShape shape = new PolygonShape(vertices, 1);
+                Vertices vertices = new Vertices(3);
+                vertices.Add(new Vector2(-0.5f, 0.0f));
+                vertices.Add(new Vector2(0.5f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 1.5f));
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
-                body.CreateFixture(shape);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                Body body = World.CreateBody(bd);
+                body.CreateFixture(fd);
             }
 
-            //Circles            
             for (int i = 0; i < 2; ++i)
             {
-                CircleShape shape = new CircleShape(0.5f, 1);
+                CircleShape shape = new CircleShape(0.5f, 1.0f);
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
 
-                body.CreateFixture(shape);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                Body body = World.CreateBody(bd);
+                body.CreateFixture(fd);
             }
         }
 

@@ -23,9 +23,6 @@ namespace Genbox.VelcroPhysics.Templates
         /// </summary>
         public bool IsBullet { get; set; }
 
-        /// <summary>Should this body be prevented from rotating?</summary>
-        public bool AllowRotation { get; set; }
-
         /// <summary>Set this flag to false if this body should never fall asleep.
         /// <remarks>Note: Setting this to false increases CPU usage.</remarks>
         /// </summary>

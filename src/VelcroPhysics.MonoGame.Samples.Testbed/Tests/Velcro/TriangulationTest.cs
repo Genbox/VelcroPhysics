@@ -28,12 +28,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             CreateBody(LoadNextDataFile());
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.T))
+            if (keyboard.IsNewKeyPress(Keys.T))
                 CreateBody(LoadNextDataFile());
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         private void CreateBody(Vertices vertices)
@@ -111,7 +111,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Update(settings, gameTime);
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new TriangulationTest();
         }

@@ -43,7 +43,7 @@ namespace Genbox.VelcroPhysics.Templates
             //RestitutionThreshold = 1.0f * b2_lengthUnitsPerMeter;
             //Density = 0.0f;
             IsSensor = false;
-            Filter = null;
+            Filter = new Filter();
         }
     }
 }

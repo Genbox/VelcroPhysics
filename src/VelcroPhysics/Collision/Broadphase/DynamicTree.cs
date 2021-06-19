@@ -38,7 +38,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
     /// </summary>
     public class DynamicTree<T>
     {
-        internal const int NullNode = -1;
+        public const int NullNode = -1;
         private int _freeList;
         private int _nodeCapacity;
         private int _nodeCount;
@@ -143,7 +143,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
         /// <param name="aabb">The AABB.</param>
         /// <param name="userData">The user data.</param>
         /// <returns>Index of the created proxy</returns>
-        public int AddProxy(ref AABB aabb, T userData)
+        public int CreateProxy(ref AABB aabb, T userData)
         {
             int proxyId = AllocateNode();
 
@@ -162,7 +162,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
 
         /// <summary>Destroy a proxy. This asserts if the id is invalid.</summary>
         /// <param name="proxyId">The proxy id.</param>
-        public void RemoveProxy(int proxyId)
+        public void DestroyProxy(int proxyId)
         {
             Debug.Assert(0 <= proxyId && proxyId < _nodeCapacity);
             Debug.Assert(_nodes[proxyId].IsLeaf());

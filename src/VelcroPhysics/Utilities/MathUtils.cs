@@ -397,6 +397,11 @@ namespace Genbox.VelcroPhysics.Utilities
             return Math.Max(valueA, valueB);
         }
 
+        public static int Max(int valueA, int valueB)
+        {
+            return Math.Max(valueA, valueB);
+        }
+
         public static float Min(float valueA, float valueB)
         {
             return Math.Min(valueA, valueB);
@@ -432,6 +437,26 @@ namespace Genbox.VelcroPhysics.Utilities
         public static float Sqrt(float value)
         {
             return (float)Math.Sqrt(value);
+        }
+
+        public static float Cosf(float value)
+        {
+            return (float)Math.Cos(value);
+        }
+
+        public static float Sinf(float value)
+        {
+            return (float)Math.Sin(value);
+        }
+
+        public static float Ceil(float log)
+        {
+            return (float)Math.Ceiling(log);
+        }
+
+        public static float Log(float log)
+        {
+            return (float)Math.Log(log);
         }
     }
 }

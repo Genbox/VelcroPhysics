@@ -42,6 +42,11 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             ComputeProperties();
         }
 
+        public CircleShape(float density) : base(ShapeType.Circle, 0, density)
+        {
+            ComputeProperties();
+        }
+
         private CircleShape() : base(ShapeType.Circle) { }
 
         public override int ChildCount => 1;

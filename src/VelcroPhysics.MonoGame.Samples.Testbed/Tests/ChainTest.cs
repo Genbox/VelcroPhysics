@@ -20,36 +20,53 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class ChainTest : Test
+    internal class ChainTest : Test
     {
         private ChainTest()
         {
-            //Ground
-            Body ground = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body ground;
+            {
+                BodyDef bd = new BodyDef();
+                ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
             {
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.6f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.2f;
+
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.CollideConnected = false;
+
                 const float y = 25.0f;
                 Body prevBody = ground;
                 for (int i = 0; i < 30; ++i)
                 {
-                    Body body = BodyFactory.CreateRectangle(World, 1.2f, 0.25f, 20, new Vector2(0.5f + i, y));
-                    body.BodyType = BodyType.Dynamic;
-                    body.Friction = 0.2f;
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(0.5f + i, y);
+                    Body body = World.CreateBody(bd);
+
+                    body.CreateFixture(fd);
 
                     Vector2 anchor = new Vector2(i, y);
-                    RevoluteJoint joint = new RevoluteJoint(prevBody, body, anchor, true);
-
-                    //The chain is breakable
-                    joint.Breakpoint = 10000f;
-                    World.AddJoint(joint);
+                    jd.Initialize(prevBody, body, anchor);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }

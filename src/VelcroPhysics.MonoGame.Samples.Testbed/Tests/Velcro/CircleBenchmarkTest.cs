@@ -56,19 +56,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             CircleShape shape = new CircleShape(1.0f, 1);
 
             for (int i = 0; i < XCount; i++)
+            for (int j = 0; j < YCount; ++j)
             {
-                for (int j = 0; j < YCount; ++j)
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-38f + 2.1f * i, 2.0f + 2.0f * j);
+                Body body = BodyFactory.CreateBody(World);
+                body.BodyType = BodyType.Dynamic;
+                body.Position = new Vector2(-38f + 2.1f * i, 2.0f + 2.0f * j);
 
-                    body.CreateFixture(shape);
-                }
+                body.CreateFixture(shape);
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new CircleBenchmarkTest();
         }

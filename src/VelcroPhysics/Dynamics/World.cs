@@ -848,7 +848,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Destroy a rigid body. Warning: This automatically deletes all associated shapes and joints.</summary>
         /// <param name="body">The body.</param>
-        public void RemoveBody(Body body)
+        public void DestroyBody(Body body)
         {
             Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
 
@@ -1179,7 +1179,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             for (int i = BodyList.Count - 1; i >= 0; i--)
             {
-                RemoveBody(BodyList[i]);
+                DestroyBody(BodyList[i]);
             }
 
             for (int i = ControllerList.Count - 1; i >= 0; i--)

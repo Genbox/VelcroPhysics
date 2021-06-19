@@ -22,79 +22,91 @@
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Utilities;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class BridgeTest : Test
+    internal class BridgeTest : Test
     {
-        private const int Count = 30;
+        private const int _count = 30;
 
         private BridgeTest()
         {
             Body ground;
             {
-                ground = BodyFactory.CreateBody(World);
+                BodyDef bd = new BodyDef();
+                ground = World.CreateBody(bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
                 ground.CreateFixture(shape);
             }
+
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 20);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.5f, 0.125f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.2f;
+
+                RevoluteJointDef jd = new RevoluteJointDef();
 
                 Body prevBody = ground;
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
 
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.2f;
-
-                    Vector2 anchor = new Vector2(-15f + 1.0f * i, 5.0f);
-                    RevoluteJoint jd = new RevoluteJoint(prevBody, body, anchor, true);
-                    World.AddJoint(jd);
+                    Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
+                    jd.Initialize(prevBody, body, anchor);
+                    World.CreateJoint(jd);
 
                     prevBody = body;
                 }
 
-                Vector2 anchor2 = new Vector2(-15.0f + 1.0f * Count, 5.0f);
-                RevoluteJoint jd2 = new RevoluteJoint(ground, prevBody, anchor2, true);
-                World.AddJoint(jd2);
+                Vector2 anchor2 = new Vector2(-15.0f + 1.0f * _count, 5.0f);
+                jd.Initialize(prevBody, ground, anchor2);
+                World.CreateJoint(jd);
             }
-
-            Vertices vertices = new Vertices(3);
-            vertices.Add(new Vector2(-0.5f, 0.0f));
-            vertices.Add(new Vector2(0.5f, 0.0f));
-            vertices.Add(new Vector2(0.0f, 1.5f));
 
             for (int i = 0; i < 2; ++i)
             {
-                PolygonShape shape = new PolygonShape(vertices, 1);
+                Vertices vertices = new Vertices(3);
+                vertices.Add(new Vector2(-0.5f, 0.0f));
+                vertices.Add(new Vector2(0.5f, 0.0f));
+                vertices.Add(new Vector2(0.0f, 1.5f));
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                PolygonShape shape = new PolygonShape(vertices, 1.0f);
 
-                body.CreateFixture(shape);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
+                Body body = World.CreateBody(bd);
+                body.CreateFixture(fd);
             }
 
             for (int i = 0; i < 3; ++i)
             {
-                CircleShape shape = new CircleShape(0.5f, 1);
+                CircleShape shape = new CircleShape(0.5f, 1.0f);
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
 
-                body.CreateFixture(shape);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
+                Body body = World.CreateBody(bd);
+                body.CreateFixture(fd);
             }
         }
 

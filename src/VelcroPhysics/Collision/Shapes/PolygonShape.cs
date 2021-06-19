@@ -222,12 +222,8 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             for (int i = 0; i < count; ++i)
             {
                 // Triangle vertices.
-                Vector2 p1 = _vertices[0] - s;
-                Vector2 p2 = _vertices[i] - s;
-                Vector2 p3 = i + 1 < count ? _vertices[i + 1] - s : _vertices[0] - s;
-
-                Vector2 e1 = p2 - p1;
-                Vector2 e2 = p3 - p1;
+                Vector2 e1 = _vertices[i] - s;
+                Vector2 e2 = i + 1 < count ? _vertices[i+1] - s : _vertices[0] - s;
 
                 float D = MathUtils.Cross(e1, e2);
 

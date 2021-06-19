@@ -1,3 +1,4 @@
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
@@ -24,6 +25,18 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The maximum motor torque in N-m.</summary>
         public float MaxTorque { get; set; }
+
+        public void Initialize(Body bA, Body bB)
+        {
+            BodyA = bA;
+            BodyB = bB;
+            Vector2 xB = BodyB.Position;
+            LinearOffset = BodyA.GetLocalPoint(xB);
+
+            float angleA = BodyA.Rotation;
+            float angleB = BodyB.Rotation;
+            AngularOffset = angleB - angleA;
+        }
 
         public override void SetDefaults()
         {

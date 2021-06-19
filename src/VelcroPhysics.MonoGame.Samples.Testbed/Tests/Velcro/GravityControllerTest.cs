@@ -88,7 +88,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new GravityControllerTest();
         }

@@ -44,17 +44,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             sbyte[,] data = new sbyte[texture.Width, texture.Height];
 
             for (int y = 0; y < texture.Height; y++)
+            for (int x = 0; x < texture.Width; x++)
             {
-                for (int x = 0; x < texture.Width; x++)
-                {
-                    //If the color on the coordinate is black, we include it in the terrain.
-                    bool inside = colorData[y * texture.Width + x] == Color.Black;
+                //If the color on the coordinate is black, we include it in the terrain.
+                bool inside = colorData[y * texture.Width + x] == Color.Black;
 
-                    if (!inside)
-                        data[x, y] = 1;
-                    else
-                        data[x, y] = -1;
-                }
+                if (!inside)
+                    data[x, y] = 1;
+                else
+                    data[x, y] = -1;
             }
 
             _terrain.ApplyData(data, new Vector2(250, 250));
@@ -92,21 +90,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsKeyDown(Keys.G))
+            if (keyboard.IsKeyDown(Keys.G))
                 _circleRadius += 0.05f;
-            else if (keyboardManager.IsKeyDown(Keys.H))
+            else if (keyboard.IsKeyDown(Keys.H))
                 _circleRadius -= 0.05f;
 
-            if (keyboardManager.IsNewKeyPress(Keys.T))
+            if (keyboard.IsNewKeyPress(Keys.T))
             {
                 _terrain.Decomposer++;
 
                 if (_terrain.Decomposer > TriangulationAlgorithm.Seidel)
                     _terrain.Decomposer--;
             }
-            else if (keyboardManager.IsNewKeyPress(Keys.Y))
+            else if (keyboard.IsNewKeyPress(Keys.Y))
             {
                 _terrain.Decomposer--;
 
@@ -114,23 +112,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                     _terrain.Decomposer++;
             }
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         private void DrawCircleOnMap(Vector2 center, sbyte value)
         {
             for (float by = -_circleRadius; by < _circleRadius; by += 0.1f)
-            {
-                for (float bx = -_circleRadius; bx < _circleRadius; bx += 0.1f)
+            for (float bx = -_circleRadius; bx < _circleRadius; bx += 0.1f)
+                if (bx * bx + @by * @by < _circleRadius * _circleRadius)
                 {
-                    if ((bx * bx) + (by * by) < _circleRadius * _circleRadius)
-                    {
-                        float ax = bx + center.X;
-                        float ay = by + center.Y;
-                        _terrain.ModifyTerrain(new Vector2(ax, ay), value);
-                    }
+                    float ax = bx + center.X;
+                    float ay = @by + center.Y;
+                    _terrain.ModifyTerrain(new Vector2(ax, ay), value);
                 }
-            }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

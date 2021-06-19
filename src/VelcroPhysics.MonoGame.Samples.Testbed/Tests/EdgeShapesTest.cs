@@ -1,63 +1,63 @@
-﻿/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
 
-using System;
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class EdgeShapesTest : Test
+    internal class EdgeShapesTest : Test
     {
-        private const int MaxBodies = 256;
-        private readonly Body[] _bodies = new Body[MaxBodies];
-        private readonly CircleShape _circle;
-        private readonly PolygonShape[] _polygons = new PolygonShape[4];
-        private float _angle;
+        private const int _maxBodies = 256;
+
         private int _bodyIndex;
-        private Fixture _fixture;
-        private Vector2 _normal;
-        private Vector2 _point;
+        private readonly Body[] _bodies = new Body[_maxBodies];
+        private readonly PolygonShape[] _polygons = new PolygonShape[4];
+        private readonly CircleShape _circle = new CircleShape(1.0f);
+
+        private float _angle;
 
         private EdgeShapesTest()
         {
             // Ground body
             {
-                Body ground = BodyFactory.CreateBody(World);
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
 
                 float x1 = -20.0f;
-                float y1 = 2.0f * (float)Math.Cos(x1 / 10.0f * MathConstants.Pi);
+                float y1 = 2.0f * MathUtils.Cosf(x1 / 10.0f * MathConstants.Pi);
                 for (int i = 0; i < 80; ++i)
                 {
                     float x2 = x1 + 0.5f;
-                    float y2 = 2.0f * (float)Math.Cos(x2 / 10.0f * MathConstants.Pi);
+                    float y2 = 2.0f * MathUtils.Cosf(x2 / 10.0f * MathConstants.Pi);
 
-                    EdgeShape shape = new EdgeShape(new Vector2(x1, y1), new Vector2(x2, y2));
+                    EdgeShape shape = new EdgeShape();
+                    shape.SetTwoSided(new Vector2(x1, y1), new Vector2(x2, y2));
                     ground.CreateFixture(shape);
 
                     x1 = x2;
@@ -82,9 +82,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             {
-                const float w = 1.0f;
-                float b = w / (2.0f + (float)Math.Sqrt(2.0f));
-                float s = (float)Math.Sqrt(2.0f) * b;
+                float w = 1.0f;
+                float b = w / (2.0f + MathUtils.Sqrt(2.0f));
+                float s = MathUtils.Sqrt(2.0f) * b;
 
                 Vertices vertices = new Vertices(8);
                 vertices.Add(new Vector2(0.5f * s, 0.0f));
@@ -95,19 +95,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vertices.Add(new Vector2(-0.5f * w, b + s));
                 vertices.Add(new Vector2(-0.5f * w, b));
                 vertices.Add(new Vector2(-0.5f * s, 0.0f));
+
                 _polygons[2] = new PolygonShape(vertices, 20);
             }
 
             {
-                _polygons[3] = new PolygonShape(20);
-                _polygons[3].Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
+                _polygons[3] = new PolygonShape(1.0f);
+                _polygons[3].SetAsBox(0.5f, 0.5f);
             }
 
             {
-                _circle = new CircleShape(0.5f, 1);
+                _circle.Radius = 0.5f;
             }
 
             _bodyIndex = 0;
+
             _angle = 0.0f;
         }
 
@@ -115,63 +117,68 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.RemoveBody(_bodies[_bodyIndex]);
+                World.DestroyBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
+            BodyDef bd = new BodyDef();
+
             float x = Rand.RandomFloat(-10.0f, 10.0f);
             float y = Rand.RandomFloat(10.0f, 20.0f);
+            bd.Position = new Vector2(x, y);
+            bd.Angle = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
+            bd.Type = BodyType.Dynamic;
 
-            _bodies[_bodyIndex] = BodyFactory.CreateBody(World);
             if (index == 4)
-                _bodies[_bodyIndex].AngularDamping = 0.02f;
-            _bodies[_bodyIndex].Position = new Vector2(x, y);
-            _bodies[_bodyIndex].Rotation = Rand.RandomFloat(-MathConstants.Pi, MathConstants.Pi);
-            _bodies[_bodyIndex].BodyType = BodyType.Dynamic;
+                bd.AngularDamping = 0.02f;
+
+            _bodies[_bodyIndex] = World.CreateBody(bd);
 
             if (index < 4)
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_polygons[index]);
-                fixture.Friction = 0.3f;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = _polygons[index];
+                fd.Friction = 0.3f;
+                _bodies[_bodyIndex].CreateFixture(fd);
             }
             else
             {
-                Fixture fixture = _bodies[_bodyIndex].CreateFixture(_circle);
-                fixture.Friction = 0.3f;
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = _circle;
+                fd.Friction = 0.3f;
+                _bodies[_bodyIndex].CreateFixture(fd);
             }
 
-            _bodyIndex = (_bodyIndex + 1) % MaxBodies;
+            _bodyIndex = (_bodyIndex + 1) % _maxBodies;
         }
 
         private void DestroyBody()
         {
-            for (int i = 0; i < MaxBodies; ++i)
-            {
+            for (int i = 0; i < _maxBodies; ++i)
                 if (_bodies[i] != null)
                 {
-                    World.RemoveBody(_bodies[i]);
+                    World.DestroyBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }
-            }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.D1))
-                Create(0);
-            if (keyboardManager.IsNewKeyPress(Keys.D2))
+            if (keyboard.IsNewKeyPress(Keys.NumPad1))
                 Create(1);
-            if (keyboardManager.IsNewKeyPress(Keys.D3))
+            else if (keyboard.IsNewKeyPress(Keys.NumPad2))
                 Create(2);
-            if (keyboardManager.IsNewKeyPress(Keys.D4))
+            else if (keyboard.IsNewKeyPress(Keys.NumPad3))
                 Create(3);
-            if (keyboardManager.IsNewKeyPress(Keys.D5))
+            else if (keyboard.IsNewKeyPress(Keys.NumPad4))
                 Create(4);
-            if (keyboardManager.IsNewKeyPress(Keys.D))
+            else if (keyboard.IsNewKeyPress(Keys.NumPad5))
+                Create(5);
+            else if (keyboard.IsNewKeyPress(Keys.D))
                 DestroyBody();
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -181,34 +188,40 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             base.Update(settings, gameTime);
             DrawString("Press 1-5 to drop stuff");
 
-            const float l = 25.0f;
+            float L = 25.0f;
             Vector2 point1 = new Vector2(0.0f, 10.0f);
-            Vector2 d = new Vector2(l * (float)Math.Cos(_angle), -l * Math.Abs((float)Math.Sin(_angle)));
+            Vector2 d = new Vector2(L * MathUtils.Cosf(_angle), -L * MathUtils.Abs(MathUtils.Sinf(_angle)));
             Vector2 point2 = point1 + d;
 
-            _fixture = null;
+            Fixture localFixture = null;
+            Vector2 localPoint = Vector2.Zero;
+            Vector2 localNormal = Vector2.Zero;
 
             World.RayCast((fixture, point, normal, fraction) =>
             {
-                _fixture = fixture;
-                _point = point;
-                _normal = normal;
+                localFixture = fixture;
+                localPoint = point;
+                localNormal = normal;
 
                 return fraction;
             }, point1, point2);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-            if (_fixture != null)
+
+            if (localFixture != null)
             {
-                DebugView.DrawPoint(_point, 0.5f, new Color(0.4f, 0.9f, 0.4f));
+                DebugView.DrawPoint(localPoint, 0.5f, new Color(0.4f, 0.9f, 0.4f));
 
-                DebugView.DrawSegment(point1, _point, new Color(0.8f, 0.8f, 0.8f));
+                DebugView.DrawSegment(point1, localPoint, new Color(0.8f, 0.8f, 0.8f));
 
-                Vector2 head = _point + 0.5f * _normal;
-                DebugView.DrawSegment(_point, head, new Color(0.9f, 0.9f, 0.4f));
+                Vector2 head = localPoint + 0.5f * localNormal;
+                DebugView.DrawSegment(localPoint, head, new Color(0.9f, 0.9f, 0.4f));
             }
             else
+            {
                 DebugView.DrawSegment(point1, point2, new Color(0.8f, 0.8f, 0.8f));
+            }
+            
             DebugView.EndCustomDraw();
 
             if (advanceRay)

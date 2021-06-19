@@ -1,4 +1,3 @@
-
 /*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
@@ -95,25 +94,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         protected override void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint)
         {
             if (_broke)
-            {
+
                 // The body already broke.
                 return;
-            }
 
             // Should the body break?
             float maxImpulse = 0.0f;
             Manifold manifold = contact.Manifold;
 
             for (int i = 0; i < manifold.PointCount; ++i)
-            {
                 maxImpulse = Math.Max(maxImpulse, contactConstraint.Points[i].NormalImpulse);
-            }
 
             if (maxImpulse > 40.0f)
-            {
+
                 // Flag the body for breaking.
                 _break = true;
-            }
         }
 
         private void Break()

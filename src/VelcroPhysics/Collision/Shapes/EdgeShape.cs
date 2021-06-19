@@ -52,7 +52,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             SetOneSided(v0, v1, v2, v3);
         }
 
-        internal EdgeShape() : base(ShapeType.Edge, Settings.PolygonRadius) { }
+        public EdgeShape() : base(ShapeType.Edge, Settings.PolygonRadius) { }
 
         public override int ChildCount => 1;
 

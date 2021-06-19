@@ -1,34 +1,32 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
 
-using System;
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -38,57 +36,92 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
     /// This stress tests the dynamic tree broad-phase. This also shows that tile
     /// based collision is _not_ smooth due to Box2D not knowing about adjacency.
     /// </summary>
-    public class TilesTest : Test
+    internal class TilesTest : Test
     {
-        private const int Count = 20;
-        private readonly long _createTime;
+        private const int _count = 20;
         private readonly int _fixtureCount;
+        private readonly float _createTime;
 
         private TilesTest()
         {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
+            _fixtureCount = 0;
+            Stopwatch timer = Stopwatch.StartNew();
 
             {
-                const float a = 0.5f;
-                Body ground = BodyFactory.CreateBody(World, new Vector2(0, -a));
-                const int N = 200;
-                const int M = 10;
-                Vector2 position = Vector2.Zero;
+                float a = 0.5f;
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(0, -a);
+                Body ground = World.CreateBody(bd);
+
+#if true
+                int N = 200;
+                int M = 10;
+                Vector2 position;
                 position.Y = 0.0f;
                 for (int j = 0; j < M; ++j)
                 {
                     position.X = -N * a;
                     for (int i = 0; i < N; ++i)
                     {
-                        PolygonShape shape = new PolygonShape(0);
-                        shape.Vertices = PolygonUtils.CreateRectangle(a, a, position, 0.0f);
+                        PolygonShape shape = new PolygonShape(0.0f);
+                        shape.SetAsBox(a, a, position, 0.0f);
                         ground.CreateFixture(shape);
                         ++_fixtureCount;
                         position.X += 2.0f * a;
                     }
+
                     position.Y -= 2.0f * a;
                 }
+#else
+			int N = 200;
+			int M = 10;
+			b2Vec2 position;
+			position.x = -N * a;
+			for (int i = 0; i < N; ++i)
+			{
+				position.y = 0.0f;
+				for (int j = 0; j < M; ++j)
+				{
+					PolygonShape shape = new PolygonShape();
+					shape.SetAsBox(a, a, position, 0.0f);
+					ground.CreateFixture(shape, 0.0f);
+					position.y -= 2.0f * a;
+				}
+				position.x += 2.0f * a;
+			}
+#endif
             }
 
             {
-                const float a = 0.5f;
-                Vertices box = PolygonUtils.CreateRectangle(a, a);
-                PolygonShape shape = new PolygonShape(box, 5);
+                float a = 0.5f;
+                PolygonShape shape = new PolygonShape(5.0f);
+                shape.SetAsBox(a, a);
 
                 Vector2 x = new Vector2(-7.0f, 0.75f);
+                Vector2 y;
                 Vector2 deltaX = new Vector2(0.5625f, 1.25f);
                 Vector2 deltaY = new Vector2(1.125f, 0.0f);
 
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    Vector2 y = x;
+                    y = x;
 
-                    for (int j = i; j < Count; ++j)
+                    for (int j = i; j < _count; ++j)
                     {
-                        Body body = BodyFactory.CreateBody(World);
-                        body.BodyType = BodyType.Dynamic;
-                        body.Position = y;
+                        BodyDef bd = new BodyDef();
+                        bd.Type = BodyType.Dynamic;
+                        bd.Position = y;
+
+                        //if (i == 0 && j == 0)
+                        //{
+                        //	bd.AllowSleep = false;
+                        //}
+                        //else
+                        //{
+                        //	bd.AllowSleep = true;
+                        //}
+
+                        Body body = World.CreateBody(bd);
                         body.CreateFixture(shape);
                         ++_fixtureCount;
                         y += deltaY;
@@ -98,23 +131,29 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 }
             }
 
-            timer.Stop();
             _createTime = timer.ElapsedMilliseconds;
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             ContactManager cm = World.ContactManager;
-            DynamicTreeBroadPhase dt = (DynamicTreeBroadPhase)cm.BroadPhase;
-
-            int height = dt.TreeHeight;
-            int leafCount = dt.ProxyCount;
-            float minimumNodeCount = 2 * leafCount - 1;
-            float minimumHeight = (float)Math.Ceiling(Math.Log(minimumNodeCount) / Math.Log(2.0f));
+            DynamicTreeBroadPhase broadPhase = (DynamicTreeBroadPhase)cm.BroadPhase;
+            int height = broadPhase.TreeHeight;
+            int leafCount = broadPhase.ProxyCount;
+            int minimumNodeCount = 2 * leafCount - 1;
+            float minimumHeight = MathUtils.Ceil(MathUtils.Log(minimumNodeCount) / MathUtils.Log(2.0f));
             DrawString($"dynamic tree height = {height}, min = {(int)minimumHeight}");
-            DrawString($"create time = {_createTime} ms, fixture count = {_fixtureCount}");
 
             base.Update(settings, gameTime);
+
+            DrawString($"create time = {_createTime} ms, fixture count = {_fixtureCount}");
+
+            //b2DynamicTree* tree = &World.m_contactManager.m_broadPhase.m_tree;
+
+            //if (m_stepCount == 400)
+            //{
+            //	tree.RebuildBottomUp();
+            //}
         }
 
         internal static Test Create()

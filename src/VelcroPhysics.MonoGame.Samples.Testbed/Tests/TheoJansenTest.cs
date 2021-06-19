@@ -1,45 +1,152 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
+
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+// Inspired by a contribution from roman_m
+// Dimensions scooped from APE (http://www.cove.org/ape/index.htm)
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class TheoJansenTest : Test
+    internal class TheoJansenTest : Test
     {
+        private readonly Vector2 _offset;
         private readonly Body _chassis;
+        private readonly Body _wheel;
         private readonly RevoluteJoint _motorJoint;
         private readonly bool _motorOn;
         private readonly float _motorSpeed;
-        private readonly Vector2 _offset;
-        private readonly Body _wheel;
+
+        private void CreateLeg(float s, Vector2 wheelAnchor)
+        {
+            Vector2 p1 = new Vector2(5.4f * s, -6.1f);
+            Vector2 p2 = new Vector2(7.2f * s, -1.2f);
+            Vector2 p3 = new Vector2(4.3f * s, -1.9f);
+            Vector2 p4 = new Vector2(3.1f * s, 0.8f);
+            Vector2 p5 = new Vector2(6.0f * s, 1.5f);
+            Vector2 p6 = new Vector2(2.5f * s, 3.7f);
+
+            FixtureDef fd1 = new FixtureDef(), fd2 = new FixtureDef();
+            fd1.Filter.Group = -1;
+            fd2.Filter.Group = -1;
+
+            PolygonShape poly1 = new PolygonShape(1.0f), poly2 = new PolygonShape(1.0f);
+
+            if (s > 0.0f)
+            {
+                Vertices vertices = new Vertices(3);
+
+                vertices.Add(p1);
+                vertices.Add(p2);
+                vertices.Add(p3);
+                poly1.Vertices = vertices;
+
+                vertices[0] = Vector2.Zero;
+                vertices[1] = p5 - p4;
+                vertices[2] = p6 - p4;
+                poly2.Vertices = vertices;
+            }
+            else
+            {
+                Vertices vertices = new Vertices(3);
+
+                vertices.Add(p1);
+                vertices.Add(p3);
+                vertices.Add(p2);
+                poly1.Vertices = vertices;
+
+                vertices[0] = Vector2.Zero;
+                vertices[1] = p6 - p4;
+                vertices[2] = p5 - p4;
+                poly2.Vertices = vertices;
+            }
+
+            fd1.Shape = poly1;
+            fd2.Shape = poly2;
+
+            BodyDef bd1 = new BodyDef(), bd2 = new BodyDef();
+            bd1.Type = BodyType.Dynamic;
+            bd2.Type = BodyType.Dynamic;
+            bd1.Position = _offset;
+            bd2.Position = p4 + _offset;
+
+            bd1.AngularDamping = 10.0f;
+            bd2.AngularDamping = 10.0f;
+
+            Body body1 = World.CreateBody(bd1);
+            Body body2 = World.CreateBody(bd2);
+
+            body1.CreateFixture(fd1);
+            body2.CreateFixture(fd2);
+
+            {
+                DistanceJointDef jd = new DistanceJointDef();
+
+                // Using a soft distance constraint can reduce some jitter.
+                // It also makes the structure seem a bit more fluid by
+                // acting like a suspension system.
+                float dampingRatio = 0.5f;
+                float frequencyHz = 10.0f;
+
+                jd.Initialize(body1, body2, p2 + _offset, p5 + _offset);
+                JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
+                jd.Stiffness = stiffness;
+                jd.Damping = damping;
+                World.CreateJoint(jd);
+
+                jd.Initialize(body1, body2, p3 + _offset, p4 + _offset);
+                JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
+                jd.Stiffness = stiffness;
+                jd.Damping = damping;
+                World.CreateJoint(jd);
+
+                jd.Initialize(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
+                JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
+                jd.Stiffness = stiffness;
+                jd.Damping = damping;
+                World.CreateJoint(jd);
+
+                jd.Initialize(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
+                JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
+                jd.Stiffness = stiffness;
+                jd.Damping = damping;
+                World.CreateJoint(jd);
+            }
+
+            {
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.Initialize(body2, _chassis, p4 + _offset);
+                World.CreateJoint(jd);
+            }
+        }
 
         private TheoJansenTest()
         {
@@ -50,57 +157,76 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             // Ground
             {
-                Body ground = BodyFactory.CreateEdge(World, new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-                FixtureFactory.AttachEdge(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f), ground);
-                FixtureFactory.AttachEdge(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f), ground);
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape();
+                shape.SetTwoSided(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
+                ground.CreateFixture(shape);
+
+                shape.SetTwoSided(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
+                ground.CreateFixture(shape);
+
+                shape.SetTwoSided(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
+                ground.CreateFixture(shape);
             }
 
             // Balls
             for (int i = 0; i < 40; ++i)
             {
-                CircleShape shape = new CircleShape(0.25f, 1);
+                CircleShape shape = new CircleShape(1.0f);
+                shape.Radius = 0.25f;
 
-                Body body = BodyFactory.CreateBody(World);
-                body.BodyType = BodyType.Dynamic;
-                body.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
+                Body body = World.CreateBody(bd);
                 body.CreateFixture(shape);
             }
 
             // Chassis
             {
-                PolygonShape shape = new PolygonShape(1);
-                shape.Vertices = PolygonUtils.CreateRectangle(2.5f, 1.0f);
+                PolygonShape shape = new PolygonShape(1.0f);
+                shape.SetAsBox(2.5f, 1.0f);
 
-                _chassis = BodyFactory.CreateBody(World);
-                _chassis.BodyType = BodyType.Dynamic;
-                _chassis.Position = pivot + _offset;
-
-                Fixture fixture = _chassis.CreateFixture(shape);
-                fixture.CollisionGroup = -1;
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+                sd.Filter.Group = -1;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = pivot + _offset;
+                _chassis = World.CreateBody(bd);
+                _chassis.CreateFixture(sd);
             }
 
             {
-                CircleShape shape = new CircleShape(1.6f, 1);
+                CircleShape shape = new CircleShape(1.0f);
+                shape.Radius = 1.6f;
 
-                _wheel = BodyFactory.CreateBody(World);
-                _wheel.BodyType = BodyType.Dynamic;
-                _wheel.Position = pivot + _offset;
-
-                Fixture fixture = _wheel.CreateFixture(shape);
-                fixture.CollisionGroup = -1;
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+                sd.Filter.Group = -1;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = pivot + _offset;
+                _wheel = World.CreateBody(bd);
+                _wheel.CreateFixture(sd);
             }
 
             {
-                _motorJoint = new RevoluteJoint(_wheel, _chassis, _chassis.Position, true);
-                _motorJoint.CollideConnected = false;
-                _motorJoint.MotorSpeed = _motorSpeed;
-                _motorJoint.MaxMotorTorque = 400.0f;
-                _motorJoint.MotorEnabled = _motorOn;
-                World.AddJoint(_motorJoint);
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.Initialize(_wheel, _chassis, pivot + _offset);
+                jd.CollideConnected = false;
+                jd.MotorSpeed = _motorSpeed;
+                jd.MaxMotorTorque = 400.0f;
+                jd.EnableMotor = _motorOn;
+                _motorJoint = (RevoluteJoint)World.CreateJoint(jd);
             }
 
-            Vector2 wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
+            Vector2 wheelAnchor;
+
+            wheelAnchor = pivot + new Vector2(0.0f, -0.8f);
 
             CreateLeg(-1.0f, wheelAnchor);
             CreateLeg(1.0f, wheelAnchor);
@@ -114,92 +240,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             CreateLeg(1.0f, wheelAnchor);
         }
 
-        private void CreateLeg(float s, Vector2 wheelAnchor)
-        {
-            Vector2 p1 = new Vector2(5.4f * s, -6.1f);
-            Vector2 p2 = new Vector2(7.2f * s, -1.2f);
-            Vector2 p3 = new Vector2(4.3f * s, -1.9f);
-            Vector2 p4 = new Vector2(3.1f * s, 0.8f);
-            Vector2 p5 = new Vector2(6.0f * s, 1.5f);
-            Vector2 p6 = new Vector2(2.5f * s, 3.7f);
-
-            PolygonShape poly1 = new PolygonShape(1);
-            PolygonShape poly2 = new PolygonShape(1);
-
-            Vertices vertices = new Vertices(3);
-
-            if (s > 0.0f)
-            {
-                vertices.Add(p1);
-                vertices.Add(p2);
-                vertices.Add(p3);
-                poly1.Vertices = vertices;
-
-                vertices[0] = Vector2.Zero;
-                vertices[1] = p5 - p4;
-                vertices[2] = p6 - p4;
-                poly2.Vertices = vertices;
-            }
-            else
-            {
-                vertices.Add(p1);
-                vertices.Add(p3);
-                vertices.Add(p2);
-                poly1.Vertices = vertices;
-
-                vertices[0] = Vector2.Zero;
-                vertices[1] = p6 - p4;
-                vertices[2] = p5 - p4;
-                poly2.Vertices = vertices;
-            }
-
-            Body body1 = BodyFactory.CreateBody(World);
-            body1.BodyType = BodyType.Dynamic;
-            body1.Position = _offset;
-            body1.AngularDamping = 10.0f;
-
-            Body body2 = BodyFactory.CreateBody(World);
-            body2.BodyType = BodyType.Dynamic;
-            body2.Position = p4 + _offset;
-            body2.AngularDamping = 10.0f;
-
-            Fixture f1 = body1.CreateFixture(poly1);
-            f1.CollisionGroup = -1;
-
-            Fixture f2 = body2.CreateFixture(poly2);
-            f2.CollisionGroup = -1;
-
-            // Using a soft distance constraint can reduce some jitter.
-            // It also makes the structure seem a bit more fluid by
-            // acting like a suspension system.
-            float dampingRatio = 0.5f;
-            float frequencyHz = 10.0f;
-
-            DistanceJoint djd = new DistanceJoint(body1, body2, p2 + _offset, p5 + _offset, true);
-            JointHelper.LinearStiffness(frequencyHz, dampingRatio, djd.BodyA, djd.BodyB, out var stiffness, out var damping);
-            djd.Damping = damping;
-            djd.Stiffness = stiffness;
-            World.AddJoint(djd);
-
-            DistanceJoint djd2 = new DistanceJoint(body1, body2, p3 + _offset, p4 + _offset, true);
-            djd2.Damping = damping;
-            djd2.Stiffness = stiffness;
-            World.AddJoint(djd2);
-
-            DistanceJoint djd3 = new DistanceJoint(body1, _wheel, p3 + _offset, wheelAnchor + _offset, true);
-            djd3.Damping = damping;
-            djd3.Stiffness = stiffness;
-            World.AddJoint(djd3);
-
-            DistanceJoint djd4 = new DistanceJoint(body2, _wheel, p6 + _offset, wheelAnchor + _offset, true);
-            djd4.Damping = damping;
-            djd4.Stiffness = stiffness;
-            World.AddJoint(djd4);
-
-            RevoluteJoint rjd = new RevoluteJoint(body2, _chassis, p4 + _offset, true);
-            World.AddJoint(rjd);
-        }
-
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             DrawString("Keys: left = a, brake = s, right = d, toggle motor = m");
@@ -207,18 +247,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             base.Update(settings, gameTime);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            if (keyboard.IsNewKeyPress(Keys.A))
                 _motorJoint.MotorSpeed = -_motorSpeed;
-            if (keyboardManager.IsNewKeyPress(Keys.S))
+            else if (keyboard.IsNewKeyPress(Keys.S))
                 _motorJoint.MotorSpeed = 0.0f;
-            if (keyboardManager.IsNewKeyPress(Keys.D))
+            else if (keyboard.IsNewKeyPress(Keys.D))
                 _motorJoint.MotorSpeed = _motorSpeed;
-            if (keyboardManager.IsNewKeyPress(Keys.M))
+            else if (keyboard.IsNewKeyPress(Keys.M))
                 _motorJoint.MotorEnabled = !_motorJoint.MotorEnabled;
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         internal static Test Create()

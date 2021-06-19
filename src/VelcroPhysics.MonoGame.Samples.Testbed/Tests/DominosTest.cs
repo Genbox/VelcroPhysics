@@ -1,209 +1,220 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
 
-using Genbox.VelcroPhysics.Collision.ContactSystem;
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class DominosTest : Test
+    internal class DominosTest : Test
     {
         private DominosTest()
         {
-            Body b1 = BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            Body b1;
+            {
+                EdgeShape shape = new EdgeShape();
+                shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+
+                BodyDef bd = new BodyDef();
+                b1 = World.CreateBody(bd);
+                b1.CreateFixture(shape);
+            }
 
             {
-                Vertices box = PolygonUtils.CreateRectangle(6.0f, 0.25f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(0.0f);
+                shape.SetAsBox(6.0f, 0.25f);
 
-                Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(-1.5f, 10.0f);
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(-1.5f, 10.0f);
+                Body ground = World.CreateBody(bd);
                 ground.CreateFixture(shape);
             }
 
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.1f, 1.0f);
-                PolygonShape shape = new PolygonShape(box, 20);
+                PolygonShape shape = new PolygonShape(20.0f);
+                shape.SetAsBox(0.1f, 1.0f);
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.1f;
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
-
-                    Fixture fixture = body.CreateFixture(shape);
-                    fixture.Friction = 0.1f;
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-6.0f + 1.0f * i, 11.25f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(fd);
                 }
             }
 
             {
-                Vertices box = PolygonUtils.CreateRectangle(7.0f, 0.25f, Vector2.Zero, 0.3f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(0.0f);
+                shape.SetAsBox(7.0f, 0.25f, Vector2.Zero, 0.3f);
 
-                Body ground = BodyFactory.CreateBody(World);
-                ground.Position = new Vector2(1.0f, 6.0f);
-
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(1.0f, 6.0f);
+                Body ground = World.CreateBody(bd);
                 ground.CreateFixture(shape);
             }
 
             Body b2;
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.25f, 1.5f);
-                PolygonShape shape = new PolygonShape(box, 0);
+                PolygonShape shape = new PolygonShape(0.02f);
+                shape.SetAsBox(0.25f, 1.5f);
 
-                b2 = BodyFactory.CreateBody(World);
-                b2.Position = new Vector2(-7.0f, 4.0f);
-
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(-7.0f, 4.0f);
+                b2 = World.CreateBody(bd);
                 b2.CreateFixture(shape);
             }
 
             Body b3;
             {
-                Vertices box = PolygonUtils.CreateRectangle(6.0f, 0.125f);
-                PolygonShape shape = new PolygonShape(box, 10);
+                PolygonShape shape = new PolygonShape(10.0f);
+                shape.SetAsBox(6.0f, 0.125f);
 
-                b3 = BodyFactory.CreateBody(World);
-                b3.BodyType = BodyType.Dynamic;
-                b3.Position = new Vector2(-0.9f, 1.0f);
-                b3.Rotation = -0.15f;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-0.9f, 1.0f);
+                bd.Angle = -0.15f;
 
+                b3 = World.CreateBody(bd);
                 b3.CreateFixture(shape);
             }
 
-            Vector2 anchor = new Vector2(-2.0f, 1.0f);
-            RevoluteJoint jd = new RevoluteJoint(b1, b3, anchor, true);
+            RevoluteJointDef jd = new RevoluteJointDef();
+            Vector2 anchor;
+
+            anchor = new Vector2(-2.0f, 1.0f);
+            jd.Initialize(b1, b3, anchor);
             jd.CollideConnected = true;
-            World.AddJoint(jd);
+            World.CreateJoint(jd);
 
             Body b4;
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.25f, 0.25f);
-                PolygonShape shape = new PolygonShape(box, 10);
+                PolygonShape shape = new PolygonShape(10.0f);
+                shape.SetAsBox(0.25f, 0.25f);
 
-                b4 = BodyFactory.CreateBody(World);
-                b4.BodyType = BodyType.Dynamic;
-                b4.Position = new Vector2(-10.0f, 15.0f);
-
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-10.0f, 15.0f);
+                b4 = World.CreateBody(bd);
                 b4.CreateFixture(shape);
             }
 
             anchor = new Vector2(-7.0f, 15.0f);
-            RevoluteJoint jd2 = new RevoluteJoint(b2, b4, anchor, true);
-            World.AddJoint(jd2);
+            jd.Initialize(b2, b4, anchor);
+            World.CreateJoint(jd);
 
             Body b5;
             {
-                b5 = BodyFactory.CreateBody(World);
-                b5.BodyType = BodyType.Dynamic;
-                b5.Position = new Vector2(6.5f, 3.0f);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(6.5f, 3.0f);
+                b5 = World.CreateBody(bd);
 
-                Vertices vertices = PolygonUtils.CreateRectangle(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
-                PolygonShape shape = new PolygonShape(vertices, 10);
+                PolygonShape shape = new PolygonShape(10.0f);
+                FixtureDef fd = new FixtureDef();
 
-                Fixture fix = b5.CreateFixture(shape);
-                fix.Friction = 0.1f;
+                fd.Shape = shape;
+                fd.Friction = 0.1f;
 
-                vertices = PolygonUtils.CreateRectangle(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
+                shape.SetAsBox(1.0f, 0.1f, new Vector2(0.0f, -0.9f), 0.0f);
+                b5.CreateFixture(fd);
 
-                shape.Vertices = vertices;
-                fix = b5.CreateFixture(shape);
-                fix.Friction = 0.1f;
+                shape.SetAsBox(0.1f, 1.0f, new Vector2(-0.9f, 0.0f), 0.0f);
+                b5.CreateFixture(fd);
 
-                vertices = PolygonUtils.CreateRectangle(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
-
-                shape.Vertices = vertices;
-                fix = b5.CreateFixture(shape);
-                fix.Friction = 0.1f;
+                shape.SetAsBox(0.1f, 1.0f, new Vector2(0.9f, 0.0f), 0.0f);
+                b5.CreateFixture(fd);
             }
 
             anchor = new Vector2(6.0f, 2.0f);
-            RevoluteJoint jd3 = new RevoluteJoint(b1, b5, anchor, true);
-            World.AddJoint(jd3);
+            jd.Initialize(b1, b5, anchor);
+            World.CreateJoint(jd);
 
             Body b6;
             {
-                Vertices box = PolygonUtils.CreateRectangle(1.0f, 0.1f);
-                PolygonShape shape = new PolygonShape(box, 30);
+                PolygonShape shape = new PolygonShape(30.0f);
+                shape.SetAsBox(1.0f, 0.1f);
 
-                b6 = BodyFactory.CreateBody(World);
-                b6.BodyType = BodyType.Dynamic;
-                b6.Position = new Vector2(6.5f, 4.1f);
-
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(6.5f, 4.1f);
+                b6 = World.CreateBody(bd);
                 b6.CreateFixture(shape);
             }
 
-            anchor = new Vector2(7.50f, 4.0f);
-            RevoluteJoint jd4 = new RevoluteJoint(b5, b6, anchor, true);
-            jd4.CollideConnected = true;
-            World.AddJoint(jd4);
+            anchor = new Vector2(7.5f, 4.0f);
+            jd.Initialize(b5, b6, anchor);
+            World.CreateJoint(jd);
 
             Body b7;
             {
-                Vertices box = PolygonUtils.CreateRectangle(0.1f, 1.0f);
-                PolygonShape shape = new PolygonShape(box, 10);
+                PolygonShape shape = new PolygonShape(10.0f);
+                shape.SetAsBox(0.1f, 1.0f);
 
-                b7 = BodyFactory.CreateBody(World);
-                b7.BodyType = BodyType.Dynamic;
-                b7.Position = new Vector2(7.4f, 1.0f);
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(7.4f, 1.0f);
 
+                b7 = World.CreateBody(bd);
                 b7.CreateFixture(shape);
             }
 
-            DistanceJoint djd = new DistanceJoint(b3, b7, new Vector2(6.0f, 0.0f), new Vector2(0.0f, -1.0f));
-            World.AddJoint(djd);
+            DistanceJointDef djd = new DistanceJointDef();
+            djd.BodyA = b3;
+            djd.BodyB = b7;
+            djd.LocalAnchorA = new Vector2(6.0f, 0.0f);
+            djd.LocalAnchorB = new Vector2(0.0f, -1.0f);
+            Vector2 d = djd.BodyB.GetWorldPoint(djd.LocalAnchorB) - djd.BodyA.GetWorldPoint(djd.LocalAnchorA);
+            djd.Length = d.Length();
+
+            JointHelper.LinearStiffness(1.0f, 1.0f, djd.BodyA, djd.BodyB, out float stiffness, out float damping);
+            djd.Stiffness = stiffness;
+            djd.Damping = damping;
+
+            World.CreateJoint(djd);
 
             {
-                const float radius = 0.2f;
+                float radius = 0.2f;
 
-                CircleShape shape = new CircleShape(radius, 10);
+                CircleShape shape = new CircleShape(10.0f);
+                shape.Radius = radius;
 
                 for (int i = 0; i < 4; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
-
-                    Fixture fix = body.CreateFixture(shape);
-                    fix.OnCollision += BallCollision;
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(5.9f + 2.0f * radius * i, 2.4f);
+                    Body body = World.CreateBody(bd);
+                    body.CreateFixture(shape);
                 }
-            }
-        }
-
-        private void BallCollision(Fixture fixturea, Fixture fixtureb, Contact contact)
-        {
-            if (fixtureb.Shape.ShapeType == ShapeType.Edge)
-            {
-                //Remove everything from the world
-                World.Clear();
-
-                //Add a rectangle
-                BodyFactory.CreateRectangle(World, 5, 5, 1);
             }
         }
 

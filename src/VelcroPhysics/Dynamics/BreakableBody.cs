@@ -129,7 +129,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 body.LinearVelocity = _velocitiesCache[i];
             }
 
-            _world.RemoveBody(MainBody);
+            _world.DestroyBody(MainBody);
             _world.RemoveBreakableBody(this);
         }
 

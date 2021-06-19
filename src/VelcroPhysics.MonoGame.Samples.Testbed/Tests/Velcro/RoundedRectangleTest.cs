@@ -6,11 +6,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
-    public class RoundedRectangle : Test
+    public class RoundedRectangleTest : Test
     {
         private int _segments = 3;
 
-        private RoundedRectangle()
+        private RoundedRectangleTest()
         {
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -34,21 +34,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             Create(0);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            if (keyboard.IsNewKeyPress(Keys.A))
                 _segments++;
 
-            if (keyboardManager.IsNewKeyPress(Keys.S) && _segments > 0)
+            if (keyboard.IsNewKeyPress(Keys.S) && _segments > 0)
                 _segments--;
 
-            if (keyboardManager.IsNewKeyPress(Keys.D))
+            if (keyboard.IsNewKeyPress(Keys.D))
                 Create(0);
 
-            if (keyboardManager.IsNewKeyPress(Keys.F))
+            if (keyboard.IsNewKeyPress(Keys.F))
                 Create(1);
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         private void Create(int type)
@@ -76,7 +76,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
         internal static Test Create()
         {
-            return new RoundedRectangle();
+            return new RoundedRectangleTest();
         }
     }
 }

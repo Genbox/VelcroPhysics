@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
-    public class ConvexHullTest2 : Test
+    public class ConvexHull2Test : Test
     {
         private const int PointCount = 32;
 
@@ -18,7 +18,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         private readonly Vertices _pointCloud2;
         private readonly Vertices _pointCloud3;
 
-        private ConvexHullTest2()
+        private ConvexHull2Test()
         {
             _pointCloud1 = new Vertices(PointCount);
 
@@ -70,7 +70,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
         internal static Test Create()
         {
-            return new ConvexHullTest2();
+            return new ConvexHull2Test();
         }
     }
 }

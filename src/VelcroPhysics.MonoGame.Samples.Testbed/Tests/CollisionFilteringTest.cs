@@ -23,11 +23,11 @@
 using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Utilities;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
@@ -35,141 +35,148 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
     /// <summary>
     /// This is a test of collision filtering.
     /// There is a triangle, a box, and a circle.
-    /// There are 7 shapes. 4 large and 3 small.
+    /// There are 6 shapes. 3 large and 3 small.
     /// The 3 small ones always collide.
-    /// The 4 large ones never collide.
+    /// The 3 large ones never collide.
     /// The boxes don't collide with triangles (except if both are small).
     /// </summary>
-    public class CollisionFilteringTest : Test
+    internal class CollisionFilteringTest : Test
     {
-        private const short SmallGroup = 1;
-        private const short LargeGroup = -1;
+        private const short _smallGroup = 1;
+        private const short _largeGroup = -1;
 
-        private const Category TriangleCategory = Category.Cat2;
-        private const Category BoxCategory = Category.Cat3;
-        private const Category CircleCategory = Category.Cat4;
+        private const Category _triangleCategory = Category.Cat2;
+        private const Category _boxCategory = Category.Cat3;
+        private const Category _circleCategory = Category.Cat4;
 
-        private const Category TriangleMask = Category.All;
-        private const Category BoxMask = Category.All ^ TriangleCategory;
-        private const Category CircleMask = Category.All;
+        private const Category _triangleMask = Category.All;
+        private const Category _boxMask = Category.All ^ _triangleCategory;
+        private const Category _circleMask = Category.All;
 
         private CollisionFilteringTest()
         {
             //Ground
             BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
+            // Ground body
             {
-                // Small triangle
-                Vertices vertices = new Vertices(3);
-                vertices.Add(new Vector2(-1.0f, 0.0f));
-                vertices.Add(new Vector2(1.0f, 0.0f));
-                vertices.Add(new Vector2(0.0f, 2.0f));
-                PolygonShape polygon = new PolygonShape(vertices, 1);
+                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-                Body triangleBody = BodyFactory.CreateBody(World);
-                triangleBody.BodyType = BodyType.Dynamic;
-                triangleBody.Position = new Vector2(-5.0f, 2.0f);
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+                sd.Friction = 0.3f;
 
-                Fixture triangleFixture = triangleBody.CreateFixture(polygon);
-                triangleFixture.CollisionGroup = SmallGroup;
-                triangleFixture.CollisionCategories = TriangleCategory;
-                triangleFixture.CollidesWith = TriangleMask;
-
-                // Large triangle (recycle definitions)
-                vertices[0] *= 2.0f;
-                vertices[1] *= 2.0f;
-                vertices[2] *= 2.0f;
-                polygon.Vertices = vertices;
-
-                Body triangleBody2 = BodyFactory.CreateBody(World);
-                triangleBody2.BodyType = BodyType.Dynamic;
-                triangleBody2.Position = new Vector2(-5.0f, 6.0f);
-                triangleBody2.FixedRotation = true; // look at me!
-
-                Fixture triangleFixture2 = triangleBody2.CreateFixture(polygon);
-                triangleFixture2.CollisionGroup = LargeGroup;
-                triangleFixture2.CollisionCategories = TriangleCategory;
-                triangleFixture2.CollidesWith = TriangleMask;
-
-                {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-5.0f, 10.0f);
-
-                    Vertices box = PolygonUtils.CreateRectangle(0.5f, 1.0f);
-                    PolygonShape p = new PolygonShape(box, 1);
-                    body.CreateFixture(p);
-
-                    PrismaticJoint jd = new PrismaticJoint(triangleBody2, body, new Vector2(0, 4), Vector2.Zero, new Vector2(0.0f, 1.0f));
-                    jd.LimitEnabled = true;
-                    jd.LowerLimit = -1.0f;
-                    jd.UpperLimit = 1.0f;
-
-                    World.AddJoint(jd);
-                }
-
-                // Small box
-                polygon.Vertices = PolygonUtils.CreateRectangle(1.0f, 0.5f);
-
-                Body boxBody = BodyFactory.CreateBody(World);
-                boxBody.BodyType = BodyType.Dynamic;
-                boxBody.Position = new Vector2(0.0f, 2.0f);
-
-                Fixture boxFixture = boxBody.CreateFixture(polygon);
-                boxFixture.Restitution = 0.1f;
-
-                boxFixture.CollisionGroup = SmallGroup;
-                boxFixture.CollisionCategories = BoxCategory;
-                boxFixture.CollidesWith = BoxMask;
-
-                // Large box (recycle definitions)
-                polygon.Vertices = PolygonUtils.CreateRectangle(2, 1);
-
-                Body boxBody2 = BodyFactory.CreateBody(World);
-                boxBody2.BodyType = BodyType.Dynamic;
-                boxBody2.Position = new Vector2(0.0f, 6.0f);
-
-                Fixture boxFixture2 = boxBody2.CreateFixture(polygon);
-                boxFixture2.CollisionGroup = LargeGroup;
-                boxFixture2.CollisionCategories = BoxCategory;
-                boxFixture2.CollidesWith = BoxMask;
-
-                // Small circle
-                CircleShape circle = new CircleShape(1.0f, 1);
-
-                Body circleBody = BodyFactory.CreateBody(World);
-                circleBody.BodyType = BodyType.Dynamic;
-                circleBody.Position = new Vector2(5.0f, 2.0f);
-
-                Fixture circleFixture = circleBody.CreateFixture(circle);
-
-                circleFixture.CollisionGroup = SmallGroup;
-                circleFixture.CollisionCategories = CircleCategory;
-                circleFixture.CollidesWith = CircleMask;
-
-                // Large circle
-                circle.Radius *= 2.0f;
-
-                Body circleBody2 = BodyFactory.CreateBody(World);
-                circleBody2.BodyType = BodyType.Dynamic;
-                circleBody2.Position = new Vector2(5.0f, 6.0f);
-
-                Fixture circleFixture2 = circleBody2.CreateFixture(circle);
-                circleFixture2.CollisionGroup = LargeGroup;
-                circleFixture2.CollisionCategories = CircleCategory;
-                circleFixture2.CollidesWith = CircleMask;
-
-                // Large circle - Ignore with other large circle
-                Body circleBody3 = BodyFactory.CreateBody(World);
-                circleBody3.BodyType = BodyType.Dynamic;
-                circleBody3.Position = new Vector2(6.0f, 9.0f);
-
-                //Another large circle. This one uses IgnoreCollisionWith() logic instead of categories.
-                Fixture circleFixture3 = circleBody3.CreateFixture(circle);
-                circleFixture3.CollisionGroup = LargeGroup;
-                circleFixture3.CollisionCategories = CircleCategory;
-                circleFixture3.CollidesWith = CircleMask;
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+                ground.CreateFixture(sd);
             }
+
+            // Small triangle
+            Vertices vertices = new Vertices(3);
+            vertices.Add(new Vector2(-1.0f, 0.0f));
+            vertices.Add(new Vector2(1.0f, 0.0f));
+            vertices.Add(new Vector2(0.0f, 2.0f));
+
+            PolygonShape polygon = new PolygonShape(vertices, 1.0f);
+
+            FixtureDef triangleShapeDef = new FixtureDef();
+            triangleShapeDef.Shape = polygon;
+
+            triangleShapeDef.Filter.Group = _smallGroup;
+            triangleShapeDef.Filter.Category = _triangleCategory;
+            triangleShapeDef.Filter.CategoryMask = _triangleMask;
+
+            BodyDef triangleBodyDef = new BodyDef();
+            triangleBodyDef.Type = BodyType.Dynamic;
+            triangleBodyDef.Position = new Vector2(-5.0f, 2.0f);
+
+            Body body1 = World.CreateBody(triangleBodyDef);
+            body1.CreateFixture(triangleShapeDef);
+
+            // Large triangle (recycle definitions)
+            vertices[0] *= 2.0f;
+            vertices[1] *= 2.0f;
+            vertices[2] *= 2.0f;
+            polygon.Vertices = vertices;
+            triangleShapeDef.Filter.Group = _largeGroup;
+            triangleBodyDef.Position = new Vector2(-5.0f, 6.0f);
+            triangleBodyDef.FixedRotation = true; // look at me!
+
+            Body body2 = World.CreateBody(triangleBodyDef);
+            body2.CreateFixture(triangleShapeDef);
+
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(-5.0f, 10.0f);
+                Body body = World.CreateBody(bd);
+
+                PolygonShape p = new PolygonShape(1.0f);
+                p.SetAsBox(0.5f, 1.0f);
+                body.CreateFixture(p);
+
+                PrismaticJointDef jd = new PrismaticJointDef();
+                jd.BodyA = body2;
+                jd.BodyB = body;
+                jd.EnableLimit = true;
+                jd.LocalAnchorA = new Vector2(0.0f, 4.0f);
+                jd.LocalAnchorB = Vector2.Zero;
+                jd.LocalAxisA = new Vector2(0.0f, 1.0f);
+                jd.LowerTranslation = -1.0f;
+                jd.UpperTranslation = 1.0f;
+
+                World.CreateJoint(jd);
+            }
+
+            // Small box
+            polygon.SetAsBox(1.0f, 0.5f);
+            FixtureDef boxShapeDef = new FixtureDef();
+            boxShapeDef.Shape = polygon;
+            boxShapeDef.Restitution = 0.1f;
+
+            boxShapeDef.Filter.Group = _smallGroup;
+            boxShapeDef.Filter.Category = _boxCategory;
+            boxShapeDef.Filter.CategoryMask = _boxMask;
+
+            BodyDef boxBodyDef = new BodyDef();
+            boxBodyDef.Type = BodyType.Dynamic;
+            boxBodyDef.Position = new Vector2(0.0f, 2.0f);
+
+            Body body3 = World.CreateBody(boxBodyDef);
+            body3.CreateFixture(boxShapeDef);
+
+            // Large box (recycle definitions)
+            polygon.SetAsBox(2.0f, 1.0f);
+            boxShapeDef.Filter.Group = _largeGroup;
+            boxBodyDef.Position = new Vector2(0.0f, 6.0f);
+
+            Body body4 = World.CreateBody(boxBodyDef);
+            body4.CreateFixture(boxShapeDef);
+
+            // Small circle
+            CircleShape circle = new CircleShape(1.0f, 1.0f);
+
+            FixtureDef circleShapeDef = new FixtureDef();
+            circleShapeDef.Shape = circle;
+
+            circleShapeDef.Filter.Group = _smallGroup;
+            circleShapeDef.Filter.Category = _circleCategory;
+            circleShapeDef.Filter.CategoryMask = _circleMask;
+
+            BodyDef circleBodyDef = new BodyDef();
+            circleBodyDef.Type = BodyType.Dynamic;
+            circleBodyDef.Position = new Vector2(5.0f, 2.0f);
+
+            Body body5 = World.CreateBody(circleBodyDef);
+            body5.CreateFixture(circleShapeDef);
+
+            // Large circle
+            circle.Radius *= 2.0f;
+            circleShapeDef.Filter.Group = _largeGroup;
+            circleBodyDef.Position = new Vector2(5.0f, 6.0f);
+
+            Body body6 = World.CreateBody(circleBodyDef);
+            body6.CreateFixture(circleShapeDef);
         }
 
         internal static Test Create()

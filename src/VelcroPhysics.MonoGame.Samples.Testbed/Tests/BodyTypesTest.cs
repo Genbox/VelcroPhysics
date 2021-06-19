@@ -32,7 +32,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class BodyTypesTest : Test
+    internal class BodyTypesTest : Test
     {
         private readonly Body _attachment;
         private readonly Body _platform;
@@ -118,20 +118,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsKeyDown(Keys.D))
+            if (keyboard.IsKeyDown(Keys.D))
                 _platform.BodyType = BodyType.Dynamic;
-            if (keyboardManager.IsKeyDown(Keys.S))
+            if (keyboard.IsKeyDown(Keys.S))
                 _platform.BodyType = BodyType.Static;
-            if (keyboardManager.IsKeyDown(Keys.K))
+            if (keyboard.IsKeyDown(Keys.K))
             {
                 _platform.BodyType = BodyType.Kinematic;
                 _platform.LinearVelocity = new Vector2(-_speed, 0.0f);
                 _platform.AngularVelocity = 0.0f;
             }
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

@@ -1,31 +1,32 @@
-﻿/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-*
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
+
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -34,95 +35,126 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     /// <summary>
     /// This tests bullet collision and provides an example of a gameplay scenario.
+    /// This also uses a loop shape.
     /// </summary>
-    public class PinballTest : Test
+    internal class PinballTest : Test
     {
-        private readonly Body _ball;
         private readonly RevoluteJoint _leftJoint;
         private readonly RevoluteJoint _rightJoint;
+        private readonly Body _ball;
+        private bool _button;
 
         private PinballTest()
         {
             // Ground body
             Body ground;
             {
-                ground = BodyFactory.CreateBody(World);
+                BodyDef bd = new BodyDef();
+                ground = World.CreateBody(bd);
 
-                Vertices vertices = new Vertices(5);
-                vertices.Add(new Vector2(-8.0f, 6.0f));
-                vertices.Add(new Vector2(-8.0f, 20.0f));
-                vertices.Add(new Vector2(8.0f, 20.0f));
-                vertices.Add(new Vector2(8.0f, 6.0f));
-                vertices.Add(new Vector2(0.0f, -2.0f));
+                Vertices vs = new Vertices(5);
+                vs.Add(new Vector2(-8.0f, 6.0f));
+                vs.Add(new Vector2(-8.0f, 20.0f));
+                vs.Add(new Vector2(8.0f, 20.0f));
+                vs.Add(new Vector2(8.0f, 6.0f));
+                vs.Add(new Vector2(0.0f, -2.0f));
 
-                ChainShape chain = new ChainShape(vertices, true);
-                ground.CreateFixture(chain);
+                ChainShape loop = new ChainShape(vs, true);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = loop;
+                ground.CreateFixture(fd);
             }
 
             // Flippers
             {
-                Vector2 p1 = new Vector2(-2.0f, 0f);
-                Vector2 p2 = new Vector2(2.0f, 0f);
+                Vector2 p1 = new Vector2(-2.0f, 0.0f), p2 = new Vector2(2.0f, 0.0f);
 
-                Body leftFlipper = BodyFactory.CreateBody(World, p1);
-                leftFlipper.BodyType = BodyType.Dynamic;
-                Body rightFlipper = BodyFactory.CreateBody(World, p2);
-                rightFlipper.BodyType = BodyType.Dynamic;
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
 
-                PolygonShape box = new PolygonShape(1);
-                box.Vertices = PolygonUtils.CreateRectangle(1.75f, 0.1f);
+                bd.Position = p1;
+                Body leftFlipper = World.CreateBody(bd);
 
-                leftFlipper.CreateFixture(box);
-                rightFlipper.CreateFixture(box);
+                bd.Position = p2;
+                Body rightFlipper = World.CreateBody(bd);
 
-                _leftJoint = new RevoluteJoint(ground, leftFlipper, p1, Vector2.Zero);
-                _leftJoint.MaxMotorTorque = 1000.0f;
-                _leftJoint.LimitEnabled = true;
-                _leftJoint.MotorEnabled = true;
-                _leftJoint.MotorSpeed = 0.0f;
-                _leftJoint.LowerLimit = -30.0f * MathConstants.Pi / 180.0f;
-                _leftJoint.UpperLimit = 5.0f * MathConstants.Pi / 180.0f;
-                World.AddJoint(_leftJoint);
+                PolygonShape box = new PolygonShape(1.0f);
+                box.SetAsBox(1.75f, 0.1f);
 
-                _rightJoint = new RevoluteJoint(ground, rightFlipper, p2, Vector2.Zero);
-                _rightJoint.MaxMotorTorque = 1000.0f;
-                _rightJoint.LimitEnabled = true;
-                _rightJoint.MotorEnabled = true;
-                _rightJoint.MotorSpeed = 0.0f;
-                _rightJoint.LowerLimit = -5.0f * MathConstants.Pi / 180.0f;
-                _rightJoint.UpperLimit = 30.0f * MathConstants.Pi / 180.0f;
-                World.AddJoint(_rightJoint);
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = box;
+
+                leftFlipper.CreateFixture(fd);
+                rightFlipper.CreateFixture(fd);
+
+                RevoluteJointDef jd = new RevoluteJointDef();
+                jd.BodyA = ground;
+                jd.LocalAnchorB = Vector2.Zero;
+                jd.EnableMotor = true;
+                jd.MaxMotorTorque = 1000.0f;
+                jd.EnableLimit = true;
+
+                jd.MotorSpeed = 0.0f;
+                jd.LocalAnchorA = p1;
+                jd.BodyB = leftFlipper;
+                jd.LowerAngle = -30.0f * MathConstants.Pi / 180.0f;
+                jd.UpperAngle = 5.0f * MathConstants.Pi / 180.0f;
+                _leftJoint = (RevoluteJoint)World.CreateJoint(jd);
+
+                jd.MotorSpeed = 0.0f;
+                jd.LocalAnchorA = p2;
+                jd.BodyB = rightFlipper;
+                jd.LowerAngle = -5.0f * MathConstants.Pi / 180.0f;
+                jd.UpperAngle = 30.0f * MathConstants.Pi / 180.0f;
+                _rightJoint = (RevoluteJoint)World.CreateJoint(jd);
             }
 
             // Circle character
             {
-                _ball = BodyFactory.CreateBody(World, new Vector2(1.0f, 15.0f));
-                _ball.BodyType = BodyType.Dynamic;
-                _ball.IsBullet = true;
-                _ball.CreateFixture(new CircleShape(0.2f, 1.0f));
+                BodyDef bd = new BodyDef();
+                bd.Position = new Vector2(1.0f, 15.0f);
+                bd.Type = BodyType.Dynamic;
+                bd.IsBullet = true;
+
+                _ball = World.CreateBody(bd);
+
+                CircleShape shape = new CircleShape(1.0f);
+                shape.Radius = 0.2f;
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                _ball.CreateFixture(fd);
             }
+
+            _button = false;
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Update(GameSettings settings, GameTime gameTime)
         {
-            if (keyboardManager.IsKeyDown(Keys.A))
+            if (_button)
             {
                 _leftJoint.MotorSpeed = 20.0f;
                 _rightJoint.MotorSpeed = -20.0f;
             }
-            if (keyboardManager.IsKeyUp(Keys.A))
+            else
             {
                 _leftJoint.MotorSpeed = -10.0f;
                 _rightJoint.MotorSpeed = 10.0f;
             }
 
-            base.Keyboard(keyboardManager);
+            base.Update(settings, gameTime);
+
+            DrawString("Press 'a' to control the flippers");
         }
 
-        public override void Update(GameSettings settings, GameTime gameTime)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            base.Update(settings, gameTime);
-            DrawString("Press 'a' to control the flippers");
+            if (keyboard.IsKeyDown(Keys.A))
+                _button = true;
+            else
+                _button = false;
+
+            base.Keyboard(keyboard);
         }
 
         internal static Test Create()

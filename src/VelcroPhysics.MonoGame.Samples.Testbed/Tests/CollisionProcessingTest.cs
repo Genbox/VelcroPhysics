@@ -20,31 +20,39 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
+using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Utilities;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class CollisionProcessingTest : Test
+    internal class CollisionProcessingTest : Test
     {
-        private readonly List<Body> _removeBodies = new List<Body>();
+        private readonly List<Body[]> _bodies = new List<Body[]>();
 
         private CollisionProcessingTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            // Ground body
+            {
+                EdgeShape shape = new EdgeShape(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
 
-            const float xLo = -5.0f;
-            const float xHi = 5.0f;
-            const float yLo = 2.0f;
-            const float yHi = 35.0f;
+                FixtureDef sd = new FixtureDef();
+                sd.Shape = shape;
+
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+                ground.CreateFixture(sd);
+            }
+
+            float xLo = -5.0f, xHi = 5.0f;
+            float yLo = 2.0f, yHi = 35.0f;
 
             // Small triangle
             Vertices vertices = new Vertices(3);
@@ -52,14 +60,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             vertices.Add(new Vector2(1.0f, 0.0f));
             vertices.Add(new Vector2(0.0f, 2.0f));
 
-            PolygonShape polygon = new PolygonShape(vertices, 1);
+            PolygonShape polygon = new PolygonShape(vertices, 1.0f);
 
-            Body body1 = BodyFactory.CreateBody(World);
-            body1.BodyType = BodyType.Dynamic;
-            body1.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+            FixtureDef triangleShapeDef = new FixtureDef();
+            triangleShapeDef.Shape = polygon;
 
-            Fixture fixture = body1.CreateFixture(polygon);
-            fixture.OnCollision += OnCollision;
+            BodyDef triangleBodyDef = new BodyDef();
+            triangleBodyDef.Type = BodyType.Dynamic;
+            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+
+            Body body1 = World.CreateBody(triangleBodyDef);
+            body1.CreateFixture(triangleShapeDef);
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
@@ -67,84 +78,127 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             vertices[2] *= 2.0f;
             polygon.Vertices = vertices;
 
-            Body body2 = BodyFactory.CreateBody(World);
-            body2.BodyType = BodyType.Dynamic;
-            body2.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            fixture = body2.CreateFixture(polygon);
-            fixture.OnCollision += OnCollision;
+            triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+
+            Body body2 = World.CreateBody(triangleBodyDef);
+            body2.CreateFixture(triangleShapeDef);
 
             // Small box
-            Vertices smallBox = PolygonUtils.CreateRectangle(1.0f, 0.5f);
-            polygon.Vertices = smallBox;
+            polygon.SetAsBox(1.0f, 0.5f);
 
-            Body body3 = BodyFactory.CreateBody(World);
-            body3.BodyType = BodyType.Dynamic;
-            body3.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            fixture = body3.CreateFixture(polygon);
-            fixture.OnCollision += OnCollision;
+            FixtureDef boxShapeDef = new FixtureDef();
+            boxShapeDef.Shape = polygon;
+
+            BodyDef boxBodyDef = new BodyDef();
+            boxBodyDef.Type = BodyType.Dynamic;
+            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+
+            Body body3 = World.CreateBody(boxBodyDef);
+            body3.CreateFixture(boxShapeDef);
 
             // Large box (recycle definitions)
-            Vertices largeBox = PolygonUtils.CreateRectangle(2.0f, 1.0f);
-            polygon.Vertices = largeBox;
+            polygon.SetAsBox(2.0f, 1.0f);
+            boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body4 = BodyFactory.CreateBody(World);
-            body4.BodyType = BodyType.Dynamic;
-            body4.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            fixture = body4.CreateFixture(polygon);
-            fixture.OnCollision += OnCollision;
+            Body body4 = World.CreateBody(boxBodyDef);
+            body4.CreateFixture(boxShapeDef);
 
             // Small circle
-            CircleShape circle = new CircleShape(1.0f, 1);
+            CircleShape circle = new CircleShape(1.0f, 1.0f);
 
-            Body body5 = BodyFactory.CreateBody(World);
-            body5.BodyType = BodyType.Dynamic;
-            body5.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            fixture = body5.CreateFixture(circle);
-            fixture.OnCollision += OnCollision;
+            FixtureDef circleShapeDef = new FixtureDef();
+            circleShapeDef.Shape = circle;
+
+            BodyDef circleBodyDef = new BodyDef();
+            circleBodyDef.Type = BodyType.Dynamic;
+            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
+
+            Body body5 = World.CreateBody(circleBodyDef);
+            body5.CreateFixture(circleShapeDef);
 
             // Large circle
             circle.Radius *= 2.0f;
+            circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body6 = BodyFactory.CreateBody(World);
-            body6.BodyType = BodyType.Dynamic;
-            body6.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
-            fixture = body6.CreateFixture(circle);
-            fixture.OnCollision += OnCollision;
+            Body body6 = World.CreateBody(circleBodyDef);
+            body6.CreateFixture(circleShapeDef);
         }
 
-        private void OnCollision(Fixture fixtureA, Fixture fixtureB, Contact contact)
+        protected override void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint)
         {
-            Body body1 = fixtureA.Body;
-            Body body2 = fixtureB.Body;
-            float mass1 = body1.Mass;
-            float mass2 = body2.Mass;
+            _bodies.Add(new[] { contact.FixtureA.Body, contact.FixtureB.Body });
 
-            if (mass1 > 0.0f && mass2 > 0.0f)
-            {
-                if (mass2 > mass1)
-                {
-                    if (!_removeBodies.Contains(body1))
-                        _removeBodies.Add(body1);
-                    contact.Enabled = false;
-                }
-            }
+            base.PostSolve(contact, contactConstraint);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             base.Update(settings, gameTime);
 
-            for (int i = 0; i < _removeBodies.Count; i++)
+            // We are going to destroy some bodies according to contact
+            // points. We must buffer the bodies that should be destroyed
+            // because they may belong to multiple contact points.
+            int k_maxNuke = 6;
+            Body[] nuke = new Body[k_maxNuke];
+            int nukeCount = 0;
+
+            // Traverse the contact results. Destroy bodies that
+            // are touching heavier bodies.
+            for (int i = 0; i < _bodies.Count; ++i)
             {
-                World.RemoveBody(_removeBodies[i]);
+                Body[] pair = _bodies[i];
+
+                Body body1 = pair[0];
+                Body body2 = pair[1];
+                float mass1 = body1.Mass;
+                float mass2 = body2.Mass;
+
+                if (mass1 > 0.0f && mass2 > 0.0f)
+                {
+                    if (mass2 > mass1)
+                        nuke[nukeCount++] = body1;
+                    else
+                        nuke[nukeCount++] = body2;
+
+                    if (nukeCount == k_maxNuke)
+                        break;
+                }
             }
 
-            _removeBodies.Clear();
+            // Sort the nuke array to group duplicates.
+            Array.Sort(nuke, new ReferenceComparer());
+
+            // Destroy the bodies, skipping duplicates.
+            int j = 0;
+            while (j < nukeCount)
+            {
+                Body b = nuke[j++];
+                while (j < nukeCount && nuke[j] == b)
+                    ++j;
+
+                World.DestroyBody(b);
+            }
+
+            _bodies.Clear();
         }
 
         internal static Test Create()
         {
             return new CollisionProcessingTest();
+        }
+
+        private class ReferenceComparer : IComparer<Body>
+        {
+            public int Compare(Body x, Body y)
+            {
+                if (ReferenceEquals(x, y))
+                    return 0;
+
+                if (x == null)
+                    return 1;
+
+                return -1;
+            }
         }
     }
 }

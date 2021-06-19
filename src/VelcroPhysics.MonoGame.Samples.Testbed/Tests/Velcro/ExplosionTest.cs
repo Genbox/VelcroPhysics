@@ -67,20 +67,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Mouse(state, oldState);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.OemComma))
+            if (keyboard.IsNewKeyPress(Keys.OemComma))
                 _realExplosion.Activate(_mousePos, _radius, _force);
-            if (keyboardManager.IsKeyDown(Keys.A))
+            if (keyboard.IsKeyDown(Keys.A))
                 _radius = MathHelper.Clamp(_radius - 0.1f, 0, 20);
-            if (keyboardManager.IsKeyDown(Keys.S))
+            if (keyboard.IsKeyDown(Keys.S))
                 _radius = MathHelper.Clamp(_radius + 0.1f, 0, 20);
-            if (keyboardManager.IsKeyDown(Keys.D))
+            if (keyboard.IsKeyDown(Keys.D))
                 _force = MathHelper.Clamp(_force - 0.1f, 0, 20);
-            if (keyboardManager.IsKeyDown(Keys.F))
+            if (keyboard.IsKeyDown(Keys.F))
                 _force = MathHelper.Clamp(_force + 0.1f, 0, 20);
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

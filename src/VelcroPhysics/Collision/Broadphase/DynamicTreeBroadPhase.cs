@@ -79,7 +79,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
         /// <returns></returns>
         public int AddProxy(ref FixtureProxy proxy)
         {
-            int proxyId = _tree.AddProxy(ref proxy.AABB, proxy);
+            int proxyId = _tree.CreateProxy(ref proxy.AABB, proxy);
             ++_proxyCount;
             BufferMove(proxyId);
             return proxyId;
@@ -91,7 +91,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
         {
             UnBufferMove(proxyId);
             --_proxyCount;
-            _tree.RemoveProxy(proxyId);
+            _tree.DestroyProxy(proxyId);
         }
 
         /// <summary>

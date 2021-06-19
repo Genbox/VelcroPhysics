@@ -1,4 +1,7 @@
+using System.Diagnostics;
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
+using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Templates.Joints
@@ -31,6 +34,22 @@ namespace Genbox.VelcroPhysics.Templates.Joints
 
         /// <summary>The pulley ratio, used to simulate a block-and-tackle.</summary>
         public float Ratio { get; set; }
+
+        public void Initialize(Body bA, Body bB, Vector2 groundA, Vector2 groundB, Vector2 anchorA, Vector2 anchorB, float r)
+        {
+            BodyA = bA;
+            BodyB = bB;
+            GroundAnchorA = groundA;
+            GroundAnchorB = groundB;
+            LocalAnchorA = BodyA.GetLocalPoint(anchorA);
+            LocalAnchorB = BodyB.GetLocalPoint(anchorB);
+            Vector2 dA = anchorA - groundA;
+            LengthA = dA.Length();
+            Vector2 dB = anchorB - groundB;
+            LengthB = dB.Length();
+            Ratio = r;
+            Debug.Assert(Ratio > MathConstants.Epsilon);
+        }
 
         public override void SetDefaults()
         {

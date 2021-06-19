@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -22,30 +22,37 @@
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class SphereStackTest : Test
+    internal class CircleStackTest : Test
     {
-        private const int Count = 10;
-        private readonly Body[] _bodies = new Body[Count];
+        private const int _count = 10;
+        private readonly Body[] _bodies = new Body[_count];
 
-        private SphereStackTest()
+        private CircleStackTest()
         {
-            //Ground
-            BodyFactory.CreateEdge(World, new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+            {
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
+                ground.CreateFixture(shape);
+            }
 
             {
-                CircleShape shape = new CircleShape(1.0f, 1);
+                CircleShape shape = new CircleShape(1.0f, 1.0f);
 
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < _count; ++i)
                 {
-                    _bodies[i] = BodyFactory.CreateBody(World);
-                    _bodies[i].BodyType = BodyType.Dynamic;
-                    _bodies[i].Position = new Vector2(0.0f, 4.0f + 3.0f * i);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(0.0f, 4.0f + 3.0f * i);
+
+                    _bodies[i] = World.CreateBody(bd);
 
                     _bodies[i].CreateFixture(shape);
 
@@ -54,9 +61,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
-            return new SphereStackTest();
+            return new CircleStackTest();
         }
     }
 }

@@ -31,13 +31,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class BoxStackTest : Test
+    internal class BoxStackTest : Test
     {
-        private const int ColumnCount = 1;
-        private const int RowCount = 15;
+        private const int _columnCount = 1;
+        private const int _rowCount = 15;
 
-        private readonly Body[] _bodies = new Body[RowCount * ColumnCount];
-        private readonly int[] _indices = new int[RowCount * ColumnCount];
+        private readonly Body[] _bodies = new Body[_rowCount * _columnCount];
+        private readonly int[] _indices = new int[_rowCount * _columnCount];
         private Body _bullet;
 
         private BoxStackTest()
@@ -48,7 +48,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             float[] xs = { 0.0f, -10.0f, -5.0f, 5.0f, 10.0f };
 
-            for (int j = 0; j < ColumnCount; ++j)
+            for (int j = 0; j < _columnCount; ++j)
             {
                 PolygonShape shape = new PolygonShape(1.0f);
                 shape.SetAsBox(0.5f, 0.5f);
@@ -57,13 +57,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Shape = shape;
                 fd.Friction = 0.3f;
 
-                for (int i = 0; i < RowCount; ++i)
+                for (int i = 0; i < _rowCount; ++i)
                 {
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
 
-                    int n = j * RowCount + i;
-                    Debug.Assert(n < RowCount * ColumnCount);
+                    int n = j * _rowCount + i;
+                    Debug.Assert(n < _rowCount * _columnCount);
                     _indices[n] = n;
                     bd.UserData = _indices[n];
 
@@ -80,13 +80,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             _bullet = null;
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsNewKeyPress(Keys.OemComma))
+            if (keyboard.IsNewKeyPress(Keys.OemComma))
             {
                 if (_bullet != null)
                 {
-                    World.RemoveBody(_bullet);
+                    World.DestroyBody(_bullet);
                     _bullet = null;
                 }
 
@@ -109,7 +109,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 }
             }
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

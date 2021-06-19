@@ -33,7 +33,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Update(settings, gameTime);
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new DeletionTest();
         }

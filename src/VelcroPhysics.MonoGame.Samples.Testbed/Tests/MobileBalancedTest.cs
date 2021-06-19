@@ -1,77 +1,105 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
 
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
+using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class MobileBalancedTest : Test
+    internal class MobileBalancedTest : Test
     {
-        private const int Depth = 4;
-        private int _counter;
+        private const int _depth = 4;
 
         private MobileBalancedTest()
         {
-            Body ground = BodyFactory.CreateBody(World, new Vector2(0, 20f));
+            Body ground;
 
-            const float a = 0.5f;
+            // Create ground body.
+            {
+                BodyDef bodyDef = new BodyDef();
+                bodyDef.Position = new Vector2(0.0f, 20.0f);
+                ground = World.CreateBody(bodyDef);
+            }
+
+            float a = 0.5f;
             Vector2 h = new Vector2(0.0f, a);
 
             Body root = AddNode(ground, Vector2.Zero, 0, 3.0f, a);
 
-            JointFactory.CreateRevoluteJoint(World, ground, root, Vector2.Zero, h);
+            RevoluteJointDef jointDef = new RevoluteJointDef();
+            jointDef.BodyA = ground;
+            jointDef.BodyB = root;
+            jointDef.LocalAnchorA = Vector2.Zero;
+            jointDef.LocalAnchorB = h;
+            World.CreateJoint(jointDef);
         }
 
         private Body AddNode(Body parent, Vector2 localAnchor, int depth, float offset, float a)
         {
-            const float density = 20.0f;
+            float density = 20.0f;
             Vector2 h = new Vector2(0.0f, a);
 
             Vector2 p = parent.Position + localAnchor - h;
 
-            Body body = BodyFactory.CreateRectangle(World, 0.5f * a, a * 2, density, p);
-            body.UserData = _counter++;
-            body.BodyType = BodyType.Dynamic;
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.Type = BodyType.Dynamic;
+            bodyDef.Position = p;
+            Body body = World.CreateBody(bodyDef);
 
-            if (depth == Depth)
+            PolygonShape shape = new PolygonShape(density);
+            shape.SetAsBox(0.25f * a, a);
+            body.CreateFixture(shape);
+
+            if (depth == _depth)
                 return body;
 
-            FixtureFactory.AttachRectangle(offset * 2, 0.5f * a, density, new Vector2(0, -a), body);
+            shape.SetAsBox(offset, 0.25f * a, new Vector2(0, -a), 0.0f);
+            body.CreateFixture(shape);
 
             Vector2 a1 = new Vector2(offset, -a);
             Vector2 a2 = new Vector2(-offset, -a);
             Body body1 = AddNode(body, a1, depth + 1, 0.5f * offset, a);
             Body body2 = AddNode(body, a2, depth + 1, 0.5f * offset, a);
 
-            JointFactory.CreateRevoluteJoint(World, body, body1, a1, h);
-            JointFactory.CreateRevoluteJoint(World, body, body2, a2, h);
+            RevoluteJointDef jointDef = new RevoluteJointDef();
+            jointDef.BodyA = body;
+            jointDef.LocalAnchorB = h;
+
+            jointDef.LocalAnchorA = a1;
+            jointDef.BodyB = body1;
+            World.CreateJoint(jointDef);
+
+            jointDef.LocalAnchorA = a2;
+            jointDef.BodyB = body2;
+            World.CreateJoint(jointDef);
 
             return body;
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new MobileBalancedTest();
         }

@@ -82,7 +82,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         public override void Update(GameSettings settings, GameTime gameTime)
         {
             foreach (Vertices vertex in _polygons)
-            {
                 if (vertex != null)
                 {
                     Vector2[] array = vertex.ToArray();
@@ -97,21 +96,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                         if (vertex == _selected)
                             col = Color.LightGreen;
                     }
+
                     if (vertex == _clip)
                     {
                         col = Color.DarkRed;
                         if (vertex == _selected)
                             col = Color.IndianRed;
                     }
+
                     DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
                     DebugView.DrawPolygon(array, vertex.Count, col);
                     for (int j = 0; j < vertex.Count; ++j)
-                    {
                         DebugView.DrawPoint(vertex[j], .2f, Color.Red);
-                    }
                     DebugView.EndCustomDraw();
                 }
-            }
 
             DrawString("A,S,D = Create Rectangle");
             DrawString("Q,W,E = Create Circle");
@@ -124,56 +122,49 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             DrawString("Holes are colored light blue");
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
             // Add Circles
-            if (keyboardManager.IsNewKeyPress(Keys.Q))
+            if (keyboard.IsNewKeyPress(Keys.Q))
                 AddCircle(3, 8);
 
             // Add Circles
-            if (keyboardManager.IsNewKeyPress(Keys.W))
+            if (keyboard.IsNewKeyPress(Keys.W))
                 AddCircle(4, 16);
 
             // Add Circles
-            if (keyboardManager.IsNewKeyPress(Keys.E))
+            if (keyboard.IsNewKeyPress(Keys.E))
                 AddCircle(5, 32);
 
             // Add Rectangle
-            if (keyboardManager.IsNewKeyPress(Keys.A))
+            if (keyboard.IsNewKeyPress(Keys.A))
                 AddRectangle(4, 8);
 
             // Add Rectangle
-            if (keyboardManager.IsNewKeyPress(Keys.S))
+            if (keyboard.IsNewKeyPress(Keys.S))
                 AddRectangle(5, 2);
 
             // Add Rectangle
-            if (keyboardManager.IsNewKeyPress(Keys.D))
+            if (keyboard.IsNewKeyPress(Keys.D))
                 AddRectangle(2, 5);
 
             // Perform a Union
-            if (keyboardManager.IsNewKeyPress(Keys.Space))
-            {
+            if (keyboard.IsNewKeyPress(Keys.Space))
                 if (_subject != null && _clip != null)
                     DoBooleanOperation(YuPengClipper.Union(_subject, _clip, out _err));
-            }
 
             // Perform a Subtraction
-            if (keyboardManager.IsNewKeyPress(Keys.Back))
-            {
+            if (keyboard.IsNewKeyPress(Keys.Back))
                 if (_subject != null && _clip != null)
                     DoBooleanOperation(YuPengClipper.Difference(_subject, _clip, out _err));
-            }
 
             // Perform a Intersection
-            if (keyboardManager.IsNewKeyPress(Keys.LeftShift))
-            {
+            if (keyboard.IsNewKeyPress(Keys.LeftShift))
                 if (_subject != null && _clip != null)
                     DoBooleanOperation(YuPengClipper.Intersect(_subject, _clip, out _err));
-            }
 
             // Select Subject
-            if (keyboardManager.IsNewKeyPress(Keys.D1))
-            {
+            if (keyboard.IsNewKeyPress(Keys.D1))
                 if (_selected != null)
                 {
                     if (_clip == _selected)
@@ -181,11 +172,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
                     _subject = _selected;
                 }
-            }
 
             // Select Clip
-            if (keyboardManager.IsNewKeyPress(Keys.D2))
-            {
+            if (keyboard.IsNewKeyPress(Keys.D2))
                 if (_selected != null)
                 {
                     if (_subject == _selected)
@@ -193,7 +182,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
                     _clip = _selected;
                 }
-            }
         }
 
         public override void Mouse(MouseState state, MouseState oldState)
@@ -201,7 +189,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
 
             if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
-            {
                 foreach (Vertices vertices in _polygons)
                 {
                     if (vertices == null)
@@ -213,7 +200,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                         break;
                     }
                 }
-            }
 
             if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
                 _selected = null;
@@ -254,7 +240,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             _polygons.Add(verts);
         }
 
-        public static Test Create()
+        internal static Test Create()
         {
             return new YuPengPolygonTest();
         }

@@ -1,135 +1,124 @@
-/*
-* Velcro Physics:
-* Copyright (c) 2017 Ian Qvist
-* 
-* Original source Box2D:
-* Copyright (c) 2006-2011 Erin Catto http://www.box2d.org 
-* 
-* This software is provided 'as-is', without any express or implied 
-* warranty.  In no event will the authors be held liable for any damages 
-* arising from the use of this software. 
-* Permission is granted to anyone to use this software for any purpose, 
-* including commercial applications, and to alter it and redistribute it 
-* freely, subject to the following restrictions: 
-* 1. The origin of this software must not be misrepresented; you must not 
-* claim that you wrote the original software. If you use this software 
-* in a product, an acknowledgment in the product documentation would be 
-* appreciated but is not required. 
-* 2. Altered source versions must be plainly marked as such, and must not be 
-* misrepresented as being the original software. 
-* 3. This notice may not be removed or altered from any source distribution. 
-*/
+// MIT License
+
+// Copyright (c) 2019 Erin Catto
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
-using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    public class ConfinedTest : Test
+    internal class ConfinedTest : Test
     {
-        private const int ColumnCount = 0;
-        private const int RowCount = 0;
+        private const int _columnCount = 0;
+        private const int _rowCount = 0;
 
         private ConfinedTest()
         {
             {
-                Body ground = BodyFactory.CreateBody(World);
+                BodyDef bd = new BodyDef();
+                Body ground = World.CreateBody(bd);
+
+                EdgeShape shape = new EdgeShape();
 
                 // Floor
-                EdgeShape shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
+                shape.SetTwoSided(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
                 ground.CreateFixture(shape);
 
                 // Left wall
-                shape = new EdgeShape(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
+                shape.SetTwoSided(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Right wall
-                shape = new EdgeShape(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
+                shape.SetTwoSided(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
                 ground.CreateFixture(shape);
 
                 // Roof
-                shape = new EdgeShape(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
+                shape.SetTwoSided(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
                 ground.CreateFixture(shape);
             }
 
-            const float radius = 0.5f;
-            CircleShape shape2 = new CircleShape(radius, 1);
-            shape2.Position = Vector2.Zero;
-
-            for (int j = 0; j < ColumnCount; ++j)
             {
-                for (int i = 0; i < RowCount; ++i)
+                float radius = 0.5f;
+                CircleShape shape = new CircleShape(1.0f);
+                shape.Position = Vector2.Zero;
+                shape.Radius = radius;
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+                fd.Friction = 0.1f;
+
+                for (int j = 0; j < _columnCount; ++j)
+                for (int i = 0; i < _rowCount; ++i)
                 {
-                    Body body = BodyFactory.CreateBody(World);
-                    body.BodyType = BodyType.Dynamic;
-                    body.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius,
-                        (2.0f * i + 1.0f) * radius);
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
+                    Body body = World.CreateBody(bd);
 
-                    Fixture fixture = body.CreateFixture(shape2);
-                    fixture.Friction = 0.1f;
+                    body.CreateFixture(fd);
                 }
-            }
 
-            World.Gravity = Vector2.Zero;
+                World.Gravity = new Vector2(0.0f, 0.0f);
+            }
         }
 
         private void CreateCircle()
         {
-            const float radius = 2f;
-            CircleShape shape = new CircleShape(radius, 1);
+            float radius = 2.0f;
+            CircleShape shape = new CircleShape(1.0f);
             shape.Position = Vector2.Zero;
+            shape.Radius = radius;
 
-            Body body = BodyFactory.CreateBody(World);
-            body.BodyType = BodyType.Dynamic;
-            body.Position = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
+            FixtureDef fd = new FixtureDef();
+            fd.Shape = shape;
+            fd.Friction = 0.0f;
 
-            Fixture fixture = body.CreateFixture(shape);
-            fixture.Friction = 0;
+            Vector2 p = new Vector2(Rand.RandomFloat(), 3.0f + Rand.RandomFloat());
+            BodyDef bd = new BodyDef();
+            bd.Type = BodyType.Dynamic;
+            bd.Position = p;
+
+            //bd.AllowSleep = false;
+            Body body = World.CreateBody(bd);
+
+            body.CreateFixture(fd);
         }
 
-        public override void Keyboard(KeyboardManager keyboardManager)
+        public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboardManager.IsKeyDown(Keys.C))
+            if (keyboard.IsNewKeyPress(Keys.C))
                 CreateCircle();
 
-            base.Keyboard(keyboardManager);
+            base.Keyboard(keyboard);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
-            foreach (Body b in World.BodyList)
-            {
-                if (b.BodyType != BodyType.Dynamic)
-                    continue;
-
-                if (b.Awake) { }
-            }
-
-            if (StepCount == 180)
-                StepCount += 0;
-
-            //if (sleeping)
-            //{
-            //	CreateCircle();
-            //}
+            DrawString("Press 'c' to create a circle.");
 
             base.Update(settings, gameTime);
-
-            foreach (Body b in World.BodyList)
-            {
-                if (b.BodyType != BodyType.Dynamic)
-                    continue;
-
-                Vector2 p = b.Position;
-                if (p.X <= -10.0f || 10.0f <= p.X || p.Y <= 0.0f || 20.0f <= p.Y)
-                    p.X += 0.0f;
-            }
-
-            DrawString("Press 'c' to create a circle.");
         }
 
         internal static Test Create()
