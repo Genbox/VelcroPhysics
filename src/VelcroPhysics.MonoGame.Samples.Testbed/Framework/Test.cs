@@ -67,11 +67,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
                 _fixedMouseJoint = null;
         }
 
-        public void DrawTitle(int x, int y, string title)
-        {
-            DebugView.DrawString(x, y, title);
-        }
-
         public virtual void Update(GameSettings settings, GameTime gameTime)
         {
             float timeStep = Math.Min((float)gameTime.ElapsedGameTime.TotalMilliseconds * 0.001f, 1f / 30f);
@@ -105,15 +100,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
             //}
         }
 
-        public virtual void Gamepad(GamePadState state, GamePadState oldState) { }
+        public virtual void Gamepad(GamePadManager gamepad) { }
 
-        public virtual void Mouse(MouseState state, MouseState oldState)
+        public virtual void Mouse(MouseManager mouse)
         {
-            Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 position = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
 
-            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            if (mouse.NewState.LeftButton == ButtonState.Released && mouse.OldState.LeftButton == ButtonState.Pressed)
                 MouseUp();
-            else if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            else if (mouse.NewState.LeftButton == ButtonState.Pressed && mouse.OldState.LeftButton == ButtonState.Released)
                 MouseDown(position);
 
             MouseMove(position);
@@ -150,10 +145,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
             }
         }
 
-        private void MouseMove(Vector2 p)
+        private void MouseMove(Vector2 position)
         {
             if (_fixedMouseJoint != null)
-                _fixedMouseJoint.WorldAnchorB = p;
+                _fixedMouseJoint.WorldAnchorB = position;
         }
 
         protected virtual void PreSolve(Contact contact, ref Manifold oldManifold) { }

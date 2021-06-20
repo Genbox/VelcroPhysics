@@ -5,25 +5,25 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework
 {
     public class GamePadManager
     {
-        internal GamePadState _oldState;
-        internal GamePadState _newState;
+        public GamePadState OldState;
+        public GamePadState NewState;
 
         public GamePadManager()
         {
-            _oldState = _newState = GamePad.GetState(PlayerIndex.One);
+            OldState = NewState = GamePad.GetState(PlayerIndex.One);
         }
 
-        public bool IsConnected => _newState.IsConnected;
+        public bool IsConnected => NewState.IsConnected;
 
         public bool IsNewButtonPress(Buttons button)
         {
-            return _newState.IsButtonDown(button) && _oldState.IsButtonUp(button);
+            return NewState.IsButtonDown(button) && OldState.IsButtonUp(button);
         }
 
         public void Update()
         {
-            _oldState = _newState;
-            _newState = GamePad.GetState(PlayerIndex.One);
+            OldState = NewState;
+            NewState = GamePad.GetState(PlayerIndex.One);
         }
     }
 }

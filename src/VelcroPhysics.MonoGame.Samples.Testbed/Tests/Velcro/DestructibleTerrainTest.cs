@@ -60,11 +60,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Initialize();
         }
 
-        public override void Mouse(MouseState state, MouseState oldState)
+        public override void Mouse(MouseManager mouse)
         {
-            Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 position = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
 
-            if (state.RightButton == ButtonState.Pressed)
+            if (mouse.IsButtonDown(MouseButton.Right))
             {
                 DrawCircleOnMap(position, -1);
                 _terrain.RegenerateTerrain();
@@ -73,7 +73,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 DebugView.DrawSolidCircle(position, _circleRadius, Vector2.UnitY, Color.Blue * 0.5f);
                 DebugView.EndCustomDraw();
             }
-            else if (state.LeftButton == ButtonState.Pressed)
+            else if (mouse.IsButtonDown(MouseButton.Left))
             {
                 DrawCircleOnMap(position, 1);
                 _terrain.RegenerateTerrain();
@@ -82,7 +82,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 DebugView.DrawSolidCircle(position, _circleRadius, Vector2.UnitY, Color.Red * 0.5f);
                 DebugView.EndCustomDraw();
             }
-            else if (state.MiddleButton == ButtonState.Pressed)
+            else if (mouse.IsButtonDown(MouseButton.Middle))
             {
                 Body circle = BodyFactory.CreateCircle(World, 1, 1);
                 circle.BodyType = BodyType.Dynamic;

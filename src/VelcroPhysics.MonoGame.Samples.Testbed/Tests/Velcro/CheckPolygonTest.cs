@@ -1,7 +1,6 @@
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 {
@@ -11,14 +10,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
         private CheckPolygonTest() { }
 
-        public override void Mouse(MouseState state, MouseState oldState)
+        public override void Mouse(MouseManager manager)
         {
-            Vector2 worldPosition = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 worldPosition = GameInstance.ConvertScreenToWorld(manager.NewPosition);
 
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            if (manager.IsNewButtonClick(MouseButton.Left))
                 _vertices.Add(worldPosition);
 
-            base.Mouse(state, oldState);
+            base.Mouse(manager);
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)

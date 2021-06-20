@@ -184,11 +184,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 }
         }
 
-        public override void Mouse(MouseState state, MouseState oldState)
+        public override void Mouse(MouseManager mouse)
         {
-            Vector2 position = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 position = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
 
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            if (mouse.IsNewButtonClick(MouseButton.Left))
+            {
                 foreach (Vertices vertices in _polygons)
                 {
                     if (vertices == null)
@@ -200,21 +201,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                         break;
                     }
                 }
+            }
 
-            if (state.LeftButton == ButtonState.Released && oldState.LeftButton == ButtonState.Pressed)
+            if (mouse.IsNewButtonRelease(MouseButton.Left))
                 _selected = null;
 
-            MouseMove(state, oldState);
-            base.Mouse(state, oldState);
-        }
-
-        private void MouseMove(MouseState state, MouseState oldState)
-        {
             if (_selected != null)
             {
-                Vector2 trans = new Vector2((state.X - oldState.X) / 12f, (oldState.Y - state.Y) / 12f);
-                _selected.Translate(ref trans);
+                Vector2 diff = position - GameInstance.ConvertScreenToWorld(mouse.OldPosition);
+                _selected.Translate(ref diff);
             }
+
+            base.Mouse(mouse);
         }
 
         private void DoBooleanOperation(IEnumerable<Vertices> result)

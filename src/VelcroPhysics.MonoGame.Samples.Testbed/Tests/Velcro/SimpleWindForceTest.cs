@@ -109,18 +109,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Keyboard(keyboard);
         }
 
-        public override void Mouse(MouseState state, MouseState oldState)
+        public override void Mouse(MouseManager mouse)
         {
             //base.Mouse(state, oldState);
-            Vector2 mouseWorld = GameInstance.ConvertScreenToWorld(state.X, state.Y);
+            Vector2 mouseWorld = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
             _simpleWind.Direction = mouseWorld - _simpleWind.Position;
             _simpleWind.Strength = _strength;
 
-            if (state.LeftButton == ButtonState.Pressed && oldState.LeftButton == ButtonState.Released)
+            if (mouse.IsNewButtonClick(MouseButton.Left))
             {
                 _simpleWind.Position = mouseWorld;
                 _simpleWind.Direction = mouseWorld + new Vector2(0, 1);
-                Microsoft.Xna.Framework.Input.Mouse.SetPosition(state.X, state.Y + 10);
             }
         }
 

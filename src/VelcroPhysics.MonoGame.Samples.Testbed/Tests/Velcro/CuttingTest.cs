@@ -134,20 +134,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             base.Keyboard(keyboard);
         }
 
-        public override void Gamepad(GamePadState state, GamePadState oldState)
-        {
-            _start.X += state.ThumbSticks.Left.X / 5;
-            _start.Y += state.ThumbSticks.Left.Y / 5;
-
-            _end.X += state.ThumbSticks.Right.X / 5;
-            _end.Y += state.ThumbSticks.Right.Y / 5;
-
-            if (state.Buttons.A == ButtonState.Pressed && oldState.Buttons.A == ButtonState.Released)
-                CuttingTools.Cut(World, _start, _end);
-
-            base.Gamepad(state, oldState);
-        }
-
         public static CuttingTest Create()
         {
             return new CuttingTest();

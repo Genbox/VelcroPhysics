@@ -45,7 +45,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             set
             {
                 _viewZoom = value;
-                Resize();
+                ResizeViewMatrix();
             }
         }
 
@@ -55,7 +55,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             set
             {
                 _viewCenter = value;
-                Resize();
+                ResizeViewMatrix();
             }
         }
 
@@ -190,13 +190,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             //Support moving the camera around with right-click movement
             Vector2 currentPos = ConvertScreenToWorld(_mouseManager.NewPosition);
 
-            if (_mouseManager._newState.RightButton == ButtonState.Pressed)
+            if (_mouseManager.NewState.RightButton == ButtonState.Pressed)
                 ViewCenter += ConvertScreenToWorld(_mouseManager.OldPosition) - currentPos;
             else
-                _test?.Mouse(_mouseManager._newState, _mouseManager._oldState);
+                _test?.Mouse(_mouseManager);
 
             if (_gamePadManager.IsConnected)
-                _test?.Gamepad(_gamePadManager._newState, _gamePadManager._oldState);
+                _test?.Gamepad(_gamePadManager);
 
             base.Update(gameTime);
 
@@ -221,7 +221,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 
         protected override void Draw(GameTime gameTime)
         {
-            _test.DrawTitle(50, 15, _entry.Name);
+            _test.DebugView.DrawString(50, 15, _entry.Name);
 
             if (_testSelection != _testIndex)
             {
@@ -239,10 +239,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
         {
             _viewZoom = 0.8f;
             _viewCenter = new Vector2(0.0f, 20.0f);
-            Resize();
+            ResizeViewMatrix();
         }
 
-        private void Resize()
+        private void ResizeViewMatrix()
         {
             View = Matrix.CreateTranslation(new Vector3(-ViewCenter.X, -ViewCenter.Y, 0)) * Matrix.CreateScale(ViewZoom);
         }

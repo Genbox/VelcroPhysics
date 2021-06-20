@@ -61,10 +61,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             _realExplosion = new RealExplosion(World);
         }
 
-        public override void Mouse(MouseState state, MouseState oldState)
+        public override void Mouse(MouseManager mouse)
         {
-            _mousePos = GameInstance.ConvertScreenToWorld(state.X, state.Y);
-            base.Mouse(state, oldState);
+            _mousePos = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
+            base.Mouse(mouse);
         }
 
         public override void Keyboard(KeyboardManager keyboard)
