@@ -1,4 +1,5 @@
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 

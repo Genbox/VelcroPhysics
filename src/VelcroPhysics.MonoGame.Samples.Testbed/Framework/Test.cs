@@ -26,6 +26,7 @@ using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;

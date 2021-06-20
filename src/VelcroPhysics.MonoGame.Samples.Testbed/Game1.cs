@@ -1,6 +1,7 @@
 using System;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -14,7 +15,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
         private readonly GamePadManager _gamePadManager = new GamePadManager();
         private readonly MouseManager _mouseManager = new MouseManager();
         private readonly GameSettings _settings = new GameSettings();
-        private TestEntry _entry;
         private Vector2 _lower;
         private Test _test;
         private int _testCount;
@@ -22,8 +22,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
         private int _testSelection;
         private Vector2 _upper;
         private Vector2 _viewCenter;
-
         private float _viewZoom;
+
         public Matrix Projection;
         public Matrix View;
 
@@ -76,7 +76,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             CreateProjection();
 
             _testCount = 0;
-            while (TestEntries.TestList[_testCount].CreateTest != null)
+            while (TestEntries.TestList[_testCount] != null)
                 ++_testCount;
 
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
@@ -104,8 +104,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 
         private void StartTest(int index)
         {
-            _entry = TestEntries.TestList[index];
-            _test = _entry.CreateTest();
+            _test = TestEntries.TestList[index]();
             _test.GameInstance = this;
             _test.Initialize();
         }
@@ -221,7 +220,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 
         protected override void Draw(GameTime gameTime)
         {
-            _test.DebugView.DrawString(50, 15, _entry.Name);
+            _test.DebugView.DrawString(50, 15, _test.GetType().Name.Replace("Test", string.Empty, StringComparison.OrdinalIgnoreCase));
 
             if (_testSelection != _testIndex)
             {
@@ -250,12 +249,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
         public Vector2 ConvertWorldToScreen(Vector2 position)
         {
             Vector3 temp = GraphicsDevice.Viewport.Project(new Vector3(position, 0), Projection, View, Matrix.Identity);
-            return new Vector2(temp.X, temp.Y);
-        }
-
-        public Vector2 ConvertScreenToWorld(int x, int y)
-        {
-            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), Projection, View, Matrix.Identity);
             return new Vector2(temp.X, temp.Y);
         }
 

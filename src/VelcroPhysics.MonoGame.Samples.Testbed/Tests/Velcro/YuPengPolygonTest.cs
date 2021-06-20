@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.Cutting;
 using Genbox.VelcroPhysics.Tools.Cutting.Simple;

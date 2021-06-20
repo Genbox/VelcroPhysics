@@ -25,6 +25,7 @@ using System.Diagnostics;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;

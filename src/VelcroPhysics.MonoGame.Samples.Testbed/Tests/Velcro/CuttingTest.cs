@@ -3,6 +3,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.Cutting.Simple;
 using Genbox.VelcroPhysics.Utilities;

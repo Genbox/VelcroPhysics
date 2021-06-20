@@ -2,6 +2,7 @@
 using Genbox.VelcroPhysics.Extensions.Controllers.Wind;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 

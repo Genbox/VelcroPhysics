@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
+using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Shared.Optimization;
 using Genbox.VelcroPhysics.Utilities;
