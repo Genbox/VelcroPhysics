@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -68,6 +68,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         private Stopwatch _watch = new Stopwatch();
         internal bool _worldHasNewFixture;
         internal Island _island;
+        private readonly ContactManager _contactManager;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -114,7 +115,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
-            ContactManager = new ContactManager(new DynamicTreeBroadPhase());
+            _contactManager = new ContactManager(new DynamicTreeBroadPhase());
             _gravity = gravity;
         }
 
@@ -128,7 +129,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Get the contact manager for testing.</summary>
         /// <value>The contact manager.</value>
-        public ContactManager ContactManager { get; }
+        public ContactManager ContactManager => _contactManager;
 
         /// <summary>Get the world body list.</summary>
         /// <value>The head of the world body list.</value>
@@ -137,13 +138,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary>Get the world joint list.</summary>
         /// <value>The joint list.</value>
         public List<Joint> JointList { get; }
-
-        /// <summary>
-        /// Get the world contact list. With the returned contact, use Contact.GetNext to get the next contact in the
-        /// world list. A null contact indicates the end of the list.
-        /// </summary>
-        /// <value>The head of the world contact list.</value>
-        public List<Contact> ContactList => ContactManager.ContactList;
 
         /// <summary>If false, the whole simulation stops. It still processes added and removed geometries.</summary>
         public bool Enabled { get; set; }
@@ -391,7 +385,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             // Size the island for the worst case.
             _island.Reset(BodyList.Count,
-                ContactManager.ContactList.Count,
+                ContactManager._contactCount,
                 JointList.Count,
                 ContactManager);
 
@@ -401,7 +395,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 b._flags &= ~BodyFlags.IslandFlag;
             }
 
-            foreach (Contact c in ContactManager.ContactList)
+            for (Contact c = ContactManager._contactList; c != null; c = c._next)
             {
                 c._flags &= ~ContactFlags.IslandFlag;
             }
@@ -462,7 +456,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                             continue;
 
                         // Is this contact solid and touching?
-                        if (!ce.Contact.Enabled || !ce.Contact.IsTouching)
+                        if (!contact.Enabled || !contact.IsTouching)
                             continue;
 
                         // Skip sensors.
@@ -482,7 +476,6 @@ namespace Genbox.VelcroPhysics.Dynamics
 
                         Debug.Assert(stackCount < stackSize);
                         _stack[stackCount++] = other;
-
                         other._flags |= BodyFlags.IslandFlag;
                     }
 
@@ -554,7 +547,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         private void SolveTOI(ref TimeStep step)
         {
-            _island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, ContactManager);
+            _island.Reset(2 * Settings.MaxTOIContacts, Settings.MaxTOIContacts, 0, _contactManager);
 
             if (_stepComplete)
             {
@@ -564,13 +557,10 @@ namespace Genbox.VelcroPhysics.Dynamics
                     BodyList[i]._sweep.Alpha0 = 0.0f;
                 }
 
-                for (int i = 0; i < ContactManager.ContactList.Count; i++)
+                for (Contact c = _contactManager._contactList; c != null; c = c._next)
                 {
-                    Contact c = ContactManager.ContactList[i];
-
                     // Invalidate TOI
-                    c._flags &= ~ContactFlags.IslandFlag;
-                    c._flags &= ~ContactFlags.TOIFlag;
+                    c._flags &= ~(ContactFlags.TOIFlag | ContactFlags.IslandFlag);
                     c._toiCount = 0;
                     c._toi = 1.0f;
                 }
@@ -583,10 +573,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 Contact minContact = null;
                 float minAlpha = 1.0f;
 
-                for (int i = 0; i < ContactManager.ContactList.Count; i++)
+                for (Contact c = _contactManager._contactList; c != null; c = c._next)
                 {
-                    Contact c = ContactManager.ContactList[i];
-
                     // Is this contact disabled?
                     if (!c.Enabled)
                         continue;
@@ -607,7 +595,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                         Fixture fB = c._fixtureB;
 
                         // Is there a sensor?
-                        if (fA.IsSensor || fB.IsSensor)
+                        if (fA._isSensor || fB._isSensor)
                             continue;
 
                         Body bA = fA.Body;
@@ -754,7 +742,9 @@ namespace Genbox.VelcroPhysics.Dynamics
                                 continue;
 
                             // Skip sensors.
-                            if (contact._fixtureA.IsSensor || contact._fixtureB.IsSensor)
+                            bool sensorA = contact._fixtureA._isSensor;
+                            bool sensorB = contact._fixtureB._isSensor;
+                            if (sensorA || sensorB)
                                 continue;
 
                             // Tentatively advance the body to the TOI.
@@ -820,8 +810,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     // Invalidate all contact TOIs on this displaced body.
                     for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
                     {
-                        ce.Contact._flags &= ~ContactFlags.TOIFlag;
-                        ce.Contact._flags &= ~ContactFlags.IslandFlag;
+                        ce.Contact._flags &= ~(ContactFlags.TOIFlag | ContactFlags.IslandFlag);
                     }
                 }
 

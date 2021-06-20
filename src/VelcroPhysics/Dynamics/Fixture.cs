@@ -47,6 +47,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal bool _isSensor;
         internal float _restitution;
 
+        internal Body _body;
+        internal Shape _shape;
+
         /// <summary>Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.</summary>
         public AfterCollisionHandler AfterCollision;
 
@@ -89,9 +92,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             Friction = template.Friction;
             Restitution = template.Restitution;
 
-            Body = body;
+            _body = body;
             IsSensor = template.IsSensor;
-            Shape = template.Shape.Clone();
+            _shape = template.Shape.Clone();
 
             RegisterFixture();
         }
@@ -156,7 +159,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// because this will crash some collision caching mechanisms.
         /// </summary>
         /// <value>The shape.</value>
-        public Shape Shape { get; internal set; }
+        public Shape Shape => _shape;
 
         /// <summary>Gets or sets a value indicating whether this fixture is a sensor.</summary>
         /// <value><c>true</c> if this instance is a sensor; otherwise, <c>false</c>.</value>
@@ -174,7 +177,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Get the parent body of this fixture. This is null if the fixture is not attached.</summary>
         /// <value>The body.</value>
-        public Body Body { get; internal set; }
+        public Body Body => _body;
 
         /// <summary>Set the user data. Use this to store your application specific data.</summary>
         /// <value>The user data.</value>
@@ -299,7 +302,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             // Free the proxy array.
             Proxies = null;
-            Shape = null;
+            _shape = null;
 
             //Velcro: We set the userdata to null here to help prevent bugs related to stale references in GC
             UserData = null;

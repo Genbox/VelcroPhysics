@@ -20,7 +20,6 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
-using System.Collections.Generic;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Handlers;
@@ -31,6 +30,9 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 {
     public class ContactManager
     {
+        internal int _contactCount;
+        internal Contact _contactList;
+
         /// <summary>Fires when a contact is created</summary>
         public BeginContactHandler BeginContact;
 
@@ -53,11 +55,11 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
         {
             BroadPhase = broadPhase;
             OnBroadphaseCollision = AddPair;
-            ContactList = new List<Contact>(128);
         }
 
-        public List<Contact> ContactList { get; }
         public IBroadPhase BroadPhase { get; }
+
+        public int ContactCount => _contactCount;
 
         // Broad-phase callback.
         private void AddPair(ref FixtureProxy proxyA, ref FixtureProxy proxyB)
@@ -75,6 +77,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             if (bodyA == bodyB)
                 return;
 
+            // TODO_ERIN use a hash table to remove a potential bottleneck when both
+            // bodies have a lot of contacts.
             // Does a contact already exist?
             ContactEdge edge = bodyB.ContactList;
             while (edge != null)
@@ -123,18 +127,23 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
             // Call the factory.
             Contact c = Contact.Create(fixtureA, indexA, fixtureB, indexB);
-
             if (c == null)
                 return;
 
             // Contact creation may swap fixtures.
             fixtureA = c._fixtureA;
             fixtureB = c._fixtureB;
+            indexA = c.ChildIndexA;
+            indexB = c.ChildIndexB;
             bodyA = fixtureA.Body;
             bodyB = fixtureB.Body;
 
             // Insert into the world.
-            ContactList.Add(c);
+            c._prev = null;
+            c._next = _contactList;
+            if (_contactList != null)
+                _contactList._prev = c;
+            _contactList = c;
 
             // Connect to island graph.
 
@@ -156,8 +165,9 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             c._nodeB.Next = bodyB.ContactList;
             if (bodyB.ContactList != null)
                 bodyB.ContactList.Prev = c._nodeB;
-            bodyB.ContactList = c._nodeB;
 
+            bodyB.ContactList = c._nodeB;
+            ++_contactCount;
         }
 
         internal void FindNewContacts()
@@ -165,72 +175,89 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             BroadPhase.UpdatePairs(OnBroadphaseCollision);
         }
 
-        internal void Destroy(Contact contact)
+        internal void Destroy(Contact c)
         {
-            if (contact._fixtureA == null || contact._fixtureB == null)
+            if (c._fixtureA == null || c._fixtureB == null)
                 return;
 
-            Fixture fixtureA = contact._fixtureA;
-            Fixture fixtureB = contact._fixtureB;
+            Fixture fixtureA = c._fixtureA;
+            Fixture fixtureB = c._fixtureB;
 
             //Velcro: When contacts are removed, we invoke OnSeparation
-            if (contact.IsTouching)
+            if (c.IsTouching)
             {
                 //Report the separation to both participants:
-                fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB, contact);
+                fixtureA.OnSeparation?.Invoke(fixtureA, fixtureB, c);
 
                 //Reverse the order of the reported fixtures. The first fixture is always the one that the user subscribed to.
-                fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA, contact);
+                fixtureB.OnSeparation?.Invoke(fixtureB, fixtureA, c);
 
                 //The generic handler
-                EndContact?.Invoke(contact);
+                EndContact?.Invoke(c);
             }
 
-            Body bodyA = fixtureA.Body;
-            Body bodyB = fixtureB.Body;
+            Body bodyA = fixtureA._body;
+            Body bodyB = fixtureB._body;
 
             // Remove from the world.
-            ContactList.Remove(contact);
+            if (c._prev != null)
+                c._prev._next = c._next;
+
+            if (c._next != null)
+                c._next._prev = c._prev;
+
+            if (c == _contactList)
+                _contactList = c._next;
 
             // Remove from body 1
-            if (contact._nodeA.Prev != null)
-                contact._nodeA.Prev.Next = contact._nodeA.Next;
+            if (c._nodeA.Prev != null)
+                c._nodeA.Prev.Next = c._nodeA.Next;
 
-            if (contact._nodeA.Next != null)
-                contact._nodeA.Next.Prev = contact._nodeA.Prev;
+            if (c._nodeA.Next != null)
+                c._nodeA.Next.Prev = c._nodeA.Prev;
 
-            if (contact._nodeA == bodyA.ContactList)
-                bodyA.ContactList = contact._nodeA.Next;
+            if (c._nodeA == bodyA.ContactList)
+                bodyA.ContactList = c._nodeA.Next;
 
             // Remove from body 2
-            if (contact._nodeB.Prev != null)
-                contact._nodeB.Prev.Next = contact._nodeB.Next;
+            if (c._nodeB.Prev != null)
+                c._nodeB.Prev.Next = c._nodeB.Next;
 
-            if (contact._nodeB.Next != null)
-                contact._nodeB.Next.Prev = contact._nodeB.Prev;
+            if (c._nodeB.Next != null)
+                c._nodeB.Next.Prev = c._nodeB.Prev;
 
-            if (contact._nodeB == bodyB.ContactList)
-                bodyB.ContactList = contact._nodeB.Next;
+            if (c._nodeB == bodyB.ContactList)
+                bodyB.ContactList = c._nodeB.Next;
 
-            contact.Destroy();
+            // Call the factory.
+            c.Destroy();
+            --_contactCount;
         }
 
+        /// <summary>
+        /// This is the top level collision call for the time step. Here all the narrow phase collision is processed for the world contact list.
+        /// </summary>
         internal void Collide()
         {
             // Update awake contacts.
-            for (int i = 0; i < ContactList.Count; i++)
+
+            Contact c = _contactList;
+
+            while (c != null)
             {
-                Contact c = ContactList[i];
                 Fixture fixtureA = c._fixtureA;
                 Fixture fixtureB = c._fixtureB;
                 int indexA = c.ChildIndexA;
                 int indexB = c.ChildIndexB;
-                Body bodyA = fixtureA.Body;
-                Body bodyB = fixtureB.Body;
+                Body bodyA = fixtureA._body;
+                Body bodyB = fixtureB._body;
 
                 //Velcro: Do no try to collide disabled bodies
                 if (!bodyA.Enabled || !bodyB.Enabled)
+                {
+                    c = c._next;
                     continue;
+                }
 
                 // Is this contact flagged for filtering?
                 if (c.FilterFlag)
@@ -239,6 +266,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     if (!bodyB.ShouldCollide(bodyA))
                     {
                         Contact cNuke = c;
+                        c = cNuke._next;
                         Destroy(cNuke);
                         continue;
                     }
@@ -247,6 +275,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     if (!ShouldCollide(fixtureA, fixtureB))
                     {
                         Contact cNuke = c;
+                        c = cNuke._next;
                         Destroy(cNuke);
                         continue;
                     }
@@ -255,6 +284,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     if (ContactFilter != null && !ContactFilter(fixtureA, fixtureB))
                     {
                         Contact cNuke = c;
+                        c = cNuke._next;
                         Destroy(cNuke);
                         continue;
                     }
@@ -268,7 +298,10 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
                 // At least one body must be awake and it must be dynamic or kinematic.
                 if (!activeA && !activeB)
+                {
+                    c = c._next;
                     continue;
+                }
 
                 int proxyIdA = fixtureA.Proxies[indexA].ProxyId;
                 int proxyIdB = fixtureB.Proxies[indexB].ProxyId;
@@ -278,12 +311,14 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                 if (!overlap)
                 {
                     Contact cNuke = c;
+                    c = cNuke._next;
                     Destroy(cNuke);
                     continue;
                 }
 
                 // The contact persists.
                 c.Update(this);
+                c = c._next;
             }
         }
 

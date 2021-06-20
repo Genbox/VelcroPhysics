@@ -355,7 +355,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             _debugPanelSb.AppendLine("Objects:");
             _debugPanelSb.Append("- Bodies: ").AppendLine(World.BodyList.Count.ToString());
             _debugPanelSb.Append("- Fixtures: ").AppendLine(fixtureCount.ToString());
-            _debugPanelSb.Append("- Contacts: ").AppendLine(World.ContactList.Count.ToString());
+            _debugPanelSb.Append("- Contacts: ").AppendLine(World.ContactManager.ContactCount.ToString());
             _debugPanelSb.Append("- Joints: ").AppendLine(World.JointList.Count.ToString());
             _debugPanelSb.Append("- Controllers: ").AppendLine(World.ControllerList.Count.ToString());
             _debugPanelSb.Append("- Proxies: ").AppendLine(World.ProxyCount.ToString());

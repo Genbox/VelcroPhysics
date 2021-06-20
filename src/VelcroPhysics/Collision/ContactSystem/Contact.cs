@@ -75,32 +75,43 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             }
         };
 
+        //private bool _initialized;
+
         internal ContactFlags _flags;
-        internal Manifold _manifold;
+
+        // World pool and list pointers.
+        internal Contact _prev;
+        internal Contact _next;
 
         // Nodes for connecting bodies.
         internal ContactEdge _nodeA = new ContactEdge();
         internal ContactEdge _nodeB = new ContactEdge();
 
-        internal float _toi;
-        internal int _toiCount;
-        private ContactType _type;
-
         internal Fixture _fixtureA;
         internal Fixture _fixtureB;
+
+        private int _indexA;
+        private int _indexB;
+
+        internal Manifold _manifold;
+
+        internal int _toiCount;
+        internal float _toi;
+
+        private ContactType _type;
+
         private float _friction;
-        private float _tangentSpeed;
-        private int _childIndexA;
-        private int _childIndexB;
         private float _restitution;
 
-        /// <summary>Get the contact manifold. Do not modify the manifold unless you understand the internals of Box2D.</summary>
-        public Manifold Manifold => _manifold;
+        private float _tangentSpeed;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {
             Reset(fA, indexA, fB, indexB);
         }
+
+        /// <summary>Get the contact manifold. Do not modify the manifold unless you understand the internals of Box2D.</summary>
+        public Manifold Manifold => _manifold;
 
         public float Friction
         {
@@ -126,11 +137,11 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
         /// <summary>Get the child primitive index for fixture A.</summary>
         /// <value>The child index A.</value>
-        public int ChildIndexA => _childIndexA;
+        public int ChildIndexA => _indexA;
 
         /// <summary>Get the child primitive index for fixture B.</summary>
         /// <value>The child index B.</value>
-        public int ChildIndexB => _childIndexB;
+        public int ChildIndexB => _indexB;
 
         /// <summary>
         /// Enable/disable this contact.The contact is only disabled for the current time step (or sub-step in continuous
@@ -147,6 +158,9 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     _flags &= ~ContactFlags.EnabledFlag;
             }
         }
+
+        public Contact Next => _next;
+        public Contact Previous => _prev;
 
         internal bool IsTouching => (_flags & ContactFlags.TouchingFlag) == ContactFlags.TouchingFlag;
         internal bool IslandFlag => (_flags & ContactFlags.IslandFlag) == ContactFlags.IslandFlag;
@@ -181,10 +195,13 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             _fixtureA = fA;
             _fixtureB = fB;
 
-            _childIndexA = indexA;
-            _childIndexB = indexB;
+            _indexA = indexA;
+            _indexB = indexB;
 
             _manifold.PointCount = 0;
+
+            _prev = null;
+            _next = null;
 
             _nodeA.Contact = null;
             _nodeA.Prev = null;
@@ -198,7 +215,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
             _toiCount = 0;
 
-            //Velcro: We only set the friction and restitution if we are not destroying the contact
+            //Velcro: We only set the friction and restitution if we are not resetting the contact
             if (_fixtureA != null && _fixtureB != null)
             {
                 _friction = Settings.MixFriction(_fixtureA._friction, _fixtureB._friction);
@@ -215,13 +232,11 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
         /// <param name="contactManager">The contact manager.</param>
         internal void Update(ContactManager contactManager)
         {
+            //Velcro: Do not try and update destroyed contacts
             if (_fixtureA == null || _fixtureB == null)
                 return;
 
-            Body bodyA = _fixtureA.Body;
-            Body bodyB = _fixtureB.Body;
-
-            Manifold oldManifold = Manifold;
+            Manifold oldManifold = _manifold;
 
             // Re-enable this contact.
             _flags |= ContactFlags.EnabledFlag;
@@ -231,19 +246,25 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
             bool sensor = _fixtureA.IsSensor || _fixtureB.IsSensor;
 
+            Body bodyA = _fixtureA.Body;
+            Body bodyB = _fixtureB.Body;
+
+            Transform xfA = bodyA._xf;
+            Transform xfB = bodyB._xf;
+
             // Is this contact a sensor?
             if (sensor)
             {
                 Shape shapeA = _fixtureA.Shape;
                 Shape shapeB = _fixtureB.Shape;
-                touching = Narrowphase.Collision.TestOverlap(shapeA, _childIndexA, shapeB, _childIndexB, ref bodyA._xf, ref bodyB._xf);
+                touching = Narrowphase.Collision.TestOverlap(shapeA, _indexA, shapeB, _indexB, ref xfA, ref xfB);
 
                 // Sensors don't generate manifolds.
                 _manifold.PointCount = 0;
             }
             else
             {
-                Evaluate(ref _manifold, ref bodyA._xf, ref bodyB._xf);
+                Evaluate(ref _manifold, ref xfA, ref xfB);
                 touching = _manifold.PointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
@@ -282,13 +303,13 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             else
                 _flags &= ~ContactFlags.TouchingFlag;
 
-            if (touching)
+            if (wasTouching == false && touching)
             {
-                // Report the collision to both participants:
+                //Velcro: Report the collision to both fixtures:
                 _fixtureA.OnCollision?.Invoke(_fixtureA, _fixtureB, this);
                 _fixtureB.OnCollision?.Invoke(_fixtureB, _fixtureA, this);
 
-                // Report the collision to both bodies:
+                //Velcro: Report the collision to both bodies:
                 bodyA.OnCollision?.Invoke(_fixtureA, _fixtureB, this);
                 bodyB.OnCollision?.Invoke(_fixtureB, _fixtureA, this);
 
@@ -304,7 +325,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
             if (wasTouching && !touching)
             {
-                //Report the separation to both participants:
+                //Report the separation to both fixtures:
                 _fixtureA.OnSeparation?.Invoke(_fixtureA, _fixtureB, this);
                 _fixtureB.OnSeparation?.Invoke(_fixtureB, _fixtureA, this);
 
@@ -315,10 +336,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                 contactManager.EndContact?.Invoke(this);
             }
 
-            if (sensor)
-                return;
-
-            contactManager.PreSolve?.Invoke(this, ref oldManifold);
+            if (!sensor && touching)
+                contactManager.PreSolve?.Invoke(this, ref oldManifold);
         }
 
         /// <summary>Evaluate this contact with your own manifold and transforms.</summary>
@@ -393,13 +412,24 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
         internal void Destroy()
         {
-            _fixtureA.Body._world._contactPool.Enqueue(this);
+            //Debug.Assert(_initialized);
 
-            if (Manifold.PointCount > 0 && !_fixtureA.IsSensor && !_fixtureB.IsSensor)
+            //Fixture fixtureA = _fixtureA;
+            //Fixture fixtureB = _fixtureB;
+
+            if (_manifold.PointCount > 0 && !_fixtureA.IsSensor && !_fixtureB.IsSensor)
             {
                 _fixtureA.Body.Awake = true;
                 _fixtureB.Body.Awake = true;
             }
+
+            //b2Shape::Type typeA = fixtureA->GetType();
+            //b2Shape::Type typeB = fixtureB->GetType();
+
+            //Debug.Assert(0 <= typeA && typeA < b2Shape::e_typeCount);
+            //Debug.Assert(0 <= typeB && typeB < b2Shape::e_typeCount);
+
+            _fixtureA._body._world._contactPool.Enqueue(this);
 
             Reset(null, 0, null, 0);
         }

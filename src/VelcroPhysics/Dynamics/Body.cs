@@ -685,7 +685,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             FixtureList.Remove(fixture);
             fixture.Destroy();
-            fixture.Body = null;
+            fixture._body = null;
 
             ResetMassData();
         }
