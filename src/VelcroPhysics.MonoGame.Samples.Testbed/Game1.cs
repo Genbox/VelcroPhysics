@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests;
@@ -35,7 +35,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 
             Window.Title = "Velcro Physics Testbed";
             _graphics = new GraphicsDeviceManager(this);
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(24f);
             IsFixedTimeStep = true;
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
@@ -172,7 +171,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
                 if (_keyboardManager.IsKeyDown(Keys.Left)) // Press left to pan left.
                     ViewCenter = new Vector2(ViewCenter.X - moveScale, ViewCenter.Y);
                 if (_keyboardManager.IsKeyDown(Keys.Right)) // Press right to pan right.
-                    ViewCenter = new Vector2((ViewCenter.X + moveScale), ViewCenter.Y);
+                    ViewCenter = new Vector2(ViewCenter.X + moveScale, ViewCenter.Y);
                 if (_keyboardManager.IsKeyDown(Keys.Down)) // Press down to pan down.
                     ViewCenter = new Vector2(ViewCenter.X, ViewCenter.Y - moveScale);
                 if (_keyboardManager.IsKeyDown(Keys.Up)) // Press up to pan up.
@@ -182,15 +181,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
                     ViewZoom *= 0.9512294f;
                 else if (_keyboardManager.IsKeyDown(Keys.OemPlus) || _keyboardManager.IsKeyDown(Keys.Add)) // Press '+' to zoom in.
                     ViewZoom *= 1.051271f;
-                else if (_mouseManager.NewScrollValue != 0) // Zoom with mouse wheel
-                    ViewZoom *= Math.Sign(_mouseManager.NewScrollValue) == -1 ? 0.85f : 1.15f;
+                else if (_mouseManager.DeltaScrollValue != 0) // Zoom with mouse wheel
+                    ViewZoom *= Math.Sign(_mouseManager.DeltaScrollValue) == -1 ? 0.85f : 1.15f;
 
                 ViewZoom = MathUtils.Clamp(ViewZoom, minZoom, maxZoom);
 
                 _test?.Keyboard(_keyboardManager);
             }
 
-            _test?.Mouse(_mouseManager._newState, _mouseManager._oldState);
+            //Support moving the camera around with right-click movement
+            Vector2 currentPos = ConvertScreenToWorld(_mouseManager.NewPosition);
+
+            if (_mouseManager._newState.RightButton == ButtonState.Pressed)
+                ViewCenter += ConvertScreenToWorld(_mouseManager.OldPosition) - currentPos;
+            else
+                _test?.Mouse(_mouseManager._newState, _mouseManager._oldState);
 
             if (_gamePadManager.IsConnected)
                 _test?.Gamepad(_gamePadManager._newState, _gamePadManager._oldState);
@@ -253,6 +258,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
         public Vector2 ConvertScreenToWorld(int x, int y)
         {
             Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(x, y, 0), Projection, View, Matrix.Identity);
+            return new Vector2(temp.X, temp.Y);
+        }
+
+        public Vector2 ConvertScreenToWorld(Vector2 position)
+        {
+            Vector3 temp = GraphicsDevice.Viewport.Unproject(new Vector3(position, 0), Projection, View, Matrix.Identity);
             return new Vector2(temp.X, temp.Y);
         }
 
