@@ -32,7 +32,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
     internal class Heavy2Test : Test
     {
         private Body _heavy;
-    
+
         private Heavy2Test()
         {
             {

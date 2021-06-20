@@ -119,10 +119,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         {
             for (float by = -_circleRadius; by < _circleRadius; by += 0.1f)
             for (float bx = -_circleRadius; bx < _circleRadius; bx += 0.1f)
-                if (bx * bx + @by * @by < _circleRadius * _circleRadius)
+                if (bx * bx + by * by < _circleRadius * _circleRadius)
                 {
                     float ax = bx + center.X;
-                    float ay = @by + center.Y;
+                    float ay = by + center.Y;
                     _terrain.ModifyTerrain(new Vector2(ax, ay), value);
                 }
         }

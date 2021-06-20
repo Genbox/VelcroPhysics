@@ -99,7 +99,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Vector2 x1 = output.PointA;
             Vector2 x2 = output.PointB;
 
-
             Color c1 = new Color(1.0f, 0.0f, 0.0f);
             DebugView.DrawPoint(x1, 4.0f, c1);
 

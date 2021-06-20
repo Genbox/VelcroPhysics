@@ -1,7 +1,6 @@
 using System;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -78,12 +77,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
 
             _testCount = 0;
             while (TestEntries.TestList[_testCount].CreateTest != null)
-            {
                 ++_testCount;
-            }
 
             _testIndex = MathUtils.Clamp(_testIndex, 0, _testCount - 1);
             _testSelection = _testIndex;
+
             StartTest(_testIndex);
         }
 
