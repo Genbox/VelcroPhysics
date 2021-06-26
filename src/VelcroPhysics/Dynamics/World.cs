@@ -94,14 +94,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary>Fires whenever a joint has been removed</summary>
         public event JointHandler JointRemoved;
 
-        /// <summary>Change the global gravity vector.</summary>
-        /// <value>The gravity.</value>
-        public Vector2 Gravity
-        {
-            get => _gravity;
-            set => _gravity = value;
-        }
-
         /// <summary>Initializes a new instance of the <see cref="World" /> class.</summary>
         public World(Vector2 gravity)
         {
@@ -118,6 +110,16 @@ namespace Genbox.VelcroPhysics.Dynamics
             _contactManager = new ContactManager(new DynamicTreeBroadPhase());
             _gravity = gravity;
         }
+
+        /// <summary>Change the global gravity vector.</summary>
+        /// <value>The gravity.</value>
+        public Vector2 Gravity
+        {
+            get => _gravity;
+            set => _gravity = value;
+        }
+
+        public ref Profile Profile => ref _profile;
 
         public List<Controller> ControllerList { get; }
 
@@ -395,7 +397,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 b._flags &= ~BodyFlags.IslandFlag;
             }
 
-            for (Contact c = ContactManager._contactList; c != null; c = c._next)
+            for (Contact c = _contactManager._contactList; c != null; c = c._next)
             {
                 c._flags &= ~ContactFlags.IslandFlag;
             }
