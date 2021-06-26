@@ -206,13 +206,10 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
             Vector2 a = GetPosition(time);
             Vector2 b = GetPosition(offsetTime);
 
-            Vector2 output;
 
             Vector2.Subtract(ref a, ref b, out Vector2 temp);
 
-#if XBOX
-            output = new Vector2();
-#endif
+            Vector2 output = new Vector2();
             output.X = -temp.Y;
             output.Y = temp.X;
 

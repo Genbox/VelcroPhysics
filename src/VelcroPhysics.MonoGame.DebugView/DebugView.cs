@@ -74,12 +74,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         public Rectangle PerformancePanelBounds = new Rectangle(430, 100, 200, 100);
 
         public bool HighPrecisionCounters;
-
-#if XBOX
-        public const int CircleSegments = 16;
-#else
         public const int CircleSegments = 32;
-#endif
 
         private const float _circleIncrement = MathConstants.TwoPi / CircleSegments;
 
@@ -347,11 +342,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             int x = (int)DebugPanelPosition.X;
             int y = (int)DebugPanelPosition.Y;
 
-#if XBOX
-            _debugPanelSb = new StringBuilder();
-#else
             _debugPanelSb.Clear();
-#endif
             _debugPanelSb.AppendLine("Objects:");
             _debugPanelSb.Append("- Bodies: ").AppendLine(World.BodyList.Count.ToString());
             _debugPanelSb.Append("- Fixtures: ").AppendLine(fixtureCount.ToString());
@@ -361,11 +352,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             _debugPanelSb.Append("- Proxies: ").AppendLine(World.ProxyCount.ToString());
             DrawString(x, y, _debugPanelSb.ToString());
 
-#if XBOX
-            _debugPanelSb = new StringBuilder();
-#else
             _debugPanelSb.Clear();
-#endif
             _debugPanelSb.AppendLine("Update time:");
 
             string msStr = " ms";
