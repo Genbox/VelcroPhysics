@@ -71,9 +71,9 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         public float MinimumValue;
         public float MaximumValue = 10;
         public bool Enabled = true;
-        public Rectangle PerformancePanelBounds = new Rectangle(330, 100, 200, 100);
+        public Rectangle PerformancePanelBounds = new Rectangle(430, 100, 200, 100);
 
-        public bool HighPrecisionCounters = false;
+        public bool HighPrecisionCounters;
 
 #if XBOX
         public const int CircleSegments = 16;
@@ -271,7 +271,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
 
         private void DrawPerformanceGraph()
         {
-            _graphValues.AddLast(InternalTimings.UpdateTime / (float)TimeSpan.TicksPerMillisecond);
+            _graphValues.AddLast(World.Profile.Step / (float)TimeSpan.TicksPerMillisecond);
 
             if (_graphValues.Count > ValuesToGraph + 1)
                 _graphValues.RemoveFirst();
@@ -370,26 +370,40 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
 
             string msStr = " ms";
 
+            ref Profile profile = ref World.Profile;
+
             if (HighPrecisionCounters)
             {
-                _debugPanelSb.Append("- Body: ").Append(InternalTimings.SolveUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Contact: ").Append(InternalTimings.ContactsUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- CCD: ").Append(InternalTimings.ContinuousPhysicsTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Joint: ").Append(InternalTimings.JointUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Controller: ").Append(InternalTimings.ControllersUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Total: ").Append(InternalTimings.UpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve init: ").Append(profile.SolveInit / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve: ").Append(profile.Solve / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve velocity: ").Append(profile.SolveVelocity / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve position: ").Append(profile.SolvePosition / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- New contacts: ").Append(profile.NewContactsTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Broadphase: ").Append(profile.Broadphase / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Collide: ").Append(profile.Collide / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- CCD: ").Append(profile.SolveTOI / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Add/Remove: ").Append(profile.AddRemoveTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Controller: ").Append(profile.ControllersUpdateTime / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Breakable bodies: ").Append(profile.BreakableBodies / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Total: ").Append(profile.Step / (double)TimeSpan.TicksPerMillisecond).AppendLine(msStr);
             }
             else
             {
-                _debugPanelSb.Append("- Body: ").Append(InternalTimings.SolveUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Contact: ").Append(InternalTimings.ContactsUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- CCD: ").Append(InternalTimings.ContinuousPhysicsTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Joint: ").Append(InternalTimings.JointUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Controller: ").Append(InternalTimings.ControllersUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
-                _debugPanelSb.Append("- Total: ").Append(InternalTimings.UpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve init: ").Append(profile.SolveInit / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve: ").Append(profile.Solve / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve velocity: ").Append(profile.SolveVelocity / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Solve position: ").Append(profile.SolvePosition / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- New contacts: ").Append(profile.NewContactsTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Broadphase: ").Append(profile.Broadphase / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Collide: ").Append(profile.Collide / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- CCD: ").Append(profile.SolveTOI / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Add/Remove: ").Append(profile.AddRemoveTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Controller: ").Append(profile.ControllersUpdateTime / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Breakable bodies: ").Append(profile.BreakableBodies / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
+                _debugPanelSb.Append("- Total: ").Append(profile.Step / TimeSpan.TicksPerMillisecond).AppendLine(msStr);
             }
 
-            DrawString(x + 110, y, _debugPanelSb.ToString());
+            DrawString(x + 140, y, _debugPanelSb.ToString());
         }
 
         public void DrawAABB(ref AABB aabb, Color color)

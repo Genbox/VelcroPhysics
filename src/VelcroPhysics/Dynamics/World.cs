@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Transactions;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Distance;
@@ -63,12 +64,13 @@ namespace Genbox.VelcroPhysics.Dynamics
         private Func<Fixture, Vector2, Vector2, float, float> _rayCastCallback;
         private Func<RayCastInput, int, float> _rayCastCallbackWrapper;
         private Body[] _stack = new Body[64];
-        private bool _stepComplete;
+        private bool _stepComplete = true;
+        private Pool<Stopwatch> _timerPool = new Pool<Stopwatch>(Stopwatch.StartNew, sw => sw.Restart(), 5, false);
         private List<Fixture> _testPointAllFixtures;
-        private Stopwatch _watch = new Stopwatch();
-        internal bool _worldHasNewFixture;
+        internal bool _newContacts;
         internal Island _island;
         private readonly ContactManager _contactManager;
+        private Profile _profile;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -385,6 +387,10 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         private void Solve(ref TimeStep step)
         {
+            _profile.SolveInit = 0;
+            _profile.SolveVelocity = 0;
+            _profile.SolvePosition = 0;
+
             // Size the island for the worst case.
             _island.Reset(BodyList.Count,
                 ContactManager._contactCount,
@@ -516,7 +522,11 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
                 }
 
-                _island.Solve(ref step, ref _gravity);
+                Profile profile = new Profile();
+                _island.Solve(ref profile, ref step, ref _gravity);
+                _profile.SolveInit += profile.SolveInit;
+                _profile.SolveVelocity += profile.SolveVelocity;
+                _profile.SolvePosition += profile.SolvePosition;
 
                 // Post solve cleanup.
                 for (int i = 0; i < _island._bodyCount; ++i)
@@ -528,23 +538,28 @@ namespace Genbox.VelcroPhysics.Dynamics
                 }
             }
 
-            // Synchronize fixtures, check for out of range bodies.
-
-            foreach (Body b in BodyList)
             {
-                // If a body was not in an island then it did not move.
-                if (!b.IsIsland)
-                    continue;
+                Stopwatch timer = _timerPool.GetFromPool();
 
-                if (b.BodyType == BodyType.Static)
-                    continue;
+                // Synchronize fixtures, check for out of range bodies.
+                foreach (Body b in BodyList)
+                {
+                    // If a body was not in an island then it did not move.
+                    if ((b._flags & BodyFlags.IslandFlag) == 0)
+                        continue;
 
-                // Update fixtures (for broad-phase).
-                b.SynchronizeFixtures();
+                    if (b.BodyType == BodyType.Static)
+                        continue;
+
+                    // Update fixtures (for broad-phase).
+                    b.SynchronizeFixtures();
+                }
+
+                // Look for new contacts.
+                ContactManager.FindNewContacts();
+                _profile.Broadphase = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
             }
-
-            // Look for new contacts.
-            ContactManager.FindNewContacts();
         }
 
         private void SolveTOI(ref TimeStep step)
@@ -796,6 +811,9 @@ namespace Genbox.VelcroPhysics.Dynamics
                 subStep.DeltaTime = (1.0f - minAlpha) * step.DeltaTime;
                 subStep.InvertedDeltaTime = 1.0f / subStep.DeltaTime;
                 subStep.DeltaTimeRatio = 1.0f;
+                //subStep.velocityIterations = step.velocityIterations;
+                //subStep.warmStarting = false;
+
                 _island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.
@@ -892,79 +910,100 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
         public void Step(float dt)
         {
+            //Velcro: We support disabling the world
             if (!Enabled)
                 return;
 
-            if (Settings.EnableDiagnostics)
-                _watch.Start();
+            //Velcro: We reuse the timers to avoid generating garbage
+            Stopwatch stepTimer = _timerPool.GetFromPool();
 
-            ProcessChanges();
-
-            if (Settings.EnableDiagnostics)
-                InternalTimings.AddRemoveTime = _watch.ElapsedTicks;
+            {
+                //Velcro: We support add/removal of objects live in the engine.
+                Stopwatch timer = _timerPool.GetFromPool();
+                ProcessChanges();
+                _profile.AddRemoveTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
 
             // If new fixtures were added, we need to find the new contacts.
-            if (_worldHasNewFixture)
+            if (_newContacts)
             {
+                //Velcro: We measure how much time is spent on finding new contacts
+                Stopwatch timer = _timerPool.GetFromPool();
                 ContactManager.FindNewContacts();
-                _worldHasNewFixture = false;
+                _newContacts = false;
+                _profile.NewContactsTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
             }
 
-            if (Settings.EnableDiagnostics)
-                InternalTimings.NewContactsTimeDelta = _watch.ElapsedTicks;
-
-            //Velcro only: moved position and velocity iterations into Settings.cs
+            //Velcro: Moved warmstarting into Settings
+            //Velcro: Moved position and velocity iterations into Settings.cs
             TimeStep step;
-            step.InvertedDeltaTime = dt > 0.0f ? 1.0f / dt : 0.0f;
             step.DeltaTime = dt;
+            if (dt > 0.0f)
+                step.InvertedDeltaTime = 1.0f / dt;
+            else
+                step.InvertedDeltaTime = 0.0f;
+
             step.DeltaTimeRatio = _invDt0 * dt;
 
-            //Update controllers
-            for (int i = 0; i < ControllerList.Count; i++)
             {
-                ControllerList[i].Update(dt);
+                //Velcro: We have the concept of controllers. We update them here
+                Stopwatch timer = _timerPool.GetFromPool();
+                for (int i = 0; i < ControllerList.Count; i++)
+                {
+                    ControllerList[i].Update(dt);
+                }
+                _profile.ControllersUpdateTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
             }
-
-            if (Settings.EnableDiagnostics)
-                InternalTimings.ControllersUpdateTimeDelta = _watch.ElapsedTicks;
 
             // Update contacts. This is where some contacts are destroyed.
-            ContactManager.Collide();
-
-            if (Settings.EnableDiagnostics)
-                InternalTimings.ContactsUpdateTimeDelta = _watch.ElapsedTicks;
+            {
+                Stopwatch timer = _timerPool.GetFromPool();
+                ContactManager.Collide();
+                _profile.Collide = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
 
             // Integrate velocities, solve velocity constraints, and integrate positions.
-            Solve(ref step);
-
-            if (Settings.EnableDiagnostics)
-                InternalTimings.SolveUpdateTimeDelta = _watch.ElapsedTicks;
+            if (_stepComplete && step.DeltaTime > 0.0f)
+            {
+                Stopwatch timer = _timerPool.GetFromPool();
+                Solve(ref step);
+                _profile.Solve = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
 
             // Handle TOI events.
-            if (Settings.ContinuousPhysics)
+            if (Settings.ContinuousPhysics && step.DeltaTime > 0.0f)
             {
+                Stopwatch timer = _timerPool.GetFromPool();
                 SolveTOI(ref step);
-
-                if (Settings.EnableDiagnostics)
-                    InternalTimings.ContinuousPhysicsTimeDelta = _watch.ElapsedTicks;
+                _profile.SolveTOI = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
             }
+
+            if (step.DeltaTime > 0.0f)
+                _invDt0 = step.InvertedDeltaTime;
 
             if (Settings.AutoClearForces)
                 ClearForces();
 
-            for (int i = 0; i < BreakableBodyList.Count; i++)
             {
-                BreakableBodyList[i].Update();
+                //Velcro: We support breakable bodies. We update them here.
+                Stopwatch timer = _timerPool.GetFromPool();
+
+                for (int i = 0; i < BreakableBodyList.Count; i++)
+                {
+                    BreakableBodyList[i].Update();
+                }
+                _profile.BreakableBodies = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
             }
 
-            _invDt0 = step.InvertedDeltaTime;
-
-            if (Settings.EnableDiagnostics)
-            {
-                _watch.Stop();
-                InternalTimings.UpdateTime = _watch.ElapsedTicks;
-                _watch.Reset();
-            }
+            _profile.Step = stepTimer.ElapsedTicks;
+            _timerPool.ReturnToPool(stepTimer);
         }
 
         /// <summary>
@@ -1206,7 +1245,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             // Let the world know we have a new fixture. This will cause new contacts
             // to be created at the beginning of the next time step.
-            _worldHasNewFixture = true;
+            _newContacts = true;
 
             //Velcro: Added event
             FixtureAdded?.Invoke(fixture);
