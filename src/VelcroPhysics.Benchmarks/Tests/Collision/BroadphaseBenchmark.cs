@@ -53,7 +53,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
         {
             for (int i = 0; i < _actors.Length; i++)
             {
-                _actors[i].ProxyId = _tree.AddProxy(ref _actors[i].AABB, null);
+                _actors[i].ProxyId = _tree.CreateProxy(ref _actors[i].AABB, null);
             }
 
             foreach (Actor a in _actors)
@@ -72,7 +72,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Collision
                 if (a.ProxyId == -1)
                     continue;
 
-                _tree.RemoveProxy(a.ProxyId);
+                _tree.DestroyProxy(a.ProxyId);
             }
         }
 

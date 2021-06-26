@@ -12,7 +12,7 @@ namespace Genbox.VelcroPhysics.Benchmarks.Tests.Shared
 
         public PoolBenchmarks()
         {
-            _pool = new Pool<PoolObject>(() => new PoolObject(), 1000);
+            _pool = new Pool<PoolObject>(() => new PoolObject(), o => o.Reset(), 1000);
         }
 
         [Benchmark]

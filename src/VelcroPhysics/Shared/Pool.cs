@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Genbox.VelcroPhysics.Shared.Optimization;
 
 namespace Genbox.VelcroPhysics.Shared
 {
-    public class Pool<T> where T : IPoolable<T>
+    public class Pool<T>
     {
         private readonly Func<T> _objectCreator;
+        private readonly Action<T> _objectReset;
         private readonly Queue<T> _queue;
 
-        public Pool(Func<T> objectCreator, int capacity = 16, bool preCreateInstances = true)
+        public Pool(Func<T> objectCreator, Action<T> objectReset, int capacity = 16, bool preCreateInstances = true)
         {
             _objectCreator = objectCreator;
+            _objectReset = objectReset;
             _queue = new Queue<T>(capacity);
 
             if (!preCreateInstances)
@@ -32,7 +33,9 @@ namespace Genbox.VelcroPhysics.Shared
             if (_queue.Count == 0)
                 return _objectCreator();
 
-            return _queue.Dequeue();
+            T obj = _queue.Dequeue();
+            _objectReset(obj);
+            return obj;
         }
 
         public IEnumerable<T> GetManyFromPool(int count)
@@ -47,7 +50,6 @@ namespace Genbox.VelcroPhysics.Shared
 
         public void ReturnToPool(T obj)
         {
-            obj.Reset();
             _queue.Enqueue(obj);
         }
 
@@ -55,7 +57,6 @@ namespace Genbox.VelcroPhysics.Shared
         {
             foreach (T obj in objs)
             {
-                obj.Reset();
                 _queue.Enqueue(obj);
             }
         }
