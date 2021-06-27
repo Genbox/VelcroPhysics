@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
+using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -73,11 +75,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public override void Update(GameSettings settings, GameTime gameTime)
         {
+            base.Update(settings, gameTime);
+
+            PolygonShape shape = new PolygonShape(new Vertices(_points), 0);
+
             DrawString("Press g to generate a new random convex hull");
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
-            DebugView.DrawPolygon(_points, _count, new Color(0.9f, 0.9f, 0.9f));
+            DebugView.DrawPolygon(shape.Vertices.ToArray(), shape.Vertices.Count, new Color(0.9f, 0.9f, 0.9f));
 
             for (int i = 0; i < _count; ++i)
             {
@@ -89,8 +95,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             if (_auto)
                 Generate();
-
-            base.Update(settings, gameTime);
         }
 
         internal static Test Create()
