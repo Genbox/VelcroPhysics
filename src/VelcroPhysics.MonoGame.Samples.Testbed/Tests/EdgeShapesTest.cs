@@ -34,6 +34,22 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
     internal class EdgeShapesTest : Test
     {
+        private class EdgeShapesCallback
+        {
+            public float ReportFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction)
+            {
+                _fixture = fixture;
+                _point = point;
+                _normal = normal;
+
+                return fraction;
+            }
+
+            public Fixture _fixture;
+            public Vector2 _point;
+            public Vector2 _normal;
+        };
+
         private const int _maxBodies = 256;
 
         private int _bodyIndex;
@@ -194,29 +210,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Vector2 d = new Vector2(L * MathUtils.Cosf(_angle), -L * MathUtils.Abs(MathUtils.Sinf(_angle)));
             Vector2 point2 = point1 + d;
 
-            Fixture localFixture = null;
-            Vector2 localPoint = Vector2.Zero;
-            Vector2 localNormal = Vector2.Zero;
+            EdgeShapesCallback callback = new EdgeShapesCallback();
 
-            World.RayCast((fixture, point, normal, fraction) =>
-            {
-                localFixture = fixture;
-                localPoint = point;
-                localNormal = normal;
-
-                return fraction;
-            }, point1, point2);
+            World.RayCast(callback.ReportFixture, point1, point2);
 
             DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
 
-            if (localFixture != null)
+            if (callback._fixture != null)
             {
-                DebugView.DrawPoint(localPoint, 0.5f, new Color(0.4f, 0.9f, 0.4f));
+                DebugView.DrawPoint(callback._point, 0.5f, new Color(0.4f, 0.9f, 0.4f));
 
-                DebugView.DrawSegment(point1, localPoint, new Color(0.8f, 0.8f, 0.8f));
+                DebugView.DrawSegment(point1, callback._point, new Color(0.8f, 0.8f, 0.8f));
 
-                Vector2 head = localPoint + 0.5f * localNormal;
-                DebugView.DrawSegment(localPoint, head, new Color(0.9f, 0.9f, 0.4f));
+                Vector2 head = callback._point + 0.5f * callback._normal;
+                DebugView.DrawSegment(callback._point, head, new Color(0.9f, 0.9f, 0.4f));
             }
             else
             {
