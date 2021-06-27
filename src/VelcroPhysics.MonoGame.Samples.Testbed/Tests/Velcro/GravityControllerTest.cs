@@ -80,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 if (i == 5)
                 {
                     fix.CollisionCategories = Category.Cat2;
-                    fix.Body.IgnoreGravity = true;
+                    fix.Body.GravityScale = 0;
                 }
 
                 if (i == 6)

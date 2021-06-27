@@ -413,20 +413,6 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public bool IsDynamic => _type == BodyType.Dynamic;
 
-        /// <summary>Gets or sets a value indicating whether this body ignores gravity.</summary>
-        /// <value><c>true</c> if it ignores gravity; otherwise, <c>false</c>.</value>
-        public bool IgnoreGravity
-        {
-            get => (_flags & BodyFlags.IgnoreGravity) == BodyFlags.IgnoreGravity;
-            set
-            {
-                if (value)
-                    _flags |= BodyFlags.IgnoreGravity;
-                else
-                    _flags &= ~BodyFlags.IgnoreGravity;
-            }
-        }
-
         /// <summary>Get the world position of the center of mass.</summary>
         /// <value>The world position.</value>
         public Vector2 WorldCenter => _sweep.C;

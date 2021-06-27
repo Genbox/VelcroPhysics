@@ -12,7 +12,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         BulletFlag = 8,
         FixedRotationFlag = 16,
         Enabled = 32,
-        IgnoreGravity = 64,
-        IgnoreCCD = 128
+        IgnoreCCD = 64
     }
 }
