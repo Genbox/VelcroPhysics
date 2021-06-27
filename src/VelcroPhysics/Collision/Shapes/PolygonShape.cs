@@ -20,10 +20,10 @@
 * 3. This notice may not be removed or altered from any source distribution. 
 */
 
+using System;
 using System.Diagnostics;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Tools.ConvexHull.GiftWrap;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
@@ -40,8 +40,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         /// <param name="density">The density.</param>
         public PolygonShape(Vertices vertices, float density) : base(ShapeType.Polygon, Settings.PolygonRadius, density)
         {
-            //Velcro: We must call the property here in order to modify the input and compute mass properties
-            Vertices = vertices;
+            SetVertices(vertices);
         }
 
         /// <summary>Initializes a new instance of the <see cref="PolygonShape" /> class.</summary>
@@ -56,17 +55,21 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
         {
             Debug.Assert(vertices.Count >= 3 && vertices.Count <= Settings.MaxPolygonVertices);
 
+            //Velcro: We throw an exception instead of setting the polygon to a box for safety reasons
+            if (vertices.Count < 3)
+                throw new InvalidOperationException("You can't create a polygon with less than 3 vertices");
+
             int n = MathUtils.Min(vertices.Count, Settings.MaxPolygonVertices);
 
             // Perform welding and copy vertices into local buffer.
-            Vertices ps = new Vertices(n); //Velcro: The temp buffer is n long instead of Settings.MaxPolygonVertices
-
+            Vector2[] ps = new Vector2[n]; //Velcro: The temp buffer is n long instead of Settings.MaxPolygonVertices
+            int tempCount = 0;
             for (int i = 0; i < n; ++i)
             {
                 Vector2 v = vertices[i];
 
                 bool unique = true;
-                for (int j = 0; j < ps.Count; ++j)
+                for (int j = 0; j < tempCount; ++j)
                 {
                     Vector2 temp = ps[j];
                     if (MathUtils.DistanceSquared(ref v, ref temp) < (0.5f * Settings.LinearSlop) * (0.5f * Settings.LinearSlop))
@@ -78,45 +81,104 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
                 if (unique)
                 {
-                    ps.Add(v);
+                    ps[tempCount++] = v;
                 }
             }
 
-            if (ps.Count < 3)
+            n = tempCount;
+            if (n < 3)
             {
                 // Polygon is degenerate.
-                _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                Debug.Assert(false);
-                goto Normals;
+                throw new InvalidOperationException("Polygon is degenerate"); //Velcro: We throw exception here because we had invalid input
             }
 
-            _vertices = GiftWrap.GetConvexHull(ps);
+            // Create the convex hull using the Gift wrapping algorithm
+            // http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 
-            if (_vertices.Count < 3)
+            // Find the right most point on the hull
+            int i0 = 0;
+            float x0 = ps[0].X;
+            for (int i = 1; i < n; ++i)
+            {
+                float x = ps[i].X;
+                if (x > x0 || (x == x0 && ps[i].Y < ps[i0].Y))
+                {
+                    i0 = i;
+                    x0 = x;
+                }
+            }
+
+            int[] hull = new int[Settings.MaxPolygonVertices];
+            int m = 0;
+            int ih = i0;
+
+            for (; ; )
+            {
+                Debug.Assert(m < Settings.MaxPolygonVertices);
+                hull[m] = ih;
+
+                int ie = 0;
+                for (int j = 1; j < n; ++j)
+                {
+                    if (ie == ih)
+                    {
+                        ie = j;
+                        continue;
+                    }
+
+                    Vector2 r = ps[ie] - ps[hull[m]];
+                    Vector2 v = ps[j] - ps[hull[m]];
+                    float c = MathUtils.Cross(r, v);
+                    if (c < 0.0f)
+                    {
+                        ie = j;
+                    }
+
+                    // Collinearity check
+                    if (c == 0.0f && v.LengthSquared() > r.LengthSquared())
+                    {
+                        ie = j;
+                    }
+                }
+
+                ++m;
+                ih = ie;
+
+                if (ie == i0)
+                {
+                    break;
+                }
+            }
+
+            if (m < 3)
             {
                 // Polygon is degenerate.
-                _vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                Debug.Assert(false);
+                throw new InvalidOperationException("Polygon is degenerate"); //Velcro: We throw exception here because we had invalid input
             }
 
-        Normals:
+            _vertices = new Vertices(m);
 
-            _normals = new Vertices(_vertices.Count);
+            // Copy vertices.
+            for (int i = 0; i < m; ++i)
+            {
+                _vertices.Add(ps[hull[i]]);
+            }
+
+            _normals = new Vertices(m);
 
             // Compute normals. Ensure the edges have non-zero length.
-            for (int i = 0; i < _vertices.Count; ++i)
+            for (int i = 0; i < m; ++i)
             {
                 int i1 = i;
                 int i2 = i + 1 < _vertices.Count ? i + 1 : 0;
                 Vector2 edge = _vertices[i2] - _vertices[i1];
                 Debug.Assert(edge.LengthSquared() > MathConstants.Epsilon * MathConstants.Epsilon);
-                Vector2 temp = MathUtils.Cross(edge, 1.0f);
+                var temp = MathUtils.Cross(edge, 1.0f);
                 temp.Normalize();
                 _normals.Add(temp);
             }
 
             //Velcro: We compute all the mass data properties up front
-            // Compute the polygon mass data
             ComputeProperties();
         }
 
@@ -202,12 +264,12 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
 
             Debug.Assert(_vertices.Count >= 3);
 
-            //Velcro optimization: Early exit as polygons with 0 density does not have any properties.
+            //Velcro: Early exit as polygons with 0 density does not have any properties.
             if (_density <= 0)
                 return;
 
-            //Velcro optimization: Consolidated the calculate centroid and mass code to a single method.
-            Vector2 centroid = Vector2.Zero;
+            //Velcro: Consolidated the calculate centroid and mass code to a single method.
+            Vector2 center = Vector2.Zero;
             float area = 0.0f;
             float I = 0.0f;
 
@@ -223,7 +285,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             {
                 // Triangle vertices.
                 Vector2 e1 = _vertices[i] - s;
-                Vector2 e2 = i + 1 < count ? _vertices[i+1] - s : _vertices[0] - s;
+                Vector2 e2 = i + 1 < count ? _vertices[i + 1] - s : _vertices[0] - s;
 
                 float D = MathUtils.Cross(e1, e2);
 
@@ -231,7 +293,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 area += triangleArea;
 
                 // Area weighted centroid
-                centroid += triangleArea * inv3 * (e1 + e2);
+                center += triangleArea * inv3 * (e1 + e2);
 
                 float ex1 = e1.X, ey1 = e1.Y;
                 float ex2 = e2.X, ey2 = e2.Y;
@@ -239,7 +301,7 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
                 float intx2 = ex1 * ex1 + ex2 * ex1 + ex2 * ex2;
                 float inty2 = ey1 * ey1 + ey2 * ey1 + ey2 * ey2;
 
-                I += 0.25f * inv3 * D * (intx2 + inty2);
+                I += (0.25f * inv3 * D) * (intx2 + inty2);
             }
 
             //The area is too small for the engine to handle.
@@ -252,14 +314,14 @@ namespace Genbox.VelcroPhysics.Collision.Shapes
             _massData._mass = _density * area;
 
             // Center of mass
-            centroid *= 1.0f / area;
-            _massData._centroid = centroid + s;
+            center *= 1.0f / area;
+            _massData._centroid = center + s;
 
             // Inertia tensor relative to the local origin (point s).
             _massData._inertia = _density * I;
 
             // Shift to center of mass then to original body origin.
-            _massData._inertia += _massData._mass * (Vector2.Dot(_massData._centroid, _massData._centroid) - Vector2.Dot(centroid, centroid));
+            _massData._inertia += _massData._mass * (MathUtils.Dot(_massData._centroid, _massData._centroid) - MathUtils.Dot(center, center));
         }
 
         public override bool TestPoint(ref Transform transform, ref Vector2 point)
