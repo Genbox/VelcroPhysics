@@ -54,6 +54,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal float _torque;
         internal World _world;
         internal Transform _xf; // the body origin transform
+        internal int _islandIndex;
 
         internal Body(World world, BodyDef def)
         {
@@ -117,7 +118,11 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public float SleepTime { get; set; }
 
-        public int IslandIndex { get; set; }
+        public int IslandIndex
+        {
+            get => _islandIndex;
+            set => _islandIndex = value;
+        }
 
         /// <summary>
         /// Scale the gravity applied to this body. Defaults to 1. A value of 2 means double the gravity is applied to

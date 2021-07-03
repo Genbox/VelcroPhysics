@@ -87,11 +87,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
                 Debug.Assert(pointCount > 0);
 
                 ContactVelocityConstraint vc = VelocityConstraints[i];
-                vc.Friction = contact.Friction;
-                vc.Restitution = contact.Restitution;
+                vc.Friction = contact._friction;
+                vc.Restitution = contact._restitution;
                 vc.Threshold = contact._restitutionThreshold;
-                vc.IndexA = bodyA.IslandIndex;
-                vc.IndexB = bodyB.IslandIndex;
+                vc.TangentSpeed = contact._tangentSpeed;
+                vc.IndexA = bodyA._islandIndex;
+                vc.IndexB = bodyB._islandIndex;
                 vc.InvMassA = bodyA._invMass;
                 vc.InvMassB = bodyB._invMass;
                 vc.InvIA = bodyA._invI;
@@ -215,7 +216,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
                     // Setup a velocity bias for restitution.
                     vcp.VelocityBias = 0.0f;
-                    float vRel = Vector2.Dot(vc.Normal, vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
+                    float vRel = MathUtils.Dot(vc.Normal, vB + MathUtils.Cross(wB, vcp.rB) - vA - MathUtils.Cross(wA, vcp.rA));
                     if (vRel < -vc.Threshold)
                         vcp.VelocityBias = -vc.Restitution * vRel;
                 }

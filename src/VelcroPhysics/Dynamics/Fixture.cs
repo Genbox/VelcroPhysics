@@ -33,11 +33,9 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics
 {
-    /// <summary>
-    /// A fixture is used to attach a Shape to a body for collision detection. A fixture inherits its transform from
+    /// <summary>A fixture is used to attach a Shape to a body for collision detection. A fixture inherits its transform from
     /// its parent. Fixtures hold additional non-geometric data such as friction, collision filters, etc. Fixtures are created
-    /// via Body.CreateFixture. Warning: You cannot reuse fixtures.
-    /// </summary>
+    /// via Body.CreateFixture. Warning: You cannot reuse fixtures.</summary>
     public class Fixture
     {
         internal Category _collidesWith;
@@ -54,25 +52,19 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary>Fires after two shapes has collided and are solved. This gives you a chance to get the impact force.</summary>
         public AfterCollisionHandler AfterCollision;
 
-        /// <summary>
-        /// Fires when two fixtures are close to each other. Due to how the broadphase works, this can be quite inaccurate
-        /// as shapes are approximated using AABBs.
-        /// </summary>
+        /// <summary>Fires when two fixtures are close to each other. Due to how the broadphase works, this can be quite inaccurate
+        /// as shapes are approximated using AABBs.</summary>
         public BeforeCollisionHandler BeforeCollision;
 
         public Category IgnoreCCDWith;
 
-        /// <summary>
-        /// Fires when two shapes collide and a contact is created between them. Note that the first fixture argument is
-        /// always the fixture that the delegate is subscribed to.
-        /// </summary>
+        /// <summary>Fires when two shapes collide and a contact is created between them. Note that the first fixture argument is
+        /// always the fixture that the delegate is subscribed to.</summary>
         public OnCollisionHandler OnCollision;
 
-        /// <summary>
-        /// Fires when two shapes separate and a contact is removed between them. Note: This can in some cases be called
+        /// <summary>Fires when two shapes separate and a contact is removed between them. Note: This can in some cases be called
         /// multiple times, as a fixture can have multiple contacts. Note The first fixture argument is always the fixture that the
-        /// delegate is subscribed to.
-        /// </summary>
+        /// delegate is subscribed to.</summary>
         public OnSeparationHandler OnSeparation;
 
         public FixtureProxy[] Proxies;
@@ -83,7 +75,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
-            _collisionGroup = 0;
+            _collisionGroup = Settings.DefaultCollisionGroup;
             _restitutionThreshold = 1;
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
@@ -131,10 +123,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             get => _collisionGroup;
         }
 
-        /// <summary>
-        /// Defaults to Category.All The collision mask bits. This states the categories that this fixture would accept
-        /// for collision. Use Settings.UseFPECollisionCategories to change the behavior.
-        /// </summary>
+        /// <summary>Defaults to Category.All The collision mask bits. This states the categories that this fixture would accept
+        /// for collision. Use Settings.UseFPECollisionCategories to change the behavior.</summary>
         public Category CollidesWith
         {
             get => _collidesWith;
@@ -149,10 +139,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// The collision categories this fixture is a part of. If Settings.UseFPECollisionCategories is set to false:
-        /// Defaults to Category.Cat1 If Settings.UseFPECollisionCategories is set to true: Defaults to Category.All
-        /// </summary>
+        /// <summary>The collision categories this fixture is a part of. If Settings.UseFPECollisionCategories is set to false:
+        /// Defaults to Category.Cat1 If Settings.UseFPECollisionCategories is set to true: Defaults to Category.All</summary>
         public Category CollisionCategories
         {
             get => _collisionCategories;
@@ -167,10 +155,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>
-        /// Get the child Shape. You can modify the child Shape, however you should not change the number of vertices
-        /// because this will crash some collision caching mechanisms.
-        /// </summary>
+        /// <summary>Get the child Shape. You can modify the child Shape, however you should not change the number of vertices
+        /// because this will crash some collision caching mechanisms.</summary>
         /// <value>The shape.</value>
         public Shape Shape => _shape;
 
@@ -230,10 +216,8 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <value>The fixture id.</value>
         public int FixtureId { get; internal set; }
 
-        /// <summary>
-        /// Contacts are persistent and will keep being persistent unless they are flagged for filtering. This methods
-        /// flags all contacts associated with the body for filtering.
-        /// </summary>
+        /// <summary>Contacts are persistent and will keep being persistent unless they are flagged for filtering. This methods
+        /// flags all contacts associated with the body for filtering.</summary>
         private void Refilter()
         {
             // Flag associated contacts for filtering.
@@ -300,10 +284,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             return Shape.RayCast(ref input, ref Body._xf, childIndex, out output);
         }
 
-        /// <summary>
-        /// Get the fixture's AABB. This AABB may be enlarge and/or stale. If you need a more accurate AABB, compute it
-        /// using the Shape and the body transform.
-        /// </summary>
+        /// <summary>Get the fixture's AABB. This AABB may be enlarge and/or stale. If you need a more accurate AABB, compute it
+        /// using the Shape and the body transform.</summary>
         /// <param name="aabb">The AABB.</param>
         /// <param name="childIndex">Index of the child.</param>
         public void GetAABB(out AABB aabb, int childIndex)
