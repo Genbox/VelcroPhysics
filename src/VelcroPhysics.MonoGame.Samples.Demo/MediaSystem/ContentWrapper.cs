@@ -127,17 +127,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         {
             if (_contentWrapper != null && _textureList.ContainsKey(textureName))
                 return _textureList[textureName];
-#if WINDOWS
-            Console.WriteLine("Texture \"" + textureName + "\" not found!");
-#endif
-            return null;
+
+            throw new FileNotFoundException($"Texture \"{textureName}\" not found!");
         }
 
         public static SpriteFont GetFont(string fontName)
         {
             if (_contentWrapper != null && _fontList.ContainsKey(fontName))
                 return _fontList[fontName];
-            throw new FileNotFoundException();
+
+            throw new FileNotFoundException($"The font \"{fontName}\" was not found");
         }
 
         public static Vector2 CalculateOrigin(Body body)
