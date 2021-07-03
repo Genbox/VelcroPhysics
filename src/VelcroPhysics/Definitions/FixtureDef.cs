@@ -27,7 +27,7 @@ namespace Genbox.VelcroPhysics.Templates
         /// <summary>
         /// Restitution velocity threshold, usually in m/s. Collisions above this speed have restitution applied (will bounce).
         /// </summary>
-        //public float RestitutionThreshold { get; set; }
+        public float RestitutionThreshold { get; set; }
 
         /// <summary>The shape, this must be set. The shape will be cloned, so you can create the shape on the stack.</summary>
         public Shape Shape { get; set; }
@@ -40,8 +40,7 @@ namespace Genbox.VelcroPhysics.Templates
             Shape = null;
             Friction = 0.2f;
             Restitution = 0.0f;
-            //RestitutionThreshold = 1.0f * b2_lengthUnitsPerMeter;
-            //Density = 0.0f;
+            RestitutionThreshold = 1.0f;
             IsSensor = false;
             Filter = new Filter();
         }

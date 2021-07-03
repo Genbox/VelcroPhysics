@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -159,11 +159,9 @@ namespace Genbox.VelcroPhysics
         /// </summary>
         public static float MaxRotation = 0.5f * MathConstants.Pi;
 
-        /// <summary>
-        /// A velocity threshold for elastic collisions. Any collision with a relative linear velocity below this
-        /// threshold will be treated as inelastic.
-        /// </summary>
-        public static float VelocityThreshold = 1.0f;
+        /// <summary>This scale factor controls how fast overlap is resolved. Ideally this would be 1 so that overlap is removed in
+        /// one time step. However using values close to 1 often lead to overshoot.</summary>
+        public static float Baumgarte = 0.2f;
 
         /// <summary>
         /// This scale factor controls how fast overlap is resolved. Ideally this would be 1 so that overlap is removed in
@@ -221,6 +219,7 @@ namespace Genbox.VelcroPhysics
         /// </summary>
         public static Func<float, float, float> MixRestitution = DefaultMixRestitution;
 
+        public static Func<float, float, float> MixRestitutionThreshold = DefaultMixRestitutionThreshold;
         private static float DefaultMixFriction(float friction1, float friction2)
         {
             return (float)Math.Sqrt(friction1 * friction2);
@@ -229,6 +228,12 @@ namespace Genbox.VelcroPhysics
         private static float DefaultMixRestitution(float restitution1, float restitution2)
         {
             return restitution1 > restitution2 ? restitution1 : restitution2;
+        }
+
+        /// <summary>Restitution mixing law. This picks the lowest value.</summary>
+        private static float DefaultMixRestitutionThreshold(float threshold1, float threshold2)
+        {
+            return threshold1 < threshold2 ? threshold1 : threshold2;
         }
     }
 }

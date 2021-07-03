@@ -46,6 +46,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal float _friction;
         internal bool _isSensor;
         internal float _restitution;
+        internal float _restitutionThreshold;
 
         internal Body _body;
         internal Shape _shape;
@@ -83,6 +84,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             _collisionCategories = Settings.DefaultFixtureCollisionCategories;
             _collidesWith = Settings.DefaultFixtureCollidesWith;
             _collisionGroup = 0;
+            _restitutionThreshold = 1;
 
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
         }
@@ -92,6 +94,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             _userData = template.UserData;
             _friction = template.Friction;
             _restitution = template.Restitution;
+            _restitutionThreshold = template.RestitutionThreshold;
 
             _collisionGroup = template.Filter.Group;
             _collisionCategories = template.Filter.Category;
@@ -104,12 +107,17 @@ namespace Genbox.VelcroPhysics.Dynamics
             RegisterFixture();
         }
 
-        /// <summary>
-        /// Defaults to 0 If Settings.UseFPECollisionCategories is set to false: Collision groups allow a certain group of
+        /// <summary>Get or set the restitution threshold. This will _not_ change the restitution threshold of existing contacts.</summary>
+        public float RestitutionThreshold
+        {
+            get => _restitutionThreshold;
+            set => _restitutionThreshold = value;
+        }
+
+        /// <summary>Defaults to 0 If Settings.UseFPECollisionCategories is set to false: Collision groups allow a certain group of
         /// objects to never collide (negative) or always collide (positive). Zero means no collision group. Non-zero group
         /// filtering always wins against the mask bits. If Settings.UseFPECollisionCategories is set to true: If 2 fixtures are in
-        /// the same collision group, they will not collide.
-        /// </summary>
+        /// the same collision group, they will not collide.</summary>
         public short CollisionGroup
         {
             set

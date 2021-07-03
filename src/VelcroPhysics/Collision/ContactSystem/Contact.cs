@@ -100,10 +100,11 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
         private ContactType _type;
 
-        private float _friction;
-        private float _restitution;
+        internal float _friction;
+        internal float _restitution;
+        internal float _restitutionThreshold;
 
-        private float _tangentSpeed;
+        internal float _tangentSpeed;
 
         private Contact(Fixture fA, int indexA, Fixture fB, int indexB)
         {
@@ -123,6 +124,12 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
         {
             get => _restitution;
             set => _restitution = value;
+        }
+
+        public float RestitutionThreshold
+        {
+            get => _restitutionThreshold;
+            set => _restitutionThreshold = value;
         }
 
         /// <summary>Get or set the desired tangent speed for a conveyor belt behavior. In meters per second.</summary>
@@ -169,12 +176,17 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
 
         public void ResetRestitution()
         {
-            Restitution = Settings.MixRestitution(_fixtureA.Restitution, _fixtureB.Restitution);
+            _restitution = Settings.MixRestitution(_fixtureA.Restitution, _fixtureB.Restitution);
+        }
+
+        public void ResetRestitutionThreshold()
+        {
+            _restitutionThreshold = Settings.MixRestitutionThreshold(_fixtureA.Restitution, _fixtureB.Restitution);
         }
 
         public void ResetFriction()
         {
-            Friction = Settings.MixFriction(_fixtureA.Friction, _fixtureB.Friction);
+            _friction = Settings.MixFriction(_fixtureA.Friction, _fixtureB.Friction);
         }
 
         /// <summary>Gets the world manifold.</summary>
@@ -220,6 +232,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             {
                 _friction = Settings.MixFriction(_fixtureA._friction, _fixtureB._friction);
                 _restitution = Settings.MixRestitution(_fixtureA._restitution, _fixtureB._restitution);
+                _restitutionThreshold = Settings.MixRestitutionThreshold(_fixtureA._restitutionThreshold, _fixtureB._restitutionThreshold);
             }
 
             _tangentSpeed = 0;

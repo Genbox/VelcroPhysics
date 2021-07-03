@@ -4,9 +4,9 @@
     {
         public Filter()
         {
-            Group = 0;
-            Category = Category.Cat1;
-            CategoryMask = Category.All;
+            Group = Settings.DefaultCollisionGroup;
+            Category = Settings.DefaultFixtureCollisionCategories;
+            CategoryMask = Settings.DefaultFixtureCollidesWith;
         }
 
         public Filter(short group, Category category, Category mask)

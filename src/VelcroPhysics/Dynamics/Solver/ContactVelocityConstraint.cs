@@ -17,6 +17,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
         public int PointCount;
         public VelocityConstraintPoint[] Points = new VelocityConstraintPoint[Settings.MaxManifoldPoints];
         public float Restitution;
+        public float Threshold;
         public float TangentSpeed;
 
         public ContactVelocityConstraint()

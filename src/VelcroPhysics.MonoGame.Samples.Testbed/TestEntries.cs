@@ -74,6 +74,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             PulleyJointTest.Create,
             PyramidTest.Create,
             RayCastTest.Create,
+            RestitutionTest.Create,
             RevoluteJointTest.Create,
             SensorsTest.Create,
             ShapeCastTest.Create,
@@ -81,7 +82,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed
             SkierTest.Create,
             SliderCrank1Test.Create,
             SliderCrank2Test.Create,
-
             TheoJansenTest.Create,
             TilesTest.Create,
             TimeOfImpactTest.Create,
