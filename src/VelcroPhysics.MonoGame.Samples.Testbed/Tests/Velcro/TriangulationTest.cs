@@ -1,4 +1,3 @@
-#if WINDOWS
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -118,5 +117,3 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         }
     }
 }
-
-#endif
