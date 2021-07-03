@@ -11,7 +11,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetWhileAdding()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), 1);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x=> x.Reset(), 1);
 
             bool first = true;
 
@@ -34,7 +34,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetManyAcrossBoundary()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), 6);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), null, 6);
 
             //We get twice as many as in pool
             List<PoolObject> many = pool.GetManyFromPool(12).ToList();
@@ -49,10 +49,11 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetManyNewAndPooled()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), 10);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x => x.Reset(), 10);
 
             //Empty whole pool
             List<PoolObject> many = pool.GetManyFromPool(10).ToList();
+
             foreach (PoolObject obj in many)
             {
                 Assert.True(obj.IsNew);
@@ -78,7 +79,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetOnePooled()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), 1);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x => x.Reset(), 1);
             PoolObject obj = pool.GetFromPool();
 
             Assert.True(obj.IsNew);
@@ -92,7 +93,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetOneNew()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), 0);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x => x.Reset(), 0);
             PoolObject obj = pool.GetFromPool();
 
             Assert.True(obj.IsNew);

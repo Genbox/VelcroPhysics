@@ -1,5 +1,4 @@
-﻿using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Shared.Optimization;
+﻿using Genbox.VelcroPhysics.Shared.Optimization;
 
 namespace Genbox.VelcroPhysics.Tests.Code
 {
@@ -18,7 +17,5 @@ namespace Genbox.VelcroPhysics.Tests.Code
         {
             IsNew = false;
         }
-
-        public Pool<PoolObject> Pool { get; set; }
     }
 }

@@ -25,8 +25,10 @@ namespace Genbox.VelcroPhysics.Tests.Tests
             const float absTol = 2.0f * MathConstants.Epsilon;
             const float relTol = 2.0f * MathConstants.Epsilon;
 
-            Assert.True(MathUtils.Abs(polygon1.MassData.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
-            Assert.True(MathUtils.Abs(polygon1.MassData.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));
+            polygon1.GetMassData(out var massData1);
+
+            Assert.True(MathUtils.Abs(massData1.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
+            Assert.True(MathUtils.Abs(massData1.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));
 
             Vector2[] vertices = new Vector2[4];
             vertices[0] = new Vector2(center.X - hx, center.Y - hy);
@@ -35,21 +37,18 @@ namespace Genbox.VelcroPhysics.Tests.Tests
             vertices[3] = new Vector2(center.X + hx, center.Y + hy);
 
             PolygonShape polygon2 = new PolygonShape(new Vertices(vertices), 1f);
+            polygon2.GetMassData(out var  massData2);
 
-            Assert.True(MathUtils.Abs(polygon2.MassData.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
-            Assert.True(MathUtils.Abs(polygon2.MassData.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));
+            Assert.True(MathUtils.Abs(massData2.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
+            Assert.True(MathUtils.Abs(massData2.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));
 
             float mass = 4.0f * hx * hy;
             float inertia = (mass / 3.0f) * (hx * hx + hy * hy) + mass * MathUtils.Dot(center, center);
-
-            MassData massData1 = polygon1.MassData;
 
             Assert.True(MathUtils.Abs(massData1.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
             Assert.True(MathUtils.Abs(massData1.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));
             Assert.True(MathUtils.Abs(massData1.Mass - mass) < 20.0f * (absTol + relTol * mass));
             Assert.True(MathUtils.Abs(massData1.Inertia - inertia) < 40.0f * (absTol + relTol * inertia));
-
-            MassData massData2 = polygon2.MassData;
 
             Assert.True(MathUtils.Abs(massData2.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
             Assert.True(MathUtils.Abs(massData2.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));

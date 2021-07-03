@@ -10,7 +10,7 @@ namespace Genbox.VelcroPhysics.Shared
         private readonly Action<T> _objectReset;
         private readonly Queue<T> _queue;
 
-        public Pool(Func<T> objectCreator, Action<T> objectReset, int capacity = 16, bool preCreateInstances = true)
+        public Pool(Func<T> objectCreator, Action<T> objectReset = null, int capacity = 16, bool preCreateInstances = true)
         {
             _objectCreator = objectCreator;
             _objectReset = objectReset;
@@ -28,13 +28,16 @@ namespace Genbox.VelcroPhysics.Shared
 
         public int LeftInPool => _queue.Count;
 
-        public T GetFromPool()
+        public T GetFromPool(bool reset = false)
         {
             if (_queue.Count == 0)
                 return _objectCreator();
 
             T obj = _queue.Dequeue();
-            _objectReset(obj);
+
+            if (reset)
+                _objectReset?.Invoke(obj);
+
             return obj;
         }
 
@@ -48,16 +51,19 @@ namespace Genbox.VelcroPhysics.Shared
             }
         }
 
-        public void ReturnToPool(T obj)
+        public void ReturnToPool(T obj, bool reset = true)
         {
+            if (reset)
+                _objectReset?.Invoke(obj);
+
             _queue.Enqueue(obj);
         }
 
-        public void ReturnToPool(IEnumerable<T> objs)
+        public void ReturnToPool(IEnumerable<T> objs, bool reset = true)
         {
             foreach (T obj in objs)
             {
-                _queue.Enqueue(obj);
+                ReturnToPool(obj, reset);
             }
         }
     }

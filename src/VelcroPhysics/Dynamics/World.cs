@@ -539,7 +539,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
 
             {
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
 
                 // Synchronize fixtures, check for out of range bodies.
                 foreach (Body b in BodyList)
@@ -915,11 +915,11 @@ namespace Genbox.VelcroPhysics.Dynamics
                 return;
 
             //Velcro: We reuse the timers to avoid generating garbage
-            Stopwatch stepTimer = _timerPool.GetFromPool();
+            Stopwatch stepTimer = _timerPool.GetFromPool(true);
 
             {
                 //Velcro: We support add/removal of objects live in the engine.
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 ProcessChanges();
                 _profile.AddRemoveTime = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -929,7 +929,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             if (_newContacts)
             {
                 //Velcro: We measure how much time is spent on finding new contacts
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 ContactManager.FindNewContacts();
                 _newContacts = false;
                 _profile.NewContactsTime = timer.ElapsedTicks;
@@ -949,7 +949,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             {
                 //Velcro: We have the concept of controllers. We update them here
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 for (int i = 0; i < ControllerList.Count; i++)
                 {
                     ControllerList[i].Update(dt);
@@ -960,7 +960,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             // Update contacts. This is where some contacts are destroyed.
             {
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 ContactManager.Collide();
                 _profile.Collide = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -969,7 +969,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             // Integrate velocities, solve velocity constraints, and integrate positions.
             if (_stepComplete && step.DeltaTime > 0.0f)
             {
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 Solve(ref step);
                 _profile.Solve = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -978,7 +978,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             // Handle TOI events.
             if (Settings.ContinuousPhysics && step.DeltaTime > 0.0f)
             {
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
                 SolveTOI(ref step);
                 _profile.SolveTOI = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -992,7 +992,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             {
                 //Velcro: We support breakable bodies. We update them here.
-                Stopwatch timer = _timerPool.GetFromPool();
+                Stopwatch timer = _timerPool.GetFromPool(true);
 
                 for (int i = 0; i < BreakableBodyList.Count; i++)
                 {
