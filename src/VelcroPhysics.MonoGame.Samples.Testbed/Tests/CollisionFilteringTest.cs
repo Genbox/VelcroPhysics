@@ -45,13 +45,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         private const short _smallGroup = 1;
         private const short _largeGroup = -1;
 
-        private const Category _triangleCategory = Category.Cat2;
-        private const Category _boxCategory = Category.Cat3;
-        private const Category _circleCategory = Category.Cat4;
+        private const Category _triangleCategory = (Category)0x0002;
+        private const Category _boxCategory = (Category)0x0004;
+        private const Category _circleCategory = (Category)0x0008;
 
-        private const Category _triangleMask = Category.All;
-        private const Category _boxMask = Category.All ^ _triangleCategory;
-        private const Category _circleMask = Category.All;
+        private const Category _triangleMask = (Category)0xFFFF;
+        private const Category _boxMask = (Category)(0xFFFF ^ (int)_triangleCategory);
+        private const Category _circleMask = (Category)0xFFFF;
 
         private CollisionFilteringTest()
         {

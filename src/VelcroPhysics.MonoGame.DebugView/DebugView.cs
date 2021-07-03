@@ -714,7 +714,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
         public void DrawPoint(Vector2 p, float size, Color color)
         {
             Vector2[] verts = new Vector2[4];
-            float hs = size / 2.0f;
+            float hs = size / 20.0f;
             verts[0] = p + new Vector2(-hs, -hs);
             verts[1] = p + new Vector2(hs, -hs);
             verts[2] = p + new Vector2(hs, hs);

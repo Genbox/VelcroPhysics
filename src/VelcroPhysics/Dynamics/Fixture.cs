@@ -76,6 +76,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
+        private object _userData;
 
         internal Fixture()
         {
@@ -88,12 +89,16 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         internal Fixture(Body body, FixtureDef template) : this()
         {
-            UserData = template.UserData;
-            Friction = template.Friction;
-            Restitution = template.Restitution;
+            _userData = template.UserData;
+            _friction = template.Friction;
+            _restitution = template.Restitution;
+
+            _collisionGroup = template.Filter.Group;
+            _collisionCategories = template.Filter.Category;
+            _collidesWith = template.Filter.CategoryMask;
 
             _body = body;
-            IsSensor = template.IsSensor;
+            _isSensor = template.IsSensor;
             _shape = template.Shape.Clone();
 
             RegisterFixture();
@@ -181,7 +186,11 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Set the user data. Use this to store your application specific data.</summary>
         /// <value>The user data.</value>
-        public object UserData { get; set; }
+        public object UserData
+        {
+            get => _userData;
+            set => _userData = value;
+        }
 
         /// <summary>Set the coefficient of friction. This will _not_ change the friction of existing contacts.</summary>
         /// <value>The friction.</value>

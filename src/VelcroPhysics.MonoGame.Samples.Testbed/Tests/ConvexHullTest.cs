@@ -87,7 +87,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             for (int i = 0; i < _count; ++i)
             {
-                DebugView.DrawPoint(_points[i], 0.3f, new Color(0.3f, 0.9f, 0.3f));
+                DebugView.DrawPoint(_points[i], 3.0f, new Color(0.3f, 0.9f, 0.3f));
                 DebugView.DrawString(_points[i] + new Vector2(0.05f, 0.05f), i.ToString());
             }
 

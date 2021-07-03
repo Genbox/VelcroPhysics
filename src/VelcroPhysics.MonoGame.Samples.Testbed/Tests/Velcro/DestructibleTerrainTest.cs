@@ -17,6 +17,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         private readonly Terrain _terrain;
         private float _circleRadius = 2.5f;
         private AABB _terrainArea;
+        private bool _create = true;
 
         private DestructibleTerrainTest()
         {
@@ -45,16 +46,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             sbyte[,] data = new sbyte[texture.Width, texture.Height];
 
             for (int y = 0; y < texture.Height; y++)
-            for (int x = 0; x < texture.Width; x++)
-            {
-                //If the color on the coordinate is black, we include it in the terrain.
-                bool inside = colorData[y * texture.Width + x] == Color.Black;
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    //If the color on the coordinate is black, we include it in the terrain.
+                    bool inside = colorData[y * texture.Width + x] == Color.Black;
 
-                if (!inside)
-                    data[x, y] = 1;
-                else
-                    data[x, y] = -1;
-            }
+                    if (!inside)
+                        data[x, y] = 1;
+                    else
+                        data[x, y] = -1;
+                }
 
             _terrain.ApplyData(data, new Vector2(250, 250));
 
@@ -65,18 +66,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         {
             Vector2 position = GameInstance.ConvertScreenToWorld(mouse.NewPosition);
 
-            if (mouse.IsButtonDown(MouseButton.Right))
+            if (mouse.IsButtonDown(MouseButton.Left))
             {
-                DrawCircleOnMap(position, -1);
-                _terrain.RegenerateTerrain();
-
-                DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
-                DebugView.DrawSolidCircle(position, _circleRadius, Vector2.UnitY, Color.Blue * 0.5f);
-                DebugView.EndCustomDraw();
-            }
-            else if (mouse.IsButtonDown(MouseButton.Left))
-            {
-                DrawCircleOnMap(position, 1);
+                DrawCircleOnMap(position, (sbyte)(_create ? -1 : 1));
                 _terrain.RegenerateTerrain();
 
                 DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
@@ -112,6 +104,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 if (_terrain.Decomposer < TriangulationAlgorithm.Bayazit)
                     _terrain.Decomposer++;
             }
+            else if (keyboard.IsNewKeyPress(Keys.M))
+            {
+                _create = !_create;
+            }
 
             base.Keyboard(keyboard);
         }
@@ -119,13 +115,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
         private void DrawCircleOnMap(Vector2 center, sbyte value)
         {
             for (float by = -_circleRadius; by < _circleRadius; by += 0.1f)
-            for (float bx = -_circleRadius; bx < _circleRadius; bx += 0.1f)
-                if (bx * bx + by * by < _circleRadius * _circleRadius)
-                {
-                    float ax = bx + center.X;
-                    float ay = by + center.Y;
-                    _terrain.ModifyTerrain(new Vector2(ax, ay), value);
-                }
+                for (float bx = -_circleRadius; bx < _circleRadius; bx += 0.1f)
+                    if (bx * bx + by * by < _circleRadius * _circleRadius)
+                    {
+                        float ax = bx + center.X;
+                        float ay = by + center.Y;
+                        _terrain.ModifyTerrain(new Vector2(ax, ay), value);
+                    }
         }
 
         public override void Update(GameSettings settings, GameTime gameTime)
@@ -134,12 +130,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             DebugView.DrawAABB(ref _terrainArea, Color.Red * 0.5f);
             DebugView.EndCustomDraw();
 
-            DrawString("Left click and drag the mouse to destroy terrain!");
-            DrawString("Right click and drag the mouse to create terrain!");
+            DrawString("Left click and drag the mouse to modify terrain!");
             DrawString("Middle click to create circles!");
             DrawString("Press t or y to cycle between decomposers: " + _terrain.Decomposer);
-            TextLine += 25;
             DrawString("Press g or h to decrease/increase circle radius: " + _circleRadius);
+            DrawString("Press m to change terrain mode");
+            DrawString("Terrain mode: " + (_create ? "Create" : "Destroy"));
 
             base.Update(settings, gameTime);
         }

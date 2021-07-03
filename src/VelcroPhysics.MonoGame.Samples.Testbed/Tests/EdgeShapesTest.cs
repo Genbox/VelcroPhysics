@@ -182,15 +182,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboard.IsNewKeyPress(Keys.NumPad1))
+            if (keyboard.IsNewKeyPress(Keys.D1))
                 Create(1);
-            else if (keyboard.IsNewKeyPress(Keys.NumPad2))
+            else if (keyboard.IsNewKeyPress(Keys.D2))
                 Create(2);
-            else if (keyboard.IsNewKeyPress(Keys.NumPad3))
+            else if (keyboard.IsNewKeyPress(Keys.D3))
                 Create(3);
-            else if (keyboard.IsNewKeyPress(Keys.NumPad4))
+            else if (keyboard.IsNewKeyPress(Keys.D4))
                 Create(4);
-            else if (keyboard.IsNewKeyPress(Keys.NumPad5))
+            else if (keyboard.IsNewKeyPress(Keys.D5))
                 Create(5);
             else if (keyboard.IsNewKeyPress(Keys.D))
                 DestroyBody();
@@ -218,7 +218,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             if (callback._fixture != null)
             {
-                DebugView.DrawPoint(callback._point, 0.5f, new Color(0.4f, 0.9f, 0.4f));
+                DebugView.DrawPoint(callback._point, 5f, new Color(0.4f, 0.9f, 0.4f));
 
                 DebugView.DrawSegment(point1, callback._point, new Color(0.8f, 0.8f, 0.8f));
 

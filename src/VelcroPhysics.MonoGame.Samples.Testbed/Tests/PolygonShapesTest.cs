@@ -30,9 +30,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             public const int MaxCount = 4;
 
-            internal CircleShape _circle;
+            internal CircleShape _circle = new CircleShape(0);
             internal Transform _transform;
             internal DebugView.DebugView _debugView;
+            internal Matrix _projection;
+            internal Matrix _view;
             internal int _count;
 
             public PolygonShapesCallback()
@@ -59,7 +61,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 {
                     Color color = new Color(0.95f, 0.95f, 0.6f);
                     Vector2 center = body.WorldCenter;
+                    _debugView.BeginCustomDraw(ref _projection, ref _view);
                     _debugView.DrawPoint(center, 5.0f, color);
+                    _debugView.EndCustomDraw();
                     ++_count;
                 }
 
@@ -178,26 +182,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
         public override void Keyboard(KeyboardManager keyboard)
         {
-            if (keyboard.IsNewKeyPress(Keys.NumPad1))
-            {
+            if (keyboard.IsNewKeyPress(Keys.D1))
                 Create(1);
-            }
-            else if (keyboard.IsNewKeyPress(Keys.NumPad2))
-            {
+            else if (keyboard.IsNewKeyPress(Keys.D2))
                 Create(2);
-            }
-            else if (keyboard.IsNewKeyPress(Keys.NumPad3))
-            {
+            else if (keyboard.IsNewKeyPress(Keys.D3))
                 Create(3);
-            }
-            else if (keyboard.IsNewKeyPress(Keys.NumPad4))
-            {
+            else if (keyboard.IsNewKeyPress(Keys.D4))
                 Create(4);
-            }
-            else if (keyboard.IsNewKeyPress(Keys.NumPad5))
-            {
+            else if (keyboard.IsNewKeyPress(Keys.D5))
                 Create(5);
-            }
             else if (keyboard.IsNewKeyPress(Keys.A))
             {
                 for (int i = 0; i < _maxBodies; i += 2)
@@ -208,9 +202,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     }
             }
             else if (keyboard.IsNewKeyPress(Keys.D))
-            {
                 DestroyBody();
-            }
 
             base.Keyboard(keyboard);
         }
@@ -224,6 +216,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             callback._circle.Position = new Vector2(0.0f, 1.1f);
             callback._transform.SetIdentity();
             callback._debugView = DebugView;
+            callback._projection = GameInstance.Projection;
+            callback._view = GameInstance.View;
 
             AABB aabb;
             callback._circle.ComputeAABB(ref callback._transform, 0, out aabb);
@@ -231,7 +225,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             World.QueryAABB(callback.ReportFixture, ref aabb);
 
             Color color = new Color(0.4f, 0.7f, 0.8f);
+            DebugView.BeginCustomDraw(ref GameInstance.Projection, ref GameInstance.View);
             DebugView.DrawCircle(callback._circle.Position, callback._circle.Radius, color);
+            DebugView.EndCustomDraw();
 
             DrawString($"Press 1-5 to drop stuff, maximum of {PolygonShapesCallback.MaxCount} overlaps detected");
             DrawString("Press 'a' to enable/disable some bodies");

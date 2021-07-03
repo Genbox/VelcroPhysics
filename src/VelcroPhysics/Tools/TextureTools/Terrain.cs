@@ -145,42 +145,48 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
             {
                 _terrainMap[(int)p.X, (int)p.Y] = value;
 
-                // expand dirty area
-                if (p.X < _dirtyArea.LowerBound.X)
-                    _dirtyArea.LowerBound.X = p.X;
-                if (p.X > _dirtyArea.UpperBound.X)
-                    _dirtyArea.UpperBound.X = p.X;
+                unchecked
+                {
+                    // expand dirty area
+                    if (p.X < (int)_dirtyArea.LowerBound.X)
+                        _dirtyArea.LowerBound.X = p.X;
+                    if (p.X > (int)_dirtyArea.UpperBound.X)
+                        _dirtyArea.UpperBound.X = p.X;
 
-                if (p.Y < _dirtyArea.LowerBound.Y)
-                    _dirtyArea.LowerBound.Y = p.Y;
-                if (p.Y > _dirtyArea.UpperBound.Y)
-                    _dirtyArea.UpperBound.Y = p.Y;
+                    if (p.Y < (int)_dirtyArea.LowerBound.Y)
+                        _dirtyArea.LowerBound.Y = p.Y;
+                    if (p.Y > (int)_dirtyArea.UpperBound.Y)
+                        _dirtyArea.UpperBound.Y = p.Y;
+                }
             }
         }
 
         /// <summary>Regenerate the terrain.</summary>
         public void RegenerateTerrain()
         {
-            //iterate effected cells
-            int xStart = (int)(_dirtyArea.LowerBound.X / CellSize);
-            if (xStart < 0)
-                xStart = 0;
+            unchecked
+            {
+                //iterate effected cells
+                int xStart = (int)(_dirtyArea.LowerBound.X / CellSize);
+                if (xStart < 0)
+                    xStart = 0;
 
-            int xEnd = (int)(_dirtyArea.UpperBound.X / CellSize) + 1;
-            if (xEnd > _xnum)
-                xEnd = _xnum;
+                int xEnd = (int)(_dirtyArea.UpperBound.X / CellSize) + 1;
+                if (xEnd > _xnum)
+                    xEnd = _xnum;
 
-            int yStart = (int)(_dirtyArea.LowerBound.Y / CellSize);
-            if (yStart < 0)
-                yStart = 0;
+                int yStart = (int)(_dirtyArea.LowerBound.Y / CellSize);
+                if (yStart < 0)
+                    yStart = 0;
 
-            int yEnd = (int)(_dirtyArea.UpperBound.Y / CellSize) + 1;
-            if (yEnd > _ynum)
-                yEnd = _ynum;
+                int yEnd = (int)(_dirtyArea.UpperBound.Y / CellSize) + 1;
+                if (yEnd > _ynum)
+                    yEnd = _ynum;
 
-            RemoveOldData(xStart, xEnd, yStart, yEnd);
+                RemoveOldData(xStart, xEnd, yStart, yEnd);
 
-            _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+                _dirtyArea = new AABB(new Vector2(float.MaxValue, float.MaxValue), new Vector2(float.MinValue, float.MinValue));
+            }
         }
 
         private void RemoveOldData(int xStart, int xEnd, int yStart, int yEnd)

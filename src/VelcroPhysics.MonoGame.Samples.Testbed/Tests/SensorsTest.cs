@@ -54,12 +54,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 }
 
 #if false
-			{
-				FixtureDef sd;
-				sd.SetAsBox(10.0f, 2.0f, b2Vec2(0.0f, 20.0f), 0.0f);
-				sd.isSensor = true;
-				_sensor = ground.CreateFixture(sd);
-			}
+			    {
+				    FixtureDef sd;
+				    sd.SetAsBox(10.0f, 2.0f, b2Vec2(0.0f, 20.0f), 0.0f);
+				    sd.isSensor = true;
+				    _sensor = ground.CreateFixture(sd);
+			    }
 #else
                 {
                     CircleShape shape = new CircleShape(0.0f);
@@ -93,6 +93,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             }
 
             _force = 100.0f;
+
+            World.ContactManager.BeginContact += BeginContact;
+            World.ContactManager.EndContact += EndContact;
         }
 
         // Implement contact listener.
@@ -103,14 +106,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             if (fixtureA == _sensor)
             {
-                uint index = (uint)fixtureB.Body.UserData;
+                int index = (int)fixtureB.Body.UserData;
                 if (index < _count)
                     _touching[index] = true;
             }
 
             if (fixtureB == _sensor)
             {
-                uint index = (uint)fixtureA.Body.UserData;
+                int index = (int)fixtureA.Body.UserData;
                 if (index < _count)
                     _touching[index] = true;
             }
@@ -124,14 +127,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             if (fixtureA == _sensor)
             {
-                uint index = (uint)fixtureB.Body.UserData;
+                int index = (int)fixtureB.Body.UserData;
                 if (index < _count)
                     _touching[index] = false;
             }
 
             if (fixtureB == _sensor)
             {
-                uint index = (uint)fixtureA.Body.UserData;
+                int index = (int)fixtureA.Body.UserData;
                 if (index < _count)
                     _touching[index] = false;
             }
