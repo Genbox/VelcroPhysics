@@ -33,11 +33,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    /// <summary>
-    /// This test shows how to use a motor joint. A motor joint
-    /// can be used to animate a dynamic body. With finite motor forces
-    /// the body can be blocked by collision with other bodies.
-    /// </summary>
+    /// <summary>This test shows how to use a motor joint. A motor joint can be used to animate a dynamic body. With finite
+    /// motor forces the body can be blocked by collision with other bodies.</summary>
     internal class MotorJointTest : Test
     {
         private readonly MotorJoint _joint;

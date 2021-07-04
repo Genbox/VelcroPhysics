@@ -5,9 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// Displays the FPS
-    /// </summary>
     public class FrameRateCounter
     {
         private readonly NumberFormatInfo _format;

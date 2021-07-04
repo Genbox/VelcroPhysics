@@ -239,14 +239,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 batch.End();
 
                 lines.Begin(ref camera.SimProjection, ref camera.SimView);
-                
+
                 for (int j = 0; j < 8; j++)
                 {
                     lines.DrawLine(_walkerJoints[8 * i + j].WorldAnchorA, _walkerJoints[8 * i + j].WorldAnchorB, Colors.Grey);
                 }
-                
+
                 lines.End();
             }
+
             batch.Begin(0, null, null, null, null, null, camera.View);
             batch.Draw(_engine.Image, ConvertUnits.ToDisplayUnits(_wheel.Position), null, Color.White, _wheel.Rotation, _engine.Origin, 1f, SpriteEffects.None, 0f);
             batch.End();

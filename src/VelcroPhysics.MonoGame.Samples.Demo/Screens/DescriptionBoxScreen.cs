@@ -6,10 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// A popup message box screen, used to display "are you sure?"
-    /// confirmation messages.
-    /// </summary>
+    /// <summary>A popup message box screen, used to display "are you sure?" confirmation messages.</summary>
     public class DescriptionBoxScreen : GameScreen
     {
         private const float HorizontalPadding = 32f;
@@ -32,12 +29,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             TransitionOffTime = TimeSpan.FromSeconds(0.4);
         }
 
-        /// <summary>
-        /// Loads graphics content for this screen. This uses the shared ContentManager
-        /// provided by the Game class, so the content will remain loaded forever.
-        /// Whenever a subsequent MessageBoxScreen tries to load this same content,
-        /// it will just get back another reference to the already loaded data.
-        /// </summary>
+        /// <summary>Loads graphics content for this screen. This uses the shared ContentManager provided by the Game class, so the
+        /// content will remain loaded forever. Whenever a subsequent MessageBoxScreen tries to load this same content, it will
+        /// just get back another reference to the already loaded data.</summary>
         public override void LoadContent()
         {
             _font = Managers.FontManager.GetFont("DetailsFont");
@@ -57,18 +51,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             base.LoadContent();
         }
 
-        /// <summary>
-        /// Responds to user input, accepting or cancelling the message box.
-        /// </summary>
+        /// <summary>Responds to user input, accepting or cancelling the message box.</summary>
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsMenuSelect() || input.IsMenuCancel() || input.IsNewKeyPress(Keys.F1) || input.IsNewButtonPress(Buttons.Start))
                 ExitScreen();
         }
 
-        /// <summary>
-        /// Draws the message box.
-        /// </summary>
+        /// <summary>Draws the message box.</summary>
         public override void Draw(GameTime gameTime)
         {
             Quads.Begin();

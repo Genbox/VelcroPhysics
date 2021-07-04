@@ -19,13 +19,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         private readonly PolygonShape[] _polygons = new PolygonShape[4];
         private readonly CircleShape _circle;
 
-        /// <summary>
-        /// This tests stacking. It also shows how to use b2World::Query
-        /// and b2TestOverlap.
-        /// This callback is called by b2World::QueryAABB. We find all the fixtures
-        /// that overlap an AABB. Of those, we use b2TestOverlap to determine which fixtures
-        /// overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.
-        /// </summary>
+        /// <summary>This tests stacking. It also shows how to use b2World::Query and b2TestOverlap. This callback is called by
+        /// b2World::QueryAABB. We find all the fixtures that overlap an AABB. Of those, we use b2TestOverlap to determine which
+        /// fixtures overlap a circle. Up to 4 overlapped fixtures will be highlighted with a yellow border.</summary>
         private class PolygonShapesCallback
         {
             public const int MaxCount = 4;
@@ -42,10 +38,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 _count = 0;
             }
 
-            /// <summary>
-            /// Called for each fixture found in the query AABB.
-            /// @return false to terminate the query.
-            /// </summary>
+            /// <summary>Called for each fixture found in the query AABB. @return false to terminate the query.</summary>
             public bool ReportFixture(Fixture fixture)
             {
                 if (_count == MaxCount)

@@ -146,6 +146,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                     prevBody = body;
                     _bridgeSegments.Add(body);
                 }
+
                 JointFactory.CreateRevoluteJoint(World, _ground, prevBody, Vector2.UnitX);
             }
 
@@ -287,6 +288,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             {
                 Sprites.Draw(_box.Image, ConvertUnits.ToDisplayUnits(_boxes[i].Position), null, Color.White, _boxes[i].Rotation, _box.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
 
             Lines.Begin(ref Camera.SimProjection, ref Camera.SimView);
@@ -296,6 +298,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             {
                 Lines.DrawLineShape(_ground.FixtureList[i].Shape, Color.Black);
             }
+
             Lines.End();
             base.Draw(gameTime);
         }

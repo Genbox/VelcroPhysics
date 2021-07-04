@@ -97,10 +97,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
             _groundBody.Friction = 0.5f;
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
+        /// <summary>Allows the game to run logic such as updating the world, checking for collisions, gathering input, and playing
+        /// audio.</summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
@@ -183,9 +181,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.HelloWorld
             _oldKeyState = state;
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
+        /// <summary>This is called when the game should draw itself.</summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {

@@ -6,10 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// Base class for screens that contain a menu of options. The user can
-    /// move up and down to select an entry, or cancel to back out of the screen.
-    /// </summary>
+    /// <summary>Base class for screens that contain a menu of options. The user can move up and down to select an entry, or
+    /// cancel to back out of the screen.</summary>
     public class MenuScreen : GameScreen
     {
         private const int NumEntries = 11;
@@ -38,9 +36,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         private Vector2 _titlePosition;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         public MenuScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.7);
@@ -101,9 +96,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _scrollLock = false;
         }
 
-        /// <summary>
-        /// Returns the index of the menu entry at the position of the given mouse state.
-        /// </summary>
+        /// <summary>Returns the index of the menu entry at the position of the given mouse state.</summary>
         /// <returns>Index of menu entry if valid, -1 otherwise</returns>
         private int GetMenuEntryAt(Vector2 position)
         {
@@ -116,6 +109,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                         return i;
                 }
             }
+
             return -1;
         }
 
@@ -137,10 +131,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             return false;
         }
 
-        /// <summary>
-        /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
-        /// </summary>
+        /// <summary>Responds to user input, changing the selected entry and accepting or cancelling the menu.</summary>
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             // Mouse on a menu item
@@ -158,6 +149,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                         Managers.SoundManager.PlaySoundEffect("Click");
                     }
                 }
+
                 if (_hoverEntry != -1)
                 {
                     if (_selectedEntry == _hoverEntry)
@@ -230,12 +222,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 _menuEntries[i].Target = _menuStart + _menuSpacing * targetIndex;
                 targetIndex++;
             }
+
             _menuSlider.Target = _menuStart + _scrollSpacing * _menuOffset;
         }
 
-        /// <summary>
-        /// Updates the menu.
-        /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -252,9 +242,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _menuSlider.Update(_scrollHover, _scrollLock, gameTime);
         }
 
-        /// <summary>
-        /// Draws the menu.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
             Vector2 transitionOffset = new Vector2(0f, (float)Math.Pow(TransitionPosition, 2) * 90f);
@@ -284,6 +271,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 if (entry.Fade > 0f)
                     Sprites.Draw(entry.Preview, PreviewPosition, null, Color.White * Math.Max((TransitionAlpha - 0.8f) / 0.2f, 0f) * entry.Fade, 0f, _previewOrigin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
 
             Quads.Begin();

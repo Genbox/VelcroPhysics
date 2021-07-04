@@ -9,21 +9,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         private const float MaxTranslation = 15f;
         private const double HighlightTime = 0.3;
         private Vector2 _currentPosition;
-
         private double _hoverFade;
-
-        private float _positionX;
         private double _selectionFade;
-
         private float _targetY;
 
-        /// <summary>
-        /// Constructs a new menu slider.
-        /// </summary>
         public MenuSlider(Vector2 position)
         {
             _currentPosition = position;
-            _positionX = _currentPosition.X;
             _targetY = _currentPosition.Y;
         }
 
@@ -36,9 +28,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public Color TileColor { get; private set; }
 
-        /// <summary>
-        /// Updates the menu slider.
-        /// </summary>
         public void Update(bool isHovered, bool isSelected, GameTime gameTime)
         {
             if (isHovered)

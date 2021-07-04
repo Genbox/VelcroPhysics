@@ -44,6 +44,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
                     pos.X += spacing;
                 }
+
                 rowStart += deltaRow;
             }
 

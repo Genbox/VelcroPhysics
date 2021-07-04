@@ -5,20 +5,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// Helper class represents a single entry in a OptionScreen.
-    /// </summary>
+    /// <summary>Helper class represents a single entry in a OptionScreen.</summary>
     public sealed class OptionEntry
     {
         private const double HighlightTime = 0.3;
-        private const double FadeTime = 0.1;
         private double _checkedFade;
-
         private double _hoverFade;
 
-        /// <summary>
-        /// Constructs a new option entry with the specified text.
-        /// </summary>
         public OptionEntry(string text, bool isChecked)
         {
             Text = text;
@@ -59,9 +52,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             Position = target;
         }
 
-        /// <summary>
-        /// Updates the menu entry.
-        /// </summary>
         public void Update(bool isHovered, GameTime gameTime)
         {
             if (isHovered)

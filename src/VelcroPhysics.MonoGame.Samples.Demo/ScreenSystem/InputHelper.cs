@@ -9,14 +9,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
     {
         private bool _cursorIsVisible;
         private Sprite _cursorSprite;
-
         private Viewport _viewport;
 
         public Vector2 Cursor;
 
-        /// <summary>
-        /// Constructs a new input state.
-        /// </summary>
         public InputHelper()
         {
             KeyboardState = new KeyboardState();
@@ -60,9 +56,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _viewport = viewport;
         }
 
-        /// <summary>
-        /// Reads the latest state of the keyboard and gamepad and mouse/touchpad.
-        /// </summary>
+        /// <summary>Reads the latest state of the keyboard and gamepad and mouse/touchpad.</summary>
         public void Update(GameTime gameTime)
         {
             PreviousKeyboardState = KeyboardState;
@@ -103,9 +97,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// Helper for checking if a key was newly pressed during this update.
-        /// </summary>
+        /// <summary>Helper for checking if a key was newly pressed during this update.</summary>
         public bool IsNewKeyPress(Keys key)
         {
             return KeyboardState.IsKeyDown(key) && PreviousKeyboardState.IsKeyUp(key);
@@ -116,9 +108,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             return PreviousKeyboardState.IsKeyDown(key) && KeyboardState.IsKeyUp(key);
         }
 
-        /// <summary>
-        /// Helper for checking if a button was newly pressed during this update.
-        /// </summary>
+        /// <summary>Helper for checking if a button was newly pressed during this update.</summary>
         public bool IsNewButtonPress(Buttons button)
         {
             return GamePadState.IsButtonDown(button) && PreviousGamePadState.IsButtonUp(button);
@@ -129,9 +119,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             return PreviousGamePadState.IsButtonDown(button) && GamePadState.IsButtonUp(button);
         }
 
-        /// <summary>
-        /// Helper for checking if a mouse button was newly pressed during this update.
-        /// </summary>
+        /// <summary>Helper for checking if a mouse button was newly pressed during this update.</summary>
         public bool IsNewMouseButtonPress(MouseButtons button)
         {
             switch (button)
@@ -151,9 +139,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// Checks if the requested mouse button is released.
-        /// </summary>
+        /// <summary>Checks if the requested mouse button is released.</summary>
         /// <param name="button">The button.</param>
         public bool IsNewMouseButtonRelease(MouseButtons button)
         {
@@ -174,25 +160,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// Checks if the mouse wheel has been scrolled up
-        /// </summary>
+        /// <summary>Checks if the mouse wheel has been scrolled up</summary>
         public bool IsNewScrollWheelUp()
         {
             return MouseState.ScrollWheelValue - PreviousMouseState.ScrollWheelValue > 0;
         }
 
-        /// <summary>
-        /// Checks if the mouse wheel has been scrolled down
-        /// </summary>
+        /// <summary>Checks if the mouse wheel has been scrolled down</summary>
         public bool IsNewScrollWheelDown()
         {
             return PreviousMouseState.ScrollWheelValue - MouseState.ScrollWheelValue > 0;
         }
 
-        /// <summary>
-        /// Checks for a "menu select" input action.
-        /// </summary>
+        /// <summary>Checks for a "menu select" input action.</summary>
         public bool IsMenuSelect()
         {
             return IsNewKeyPress(Keys.Space) ||
@@ -213,9 +193,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                    MouseState.LeftButton == ButtonState.Released;
         }
 
-        /// <summary>
-        /// Checks for a "menu cancel" input action.
-        /// </summary>
+        /// <summary>Checks for a "menu cancel" input action.</summary>
         public bool IsMenuCancel()
         {
             return IsNewKeyPress(Keys.Escape) ||

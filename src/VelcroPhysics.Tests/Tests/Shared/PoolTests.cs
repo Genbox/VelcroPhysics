@@ -11,7 +11,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
         [Fact]
         public void GetWhileAdding()
         {
-            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x=> x.Reset(), 1);
+            Pool<PoolObject> pool = new Pool<PoolObject>(() => new PoolObject(), x => x.Reset(), 1);
 
             bool first = true;
 
@@ -58,6 +58,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
             {
                 Assert.True(obj.IsNew);
             }
+
             Assert.Equal(10, many.Count);
 
             many = pool.GetManyFromPool(10).ToList();
@@ -66,6 +67,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
                 Assert.True(obj.IsNew);
                 pool.ReturnToPool(obj);
             }
+
             Assert.Equal(10, many.Count);
 
             many = pool.GetManyFromPool(10).ToList();
@@ -73,6 +75,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests.Shared
             {
                 Assert.False(obj.IsNew);
             }
+
             Assert.Equal(10, many.Count);
         }
 

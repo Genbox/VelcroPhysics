@@ -37,7 +37,7 @@ namespace Genbox.VelcroPhysics.Tests.Tests
             vertices[3] = new Vector2(center.X + hx, center.Y + hy);
 
             PolygonShape polygon2 = new PolygonShape(new Vertices(vertices), 1f);
-            polygon2.GetMassData(out var  massData2);
+            polygon2.GetMassData(out var massData2);
 
             Assert.True(MathUtils.Abs(massData2.Centroid.X - center.X) < absTol + relTol * MathUtils.Abs(center.X));
             Assert.True(MathUtils.Abs(massData2.Centroid.Y - center.Y) < absTol + relTol * MathUtils.Abs(center.Y));

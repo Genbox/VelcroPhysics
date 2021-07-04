@@ -45,6 +45,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableCookie[0].Parts[i].Body.Position - bounds.LowerBound);
                 _breakableSprite.Add(new Sprite(textures[i], origin));
             }
+
             _completeSprite = new Sprite(Managers.TextureManager.GetTexture("Cookie"), Vector2.Zero);
         }
 
@@ -112,6 +113,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 else
                     Sprites.Draw(_completeSprite.Image, ConvertUnits.ToDisplayUnits(_breakableCookie[i].MainBody.Position), null, Color.White, _breakableCookie[i].MainBody.Rotation, _completeSprite.Origin, 1f, SpriteEffects.None, 0f);
             }
+
             Sprites.End();
 
             base.Draw(gameTime);

@@ -5,9 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// Helper class represents a single entry in a MenuScreen.
-    /// </summary>
+    /// <summary>Helper class represents a single entry in a MenuScreen.</summary>
     public sealed class MenuEntry : IComparable
     {
         private const float _maxTranslation = 10f;
@@ -26,9 +24,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         private float _targetY;
         private double _visibleFade;
 
-        /// <summary>
-        /// Constructs a new menu entry with the specified text.
-        /// </summary>
+        /// <summary>Constructs a new menu entry with the specified text.</summary>
         public MenuEntry(string text, PhysicsDemoScreen screen, Texture2D preview)
         {
             Text = text;
@@ -75,7 +71,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         {
             if (obj is MenuEntry entry)
                 return _screen.GetType().ToString().CompareTo(entry._screen.GetType().ToString());
-            
+
             return 0;
         }
 
@@ -93,16 +89,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _currentPosition.Y = _targetY = target;
         }
 
-        /// <summary>
-        /// Updates the menu entry.
-        /// </summary>
         public void Update(bool isSelected, bool isHovered, GameTime gameTime)
         {
             if (isHovered)
                 _hoverFade = Math.Min(_hoverFade + gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 1.0);
             else
                 _hoverFade = Math.Max(_hoverFade - gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 0.0);
-        
+
             if (isSelected)
                 _selectionFade = Math.Min(_selectionFade + gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 1.0);
             else
@@ -115,7 +108,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / _fadeTime, 1.0);
             else
                 _visibleFade = Math.Max(_visibleFade - gameTime.ElapsedGameTime.TotalSeconds / _fadeTime, 0.0);
-       
+
             _currentPosition.X = MathHelper.SmoothStep(_targetHiddenX, _targetVisibleX, (float)_visibleFade);
 
             float deltaY = _targetY - _currentPosition.Y;

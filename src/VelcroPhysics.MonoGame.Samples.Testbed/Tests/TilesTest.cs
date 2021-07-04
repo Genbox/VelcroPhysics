@@ -32,10 +32,8 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    /// <summary>
-    /// This stress tests the dynamic tree broad-phase. This also shows that tile
-    /// based collision is _not_ smooth due to Box2D not knowing about adjacency.
-    /// </summary>
+    /// <summary>This stress tests the dynamic tree broad-phase. This also shows that tile based collision is _not_ smooth due
+    /// to Box2D not knowing about adjacency.</summary>
     internal class TilesTest : Test
     {
         private const int _count = 20;

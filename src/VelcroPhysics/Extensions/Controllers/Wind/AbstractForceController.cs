@@ -55,7 +55,6 @@ namespace Genbox.VelcroPhysics.Extensions.Controllers.Wind
         /// </summary>
         public Curve StrengthCurve;
 
-        /// <summary>Constructor</summary>
         protected AbstractForceController() : base(ControllerType.AbstractForceController)
         {
             Enabled = true;

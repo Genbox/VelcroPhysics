@@ -228,8 +228,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     DebugView.Flags = _flags;
                     _flagsChanged = false;
                 }
+
                 DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
             }
+
             base.Draw(gameTime);
         }
 

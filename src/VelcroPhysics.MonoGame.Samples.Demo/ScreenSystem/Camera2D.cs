@@ -31,10 +31,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         private Matrix _view;
         private Matrix _simView;
 
-        /// <summary>
-        /// The constructor for the Camera2D class.
-        /// </summary>
-        /// <param name="graphics"></param>
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
@@ -53,9 +49,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public ref Matrix SimProjection => ref _simProjection;
 
-        /// <summary>
-        /// The current position of the camera.
-        /// </summary>
+        /// <summary>The current position of the camera.</summary>
         public Vector2 Position
         {
             get => ConvertUnits.ToDisplayUnits(_currentPosition);
@@ -67,31 +61,23 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// The furthest up, and the furthest left the camera can go.
-        /// if this value equals maxPosition, then no clamping will be
-        /// applied (unless you override that function).
-        /// </summary>
+        /// <summary>The furthest up, and the furthest left the camera can go. if this value equals maxPosition, then no clamping
+        /// will be applied (unless you override that function).</summary>
         public Vector2 MinPosition
         {
             get => ConvertUnits.ToDisplayUnits(_minPosition);
             set => _minPosition = ConvertUnits.ToSimUnits(value);
         }
 
-        /// <summary>
-        /// the furthest down, and the furthest right the camera will go.
-        /// if this value equals minPosition, then no clamping will be
-        /// applied (unless you override that function).
-        /// </summary>
+        /// <summary>the furthest down, and the furthest right the camera will go. if this value equals minPosition, then no
+        /// clamping will be applied (unless you override that function).</summary>
         public Vector2 MaxPosition
         {
             get => ConvertUnits.ToDisplayUnits(_maxPosition);
             set => _maxPosition = ConvertUnits.ToSimUnits(value);
         }
 
-        /// <summary>
-        /// The current rotation of the camera in radians.
-        /// </summary>
+        /// <summary>The current rotation of the camera in radians.</summary>
         public float Rotation
         {
             get => _currentRotation;
@@ -103,9 +89,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// Gets or sets the minimum rotation in radians.
-        /// </summary>
+        /// <summary>Gets or sets the minimum rotation in radians.</summary>
         /// <value>The min rotation.</value>
         public float MinRotation
         {
@@ -113,9 +97,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             set => _minRotation = MathHelper.Clamp(value, -MathHelper.Pi, 0f);
         }
 
-        /// <summary>
-        /// Gets or sets the maximum rotation in radians.
-        /// </summary>
+        /// <summary>Gets or sets the maximum rotation in radians.</summary>
         /// <value>The max rotation.</value>
         public float MaxRotation
         {
@@ -123,9 +105,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             set => _maxRotation = MathHelper.Clamp(value, 0f, MathHelper.Pi);
         }
 
-        /// <summary>
-        /// The current rotation of the camera in radians.
-        /// </summary>
+        /// <summary>The current rotation of the camera in radians.</summary>
         public float Zoom
         {
             get => _currentZoom;
@@ -136,10 +116,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// the body that this camera is currently tracking.
-        /// Null if not tracking any.
-        /// </summary>
+        /// <summary>the body that this camera is currently tracking. Null if not tracking any.</summary>
         public Body TrackingBody
         {
             get => _trackingBody;
@@ -204,9 +181,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _rotationTracking = false;
         }
 
-        /// <summary>
-        /// Resets the camera to default values.
-        /// </summary>
+        /// <summary>Resets the camera to default values.</summary>
         public void ResetCamera()
         {
             _currentPosition = Vector2.Zero;
@@ -256,9 +231,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                    Matrix.CreateTranslation(translateCenter);
         }
 
-        /// <summary>
-        /// Moves the camera forward one timestep.
-        /// </summary>
+        /// <summary>Moves the camera forward one timestep.</summary>
         public void Update(GameTime gameTime)
         {
             if (_trackingBody != null)
@@ -269,6 +242,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     if (_minPosition != _maxPosition)
                         Vector2.Clamp(ref _targetPosition, ref _minPosition, ref _maxPosition, out _targetPosition);
                 }
+
                 if (_rotationTracking)
                 {
                     _targetRotation = -_trackingBody.Rotation % MathHelper.TwoPi;
@@ -276,10 +250,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                         _targetRotation = MathHelper.Clamp(_targetRotation, _minRotation, _maxRotation);
                 }
             }
+
             Vector2 delta = _targetPosition - _currentPosition;
             float distance = delta.Length();
             if (distance > 0f)
                 delta /= distance;
+
             float inertia;
             if (distance < 10f)
                 inertia = (float)Math.Pow(distance / 10.0, 2.0);
@@ -287,7 +263,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 inertia = 1f;
 
             float rotDelta = _targetRotation - _currentRotation;
-
             float rotInertia;
             if (Math.Abs(rotDelta) < 5f)
                 rotInertia = (float)Math.Pow(rotDelta / 5.0, 2.0);

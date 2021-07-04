@@ -32,14 +32,9 @@ using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    /// <summary>
-    /// This is a test of collision filtering.
-    /// There is a triangle, a box, and a circle.
-    /// There are 6 shapes. 3 large and 3 small.
-    /// The 3 small ones always collide.
-    /// The 3 large ones never collide.
-    /// The boxes don't collide with triangles (except if both are small).
-    /// </summary>
+    /// <summary>This is a test of collision filtering. There is a triangle, a box, and a circle. There are 6 shapes. 3 large
+    /// and 3 small. The 3 small ones always collide. The 3 large ones never collide. The boxes don't collide with triangles
+    /// (except if both are small).</summary>
     internal class CollisionFilteringTest : Test
     {
         private const short _smallGroup = 1;

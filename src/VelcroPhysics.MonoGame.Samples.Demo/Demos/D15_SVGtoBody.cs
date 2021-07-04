@@ -52,7 +52,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             foreach (VerticesExt ve in ext)
             {
-
                 List<Vertices> decomposed = Triangulate.ConvexPartition(ve, TriangulationAlgorithm.Bayazit);
 
                 foreach (Vertices v in decomposed)

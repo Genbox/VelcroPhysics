@@ -12,17 +12,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
-    public class TextureManager 
+    public class TextureManager : IDisposable
     {
-        private readonly ContentManager _content;
-        private readonly GraphicsDevice _graphicsDevice;
         private const int _circleSegments = 32;
+        private readonly GraphicsDevice _graphicsDevice;
         private readonly BasicEffect _effect;
         private readonly Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
 
-        public TextureManager(ContentManager content, GraphicsDevice graphicsDevice) 
+        public TextureManager(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            _content = content;
             _graphicsDevice = graphicsDevice;
 
             // First create a blank texture
@@ -138,12 +136,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                     verticesOutline[1].Position = new Vector3(p1, 0f);
                     verticesOutline[0].Color = verticesOutline[1].Color = outlineColor;
                 }
+
                 if (i == _circleSegments - 3)
                 {
                     verticesOutline[2 * _circleSegments - 2].Position = new Vector3(p2, 0f);
                     verticesOutline[2 * _circleSegments - 1].Position = new Vector3(start, 0f);
                     verticesOutline[2 * _circleSegments - 2].Color = verticesOutline[2 * _circleSegments - 1].Color = outlineColor;
                 }
+
                 verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
                 verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
                 verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = outlineColor;
@@ -255,6 +255,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                         decomposedVertices = new List<Vertices>();
                         decomposedVertices.Add(v);
                     }
+
                     List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
                     for (int i = 0; i < decomposedVertices.Count; i++)
                     {
@@ -279,6 +280,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 else
                     result.Add(_textureList["Blank"]);
             }
+
             return result;
         }
 
@@ -324,6 +326,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                     {
                         verticesFill[i][j].Color = patternColor;
                     }
+
                     _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
                 }
             }
@@ -338,6 +341,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
             _graphicsDevice.SetRenderTarget(null);
             return texture;
+        }
+
+        public void Dispose()
+        {
+            _effect?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -34,10 +34,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    /// <summary>
-    /// This tests bullet collision and provides an example of a gameplay scenario.
-    /// This also uses a loop shape.
-    /// </summary>
+    /// <summary>This tests bullet collision and provides an example of a gameplay scenario. This also uses a loop shape.</summary>
     internal class PinballTest : Test
     {
         private readonly RevoluteJoint _leftJoint;

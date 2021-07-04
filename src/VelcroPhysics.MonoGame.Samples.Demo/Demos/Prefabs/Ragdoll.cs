@@ -116,7 +116,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _upperRightLeg.Mass = 2f;
             _upperRightLeg.Position = position + new Vector2(0.6f, 6f);
 
-
             // head -> upper body
             DistanceJoint jointHeadBody = new DistanceJoint(_head, Body, new Vector2(0f, 1f), new Vector2(-0.75f, 0f));
             JointHelper.LinearStiffness(Frequency, DampingRatio, jointHeadBody.BodyA, jointHeadBody.BodyB, out var stiffness, out var damping);

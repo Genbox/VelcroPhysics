@@ -9,7 +9,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
     {
         private readonly Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
 
-        public FontManager(ContentManager content) 
+        public FontManager(ContentManager content)
         {
             // Add samples fonts
             DirectoryInfo currentAssetFolder = new DirectoryInfo(content.RootDirectory + "/Fonts");

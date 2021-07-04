@@ -1,8 +1,6 @@
 ﻿namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// an enum of all available mouse buttons.
-    /// </summary>
+    /// <summary>an enum of all available mouse buttons.</summary>
     public enum MouseButtons
     {
         LeftButton,

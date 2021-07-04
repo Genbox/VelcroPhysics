@@ -11,9 +11,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
 {
-    /// <summary>
-    /// This is the main type for the samples
-    /// </summary>
+    /// <summary>This is the main type for the samples</summary>
     public sealed class Game1 : Game
     {
         private readonly GraphicsDeviceManager _graphics;
@@ -98,6 +96,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                 if (sampleType.IsSubclassOf(typeof(PhysicsDemoScreen)))
                     demosToLoad.Add(sampleType);
             }
+
             demosToLoad.Add(demosToLoad[0]); // HACK: Load the first sample two times, since some delayed creation stuff with the rendertargets always breaks the first preview picture.
 
             bool firstPreview = true;
@@ -166,18 +165,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
             {
                 screen.UnloadContent();
             }
+
             base.UnloadContent();
         }
 
-        /// <summary>
-        /// Allows each screen to run logic.
-        /// </summary>
+        /// <summary>Allows each screen to run logic.</summary>
         protected override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
             _input.Update(gameTime);
 
 #if WINDOWS
+
             // Update the framerate counter
             _counter.Update(gameTime);
 #endif
@@ -249,6 +248,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                         PresentationParameters pp = GraphicsDevice.PresentationParameters;
                         _transitions.Add(new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, false, SurfaceFormat.Color, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents));
                     }
+
                     GraphicsDevice.SetRenderTarget(_transitions[transitionCount - 1]);
                     GraphicsDevice.Clear(Color.Transparent);
                     screen.Draw(gameTime);
@@ -299,12 +299,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
             {
                 screen.ExitScreen();
             }
+
             _isExiting = true;
         }
 
-        /// <summary>
-        /// Adds a new screen to the screen manager.
-        /// </summary>
+        /// <summary>Adds a new screen to the screen manager.</summary>
         public void AddScreen(GameScreen screen)
         {
             screen.Framework = this;
@@ -324,12 +323,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
             _screens.Add(screen);
         }
 
-        /// <summary>
-        /// Removes a screen from the screen manager. You should normally
-        /// use GameScreen.ExitScreen instead of calling this directly, so
-        /// the screen can gradually transition off rather than just being
-        /// instantly removed.
-        /// </summary>
+        /// <summary>Removes a screen from the screen manager. You should normally use GameScreen.ExitScreen instead of calling
+        /// this directly, so the screen can gradually transition off rather than just being instantly removed.</summary>
         public void RemoveScreen(GameScreen screen)
         {
             // Tell the screen to unload content.
@@ -346,6 +341,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                 _lineBatch.Dispose();
                 _quadRenderer.Dispose();
                 _spriteBatch.Dispose();
+                Managers.TextureManager.Dispose();
             }
 
             base.Dispose(disposing);

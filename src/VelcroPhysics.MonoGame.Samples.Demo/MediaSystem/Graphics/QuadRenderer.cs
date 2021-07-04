@@ -17,10 +17,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
 
         public QuadRenderer(GraphicsDevice graphicsDevice)
         {
-            if (graphicsDevice == null)
-                throw new ArgumentNullException(nameof(graphicsDevice));
-
-            _device = graphicsDevice;
+            _device = graphicsDevice ?? throw new ArgumentNullException(nameof(graphicsDevice));
             _isDisposed = false;
 
             _verticesQuad = new[]
@@ -56,8 +53,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
 
         public void Begin()
         {
+#if DEBUG
             if (_hasBegun)
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
+#endif
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
             _device.RasterizerState = RasterizerState.CullNone;
@@ -67,8 +66,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
 
         public void End()
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before End can be called.");
+#endif
 
             _hasBegun = false;
         }
@@ -80,8 +81,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
 
         public void Render(Vector2 v1, Vector2 v2, Texture2D texture, bool outline, Color outlineColor, params Color[] color)
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
+#endif
 
             if (texture == null)
                 _basicEffect.TextureEnabled = false;
@@ -120,6 +123,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
                 {
                     _verticesQuad[i].Color = outlineColor;
                 }
+
                 _basicEffect.CurrentTechnique.Passes[0].Apply();
                 _device.DrawUserIndexedPrimitives(PrimitiveType.LineStrip, _verticesQuad, 0, 4, _lineBuffer, 0, 4);
             }

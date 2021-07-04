@@ -58,6 +58,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             {
                 Sprites.Draw(_grain.Image, ConvertUnits.ToDisplayUnits(_circles[i].Position), null, Color.White, _circles[i].Rotation, _grain.Origin, 1f, SpriteEffects.None, 1f);
             }
+
             Sprites.End();
 
             _walker.Draw(Sprites, Lines, Camera);

@@ -44,9 +44,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             }
         }
 
-        /// <summary>
-        /// Plays a fire-and-forget sound effect by name.
-        /// </summary>
+        /// <summary>Plays a fire-and-forget sound effect by name.</summary>
         /// <param name="soundName">The name of the sound to play.</param>
         public void PlaySoundEffect(string soundName)
         {
@@ -56,9 +54,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             soundEffect.Play();
         }
 
-        /// <summary>
-        /// Plays a sound effect by name and returns an instance of that sound.
-        /// </summary>
+        /// <summary>Plays a sound effect by name and returns an instance of that sound.</summary>
         /// <param name="soundName">The name of the sound to play.</param>
         /// <param name="looped">True if sound effect should loop.</param>
         public SoundEffectInstance PlaySoundEffect(string soundName, bool looped)

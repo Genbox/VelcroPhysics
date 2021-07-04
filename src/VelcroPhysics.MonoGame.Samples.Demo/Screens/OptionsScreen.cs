@@ -7,10 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
-    /// <summary>
-    /// Base class for screens that contain a menu of options. The user can
-    /// move up and down to select an entry, or cancel to back out of the screen.
-    /// </summary>
+    /// <summary>Base class for screens that contain a menu of options. The user can move up and down to select an entry, or
+    /// cancel to back out of the screen.</summary>
     public class OptionsScreen : GameScreen
     {
         private const float HorizontalPadding = 24f;
@@ -33,9 +31,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         private Vector2 _topLeft;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         public OptionsScreen()
         {
             IsPopup = true;
@@ -100,9 +95,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _bottomRight.Y = _optionStart + (_optionEntries.Count - 1) * _optionSpacing + _optionEntrySize.Y / 2f + VerticalPadding;
         }
 
-        /// <summary>
-        /// Returns the index of the menu entry at the position of the given mouse state.
-        /// </summary>
+        /// <summary>Returns the index of the menu entry at the position of the given mouse state.</summary>
         /// <returns>Index of menu entry if valid, -1 otherwise</returns>
         private int GetOptionEntryAt(Vector2 position)
         {
@@ -112,13 +105,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 if (boundingBox.Contains((int)position.X, (int)position.Y))
                     return i;
             }
+
             return -1;
         }
 
-        /// <summary>
-        /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
-        /// </summary>
+        /// <summary>Responds to user input, changing the selected entry and accepting or cancelling the menu.</summary>
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             // Mouse on a menu item
@@ -170,6 +161,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                             Managers.SoundManager.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
                             break;
                     }
+
                     Managers.SoundManager.PlaySoundEffect("Click");
                 }
             }
@@ -178,9 +170,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 ExitScreen();
         }
 
-        /// <summary>
-        /// Updates the menu.
-        /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -193,9 +182,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        /// <summary>
-        /// Draws the menu.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
             Quads.Begin();
@@ -209,6 +195,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true, Colors.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
                 Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true, Colors.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
             }
+
             Quads.End();
 
             Sprites.Begin();
@@ -218,6 +205,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 Sprites.DrawString(_font, entry.Text, entry.Position + _optionTextOffset, entry.TextColor * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.Draw(_checkmark, entry.Position - _optionEntrySize / 2f + _optionCheckOffset, Color.White * entry.CheckedFade);
             }
+
             Sprites.End();
         }
     }
