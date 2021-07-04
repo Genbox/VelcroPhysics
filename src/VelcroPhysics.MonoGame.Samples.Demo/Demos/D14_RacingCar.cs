@@ -110,7 +110,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
                 PolygonShape box = new PolygonShape(1f);
                 box.Vertices = PolygonUtils.CreateRectangle(10.0f, 0.25f);
-                _teeter = new Sprite(ContentWrapper.TextureFromShape(box, "Stripe", Colors.Gold, Colors.Black, Colors.Black, 1f));
+                _teeter = new Sprite(Managers.TextureManager.TextureFromShape(box, "Stripe", Colors.Gold, Colors.Black, Colors.Black, 1f));
 
                 _board.CreateFixture(box);
 
@@ -130,7 +130,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 PolygonShape shape = new PolygonShape(1f);
                 shape.Vertices = PolygonUtils.CreateRectangle(1.0f, 0.125f);
 
-                _bridge = new Sprite(ContentWrapper.TextureFromShape(shape, Colors.Gold, Colors.Black));
+                _bridge = new Sprite(Managers.TextureManager.TextureFromShape(shape, Colors.Gold, Colors.Black));
 
                 Body prevBody = _ground;
                 for (int i = 0; i < segmentCount; ++i)
@@ -153,7 +153,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 _boxes = new List<Body>();
                 PolygonShape box = new PolygonShape(1f);
                 box.Vertices = PolygonUtils.CreateRectangle(0.5f, 0.5f);
-                _box = new Sprite(ContentWrapper.TextureFromShape(box, "Square", Colors.Sky, Colors.Sunset, Colors.Black, 1f));
+                _box = new Sprite(Managers.TextureManager.TextureFromShape(box, "Square", Colors.Sky, Colors.Sunset, Colors.Black, 1f));
 
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
@@ -226,8 +226,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 World.AddJoint(_springFront);
 
                 // GFX
-                _carBody = new Sprite(ContentWrapper.GetTexture("Car"), ContentWrapper.CalculateOrigin(_car));
-                _wheel = new Sprite(ContentWrapper.GetTexture("Wheel"));
+                _carBody = new Sprite(Managers.TextureManager.GetTexture("Car"), Managers.TextureManager.CalculateOrigin(_car));
+                _wheel = new Sprite(Managers.TextureManager.GetTexture("Wheel"));
             }
 
             Camera.MinRotation = -0.05f;

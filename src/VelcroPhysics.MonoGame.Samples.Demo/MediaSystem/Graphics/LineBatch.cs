@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics
 {
     public class LineBatch : IDisposable
     {

@@ -27,7 +27,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public void LoadContent()
         {
-            _font = ContentWrapper.GetFont("DetailsFont");
+            _font = Managers.FontManager.GetFont("DetailsFont");
         }
 
         public void Update(GameTime gameTime)

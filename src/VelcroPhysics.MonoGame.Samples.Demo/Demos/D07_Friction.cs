@@ -40,7 +40,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             // create sprite based on body
-            _rectangleSprite = new Sprite(ContentWrapper.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "Square", Colors.Green, Colors.Lime, Colors.Black, 1f));
+            _rectangleSprite = new Sprite(Managers.TextureManager.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "Square", Colors.Green, Colors.Lime, Colors.Black, 1f));
         }
 
         public override void Draw(GameTime gameTime)

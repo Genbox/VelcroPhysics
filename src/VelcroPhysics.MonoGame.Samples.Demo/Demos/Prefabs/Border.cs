@@ -3,6 +3,7 @@ using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -67,12 +68,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
             _basicEffect.Projection = projection;
             _basicEffect.View = view;
-            _basicEffect.Texture = ContentWrapper.GetTexture("Blank");
+            _basicEffect.Texture = Managers.TextureManager.GetTexture("Blank");
             _basicEffect.DiffuseColor = Colors.Black.ToVector3();
             _basicEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);
 
-            _basicEffect.Texture = ContentWrapper.GetTexture("Stripe");
+            _basicEffect.Texture = Managers.TextureManager.GetTexture("Stripe");
             _basicEffect.DiffuseColor = Colors.Grey.ToVector3();
             _basicEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);

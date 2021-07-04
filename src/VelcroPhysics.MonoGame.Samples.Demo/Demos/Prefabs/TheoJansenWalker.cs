@@ -4,6 +4,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -54,7 +55,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             // Chassis
             PolygonShape box = new PolygonShape(1f);
             box.Vertices = PolygonUtils.CreateRectangle(2.5f, 1.0f);
-            _body = new Sprite(ContentWrapper.TextureFromShape(box, _walkerColors[0], Colors.Black));
+            _body = new Sprite(Managers.TextureManager.TextureFromShape(box, _walkerColors[0], Colors.Black));
 
             _chassis = BodyFactory.CreateBody(world);
             _chassis.BodyType = BodyType.Dynamic;
@@ -65,7 +66,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
             // Wheel
             CircleShape circle = new CircleShape(1.6f, 1f);
-            _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "Stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, Colors.Black, 3f));
+            _engine = new Sprite(Managers.TextureManager.TextureFromShape(circle, "Stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, Colors.Black, 3f));
 
             _wheel = BodyFactory.CreateBody(world);
             _wheel.BodyType = BodyType.Dynamic;
@@ -105,22 +106,22 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 new Vector2(0.6f, -2.9f)
             };
 
-            _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, Colors.Black));
-            _leftShoulder.Origin = ContentWrapper.CalculateOrigin(_leftShoulders[0]);
+            _leftShoulder = new Sprite(Managers.TextureManager.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, Colors.Black));
+            _leftShoulder.Origin = Managers.TextureManager.CalculateOrigin(_leftShoulders[0]);
 
-            _leftLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[1], points[2] }, Color.White * 0.6f, Colors.Black));
-            _leftLeg.Origin = ContentWrapper.CalculateOrigin(_leftLegs[0]);
+            _leftLeg = new Sprite(Managers.TextureManager.PolygonTexture(new[] { points[0], points[1], points[2] }, Color.White * 0.6f, Colors.Black));
+            _leftLeg.Origin = Managers.TextureManager.CalculateOrigin(_leftLegs[0]);
 
             for (int i = 0; i < points.Length; i++)
             {
                 points[i].X *= -1f;
             }
 
-            _rightShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[4], points[3] }, Color.White * 0.6f, Colors.Black));
-            _rightShoulder.Origin = ContentWrapper.CalculateOrigin(_rightShoulders[0]);
+            _rightShoulder = new Sprite(Managers.TextureManager.PolygonTexture(new[] { Vector2.Zero, points[4], points[3] }, Color.White * 0.6f, Colors.Black));
+            _rightShoulder.Origin = Managers.TextureManager.CalculateOrigin(_rightShoulders[0]);
 
-            _rightLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[2], points[1] }, Color.White * 0.6f, Colors.Black));
-            _rightLeg.Origin = ContentWrapper.CalculateOrigin(_rightLegs[0]);
+            _rightLeg = new Sprite(Managers.TextureManager.PolygonTexture(new[] { points[0], points[2], points[1] }, Color.White * 0.6f, Colors.Black));
+            _rightLeg.Origin = Managers.TextureManager.CalculateOrigin(_rightLegs[0]);
         }
 
         private void CreateLeg(World world, float direction, Vector2 wheelAnchor, int index)

@@ -61,7 +61,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _optionEntries.Add(new OptionEntry("Debug draw contact points", (PhysicsDemoScreen.Flags & DebugViewFlags.ContactPoints) == DebugViewFlags.ContactPoints));
             _optionEntries.Add(new OptionEntry("Debug draw contact normals", (PhysicsDemoScreen.Flags & DebugViewFlags.ContactNormals) == DebugViewFlags.ContactNormals));
             _optionEntries.Add(new OptionEntry("Debug draw controllers", (PhysicsDemoScreen.Flags & DebugViewFlags.Controllers) == DebugViewFlags.Controllers));
-            _optionEntries.Add(new OptionEntry("Play sound effects", ContentWrapper.SoundVolume == 100));
+            _optionEntries.Add(new OptionEntry("Play sound effects", Managers.SoundManager.SoundVolume == 100));
 
             for (int i = 0; i < _optionEntries.Count; i++)
             {
@@ -82,8 +82,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-            _font = ContentWrapper.GetFont("MenuFont");
-            _checkmark = ContentWrapper.GetTexture("Checkmark");
+            _font = Managers.FontManager.GetFont("MenuFont");
+            _checkmark = Managers.TextureManager.GetTexture("Checkmark");
 
             _optionStart = (viewport.Height - (_optionEntries.Count - 1) * (_optionEntrySize.Y + EntrySpacer)) / 2f;
             _optionSpacing = _optionEntrySize.Y + EntrySpacer;
@@ -167,10 +167,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Controllers : PhysicsDemoScreen.Flags & ~DebugViewFlags.Controllers;
                             break;
                         case 11:
-                            ContentWrapper.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
+                            Managers.SoundManager.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
                             break;
                     }
-                    ContentWrapper.PlaySoundEffect("Click");
+                    Managers.SoundManager.PlaySoundEffect("Click");
                 }
             }
 

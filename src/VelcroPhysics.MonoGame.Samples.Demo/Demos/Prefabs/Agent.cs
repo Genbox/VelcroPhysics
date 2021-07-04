@@ -44,8 +44,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             FixtureFactory.AttachCircle(0.5f, 0.5f, Body, new Vector2(0f, -2f));
 
             //GFX
-            _box = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateRectangle(1.75f, 0.2f), Color.White, Colors.Black));
-            _knob = new Sprite(ContentWrapper.CircleTexture(0.5f, "Square", Colors.Black, Colors.Gold, Colors.Black, 1f));
+            _box = new Sprite(Managers.TextureManager.PolygonTexture(PolygonUtils.CreateRectangle(1.75f, 0.2f), Color.White, Colors.Black));
+            _knob = new Sprite(Managers.TextureManager.CircleTexture(0.5f, "Square", Colors.Black, Colors.Gold, Colors.Black, 1f));
 
             _offset = ConvertUnits.ToDisplayUnits(2f);
         }

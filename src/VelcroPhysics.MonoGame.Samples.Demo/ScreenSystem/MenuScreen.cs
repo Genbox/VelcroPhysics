@@ -68,8 +68,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
             Viewport viewport = Framework.GraphicsDevice.Viewport;
 
-            _font = ContentWrapper.GetFont("MenuFont");
-            _samplesLogo = ContentWrapper.GetTexture("SamplesLogo");
+            _font = Managers.FontManager.GetFont("MenuFont");
+            _samplesLogo = Managers.TextureManager.GetTexture("SamplesLogo");
 
             _titleOrigin = new Vector2(_samplesLogo.Width, _samplesLogo.Height) / 2f;
             _titlePosition = new Vector2(viewport.Width / 2f, TitleBarHeight / 2f);
@@ -155,7 +155,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     {
                         Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
                         Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
-                        ContentWrapper.PlaySoundEffect("Click");
+                        Managers.SoundManager.PlaySoundEffect("Click");
                     }
                 }
                 if (_hoverEntry != -1)
@@ -166,7 +166,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                         {
                             Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
                             Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
-                            ContentWrapper.PlaySoundEffect("Click");
+                            Managers.SoundManager.PlaySoundEffect("Click");
                         }
                     }
                     else

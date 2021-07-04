@@ -37,7 +37,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             _breakableSprite = new List<Sprite>();
-            IList<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "Cookie");
+            IList<Texture2D> textures = Managers.TextureManager.BreakableTextureFragments(_breakableCookie[0], "Cookie");
             for (int i = 0; i < _breakableCookie[0].Parts.Count; i++)
             {
                 _breakableCookie[0].Parts[i].Body.GetTransform(out Transform transform);
@@ -45,7 +45,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 Vector2 origin = ConvertUnits.ToDisplayUnits(_breakableCookie[0].Parts[i].Body.Position - bounds.LowerBound);
                 _breakableSprite.Add(new Sprite(textures[i], origin));
             }
-            _completeSprite = new Sprite(ContentWrapper.GetTexture("Cookie"), Vector2.Zero);
+            _completeSprite = new Sprite(Managers.TextureManager.GetTexture("Cookie"), Vector2.Zero);
         }
 
         private BreakableBody CreateBreakable(List<VerticesExt> ext)

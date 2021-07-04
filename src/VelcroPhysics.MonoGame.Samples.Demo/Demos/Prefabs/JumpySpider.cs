@@ -82,9 +82,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _rightKneeAngleJoint.MaxImpulse = 3;
 
             //GFX
-            _torso = new Sprite(ContentWrapper.CircleTexture(SpiderBodyRadius, "Square", Colors.Grey, Colors.Gold, Colors.Black, 1f));
-            _upperLeg = new Sprite(ContentWrapper.TextureFromShape(_leftUpper.FixtureList[0].Shape, Colors.Grey, Colors.Black));
-            _lowerLeg = new Sprite(ContentWrapper.TextureFromShape(_leftLower.FixtureList[0].Shape, Colors.Gold, Colors.Black));
+            _torso = new Sprite(Managers.TextureManager.CircleTexture(SpiderBodyRadius, "Square", Colors.Grey, Colors.Gold, Colors.Black, 1f));
+            _upperLeg = new Sprite(Managers.TextureManager.TextureFromShape(_leftUpper.FixtureList[0].Shape, Colors.Grey, Colors.Black));
+            _lowerLeg = new Sprite(Managers.TextureManager.TextureFromShape(_leftLower.FixtureList[0].Shape, Colors.Gold, Colors.Black));
 
             _flexed = false;
             _timer = 0f;

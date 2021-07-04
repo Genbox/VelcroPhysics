@@ -73,8 +73,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero));
 
             // create sprites based on bodies
-            _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", Colors.Gold, Colors.Orange, Colors.Grey, 1f));
-            _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", Colors.Red, Colors.Blue, Colors.Grey, 4f));
+            _angleCube = new Sprite(Managers.TextureManager.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", Colors.Gold, Colors.Orange, Colors.Grey, 1f));
+            _distanceCube = new Sprite(Managers.TextureManager.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", Colors.Red, Colors.Blue, Colors.Grey, 4f));
         }
 
         public override void Draw(GameTime gameTime)

@@ -40,7 +40,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         /// </summary>
         public override void LoadContent()
         {
-            _font = ContentWrapper.GetFont("DetailsFont");
+            _font = Managers.FontManager.GetFont("DetailsFont");
 
             // Center the message text in the viewport.
             Viewport viewport = Framework.GraphicsDevice.Viewport;

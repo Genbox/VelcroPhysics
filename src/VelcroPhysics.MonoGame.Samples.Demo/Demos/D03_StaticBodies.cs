@@ -40,7 +40,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _obstacles[4].Position = new Vector2(-17f, 0f);
 
             // create sprite based on body
-            _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "Stripe", Colors.Gold, Colors.Black, Colors.Black, 1.5f));
+            _obstacle = new Sprite(Managers.TextureManager.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "Stripe", Colors.Gold, Colors.Black, Colors.Black, 1.5f));
 
             SetUserAgent(_agent.Body, 1000f, 400f);
         }

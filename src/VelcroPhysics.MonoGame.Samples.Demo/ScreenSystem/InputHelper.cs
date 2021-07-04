@@ -1,4 +1,5 @@
 ﻿using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -55,7 +56,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public void LoadContent(Viewport viewport)
         {
-            Texture2D cursorTexture = ContentWrapper.GetTexture("Cursor");
+            Texture2D cursorTexture = Managers.TextureManager.GetTexture("Cursor");
             _cursorSprite = new Sprite(cursorTexture, Vector2.One);
             _viewport = viewport;
         }

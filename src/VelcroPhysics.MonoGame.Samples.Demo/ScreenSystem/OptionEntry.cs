@@ -27,7 +27,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _hoverFade = 0.0;
             _checkedFade = 0.0;
 
-            SpriteFont font = ContentWrapper.GetFont("MenuFont");
+            SpriteFont font = Managers.FontManager.GetFont("MenuFont");
             Size = font.MeasureString(text);
         }
 

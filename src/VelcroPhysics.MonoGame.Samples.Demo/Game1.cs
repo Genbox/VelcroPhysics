@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -70,7 +71,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
         {
             base.LoadContent();
 
-            ContentWrapper.Initialize(this);
+            Managers.TextureManager = new TextureManager(Content, GraphicsDevice);
+            Managers.FontManager = new FontManager(Content);
+            Managers.SoundManager = new SoundManager(Content);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _lineBatch = new LineBatch(GraphicsDevice);

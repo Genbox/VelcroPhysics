@@ -70,10 +70,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             PathManager.AttachBodiesWithRevoluteJoint(World, _softBodies, new Vector2(0f, -0.5f), new Vector2(0f, 0.5f), true, true);
 
             // GFX
-            _bridgeBox = new Sprite(ContentWrapper.TextureFromShape(shape, Colors.Orange, Colors.Brown));
-            _softBodyBox = new Sprite(ContentWrapper.TextureFromShape(shapes[0], Colors.Green, Colors.Black));
+            _bridgeBox = new Sprite(Managers.TextureManager.TextureFromShape(shape, Colors.Orange, Colors.Brown));
+            _softBodyBox = new Sprite(Managers.TextureManager.TextureFromShape(shapes[0], Colors.Green, Colors.Black));
             _softBodyBox.Origin += new Vector2(ConvertUnits.ToDisplayUnits(0.1f), 0f);
-            _softBodyCircle = new Sprite(ContentWrapper.TextureFromShape(shapes[1], Colors.Lime, Colors.Grey));
+            _softBodyCircle = new Sprite(Managers.TextureManager.TextureFromShape(shapes[1], Colors.Lime, Colors.Grey));
         }
 
         public override void Draw(GameTime gameTime)

@@ -55,16 +55,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             switch (type)
             {
                 case ObjectType.Circle:
-                    _object = new Sprite(ContentWrapper.CircleTexture(radius, Colors.Gold, Colors.Grey));
+                    _object = new Sprite(Managers.TextureManager.CircleTexture(radius, Colors.Gold, Colors.Grey));
                     break;
                 case ObjectType.Rectangle:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateRectangle(radius / 2f, radius / 2f), Colors.Red, Colors.Grey));
+                    _object = new Sprite(Managers.TextureManager.PolygonTexture(PolygonUtils.CreateRectangle(radius / 2f, radius / 2f), Colors.Red, Colors.Grey));
                     break;
                 case ObjectType.Star:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateGear(radius, 10, 0f, 1f), Colors.Brown, Colors.Black));
+                    _object = new Sprite(Managers.TextureManager.PolygonTexture(PolygonUtils.CreateGear(radius, 10, 0f, 1f), Colors.Brown, Colors.Black));
                     break;
                 case ObjectType.Gear:
-                    _object = new Sprite(ContentWrapper.PolygonTexture(PolygonUtils.CreateGear(radius, 10, 100f, 1f), Colors.Orange, Colors.Grey));
+                    _object = new Sprite(Managers.TextureManager.PolygonTexture(PolygonUtils.CreateGear(radius, 10, 100f, 1f), Colors.Orange, Colors.Grey));
                     break;
             }
         }

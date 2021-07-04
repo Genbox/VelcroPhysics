@@ -100,8 +100,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 }
             }
 
-            _link = new Sprite(ContentWrapper.GetTexture("Link"));
-            _goo = new Sprite(ContentWrapper.GetTexture("Goo"));
+            _link = new Sprite(Managers.TextureManager.GetTexture("Link"));
+            _goo = new Sprite(Managers.TextureManager.GetTexture("Goo"));
         }
 
         public void Draw(SpriteBatch batch)

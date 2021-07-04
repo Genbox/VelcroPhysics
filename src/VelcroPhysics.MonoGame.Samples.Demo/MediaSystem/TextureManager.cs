@@ -7,31 +7,26 @@ using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
-    public class ContentWrapper : GameComponent
+    public class TextureManager 
     {
+        private readonly ContentManager _content;
+        private readonly GraphicsDevice _graphicsDevice;
         private const int _circleSegments = 32;
-        private static int _soundVolume;
+        private readonly BasicEffect _effect;
+        private readonly Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
 
-        private static ContentWrapper _contentWrapper;
-        private static BasicEffect _effect;
-
-        private static readonly Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
-        private static readonly Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
-        private static readonly Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
-
-        private ContentWrapper(Game game)
-            : base(game)
+        public TextureManager(ContentManager content, GraphicsDevice graphicsDevice) 
         {
-            DirectoryInfo currentAssetFolder;
-            FileInfo[] currentFileList;
+            _content = content;
+            _graphicsDevice = graphicsDevice;
 
             // First create a blank texture
-            _textureList["Blank"] = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            _textureList["Blank"] = new Texture2D(graphicsDevice, 1, 1, false, SurfaceFormat.Color);
             _textureList["Blank"].SetData(new[] { Color.White });
             _textureList["Blank"].Name = "Blank";
 
@@ -39,95 +34,41 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             string[] gfxFolders = { "Common", "DemoGFX", "Materials" };
             foreach (string folder in gfxFolders)
             {
-                currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/" + folder);
-                currentFileList = currentAssetFolder.GetFiles("*.xnb");
+                DirectoryInfo currentAssetFolder = new DirectoryInfo(content.RootDirectory + "/" + folder);
+                FileInfo[] currentFileList = currentAssetFolder.GetFiles("*.xnb");
+
                 for (int i = 0; i < currentFileList.Length; i++)
                 {
                     string textureName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
-                    _textureList[textureName] = game.Content.Load<Texture2D>(folder + "/" + textureName);
+                    _textureList[textureName] = content.Load<Texture2D>(folder + "/" + textureName);
                     _textureList[textureName].Name = textureName;
                 }
             }
 
-            // Add samples fonts
-            currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/Fonts");
-            currentFileList = currentAssetFolder.GetFiles("*.xnb");
-
-            for (int i = 0; i < currentFileList.Length; i++)
-            {
-                string fontName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
-                _fontList[fontName] = game.Content.Load<SpriteFont>("Fonts/" + fontName);
-            }
-
             // Add basic effect for texture generation
-            _effect = new BasicEffect(game.GraphicsDevice);
-
-            // Initialize audio playback
-            currentAssetFolder = new DirectoryInfo(game.Content.RootDirectory + "/DemoSFX");
-            currentFileList = currentAssetFolder.GetFiles("*.xnb");
-
-            for (int i = 0; i < currentFileList.Length; i++)
-            {
-                string soundName = Path.GetFileNameWithoutExtension(currentFileList[i].Name);
-                _soundList[soundName] = game.Content.Load<SoundEffect>("DemoSFX/" + soundName);
-                _soundList[soundName].Name = soundName;
-            }
-
-            try
-            {
-                SoundVolume = 100;
-            }
-            catch (NoAudioHardwareException)
-            {
-                // silently fall back to silence
-            }
+            _effect = new BasicEffect(_graphicsDevice);
         }
 
-        public static int SoundVolume
+        public Texture2D GetTexture(string textureName)
         {
-            get => _soundVolume;
-            set
-            {
-                _soundVolume = (int)MathHelper.Clamp(value, 0f, 100f);
-                SoundEffect.MasterVolume = _soundVolume / 100f;
-            }
-        }
-
-        public static void Initialize(Game game)
-        {
-            if (_contentWrapper == null && game != null)
-            {
-                _contentWrapper = new ContentWrapper(game);
-                game.Components.Add(_contentWrapper);
-            }
-        }
-
-        public static Texture2D GetTexture(string textureName)
-        {
-            if (_contentWrapper != null && _textureList.ContainsKey(textureName))
-                return _textureList[textureName];
+            if (_textureList.TryGetValue(textureName, out Texture2D texture))
+                return texture;
 
             throw new FileNotFoundException($"Texture \"{textureName}\" not found!");
         }
 
-        public static SpriteFont GetFont(string fontName)
-        {
-            if (_contentWrapper != null && _fontList.ContainsKey(fontName))
-                return _fontList[fontName];
-
-            throw new FileNotFoundException($"The font \"{fontName}\" was not found");
-        }
-
-        public static Vector2 CalculateOrigin(Body body)
+        public Vector2 CalculateOrigin(Body body)
         {
             Vector2 lowerBound = new Vector2(float.MaxValue);
             body.GetTransform(out Transform transform);
 
             for (int i = 0; i < body.FixtureList.Count; i++)
             {
-                for (int j = 0; j < body.FixtureList[i].Shape.ChildCount; j++)
+                Shape shape = body.FixtureList[i].Shape;
+
+                for (int j = 0; j < shape.ChildCount; j++)
                 {
-                    body.FixtureList[i].Shape.ComputeAABB(ref transform, j, out AABB bounds);
+                    shape.ComputeAABB(ref transform, j, out AABB bounds);
                     Vector2.Min(ref lowerBound, ref bounds.LowerBound, out lowerBound);
                 }
             }
@@ -137,16 +78,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             return ConvertUnits.ToDisplayUnits(body.Position - lowerBound) + new Vector2(1f);
         }
 
-        public static Texture2D TextureFromShape(Shape shape, Color color, Color outlineColor)
+        public Texture2D TextureFromShape(Shape shape, Color color, Color outlineColor)
         {
             return TextureFromShape(shape, "Blank", color, color, outlineColor, 1f);
         }
 
-        public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
+        public Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper == null)
-                return null;
-
             switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
@@ -158,16 +96,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             }
         }
 
-        public static Texture2D CircleTexture(float radius, Color color, Color outlineColor)
+        public Texture2D CircleTexture(float radius, Color color, Color outlineColor)
         {
             return CircleTexture(radius, "Blank", color, color, outlineColor, 1f);
         }
 
-        public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
+        public Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper == null)
-                return null;
-
             VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (_circleSegments - 2)];
             VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * _circleSegments];
 
@@ -216,30 +151,27 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                 theta += segmentSize;
             }
 
-            return _contentWrapper.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
+            return RenderTexture((int)(radius * 2f), (int)(radius * 2f), _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
         }
 
-        public static Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
+        public Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
         {
             return PolygonTexture(vertices, "Blank", color, color, outlineColor, 1f);
         }
 
-        public static Texture2D PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
+        public Texture2D PolygonTexture(Vector2[] vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
             Vertices temp = new Vertices(vertices);
             return PolygonTexture(temp, pattern, mainColor, patternColor, outlineColor, materialScale);
         }
 
-        public static Texture2D PolygonTexture(Vertices vertices, Color color, Color outlineColor)
+        public Texture2D PolygonTexture(Vertices vertices, Color color, Color outlineColor)
         {
             return PolygonTexture(vertices, "Blank", color, color, outlineColor, 1f);
         }
 
-        public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
+        public Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper == null)
-                return null;
-
             // copy vertices
             Vertices scaledVertices = new Vertices(vertices);
 
@@ -295,14 +227,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
             Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
 
-            return _contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
+            return RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
         }
 
-        public static IList<Texture2D> BreakableTextureFragments(BreakableBody body, string textureName)
+        public IList<Texture2D> BreakableTextureFragments(BreakableBody body, string textureName)
         {
-            if (_contentWrapper == null)
-                return Array.Empty<Texture2D>();
-
             List<Texture2D> result = new List<Texture2D>();
 
             Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
@@ -345,7 +274,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                     }
 
                     Vector2 vertsSize = new Vector2(polygonBounds.UpperBound.X - polygonBounds.LowerBound.X, polygonBounds.UpperBound.Y - polygonBounds.LowerBound.Y);
-                    result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, Array.Empty<VertexPositionColor>()));
+                    result.Add(RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, Array.Empty<VertexPositionColor>()));
                 }
                 else
                     result.Add(_textureList["Blank"]);
@@ -363,13 +292,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         private Texture2D RenderTexture(int width, int height, Texture2D pattern, Color patternColor, List<VertexPositionColorTexture[]> verticesFill, VertexPositionColor[] verticesOutline)
         {
             Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0f);
-            PresentationParameters pp = Game.GraphicsDevice.PresentationParameters;
-            RenderTarget2D texture = new RenderTarget2D(Game.GraphicsDevice, width + 2, height + 2, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
-            Game.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-            Game.GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
+            PresentationParameters pp = _graphicsDevice.PresentationParameters;
+            RenderTarget2D texture = new RenderTarget2D(_graphicsDevice, width + 2, height + 2, false, SurfaceFormat.Color, DepthFormat.None, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+            _graphicsDevice.RasterizerState = RasterizerState.CullNone;
+            _graphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
 
-            Game.GraphicsDevice.SetRenderTarget(texture);
-            Game.GraphicsDevice.Clear(Color.Transparent);
+            _graphicsDevice.SetRenderTarget(texture);
+            _graphicsDevice.Clear(Color.Transparent);
             _effect.Projection = Matrix.CreateOrthographic(width + 2f, -height - 2f, 0f, 1f);
             _effect.View = halfPixelOffset;
 
@@ -382,7 +311,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
             for (int i = 0; i < verticesFill.Count; i++)
             {
-                Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
             }
 
             if (pattern != null)
@@ -395,7 +324,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
                     {
                         verticesFill[i][j].Color = patternColor;
                     }
-                    Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
+                    _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, verticesFill[i], 0, verticesFill[i].Length / 3);
                 }
             }
 
@@ -404,53 +333,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             {
                 _effect.TextureEnabled = false;
                 _effect.CurrentTechnique.Passes[0].Apply();
-                Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verticesOutline, 0, verticesOutline.Length / 2);
             }
 
-            Game.GraphicsDevice.SetRenderTarget(null);
+            _graphicsDevice.SetRenderTarget(null);
             return texture;
-        }
-
-        /// <summary>
-        /// Plays a fire-and-forget sound effect by name.
-        /// </summary>
-        /// <param name="soundName">The name of the sound to play.</param>
-        public static void PlaySoundEffect(string soundName)
-        {
-            if (_contentWrapper != null && _soundList.ContainsKey(soundName))
-                _soundList[soundName].Play();
-            else
-                throw new FileNotFoundException();
-        }
-
-        /// <summary>
-        /// Plays a sound effect by name and returns an instance of that sound.
-        /// </summary>
-        /// <param name="soundName">The name of the sound to play.</param>
-        /// <param name="looped">True if sound effect should loop.</param>
-        public static SoundEffectInstance PlaySoundEffect(string soundName, bool looped)
-        {
-            SoundEffectInstance instance = null;
-            if (_contentWrapper != null && _soundList != null && _soundList.ContainsKey(soundName))
-            {
-                try
-                {
-                    instance = _soundList[soundName].CreateInstance();
-                    if (instance != null)
-                    {
-                        instance.IsLooped = looped;
-                        instance.Play();
-                    }
-                }
-                catch (InstancePlayLimitException)
-                {
-                    // silently fail (returns null instance) if instance limit reached
-                }
-            }
-            else
-                throw new FileNotFoundException();
-
-            return instance;
         }
     }
 }

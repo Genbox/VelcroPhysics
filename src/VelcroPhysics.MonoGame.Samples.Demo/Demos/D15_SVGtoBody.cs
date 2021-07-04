@@ -34,16 +34,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _loadedVertices = Framework.Content.Load<VerticesContainer>("Pipeline/Body");
 
             _heartBody = Create(_loadedVertices["Heart"]);
-            _heart = new Sprite(ContentWrapper.GetTexture("Heart"), ContentWrapper.CalculateOrigin(_heartBody));
+            _heart = new Sprite(Managers.TextureManager.GetTexture("Heart"), Managers.TextureManager.CalculateOrigin(_heartBody));
 
             _clubBody = Create(_loadedVertices["Club"]);
-            _club = new Sprite(ContentWrapper.GetTexture("Club"), ContentWrapper.CalculateOrigin(_clubBody));
+            _club = new Sprite(Managers.TextureManager.GetTexture("Club"), Managers.TextureManager.CalculateOrigin(_clubBody));
 
             _spadeBody = Create(_loadedVertices["Spade"]);
-            _spade = new Sprite(ContentWrapper.GetTexture("Spade"), ContentWrapper.CalculateOrigin(_spadeBody));
+            _spade = new Sprite(Managers.TextureManager.GetTexture("Spade"), Managers.TextureManager.CalculateOrigin(_spadeBody));
 
             _diamondBody = Create(_loadedVertices["Diamond"]);
-            _diamond = new Sprite(ContentWrapper.GetTexture("Diamond"), ContentWrapper.CalculateOrigin(_diamondBody));
+            _diamond = new Sprite(Managers.TextureManager.GetTexture("Diamond"), Managers.TextureManager.CalculateOrigin(_diamondBody));
         }
 
         private Body Create(List<VerticesExt> ext)
