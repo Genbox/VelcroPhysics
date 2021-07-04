@@ -2,7 +2,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Definitions.Joints
 {
     /// <summary>Wheel joint definition. This requires defining a line of motion using an axis and an anchor point. The
     /// definition uses local anchor points and a local axis so that the initial configuration can violate the constraint

@@ -23,20 +23,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Transactions;
 using Genbox.VelcroPhysics.Collision.Broadphase;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Distance;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Collision.TOI;
+using Genbox.VelcroPhysics.Definitions;
+using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics.Handlers;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Templates;
-using Genbox.VelcroPhysics.Templates.Joints;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 

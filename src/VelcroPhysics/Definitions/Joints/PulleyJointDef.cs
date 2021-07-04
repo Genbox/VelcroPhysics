@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Definitions.Joints
 {
     /// <summary>Pulley joint definition. This requires two ground anchors, two dynamic body anchor points, and a pulley ratio.</summary>
     public sealed class PulleyJointDef : JointDef

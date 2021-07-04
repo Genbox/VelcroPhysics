@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.DebugView
+namespace Genbox.VelcroPhysics.Interfaces
 {
     public interface IDebugView
     {

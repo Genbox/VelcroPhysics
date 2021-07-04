@@ -1,5 +1,4 @@
-﻿using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
+﻿using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

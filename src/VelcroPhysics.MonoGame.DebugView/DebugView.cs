@@ -12,6 +12,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Extensions.Controllers.Buoyancy;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Extensions.DebugView;
+using Genbox.VelcroPhysics.Interfaces;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Shared.Optimization;
 using Genbox.VelcroPhysics.Utilities;

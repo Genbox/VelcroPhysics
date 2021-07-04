@@ -28,11 +28,11 @@ using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Handlers;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.TOI;
+using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Extensions.Controllers.ControllerBase;
 using Genbox.VelcroPhysics.Extensions.PhysicsLogics.PhysicsLogicBase;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Templates;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 

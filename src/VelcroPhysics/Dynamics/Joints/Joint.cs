@@ -22,9 +22,9 @@
 
 using System;
 using System.Diagnostics;
+using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Dynamics.Solver;
-using Genbox.VelcroPhysics.Templates.Joints;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics.Joints

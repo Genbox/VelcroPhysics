@@ -1,7 +1,7 @@
 ﻿using Genbox.VelcroPhysics.Collision.Shapes;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Definitions.Shapes
 {
     public sealed class CircleShapeDef : ShapeDef
     {

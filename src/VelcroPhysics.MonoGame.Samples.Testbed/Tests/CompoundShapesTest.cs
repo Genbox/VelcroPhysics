@@ -21,11 +21,11 @@
 // SOFTWARE.
 
 using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 

@@ -2,7 +2,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Definitions.Joints
 {
     /// <summary>Revolute joint definition. This requires defining an anchor point where the bodies are joined. The definition
     /// uses local anchor points so that the initial configuration can violate the constraint slightly. You also need to

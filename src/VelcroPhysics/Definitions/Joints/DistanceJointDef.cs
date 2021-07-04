@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates.Joints
+namespace Genbox.VelcroPhysics.Definitions.Joints
 {
     /// <summary>Distance joint definition. This requires defining an anchor point on both bodies and the non-zero length of
     /// the distance joint. The definition uses local anchor points so that the initial configuration can violate the

@@ -1,4 +1,4 @@
-namespace Genbox.VelcroPhysics.Templates
+namespace Genbox.VelcroPhysics.Definitions
 {
     public interface IDef
     {

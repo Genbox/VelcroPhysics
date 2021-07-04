@@ -1,6 +1,4 @@
-﻿using Genbox.VelcroPhysics.Shared;
-
-namespace Genbox.VelcroPhysics.Benchmarks.Code.TestClasses
+﻿namespace Genbox.VelcroPhysics.Benchmarks.Code.TestClasses
 {
     internal sealed class PoolObject 
     {

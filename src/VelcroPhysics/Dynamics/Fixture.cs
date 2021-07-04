@@ -27,8 +27,8 @@ using Genbox.VelcroPhysics.Collision.Filtering;
 using Genbox.VelcroPhysics.Collision.Handlers;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Shared;
-using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.Dynamics

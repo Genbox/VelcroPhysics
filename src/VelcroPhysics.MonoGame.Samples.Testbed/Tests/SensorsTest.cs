@@ -24,9 +24,9 @@
 
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.Templates;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 

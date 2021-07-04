@@ -24,57 +24,60 @@
 // due to position correction.
 
 using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
-using Genbox.VelcroPhysics.Templates;
 using Microsoft.Xna.Framework;
 
-public class RestitutionTest : Test
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 {
-    private RestitutionTest()
+    public class RestitutionTest : Test
     {
-        const float threshold = 10.0f;
-
+        private RestitutionTest()
         {
-            BodyDef bd = new BodyDef();
-            Body ground = World.CreateBody(bd);
+            const float threshold = 10.0f;
 
-            EdgeShape shape = new EdgeShape();
-            shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-
-            FixtureDef fd = new FixtureDef();
-            fd.Shape = shape;
-            fd.RestitutionThreshold = threshold;
-            ground.CreateFixture(fd);
-        }
-
-        {
-            CircleShape shape = new CircleShape(1.0f);
-            shape.Radius = 1.0f;
-
-            FixtureDef fd = new FixtureDef();
-            fd.Shape = shape;
-
-            float[] restitution = { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
-
-            for (int i = 0; i < 7; ++i)
             {
                 BodyDef bd = new BodyDef();
-                bd.Type = BodyType.Dynamic;
-                bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+                Body ground = World.CreateBody(bd);
 
-                Body body = World.CreateBody(bd);
+                EdgeShape shape = new EdgeShape();
+                shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
 
-                fd.Restitution = restitution[i];
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
                 fd.RestitutionThreshold = threshold;
-                body.CreateFixture(fd);
+                ground.CreateFixture(fd);
+            }
+
+            {
+                CircleShape shape = new CircleShape(1.0f);
+                shape.Radius = 1.0f;
+
+                FixtureDef fd = new FixtureDef();
+                fd.Shape = shape;
+
+                float[] restitution = { 0.0f, 0.1f, 0.3f, 0.5f, 0.75f, 0.9f, 1.0f };
+
+                for (int i = 0; i < 7; ++i)
+                {
+                    BodyDef bd = new BodyDef();
+                    bd.Type = BodyType.Dynamic;
+                    bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
+
+                    Body body = World.CreateBody(bd);
+
+                    fd.Restitution = restitution[i];
+                    fd.RestitutionThreshold = threshold;
+                    body.CreateFixture(fd);
+                }
             }
         }
-    }
 
-    public static Test Create()
-    {
-        return new RestitutionTest();
+        public static Test Create()
+        {
+            return new RestitutionTest();
+        }
     }
 }
 

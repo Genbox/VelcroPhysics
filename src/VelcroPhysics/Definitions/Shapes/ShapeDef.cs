@@ -1,6 +1,6 @@
 ﻿using Genbox.VelcroPhysics.Collision.Shapes;
 
-namespace Genbox.VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Definitions.Shapes
 {
     public abstract class ShapeDef : IDef
     {

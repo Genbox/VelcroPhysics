@@ -1,7 +1,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Shared;
 
-namespace Genbox.VelcroPhysics.Templates.Shapes
+namespace Genbox.VelcroPhysics.Definitions.Shapes
 {
     public sealed class PolygonShapeDef : ShapeDef
     {

@@ -1,7 +1,7 @@
 ﻿using Genbox.VelcroPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.Templates
+namespace Genbox.VelcroPhysics.Definitions
 {
     public class BodyDef : IDef
     {
