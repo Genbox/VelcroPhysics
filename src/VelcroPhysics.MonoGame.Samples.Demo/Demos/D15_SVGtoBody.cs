@@ -85,14 +85,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how to load bodies from a SVG.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.Append("  - Exit to demo selection: Back button");
 #if WINDOWS
-            sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  - Exit to demo selection: Escape");
+#elif XBOX
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }

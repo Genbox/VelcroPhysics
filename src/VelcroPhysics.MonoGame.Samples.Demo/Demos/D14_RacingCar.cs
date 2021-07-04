@@ -313,18 +313,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             sb.AppendLine("a (soft) distance joint for the tire suspension.");
             sb.AppendLine("The track is composed of several edge shapes and different");
             sb.AppendLine("obstacles are attached to the track.");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
-            sb.AppendLine("  - Break: A button");
-            sb.Append("  - Exit to demo selection: Back button");
 #if WINDOWS
-            sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  - Accelerate / reverse: D / A");
             sb.AppendLine("  - Break: S");
-            sb.Append("  - Exit to demo selection: Escape");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+#elif XBOX
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Accelerate / reverse: Left thumbstick");
+            sb.AppendLine("  - Break: A button");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }

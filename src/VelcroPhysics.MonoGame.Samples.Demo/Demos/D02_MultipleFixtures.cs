@@ -71,6 +71,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             sb.AppendLine("This demo shows a single body with two attached fixtures and shapes.");
             sb.AppendLine("A fixture binds a shape to a body and adds material properties such");
             sb.AppendLine("as density, friction, and restitution.");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Rotate object: Q, E");
+            sb.AppendLine("  - Move object: W, S, A, D");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse:");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.AppendLine("  - Drag grabbed object: Move mouse");
+#elif XBOX
             sb.AppendLine();
             sb.AppendLine("GamePad:");
             sb.AppendLine("  - Rotate object: Left and right trigger");
@@ -78,18 +89,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             sb.AppendLine("  - Move cursor: Left thumbstick");
             sb.AppendLine("  - Grab object (beneath cursor): A button");
             sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Rotate object: Q, E");
-            sb.AppendLine("  - Move object: W, S, A, D");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }

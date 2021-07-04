@@ -75,19 +75,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows how complex mechanical structures can be realized.");
             sb.AppendLine("http://www.strandbeest.com/");
-            sb.AppendLine();
-            sb.AppendLine("GamePad:");
-            sb.AppendLine("  - Switch walker direction: A button");
-            sb.Append("  - Exit to demo selection: Back button");
 #if WINDOWS
-            sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine("Keyboard:");
             sb.AppendLine("  - Switch walker direction: Space");
             sb.AppendLine("  - Exit to demo selection: Escape");
             sb.AppendLine();
-            sb.AppendLine("Mouse / Touchscreen");
-            sb.Append("  - Switch walker direction: Right click");
+            sb.AppendLine("Mouse:");
+            sb.AppendLine("  - Switch walker direction: Right click");
+#elif XBOX
+            sb.AppendLine();
+            sb.AppendLine("GamePad:");
+            sb.AppendLine("  - Switch walker direction: A button");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }

@@ -126,23 +126,23 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("This demo shows a breakable cookie, imported from a SVG.");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse:");
+            sb.AppendLine("  - Explosion (at cursor): Right click");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.AppendLine("  - Drag grabbed object: Move mouse");
+#elif XBOX
             sb.AppendLine();
             sb.AppendLine("GamePad:");
             sb.AppendLine("  - Explosion (at cursor): B button");
             sb.AppendLine("  - Move cursor: Left thumbstick");
             sb.AppendLine("  - Grab object (beneath cursor): A button");
             sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Explosion (at cursor): Right click");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }

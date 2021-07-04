@@ -89,6 +89,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             sb.AppendLine("  - Stars are set to collide with gears.");
             sb.AppendLine("  - Gears are set to collide with stars.");
             sb.AppendLine("  - The agent is set to collide with everything but stars.");
+#if WINDOWS
+            sb.AppendLine();
+            sb.AppendLine("Keyboard:");
+            sb.AppendLine("  - Rotate object: Q, E");
+            sb.AppendLine("  - Move object: W, S, A, D");
+            sb.AppendLine("  - Exit to demo selection: Escape");
+            sb.AppendLine();
+            sb.AppendLine("Mouse:");
+            sb.AppendLine("  - Grab object (beneath cursor): Left click");
+            sb.AppendLine("  - Drag grabbed object: Move mouse");
+#elif XBOX
             sb.AppendLine();
             sb.AppendLine("GamePad:");
             sb.AppendLine("  - Rotate object: Left and right trigger");
@@ -96,18 +107,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             sb.AppendLine("  - Move cursor: Left thumbstick");
             sb.AppendLine("  - Grab object (beneath cursor): A button");
             sb.AppendLine("  - Drag grabbed object: Left thumbstick");
-            sb.Append("  - Exit to demo selection: Back button");
-#if WINDOWS
-            sb.AppendLine();
-            sb.AppendLine();
-            sb.AppendLine("Keyboard:");
-            sb.AppendLine("  - Rotate object: Q, E");
-            sb.AppendLine("  - Move object: W, S, A, D");
-            sb.AppendLine("  - Exit to demo selection: Escape");
-            sb.AppendLine();
-            sb.AppendLine("Mouse");
-            sb.AppendLine("  - Grab object (beneath cursor): Left click");
-            sb.Append("  - Drag grabbed object: Move mouse");
+            sb.AppendLine("  - Exit to demo selection: Back button");
 #endif
             return sb.ToString();
         }
