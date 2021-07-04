@@ -4,11 +4,10 @@ using System.Reflection;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 {
     public class ScreenManager
     {
@@ -63,7 +62,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                     demosToLoad.Add(sampleType);
             }
 
-            bool firstPreview = true;
             foreach (Type sampleType in demosToLoad)
             {
                 PhysicsDemoScreen demoScreen = (PhysicsDemoScreen)samplesFramework.CreateInstance(sampleType.ToString());
@@ -97,11 +95,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                 _graphics.SetRenderTarget(null);
 
                 demoScreen.ExitScreen();
-
-                if (!firstPreview)
-                    _menuScreen.AddMenuItem(demoScreen, preview);
-                else
-                    firstPreview = false;
+                _menuScreen.AddMenuItem(demoScreen, preview);
             }
 
             AddScreen(new BackgroundScreen());
