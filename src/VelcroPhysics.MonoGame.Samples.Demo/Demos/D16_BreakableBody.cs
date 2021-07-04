@@ -4,6 +4,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.PolygonManipulation;
@@ -97,7 +98,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.HandleInput(input, gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 3; i++)
@@ -116,7 +117,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

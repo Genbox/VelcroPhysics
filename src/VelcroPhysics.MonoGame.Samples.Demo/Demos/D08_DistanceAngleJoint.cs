@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,7 +78,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _distanceCube = new Sprite(Managers.TextureManager.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", Colors.Red, Colors.Blue, Colors.Grey, 4f));
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Lines.Begin(ref Camera.SimProjection, ref Camera.SimView);
 
@@ -111,7 +111,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             Lines.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

@@ -2,7 +2,7 @@
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>The background screen sits behind all the other menu screens. It draws a background image that remains fixed
     /// in place regardless of whatever transitions the screens on top of it may be doing.</summary>
@@ -30,7 +30,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         }
 
         /// <summary>Draws the background screen.</summary>
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Quads.Begin();
             Quads.Render(Vector2.Zero, _viewportSize, null, Colors.Cyan, Colors.Ocean, Colors.Cyan, Colors.Sky);

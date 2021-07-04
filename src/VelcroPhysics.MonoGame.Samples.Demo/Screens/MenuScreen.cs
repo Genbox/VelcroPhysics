@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>Base class for screens that contain a menu of options. The user can move up and down to select an entry, or
     /// cancel to back out of the screen.</summary>
@@ -144,8 +145,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 {
                     if (_menuEntries[_selectedEntry].Screen != null)
                     {
-                        Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
-                        Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
+                        ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
+                        ScreenManager.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
                         Managers.SoundManager.PlaySoundEffect("Click");
                     }
                 }
@@ -156,8 +157,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     {
                         if (_menuEntries[_selectedEntry].Screen != null)
                         {
-                            Framework.AddScreen(_menuEntries[_selectedEntry].Screen);
-                            Framework.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
+                            ScreenManager.AddScreen(_menuEntries[_selectedEntry].Screen);
+                            ScreenManager.AddScreen(new DescriptionBoxScreen((_menuEntries[_selectedEntry].Screen as PhysicsDemoScreen).GetDetails()));
                             Managers.SoundManager.PlaySoundEffect("Click");
                         }
                     }
@@ -242,7 +243,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _menuSlider.Update(_scrollHover, _scrollLock, gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Vector2 transitionOffset = new Vector2(0f, (float)Math.Pow(TransitionPosition, 2) * 90f);
 
@@ -263,10 +264,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             Sprites.Begin();
             foreach (MenuEntry entry in _menuEntries)
             {
-                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, Colors.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
-                    0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
-                Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha,
-                    0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, Colors.Black * entry.Alpha * entry.Alpha * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
 
                 if (entry.Fade > 0f)
                     Sprites.Draw(entry.Preview, PreviewPosition, null, Color.White * Math.Max((TransitionAlpha - 0.8f) / 0.2f, 0f) * entry.Fade, 0f, _previewOrigin, 1f, SpriteEffects.None, 0f);

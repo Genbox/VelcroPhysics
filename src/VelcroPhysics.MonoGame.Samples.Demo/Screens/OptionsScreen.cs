@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>Base class for screens that contain a menu of options. The user can move up and down to select an entry, or
     /// cancel to back out of the screen.</summary>
@@ -45,7 +46,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         private void LoadOptions()
         {
-            _optionEntries.Add(new OptionEntry("Show debug view", PhysicsDemoScreen.RenderDebug));
             _optionEntries.Add(new OptionEntry("Debug draw data panel", (PhysicsDemoScreen.Flags & DebugViewFlags.DebugPanel) == DebugViewFlags.DebugPanel));
             _optionEntries.Add(new OptionEntry("Debug draw performance graph", (PhysicsDemoScreen.Flags & DebugViewFlags.PerformanceGraph) == DebugViewFlags.PerformanceGraph));
             _optionEntries.Add(new OptionEntry("Debug draw shapes", (PhysicsDemoScreen.Flags & DebugViewFlags.Shape) == DebugViewFlags.Shape));
@@ -125,39 +125,36 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     switch (_hoverEntry)
                     {
                         case 0:
-                            PhysicsDemoScreen.RenderDebug = _optionEntries[_hoverEntry].IsChecked;
-                            break;
-                        case 1:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.DebugPanel : PhysicsDemoScreen.Flags & ~DebugViewFlags.DebugPanel;
                             break;
-                        case 2:
+                        case 1:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PerformanceGraph : PhysicsDemoScreen.Flags & ~DebugViewFlags.PerformanceGraph;
                             break;
-                        case 3:
+                        case 2:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Shape : PhysicsDemoScreen.Flags & ~DebugViewFlags.Shape;
                             break;
-                        case 4:
+                        case 3:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.PolygonPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.PolygonPoints;
                             break;
-                        case 5:
+                        case 4:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Joint : PhysicsDemoScreen.Flags & ~DebugViewFlags.Joint;
                             break;
-                        case 6:
+                        case 5:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.AABB : PhysicsDemoScreen.Flags & ~DebugViewFlags.AABB;
                             break;
-                        case 7:
+                        case 6:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.CenterOfMass : PhysicsDemoScreen.Flags & ~DebugViewFlags.CenterOfMass;
                             break;
-                        case 8:
+                        case 7:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactPoints : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactPoints;
                             break;
-                        case 9:
+                        case 8:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.ContactNormals : PhysicsDemoScreen.Flags & ~DebugViewFlags.ContactNormals;
                             break;
-                        case 10:
+                        case 9:
                             PhysicsDemoScreen.Flags = _optionEntries[_hoverEntry].IsChecked ? PhysicsDemoScreen.Flags | DebugViewFlags.Controllers : PhysicsDemoScreen.Flags & ~DebugViewFlags.Controllers;
                             break;
-                        case 11:
+                        case 10:
                             Managers.SoundManager.SoundVolume = _optionEntries[_hoverEntry].IsChecked ? 100 : 0;
                             break;
                     }
@@ -182,7 +179,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Quads.Begin();
             Quads.Render(_topLeft, _bottomRight, null, true, Colors.Black, Colors.Grey * 0.95f);

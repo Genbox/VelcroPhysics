@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -46,7 +46,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
 
@@ -57,7 +57,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.Draw(_rectangleSprite.Image, ConvertUnits.ToDisplayUnits(_rectangles.Position), null, Color.White, _rectangles.Rotation, _rectangleSprite.Origin - _offset, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

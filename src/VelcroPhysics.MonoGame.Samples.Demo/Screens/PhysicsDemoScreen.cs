@@ -3,15 +3,16 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Extensions.DebugView;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     public class PhysicsDemoScreen : GameScreen, IDisposable
     {
-        private static DebugViewFlags _flags = DebugViewFlags.DebugPanel;
+        private static DebugViewFlags _flags;
         private static bool _flagsChanged;
 
         private float _agentForce;
@@ -32,7 +33,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             TransitionOffTime = TimeSpan.FromSeconds(0.75);
             HasCursor = true;
             EnableCameraControl = true;
-            RenderDebug = true;
         }
 
         public static DebugViewFlags Flags
@@ -44,8 +44,6 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 _flagsChanged = true;
             }
         }
-
-        public static bool RenderDebug { get; set; }
 
         public bool EnableCameraControl { get; set; }
 
@@ -97,7 +95,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public override void HandleInput(InputHelper input, GameTime gameTime)
         {
             if (input.IsNewButtonPress(Buttons.Start) || input.IsNewKeyPress(Keys.F1))
-                Framework.AddScreen(new DescriptionBoxScreen(GetDetails()));
+                ScreenManager.AddScreen(new DescriptionBoxScreen(GetDetails()));
 
             if (input.IsScreenExit())
                 ExitScreen();
@@ -216,23 +214,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             _userAgent.ApplyTorque(torque);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             if (_hasBorder)
                 _border.Draw(ref Camera.SimProjection, ref Camera.SimView);
 
-            if (RenderDebug)
+            if (_flagsChanged)
             {
-                if (_flagsChanged)
-                {
-                    DebugView.Flags = _flags;
-                    _flagsChanged = false;
-                }
-
-                DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
+                DebugView.Flags = _flags;
+                _flagsChanged = false;
             }
 
-            base.Draw(gameTime);
+            DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
+
+            base.Draw();
         }
 
         public virtual string GetTitle()

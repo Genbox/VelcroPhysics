@@ -6,7 +6,7 @@ using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.PathGenerator;
 using Genbox.VelcroPhysics.Utilities;
@@ -77,7 +77,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _softBodyCircle = new Sprite(Managers.TextureManager.TextureFromShape(shapes[1], Colors.Lime, Colors.Grey));
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
 
@@ -98,7 +98,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

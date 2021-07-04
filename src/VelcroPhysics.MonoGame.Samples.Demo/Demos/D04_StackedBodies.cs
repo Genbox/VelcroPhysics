@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Microsoft.Xna.Framework;
 
 namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
@@ -62,14 +62,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             SetUserAgent(_agent.Body, 1000f, 400f);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             _agent.Draw(Sprites);
             _pyramid.Draw(Sprites);
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
     }
 }

@@ -1,9 +1,10 @@
 using System;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>A screen is a single layer that has update and draw logic, and which can be combined with other layers to
     /// build up a complex menu system. For instance the main menu, the options menu, the "are you sure you want to quit"
@@ -59,6 +60,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public SpriteBatch Sprites { get; protected internal set; }
         public LineBatch Lines { get; protected internal set; }
         public QuadRenderer Quads { get; protected internal set; }
+        public ScreenManager ScreenManager { get; protected internal set; }
 
         /// <summary>Load graphics content for the screen.</summary>
         public virtual void LoadContent() { }
@@ -80,7 +82,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                 if (!UpdateTransition(gameTime, TransitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    Framework.RemoveScreen(this);
+                    ScreenManager.RemoveScreen(this);
                 }
             }
             else if (coveredByOtherScreen)
@@ -143,7 +145,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public virtual void HandleInput(InputHelper input, GameTime gameTime) { }
 
         /// <summary>This is called when the screen should draw itself.</summary>
-        public virtual void Draw(GameTime gameTime) { }
+        public virtual void Draw() { }
 
         /// <summary>Tells the screen to go away. Unlike ScreenManager.RemoveScreen, which instantly kills the screen, this method
         /// respects the transition timings and will give the screen a chance to gradually transition off.</summary>
@@ -152,7 +154,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             if (TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                Framework.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
             else
             {

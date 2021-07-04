@@ -5,6 +5,9 @@ namespace Genbox.VelcroPhysics.Extensions.DebugView
     [Flags]
     public enum DebugViewFlags
     {
+        /// <summary>Do not draw anything</summary>
+        None = 0,
+
         /// <summary>Draw shapes.</summary>
         Shape = 1 << 0,
 
@@ -14,9 +17,7 @@ namespace Genbox.VelcroPhysics.Extensions.DebugView
         /// <summary>Draw axis aligned bounding boxes.</summary>
         AABB = 1 << 2,
 
-        /// <summary>
-        /// Draw broad-phase pairs.
-        /// </summary>
+        /// <summary>Draw broad-phase pairs.</summary>
         Pair = (1 << 3),
 
         /// <summary>Draw center of mass frame.</summary>

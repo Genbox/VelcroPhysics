@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -41,7 +41,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             SetUserAgent(_ragdoll.Body, 1000f, 400f);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
 
@@ -53,7 +53,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _ragdoll.Draw(Sprites);
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

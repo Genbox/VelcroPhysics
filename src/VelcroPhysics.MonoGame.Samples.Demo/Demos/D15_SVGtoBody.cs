@@ -4,7 +4,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Content.SVGImport.Objects;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Tools.Triangulation.TriangulationBase;
 using Genbox.VelcroPhysics.Utilities;
@@ -63,7 +63,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             return b;
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             Sprites.Draw(_heart.Image, ConvertUnits.ToDisplayUnits(_heartBody.Position), null, Color.White, _heartBody.Rotation, _heart.Origin, 1f, SpriteEffects.None, 0f);
@@ -72,7 +72,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             Sprites.Draw(_diamond.Image, ConvertUnits.ToDisplayUnits(_diamondBody.Position), null, Color.White, _diamondBody.Rotation, _diamond.Origin, 1f, SpriteEffects.None, 0f);
             Sprites.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
-using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -44,7 +44,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             _rectangleSprite = new Sprite(Managers.TextureManager.TextureFromShape(_rectangle[0].FixtureList[0].Shape, "Square", Colors.Green, Colors.Lime, Colors.Black, 1f));
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
 
@@ -64,7 +64,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             Lines.End();
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

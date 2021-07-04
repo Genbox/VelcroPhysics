@@ -1,10 +1,11 @@
 ﻿using System;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>A popup message box screen, used to display "are you sure?" confirmation messages.</summary>
     public class DescriptionBoxScreen : GameScreen
@@ -59,7 +60,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         }
 
         /// <summary>Draws the message box.</summary>
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Quads.Begin();
             Quads.Render(_topLeft, _bottomRight, null, true, Colors.Black, Colors.Grey * 0.65f);

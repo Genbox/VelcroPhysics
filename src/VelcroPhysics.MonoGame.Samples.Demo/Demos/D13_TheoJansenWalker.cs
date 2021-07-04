@@ -5,6 +5,7 @@ using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem.Graphics;
+using Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens;
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -51,7 +52,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             base.HandleInput(input, gameTime);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw()
         {
             Sprites.Begin(0, null, null, null, null, null, Camera.View);
             for (int i = 0; i < 48; i++)
@@ -63,7 +64,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
 
             _walker.Draw(Sprites, Lines, Camera);
 
-            base.Draw(gameTime);
+            base.Draw();
         }
 
         public override string GetTitle()

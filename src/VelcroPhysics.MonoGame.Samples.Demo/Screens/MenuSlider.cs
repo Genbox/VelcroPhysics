@@ -2,7 +2,7 @@
 using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     public sealed class MenuSlider
     {

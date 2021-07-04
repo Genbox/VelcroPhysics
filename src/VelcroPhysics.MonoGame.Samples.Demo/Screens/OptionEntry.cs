@@ -3,7 +3,7 @@ using Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
+namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Screens
 {
     /// <summary>Helper class represents a single entry in a OptionScreen.</summary>
     public sealed class OptionEntry
