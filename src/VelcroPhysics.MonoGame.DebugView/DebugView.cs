@@ -25,7 +25,7 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
     /// A debug view shows you what happens inside the physics engine. You can view
     /// bodies, joints, fixtures and more.
     /// </summary>
-    public class DebugView : DebugViewBase, IDisposable
+    public class DebugView : DebugViewBase, IDisposable, IDebugView
     {
         //Drawing
         private PrimitiveBatch _primitiveBatch;
@@ -147,16 +147,18 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
                     b.GetTransform(out Transform xf);
                     foreach (Fixture f in b.FixtureList)
                     {
+                        Shape shape = f.Shape;
+
                         if (!b.Enabled)
-                            DrawShape(f, xf, InactiveShapeColor);
+                            DrawShape(shape, ref xf, InactiveShapeColor);
                         else if (b.BodyType == BodyType.Static)
-                            DrawShape(f, xf, StaticShapeColor);
+                            DrawShape(shape, ref xf, StaticShapeColor);
                         else if (b.BodyType == BodyType.Kinematic)
-                            DrawShape(f, xf, KinematicShapeColor);
+                            DrawShape(shape, ref xf, KinematicShapeColor);
                         else if (!b.Awake)
-                            DrawShape(f, xf, SleepingShapeColor);
+                            DrawShape(shape, ref xf, SleepingShapeColor);
                         else
-                            DrawShape(f, xf, DefaultShapeColor);
+                            DrawShape(shape, ref xf, DefaultShapeColor);
                     }
                 }
             }
@@ -551,17 +553,17 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             }
         }
 
-        public void DrawShape(Fixture fixture, Transform xf, Color color)
+        public void DrawShape(Shape shape, ref Transform transform, Color color)
         {
-            switch (fixture.Shape.ShapeType)
+            switch (shape.ShapeType)
             {
                 case ShapeType.Circle:
                     {
-                        CircleShape circle = (CircleShape)fixture.Shape;
+                        CircleShape circle = (CircleShape)shape;
 
-                        Vector2 center = MathUtils.Mul(ref xf, circle.Position);
+                        Vector2 center = MathUtils.Mul(ref transform, circle.Position);
                         float radius = circle.Radius;
-                        Vector2 axis = MathUtils.Mul(xf.q, new Vector2(1.0f, 0.0f));
+                        Vector2 axis = MathUtils.Mul(transform.q, new Vector2(1.0f, 0.0f));
 
                         DrawSolidCircle(center, radius, axis, color);
                     }
@@ -569,13 +571,13 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
 
                 case ShapeType.Polygon:
                     {
-                        PolygonShape poly = (PolygonShape)fixture.Shape;
+                        PolygonShape poly = (PolygonShape)shape;
                         int vertexCount = poly.Vertices.Count;
                         Debug.Assert(vertexCount <= Settings.MaxPolygonVertices);
 
                         for (int i = 0; i < vertexCount; ++i)
                         {
-                            _tempVertices[i] = MathUtils.Mul(ref xf, poly.Vertices[i]);
+                            _tempVertices[i] = MathUtils.Mul(ref transform, poly.Vertices[i]);
                         }
 
                         DrawSolidPolygon(_tempVertices, vertexCount, color);
@@ -584,21 +586,21 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
 
                 case ShapeType.Edge:
                     {
-                        EdgeShape edge = (EdgeShape)fixture.Shape;
-                        Vector2 v1 = MathUtils.Mul(ref xf, edge.Vertex1);
-                        Vector2 v2 = MathUtils.Mul(ref xf, edge.Vertex2);
+                        EdgeShape edge = (EdgeShape)shape;
+                        Vector2 v1 = MathUtils.Mul(ref transform, edge.Vertex1);
+                        Vector2 v2 = MathUtils.Mul(ref transform, edge.Vertex2);
                         DrawSegment(v1, v2, color);
                     }
                     break;
 
                 case ShapeType.Chain:
                     {
-                        ChainShape chain = (ChainShape)fixture.Shape;
+                        ChainShape chain = (ChainShape)shape;
 
                         for (int i = 0; i < chain.Vertices.Count - 1; ++i)
                         {
-                            Vector2 v1 = MathUtils.Mul(ref xf, chain.Vertices[i]);
-                            Vector2 v2 = MathUtils.Mul(ref xf, chain.Vertices[i + 1]);
+                            Vector2 v1 = MathUtils.Mul(ref transform, chain.Vertices[i]);
+                            Vector2 v2 = MathUtils.Mul(ref transform, chain.Vertices[i + 1]);
                             DrawSegment(v1, v2, color);
                         }
                     }
@@ -711,14 +713,14 @@ namespace Genbox.VelcroPhysics.MonoGame.DebugView
             DrawSegment(p1, p2, Color.Green);
         }
 
-        public void DrawPoint(Vector2 p, float size, Color color)
+        public void DrawPoint(Vector2 position, float size, Color color)
         {
             Vector2[] verts = new Vector2[4];
             float hs = size / 20.0f;
-            verts[0] = p + new Vector2(-hs, -hs);
-            verts[1] = p + new Vector2(hs, -hs);
-            verts[2] = p + new Vector2(hs, hs);
-            verts[3] = p + new Vector2(-hs, hs);
+            verts[0] = position + new Vector2(-hs, -hs);
+            verts[1] = position + new Vector2(hs, -hs);
+            verts[2] = position + new Vector2(hs, hs);
+            verts[3] = position + new Vector2(-hs, hs);
 
             DrawSolidPolygon(verts, 4, color);
         }
