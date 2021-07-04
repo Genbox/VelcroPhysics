@@ -14,35 +14,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 {
     public class ContentWrapper : GameComponent
     {
-        private const int CircleSegments = 32;
+        private const int _circleSegments = 32;
         private static int _soundVolume;
-
-        public static Color Gold = new Color(246, 187, 53);
-        public static Color Red = new Color(215, 1, 51);
-        public static Color Green = new Color(102, 158, 68);
-        public static Color Orange = new Color(218, 114, 44);
-        public static Color Brown = new Color(123, 40, 11);
-
-        public static Color Beige = new Color(233, 229, 217);
-        public static Color Cream = new Color(246, 87, 84);
-        public static Color Lime = new Color(146, 201, 43);
-        public static Color Teal = new Color(66, 126, 120);
-        public static Color Grey = new Color(73, 69, 69);
-
-        public static Color Black = new Color(28, 19, 11);
-        public static Color Sunset = new Color(194, 73, 24);
-        public static Color Sky = new Color(185, 216, 221);
-
-        public static Color Cyan = new Color(50, 201, 251);
-        public static Color Blue = new Color(44, 138, 153);
-        public static Color Ocean = new Color(57, 143, 171);
 
         private static ContentWrapper _contentWrapper;
         private static BasicEffect _effect;
 
         private static readonly Dictionary<string, Texture2D> _textureList = new Dictionary<string, Texture2D>();
         private static readonly Dictionary<string, SpriteFont> _fontList = new Dictionary<string, SpriteFont>();
-
         private static readonly Dictionary<string, SoundEffect> _soundList = new Dictionary<string, SoundEffect>();
 
         private ContentWrapper(Game game)
@@ -165,19 +144,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public static Texture2D TextureFromShape(Shape shape, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper != null)
+            if (_contentWrapper == null)
+                return null;
+
+            switch (shape.ShapeType)
             {
-                switch (shape.ShapeType)
-                {
-                    case ShapeType.Circle:
-                        return CircleTexture(shape.Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
-                    case ShapeType.Polygon:
-                        return PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale);
-                    default:
-                        throw new NotSupportedException("The specified shape type is not supported.");
-                }
+                case ShapeType.Circle:
+                    return CircleTexture(shape.Radius, pattern, mainColor, patternColor, outlineColor, materialScale);
+                case ShapeType.Polygon:
+                    return PolygonTexture(((PolygonShape)shape).Vertices, pattern, mainColor, patternColor, outlineColor, materialScale);
+                default:
+                    throw new NotSupportedException("The specified shape type is not supported.");
             }
-            return null;
         }
 
         public static Texture2D CircleTexture(float radius, Color color, Color outlineColor)
@@ -187,59 +165,58 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public static Texture2D CircleTexture(float radius, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper != null)
+            if (_contentWrapper == null)
+                return null;
+
+            VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (_circleSegments - 2)];
+            VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * _circleSegments];
+
+            const float segmentSize = MathHelper.TwoPi / _circleSegments;
+            float theta = segmentSize;
+
+            radius = ConvertUnits.ToDisplayUnits(radius);
+            if (_textureList.ContainsKey(pattern))
+                materialScale /= _textureList[pattern].Width;
+            else
+                materialScale = 1f;
+
+            Vector2 start = new Vector2(radius, 0f);
+
+            for (int i = 0; i < _circleSegments - 2; i++)
             {
-                VertexPositionColorTexture[] verticesFill = new VertexPositionColorTexture[3 * (CircleSegments - 2)];
-                VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * CircleSegments];
+                Vector2 p1 = new Vector2(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta));
+                Vector2 p2 = new Vector2(radius * (float)Math.Cos(theta + segmentSize), radius * (float)Math.Sin(theta + segmentSize));
 
-                const float segmentSize = MathHelper.TwoPi / CircleSegments;
-                float theta = segmentSize;
+                // fill vertices
+                verticesFill[3 * i].Position = new Vector3(start, 0f);
+                verticesFill[3 * i + 1].Position = new Vector3(p1, 0f);
+                verticesFill[3 * i + 2].Position = new Vector3(p2, 0f);
+                verticesFill[3 * i].TextureCoordinate = start * materialScale;
+                verticesFill[3 * i + 1].TextureCoordinate = p1 * materialScale;
+                verticesFill[3 * i + 2].TextureCoordinate = p2 * materialScale;
+                verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = mainColor;
 
-                radius = ConvertUnits.ToDisplayUnits(radius);
-                if (_textureList.ContainsKey(pattern))
-                    materialScale /= _textureList[pattern].Width;
-                else
-                    materialScale = 1f;
-
-                Vector2 start = new Vector2(radius, 0f);
-
-                for (int i = 0; i < CircleSegments - 2; i++)
+                // outline vertices
+                if (i == 0)
                 {
-                    Vector2 p1 = new Vector2(radius * (float)Math.Cos(theta), radius * (float)Math.Sin(theta));
-                    Vector2 p2 = new Vector2(radius * (float)Math.Cos(theta + segmentSize), radius * (float)Math.Sin(theta + segmentSize));
-
-                    // fill vertices
-                    verticesFill[3 * i].Position = new Vector3(start, 0f);
-                    verticesFill[3 * i + 1].Position = new Vector3(p1, 0f);
-                    verticesFill[3 * i + 2].Position = new Vector3(p2, 0f);
-                    verticesFill[3 * i].TextureCoordinate = start * materialScale;
-                    verticesFill[3 * i + 1].TextureCoordinate = p1 * materialScale;
-                    verticesFill[3 * i + 2].TextureCoordinate = p2 * materialScale;
-                    verticesFill[3 * i].Color = verticesFill[3 * i + 1].Color = verticesFill[3 * i + 2].Color = mainColor;
-
-                    // outline vertices
-                    if (i == 0)
-                    {
-                        verticesOutline[0].Position = new Vector3(start, 0f);
-                        verticesOutline[1].Position = new Vector3(p1, 0f);
-                        verticesOutline[0].Color = verticesOutline[1].Color = outlineColor;
-                    }
-                    if (i == CircleSegments - 3)
-                    {
-                        verticesOutline[2 * CircleSegments - 2].Position = new Vector3(p2, 0f);
-                        verticesOutline[2 * CircleSegments - 1].Position = new Vector3(start, 0f);
-                        verticesOutline[2 * CircleSegments - 2].Color = verticesOutline[2 * CircleSegments - 1].Color = outlineColor;
-                    }
-                    verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
-                    verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
-                    verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = outlineColor;
-
-                    theta += segmentSize;
+                    verticesOutline[0].Position = new Vector3(start, 0f);
+                    verticesOutline[1].Position = new Vector3(p1, 0f);
+                    verticesOutline[0].Color = verticesOutline[1].Color = outlineColor;
                 }
+                if (i == _circleSegments - 3)
+                {
+                    verticesOutline[2 * _circleSegments - 2].Position = new Vector3(p2, 0f);
+                    verticesOutline[2 * _circleSegments - 1].Position = new Vector3(start, 0f);
+                    verticesOutline[2 * _circleSegments - 2].Color = verticesOutline[2 * _circleSegments - 1].Color = outlineColor;
+                }
+                verticesOutline[2 * i + 2].Position = new Vector3(p1, 0f);
+                verticesOutline[2 * i + 3].Position = new Vector3(p2, 0f);
+                verticesOutline[2 * i + 2].Color = verticesOutline[2 * i + 3].Color = outlineColor;
 
-                return _contentWrapper.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
+                theta += segmentSize;
             }
-            return null;
+
+            return _contentWrapper.RenderTexture((int)(radius * 2f), (int)(radius * 2f), _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
         }
 
         public static Texture2D PolygonTexture(Vector2[] vertices, Color color, Color outlineColor)
@@ -260,117 +237,118 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public static Texture2D PolygonTexture(Vertices vertices, string pattern, Color mainColor, Color patternColor, Color outlineColor, float materialScale)
         {
-            if (_contentWrapper != null)
+            if (_contentWrapper == null)
+                return null;
+
+            // copy vertices
+            Vertices scaledVertices = new Vertices(vertices);
+
+            // scale to display units (i.e. pixels) for rendering to texture
+            Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
+            scaledVertices.Scale(ref scale);
+
+            // translate the boundingbox center to the texture center
+            // because we use an orthographic projection for rendering later
+            AABB verticesBounds = scaledVertices.GetAABB();
+            scaledVertices.Translate(-verticesBounds.Center);
+
+            List<Vertices> decomposedVertices;
+            if (!scaledVertices.IsConvex())
+                decomposedVertices = Triangulate.ConvexPartition(scaledVertices, TriangulationAlgorithm.Earclip);
+            else
             {
-                // copy vertices
-                Vertices scaledVertices = new Vertices(vertices);
-
-                // scale to display units (i.e. pixels) for rendering to texture
-                Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
-                scaledVertices.Scale(ref scale);
-
-                // translate the boundingbox center to the texture center
-                // because we use an orthographic projection for rendering later
-                AABB verticesBounds = scaledVertices.GetAABB();
-                scaledVertices.Translate(-verticesBounds.Center);
-
-                List<Vertices> decomposedVertices;
-                if (!scaledVertices.IsConvex())
-                    decomposedVertices = Triangulate.ConvexPartition(scaledVertices, TriangulationAlgorithm.Earclip);
-                else
-                {
-                    decomposedVertices = new List<Vertices>();
-                    decomposedVertices.Add(scaledVertices);
-                }
-
-                List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
-
-                if (_textureList.ContainsKey(pattern))
-                    materialScale /= _textureList[pattern].Width;
-                else
-                    materialScale = 1f;
-
-                for (int i = 0; i < decomposedVertices.Count; i++)
-                {
-                    verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
-                    for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
-                    {
-                        // fill vertices
-                        verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0], 0f);
-                        verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j), 0f);
-                        verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1), 0f);
-                        verticesFill[i][3 * j].TextureCoordinate = decomposedVertices[i][0] * materialScale;
-                        verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVertices[i].NextVertex(j) * materialScale;
-                        verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVertices[i].NextVertex(j + 1) * materialScale;
-                        verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = mainColor;
-                    }
-                }
-
-                // calculate outline
-                VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * scaledVertices.Count];
-                for (int i = 0; i < scaledVertices.Count; i++)
-                {
-                    verticesOutline[2 * i].Position = new Vector3(scaledVertices[i], 0f);
-                    verticesOutline[2 * i + 1].Position = new Vector3(scaledVertices.NextVertex(i), 0f);
-                    verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = outlineColor;
-                }
-
-                Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
-
-                return _contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
+                decomposedVertices = new List<Vertices>();
+                decomposedVertices.Add(scaledVertices);
             }
-            return null;
+
+            List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
+
+            if (_textureList.ContainsKey(pattern))
+                materialScale /= _textureList[pattern].Width;
+            else
+                materialScale = 1f;
+
+            for (int i = 0; i < decomposedVertices.Count; i++)
+            {
+                verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
+                for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
+                {
+                    // fill vertices
+                    verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0], 0f);
+                    verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j), 0f);
+                    verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1), 0f);
+                    verticesFill[i][3 * j].TextureCoordinate = decomposedVertices[i][0] * materialScale;
+                    verticesFill[i][3 * j + 1].TextureCoordinate = decomposedVertices[i].NextVertex(j) * materialScale;
+                    verticesFill[i][3 * j + 2].TextureCoordinate = decomposedVertices[i].NextVertex(j + 1) * materialScale;
+                    verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = mainColor;
+                }
+            }
+
+            // calculate outline
+            VertexPositionColor[] verticesOutline = new VertexPositionColor[2 * scaledVertices.Count];
+            for (int i = 0; i < scaledVertices.Count; i++)
+            {
+                verticesOutline[2 * i].Position = new Vector3(scaledVertices[i], 0f);
+                verticesOutline[2 * i + 1].Position = new Vector3(scaledVertices.NextVertex(i), 0f);
+                verticesOutline[2 * i].Color = verticesOutline[2 * i + 1].Color = outlineColor;
+            }
+
+            Vector2 vertsSize = new Vector2(verticesBounds.UpperBound.X - verticesBounds.LowerBound.X, verticesBounds.UpperBound.Y - verticesBounds.LowerBound.Y);
+
+            return _contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(pattern) ? _textureList[pattern] : null, patternColor, verticesFill, verticesOutline);
         }
 
-        public static List<Texture2D> BreakableTextureFragments(BreakableBody body, string textureName)
+        public static IList<Texture2D> BreakableTextureFragments(BreakableBody body, string textureName)
         {
+            if (_contentWrapper == null)
+                return Array.Empty<Texture2D>();
+
             List<Texture2D> result = new List<Texture2D>();
-            if (_contentWrapper != null)
+
+            Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
+            foreach (Fixture f in body.Parts)
             {
-                Vector2 scale = ConvertUnits.ToDisplayUnits(Vector2.One);
-                foreach (Fixture f in body.Parts)
+                Vertices v = null;
+                if (f.Shape is PolygonShape polygonShape)
                 {
-                    Vertices v = null;
-                    if (f.Shape is PolygonShape)
-                    {
-                        v = new Vertices(((PolygonShape)f.Shape).Vertices);
-                        v.Scale(ref scale);
-                    }
-                    if (v != null)
-                    {
-                        AABB polygonBounds = v.GetAABB();
-                        List<Vertices> decomposedVertices;
-                        if (!v.IsConvex())
-                            decomposedVertices = Triangulate.ConvexPartition(v, TriangulationAlgorithm.Bayazit);
-                        else
-                        {
-                            decomposedVertices = new List<Vertices>();
-                            decomposedVertices.Add(v);
-                        }
-                        List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
-                        for (int i = 0; i < decomposedVertices.Count; i++)
-                        {
-                            verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
-                            for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
-                            {
-                                // fill vertices
-                                verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0] - polygonBounds.Center, 0f);
-                                verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j) - polygonBounds.Center, 0f);
-                                verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1) - polygonBounds.Center, 0f);
-
-                                verticesFill[i][3 * j].TextureCoordinate = new Vector2(decomposedVertices[i][0].X / _textureList[textureName].Width, decomposedVertices[i][0].Y / _textureList[textureName].Height - 1f);
-                                verticesFill[i][3 * j + 1].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j).Y / _textureList[textureName].Height - 1f);
-                                verticesFill[i][3 * j + 2].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j + 1).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j + 1).Y / _textureList[textureName].Height - 1f);
-                                verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.Transparent;
-                            }
-                        }
-
-                        Vector2 vertsSize = new Vector2(polygonBounds.UpperBound.X - polygonBounds.LowerBound.X, polygonBounds.UpperBound.Y - polygonBounds.LowerBound.Y);
-                        result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, Array.Empty<VertexPositionColor>()));
-                    }
-                    else
-                        result.Add(_textureList["Blank"]);
+                    v = new Vertices(polygonShape.Vertices);
+                    v.Scale(ref scale);
                 }
+
+                if (v != null)
+                {
+                    AABB polygonBounds = v.GetAABB();
+                    List<Vertices> decomposedVertices;
+                    if (!v.IsConvex())
+                        decomposedVertices = Triangulate.ConvexPartition(v, TriangulationAlgorithm.Bayazit);
+                    else
+                    {
+                        decomposedVertices = new List<Vertices>();
+                        decomposedVertices.Add(v);
+                    }
+                    List<VertexPositionColorTexture[]> verticesFill = new List<VertexPositionColorTexture[]>(decomposedVertices.Count);
+                    for (int i = 0; i < decomposedVertices.Count; i++)
+                    {
+                        verticesFill.Add(new VertexPositionColorTexture[3 * (decomposedVertices[i].Count - 2)]);
+                        for (int j = 0; j < decomposedVertices[i].Count - 2; j++)
+                        {
+                            // fill vertices
+                            verticesFill[i][3 * j].Position = new Vector3(decomposedVertices[i][0] - polygonBounds.Center, 0f);
+                            verticesFill[i][3 * j + 1].Position = new Vector3(decomposedVertices[i].NextVertex(j) - polygonBounds.Center, 0f);
+                            verticesFill[i][3 * j + 2].Position = new Vector3(decomposedVertices[i].NextVertex(j + 1) - polygonBounds.Center, 0f);
+
+                            verticesFill[i][3 * j].TextureCoordinate = new Vector2(decomposedVertices[i][0].X / _textureList[textureName].Width, decomposedVertices[i][0].Y / _textureList[textureName].Height - 1f);
+                            verticesFill[i][3 * j + 1].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j).Y / _textureList[textureName].Height - 1f);
+                            verticesFill[i][3 * j + 2].TextureCoordinate = new Vector2(decomposedVertices[i].NextVertex(j + 1).X / _textureList[textureName].Width, decomposedVertices[i].NextVertex(j + 1).Y / _textureList[textureName].Height - 1f);
+                            verticesFill[i][3 * j].Color = verticesFill[i][3 * j + 1].Color = verticesFill[i][3 * j + 2].Color = Color.Transparent;
+                        }
+                    }
+
+                    Vector2 vertsSize = new Vector2(polygonBounds.UpperBound.X - polygonBounds.LowerBound.X, polygonBounds.UpperBound.Y - polygonBounds.LowerBound.Y);
+                    result.Add(_contentWrapper.RenderTexture((int)vertsSize.X, (int)vertsSize.Y, _textureList.ContainsKey(textureName) ? _textureList[textureName] : null, Color.White, verticesFill, Array.Empty<VertexPositionColor>()));
+                }
+                else
+                    result.Add(_textureList["Blank"]);
             }
             return result;
         }
@@ -471,6 +449,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             }
             else
                 throw new FileNotFoundException();
+
             return instance;
         }
     }

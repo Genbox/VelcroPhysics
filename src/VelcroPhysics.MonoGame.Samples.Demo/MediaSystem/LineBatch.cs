@@ -26,14 +26,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         private bool _isDisposed;
         private int _lineVertsCount;
 
-        public LineBatch(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, DefaultBufferSize) { }
-
-        public LineBatch(GraphicsDevice graphicsDevice, int bufferSize)
+        public LineBatch(GraphicsDevice graphicsDevice, int bufferSize = DefaultBufferSize)
         {
-            if (graphicsDevice == null)
-                throw new ArgumentNullException(nameof(graphicsDevice));
-            _device = graphicsDevice;
+            _device = graphicsDevice ?? throw new ArgumentNullException(nameof(graphicsDevice));
 
             _lineVertices = new VertexPositionColor[bufferSize - bufferSize % 2];
 
@@ -54,27 +49,26 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
         {
             if (disposing && !_isDisposed)
             {
-                if (_basicEffect != null)
-                    _basicEffect.Dispose();
-
+                _basicEffect?.Dispose();
                 _isDisposed = true;
             }
         }
 
-        public void Begin(Matrix projection, Matrix view)
+        public void Begin(ref Matrix projection, ref Matrix view)
         {
+#if DEBUG
             if (_hasBegun)
                 throw new InvalidOperationException("End must be called before Begin can be called again.");
+#endif
 
             _device.SamplerStates[0] = SamplerState.AnisotropicClamp;
 
-            //tell our basic effect to begin.
+            // Tell our basic effect to begin.
             _basicEffect.Projection = projection;
             _basicEffect.View = view;
             _basicEffect.CurrentTechnique.Passes[0].Apply();
 
-            // flip the error checking boolean. It's now ok to call DrawLineShape, Flush,
-            // and End.
+            // Flip the error checking boolean. It's now ok to call DrawLineShape, Flush, and End.
             _hasBegun = true;
         }
 
@@ -85,82 +79,79 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         public void DrawLineShape(Shape shape, Color color)
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
 
             if (shape.ShapeType != ShapeType.Edge && shape.ShapeType != ShapeType.Chain)
                 throw new NotSupportedException("The specified shapeType is not supported by LineBatch.");
+#endif
 
             if (shape.ShapeType == ShapeType.Edge)
             {
-                if (_lineVertsCount >= _lineVertices.Length)
-                    Flush();
-
                 EdgeShape edge = (EdgeShape)shape;
-                _lineVertices[_lineVertsCount].Position = new Vector3(edge.Vertex1, 0f);
-                _lineVertices[_lineVertsCount + 1].Position = new Vector3(edge.Vertex2, 0f);
-                _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
-                _lineVertsCount += 2;
+                DrawLine(edge.Vertex1, edge.Vertex2, color);
             }
             else if (shape.ShapeType == ShapeType.Chain)
             {
                 ChainShape chain = (ChainShape)shape;
-                for (int i = 0; i < chain.Vertices.Count; ++i)
-                {
-                    if (_lineVertsCount >= _lineVertices.Length)
-                        Flush();
-                    _lineVertices[_lineVertsCount].Position = new Vector3(chain.Vertices[i], 0f);
-                    _lineVertices[_lineVertsCount + 1].Position = new Vector3(chain.Vertices.NextVertex(i), 0f);
-                    _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
-                    _lineVertsCount += 2;
-                }
+                DrawVertices(chain.Vertices, color);
             }
         }
 
-        public void DrawVertices(Vertices verts)
+        public void DrawVertices(Vertices vertices)
         {
-            DrawVertices(verts, Color.Black);
+            DrawVertices(vertices, Color.Black);
         }
 
-        public void DrawVertices(Vertices verts, Color color)
+        public void DrawVertices(Vertices vertices, Color color)
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before DrawVertices can be called.");
-            for (int i = 0; i < verts.Count; ++i)
+#endif
+
+            for (int i = 0; i < vertices.Count; ++i)
             {
                 if (_lineVertsCount >= _lineVertices.Length)
                     Flush();
-                _lineVertices[_lineVertsCount].Position = new Vector3(verts[i], 0f);
-                _lineVertices[_lineVertsCount + 1].Position = new Vector3(verts.NextVertex(i), 0f);
+
+                _lineVertices[_lineVertsCount].Position = new Vector3(vertices[i], 0f);
+                _lineVertices[_lineVertsCount + 1].Position = new Vector3(vertices.NextVertex(i), 0f);
                 _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
                 _lineVertsCount += 2;
             }
         }
 
-        public void DrawLine(Vector2 v1, Vector2 v2)
+        public void DrawLine(Vector2 start, Vector2 end)
         {
-            DrawLine(v1, v2, Color.Black);
+            DrawLine(start, end, Color.Black);
         }
 
-        public void DrawLine(Vector2 v1, Vector2 v2, Color color)
+        public void DrawLine(Vector2 start, Vector2 end, Color color)
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before DrawLineShape can be called.");
+#endif
+
             if (_lineVertsCount >= _lineVertices.Length)
                 Flush();
-            _lineVertices[_lineVertsCount].Position = new Vector3(v1, 0f);
-            _lineVertices[_lineVertsCount + 1].Position = new Vector3(v2, 0f);
+
+            _lineVertices[_lineVertsCount].Position = new Vector3(start, 0f);
+            _lineVertices[_lineVertsCount + 1].Position = new Vector3(end, 0f);
             _lineVertices[_lineVertsCount].Color = _lineVertices[_lineVertsCount + 1].Color = color;
             _lineVertsCount += 2;
         }
 
-        // End is called once all the primitives have been drawn using AddVertex.
-        // it will call Flush to actually submit the draw call to the graphics card, and
-        // then tell the basic effect to end.
+        /// <summary>End is called once all the primitives have been drawn using AddVertex. it will call Flush to actually submit
+        /// the draw call to the graphics card, and then tell the basic effect to end.</summary>
         public void End()
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before End can be called.");
+#endif
 
             // Draw whatever the user wanted us to draw
             Flush();
@@ -170,14 +161,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
 
         private void Flush()
         {
+#if DEBUG
             if (!_hasBegun)
                 throw new InvalidOperationException("Begin must be called before Flush can be called.");
+#endif
 
             if (_lineVertsCount >= 2)
             {
                 int primitiveCount = _lineVertsCount / 2;
 
-                // submit the draw call to the graphics card
+                // Submit the draw call to the graphics card
                 _device.DrawUserPrimitives(PrimitiveType.LineList, _lineVertices, 0, primitiveCount);
                 _lineVertsCount -= primitiveCount * 2;
             }

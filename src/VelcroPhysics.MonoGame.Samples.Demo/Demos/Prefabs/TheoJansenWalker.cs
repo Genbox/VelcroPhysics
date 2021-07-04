@@ -32,7 +32,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
         private readonly Sprite _rightShoulder;
         private readonly Body[] _rightShoulders;
 
-        private readonly Color[] _walkerColors = { ContentWrapper.Brown, ContentWrapper.Orange, ContentWrapper.Gold };
+        private readonly Color[] _walkerColors = { Colors.Brown, Colors.Orange, Colors.Gold };
         private readonly List<DistanceJoint> _walkerJoints = new List<DistanceJoint>();
         private readonly Body _wheel;
         private float _motorSpeed;
@@ -54,7 +54,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             // Chassis
             PolygonShape box = new PolygonShape(1f);
             box.Vertices = PolygonUtils.CreateRectangle(2.5f, 1.0f);
-            _body = new Sprite(ContentWrapper.TextureFromShape(box, _walkerColors[0], ContentWrapper.Black));
+            _body = new Sprite(ContentWrapper.TextureFromShape(box, _walkerColors[0], Colors.Black));
 
             _chassis = BodyFactory.CreateBody(world);
             _chassis.BodyType = BodyType.Dynamic;
@@ -65,7 +65,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
 
             // Wheel
             CircleShape circle = new CircleShape(1.6f, 1f);
-            _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "Stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, ContentWrapper.Black, 3f));
+            _engine = new Sprite(ContentWrapper.TextureFromShape(circle, "Stripe", _walkerColors[1] * 0.6f, _walkerColors[2] * 0.8f, Colors.Black, 3f));
 
             _wheel = BodyFactory.CreateBody(world);
             _wheel.BodyType = BodyType.Dynamic;
@@ -105,10 +105,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 new Vector2(0.6f, -2.9f)
             };
 
-            _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, ContentWrapper.Black));
+            _leftShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[3], points[4] }, Color.White * 0.6f, Colors.Black));
             _leftShoulder.Origin = ContentWrapper.CalculateOrigin(_leftShoulders[0]);
 
-            _leftLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[1], points[2] }, Color.White * 0.6f, ContentWrapper.Black));
+            _leftLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[1], points[2] }, Color.White * 0.6f, Colors.Black));
             _leftLeg.Origin = ContentWrapper.CalculateOrigin(_leftLegs[0]);
 
             for (int i = 0; i < points.Length; i++)
@@ -116,10 +116,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 points[i].X *= -1f;
             }
 
-            _rightShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[4], points[3] }, Color.White * 0.6f, ContentWrapper.Black));
+            _rightShoulder = new Sprite(ContentWrapper.PolygonTexture(new[] { Vector2.Zero, points[4], points[3] }, Color.White * 0.6f, Colors.Black));
             _rightShoulder.Origin = ContentWrapper.CalculateOrigin(_rightShoulders[0]);
 
-            _rightLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[2], points[1] }, Color.White * 0.6f, ContentWrapper.Black));
+            _rightLeg = new Sprite(ContentWrapper.PolygonTexture(new[] { points[0], points[2], points[1] }, Color.White * 0.6f, Colors.Black));
             _rightLeg.Origin = ContentWrapper.CalculateOrigin(_rightLegs[0]);
         }
 
@@ -236,11 +236,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                 batch.Draw(_rightLeg.Image, ConvertUnits.ToDisplayUnits(_rightLegs[i].Position), null, _walkerColors[i], _rightLegs[i].Rotation, _rightLeg.Origin, 1f, SpriteEffects.None, 0f);
                 batch.Draw(_rightShoulder.Image, ConvertUnits.ToDisplayUnits(_rightShoulders[i].Position), null, _walkerColors[i], _rightShoulders[i].Rotation, _rightShoulder.Origin, 1f, SpriteEffects.None, 0f);
                 batch.End();
-                lines.Begin(camera.SimProjection, camera.SimView);
-                for (int j = 0; j < 8; j++) // 4 joints pro for schleife...
+
+                lines.Begin(ref camera.SimProjection, ref camera.SimView);
+                
+                for (int j = 0; j < 8; j++)
                 {
-                    lines.DrawLine(_walkerJoints[8 * i + j].WorldAnchorA, _walkerJoints[8 * i + j].WorldAnchorB, ContentWrapper.Grey);
+                    lines.DrawLine(_walkerJoints[8 * i + j].WorldAnchorA, _walkerJoints[8 * i + j].WorldAnchorB, Colors.Grey);
                 }
+                
                 lines.End();
             }
             batch.Begin(0, null, null, null, null, null, camera.View);

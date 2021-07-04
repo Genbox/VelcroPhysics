@@ -218,11 +218,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix projection = Camera.SimProjection;
-            Matrix view = Camera.SimView;
-
             if (_hasBorder)
-                _border.Draw(Camera.SimProjection, Camera.SimView);
+                _border.Draw(ref Camera.SimProjection, ref Camera.SimView);
 
             if (RenderDebug)
             {
@@ -231,7 +228,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
                     DebugView.Flags = _flags;
                     _flagsChanged = false;
                 }
-                DebugView.RenderDebugData(ref projection, ref view);
+                DebugView.RenderDebugData(ref Camera.SimProjection, ref Camera.SimView);
             }
             base.Draw(gameTime);
         }

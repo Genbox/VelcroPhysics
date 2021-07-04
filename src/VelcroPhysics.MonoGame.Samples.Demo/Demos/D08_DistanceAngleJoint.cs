@@ -73,18 +73,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             World.AddJoint(new DistanceJoint(_distanceBody[2], _distanceBody[3], Vector2.Zero, Vector2.Zero));
 
             // create sprites based on bodies
-            _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", ContentWrapper.Gold, ContentWrapper.Orange, ContentWrapper.Grey, 1f));
-            _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", ContentWrapper.Red, ContentWrapper.Blue, ContentWrapper.Grey, 4f));
+            _angleCube = new Sprite(ContentWrapper.TextureFromShape(_angleBody[0].FixtureList[0].Shape, "Square", Colors.Gold, Colors.Orange, Colors.Grey, 1f));
+            _distanceCube = new Sprite(ContentWrapper.TextureFromShape(_distanceBody[0].FixtureList[0].Shape, "Stripe", Colors.Red, Colors.Blue, Colors.Grey, 4f));
         }
 
         public override void Draw(GameTime gameTime)
         {
-            Lines.Begin(Camera.SimProjection, Camera.SimView);
+            Lines.Begin(ref Camera.SimProjection, ref Camera.SimView);
 
             foreach (Fixture f in _obstacles.FixtureList)
             {
-                Lines.DrawLine(_distanceBody[0].Position, _distanceBody[1].Position, ContentWrapper.Black);
-                Lines.DrawLine(_distanceBody[2].Position, _distanceBody[3].Position, ContentWrapper.Black);
+                Lines.DrawLine(_distanceBody[0].Position, _distanceBody[1].Position, Colors.Black);
+                Lines.DrawLine(_distanceBody[2].Position, _distanceBody[3].Position, Colors.Black);
             }
 
             Lines.End();
@@ -101,11 +101,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             Sprites.End();
-            Lines.Begin(Camera.SimProjection, Camera.SimView);
+            Lines.Begin(ref Camera.SimProjection, ref Camera.SimView);
 
             foreach (Fixture f in _obstacles.FixtureList)
             {
-                Lines.DrawLineShape(f.Shape, ContentWrapper.Black);
+                Lines.DrawLineShape(f.Shape, Colors.Black);
             }
 
             Lines.End();

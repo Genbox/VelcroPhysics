@@ -28,7 +28,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             World.Gravity = new Vector2(0, 9.82f);
 
             CircleShape shape = new CircleShape(0.25f, 1);
-            _grain = new Sprite(ContentWrapper.CircleTexture(0.25f, ContentWrapper.Gold, ContentWrapper.Grey));
+            _grain = new Sprite(ContentWrapper.CircleTexture(0.25f, Colors.Gold, Colors.Grey));
 
             _circles = new Body[48];
             for (int i = 0; i < 48; i++)

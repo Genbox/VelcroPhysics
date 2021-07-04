@@ -108,8 +108,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             else
                 _selectionFade = Math.Max(_selectionFade - gameTime.ElapsedGameTime.TotalSeconds / _highlightTime, 0.0);
 
-            TextColor = Color.Lerp(ContentWrapper.Beige, ContentWrapper.Gold, (float)_selectionFade);
-            TileColor = Color.Lerp(ContentWrapper.Sky * 0.6f, ContentWrapper.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
+            TextColor = Color.Lerp(Colors.Beige, Colors.Gold, (float)_selectionFade);
+            TileColor = Color.Lerp(Colors.Sky * 0.6f, Colors.Grey * 0.6f, (float)Math.Max(_selectionFade, _hoverFade));
 
             if (Visible)
                 _visibleFade = Math.Min(_visibleFade + gameTime.ElapsedGameTime.TotalSeconds / _fadeTime, 1.0);

@@ -41,7 +41,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             SetUserAgent(_rectangles, 200f, 200f);
 
             // create sprite based on rectangle fixture
-            _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _rectangleSprite = new Sprite(ContentWrapper.PolygonTexture(rectangle1, "Square", Colors.Blue, Colors.Gold, Colors.Black, 1f));
             _offset = new Vector2(ConvertUnits.ToDisplayUnits(2f), 0f);
         }
 

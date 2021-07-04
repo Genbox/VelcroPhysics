@@ -27,6 +27,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         private Vector2 _targetPosition;
         private float _targetRotation;
         private Body _trackingBody;
+        private Matrix _simProjection;
+        private Matrix _view;
+        private Matrix _simView;
 
         /// <summary>
         /// The constructor for the Camera2D class.
@@ -35,23 +38,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public Camera2D(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            SimProjection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width),
-                ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f,
-                1f);
-            SimView = Matrix.Identity;
-            View = Matrix.Identity;
+            _simProjection = Matrix.CreateOrthographicOffCenter(0f, ConvertUnits.ToSimUnits(_graphics.Viewport.Width), ConvertUnits.ToSimUnits(_graphics.Viewport.Height), 0f, 0f, 1f);
+            _simView = Matrix.Identity;
+            _view = Matrix.Identity;
 
-            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f),
-                ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
+            _translateCenter = new Vector2(ConvertUnits.ToSimUnits(_graphics.Viewport.Width / 2f), ConvertUnits.ToSimUnits(_graphics.Viewport.Height / 2f));
 
             ResetCamera();
         }
 
-        public Matrix View { get; private set; }
+        public ref Matrix View => ref _view;
 
-        public Matrix SimView { get; private set; }
+        public ref Matrix SimView => ref _simView;
 
-        public Matrix SimProjection { get; }
+        public ref Matrix SimProjection => ref _simProjection;
 
         /// <summary>
         /// The current position of the camera.

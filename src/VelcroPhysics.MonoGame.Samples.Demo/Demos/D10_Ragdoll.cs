@@ -35,7 +35,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             // create sprite based on body
-            _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "Stripe", ContentWrapper.Red, ContentWrapper.Black, ContentWrapper.Black, 1.5f));
+            _obstacle = new Sprite(ContentWrapper.TextureFromShape(_obstacles[0].FixtureList[0].Shape, "Stripe", Colors.Red, Colors.Black, Colors.Black, 1.5f));
 
             SetUserAgent(_ragdoll.Body, 1000f, 400f);
         }

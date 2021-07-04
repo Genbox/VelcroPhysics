@@ -37,7 +37,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
             }
 
             _breakableSprite = new List<Sprite>();
-            List<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "Cookie");
+            IList<Texture2D> textures = ContentWrapper.BreakableTextureFragments(_breakableCookie[0], "Cookie");
             for (int i = 0; i < _breakableCookie[0].Parts.Count; i++)
             {
                 _breakableCookie[0].Parts[i].Body.GetTransform(out Transform transform);

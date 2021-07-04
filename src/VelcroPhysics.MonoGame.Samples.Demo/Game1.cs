@@ -121,7 +121,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo
                 GraphicsDevice.Clear(Color.Transparent);
 
                 _quadRenderer.Begin();
-                _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, ContentWrapper.Grey, Color.White * 0.3f);
+                _quadRenderer.Render(Vector2.Zero, new Vector2(_transitions[0].Width, _transitions[0].Height), null, true, Colors.Grey, Color.White * 0.3f);
                 _quadRenderer.End();
 
                 // Update ensures that the screen is fully visible, we "cover" it so that no physics are run

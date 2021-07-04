@@ -6,11 +6,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
     public class Sprite
     {
         private Texture2D _image;
+        private Vector2 _origin;
 
         public Sprite(Texture2D image, Vector2 origin)
         {
             _image = image;
-            Origin = origin;
+            _origin = origin;
         }
 
         public Sprite(Texture2D image)
@@ -18,7 +19,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             Image = image;
         }
 
-        public Vector2 Origin { get; set; }
+        public Vector2 Origin
+        {
+            get => _origin;
+            set => _origin = value;
+        }
 
         public Texture2D Image
         {
@@ -26,7 +31,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.MediaSystem
             set
             {
                 _image = value;
-                Origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
+                _origin = new Vector2(_image.Width / 2f, _image.Height / 2f);
             }
         }
     }

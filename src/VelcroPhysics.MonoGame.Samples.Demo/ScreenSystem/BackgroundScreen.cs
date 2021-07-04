@@ -45,7 +45,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public override void Draw(GameTime gameTime)
         {
             Quads.Begin();
-            Quads.Render(Vector2.Zero, _viewportSize, null, ContentWrapper.Cyan, ContentWrapper.Ocean, ContentWrapper.Cyan, ContentWrapper.Sky);
+            Quads.Render(Vector2.Zero, _viewportSize, null, Colors.Cyan, Colors.Ocean, Colors.Cyan, Colors.Sky);
             Quads.End();
         }
     }

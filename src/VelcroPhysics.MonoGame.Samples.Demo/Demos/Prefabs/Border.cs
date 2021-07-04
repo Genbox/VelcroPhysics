@@ -60,7 +60,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _indexBuffer = new short[] { 0, 5, 4, 0, 1, 5, 1, 6, 5, 1, 2, 6, 2, 7, 6, 2, 3, 7, 3, 4, 7, 3, 0, 4 };
         }
 
-        public void Draw(Matrix projection, Matrix view)
+        public void Draw(ref Matrix projection, ref Matrix view)
         {
             _graphics.SamplerStates[0] = SamplerState.AnisotropicWrap;
             _graphics.RasterizerState = RasterizerState.CullNone;
@@ -68,16 +68,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _basicEffect.Projection = projection;
             _basicEffect.View = view;
             _basicEffect.Texture = ContentWrapper.GetTexture("Blank");
-            _basicEffect.DiffuseColor = ContentWrapper.Black.ToVector3();
+            _basicEffect.DiffuseColor = Colors.Black.ToVector3();
             _basicEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);
 
             _basicEffect.Texture = ContentWrapper.GetTexture("Stripe");
-            _basicEffect.DiffuseColor = ContentWrapper.Grey.ToVector3();
+            _basicEffect.DiffuseColor = Colors.Grey.ToVector3();
             _basicEffect.CurrentTechnique.Passes[0].Apply();
             _graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, _borderVertices, 0, 8, _indexBuffer, 0, 8);
 
-            _lines.Begin(projection, view);
+            _lines.Begin(ref projection, ref view);
             _lines.DrawLineShape(_anchor.FixtureList[0].Shape);
             _lines.End();
         }

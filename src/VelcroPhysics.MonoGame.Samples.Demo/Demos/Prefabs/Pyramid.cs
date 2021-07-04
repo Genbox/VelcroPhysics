@@ -47,7 +47,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             }
 
             //GFX
-            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "Square", ContentWrapper.Blue, ContentWrapper.Gold, ContentWrapper.Black, 1f));
+            _box = new Sprite(ContentWrapper.PolygonTexture(rect, "Square", Colors.Blue, Colors.Gold, Colors.Black, 1f));
         }
 
         public void Draw(SpriteBatch batch)

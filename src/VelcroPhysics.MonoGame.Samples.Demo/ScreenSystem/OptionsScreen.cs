@@ -199,22 +199,22 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
         public override void Draw(GameTime gameTime)
         {
             Quads.Begin();
-            Quads.Render(_topLeft, _bottomRight, null, true, ContentWrapper.Black, ContentWrapper.Grey * 0.95f);
+            Quads.Render(_topLeft, _bottomRight, null, true, Colors.Black, Colors.Grey * 0.95f);
             Quads.End();
 
             // Draw each menu entry in turn.
             Quads.Begin();
             foreach (OptionEntry entry in _optionEntries)
             {
-                Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true, ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
-                Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true, ContentWrapper.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
+                Quads.Render(entry.Position - _optionEntrySize / 2f, entry.Position + _optionEntrySize / 2f, null, true, Colors.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
+                Quads.Render(entry.Position - _optionEntrySize / 2f + _optionCheckOffset, entry.Position + _optionEntrySize / 2f, null, true, Colors.Black * TransitionAlpha, entry.TileColor * TransitionAlpha);
             }
             Quads.End();
 
             Sprites.Begin();
             foreach (OptionEntry entry in _optionEntries)
             {
-                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _optionTextOffset, ContentWrapper.Black * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
+                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One + _optionTextOffset, Colors.Black * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.DrawString(_font, entry.Text, entry.Position + _optionTextOffset, entry.TextColor * TransitionAlpha, 0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.Draw(_checkmark, entry.Position - _optionEntrySize / 2f + _optionCheckOffset, Color.White * entry.CheckedFade);
             }

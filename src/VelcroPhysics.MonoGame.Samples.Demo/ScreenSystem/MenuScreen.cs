@@ -264,19 +264,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             foreach (MenuEntry entry in _menuEntries)
             {
                 Quads.Render(entry.Position - _menuEntrySize / 2f, entry.Position + _menuEntrySize / 2f, null, true,
-                    ContentWrapper.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
+                    Colors.Grey * entry.Alpha * TransitionAlpha, entry.TileColor * entry.Alpha * TransitionAlpha);
             }
 
             Quads.Render(_menuSlider.Position - new Vector2(_menuEntrySize.Y / 2f),
                 _menuSlider.Position + new Vector2(_menuEntrySize.Y / 2f), null, true,
-                ContentWrapper.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
+                Colors.Grey * TransitionAlpha, _menuSlider.TileColor * TransitionAlpha);
 
             Quads.End();
 
             Sprites.Begin();
             foreach (MenuEntry entry in _menuEntries)
             {
-                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, ContentWrapper.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
+                Sprites.DrawString(_font, entry.Text, entry.Position + Vector2.One, Colors.Black * entry.Alpha * entry.Alpha * TransitionAlpha,
                     0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
                 Sprites.DrawString(_font, entry.Text, entry.Position, entry.TextColor * entry.Alpha * TransitionAlpha,
                     0f, entry.Origin, entry.Scale, SpriteEffects.None, 0f);
@@ -287,7 +287,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.ScreenSystem
             Sprites.End();
 
             Quads.Begin();
-            Quads.Render(Vector2.Zero, new Vector2(Framework.GraphicsDevice.Viewport.Width, TitleBarHeight), null, ContentWrapper.Grey * 0.7f * TransitionAlpha);
+            Quads.Render(Vector2.Zero, new Vector2(Framework.GraphicsDevice.Viewport.Width, TitleBarHeight), null, Colors.Grey * 0.7f * TransitionAlpha);
             Quads.End();
 
             // Make the menu slide into place during transitions, using a
