@@ -458,6 +458,22 @@ namespace Genbox.VelcroPhysics.Shared
             }
         }
 
+        public void FlipHorizontally()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                this[i] = new Vector2(-1 * this[i].X, this[i].Y);
+            }
+        }
+
+        public void FlipVertically()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                this[i] = new Vector2(this[i].X, -1 * this[i].Y);
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
