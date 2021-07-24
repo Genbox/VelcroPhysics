@@ -36,7 +36,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
     /// </summary>
     public class DynamicTreeBroadPhase : IBroadPhase
     {
-        private const int NullProxy = -1;
+        public const int NullProxy = -1;
         private int[] _moveBuffer;
         private int _moveCapacity;
         private int _moveCount;

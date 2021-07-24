@@ -59,24 +59,22 @@ namespace Genbox.VelcroPhysics.Dynamics
         private bool _stepComplete = true;
         private Pool<Stopwatch> _timerPool = new Pool<Stopwatch>(Stopwatch.StartNew, sw => sw.Restart(), 5, false);
         private List<Fixture> _testPointAllFixtures;
-        private readonly ContactManager _contactManager;
         private Profile _profile;
-        private readonly List<Controller> _controllerList;
-        private readonly List<BreakableBody> _breakableBodyList;
-        private readonly List<Body> _bodyList;
-        private readonly List<Joint> _jointList;
+        private List<Controller> _controllerList;
+        private List<BreakableBody> _breakableBodyList;
+        private List<Body> _bodyList;
+        private List<Joint> _jointList;
         private bool _enabled;
-        private bool _isLocked;
         private bool _warmStartingEnabled;
         private bool _enableDiagnostics;
         private bool _sleepingAllowed;
-
-        internal int _bodyIdCounter;
-        internal int _fixtureIdCounter;
-        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
-        internal bool _newContacts;
-        internal Island _island;
         private bool _continuousPhysicsEnabled;
+
+        internal ContactManager _contactManager;
+        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
+        internal Island _island;
+        internal bool _newContacts;
+        internal bool _isLocked;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -107,7 +105,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             _gravity = gravity;
             _enabled = true;
+            _sleepingAllowed = true;
             _warmStartingEnabled = true;
+            _continuousPhysicsEnabled = true;
 
             _island = new Island();
             _controllerList = new List<Controller>();
@@ -183,7 +183,11 @@ namespace Genbox.VelcroPhysics.Dynamics
             set => _enabled = value;
         }
 
-        public bool IsLocked => _isLocked;
+        public bool IsLocked
+        {
+            get => _isLocked;
+            set => _isLocked = value;
+        }
 
         /// <summary>Add a rigid body.</summary>
         /// <param name="body">The body.</param>
@@ -199,9 +203,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
             else
             {
-                Debug.Assert(!IsLocked);
+                Debug.Assert(!_isLocked);
 
-                if (IsLocked)
+                if (_isLocked)
                     return;
 
                 AddBodyInternal(body);
@@ -222,9 +226,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
             else
             {
-                Debug.Assert(!IsLocked);
+                Debug.Assert(!_isLocked);
 
-                if (IsLocked)
+                if (_isLocked)
                     return;
 
                 RemoveBodyInternal(body);
@@ -245,9 +249,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
             else
             {
-                Debug.Assert(!IsLocked);
+                Debug.Assert(!_isLocked);
 
-                if (IsLocked)
+                if (_isLocked)
                     return;
 
                 AddJointInternal(joint);
@@ -268,9 +272,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
             else
             {
-                Debug.Assert(!IsLocked);
+                Debug.Assert(!_isLocked);
 
-                if (IsLocked)
+                if (_isLocked)
                     return;
 
                 RemoveJointInternal(joint);
@@ -585,16 +589,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             ProcessChanges();
         }
 
-        internal int CreateFixture(Fixture fixture)
+        internal void RaiseNewFixtureEvent(Fixture fixture)
         {
-            // Let the world know we have a new fixture. This will cause new contacts
-            // to be created at the beginning of the next time step.
-            _newContacts = true;
-
-            //Velcro: Added event
             FixtureAdded?.Invoke(fixture);
-
-            return _fixtureIdCounter++;
         }
 
         private void ProcessRemovedJoints()
@@ -1281,6 +1278,8 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         private void AddBodyInternal(Body body)
         {
+            body._world = this;
+
             // Add to world list.
             _bodyList.Add(body);
 

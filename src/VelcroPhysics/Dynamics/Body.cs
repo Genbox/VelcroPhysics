@@ -56,7 +56,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Transform _xf; // the body origin transform
         internal int _islandIndex;
 
-        internal Body(BodyDef def, World world)
+        internal Body(BodyDef def)
         {
             FixtureList = new List<Fixture>(1);
 
@@ -70,8 +70,6 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _flags |= BodyFlags.AwakeFlag;
             if (def.Enabled)
                 _flags |= BodyFlags.Enabled;
-
-            _world = world;
 
             _xf.p = def.Position;
             _xf.q.Set(def.Angle);
@@ -113,9 +111,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         public OnSeparationHandler OnSeparation;
 
-        /// <summary>A unique id for this body.</summary>
-        public int BodyId { get; internal set; }
-
         public float SleepTime { get; set; }
 
         public int IslandIndex
@@ -145,8 +140,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             get => _type;
             set
             {
-                Debug.Assert(!_world.IsLocked);
-                if (_world.IsLocked)
+                Debug.Assert(!_world._isLocked);
+                if (_world._isLocked)
                     return;
 
                 if (_type == value)
@@ -311,7 +306,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             set
             {
-                Debug.Assert(!_world.IsLocked);
+                Debug.Assert(!_world._isLocked);
 
                 if (value == Enabled)
                     return;
@@ -619,18 +614,36 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// the mass of the body. Contacts are not created until the next time step. Warning: This function is locked during
         /// callbacks.
         /// </summary>
-        public Fixture AddFixture(FixtureDef template)
+        public Fixture AddFixture(FixtureDef def)
         {
-            Debug.Assert(!_world.IsLocked);
-            if (_world.IsLocked)
+            Debug.Assert(!_world._isLocked);
+            if (_world._isLocked)
                 return null;
 
-            Fixture f = new Fixture(this, template);
+            Fixture fixture = new Fixture(def);
 
-            //Velcro: Added this code to raise the FixtureAdded event and get an identifier
-            f.FixtureId = _world.CreateFixture(f);
+            if ((_flags & BodyFlags.Enabled) == BodyFlags.Enabled)
+            {
+                IBroadPhase broadPhase = _world._contactManager.BroadPhase;
+                fixture.CreateProxies(broadPhase, ref _xf);
+            }
 
-            return f;
+            FixtureList.Add(fixture);
+
+            fixture._body = this;
+
+            // Adjust mass properties if needed.
+            if (fixture._shape._density > 0.0f)
+            {
+                ResetMassData();
+            }
+
+            _world._newContacts = true;
+
+            //Velcro: Added this code to raise the FixtureAdded event
+            _world.RaiseNewFixtureEvent(fixture);
+
+            return fixture;
         }
 
         /// <summary>
@@ -640,8 +653,8 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         public Fixture AddFixture(Shape shape)
         {
-            Debug.Assert(!_world.IsLocked);
-            if (_world.IsLocked)
+            Debug.Assert(!_world._isLocked);
+            if (_world._isLocked)
                 return null;
 
             FixtureDef template = new FixtureDef();
@@ -659,8 +672,8 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="fixture">The fixture to be removed.</param>
         public void RemoveFixture(Fixture fixture)
         {
-            Debug.Assert(!_world.IsLocked);
-            if (_world.IsLocked)
+            Debug.Assert(!_world._isLocked);
+            if (_world._isLocked)
                 return;
 
             if (fixture == null)
@@ -724,8 +737,8 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="rotation">The world rotation in radians.</param>
         public void SetTransform(ref Vector2 position, float rotation)
         {
-            Debug.Assert(!_world.IsLocked);
-            if (_world.IsLocked)
+            Debug.Assert(!_world._isLocked);
+            if (_world._isLocked)
                 return;
 
             _xf.q.Set(rotation);

@@ -198,7 +198,9 @@ namespace Genbox.VelcroPhysics.Factories
 
         public static Body CreateFromDef(World world, BodyDef def)
         {
-            return new Body(def, world);
+            Body body = new Body(def);
+            world.AddBody(body);
+            return body;
         }
     }
 }

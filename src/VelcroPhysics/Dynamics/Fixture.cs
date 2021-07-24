@@ -38,6 +38,8 @@ namespace Genbox.VelcroPhysics.Dynamics
     /// via Body.CreateFixture. Warning: You cannot reuse fixtures.</summary>
     public class Fixture
     {
+        private object _userData;
+
         internal Category _collidesWith;
         internal Category _collisionCategories;
         internal short _collisionGroup;
@@ -45,7 +47,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal bool _isSensor;
         internal float _restitution;
         internal float _restitutionThreshold;
-
         internal Body _body;
         internal Shape _shape;
 
@@ -69,34 +70,36 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public FixtureProxy[] Proxies;
         public int ProxyCount;
-        private object _userData;
 
-        internal Fixture()
+        internal Fixture(FixtureDef def)
         {
-            _collisionCategories = Settings.DefaultFixtureCollisionCategories;
-            _collidesWith = Settings.DefaultFixtureCollidesWith;
-            _collisionGroup = Settings.DefaultCollisionGroup;
-            _restitutionThreshold = 1;
+            _userData = def.UserData;
+            _friction = def.Friction;
+            _restitution = def.Restitution;
+            _restitutionThreshold = def.RestitutionThreshold;
 
+            _collisionGroup = def.Filter.Group;
+            _collisionCategories = def.Filter.Category;
+            _collidesWith = def.Filter.CategoryMask;
+
+            //Velcro: we have support for ignoring CCD with certain groups
             IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
-        }
 
-        internal Fixture(Body body, FixtureDef template) : this()
-        {
-            _userData = template.UserData;
-            _friction = template.Friction;
-            _restitution = template.Restitution;
-            _restitutionThreshold = template.RestitutionThreshold;
+            _isSensor = def.IsSensor;
+            _shape = def.Shape.Clone();
 
-            _collisionGroup = template.Filter.Group;
-            _collisionCategories = template.Filter.Category;
-            _collidesWith = template.Filter.CategoryMask;
+            // Reserve proxy space
+            int childCount = Shape.ChildCount;
+            Proxies = new FixtureProxy[childCount];
+            for (int i = 0; i < childCount; ++i)
+            {
+                Proxies[i].Fixture = null;
+                Proxies[i].ProxyId = DynamicTreeBroadPhase.NullProxy;
+            }
+            ProxyCount = 0;
 
-            _body = body;
-            _isSensor = template.IsSensor;
-            _shape = template.Shape.Clone();
-
-            RegisterFixture();
+            //TODO:
+            //m_density = def->density;
         }
 
         /// <summary>Get or set the restitution threshold. This will _not_ change the restitution threshold of existing contacts.</summary>
@@ -212,10 +215,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>Gets a unique ID for this fixture.</summary>
-        /// <value>The fixture id.</value>
-        public int FixtureId { get; internal set; }
-
         /// <summary>Contacts are persistent and will keep being persistent unless they are flagged for filtering. This methods
         /// flags all contacts associated with the body for filtering.</summary>
         private void Refilter()
@@ -244,28 +243,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             {
                 broadPhase.TouchProxy(Proxies[i].ProxyId);
             }
-        }
-
-        private void RegisterFixture()
-        {
-            // Reserve proxy space
-            Proxies = new FixtureProxy[Shape.ChildCount];
-            ProxyCount = 0;
-
-            if (Body.Enabled)
-            {
-                IBroadPhase broadPhase = Body._world.ContactManager.BroadPhase;
-                CreateProxies(broadPhase, ref Body._xf);
-            }
-
-            Body.FixtureList.Add(this);
-
-            // Adjust mass properties if needed.
-            if (Shape._density > 0.0f)
-                Body.ResetMassData();
-
-            //Velcro: Moved this to World.CreateNewFixture()
-            //Body._world._worldHasNewFixture = true;
         }
 
         /// <summary>Test a point for containment in this fixture.</summary>
