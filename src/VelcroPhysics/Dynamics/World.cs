@@ -70,6 +70,11 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Island _island;
         private readonly ContactManager _contactManager;
         private Profile _profile;
+        private readonly List<Controller> _controllerList;
+        private readonly List<BreakableBody> _breakableBodyList;
+        private readonly List<Body> _bodyList;
+        private readonly List<Joint> _jointList;
+        private bool _enabled;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -98,18 +103,19 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary>Initializes a new instance of the <see cref="World" /> class.</summary>
         public World(Vector2 gravity)
         {
+            _gravity = gravity;
+            _enabled = true;
+
             _island = new Island();
-            Enabled = true;
-            ControllerList = new List<Controller>();
-            BreakableBodyList = new List<BreakableBody>();
-            BodyList = new List<Body>(32);
-            JointList = new List<Joint>(32);
+            _controllerList = new List<Controller>();
+            _breakableBodyList = new List<BreakableBody>();
+            _bodyList = new List<Body>(32);
+            _jointList = new List<Joint>(32);
 
             _queryAABBCallbackWrapper = QueryAABBCallbackWrapper;
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
             _contactManager = new ContactManager(new DynamicTreeBroadPhase());
-            _gravity = gravity;
         }
 
         /// <summary>Change the global gravity vector.</summary>
@@ -122,9 +128,9 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public ref Profile Profile => ref _profile;
 
-        public List<Controller> ControllerList { get; }
+        public List<Controller> ControllerList => _controllerList;
 
-        public List<BreakableBody> BreakableBodyList { get; }
+        public List<BreakableBody> BreakableBodyList => _breakableBodyList;
 
         /// <summary>Get the number of broad-phase proxies.</summary>
         /// <value>The proxy count.</value>
@@ -136,14 +142,18 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Get the world body list.</summary>
         /// <value>The head of the world body list.</value>
-        public List<Body> BodyList { get; }
+        public List<Body> BodyList => _bodyList;
 
         /// <summary>Get the world joint list.</summary>
         /// <value>The joint list.</value>
-        public List<Joint> JointList { get; }
+        public List<Joint> JointList => _jointList;
 
         /// <summary>If false, the whole simulation stops. It still processes added and removed geometries.</summary>
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get => _enabled;
+            set => _enabled = value;
+        }
 
         private void ProcessRemovedJoints()
         {
@@ -154,7 +164,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     bool collideConnected = joint.CollideConnected;
 
                     // Remove from the world list.
-                    JointList.Remove(joint);
+                    _jointList.Remove(joint);
 
                     // Disconnect from island graph.
                     Body bodyA = joint.BodyA;
@@ -228,7 +238,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 foreach (Joint joint in _jointAddList)
                 {
                     // Connect to the world list.
-                    JointList.Add(joint);
+                    _jointList.Add(joint);
 
                     // Connect to the bodies' doubly linked lists.
                     joint.EdgeA.Joint = joint;
@@ -291,7 +301,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 foreach (Body body in _bodyAddList)
                 {
                     // Add to world list.
-                    BodyList.Add(body);
+                    _bodyList.Add(body);
 
                     BodyAdded?.Invoke(body);
                 }
@@ -306,11 +316,11 @@ namespace Genbox.VelcroPhysics.Dynamics
             {
                 foreach (Body body in _bodyRemoveList)
                 {
-                    Debug.Assert(BodyList.Count > 0);
+                    Debug.Assert(_bodyList.Count > 0);
 
                     // You tried to remove a body that is not contained in the BodyList.
                     // Are you removing the body more than once?
-                    Debug.Assert(BodyList.Contains(body));
+                    Debug.Assert(_bodyList.Contains(body));
 
                     // Delete the attached joints.
                     JointEdge je = body.JointList;
@@ -329,7 +339,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     {
                         ContactEdge ce0 = ce;
                         ce = ce.Next;
-                        ContactManager.Destroy(ce0.Contact);
+                        _contactManager.Destroy(ce0.Contact);
                     }
                     body.ContactList = null;
 
@@ -337,7 +347,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     for (int i = 0; i < body.FixtureList.Count; i++)
                     {
                         Fixture fixture = body.FixtureList[i];
-                        fixture.DestroyProxies(ContactManager.BroadPhase);
+                        fixture.DestroyProxies(_contactManager.BroadPhase);
                         fixture.Destroy();
 
                         //Velcro: Added event
@@ -352,7 +362,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     body.OnSeparation = null;
 
                     // Remove world body list.
-                    BodyList.Remove(body);
+                    _bodyList.Remove(body);
 
                     BodyRemoved?.Invoke(body);
                 }
@@ -363,13 +373,13 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         private bool QueryAABBCallbackWrapper(int proxyId)
         {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetProxy(proxyId);
+            FixtureProxy proxy = _contactManager.BroadPhase.GetProxy(proxyId);
             return _queryAABBCallback(proxy.Fixture);
         }
 
         private float RayCastCallbackWrapper(RayCastInput rayCastInput, int proxyId)
         {
-            FixtureProxy proxy = ContactManager.BroadPhase.GetProxy(proxyId);
+            FixtureProxy proxy = _contactManager.BroadPhase.GetProxy(proxyId);
             Fixture fixture = proxy.Fixture;
             int index = proxy.ChildIndex;
             bool hit = fixture.RayCast(out RayCastOutput output, ref rayCastInput, index);
@@ -391,13 +401,13 @@ namespace Genbox.VelcroPhysics.Dynamics
             _profile.SolvePosition = 0;
 
             // Size the island for the worst case.
-            _island.Reset(BodyList.Count,
-                ContactManager._contactCount,
-                JointList.Count,
-                ContactManager);
+            _island.Reset(_bodyList.Count,
+                _contactManager._contactCount,
+                _jointList.Count,
+                _contactManager);
 
             // Clear all the island flags.
-            foreach (Body b in BodyList)
+            foreach (Body b in _bodyList)
             {
                 b._flags &= ~BodyFlags.IslandFlag;
             }
@@ -407,19 +417,19 @@ namespace Genbox.VelcroPhysics.Dynamics
                 c._flags &= ~ContactFlags.IslandFlag;
             }
 
-            foreach (Joint j in JointList)
+            foreach (Joint j in _jointList)
             {
                 j._islandFlag = false;
             }
 
             // Build and simulate all awake islands.
-            int stackSize = BodyList.Count;
+            int stackSize = _bodyList.Count;
             if (stackSize > _stack.Length)
                 _stack = new Body[Math.Max(_stack.Length * 2, stackSize)];
 
-            for (int index = BodyList.Count - 1; index >= 0; index--)
+            for (int index = _bodyList.Count - 1; index >= 0; index--)
             {
-                Body seed = BodyList[index];
+                Body seed = _bodyList[index];
                 if ((seed._flags & BodyFlags.IslandFlag) == BodyFlags.IslandFlag)
                     continue;
 
@@ -541,7 +551,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 Stopwatch timer = _timerPool.GetFromPool(true);
 
                 // Synchronize fixtures, check for out of range bodies.
-                foreach (Body b in BodyList)
+                foreach (Body b in _bodyList)
                 {
                     // If a body was not in an island then it did not move.
                     if ((b._flags & BodyFlags.IslandFlag) == 0)
@@ -555,7 +565,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 }
 
                 // Look for new contacts.
-                ContactManager.FindNewContacts();
+                _contactManager.FindNewContacts();
                 _profile.Broadphase = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
             }
@@ -567,10 +577,10 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             if (_stepComplete)
             {
-                for (int i = 0; i < BodyList.Count; i++)
+                for (int i = 0; i < _bodyList.Count; i++)
                 {
-                    BodyList[i]._flags &= ~BodyFlags.IslandFlag;
-                    BodyList[i]._sweep.Alpha0 = 0.0f;
+                    _bodyList[i]._flags &= ~BodyFlags.IslandFlag;
+                    _bodyList[i]._sweep.Alpha0 = 0.0f;
                 }
 
                 for (Contact c = _contactManager._contactList; c != null; c = c._next)
@@ -701,7 +711,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 bB0.Advance(minAlpha);
 
                 // The TOI contact likely has some new contact points.
-                minContact.Update(ContactManager);
+                minContact.Update(_contactManager);
                 minContact._flags &= ~ContactFlags.TOIFlag;
                 ++minContact._toiCount;
 
@@ -769,7 +779,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                                 other.Advance(minAlpha);
 
                             // Update the contact points
-                            contact.Update(ContactManager);
+                            contact.Update(_contactManager);
 
                             // Was the contact disabled by the user?
                             if (!contact.Enabled)
@@ -835,7 +845,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
                 // Commit fixture proxy movements to the broad-phase so that new contacts are created.
                 // Also, some contacts can be destroyed.
-                ContactManager.FindNewContacts();
+                _contactManager.FindNewContacts();
 
                 if (Settings.EnableSubStepping)
                 {
@@ -910,7 +920,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         public void Step(float dt)
         {
             //Velcro: We support disabling the world
-            if (!Enabled)
+            if (!_enabled)
                 return;
 
             //Velcro: We reuse the timers to avoid generating garbage
@@ -929,7 +939,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             {
                 //Velcro: We measure how much time is spent on finding new contacts
                 Stopwatch timer = _timerPool.GetFromPool(true);
-                ContactManager.FindNewContacts();
+                _contactManager.FindNewContacts();
                 _newContacts = false;
                 _profile.NewContactsTime = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -949,9 +959,9 @@ namespace Genbox.VelcroPhysics.Dynamics
             {
                 //Velcro: We have the concept of controllers. We update them here
                 Stopwatch timer = _timerPool.GetFromPool(true);
-                for (int i = 0; i < ControllerList.Count; i++)
+                for (int i = 0; i < _controllerList.Count; i++)
                 {
-                    ControllerList[i].Update(dt);
+                    _controllerList[i].Update(dt);
                 }
                 _profile.ControllersUpdateTime = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -960,7 +970,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             // Update contacts. This is where some contacts are destroyed.
             {
                 Stopwatch timer = _timerPool.GetFromPool(true);
-                ContactManager.Collide();
+                _contactManager.Collide();
                 _profile.Collide = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
             }
@@ -993,9 +1003,9 @@ namespace Genbox.VelcroPhysics.Dynamics
                 //Velcro: We support breakable bodies. We update them here.
                 Stopwatch timer = _timerPool.GetFromPool(true);
 
-                for (int i = 0; i < BreakableBodyList.Count; i++)
+                for (int i = 0; i < _breakableBodyList.Count; i++)
                 {
-                    BreakableBodyList[i].Update();
+                    _breakableBodyList[i].Update();
                 }
                 _profile.BreakableBodies = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
@@ -1012,9 +1022,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         public void ClearForces()
         {
-            for (int i = 0; i < BodyList.Count; i++)
+            for (int i = 0; i < _bodyList.Count; i++)
             {
-                Body body = BodyList[i];
+                Body body = _bodyList[i];
                 body._force = Vector2.Zero;
                 body._torque = 0.0f;
             }
@@ -1029,7 +1039,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
         {
             _queryAABBCallback = callback;
-            ContactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
+            _contactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
             _queryAABBCallback = null;
         }
 
@@ -1069,7 +1079,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             input.Point2 = point2;
 
             _rayCastCallback = callback;
-            ContactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
+            _contactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
             _rayCastCallback = null;
         }
 
@@ -1090,22 +1100,22 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public void AddController(Controller controller)
         {
-            Debug.Assert(!ControllerList.Contains(controller), "You are adding the same controller more than once.");
+            Debug.Assert(!_controllerList.Contains(controller), "You are adding the same controller more than once.");
 
             controller.World = this;
-            ControllerList.Add(controller);
+            _controllerList.Add(controller);
 
             ControllerAdded?.Invoke(controller);
         }
 
         public void RemoveController(Controller controller)
         {
-            Debug.Assert(ControllerList.Contains(controller),
+            Debug.Assert(_controllerList.Contains(controller),
                 "You are removing a controller that is not in the simulation.");
 
-            if (ControllerList.Contains(controller))
+            if (_controllerList.Contains(controller))
             {
-                ControllerList.Remove(controller);
+                _controllerList.Remove(controller);
 
                 ControllerRemoved?.Invoke(controller);
             }
@@ -1113,15 +1123,15 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         public void AddBreakableBody(BreakableBody breakableBody)
         {
-            BreakableBodyList.Add(breakableBody);
+            _breakableBodyList.Add(breakableBody);
         }
 
         public void RemoveBreakableBody(BreakableBody breakableBody)
         {
             //The breakable body list does not contain the body you tried to remove.
-            Debug.Assert(BreakableBodyList.Contains(breakableBody));
+            Debug.Assert(_breakableBodyList.Contains(breakableBody));
 
-            BreakableBodyList.Remove(breakableBody);
+            _breakableBodyList.Remove(breakableBody);
         }
 
         public Fixture TestPoint(Vector2 point)
@@ -1187,38 +1197,38 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         public void ShiftOrigin(Vector2 newOrigin)
         {
-            foreach (Body b in BodyList)
+            foreach (Body b in _bodyList)
             {
                 b._xf.p -= newOrigin;
                 b._sweep.C0 -= newOrigin;
                 b._sweep.C -= newOrigin;
             }
 
-            foreach (Joint joint in JointList)
+            foreach (Joint joint in _jointList)
             {
                 //joint.ShiftOrigin(newOrigin); //TODO: uncomment
             }
 
-            ContactManager.BroadPhase.ShiftOrigin(newOrigin);
+            _contactManager.BroadPhase.ShiftOrigin(newOrigin);
         }
 
         public void Clear()
         {
             ProcessChanges();
 
-            for (int i = BodyList.Count - 1; i >= 0; i--)
+            for (int i = _bodyList.Count - 1; i >= 0; i--)
             {
-                DestroyBody(BodyList[i]);
+                DestroyBody(_bodyList[i]);
             }
 
-            for (int i = ControllerList.Count - 1; i >= 0; i--)
+            for (int i = _controllerList.Count - 1; i >= 0; i--)
             {
-                RemoveController(ControllerList[i]);
+                RemoveController(_controllerList[i]);
             }
 
-            for (int i = BreakableBodyList.Count - 1; i >= 0; i--)
+            for (int i = _breakableBodyList.Count - 1; i >= 0; i--)
             {
-                RemoveBreakableBody(BreakableBodyList[i]);
+                RemoveBreakableBody(_breakableBodyList[i]);
             }
 
             ProcessChanges();
