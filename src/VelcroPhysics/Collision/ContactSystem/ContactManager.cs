@@ -80,7 +80,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             // TODO_ERIN use a hash table to remove a potential bottleneck when both
             // bodies have a lot of contacts.
             // Does a contact already exist?
-            ContactEdge edge = bodyB.ContactList;
+            ContactEdge edge = bodyB._contactList;
             while (edge != null)
             {
                 if (edge.Other == bodyA)
@@ -152,21 +152,21 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             c._nodeA.Other = bodyB;
 
             c._nodeA.Prev = null;
-            c._nodeA.Next = bodyA.ContactList;
-            if (bodyA.ContactList != null)
-                bodyA.ContactList.Prev = c._nodeA;
-            bodyA.ContactList = c._nodeA;
+            c._nodeA.Next = bodyA._contactList;
+            if (bodyA._contactList != null)
+                bodyA._contactList.Prev = c._nodeA;
+            bodyA._contactList = c._nodeA;
 
             // Connect to body B
             c._nodeB.Contact = c;
             c._nodeB.Other = bodyA;
 
             c._nodeB.Prev = null;
-            c._nodeB.Next = bodyB.ContactList;
-            if (bodyB.ContactList != null)
-                bodyB.ContactList.Prev = c._nodeB;
+            c._nodeB.Next = bodyB._contactList;
+            if (bodyB._contactList != null)
+                bodyB._contactList.Prev = c._nodeB;
 
-            bodyB.ContactList = c._nodeB;
+            bodyB._contactList = c._nodeB;
             ++_contactCount;
         }
 
@@ -216,8 +216,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             if (c._nodeA.Next != null)
                 c._nodeA.Next.Prev = c._nodeA.Prev;
 
-            if (c._nodeA == bodyA.ContactList)
-                bodyA.ContactList = c._nodeA.Next;
+            if (c._nodeA == bodyA._contactList)
+                bodyA._contactList = c._nodeA.Next;
 
             // Remove from body 2
             if (c._nodeB.Prev != null)
@@ -226,8 +226,8 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             if (c._nodeB.Next != null)
                 c._nodeB.Next.Prev = c._nodeB.Prev;
 
-            if (c._nodeB == bodyB.ContactList)
-                bodyB.ContactList = c._nodeB.Next;
+            if (c._nodeB == bodyB._contactList)
+                bodyB._contactList = c._nodeB.Next;
 
             // Call the factory.
             c.Destroy();

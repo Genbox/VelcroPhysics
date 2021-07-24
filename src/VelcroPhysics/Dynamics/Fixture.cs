@@ -39,6 +39,9 @@ namespace Genbox.VelcroPhysics.Dynamics
     public class Fixture
     {
         private object _userData;
+        private FixtureProxy[] _proxies;
+        private int _proxyCount;
+        private Category _ignoreCcdWith;
 
         internal Category _collidesWith;
         internal Category _collisionCategories;
@@ -57,8 +60,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// as shapes are approximated using AABBs.</summary>
         public BeforeCollisionHandler BeforeCollision;
 
-        public Category IgnoreCCDWith;
-
         /// <summary>Fires when two shapes collide and a contact is created between them. Note that the first fixture argument is
         /// always the fixture that the delegate is subscribed to.</summary>
         public OnCollisionHandler OnCollision;
@@ -68,8 +69,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// delegate is subscribed to.</summary>
         public OnSeparationHandler OnSeparation;
 
-        public FixtureProxy[] Proxies;
-        public int ProxyCount;
 
         internal Fixture(FixtureDef def)
         {
@@ -83,24 +82,34 @@ namespace Genbox.VelcroPhysics.Dynamics
             _collidesWith = def.Filter.CategoryMask;
 
             //Velcro: we have support for ignoring CCD with certain groups
-            IgnoreCCDWith = Settings.DefaultFixtureIgnoreCCDWith;
+            _ignoreCcdWith = Settings.DefaultFixtureIgnoreCCDWith;
 
             _isSensor = def.IsSensor;
             _shape = def.Shape.Clone();
 
             // Reserve proxy space
             int childCount = Shape.ChildCount;
-            Proxies = new FixtureProxy[childCount];
+            _proxies = new FixtureProxy[childCount];
             for (int i = 0; i < childCount; ++i)
             {
-                Proxies[i].Fixture = null;
-                Proxies[i].ProxyId = DynamicTreeBroadPhase.NullProxy;
+                _proxies[i].Fixture = null;
+                _proxies[i].ProxyId = DynamicTreeBroadPhase.NullProxy;
             }
-            ProxyCount = 0;
+            _proxyCount = 0;
 
             //TODO:
             //m_density = def->density;
         }
+
+        public Category IgnoreCcdWith
+        {
+            get => _ignoreCcdWith;
+            set => _ignoreCcdWith = value;
+        }
+
+        public FixtureProxy[] Proxies => _proxies;
+
+        public int ProxyCount => _proxyCount;
 
         /// <summary>Get or set the restitution threshold. This will _not_ change the restitution threshold of existing contacts.</summary>
         public float RestitutionThreshold
@@ -170,8 +179,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             get => _isSensor;
             set
             {
-                if (Body != null)
-                    Body.Awake = true;
+                if (_body != null)
+                    _body.Awake = true;
 
                 _isSensor = value;
             }
@@ -220,7 +229,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         private void Refilter()
         {
             // Flag associated contacts for filtering.
-            ContactEdge edge = Body.ContactList;
+            ContactEdge edge = _body._contactList;
             while (edge != null)
             {
                 Contact contact = edge.Contact;
@@ -232,16 +241,16 @@ namespace Genbox.VelcroPhysics.Dynamics
                 edge = edge.Next;
             }
 
-            World world = Body._world;
+            World world = _body._world;
 
             if (world == null)
                 return;
 
             // Touch each proxy so that new pairs may be created
-            IBroadPhase broadPhase = world.ContactManager.BroadPhase;
-            for (int i = 0; i < ProxyCount; ++i)
+            IBroadPhase broadPhase = world._contactManager.BroadPhase;
+            for (int i = 0; i < _proxyCount; ++i)
             {
-                broadPhase.TouchProxy(Proxies[i].ProxyId);
+                broadPhase.TouchProxy(_proxies[i].ProxyId);
             }
         }
 
@@ -249,7 +258,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="point">A point in world coordinates.</param>
         public bool TestPoint(ref Vector2 point)
         {
-            return Shape.TestPoint(ref Body._xf, ref point);
+            return Shape.TestPoint(ref _body._xf, ref point);
         }
 
         /// <summary>Cast a ray against this Shape.</summary>
@@ -258,7 +267,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="childIndex">Index of the child.</param>
         public bool RayCast(out RayCastOutput output, ref RayCastInput input, int childIndex)
         {
-            return Shape.RayCast(ref input, ref Body._xf, childIndex, out output);
+            return Shape.RayCast(ref input, ref _body._xf, childIndex, out output);
         }
 
         /// <summary>Get the fixture's AABB. This AABB may be enlarge and/or stale. If you need a more accurate AABB, compute it
@@ -267,21 +276,21 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="childIndex">Index of the child.</param>
         public void GetAABB(out AABB aabb, int childIndex)
         {
-            Debug.Assert(0 <= childIndex && childIndex < ProxyCount);
-            aabb = Proxies[childIndex].AABB;
+            Debug.Assert(0 <= childIndex && childIndex < _proxyCount);
+            aabb = _proxies[childIndex].AABB;
         }
 
         internal void Destroy()
         {
             // The proxies must be destroyed before calling this.
-            Debug.Assert(ProxyCount == 0);
+            Debug.Assert(_proxyCount == 0);
 
             // Free the proxy array.
-            Proxies = null;
+            _proxies = null;
             _shape = null;
 
             //Velcro: We set the userdata to null here to help prevent bugs related to stale references in GC
-            UserData = null;
+            _userData = null;
 
             BeforeCollision = null;
             OnCollision = null;
@@ -292,45 +301,46 @@ namespace Genbox.VelcroPhysics.Dynamics
         // These support body activation/deactivation.
         internal void CreateProxies(IBroadPhase broadPhase, ref Transform xf)
         {
-            Debug.Assert(ProxyCount == 0);
+            Debug.Assert(_proxyCount == 0);
 
             // Create proxies in the broad-phase.
-            ProxyCount = Shape.ChildCount;
+            _proxyCount = _shape.ChildCount;
 
-            for (int i = 0; i < ProxyCount; ++i)
+            for (int i = 0; i < _proxyCount; ++i)
             {
                 FixtureProxy proxy = new FixtureProxy();
-                Shape.ComputeAABB(ref xf, i, out proxy.AABB);
+                _shape.ComputeAABB(ref xf, i, out proxy.AABB);
                 proxy.Fixture = this;
                 proxy.ChildIndex = i;
 
                 //Velcro note: This line needs to be after the previous two because FixtureProxy is a struct
                 proxy.ProxyId = broadPhase.AddProxy(ref proxy);
 
-                Proxies[i] = proxy;
+                _proxies[i] = proxy;
             }
         }
 
         internal void DestroyProxies(IBroadPhase broadPhase)
         {
             // Destroy proxies in the broad-phase.
-            for (int i = 0; i < ProxyCount; ++i)
+            for (int i = 0; i < _proxyCount; ++i)
             {
-                broadPhase.RemoveProxy(Proxies[i].ProxyId);
-                Proxies[i].ProxyId = -1;
+                FixtureProxy proxy = _proxies[i];
+                broadPhase.RemoveProxy(proxy.ProxyId);
+                proxy.ProxyId = DynamicTreeBroadPhase.NullProxy;
             }
 
-            ProxyCount = 0;
+            _proxyCount = 0;
         }
 
         internal void Synchronize(IBroadPhase broadPhase, ref Transform transform1, ref Transform transform2)
         {
-            if (ProxyCount == 0)
+            if (_proxyCount == 0)
                 return;
 
-            for (int i = 0; i < ProxyCount; ++i)
+            for (int i = 0; i < _proxyCount; ++i)
             {
-                FixtureProxy proxy = Proxies[i];
+                FixtureProxy proxy = _proxies[i];
 
                 // Compute an AABB that covers the swept Shape (may miss some rotation effect).
                 Shape.ComputeAABB(ref transform1, proxy.ChildIndex, out AABB aabb1);

@@ -739,7 +739,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     b._flags |= BodyFlags.AwakeFlag;
 
                     // Search all contacts connected to this body.
-                    for (ContactEdge ce = b.ContactList; ce != null; ce = ce.Next)
+                    for (ContactEdge ce = b._contactList; ce != null; ce = ce.Next)
                     {
                         Contact contact = ce.Contact;
 
@@ -772,7 +772,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
 
                     // Search all joints connect to this body.
-                    for (JointEdge je = b.JointList; je != null; je = je.Next)
+                    for (JointEdge je = b._jointList; je != null; je = je.Next)
                     {
                         if (je.Joint._islandFlag)
                             continue;
@@ -913,8 +913,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                         if (!activeA && !activeB)
                             continue;
 
-                        bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && (fA.IgnoreCCDWith & fB.CollisionCategories) == 0 && !bA.IgnoreCCD;
-                        bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && (fB.IgnoreCCDWith & fA.CollisionCategories) == 0 && !bB.IgnoreCCD;
+                        bool collideA = (bA.IsBullet || typeA != BodyType.Dynamic) && (fA.IgnoreCcdWith & fB.CollisionCategories) == 0 && !bA.IgnoreCCD;
+                        bool collideB = (bB.IsBullet || typeB != BodyType.Dynamic) && (fB.IgnoreCcdWith & fA.CollisionCategories) == 0 && !bB.IgnoreCCD;
 
                         // Are these two non-bullet dynamic bodies?
                         if (!collideA && !collideB)
@@ -1022,7 +1022,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     Body body = bodies[i];
                     if (body.BodyType == BodyType.Dynamic)
                     {
-                        for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
+                        for (ContactEdge ce = body._contactList; ce != null; ce = ce.Next)
                         {
                             Contact contact = ce.Contact;
 
@@ -1112,7 +1112,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     body.SynchronizeFixtures();
 
                     // Invalidate all contact TOIs on this displaced body.
-                    for (ContactEdge ce = body.ContactList; ce != null; ce = ce.Next)
+                    for (ContactEdge ce = body._contactList; ce != null; ce = ce.Next)
                     {
                         ce.Contact._flags &= ~(ContactFlags.TOIFlag | ContactFlags.IslandFlag);
                     }
@@ -1162,12 +1162,12 @@ namespace Genbox.VelcroPhysics.Dynamics
             joint._edgeA.Joint = joint;
             joint._edgeA.Other = joint.BodyB;
             joint._edgeA.Prev = null;
-            joint._edgeA.Next = joint.BodyA.JointList;
+            joint._edgeA.Next = joint.BodyA._jointList;
 
-            if (joint.BodyA.JointList != null)
-                joint.BodyA.JointList.Prev = joint._edgeA;
+            if (joint.BodyA._jointList != null)
+                joint.BodyA._jointList.Prev = joint._edgeA;
 
-            joint.BodyA.JointList = joint._edgeA;
+            joint.BodyA._jointList = joint._edgeA;
 
             // WIP David
             if (!joint.IsFixedType())
@@ -1175,12 +1175,12 @@ namespace Genbox.VelcroPhysics.Dynamics
                 joint._edgeB.Joint = joint;
                 joint._edgeB.Other = joint.BodyA;
                 joint._edgeB.Prev = null;
-                joint._edgeB.Next = joint.BodyB.JointList;
+                joint._edgeB.Next = joint.BodyB._jointList;
 
-                if (joint.BodyB.JointList != null)
-                    joint.BodyB.JointList.Prev = joint._edgeB;
+                if (joint.BodyB._jointList != null)
+                    joint.BodyB._jointList.Prev = joint._edgeB;
 
-                joint.BodyB.JointList = joint._edgeB;
+                joint.BodyB._jointList = joint._edgeB;
 
                 Body bodyA = joint.BodyA;
                 Body bodyB = joint.BodyB;
@@ -1188,7 +1188,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 // If the joint prevents collisions, then flag any contacts for filtering.
                 if (!joint.CollideConnected)
                 {
-                    ContactEdge edge = bodyB.ContactList;
+                    ContactEdge edge = bodyB._contactList;
                     while (edge != null)
                     {
                         if (edge.Other == bodyA)
@@ -1233,8 +1233,8 @@ namespace Genbox.VelcroPhysics.Dynamics
             if (joint._edgeA.Next != null)
                 joint._edgeA.Next.Prev = joint._edgeA.Prev;
 
-            if (joint._edgeA == bodyA.JointList)
-                bodyA.JointList = joint._edgeA.Next;
+            if (joint._edgeA == bodyA._jointList)
+                bodyA._jointList = joint._edgeA.Next;
 
             joint._edgeA.Prev = null;
             joint._edgeA.Next = null;
@@ -1249,8 +1249,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 if (joint._edgeB.Next != null)
                     joint._edgeB.Next.Prev = joint._edgeB.Prev;
 
-                if (joint._edgeB == bodyB.JointList)
-                    bodyB.JointList = joint._edgeB.Next;
+                if (joint._edgeB == bodyB._jointList)
+                    bodyB._jointList = joint._edgeB.Next;
 
                 joint._edgeB.Prev = null;
                 joint._edgeB.Next = null;
@@ -1258,7 +1258,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 // If the joint prevents collisions, then flag any contacts for filtering.
                 if (!collideConnected)
                 {
-                    ContactEdge edge = bodyB.ContactList;
+                    ContactEdge edge = bodyB._contactList;
                     while (edge != null)
                     {
                         if (edge.Other == bodyA)
@@ -1288,8 +1288,8 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             //Velcro: We have events to notify fixtures was added
             if (FixtureAdded != null)
-                for (int i = 0; i < body.FixtureList.Count; i++)
-                    FixtureAdded(body.FixtureList[i]);
+                for (int i = 0; i < body._fixtureList.Count; i++)
+                    FixtureAdded(body._fixtureList[i]);
         }
 
         private void RemoveBodyInternal(Body body)
@@ -1300,7 +1300,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             Debug.Assert(_bodyList.Contains(body));
 
             // Delete the attached joints.
-            JointEdge je = body.JointList;
+            JointEdge je = body._jointList;
             while (je != null)
             {
                 JointEdge je0 = je;
@@ -1308,22 +1308,22 @@ namespace Genbox.VelcroPhysics.Dynamics
 
                 RemoveJointInternal(je0.Joint);
             }
-            body.JointList = null;
+            body._jointList = null;
 
             // Delete the attached contacts.
-            ContactEdge ce = body.ContactList;
+            ContactEdge ce = body._contactList;
             while (ce != null)
             {
                 ContactEdge ce0 = ce;
                 ce = ce.Next;
                 _contactManager.Remove(ce0.Contact);
             }
-            body.ContactList = null;
+            body._contactList = null;
 
             // Delete the attached fixtures. This destroys broad-phase proxies.
-            for (int i = 0; i < body.FixtureList.Count; i++)
+            for (int i = 0; i < body._fixtureList.Count; i++)
             {
-                Fixture fixture = body.FixtureList[i];
+                Fixture fixture = body._fixtureList[i];
 
                 //Velcro: Added event
                 FixtureRemoved?.Invoke(fixture);
@@ -1332,7 +1332,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 fixture.Destroy();
             }
 
-            body.FixtureList = null;
+            body._fixtureList = null;
 
             //Velcro: We make sure to cleanup the references and delegates
             body._world = null;
