@@ -137,210 +137,6 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             manifold.Points.Value0.LocalPoint = circleB.Position;
         }
 
-        public static void b2CollideEdgeAndCircle(Manifold manifold, EdgeShape edgeA, Transform xfA, CircleShape circleB, Transform xfB)
-        {
-            manifold.PointCount = 0;
-
-            // Compute circle in frame of edge
-            Vector2 Q = MathUtils.MulT(xfA, MathUtils.Mul(ref xfB, circleB._position));
-
-            Vector2 A = edgeA._vertex1, B = edgeA._vertex2;
-            Vector2 e = B - A;
-
-            // Normal points to the right for a CCW winding
-            Vector2 n = new Vector2(e.Y, -e.X);
-            float offset = MathUtils.Dot(n, Q - A);
-
-            bool oneSided = edgeA._oneSided;
-            if (oneSided && offset < 0.0f)
-            {
-                return;
-            }
-
-            // Barycentric coordinates
-            float u = MathUtils.Dot(e, B - Q);
-            float v = MathUtils.Dot(e, Q - A);
-
-            float radius = edgeA._radius + circleB._radius;
-
-            ContactFeature cf;
-            cf.IndexB = 0;
-            cf.TypeB = ContactFeatureType.Vertex;
-
-            {
-                // Region A
-                if (v <= 0.0f)
-                {
-                    Vector2 P = A;
-                    Vector2 d = Q - P;
-                    float dd = MathUtils.Dot(d, d);
-                    if (dd > radius * radius)
-                    {
-                        return;
-                    }
-
-                    // Is there an edge connected to A?
-                    if (edgeA._oneSided)
-                    {
-                        Vector2 A1 = edgeA._vertex0;
-                        Vector2 B1 = A;
-                        Vector2 e1 = B1 - A1;
-                        float u1 = MathUtils.Dot(e1, B1 - Q);
-
-                        // Is the circle in Region AB of the previous edge?
-                        if (u1 > 0.0f)
-                        {
-                            return;
-                        }
-                    }
-
-                    cf.IndexA = 0;
-                    cf.TypeA = ContactFeatureType.Vertex;
-                    manifold.PointCount = 1;
-                    manifold.Type = ManifoldType.Circles;
-                    manifold.LocalNormal = Vector2.Zero;
-                    manifold.LocalPoint = P;
-                    manifold.Points.Value0.Id.Key = 0;
-                    manifold.Points.Value0.Id.ContactFeature = cf;
-                    manifold.Points.Value0.LocalPoint = circleB._position;
-                    return;
-                }
-            }
-
-            {
-                // Region B
-                if (u <= 0.0f)
-                {
-                    Vector2 P = B;
-                    Vector2 d = Q - P;
-                    float dd = MathUtils.Dot(d, d);
-                    if (dd > radius * radius)
-                    {
-                        return;
-                    }
-
-                    // Is there an edge connected to B?
-                    if (edgeA._oneSided)
-                    {
-                        Vector2 B2 = edgeA._vertex3;
-                        Vector2 A2 = B;
-                        Vector2 e2 = B2 - A2;
-                        float v2 = MathUtils.Dot(e2, Q - A2);
-
-                        // Is the circle in Region AB of the next edge?
-                        if (v2 > 0.0f)
-                        {
-                            return;
-                        }
-                    }
-
-                    cf.IndexA = 1;
-                    cf.TypeA = ContactFeatureType.Vertex;
-                    manifold.PointCount = 1;
-                    manifold.Type = ManifoldType.Circles;
-                    manifold.LocalNormal = Vector2.Zero;
-                    manifold.LocalPoint = P;
-                    manifold.Points.Value0.Id.Key = 0;
-                    manifold.Points.Value0.Id.ContactFeature = cf;
-                    manifold.Points.Value0.LocalPoint = circleB._position;
-                    return;
-                }
-            }
-
-            {
-                // Region AB
-                float den = MathUtils.Dot(e, e);
-                Debug.Assert(den > 0.0f);
-                Vector2 P = (1.0f / den) * (u * A + v * B);
-                Vector2 d = Q - P;
-                float dd = MathUtils.Dot(d, d);
-                if (dd > radius * radius)
-                {
-                    return;
-                }
-
-                if (offset < 0.0f)
-                {
-                    n = new Vector2(-n.X, -n.Y);
-                }
-                n.Normalize();
-
-                cf.IndexA = 0;
-                cf.TypeA = ContactFeatureType.Face;
-                manifold.PointCount = 1;
-                manifold.Type = ManifoldType.FaceA;
-                manifold.LocalNormal = n;
-                manifold.LocalPoint = A;
-                manifold.Points.Value0.Id.Key = 0;
-                manifold.Points.Value0.Id.ContactFeature = cf;
-                manifold.Points.Value0.LocalPoint = circleB._position;
-            }
-        }
-
-        public static EPAxis ComputeEdgeSeparation(TempPolygon polygonB, Vector2 v1, Vector2 normal1)
-        {
-            EPAxis axis;
-            axis.Type = EPAxisType.EdgeA;
-            axis.Index = -1;
-            axis.Separation = -MathConstants.MaxFloat;
-            axis.Normal = Vector2.Zero;
-
-            Vector2[] axes = { normal1, -normal1 };
-
-            // Find axis with least overlap (min-max problem)
-            for (int j = 0; j < 2; ++j)
-            {
-                float sj = MathConstants.MaxFloat;
-
-                // Find deepest polygon vertex along axis j
-                for (int i = 0; i < polygonB.Count; ++i)
-                {
-                    float si = MathUtils.Dot(axes[j], polygonB.Vertices[i] - v1);
-                    if (si < sj)
-                    {
-                        sj = si;
-                    }
-                }
-
-                if (sj > axis.Separation)
-                {
-                    axis.Index = j;
-                    axis.Separation = sj;
-                    axis.Normal = axes[j];
-                }
-            }
-
-            return axis;
-        }
-
-        public static EPAxis ComputePolygonSeparation(TempPolygon polygonB, Vector2 v1, Vector2 v2)
-        {
-            EPAxis axis;
-            axis.Type = EPAxisType.Unknown;
-            axis.Index = -1;
-            axis.Separation = -MathConstants.MaxFloat;
-            axis.Normal = Vector2.Zero;
-
-            for (int i = 0; i < polygonB.Count; ++i)
-            {
-                Vector2 n = -polygonB.Normals[i];
-
-                float s1 = MathUtils.Dot(n, polygonB.Vertices[i] - v1);
-                float s2 = MathUtils.Dot(n, polygonB.Vertices[i] - v2);
-                float s = MathUtils.Min(s1, s2);
-
-                if (s > axis.Separation)
-                {
-                    axis.Type = EPAxisType.EdgeB;
-                    axis.Index = i;
-                    axis.Separation = s;
-                    axis.Normal = n;
-                }
-            }
-
-            return axis;
-        }
-
         public static void CollideEdgeAndPolygon(ref Manifold manifold, EdgeShape edgeA, ref Transform xfA, PolygonShape polygonB, ref Transform xfB)
         {
             manifold.PointCount = 0;
@@ -366,8 +162,7 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
             }
 
             // Get polygonB in frameA
-            TempPolygon tempPolygonB = new TempPolygon();
-            tempPolygonB.Count = polygonB._vertices.Count;
+            TempPolygon tempPolygonB = new TempPolygon(polygonB._vertices.Count);
             for (int i = 0; i < polygonB._vertices.Count; ++i)
             {
                 tempPolygonB.Vertices[i] = MathUtils.Mul(ref xf, polygonB._vertices[i]);
@@ -376,13 +171,13 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             float radius = polygonB._radius + edgeA._radius;
 
-            EPAxis edgeAxis = ComputeEdgeSeparation(tempPolygonB, v1, normal1);
+            EPAxis edgeAxis = ComputeEdgeSeparation(ref tempPolygonB, v1, normal1);
             if (edgeAxis.Separation > radius)
             {
                 return;
             }
 
-            EPAxis polygonAxis = ComputePolygonSeparation(tempPolygonB, v1, v2);
+            EPAxis polygonAxis = ComputePolygonSeparation(ref tempPolygonB, v1, v2);
             if (polygonAxis.Separation > radius)
             {
                 return;
@@ -594,12 +389,83 @@ namespace Genbox.VelcroPhysics.Collision.Narrowphase
 
             manifold.PointCount = pointCount;
         }
-    }
 
-    public class TempPolygon
-    {
-        public Vector2[] Vertices = new Vector2[Settings.MaxPolygonVertices];
-        public Vector2[] Normals = new Vector2[Settings.MaxPolygonVertices];
-        public int Count;
-    };
+        private static EPAxis ComputeEdgeSeparation(ref TempPolygon polygonB, Vector2 v1, Vector2 normal1)
+        {
+            EPAxis axis;
+            axis.Type = EPAxisType.EdgeA;
+            axis.Index = -1;
+            axis.Separation = -MathConstants.MaxFloat;
+            axis.Normal = Vector2.Zero;
+
+            Vector2[] axes = { normal1, -normal1 };
+
+            // Find axis with least overlap (min-max problem)
+            for (int j = 0; j < 2; ++j)
+            {
+                float sj = MathConstants.MaxFloat;
+
+                // Find deepest polygon vertex along axis j
+                for (int i = 0; i < polygonB.Count; ++i)
+                {
+                    float si = MathUtils.Dot(axes[j], polygonB.Vertices[i] - v1);
+                    if (si < sj)
+                    {
+                        sj = si;
+                    }
+                }
+
+                if (sj > axis.Separation)
+                {
+                    axis.Index = j;
+                    axis.Separation = sj;
+                    axis.Normal = axes[j];
+                }
+            }
+
+            return axis;
+        }
+
+        private static EPAxis ComputePolygonSeparation(ref TempPolygon polygonB, Vector2 v1, Vector2 v2)
+        {
+            EPAxis axis;
+            axis.Type = EPAxisType.Unknown;
+            axis.Index = -1;
+            axis.Separation = -MathConstants.MaxFloat;
+            axis.Normal = Vector2.Zero;
+
+            for (int i = 0; i < polygonB.Count; ++i)
+            {
+                Vector2 n = -polygonB.Normals[i];
+
+                float s1 = MathUtils.Dot(n, polygonB.Vertices[i] - v1);
+                float s2 = MathUtils.Dot(n, polygonB.Vertices[i] - v2);
+                float s = MathUtils.Min(s1, s2);
+
+                if (s > axis.Separation)
+                {
+                    axis.Type = EPAxisType.EdgeB;
+                    axis.Index = i;
+                    axis.Separation = s;
+                    axis.Normal = n;
+                }
+            }
+
+            return axis;
+        }
+
+        private struct TempPolygon
+        {
+            public TempPolygon(int count)
+            {
+                Count = count;
+                Vertices = new Vector2[count];
+                Normals = new Vector2[count];
+            }
+
+            public Vector2[] Vertices;
+            public Vector2[] Normals;
+            public int Count;
+        }
+    }
 }
