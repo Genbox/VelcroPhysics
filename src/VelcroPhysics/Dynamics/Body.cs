@@ -710,12 +710,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetTransform(ref Vector2 position, float rotation)
+        public void SetTransform(Vector2 position, float rotation)
         {
-            SetTransformIgnoreContacts(ref position, rotation);
-
-            //Velcro: We check for new contacts after a body has been moved.
-            _world.ContactManager.FindNewContacts();
+            SetTransform(ref position, rotation);
         }
 
         /// <summary>
@@ -724,31 +721,29 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         /// <param name="position">The world position of the body's local origin.</param>
         /// <param name="rotation">The world rotation in radians.</param>
-        public void SetTransform(Vector2 position, float rotation)
+        public void SetTransform(ref Vector2 position, float rotation)
         {
             Debug.Assert(!_world.IsLocked);
             if (_world.IsLocked)
                 return;
 
-        /// <summary>For teleporting a body without considering new contacts immediately.</summary>
-        /// <param name="position">The position.</param>
-        /// <param name="angle">The angle.</param>
-        public void SetTransformIgnoreContacts(ref Vector2 position, float angle)
-        {
-            _xf.q.Set(angle);
+            _xf.q.Set(rotation);
             _xf.p = position;
 
             _sweep.C = MathUtils.Mul(ref _xf, _sweep.LocalCenter);
-            _sweep.A = angle;
+            _sweep.A = rotation;
 
             _sweep.C0 = _sweep.C;
-            _sweep.A0 = angle;
+            _sweep.A0 = rotation;
 
             IBroadPhase broadPhase = _world.ContactManager.BroadPhase;
             for (int i = 0; i < FixtureList.Count; i++)
             {
                 FixtureList[i].Synchronize(broadPhase, ref _xf, ref _xf);
             }
+
+            // Check for new contacts the next step
+            _world._newContacts = true;
         }
 
         /// <summary>Get the body transform for the body's origin.</summary>
