@@ -27,6 +27,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Utilities;
@@ -45,11 +46,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -60,20 +61,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
 
                 bd.Position = new Vector2(-5.0f, 5.0f);
-                _bodies[0] = World.CreateBody(bd);
-                _bodies[0].CreateFixture(shape);
+                _bodies[0] = BodyFactory.CreateFromDef(World, bd);
+                _bodies[0].AddFixture(shape);
 
                 bd.Position = new Vector2(5.0f, 5.0f);
-                _bodies[1] = World.CreateBody(bd);
-                _bodies[1].CreateFixture(shape);
+                _bodies[1] = BodyFactory.CreateFromDef(World, bd);
+                _bodies[1].AddFixture(shape);
 
                 bd.Position = new Vector2(5.0f, 15.0f);
-                _bodies[2] = World.CreateBody(bd);
-                _bodies[2].CreateFixture(shape);
+                _bodies[2] = BodyFactory.CreateFromDef(World, bd);
+                _bodies[2].AddFixture(shape);
 
                 bd.Position = new Vector2(-5.0f, 15.0f);
-                _bodies[3] = World.CreateBody(bd);
-                _bodies[3].CreateFixture(shape);
+                _bodies[3] = BodyFactory.CreateFromDef(World, bd);
+                _bodies[3].AddFixture(shape);
 
                 DistanceJointDef jd = new DistanceJointDef();
                 Vector2 p1, p2, d;
@@ -92,7 +93,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[0] = World.CreateJoint(jd);
+                _joints[0] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = ground;
                 jd.BodyB = _bodies[1];
@@ -105,7 +106,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[1] = World.CreateJoint(jd);
+                _joints[1] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = ground;
                 jd.BodyB = _bodies[2];
@@ -118,7 +119,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[2] = World.CreateJoint(jd);
+                _joints[2] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = ground;
                 jd.BodyB = _bodies[3];
@@ -131,7 +132,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[3] = World.CreateJoint(jd);
+                _joints[3] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = _bodies[0];
                 jd.BodyB = _bodies[1];
@@ -145,7 +146,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[4] = World.CreateJoint(jd);
+                _joints[4] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = _bodies[1];
                 jd.BodyB = _bodies[2];
@@ -158,7 +159,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[5] = World.CreateJoint(jd);
+                _joints[5] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = _bodies[2];
                 jd.BodyB = _bodies[3];
@@ -171,7 +172,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[6] = World.CreateJoint(jd);
+                _joints[6] = JointFactory.CreateFromDef(World, jd);
 
                 jd.BodyA = _bodies[3];
                 jd.BodyB = _bodies[0];
@@ -184,7 +185,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                _joints[7] = World.CreateJoint(jd);
+                _joints[7] = JointFactory.CreateFromDef(World, jd);
             }
         }
 
@@ -195,7 +196,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 for (int i = 0; i < 4; ++i)
                     if (_bodies[i] != null)
                     {
-                        World.DestroyBody(_bodies[i]);
+                        World.RemoveBody(_bodies[i]);
                         _bodies[i] = null;
                         break;
                     }

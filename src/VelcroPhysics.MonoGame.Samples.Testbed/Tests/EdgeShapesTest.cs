@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -64,7 +65,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // Ground body
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 float x1 = -20.0f;
                 float y1 = 2.0f * MathUtils.Cosf(x1 / 10.0f * MathConstants.Pi);
@@ -75,7 +76,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                     EdgeShape shape = new EdgeShape();
                     shape.SetTwoSided(new Vector2(x1, y1), new Vector2(x2, y2));
-                    ground.CreateFixture(shape);
+                    ground.AddFixture(shape);
 
                     x1 = x2;
                     y1 = y2;
@@ -134,7 +135,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             if (_bodies[_bodyIndex] != null)
             {
-                World.DestroyBody(_bodies[_bodyIndex]);
+                World.RemoveBody(_bodies[_bodyIndex]);
                 _bodies[_bodyIndex] = null;
             }
 
@@ -149,21 +150,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             if (index == 4)
                 bd.AngularDamping = 0.02f;
 
-            _bodies[_bodyIndex] = World.CreateBody(bd);
+            _bodies[_bodyIndex] = BodyFactory.CreateFromDef(World, bd);
 
             if (index < 4)
             {
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = _polygons[index];
                 fd.Friction = 0.3f;
-                _bodies[_bodyIndex].CreateFixture(fd);
+                _bodies[_bodyIndex].AddFixture(fd);
             }
             else
             {
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = _circle;
                 fd.Friction = 0.3f;
-                _bodies[_bodyIndex].CreateFixture(fd);
+                _bodies[_bodyIndex].AddFixture(fd);
             }
 
             _bodyIndex = (_bodyIndex + 1) % _maxBodies;
@@ -174,7 +175,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             for (int i = 0; i < _maxBodies; ++i)
                 if (_bodies[i] != null)
                 {
-                    World.DestroyBody(_bodies[i]);
+                    World.RemoveBody(_bodies[i]);
                     _bodies[i] = null;
                     return;
                 }

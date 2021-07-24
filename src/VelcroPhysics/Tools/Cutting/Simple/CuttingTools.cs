@@ -196,7 +196,7 @@ namespace Genbox.VelcroPhysics.Tools.Cutting.Simple
                         secondFixture.BodyType = BodyType.Dynamic;
                     }
 
-                    world.DestroyBody(fixtures[i].Body);
+                    world.RemoveBody(fixtures[i].Body);
                 }
             }
 

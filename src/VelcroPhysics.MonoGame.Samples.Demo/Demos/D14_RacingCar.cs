@@ -114,7 +114,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 box.Vertices = PolygonUtils.CreateRectangle(10.0f, 0.25f);
                 _teeter = new Sprite(Managers.TextureManager.TextureFromShape(box, "Stripe", Colors.Gold, Colors.Black, Colors.Black, 1f));
 
-                _board.CreateFixture(box);
+                _board.AddFixture(box);
 
                 RevoluteJoint teeterAxis = JointFactory.CreateRevoluteJoint(World, _ground, _board, Vector2.Zero);
                 teeterAxis.LowerLimit = -8.0f * MathConstants.Pi / 180.0f;
@@ -140,7 +140,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(161f + 2f * i, 0.125f);
-                    Fixture fix = body.CreateFixture(shape);
+                    Fixture fix = body.AddFixture(shape);
                     fix.Friction = 0.6f;
                     JointFactory.CreateRevoluteJoint(World, prevBody, body, -Vector2.UnitX);
 
@@ -161,19 +161,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 Body body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -0.5f);
-                body.CreateFixture(box);
+                body.AddFixture(box);
                 _boxes.Add(body);
 
                 body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -1.5f);
-                body.CreateFixture(box);
+                body.AddFixture(box);
                 _boxes.Add(body);
 
                 body = BodyFactory.CreateBody(World);
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(220f, -2.5f);
-                body.CreateFixture(box);
+                body.AddFixture(box);
                 _boxes.Add(body);
             }
 
@@ -194,18 +194,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 _car = BodyFactory.CreateBody(World);
                 _car.BodyType = BodyType.Dynamic;
                 _car.Position = new Vector2(0.0f, -1.0f);
-                _car.CreateFixture(chassis);
+                _car.AddFixture(chassis);
 
                 _wheelBack = BodyFactory.CreateBody(World);
                 _wheelBack.BodyType = BodyType.Dynamic;
                 _wheelBack.Position = new Vector2(-1.709f, -0.78f);
-                Fixture fix = _wheelBack.CreateFixture(new CircleShape(0.5f, 0.8f));
+                Fixture fix = _wheelBack.AddFixture(new CircleShape(0.5f, 0.8f));
                 fix.Friction = 0.9f;
 
                 _wheelFront = BodyFactory.CreateBody(World);
                 _wheelFront.BodyType = BodyType.Dynamic;
                 _wheelFront.Position = new Vector2(1.54f, -0.8f);
-                _wheelFront.CreateFixture(new CircleShape(0.5f, 1f));
+                _wheelFront.AddFixture(new CircleShape(0.5f, 1f));
 
                 Vector2 axis = new Vector2(0.0f, -1.2f);
                 _springBack = new WheelJoint(_car, _wheelBack, _wheelBack.Position, axis, true);

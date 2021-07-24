@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
@@ -28,7 +28,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             foreach (Vertices part in vertices)
             {
                 PolygonShape polygonShape = new PolygonShape(part, density);
-                Fixture fixture = MainBody.CreateFixture(polygonShape);
+                Fixture fixture = MainBody.AddFixture(polygonShape);
                 Parts.Add(fixture);
             }
         }
@@ -42,7 +42,7 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             foreach (Shape part in shapes)
             {
-                Fixture fixture = MainBody.CreateFixture(part);
+                Fixture fixture = MainBody.AddFixture(part);
                 Parts.Add(fixture);
             }
         }
@@ -117,11 +117,11 @@ namespace Genbox.VelcroPhysics.Dynamics
                 Shape shape = oldFixture.Shape.Clone();
                 object userData = oldFixture.UserData;
 
-                MainBody.DestroyFixture(oldFixture);
+                MainBody.RemoveFixture(oldFixture);
 
                 Body body = BodyFactory.CreateBody(_world, MainBody.Position, MainBody.Rotation, BodyType.Dynamic, MainBody.UserData);
 
-                Fixture newFixture = body.CreateFixture(shape);
+                Fixture newFixture = body.AddFixture(shape);
                 newFixture.UserData = userData;
                 Parts[i] = newFixture;
 
@@ -129,7 +129,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 body.LinearVelocity = _velocitiesCache[i];
             }
 
-            _world.DestroyBody(MainBody);
+            _world.RemoveBody(MainBody);
             _world.RemoveBreakableBody(this);
         }
 

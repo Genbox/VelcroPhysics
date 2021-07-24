@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -41,22 +42,22 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 10.0f);
-                _body = World.CreateBody(bd);
+                _body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(10.0f);
                 shape.SetAsBox(4.0f, 4.0f, new Vector2(0.0f, 0.0f), 0.0f);
-                _fixture1 = _body.CreateFixture(shape);
+                _fixture1 = _body.AddFixture(shape);
 
                 _fixture2 = null;
 
@@ -73,7 +74,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     CircleShape shape = new CircleShape(10.0f);
                     shape.Radius = 3.0f;
                     shape.Position = new Vector2(0.5f, -4.0f);
-                    _fixture2 = _body.CreateFixture(shape);
+                    _fixture2 = _body.AddFixture(shape);
                     _body.Awake = true;
                 }
             }
@@ -81,7 +82,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 if (_fixture2 != null)
                 {
-                    _body.DestroyFixture(_fixture2);
+                    _body.RemoveFixture(_fixture2);
                     _fixture2 = null;
                     _body.Awake = true;
                 }

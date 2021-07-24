@@ -55,12 +55,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(fd);
 
                     Vector2 anchor = new Vector2(-15.0f + 1.0f * i, 5.0f);
                     jd.Initialize(prevBody, body, anchor);
-                    World.CreateJoint(jd);
+                    JointFactory.CreateFromDef(World, jd);
 
                     prevBody = body;
                 }
@@ -84,8 +84,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-14.0f + 2.0f * i, 15.0f);
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(fd);
 
                     Vector2 anchor = new Vector2(-15.0f + 2.0f * i, 15.0f);
                     jd.Initialize(prevBody, body, anchor);
@@ -93,7 +93,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     jd.Stiffness = stiffness;
                     jd.Damping = damping;
 
-                    World.CreateJoint(jd);
+                    JointFactory.CreateFromDef(World, jd);
 
                     prevBody = body;
                 }
@@ -114,14 +114,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-4.5f + 1.0f * i, 5.0f);
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(fd);
 
                     if (i > 0)
                     {
                         Vector2 anchor = new Vector2(-5.0f + 1.0f * i, 5.0f);
                         jd.Initialize(prevBody, body, anchor);
-                        World.CreateJoint(jd);
+                        JointFactory.CreateFromDef(World, jd);
                     }
 
                     prevBody = body;
@@ -145,8 +145,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(5.5f + 1.0f * i, 10.0f);
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(fd);
 
                     if (i > 0)
                     {
@@ -157,7 +157,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                         jd.Stiffness = stiffness;
                         jd.Damping = damping;
 
-                        World.CreateJoint(jd);
+                        JointFactory.CreateFromDef(World, jd);
                     }
 
                     prevBody = body;
@@ -179,8 +179,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-8.0f + 8.0f * i, 12.0f);
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(fd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(fd);
             }
 
             for (int i = 0; i < 2; ++i)
@@ -193,8 +193,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-6.0f + 6.0f * i, 10.0f);
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(fd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(fd);
             }
         }
 

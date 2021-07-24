@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -39,25 +40,25 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
 
                 // Floor
                 shape.SetTwoSided(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
 
                 // Left wall
                 shape.SetTwoSided(new Vector2(-10.0f, 0.0f), new Vector2(-10.0f, 20.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
 
                 // Right wall
                 shape.SetTwoSided(new Vector2(10.0f, 0.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
 
                 // Roof
                 shape.SetTwoSided(new Vector2(-10.0f, 20.0f), new Vector2(10.0f, 20.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -76,9 +77,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-10.0f + (2.1f * j + 1.0f + 0.01f * i) * radius, (2.0f * i + 1.0f) * radius);
-                    Body body = World.CreateBody(bd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
 
-                    body.CreateFixture(fd);
+                    body.AddFixture(fd);
                 }
 
                 World.Gravity = new Vector2(0.0f, 0.0f);
@@ -102,9 +103,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             bd.Position = p;
 
             //bd.AllowSleep = false;
-            Body body = World.CreateBody(bd);
+            Body body = BodyFactory.CreateFromDef(World, bd);
 
-            body.CreateFixture(fd);
+            body.AddFixture(fd);
         }
 
         public override void Keyboard(KeyboardManager keyboard)

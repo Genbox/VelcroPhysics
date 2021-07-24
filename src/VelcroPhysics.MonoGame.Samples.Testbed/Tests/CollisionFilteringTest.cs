@@ -62,8 +62,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 sd.Friction = 0.3f;
 
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(sd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(sd);
             }
 
             // Small triangle
@@ -85,8 +85,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             triangleBodyDef.Type = BodyType.Dynamic;
             triangleBodyDef.Position = new Vector2(-5.0f, 2.0f);
 
-            Body body1 = World.CreateBody(triangleBodyDef);
-            body1.CreateFixture(triangleShapeDef);
+            Body body1 = BodyFactory.CreateFromDef(World, triangleBodyDef);
+            body1.AddFixture(triangleShapeDef);
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
@@ -97,18 +97,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             triangleBodyDef.Position = new Vector2(-5.0f, 6.0f);
             triangleBodyDef.FixedRotation = true; // look at me!
 
-            Body body2 = World.CreateBody(triangleBodyDef);
-            body2.CreateFixture(triangleShapeDef);
+            Body body2 = BodyFactory.CreateFromDef(World, triangleBodyDef);
+            body2.AddFixture(triangleShapeDef);
 
             {
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-5.0f, 10.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape p = new PolygonShape(1.0f);
                 p.SetAsBox(0.5f, 1.0f);
-                body.CreateFixture(p);
+                body.AddFixture(p);
 
                 PrismaticJointDef jd = new PrismaticJointDef();
                 jd.BodyA = body2;
@@ -120,7 +120,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.LowerTranslation = -1.0f;
                 jd.UpperTranslation = 1.0f;
 
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
             }
 
             // Small box
@@ -137,16 +137,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             boxBodyDef.Type = BodyType.Dynamic;
             boxBodyDef.Position = new Vector2(0.0f, 2.0f);
 
-            Body body3 = World.CreateBody(boxBodyDef);
-            body3.CreateFixture(boxShapeDef);
+            Body body3 = BodyFactory.CreateFromDef(World, boxBodyDef);
+            body3.AddFixture(boxShapeDef);
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
             boxShapeDef.Filter.Group = _largeGroup;
             boxBodyDef.Position = new Vector2(0.0f, 6.0f);
 
-            Body body4 = World.CreateBody(boxBodyDef);
-            body4.CreateFixture(boxShapeDef);
+            Body body4 = BodyFactory.CreateFromDef(World, boxBodyDef);
+            body4.AddFixture(boxShapeDef);
 
             // Small circle
             CircleShape circle = new CircleShape(1.0f, 1.0f);
@@ -162,16 +162,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             circleBodyDef.Type = BodyType.Dynamic;
             circleBodyDef.Position = new Vector2(5.0f, 2.0f);
 
-            Body body5 = World.CreateBody(circleBodyDef);
-            body5.CreateFixture(circleShapeDef);
+            Body body5 = BodyFactory.CreateFromDef(World, circleBodyDef);
+            body5.AddFixture(circleShapeDef);
 
             // Large circle
             circle.Radius *= 2.0f;
             circleShapeDef.Filter.Group = _largeGroup;
             circleBodyDef.Position = new Vector2(5.0f, 6.0f);
 
-            Body body6 = World.CreateBody(circleBodyDef);
-            body6.CreateFixture(circleShapeDef);
+            Body body6 = BodyFactory.CreateFromDef(World, circleBodyDef);
+            body6.AddFixture(circleShapeDef);
         }
 
         internal static Test Create()

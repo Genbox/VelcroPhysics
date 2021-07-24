@@ -48,7 +48,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                     body.UserData = _indices[n];
                     _bodies[n] = body;
 
-                    Fixture fixture = body.CreateFixture(shape);
+                    Fixture fixture = body.AddFixture(shape);
                     fixture.Friction = 0.3f;
 
                     //First column is unaffected by the explosion

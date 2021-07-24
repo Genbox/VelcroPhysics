@@ -42,7 +42,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = y;
-                    body.CreateFixture(shape);
+                    body.AddFixture(shape);
 
                     y += deltaY;
                 }

@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.TOI;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -40,16 +41,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(0.0f, 0.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape edge = new EdgeShape();
 
                 edge.SetTwoSided(new Vector2(-10.0f, 0.0f), new Vector2(10.0f, 0.0f));
-                body.CreateFixture(edge);
+                body.AddFixture(edge);
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsBox(0.2f, 1.0f, new Vector2(0.5f, 1.0f), 0.0f);
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
             }
 
 #if TRUE
@@ -73,16 +74,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 2.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(0.5f, 1.0f);
                 shape.Position = Vector2.Zero;
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
 
                 bd.IsBullet = true;
                 bd.Position = new Vector2(0.0f, 10.0f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
                 body.LinearVelocity = new Vector2(0.0f, -100.0f);
             }
 #endif

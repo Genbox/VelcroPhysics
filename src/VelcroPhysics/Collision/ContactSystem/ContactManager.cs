@@ -175,7 +175,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
             BroadPhase.UpdatePairs(OnBroadphaseCollision);
         }
 
-        internal void Destroy(Contact c)
+        internal void Remove(Contact c)
         {
             if (c._fixtureA == null || c._fixtureB == null)
                 return;
@@ -267,7 +267,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     {
                         Contact cNuke = c;
                         c = cNuke._next;
-                        Destroy(cNuke);
+                        Remove(cNuke);
                         continue;
                     }
 
@@ -276,7 +276,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     {
                         Contact cNuke = c;
                         c = cNuke._next;
-                        Destroy(cNuke);
+                        Remove(cNuke);
                         continue;
                     }
 
@@ -285,7 +285,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                     {
                         Contact cNuke = c;
                         c = cNuke._next;
-                        Destroy(cNuke);
+                        Remove(cNuke);
                         continue;
                     }
 
@@ -312,7 +312,7 @@ namespace Genbox.VelcroPhysics.Collision.ContactSystem
                 {
                     Contact cNuke = c;
                     c = cNuke._next;
-                    Destroy(cNuke);
+                    Remove(cNuke);
                     continue;
                 }
 

@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -43,12 +44,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(0.0f, 0.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
 
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
             }
 
             // Table 1
@@ -56,7 +57,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-15.0f, 1.0f);
-                _table1 = World.CreateBody(bd);
+                _table1 = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape top = new PolygonShape(2.0f);
                 top.SetAsBox(3.0f, 0.5f, new Vector2(0.0f, 3.5f), 0.0f);
@@ -67,9 +68,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 PolygonShape rightLeg = new PolygonShape(2.0f);
                 rightLeg.SetAsBox(0.5f, 1.5f, new Vector2(2.5f, 1.5f), 0.0f);
 
-                _table1.CreateFixture(top);
-                _table1.CreateFixture(leftLeg);
-                _table1.CreateFixture(rightLeg);
+                _table1.AddFixture(top);
+                _table1.AddFixture(leftLeg);
+                _table1.AddFixture(rightLeg);
             }
 
             // Table 2
@@ -77,7 +78,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-5.0f, 1.0f);
-                _table2 = World.CreateBody(bd);
+                _table2 = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape top = new PolygonShape(2.0f);
                 top.SetAsBox(3.0f, 0.5f, new Vector2(0.0f, 3.5f), 0.0f);
@@ -88,9 +89,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 PolygonShape rightLeg = new PolygonShape(2.0f);
                 rightLeg.SetAsBox(0.5f, 2.0f, new Vector2(2.5f, 2.0f), 0.0f);
 
-                _table2.CreateFixture(top);
-                _table2.CreateFixture(leftLeg);
-                _table2.CreateFixture(rightLeg);
+                _table2.AddFixture(top);
+                _table2.AddFixture(leftLeg);
+                _table2.AddFixture(rightLeg);
             }
 
             // Spaceship 1
@@ -98,7 +99,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(5.0f, 1.0f);
-                _ship1 = World.CreateBody(bd);
+                _ship1 = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vertices = new Vertices(3);
 
@@ -114,8 +115,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vertices[2] = new Vector2(0.0f, 4.0f);
                 right.Vertices = vertices;
 
-                _ship1.CreateFixture(left);
-                _ship1.CreateFixture(right);
+                _ship1.AddFixture(left);
+                _ship1.AddFixture(right);
             }
 
             // Spaceship 2
@@ -123,7 +124,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(15.0f, 1.0f);
-                _ship2 = World.CreateBody(bd);
+                _ship2 = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vertices = new Vertices(3);
 
@@ -139,8 +140,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vertices[2] = new Vector2(0.0f, 4.0f);
                 right.Vertices = vertices;
 
-                _ship2.CreateFixture(left);
-                _ship2.CreateFixture(right);
+                _ship2.AddFixture(left);
+                _ship2.AddFixture(right);
             }
         }
 
@@ -153,12 +154,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Position = _table1.Position;
                 bd.Angle = _table1.Rotation;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape box = new PolygonShape(2.0f);
                 box.SetAsBox(4.0f, 0.1f, new Vector2(0.0f, 3.0f), 0.0f);
 
-                body.CreateFixture(box);
+                body.AddFixture(box);
             }
 
             // Table 2 obstruction
@@ -168,12 +169,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Position = _table2.Position;
                 bd.Angle = _table2.Rotation;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape box = new PolygonShape(2.0f);
                 box.SetAsBox(4.0f, 0.1f, new Vector2(0.0f, 3.0f), 0.0f);
 
-                body.CreateFixture(box);
+                body.AddFixture(box);
             }
 
             // Ship 1 obstruction
@@ -184,10 +185,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Angle = _ship1.Rotation;
                 bd.GravityScale = 0.0f;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape circle = new CircleShape(0.5f, 2.0f, new Vector2(0.0f, 2.0f));
-                body.CreateFixture(circle);
+                body.AddFixture(circle);
             }
 
             // Ship 2 obstruction
@@ -198,13 +199,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Angle = _ship2.Rotation;
                 bd.GravityScale = 0.0f;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape circle = new CircleShape(2.0f);
                 circle.Radius = 0.5f;
                 circle.Position = new Vector2(0.0f, 2.0f);
 
-                body.CreateFixture(circle);
+                body.AddFixture(circle);
             }
         }
 

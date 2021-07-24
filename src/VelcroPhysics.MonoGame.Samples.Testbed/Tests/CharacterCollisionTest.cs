@@ -24,6 +24,7 @@ using System;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -40,10 +41,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // Ground body
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Collinear edges with no adjacency information.
@@ -51,21 +52,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // an internal vertex.
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-8.0f, 1.0f), new Vector2(-6.0f, 1.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
                 shape.SetTwoSided(new Vector2(-6.0f, 1.0f), new Vector2(-4.0f, 1.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
                 shape.SetTwoSided(new Vector2(-4.0f, 1.0f), new Vector2(-2.0f, 1.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Chain shape
             {
                 BodyDef bd = new BodyDef();
                 bd.Angle = 0.25f * MathConstants.Pi;
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vs = new Vertices(4);
                 vs.Add(new Vector2(5.0f, 7.0f));
@@ -73,7 +74,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vs.Add(new Vector2(7.0f, 8.0f));
                 vs.Add(new Vector2(8.0f, 7.0f));
                 ChainShape shape = new ChainShape(vs, true);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Square tiles. This shows that adjacency shapes may
@@ -81,21 +82,21 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // to this problem.
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(0.0f);
                 shape.SetAsBox(1.0f, 1.0f, new Vector2(4.0f, 3.0f), 0.0f);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
                 shape.SetAsBox(1.0f, 1.0f, new Vector2(6.0f, 3.0f), 0.0f);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
                 shape.SetAsBox(1.0f, 1.0f, new Vector2(8.0f, 3.0f), 0.0f);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Square made from an edge loop. Collision should be smooth.
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vs = new Vertices(4);
                 vs.Add(new Vector2(-1.0f, 3.0f));
@@ -103,14 +104,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vs.Add(new Vector2(1.0f, 5.0f));
                 vs.Add(new Vector2(-1.0f, 5.0f));
                 ChainShape shape = new ChainShape(vs, true);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Edge loop. Collision should be smooth.
             {
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(-10.0f, 4.0f);
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vs = new Vertices(10);
                 vs.Add(new Vector2(0.0f, 0.0f));
@@ -124,7 +125,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 vs.Add(new Vector2(-6.0f, 2.0f));
                 vs.Add(new Vector2(-6.0f, 0.0f));
                 ChainShape shape = new ChainShape(vs, true);
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Square character 1
@@ -135,14 +136,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.FixedRotation = true;
                 bd.AllowSleep = false;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(20.0f);
                 shape.SetAsBox(0.5f, 0.5f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
             }
 
             // Square character 2
@@ -153,14 +154,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.FixedRotation = true;
                 bd.AllowSleep = false;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(20.0f);
                 shape.SetAsBox(0.25f, 0.25f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
             }
 
             // Hexagon character
@@ -171,7 +172,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.FixedRotation = true;
                 bd.AllowSleep = false;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 float angle = 0.0f;
                 float delta = MathConstants.Pi / 3.0f;
@@ -186,7 +187,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
             }
 
             // Circle character
@@ -197,13 +198,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.FixedRotation = true;
                 bd.AllowSleep = false;
 
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(0.5f, 20.0f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
             }
 
             // Circle character
@@ -213,14 +214,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.AllowSleep = false;
 
-                _character = World.CreateBody(bd);
+                _character = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(0.25f, 20.0f);
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
                 fd.Friction = 1.0f;
-                _character.CreateFixture(fd);
+                _character.AddFixture(fd);
             }
         }
 

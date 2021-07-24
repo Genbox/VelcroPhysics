@@ -27,6 +27,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
@@ -47,8 +48,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 sd.Shape = shape;
 
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(sd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(sd);
             }
 
             float xLo = -5.0f, xHi = 5.0f;
@@ -69,8 +70,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             triangleBodyDef.Type = BodyType.Dynamic;
             triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body1 = World.CreateBody(triangleBodyDef);
-            body1.CreateFixture(triangleShapeDef);
+            Body body1 = BodyFactory.CreateFromDef(World, triangleBodyDef);
+            body1.AddFixture(triangleShapeDef);
 
             // Large triangle (recycle definitions)
             vertices[0] *= 2.0f;
@@ -80,8 +81,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             triangleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body2 = World.CreateBody(triangleBodyDef);
-            body2.CreateFixture(triangleShapeDef);
+            Body body2 = BodyFactory.CreateFromDef(World, triangleBodyDef);
+            body2.AddFixture(triangleShapeDef);
 
             // Small box
             polygon.SetAsBox(1.0f, 0.5f);
@@ -93,15 +94,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             boxBodyDef.Type = BodyType.Dynamic;
             boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body3 = World.CreateBody(boxBodyDef);
-            body3.CreateFixture(boxShapeDef);
+            Body body3 = BodyFactory.CreateFromDef(World, boxBodyDef);
+            body3.AddFixture(boxShapeDef);
 
             // Large box (recycle definitions)
             polygon.SetAsBox(2.0f, 1.0f);
             boxBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body4 = World.CreateBody(boxBodyDef);
-            body4.CreateFixture(boxShapeDef);
+            Body body4 =BodyFactory.CreateFromDef(World, boxBodyDef);
+            body4.AddFixture(boxShapeDef);
 
             // Small circle
             CircleShape circle = new CircleShape(1.0f, 1.0f);
@@ -113,15 +114,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             circleBodyDef.Type = BodyType.Dynamic;
             circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body5 = World.CreateBody(circleBodyDef);
-            body5.CreateFixture(circleShapeDef);
+            Body body5 = BodyFactory.CreateFromDef(World, circleBodyDef);
+            body5.AddFixture(circleShapeDef);
 
             // Large circle
             circle.Radius *= 2.0f;
             circleBodyDef.Position = new Vector2(Rand.RandomFloat(xLo, xHi), Rand.RandomFloat(yLo, yHi));
 
-            Body body6 = World.CreateBody(circleBodyDef);
-            body6.CreateFixture(circleShapeDef);
+            Body body6 = BodyFactory.CreateFromDef(World, circleBodyDef);
+            body6.AddFixture(circleShapeDef);
         }
 
         protected override void PostSolve(Contact contact, ContactVelocityConstraint contactConstraint)
@@ -176,7 +177,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 while (j < nukeCount && nuke[j] == b)
                     ++j;
 
-                World.DestroyBody(b);
+                World.RemoveBody(b);
             }
 
             _bodies.Clear();

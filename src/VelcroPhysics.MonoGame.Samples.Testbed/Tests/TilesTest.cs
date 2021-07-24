@@ -26,6 +26,7 @@ using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -49,7 +50,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 float a = 0.5f;
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(0, -a);
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
 #if true
                 int N = 200;
@@ -63,7 +64,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     {
                         PolygonShape shape = new PolygonShape(0.0f);
                         shape.SetAsBox(a, a, position, 0.0f);
-                        ground.CreateFixture(shape);
+                        ground.AddFixture(shape);
                         ++_fixtureCount;
                         position.X += 2.0f * a;
                     }
@@ -119,8 +120,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                         //	bd.AllowSleep = true;
                         //}
 
-                        Body body = World.CreateBody(bd);
-                        body.CreateFixture(shape);
+                        Body body = BodyFactory.CreateFromDef(World, bd);
+                        body.AddFixture(shape);
                         ++_fixtureCount;
                         y += deltaY;
                     }

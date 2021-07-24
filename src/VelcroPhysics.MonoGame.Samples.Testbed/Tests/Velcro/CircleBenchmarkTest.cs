@@ -39,19 +39,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
 
             // Floor
             EdgeShape ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-            ground.CreateFixture(ashape);
+            ground.AddFixture(ashape);
 
             // Left wall
             ashape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(-40.0f, 45.0f));
-            ground.CreateFixture(ashape);
+            ground.AddFixture(ashape);
 
             // Right wall
             ashape = new EdgeShape(new Vector2(40.0f, 0.0f), new Vector2(40.0f, 45.0f));
-            ground.CreateFixture(ashape);
+            ground.AddFixture(ashape);
 
             // Roof
             ashape = new EdgeShape(new Vector2(-40.0f, 45.0f), new Vector2(40.0f, 45.0f));
-            ground.CreateFixture(ashape);
+            ground.AddFixture(ashape);
 
             CircleShape shape = new CircleShape(1.0f, 1);
 
@@ -62,7 +62,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 body.BodyType = BodyType.Dynamic;
                 body.Position = new Vector2(-38f + 2.1f * i, 2.0f + 2.0f * j);
 
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
             }
         }
 

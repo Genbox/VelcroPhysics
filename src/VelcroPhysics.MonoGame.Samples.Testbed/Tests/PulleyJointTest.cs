@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -44,16 +45,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape circle = new CircleShape(0.0f);
                 circle.Radius = 2.0f;
 
                 circle.Position = new Vector2(-10.0f, y + b + L);
-                ground.CreateFixture(circle);
+                ground.AddFixture(circle);
 
                 circle.Position = new Vector2(10.0f, y + b + L);
-                ground.CreateFixture(circle);
+                ground.AddFixture(circle);
             }
 
             {
@@ -65,12 +66,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                 //bd.FixedRotation = true;
                 bd.Position = new Vector2(-10.0f, y);
-                Body body1 = World.CreateBody(bd);
-                body1.CreateFixture(shape);
+                Body body1 = BodyFactory.CreateFromDef(World, bd);
+                body1.AddFixture(shape);
 
                 bd.Position = new Vector2(10.0f, y);
-                Body body2 = World.CreateBody(bd);
-                body2.CreateFixture(shape);
+                Body body2 = BodyFactory.CreateFromDef(World, bd);
+                body2.AddFixture(shape);
 
                 PulleyJointDef pulleyDef = new PulleyJointDef();
                 Vector2 anchor1 = new Vector2(-10.0f, y + b);
@@ -79,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 Vector2 groundAnchor2 = new Vector2(10.0f, y + b + L);
                 pulleyDef.Initialize(body1, body2, groundAnchor1, groundAnchor2, anchor1, anchor2, 1.5f);
 
-                _joint1 = (PulleyJoint)World.CreateJoint(pulleyDef);
+                _joint1 = (PulleyJoint)JointFactory.CreateFromDef(World, pulleyDef);
             }
         }
 

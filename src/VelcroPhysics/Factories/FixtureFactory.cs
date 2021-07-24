@@ -16,7 +16,7 @@ namespace Genbox.VelcroPhysics.Factories
         public static Fixture AttachEdge(Vector2 start, Vector2 end, Body body, object? userData = null)
         {
             EdgeShape edgeShape = new EdgeShape(start, end);
-            Fixture f = body.CreateFixture(edgeShape);
+            Fixture f = body.AddFixture(edgeShape);
             f.UserData = userData;
             return f;
         }
@@ -24,7 +24,7 @@ namespace Genbox.VelcroPhysics.Factories
         public static Fixture AttachChainShape(Vertices vertices, Body body, object? userData = null)
         {
             ChainShape shape = new ChainShape(vertices);
-            Fixture f = body.CreateFixture(shape);
+            Fixture f = body.AddFixture(shape);
             f.UserData = userData;
             return f;
         }
@@ -32,7 +32,7 @@ namespace Genbox.VelcroPhysics.Factories
         public static Fixture AttachLoopShape(Vertices vertices, Body body, object? userData = null)
         {
             ChainShape shape = new ChainShape(vertices, true);
-            Fixture f = body.CreateFixture(shape);
+            Fixture f = body.AddFixture(shape);
             f.UserData = userData;
             return f;
         }
@@ -42,7 +42,7 @@ namespace Genbox.VelcroPhysics.Factories
             Vertices rectangleVertices = PolygonUtils.CreateRectangle(width / 2, height / 2);
             rectangleVertices.Translate(ref offset);
             PolygonShape rectangleShape = new PolygonShape(rectangleVertices, density);
-            Fixture f = body.CreateFixture(rectangleShape);
+            Fixture f = body.AddFixture(rectangleShape);
             f.UserData = userData;
             return f;
         }
@@ -53,7 +53,7 @@ namespace Genbox.VelcroPhysics.Factories
                 throw new ArgumentOutOfRangeException(nameof(radius), "Radius must be more than 0 meters");
 
             CircleShape circleShape = new CircleShape(radius, density);
-            Fixture f = body.CreateFixture(circleShape);
+            Fixture f = body.AddFixture(circleShape);
             f.UserData = userData;
             return f;
         }
@@ -65,7 +65,7 @@ namespace Genbox.VelcroPhysics.Factories
 
             CircleShape circleShape = new CircleShape(radius, density);
             circleShape.Position = offset;
-            Fixture f = body.CreateFixture(circleShape);
+            Fixture f = body.AddFixture(circleShape);
             f.UserData = userData;
             return f;
         }
@@ -76,7 +76,7 @@ namespace Genbox.VelcroPhysics.Factories
                 throw new ArgumentOutOfRangeException(nameof(vertices), "Too few points to be a polygon");
 
             PolygonShape polygon = new PolygonShape(vertices, density);
-            Fixture f = body.CreateFixture(polygon);
+            Fixture f = body.AddFixture(polygon);
             f.UserData = userData;
             return f;
         }
@@ -91,7 +91,7 @@ namespace Genbox.VelcroPhysics.Factories
 
             Vertices ellipseVertices = PolygonUtils.CreateEllipse(xRadius, yRadius, edges);
             PolygonShape polygonShape = new PolygonShape(ellipseVertices, density);
-            Fixture f = body.CreateFixture(polygonShape);
+            Fixture f = body.AddFixture(polygonShape);
             f.UserData = userData;
             return f;
         }
@@ -106,12 +106,12 @@ namespace Genbox.VelcroPhysics.Factories
                 if (vertices.Count == 2)
                 {
                     EdgeShape shape = new EdgeShape(vertices[0], vertices[1]);
-                    res.Add(body.CreateFixture(shape));
+                    res.Add(body.AddFixture(shape));
                 }
                 else
                 {
                     PolygonShape shape = new PolygonShape(vertices, density);
-                    res.Add(body.CreateFixture(shape));
+                    res.Add(body.AddFixture(shape));
                 }
             }
 
@@ -140,7 +140,7 @@ namespace Genbox.VelcroPhysics.Factories
 
         public static Fixture CreateFromDef(Body body, FixtureDef fixtureDef)
         {
-            return body.CreateFixture(fixtureDef);
+            return body.AddFixture(fixtureDef);
         }
     }
 }

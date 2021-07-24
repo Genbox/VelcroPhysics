@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -34,11 +35,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -49,8 +50,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Position = new Vector2(-4.0f, 22.0f);
                 bd.Angle = -0.25f;
 
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(shape);
             }
 
             {
@@ -60,8 +61,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(10.5f, 19.0f);
 
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(shape);
             }
 
             {
@@ -72,8 +73,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Position = new Vector2(4.0f, 14.0f);
                 bd.Angle = 0.25f;
 
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(shape);
             }
 
             {
@@ -83,8 +84,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(-10.5f, 11.0f);
 
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(shape);
             }
 
             {
@@ -95,8 +96,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Position = new Vector2(-4.0f, 6.0f);
                 bd.Angle = -0.25f;
 
-                Body ground = World.CreateBody(bd);
-                ground.CreateFixture(shape);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
+                ground.AddFixture(shape);
             }
 
             {
@@ -113,10 +114,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-15.0f + 4.0f * i, 28.0f);
-                    Body body = World.CreateBody(bd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
 
                     fd.Friction = friction[i];
-                    body.CreateFixture(fd);
+                    body.AddFixture(fd);
                 }
             }
         }

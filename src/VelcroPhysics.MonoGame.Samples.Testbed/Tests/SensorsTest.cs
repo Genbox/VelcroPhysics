@@ -26,6 +26,7 @@ using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -45,12 +46,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 {
                     EdgeShape shape = new EdgeShape();
                     shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                    ground.CreateFixture(shape);
+                    ground.AddFixture(shape);
                 }
 
 #if false
@@ -69,7 +70,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     FixtureDef fd = new FixtureDef();
                     fd.Shape = shape;
                     fd.IsSensor = true;
-                    _sensor = ground.CreateFixture(fd);
+                    _sensor = ground.AddFixture(fd);
                 }
 #endif
             }
@@ -86,9 +87,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     bd.UserData = i;
 
                     _touching[i] = false;
-                    _bodies[i] = World.CreateBody(bd);
+                    _bodies[i] = BodyFactory.CreateFromDef(World, bd);
 
-                    _bodies[i].CreateFixture(shape);
+                    _bodies[i].AddFixture(shape);
                 }
             }
 

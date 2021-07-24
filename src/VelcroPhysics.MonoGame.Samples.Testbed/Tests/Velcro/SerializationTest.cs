@@ -134,7 +134,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                     Body body = BodyFactory.CreateBody(World);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = new Vector2(-14.5f + 1.0f * i, 5.0f);
-                    body.CreateFixture(shape);
+                    body.AddFixture(shape);
 
                     Vector2 anchor = new Vector2(0.5f, 0);
 

@@ -70,11 +70,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                     const float x = 0.0f;
                     bd.Position = new Vector2(xs[j] + x, 0.55f + 1.1f * i);
-                    Body body = World.CreateBody(bd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
 
                     _bodies[n] = body;
 
-                    body.CreateFixture(shape);
+                    body.AddFixture(shape);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 if (_bullet != null)
                 {
-                    World.DestroyBody(_bullet);
+                    World.RemoveBody(_bullet);
                     _bullet = null;
                 }
 
@@ -103,8 +103,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     bd.IsBullet = true;
                     bd.Position = new Vector2(-31.0f, 5.0f);
 
-                    _bullet = World.CreateBody(bd);
-                    _bullet.CreateFixture(fd);
+                    _bullet = BodyFactory.CreateFromDef(World, bd);
+                    _bullet.AddFixture(fd);
 
                     _bullet.LinearVelocity = new Vector2(400.0f, 0.0f);
                 }

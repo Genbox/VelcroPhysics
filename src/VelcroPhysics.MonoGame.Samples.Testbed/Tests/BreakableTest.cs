@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Solver;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -49,10 +50,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // Ground body
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Breakable dynamic body
@@ -61,15 +62,15 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 40.0f);
                 bd.Angle = 0.25f * MathConstants.Pi;
-                _body1 = World.CreateBody(bd);
+                _body1 = BodyFactory.CreateFromDef(World, bd);
 
                 _shape1 = new PolygonShape(1.0f);
                 _shape1.SetAsBox(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
-                _piece1 = _body1.CreateFixture(_shape1);
+                _piece1 = _body1.AddFixture(_shape1);
 
                 _shape2 = new PolygonShape(1.0f);
                 _shape2.SetAsBox(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
-                _piece2 = _body1.CreateFixture(_shape2);
+                _piece2 = _body1.AddFixture(_shape2);
             }
 
             _break = false;
@@ -106,7 +107,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body body1 = _piece1.Body;
             Vector2 center = body1.WorldCenter;
 
-            body1.DestroyFixture(_piece2);
+            body1.RemoveFixture(_piece2);
             _piece2 = null;
 
             BodyDef bd = new BodyDef();
@@ -114,8 +115,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             bd.Position = body1.Position;
             bd.Angle = body1.Rotation;
 
-            Body body2 = World.CreateBody(bd);
-            _piece2 = body2.CreateFixture(_shape2);
+            Body body2 = BodyFactory.CreateFromDef(World, bd);
+            _piece2 = body2.AddFixture(_shape2);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.

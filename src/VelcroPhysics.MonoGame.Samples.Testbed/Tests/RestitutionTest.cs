@@ -26,6 +26,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -39,7 +40,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -47,7 +48,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
                 fd.RestitutionThreshold = threshold;
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             {
@@ -65,11 +66,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(-10.0f + 3.0f * i, 20.0f);
 
-                    Body body = World.CreateBody(bd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
 
                     fd.Restitution = restitution[i];
                     fd.RestitutionThreshold = threshold;
-                    body.CreateFixture(fd);
+                    body.AddFixture(fd);
                 }
             }
         }

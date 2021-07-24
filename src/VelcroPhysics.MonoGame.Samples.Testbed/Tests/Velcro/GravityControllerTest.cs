@@ -56,7 +56,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             planet.Position = new Vector2(0, 20);
 
             CircleShape planetShape = new CircleShape(2, 1);
-            planet.CreateFixture(planetShape);
+            planet.AddFixture(planetShape);
 
             //Add the planet as the one that has gravity
             gravity.AddBody(planet);
@@ -70,7 +70,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
                 circle.SleepingAllowed = false;
 
                 CircleShape circleShape = new CircleShape(1, 0.1f);
-                Fixture fix = circle.CreateFixture(circleShape);
+                Fixture fix = circle.AddFixture(circleShape);
                 fix.CollisionCategories = Category.Cat3;
                 fix.CollisionGroup = 2;
 

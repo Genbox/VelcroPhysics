@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -28,8 +28,6 @@ using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Distance;
 using Genbox.VelcroPhysics.Collision.RayCast;
 using Genbox.VelcroPhysics.Collision.TOI;
-using Genbox.VelcroPhysics.Definitions;
-using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics.Handlers;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Genbox.VelcroPhysics.Dynamics.Joints.Misc;
@@ -75,6 +73,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         private readonly List<Body> _bodyList;
         private readonly List<Joint> _jointList;
         private bool _enabled;
+        private bool _isLocked;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -155,220 +154,459 @@ namespace Genbox.VelcroPhysics.Dynamics
             set => _enabled = value;
         }
 
+        public bool IsLocked => _isLocked;
+
+        /// <summary>Add a rigid body.</summary>
+        /// <param name="body">The body.</param>
+        /// <param name="delayUntilNextStep">If true, the body is added at next time step</param>
+        public void AddBody(Body body, bool delayUntilNextStep = false)
+        {
+            if (delayUntilNextStep)
+            {
+                Debug.Assert(!_bodyAddList.Contains(body), "You are adding the same body more than once.");
+
+                if (!_bodyAddList.Contains(body))
+                    _bodyAddList.Add(body);
+            }
+            else
+            {
+                Debug.Assert(!IsLocked);
+
+                if (IsLocked)
+                    return;
+
+                AddBodyInternal(body);
+            }
+        }
+
+        /// <summary>Destroy a rigid body. Warning: This automatically deletes all associated shapes and joints.</summary>
+        /// <param name="body">The body.</param>
+        /// <param name="delayUntilNextStep">If true, the body is removed at next time step</param>
+        public void RemoveBody(Body body, bool delayUntilNextStep = false)
+        {
+            if (delayUntilNextStep)
+            {
+                Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
+
+                if (!_bodyRemoveList.Contains(body))
+                    _bodyRemoveList.Add(body);
+            }
+            else
+            {
+                Debug.Assert(!IsLocked);
+
+                if (IsLocked)
+                    return;
+
+                RemoveBodyInternal(body);
+            }
+        }
+
+        /// <summary>Create a joint to constrain bodies together. This may cause the connected bodies to cease colliding.</summary>
+        /// <param name="joint">The joint.</param>
+        /// <param name="delayUntilNextStep">If true, the joint is added at next time step</param>
+        public void AddJoint(Joint joint, bool delayUntilNextStep = false)
+        {
+            if (delayUntilNextStep)
+            {
+                Debug.Assert(!_jointAddList.Contains(joint), "You are adding the same joint more than once.");
+
+                if (!_jointAddList.Contains(joint))
+                    _jointAddList.Add(joint);
+            }
+            else
+            {
+                Debug.Assert(!IsLocked);
+
+                if (IsLocked)
+                    return;
+
+                AddJointInternal(joint);
+            }
+        }
+
+        /// <summary>Destroy a joint. This may cause the connected bodies to begin colliding.</summary>
+        /// <param name="joint">The joint.</param>
+        /// <param name="delayUntilNextStep">If true, the joint is removed at next time step</param>
+        public void RemoveJoint(Joint joint, bool delayUntilNextStep = false)
+        {
+            if (delayUntilNextStep)
+            {
+                Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
+
+                if (!_jointRemoveList.Contains(joint))
+                    _jointRemoveList.Add(joint);
+            }
+            else
+            {
+                Debug.Assert(!IsLocked);
+
+                if (IsLocked)
+                    return;
+
+                RemoveJointInternal(joint);
+            }
+        }
+
+        public void AddController(Controller controller)
+        {
+            Debug.Assert(!_controllerList.Contains(controller), "You are adding the same controller more than once.");
+
+            controller.World = this;
+            _controllerList.Add(controller);
+
+            ControllerAdded?.Invoke(controller);
+        }
+
+        public void RemoveController(Controller controller)
+        {
+            Debug.Assert(_controllerList.Contains(controller),
+                "You are removing a controller that is not in the simulation.");
+
+            if (_controllerList.Contains(controller))
+            {
+                _controllerList.Remove(controller);
+
+                ControllerRemoved?.Invoke(controller);
+            }
+        }
+
+        public void AddBreakableBody(BreakableBody breakableBody)
+        {
+            _breakableBodyList.Add(breakableBody);
+        }
+
+        public void RemoveBreakableBody(BreakableBody breakableBody)
+        {
+            //The breakable body list does not contain the body you tried to remove.
+            Debug.Assert(_breakableBodyList.Contains(breakableBody));
+
+            _breakableBodyList.Remove(breakableBody);
+        }
+
+        /// <summary>Take a time step. This performs collision detection, integration, and constraint solution.</summary>
+        /// <param name="dt">The amount of time to simulate, this should not vary.</param>
+        public void Step(float dt)
+        {
+            //Velcro: We support disabling the world
+            if (!_enabled)
+                return;
+
+            //Velcro: We reuse the timers to avoid generating garbage
+            Stopwatch stepTimer = _timerPool.GetFromPool(true);
+
+            {
+                //Velcro: We support add/removal of objects live in the engine.
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                ProcessChanges();
+                _profile.AddRemoveTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            // If new fixtures were added, we need to find the new contacts.
+            if (_newContacts)
+            {
+                //Velcro: We measure how much time is spent on finding new contacts
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                _contactManager.FindNewContacts();
+                _newContacts = false;
+                _profile.NewContactsTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            //Velcro: Moved warmstarting into Settings
+            //Velcro: Moved position and velocity iterations into Settings.cs
+            TimeStep step;
+            step.DeltaTime = dt;
+            if (dt > 0.0f)
+                step.InvertedDeltaTime = 1.0f / dt;
+            else
+                step.InvertedDeltaTime = 0.0f;
+
+            step.DeltaTimeRatio = _invDt0 * dt;
+
+            {
+                //Velcro: We have the concept of controllers. We update them here
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                for (int i = 0; i < _controllerList.Count; i++)
+                {
+                    _controllerList[i].Update(dt);
+                }
+                _profile.ControllersUpdateTime = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            // Update contacts. This is where some contacts are destroyed.
+            {
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                _contactManager.Collide();
+                _profile.Collide = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            // Integrate velocities, solve velocity constraints, and integrate positions.
+            if (_stepComplete && step.DeltaTime > 0.0f)
+            {
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                Solve(ref step);
+                _profile.Solve = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            // Handle TOI events.
+            if (Settings.ContinuousPhysics && step.DeltaTime > 0.0f)
+            {
+                Stopwatch timer = _timerPool.GetFromPool(true);
+                SolveTOI(ref step);
+                _profile.SolveTOI = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            if (step.DeltaTime > 0.0f)
+                _invDt0 = step.InvertedDeltaTime;
+
+            if (Settings.AutoClearForces)
+                ClearForces();
+
+            {
+                //Velcro: We support breakable bodies. We update them here.
+                Stopwatch timer = _timerPool.GetFromPool(true);
+
+                for (int i = 0; i < _breakableBodyList.Count; i++)
+                {
+                    _breakableBodyList[i].Update();
+                }
+                _profile.BreakableBodies = timer.ElapsedTicks;
+                _timerPool.ReturnToPool(timer);
+            }
+
+            _profile.Step = stepTimer.ElapsedTicks;
+            _timerPool.ReturnToPool(stepTimer);
+        }
+
+        /// <summary>
+        /// Call this after you are done with time steps to clear the forces. You normally call this after each call to
+        /// Step, unless you are performing sub-steps. By default, forces will be automatically cleared, so you don't need to call
+        /// this function.
+        /// </summary>
+        public void ClearForces()
+        {
+            for (int i = 0; i < _bodyList.Count; i++)
+            {
+                Body body = _bodyList[i];
+                body._force = Vector2.Zero;
+                body._torque = 0.0f;
+            }
+        }
+
+        /// <summary>
+        /// Query the world for all fixtures that potentially overlap the provided AABB. Inside the callback: Return true:
+        /// Continues the query Return false: Terminate the query
+        /// </summary>
+        /// <param name="callback">A user implemented callback class.</param>
+        /// <param name="aabb">The AABB query box.</param>
+        public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
+        {
+            _queryAABBCallback = callback;
+            _contactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
+            _queryAABBCallback = null;
+        }
+
+        /// <summary>
+        /// Query the world for all fixtures that potentially overlap the provided AABB. Use the overload with a callback
+        /// for filtering and better performance.
+        /// </summary>
+        /// <param name="aabb">The AABB query box.</param>
+        /// <returns>A list of fixtures that were in the affected area.</returns>
+        public List<Fixture> QueryAABB(ref AABB aabb)
+        {
+            List<Fixture> affected = new List<Fixture>();
+
+            QueryAABB(fixture =>
+            {
+                affected.Add(fixture);
+                return true;
+            }, ref aabb);
+
+            return affected;
+        }
+
+        /// <summary>
+        /// Ray-cast the world for all fixtures in the path of the ray. Your callback controls whether you get the closest
+        /// point, any point, or n-points. The ray-cast ignores shapes that contain the starting point. Inside the callback: return
+        /// -1: ignore this fixture and continue return 0: terminate the ray cast return fraction: clip the ray to this point
+        /// return 1: don't clip the ray and continue
+        /// </summary>
+        /// <param name="callback">A user implemented callback class.</param>
+        /// <param name="point1">The ray starting point.</param>
+        /// <param name="point2">The ray ending point.</param>
+        public void RayCast(Func<Fixture, Vector2, Vector2, float, float> callback, Vector2 point1, Vector2 point2)
+        {
+            RayCastInput input = new RayCastInput();
+            input.MaxFraction = 1.0f;
+            input.Point1 = point1;
+            input.Point2 = point2;
+
+            _rayCastCallback = callback;
+            _contactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
+            _rayCastCallback = null;
+        }
+
+        public List<Fixture> RayCast(Vector2 point1, Vector2 point2)
+        {
+            List<Fixture> affected = new List<Fixture>();
+
+            float RayCastCallback(Fixture f, Vector2 vector2, Vector2 vector3, float f1)
+            {
+                affected.Add(f);
+                return 1;
+            }
+
+            RayCast(RayCastCallback, point1, point2);
+
+            return affected;
+        }
+
+        public Fixture TestPoint(Vector2 point)
+        {
+            AABB aabb;
+            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
+            aabb.LowerBound = point - d;
+            aabb.UpperBound = point + d;
+
+            _myFixture = null;
+            _point1 = point;
+
+            // Query the world for overlapping shapes.
+            QueryAABB(TestPointCallback, ref aabb);
+
+            return _myFixture;
+        }
+
+        /// <summary>Returns a list of fixtures that are at the specified point.</summary>
+        /// <param name="point">The point.</param>
+        public List<Fixture> TestPointAll(Vector2 point)
+        {
+            AABB aabb;
+            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
+            aabb.LowerBound = point - d;
+            aabb.UpperBound = point + d;
+
+            _point2 = point;
+            _testPointAllFixtures = new List<Fixture>();
+
+            // Query the world for overlapping shapes.
+            QueryAABB(TestPointAllCallback, ref aabb);
+
+            return _testPointAllFixtures;
+        }
+
+        /// <summary>
+        /// Shift the world origin. Useful for large worlds. The body shift formula is: position -= newOrigin @param
+        /// newOrigin the new origin with respect to the old origin Warning: Calling this method mid-update might cause a crash.
+        /// </summary>
+        public void ShiftOrigin(Vector2 newOrigin)
+        {
+            foreach (Body b in _bodyList)
+            {
+                b._xf.p -= newOrigin;
+                b._sweep.C0 -= newOrigin;
+                b._sweep.C -= newOrigin;
+            }
+
+            foreach (Joint joint in _jointList)
+            {
+                joint.ShiftOrigin(ref newOrigin);
+            }
+
+            _contactManager.BroadPhase.ShiftOrigin(ref newOrigin);
+        }
+
+        public void Clear()
+        {
+            ProcessChanges();
+
+            for (int i = _bodyList.Count - 1; i >= 0; i--)
+            {
+                RemoveBody(_bodyList[i]);
+            }
+
+            for (int i = _controllerList.Count - 1; i >= 0; i--)
+            {
+                RemoveController(_controllerList[i]);
+            }
+
+            for (int i = _breakableBodyList.Count - 1; i >= 0; i--)
+            {
+                RemoveBreakableBody(_breakableBodyList[i]);
+            }
+
+            //We call ProcessChanges again since the user could have added items to the body/joint queues in the Removed/Added events
+            ProcessChanges();
+        }
+
+        internal int CreateFixture(Fixture fixture)
+        {
+            // Let the world know we have a new fixture. This will cause new contacts
+            // to be created at the beginning of the next time step.
+            _newContacts = true;
+
+            //Velcro: Added event
+            FixtureAdded?.Invoke(fixture);
+
+            return _fixtureIdCounter++;
+        }
+
         private void ProcessRemovedJoints()
         {
-            if (_jointRemoveList.Count > 0)
+            if (_jointRemoveList.Count == 0)
+                return;
+
+            foreach (Joint joint in _jointRemoveList)
             {
-                foreach (Joint joint in _jointRemoveList)
-                {
-                    bool collideConnected = joint.CollideConnected;
-
-                    // Remove from the world list.
-                    _jointList.Remove(joint);
-
-                    // Disconnect from island graph.
-                    Body bodyA = joint.BodyA;
-                    Body bodyB = joint.BodyB;
-
-                    // Wake up connected bodies.
-                    bodyA.Awake = true;
-
-                    // WIP David
-                    if (!joint.IsFixedType())
-                        bodyB.Awake = true;
-
-                    // Remove from body 1.
-                    if (joint._edgeA.Prev != null)
-                        joint._edgeA.Prev.Next = joint._edgeA.Next;
-
-                    if (joint._edgeA.Next != null)
-                        joint._edgeA.Next.Prev = joint._edgeA.Prev;
-
-                    if (joint._edgeA == bodyA.JointList)
-                        bodyA.JointList = joint._edgeA.Next;
-
-                    joint._edgeA.Prev = null;
-                    joint._edgeA.Next = null;
-
-                    // WIP David
-                    if (!joint.IsFixedType())
-                    {
-                        // Remove from body 2
-                        if (joint._edgeB.Prev != null)
-                            joint._edgeB.Prev.Next = joint._edgeB.Next;
-
-                        if (joint._edgeB.Next != null)
-                            joint._edgeB.Next.Prev = joint._edgeB.Prev;
-
-                        if (joint._edgeB == bodyB.JointList)
-                            bodyB.JointList = joint._edgeB.Next;
-
-                        joint._edgeB.Prev = null;
-                        joint._edgeB.Next = null;
-
-                        // If the joint prevents collisions, then flag any contacts for filtering.
-                        if (!collideConnected)
-                        {
-                            ContactEdge edge = bodyB.ContactList;
-                            while (edge != null)
-                            {
-                                if (edge.Other == bodyA)
-                                {
-                                    // Flag the contact for filtering at the next time step (where either
-                                    // body is awake).
-                                    edge.Contact._flags |= ContactFlags.FilterFlag;
-                                }
-
-                                edge = edge.Next;
-                            }
-                        }
-                    }
-
-                    JointRemoved?.Invoke(joint);
-                }
-
-                _jointRemoveList.Clear();
+                RemoveJointInternal(joint);
             }
+
+            _jointRemoveList.Clear();
         }
 
         private void ProcessAddedJoints()
         {
-            if (_jointAddList.Count > 0)
+            if (_jointAddList.Count == 0)
+                return;
+
+            foreach (Joint joint in _jointAddList)
             {
-                foreach (Joint joint in _jointAddList)
-                {
-                    // Connect to the world list.
-                    _jointList.Add(joint);
-
-                    // Connect to the bodies' doubly linked lists.
-                    joint._edgeA.Joint = joint;
-                    joint._edgeA.Other = joint.BodyB;
-                    joint._edgeA.Prev = null;
-                    joint._edgeA.Next = joint.BodyA.JointList;
-
-                    if (joint.BodyA.JointList != null)
-                        joint.BodyA.JointList.Prev = joint._edgeA;
-
-                    joint.BodyA.JointList = joint._edgeA;
-
-                    // WIP David
-                    if (!joint.IsFixedType())
-                    {
-                        joint._edgeB.Joint = joint;
-                        joint._edgeB.Other = joint.BodyA;
-                        joint._edgeB.Prev = null;
-                        joint._edgeB.Next = joint.BodyB.JointList;
-
-                        if (joint.BodyB.JointList != null)
-                            joint.BodyB.JointList.Prev = joint._edgeB;
-
-                        joint.BodyB.JointList = joint._edgeB;
-
-                        Body bodyA = joint.BodyA;
-                        Body bodyB = joint.BodyB;
-
-                        // If the joint prevents collisions, then flag any contacts for filtering.
-                        if (!joint.CollideConnected)
-                        {
-                            ContactEdge edge = bodyB.ContactList;
-                            while (edge != null)
-                            {
-                                if (edge.Other == bodyA)
-                                {
-                                    // Flag the contact for filtering at the next time step (where either
-                                    // body is awake).
-                                    edge.Contact._flags |= ContactFlags.FilterFlag;
-                                }
-
-                                edge = edge.Next;
-                            }
-                        }
-                    }
-
-                    JointAdded?.Invoke(joint);
-
-                    // Note: creating a joint doesn't wake the bodies.
-                }
-
-                _jointAddList.Clear();
+                AddJointInternal(joint);
             }
+
+            _jointAddList.Clear();
         }
 
         private void ProcessAddedBodies()
         {
-            if (_bodyAddList.Count > 0)
+            if (_bodyAddList.Count == 0)
+                return;
+
+            foreach (Body body in _bodyAddList)
             {
-                foreach (Body body in _bodyAddList)
-                {
-                    // Add to world list.
-                    _bodyList.Add(body);
-
-                    BodyAdded?.Invoke(body);
-                }
-
-                _bodyAddList.Clear();
+                AddBodyInternal(body);
             }
+
+            _bodyAddList.Clear();
         }
 
         private void ProcessRemovedBodies()
         {
-            if (_bodyRemoveList.Count > 0)
+            if (_bodyRemoveList.Count == 0)
+                return;
+
+            foreach (Body body in _bodyRemoveList)
             {
-                foreach (Body body in _bodyRemoveList)
-                {
-                    Debug.Assert(_bodyList.Count > 0);
-
-                    // You tried to remove a body that is not contained in the BodyList.
-                    // Are you removing the body more than once?
-                    Debug.Assert(_bodyList.Contains(body));
-
-                    // Delete the attached joints.
-                    JointEdge je = body.JointList;
-                    while (je != null)
-                    {
-                        JointEdge je0 = je;
-                        je = je.Next;
-
-                        RemoveJoint(je0.Joint, false);
-                    }
-                    body.JointList = null;
-
-                    // Delete the attached contacts.
-                    ContactEdge ce = body.ContactList;
-                    while (ce != null)
-                    {
-                        ContactEdge ce0 = ce;
-                        ce = ce.Next;
-                        _contactManager.Destroy(ce0.Contact);
-                    }
-                    body.ContactList = null;
-
-                    // Delete the attached fixtures. This destroys broad-phase proxies.
-                    for (int i = 0; i < body.FixtureList.Count; i++)
-                    {
-                        Fixture fixture = body.FixtureList[i];
-                        fixture.DestroyProxies(_contactManager.BroadPhase);
-                        fixture.Destroy();
-
-                        //Velcro: Added event
-                        FixtureRemoved?.Invoke(fixture);
-                    }
-
-                    body.FixtureList = null;
-
-                    //Velcro: We make sure to cleanup the references and delegates
-                    body._world = null;
-                    body.OnCollision = null;
-                    body.OnSeparation = null;
-
-                    // Remove world body list.
-                    _bodyList.Remove(body);
-
-                    BodyRemoved?.Invoke(body);
-                }
-
-                _bodyRemoveList.Clear();
+                RemoveBodyInternal(body);
             }
+
+            _bodyRemoveList.Clear();
         }
 
         private bool QueryAABBCallbackWrapper(int proxyId)
@@ -855,301 +1093,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
         }
 
-        /// <summary>Add a rigid body.</summary>
-        internal void AddBody(Body body)
-        {
-            Debug.Assert(!_bodyAddList.Contains(body), "You are adding the same body more than once.");
-
-            if (!_bodyAddList.Contains(body))
-                _bodyAddList.Add(body);
-        }
-
-        /// <summary>Destroy a rigid body. Warning: This automatically deletes all associated shapes and joints.</summary>
-        /// <param name="body">The body.</param>
-        public void DestroyBody(Body body)
-        {
-            Debug.Assert(!_bodyRemoveList.Contains(body), "The body is already marked for removal. You are removing the body more than once.");
-
-            if (!_bodyRemoveList.Contains(body))
-                _bodyRemoveList.Add(body);
-        }
-
-        /// <summary>Create a joint to constrain bodies together. This may cause the connected bodies to cease colliding.</summary>
-        /// <param name="joint">The joint.</param>
-        public void AddJoint(Joint joint)
-        {
-            Debug.Assert(!_jointAddList.Contains(joint), "You are adding the same joint more than once.");
-
-            if (!_jointAddList.Contains(joint))
-                _jointAddList.Add(joint);
-        }
-
-        private void RemoveJoint(Joint joint, bool doCheck)
-        {
-            if (doCheck)
-            {
-                Debug.Assert(!_jointRemoveList.Contains(joint), "The joint is already marked for removal. You are removing the joint more than once.");
-            }
-
-            if (!_jointRemoveList.Contains(joint))
-                _jointRemoveList.Add(joint);
-        }
-
-        /// <summary>Destroy a joint. This may cause the connected bodies to begin colliding.</summary>
-        /// <param name="joint">The joint.</param>
-        public void RemoveJoint(Joint joint)
-        {
-            RemoveJoint(joint, true);
-        }
-
-        /// <summary>
-        /// All adds and removes are cached by the World during a World step. To process the changes before the world
-        /// updates again, call this method.
-        /// </summary>
-        public void ProcessChanges()
-        {
-            ProcessAddedBodies();
-            ProcessAddedJoints();
-
-            ProcessRemovedBodies();
-            ProcessRemovedJoints();
-        }
-
-        /// <summary>Take a time step. This performs collision detection, integration, and constraint solution.</summary>
-        /// <param name="dt">The amount of time to simulate, this should not vary.</param>
-        public void Step(float dt)
-        {
-            //Velcro: We support disabling the world
-            if (!_enabled)
-                return;
-
-            //Velcro: We reuse the timers to avoid generating garbage
-            Stopwatch stepTimer = _timerPool.GetFromPool(true);
-
-            {
-                //Velcro: We support add/removal of objects live in the engine.
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                ProcessChanges();
-                _profile.AddRemoveTime = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            // If new fixtures were added, we need to find the new contacts.
-            if (_newContacts)
-            {
-                //Velcro: We measure how much time is spent on finding new contacts
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                _contactManager.FindNewContacts();
-                _newContacts = false;
-                _profile.NewContactsTime = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            //Velcro: Moved warmstarting into Settings
-            //Velcro: Moved position and velocity iterations into Settings.cs
-            TimeStep step;
-            step.DeltaTime = dt;
-            if (dt > 0.0f)
-                step.InvertedDeltaTime = 1.0f / dt;
-            else
-                step.InvertedDeltaTime = 0.0f;
-
-            step.DeltaTimeRatio = _invDt0 * dt;
-
-            {
-                //Velcro: We have the concept of controllers. We update them here
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                for (int i = 0; i < _controllerList.Count; i++)
-                {
-                    _controllerList[i].Update(dt);
-                }
-                _profile.ControllersUpdateTime = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            // Update contacts. This is where some contacts are destroyed.
-            {
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                _contactManager.Collide();
-                _profile.Collide = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            // Integrate velocities, solve velocity constraints, and integrate positions.
-            if (_stepComplete && step.DeltaTime > 0.0f)
-            {
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                Solve(ref step);
-                _profile.Solve = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            // Handle TOI events.
-            if (Settings.ContinuousPhysics && step.DeltaTime > 0.0f)
-            {
-                Stopwatch timer = _timerPool.GetFromPool(true);
-                SolveTOI(ref step);
-                _profile.SolveTOI = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            if (step.DeltaTime > 0.0f)
-                _invDt0 = step.InvertedDeltaTime;
-
-            if (Settings.AutoClearForces)
-                ClearForces();
-
-            {
-                //Velcro: We support breakable bodies. We update them here.
-                Stopwatch timer = _timerPool.GetFromPool(true);
-
-                for (int i = 0; i < _breakableBodyList.Count; i++)
-                {
-                    _breakableBodyList[i].Update();
-                }
-                _profile.BreakableBodies = timer.ElapsedTicks;
-                _timerPool.ReturnToPool(timer);
-            }
-
-            _profile.Step = stepTimer.ElapsedTicks;
-            _timerPool.ReturnToPool(stepTimer);
-        }
-
-        /// <summary>
-        /// Call this after you are done with time steps to clear the forces. You normally call this after each call to
-        /// Step, unless you are performing sub-steps. By default, forces will be automatically cleared, so you don't need to call
-        /// this function.
-        /// </summary>
-        public void ClearForces()
-        {
-            for (int i = 0; i < _bodyList.Count; i++)
-            {
-                Body body = _bodyList[i];
-                body._force = Vector2.Zero;
-                body._torque = 0.0f;
-            }
-        }
-
-        /// <summary>
-        /// Query the world for all fixtures that potentially overlap the provided AABB. Inside the callback: Return true:
-        /// Continues the query Return false: Terminate the query
-        /// </summary>
-        /// <param name="callback">A user implemented callback class.</param>
-        /// <param name="aabb">The AABB query box.</param>
-        public void QueryAABB(Func<Fixture, bool> callback, ref AABB aabb)
-        {
-            _queryAABBCallback = callback;
-            _contactManager.BroadPhase.Query(_queryAABBCallbackWrapper, ref aabb);
-            _queryAABBCallback = null;
-        }
-
-        /// <summary>
-        /// Query the world for all fixtures that potentially overlap the provided AABB. Use the overload with a callback
-        /// for filtering and better performance.
-        /// </summary>
-        /// <param name="aabb">The AABB query box.</param>
-        /// <returns>A list of fixtures that were in the affected area.</returns>
-        public List<Fixture> QueryAABB(ref AABB aabb)
-        {
-            List<Fixture> affected = new List<Fixture>();
-
-            QueryAABB(fixture =>
-            {
-                affected.Add(fixture);
-                return true;
-            }, ref aabb);
-
-            return affected;
-        }
-
-        /// <summary>
-        /// Ray-cast the world for all fixtures in the path of the ray. Your callback controls whether you get the closest
-        /// point, any point, or n-points. The ray-cast ignores shapes that contain the starting point. Inside the callback: return
-        /// -1: ignore this fixture and continue return 0: terminate the ray cast return fraction: clip the ray to this point
-        /// return 1: don't clip the ray and continue
-        /// </summary>
-        /// <param name="callback">A user implemented callback class.</param>
-        /// <param name="point1">The ray starting point.</param>
-        /// <param name="point2">The ray ending point.</param>
-        public void RayCast(Func<Fixture, Vector2, Vector2, float, float> callback, Vector2 point1, Vector2 point2)
-        {
-            RayCastInput input = new RayCastInput();
-            input.MaxFraction = 1.0f;
-            input.Point1 = point1;
-            input.Point2 = point2;
-
-            _rayCastCallback = callback;
-            _contactManager.BroadPhase.RayCast(_rayCastCallbackWrapper, ref input);
-            _rayCastCallback = null;
-        }
-
-        public List<Fixture> RayCast(Vector2 point1, Vector2 point2)
-        {
-            List<Fixture> affected = new List<Fixture>();
-
-            float RayCastCallback(Fixture f, Vector2 vector2, Vector2 vector3, float f1)
-            {
-                affected.Add(f);
-                return 1;
-            }
-
-            RayCast(RayCastCallback, point1, point2);
-
-            return affected;
-        }
-
-        public void AddController(Controller controller)
-        {
-            Debug.Assert(!_controllerList.Contains(controller), "You are adding the same controller more than once.");
-
-            controller.World = this;
-            _controllerList.Add(controller);
-
-            ControllerAdded?.Invoke(controller);
-        }
-
-        public void RemoveController(Controller controller)
-        {
-            Debug.Assert(_controllerList.Contains(controller),
-                "You are removing a controller that is not in the simulation.");
-
-            if (_controllerList.Contains(controller))
-            {
-                _controllerList.Remove(controller);
-
-                ControllerRemoved?.Invoke(controller);
-            }
-        }
-
-        public void AddBreakableBody(BreakableBody breakableBody)
-        {
-            _breakableBodyList.Add(breakableBody);
-        }
-
-        public void RemoveBreakableBody(BreakableBody breakableBody)
-        {
-            //The breakable body list does not contain the body you tried to remove.
-            Debug.Assert(_breakableBodyList.Contains(breakableBody));
-
-            _breakableBodyList.Remove(breakableBody);
-        }
-
-        public Fixture TestPoint(Vector2 point)
-        {
-            AABB aabb;
-            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
-            aabb.LowerBound = point - d;
-            aabb.UpperBound = point + d;
-
-            _myFixture = null;
-            _point1 = point;
-
-            // Query the world for overlapping shapes.
-            QueryAABB(TestPointCallback, ref aabb);
-
-            return _myFixture;
-        }
-
         private bool TestPointCallback(Fixture fixture)
         {
             bool inside = fixture.TestPoint(ref _point1);
@@ -1163,24 +1106,6 @@ namespace Genbox.VelcroPhysics.Dynamics
             return true;
         }
 
-        /// <summary>Returns a list of fixtures that are at the specified point.</summary>
-        /// <param name="point">The point.</param>
-        public List<Fixture> TestPointAll(Vector2 point)
-        {
-            AABB aabb;
-            Vector2 d = new Vector2(MathConstants.Epsilon, MathConstants.Epsilon);
-            aabb.LowerBound = point - d;
-            aabb.UpperBound = point + d;
-
-            _point2 = point;
-            _testPointAllFixtures = new List<Fixture>();
-
-            // Query the world for overlapping shapes.
-            QueryAABB(TestPointAllCallback, ref aabb);
-
-            return _testPointAllFixtures;
-        }
-
         private bool TestPointAllCallback(Fixture fixture)
         {
             bool inside = fixture.TestPoint(ref _point2);
@@ -1191,75 +1116,203 @@ namespace Genbox.VelcroPhysics.Dynamics
             return true;
         }
 
-        /// <summary>
-        /// Shift the world origin. Useful for large worlds. The body shift formula is: position -= newOrigin @param
-        /// newOrigin the new origin with respect to the old origin Warning: Calling this method mid-update might cause a crash.
-        /// </summary>
-        public void ShiftOrigin(Vector2 newOrigin)
+        private void AddJointInternal(Joint joint)
         {
-            foreach (Body b in _bodyList)
+            // Connect to the world list.
+            _jointList.Add(joint);
+
+            // Connect to the bodies' doubly linked lists.
+            joint._edgeA.Joint = joint;
+            joint._edgeA.Other = joint.BodyB;
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = joint.BodyA.JointList;
+
+            if (joint.BodyA.JointList != null)
+                joint.BodyA.JointList.Prev = joint._edgeA;
+
+            joint.BodyA.JointList = joint._edgeA;
+
+            // WIP David
+            if (!joint.IsFixedType())
             {
-                b._xf.p -= newOrigin;
-                b._sweep.C0 -= newOrigin;
-                b._sweep.C -= newOrigin;
+                joint._edgeB.Joint = joint;
+                joint._edgeB.Other = joint.BodyA;
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = joint.BodyB.JointList;
+
+                if (joint.BodyB.JointList != null)
+                    joint.BodyB.JointList.Prev = joint._edgeB;
+
+                joint.BodyB.JointList = joint._edgeB;
+
+                Body bodyA = joint.BodyA;
+                Body bodyB = joint.BodyB;
+
+                // If the joint prevents collisions, then flag any contacts for filtering.
+                if (!joint.CollideConnected)
+                {
+                    ContactEdge edge = bodyB.ContactList;
+                    while (edge != null)
+                    {
+                        if (edge.Other == bodyA)
+                        {
+                            // Flag the contact for filtering at the next time step (where either
+                            // body is awake).
+                            edge.Contact._flags |= ContactFlags.FilterFlag;
+                        }
+
+                        edge = edge.Next;
+                    }
+                }
             }
 
-            foreach (Joint joint in _jointList)
-            {
-                joint.ShiftOrigin(ref newOrigin);
-            }
+            JointAdded?.Invoke(joint);
 
-            _contactManager.BroadPhase.ShiftOrigin(ref newOrigin);
+            // Note: creating a joint doesn't wake the bodies.
         }
 
-        public void Clear()
+        private void RemoveJointInternal(Joint joint)
         {
-            ProcessChanges();
+            bool collideConnected = joint.CollideConnected;
 
-            for (int i = _bodyList.Count - 1; i >= 0; i--)
+            // Remove from the world list.
+            _jointList.Remove(joint);
+
+            // Disconnect from island graph.
+            Body bodyA = joint.BodyA;
+            Body bodyB = joint.BodyB;
+
+            // Wake up connected bodies.
+            bodyA.Awake = true;
+
+            // WIP David
+            if (!joint.IsFixedType())
+                bodyB.Awake = true;
+
+            // Remove from body 1.
+            if (joint._edgeA.Prev != null)
+                joint._edgeA.Prev.Next = joint._edgeA.Next;
+
+            if (joint._edgeA.Next != null)
+                joint._edgeA.Next.Prev = joint._edgeA.Prev;
+
+            if (joint._edgeA == bodyA.JointList)
+                bodyA.JointList = joint._edgeA.Next;
+
+            joint._edgeA.Prev = null;
+            joint._edgeA.Next = null;
+
+            // WIP David
+            if (!joint.IsFixedType())
             {
-                DestroyBody(_bodyList[i]);
+                // Remove from body 2
+                if (joint._edgeB.Prev != null)
+                    joint._edgeB.Prev.Next = joint._edgeB.Next;
+
+                if (joint._edgeB.Next != null)
+                    joint._edgeB.Next.Prev = joint._edgeB.Prev;
+
+                if (joint._edgeB == bodyB.JointList)
+                    bodyB.JointList = joint._edgeB.Next;
+
+                joint._edgeB.Prev = null;
+                joint._edgeB.Next = null;
+
+                // If the joint prevents collisions, then flag any contacts for filtering.
+                if (!collideConnected)
+                {
+                    ContactEdge edge = bodyB.ContactList;
+                    while (edge != null)
+                    {
+                        if (edge.Other == bodyA)
+                        {
+                            // Flag the contact for filtering at the next time step (where either
+                            // body is awake).
+                            edge.Contact._flags |= ContactFlags.FilterFlag;
+                        }
+
+                        edge = edge.Next;
+                    }
+                }
             }
 
-            for (int i = _controllerList.Count - 1; i >= 0; i--)
+            JointRemoved?.Invoke(joint);
+        }
+
+        private void AddBodyInternal(Body body)
+        {
+            // Add to world list.
+            _bodyList.Add(body);
+
+            //Velcro: We have events to notify the user that a body was added
+            BodyAdded?.Invoke(body);
+
+            //Velcro: We have events to notify fixtures was added
+            if (FixtureAdded != null)
+                for (int i = 0; i < body.FixtureList.Count; i++)
+                    FixtureAdded(body.FixtureList[i]);
+        }
+
+        private void RemoveBodyInternal(Body body)
+        {
+            Debug.Assert(_bodyList.Count > 0);
+
+            //Velcro: We check if the user is trying to remove a body more than one (to check for bugs)
+            Debug.Assert(_bodyList.Contains(body));
+
+            // Delete the attached joints.
+            JointEdge je = body.JointList;
+            while (je != null)
             {
-                RemoveController(_controllerList[i]);
+                JointEdge je0 = je;
+                je = je.Next;
+
+                RemoveJointInternal(je0.Joint);
+            }
+            body.JointList = null;
+
+            // Delete the attached contacts.
+            ContactEdge ce = body.ContactList;
+            while (ce != null)
+            {
+                ContactEdge ce0 = ce;
+                ce = ce.Next;
+                _contactManager.Remove(ce0.Contact);
+            }
+            body.ContactList = null;
+
+            // Delete the attached fixtures. This destroys broad-phase proxies.
+            for (int i = 0; i < body.FixtureList.Count; i++)
+            {
+                Fixture fixture = body.FixtureList[i];
+
+                //Velcro: Added event
+                FixtureRemoved?.Invoke(fixture);
+
+                fixture.DestroyProxies(_contactManager.BroadPhase);
+                fixture.Destroy();
             }
 
-            for (int i = _breakableBodyList.Count - 1; i >= 0; i--)
-            {
-                RemoveBreakableBody(_breakableBodyList[i]);
-            }
+            body.FixtureList = null;
 
-            ProcessChanges();
+            //Velcro: We make sure to cleanup the references and delegates
+            body._world = null;
+            body.OnCollision = null;
+            body.OnSeparation = null;
+
+            // Remove world body list.
+            _bodyList.Remove(body);
+
+            BodyRemoved?.Invoke(body);
         }
 
-        public Body CreateBody(BodyDef def)
+        private void ProcessChanges()
         {
-            Body b = new Body(this, def);
-            b.BodyId = _bodyIdCounter++;
+            ProcessAddedBodies();
+            ProcessAddedJoints();
 
-            AddBody(b);
-            return b;
-        }
-
-        public Joint CreateJoint(JointDef def)
-        {
-            Joint joint = Joint.Create(def);
-            AddJoint(joint);
-            return joint;
-        }
-
-        internal int CreateFixture(Fixture fixture)
-        {
-            // Let the world know we have a new fixture. This will cause new contacts
-            // to be created at the beginning of the next time step.
-            _newContacts = true;
-
-            //Velcro: Added event
-            FixtureAdded?.Invoke(fixture);
-
-            return _fixtureIdCounter++;
+            ProcessRemovedBodies();
+            ProcessRemovedJoints();
         }
     }
 }

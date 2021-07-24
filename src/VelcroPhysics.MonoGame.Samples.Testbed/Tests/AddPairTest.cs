@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -49,8 +50,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 {
                     bd.Position = new Vector2(Rand.RandomFloat(minX, maxX), Rand.RandomFloat(minY, maxY));
 
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(shape);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(shape);
                 }
             }
 
@@ -61,8 +62,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-40.0f, 5.0f);
                 bd.IsBullet = true;
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
                 body.LinearVelocity = new Vector2(10.0f, 0.0f);
             }
         }

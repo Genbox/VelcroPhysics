@@ -60,12 +60,12 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             Vertices box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(-0.5f, 0.0f), 0.0f);
 
             PolygonShape shape1 = new PolygonShape(box, 1);
-            _piece1 = _body1.CreateFixture(shape1);
+            _piece1 = _body1.AddFixture(shape1);
 
             box = PolygonUtils.CreateRectangle(0.5f, 0.5f, new Vector2(0.5f, 0.0f), 0.0f);
             _shape2 = new PolygonShape(box, 1);
 
-            _piece2 = _body1.CreateFixture(_shape2);
+            _piece2 = _body1.AddFixture(_shape2);
 
             _break = false;
             _broke = false;
@@ -117,7 +117,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             Body body1 = _piece1.Body;
             Vector2 center = body1.WorldCenter;
 
-            body1.DestroyFixture(_piece2);
+            body1.RemoveFixture(_piece2);
             _piece2 = null;
 
             Body body2 = BodyFactory.CreateBody(World);
@@ -125,7 +125,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests.Velcro
             body2.Position = body1.Position;
             body2.Rotation = body1.Rotation;
 
-            _piece2 = body2.CreateFixture(_shape2);
+            _piece2 = body2.AddFixture(_shape2);
 
             // Compute consistent velocities for new bodies based on
             // cached velocity.

@@ -20,7 +20,7 @@ namespace Genbox.VelcroPhysics.Factories
             def.Type = bodyType;
             def.UserData = userData;
 
-            return world.CreateBody(def);
+            return CreateFromDef(world, def);
         }
 
         public static Body CreateEdge(World world, Vector2 start, Vector2 end, object userData = null)
@@ -196,9 +196,9 @@ namespace Genbox.VelcroPhysics.Factories
             return breakableBody;
         }
 
-        public static Body CreateFromDef(World world, BodyDef bodyDef)
+        public static Body CreateFromDef(World world, BodyDef def)
         {
-            return world.CreateBody(bodyDef);
+            return new Body(def, world);
         }
     }
 }

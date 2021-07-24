@@ -24,6 +24,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -44,14 +45,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
 
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             // Define attachment
@@ -59,11 +60,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 3.0f);
-                _attachment = World.CreateBody(bd);
+                _attachment = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(2.0f);
                 shape.SetAsBox(0.5f, 2.0f);
-                _attachment.CreateFixture(shape);
+                _attachment.AddFixture(shape);
             }
 
             // Define platform
@@ -71,7 +72,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-4.0f, 5.0f);
-                _platform = World.CreateBody(bd);
+                _platform = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(2.0f);
                 shape.SetAsBox(0.5f, 4.0f, new Vector2(4.0f, 0.0f), 0.5f * MathConstants.Pi);
@@ -79,13 +80,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
                 fd.Friction = 0.6f;
-                _platform.CreateFixture(fd);
+                _platform.AddFixture(fd);
 
                 RevoluteJointDef rjd = new RevoluteJointDef();
                 rjd.Initialize(_attachment, _platform, new Vector2(0.0f, 5.0f));
                 rjd.MaxMotorTorque = 50.0f;
                 rjd.EnableMotor = true;
-                World.CreateJoint(rjd);
+                JointFactory.CreateFromDef(World, rjd);
 
                 PrismaticJointDef pjd = new PrismaticJointDef();
                 pjd.Initialize(ground, _platform, new Vector2(0.0f, 5.0f), new Vector2(1.0f, 0.0f));
@@ -96,7 +97,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 pjd.UpperTranslation = 10.0f;
                 pjd.EnableLimit = true;
 
-                World.CreateJoint(pjd);
+                JointFactory.CreateFromDef(World, pjd);
 
                 _speed = 3.0f;
             }
@@ -106,7 +107,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 8.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(2.0f);
                 shape.SetAsBox(0.75f, 0.75f);
@@ -115,7 +116,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Shape = shape;
                 fd.Friction = 0.6f;
 
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
             }
         }
 

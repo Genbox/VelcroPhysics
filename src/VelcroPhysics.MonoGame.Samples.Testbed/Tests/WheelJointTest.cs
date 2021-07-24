@@ -27,6 +27,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -45,11 +46,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             _enableLimit = true;
@@ -64,8 +65,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 10.0f);
                 bd.AllowSleep = false;
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
 
                 WheelJointDef jd = new WheelJointDef();
 
@@ -85,7 +86,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
 
-                _joint = (WheelJoint)World.CreateJoint(jd);
+                _joint = (WheelJoint)JointFactory.CreateFromDef(World, jd);
             }
         }
 

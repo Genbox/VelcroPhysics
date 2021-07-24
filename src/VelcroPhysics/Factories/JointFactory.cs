@@ -1,4 +1,5 @@
-﻿using Genbox.VelcroPhysics.Dynamics;
+﻿using Genbox.VelcroPhysics.Definitions.Joints;
+using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
 using Microsoft.Xna.Framework;
 
@@ -105,6 +106,13 @@ namespace Genbox.VelcroPhysics.Factories
         public static FrictionJoint CreateFrictionJoint(World world, Body bodyA, Body bodyB)
         {
             return CreateFrictionJoint(world, bodyA, bodyB, Vector2.Zero);
+        }
+
+        public static Joint CreateFromDef(World world, JointDef def)
+        {
+            Joint joint = Joint.Create(def);
+            world.AddJoint(joint);
+            return joint;
         }
     }
 }

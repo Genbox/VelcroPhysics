@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -37,10 +38,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -52,9 +53,9 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(0.0f, 4.0f + 3.0f * i);
 
-                    _bodies[i] = World.CreateBody(bd);
+                    _bodies[i] = BodyFactory.CreateFromDef(World, bd);
 
-                    _bodies[i].CreateFixture(shape);
+                    _bodies[i].AddFixture(shape);
 
                     _bodies[i].LinearVelocity = new Vector2(0.0f, -50.0f);
                 }

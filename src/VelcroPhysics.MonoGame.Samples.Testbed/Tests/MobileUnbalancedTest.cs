@@ -24,6 +24,7 @@ using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -41,7 +42,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             {
                 BodyDef bodyDef = new BodyDef();
                 bodyDef.Position = new Vector2(0.0f, 20.0f);
-                ground = World.CreateBody(bodyDef);
+                ground = BodyFactory.CreateFromDef(World, bodyDef);
             }
 
             float a = 0.5f;
@@ -54,7 +55,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             jointDef.BodyB = root;
             jointDef.LocalAnchorA = Vector2.Zero;
             jointDef.LocalAnchorB = h;
-            World.CreateJoint(jointDef);
+            JointFactory.CreateFromDef(World, jointDef);
         }
 
         private Body AddNode(Body parent, Vector2 localAnchor, int depth, float offset, float a)
@@ -67,11 +68,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             BodyDef bodyDef = new BodyDef();
             bodyDef.Type = BodyType.Dynamic;
             bodyDef.Position = p;
-            Body body = World.CreateBody(bodyDef);
+            Body body = BodyFactory.CreateFromDef(World, bodyDef);
 
             PolygonShape shape = new PolygonShape(density);
             shape.SetAsBox(0.25f * a, a);
-            body.CreateFixture(shape);
+            body.AddFixture(shape);
 
             if (depth == _depth)
                 return body;
@@ -87,11 +88,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             jointDef.LocalAnchorA = a1;
             jointDef.BodyB = body1;
-            World.CreateJoint(jointDef);
+            JointFactory.CreateFromDef(World, jointDef);
 
             jointDef.LocalAnchorA = a2;
             jointDef.BodyB = body2;
-            World.CreateJoint(jointDef);
+            JointFactory.CreateFromDef(World, jointDef);
 
             return body;
         }

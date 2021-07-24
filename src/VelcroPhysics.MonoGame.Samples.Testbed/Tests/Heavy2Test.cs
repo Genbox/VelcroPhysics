@@ -23,6 +23,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -38,26 +39,26 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 2.5f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(10.0f);
                 shape.Radius = 0.5f;
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
 
                 bd.Position = new Vector2(0.0f, 3.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
 
                 _heavy = null;
             }
@@ -67,7 +68,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
         {
             if (_heavy != null)
             {
-                World.DestroyBody(_heavy);
+                World.RemoveBody(_heavy);
                 _heavy = null;
             }
             else
@@ -75,11 +76,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 9.0f);
-                _heavy = World.CreateBody(bd);
+                _heavy = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(10.0f);
                 shape.Radius = 5.0f;
-                _heavy.CreateFixture(shape);
+                _heavy.AddFixture(shape);
             }
         }
 

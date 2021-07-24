@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Collision.Narrowphase;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -39,18 +40,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // Ground
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Platform
             {
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(-5.0f, 5.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(0);
                 shape.SetAsBox(10.0f, 0.5f);
@@ -58,7 +59,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
                 fd.Friction = 0.8f;
-                _platform = body.CreateFixture(fd);
+                _platform = body.AddFixture(fd);
             }
 
             // Boxes
@@ -67,11 +68,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-10.0f + 2.0f * i, 7.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(20.0f);
                 shape.SetAsBox(0.5f, 0.5f);
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
             }
         }
 

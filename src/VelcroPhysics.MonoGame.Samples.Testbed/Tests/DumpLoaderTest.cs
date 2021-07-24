@@ -25,6 +25,7 @@
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
@@ -47,8 +48,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             BodyDef groundBodyDef = new BodyDef();
             groundBodyDef.Type = BodyType.Static;
 
-            Body groundBody = World.CreateBody(groundBodyDef);
-            Fixture groundBodyFixture = groundBody.CreateFixture(groundFixtureDef);
+            Body groundBody = BodyFactory.CreateFromDef(World, groundBodyDef);
+            Fixture groundBodyFixture = groundBody.AddFixture(groundFixtureDef);
 
             CircleShape ballShape = new CircleShape(1, 1);
 
@@ -62,8 +63,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             // ballBodyDef.AngularDamping = 0.2f;
 
-            _ball = World.CreateBody(ballBodyDef);
-            Fixture ballFixture = _ball.CreateFixture(ballFixtureDef);
+            _ball = BodyFactory.CreateFromDef(World, ballBodyDef);
+            Fixture ballFixture = _ball.AddFixture(ballFixtureDef);
             _ball.ApplyForce(new Vector2(-1000, -400));
         }
 

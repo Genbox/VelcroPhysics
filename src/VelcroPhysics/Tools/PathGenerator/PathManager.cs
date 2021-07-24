@@ -26,13 +26,13 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
             if (path.Closed)
             {
                 ChainShape chain = new ChainShape(verts, true);
-                body.CreateFixture(chain);
+                body.AddFixture(chain);
             }
             else
             {
                 for (int i = 1; i < verts.Count; i++)
                 {
-                    body.CreateFixture(new EdgeShape(verts[i], verts[i - 1]));
+                    body.AddFixture(new EdgeShape(verts[i], verts[i - 1]));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
 
             foreach (Vertices item in decomposedVerts)
             {
-                body.CreateFixture(new PolygonShape(item, density));
+                body.AddFixture(new PolygonShape(item, density));
             }
         }
 
@@ -77,7 +77,7 @@ namespace Genbox.VelcroPhysics.Tools.PathGenerator
 
                 foreach (Shape shape in shapes)
                 {
-                    b.CreateFixture(shape);
+                    b.AddFixture(shape);
                 }
 
                 bodyList.Add(b);

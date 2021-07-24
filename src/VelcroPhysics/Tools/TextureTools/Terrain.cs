@@ -200,7 +200,7 @@ namespace Genbox.VelcroPhysics.Tools.TextureTools
                     {
                         for (int i = 0; i < _bodyMap[x, y].Count; i++)
                         {
-                            World.DestroyBody(_bodyMap[x, y][i]);
+                            World.RemoveBody(_bodyMap[x, y][i]);
                         }
                     }
 

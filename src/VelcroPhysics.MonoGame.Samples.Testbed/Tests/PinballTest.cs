@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -48,7 +49,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 Vertices vs = new Vertices(5);
                 vs.Add(new Vector2(-8.0f, 6.0f));
@@ -60,7 +61,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 ChainShape loop = new ChainShape(vs, true);
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = loop;
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             // Flippers
@@ -71,10 +72,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
 
                 bd.Position = p1;
-                Body leftFlipper = World.CreateBody(bd);
+                Body leftFlipper = BodyFactory.CreateFromDef(World, bd);
 
                 bd.Position = p2;
-                Body rightFlipper = World.CreateBody(bd);
+                Body rightFlipper = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape box = new PolygonShape(1.0f);
                 box.SetAsBox(1.75f, 0.1f);
@@ -82,8 +83,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = box;
 
-                leftFlipper.CreateFixture(fd);
-                rightFlipper.CreateFixture(fd);
+                leftFlipper.AddFixture(fd);
+                rightFlipper.AddFixture(fd);
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.BodyA = ground;
@@ -97,14 +98,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.BodyB = leftFlipper;
                 jd.LowerAngle = -30.0f * MathConstants.Pi / 180.0f;
                 jd.UpperAngle = 5.0f * MathConstants.Pi / 180.0f;
-                _leftJoint = (RevoluteJoint)World.CreateJoint(jd);
+                _leftJoint = (RevoluteJoint)JointFactory.CreateFromDef(World, jd);
 
                 jd.MotorSpeed = 0.0f;
                 jd.LocalAnchorA = p2;
                 jd.BodyB = rightFlipper;
                 jd.LowerAngle = -5.0f * MathConstants.Pi / 180.0f;
                 jd.UpperAngle = 30.0f * MathConstants.Pi / 180.0f;
-                _rightJoint = (RevoluteJoint)World.CreateJoint(jd);
+                _rightJoint = (RevoluteJoint)JointFactory.CreateFromDef(World, jd);
             }
 
             // Circle character
@@ -114,14 +115,14 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.IsBullet = true;
 
-                _ball = World.CreateBody(bd);
+                _ball = BodyFactory.CreateFromDef(World, bd);
 
                 CircleShape shape = new CircleShape(1.0f);
                 shape.Radius = 0.2f;
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
-                _ball.CreateFixture(fd);
+                _ball.AddFixture(fd);
             }
 
             _button = false;

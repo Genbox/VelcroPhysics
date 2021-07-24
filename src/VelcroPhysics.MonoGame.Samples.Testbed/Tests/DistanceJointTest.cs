@@ -27,6 +27,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -47,11 +48,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -60,11 +61,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.AngularDamping = 0.1f;
 
                 bd.Position = new Vector2(0.0f, 5.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(5.0f);
                 shape.SetAsBox(0.5f, 0.5f);
-                body.CreateFixture(shape);
+                body.AddFixture(shape);
 
                 _hertz = 1.0f;
                 _dampingRatio = 0.7f;
@@ -79,7 +80,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
 
-                _joint = (DistanceJoint)World.CreateJoint(jd);
+                _joint = (DistanceJoint)JointFactory.CreateFromDef(World, jd);
             }
         }
 

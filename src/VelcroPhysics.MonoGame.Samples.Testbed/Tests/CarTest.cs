@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -50,7 +51,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
 
@@ -58,7 +59,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Shape = shape;
                 fd.Friction = 0.6f;
 
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
 
                 float[] hs = { 0.25f, 1.0f, 4.0f, 0.0f, 0.0f, -1.0f, -2.0f, -2.0f, -1.25f, 0.0f };
 
@@ -68,7 +69,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 {
                     float y2 = hs[i];
                     shape.SetTwoSided(new Vector2(x, y1), new Vector2(x + dx, y2));
-                    ground.CreateFixture(fd);
+                    ground.AddFixture(fd);
                     y1 = y2;
                     x += dx;
                 }
@@ -77,29 +78,29 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 {
                     float y2 = hs[i];
                     shape.SetTwoSided(new Vector2(x, y1), new Vector2(x + dx, y2));
-                    ground.CreateFixture(fd);
+                    ground.AddFixture(fd);
                     y1 = y2;
                     x += dx;
                 }
 
                 shape.SetTwoSided(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f));
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
 
                 x += 80.0f;
                 shape.SetTwoSided(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f));
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
 
                 x += 40.0f;
                 shape.SetTwoSided(new Vector2(x, 0.0f), new Vector2(x + 10.0f, 5.0f));
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
 
                 x += 20.0f;
                 shape.SetTwoSided(new Vector2(x, 0.0f), new Vector2(x + 40.0f, 0.0f));
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
 
                 x += 40.0f;
                 shape.SetTwoSided(new Vector2(x, 0.0f), new Vector2(x, 20.0f));
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             // Teeter
@@ -107,18 +108,18 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Position = new Vector2(140.0f, 1.0f);
                 bd.Type = BodyType.Dynamic;
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape box = new PolygonShape(1.0f);
                 box.SetAsBox(10.0f, 0.25f);
-                body.CreateFixture(box);
+                body.AddFixture(box);
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.Initialize(ground, body, body.Position);
                 jd.LowerAngle = -8.0f * MathConstants.Pi / 180.0f;
                 jd.UpperAngle = 8.0f * MathConstants.Pi / 180.0f;
                 jd.EnableLimit = true;
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
 
                 body.ApplyAngularImpulse(100.0f);
             }
@@ -141,19 +142,19 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                     BodyDef bd = new BodyDef();
                     bd.Type = BodyType.Dynamic;
                     bd.Position = new Vector2(161.0f + 2.0f * i, -0.125f);
-                    Body body = World.CreateBody(bd);
-                    body.CreateFixture(fd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
+                    body.AddFixture(fd);
 
                     Vector2 anchor = new Vector2(160.0f + 2.0f * i, -0.125f);
                     jd.Initialize(prevBody, body, anchor);
-                    World.CreateJoint(jd);
+                    JointFactory.CreateFromDef(World, jd);
 
                     prevBody = body;
                 }
 
                 Vector2 anchor2 = new Vector2(160.0f + 2.0f * N, -0.125f);
                 jd.Initialize(prevBody, ground, anchor2);
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
             }
 
             // Boxes
@@ -166,24 +167,24 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
 
                 bd.Position = new Vector2(230.0f, 0.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(box);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(box);
 
                 bd.Position = new Vector2(230.0f, 1.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(box);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(box);
 
                 bd.Position = new Vector2(230.0f, 2.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(box);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(box);
 
                 bd.Position = new Vector2(230.0f, 3.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(box);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(box);
 
                 bd.Position = new Vector2(230.0f, 4.5f);
-                body = World.CreateBody(bd);
-                body.CreateFixture(box);
+                body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(box);
             }
 
             // Car
@@ -204,20 +205,20 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 1.0f);
-                _car = World.CreateBody(bd);
-                _car.CreateFixture(chassis);
+                _car = BodyFactory.CreateFromDef(World, bd);
+                _car.AddFixture(chassis);
 
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = circle;
                 fd.Friction = 0.9f;
 
                 bd.Position = new Vector2(-1.0f, 0.35f);
-                _wheel1 = World.CreateBody(bd);
-                _wheel1.CreateFixture(fd);
+                _wheel1 = BodyFactory.CreateFromDef(World, bd);
+                _wheel1.AddFixture(fd);
 
                 bd.Position = new Vector2(1.0f, 0.4f);
-                _wheel2 = World.CreateBody(bd);
-                _wheel2.CreateFixture(fd);
+                _wheel2 = BodyFactory.CreateFromDef(World, bd);
+                _wheel2.AddFixture(fd);
 
                 WheelJointDef jd = new WheelJointDef();
                 Vector2 axis = new Vector2(0.0f, 1.0f);
@@ -238,7 +239,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.LowerTranslation = -0.25f;
                 jd.UpperTranslation = 0.25f;
                 jd.EnableLimit = true;
-                _spring1 = (WheelJoint)World.CreateJoint(jd);
+                _spring1 = (WheelJoint)JointFactory.CreateFromDef(World, jd);
 
                 jd.Initialize(_car, _wheel2, _wheel2.Position, axis);
                 jd.MotorSpeed = 0.0f;
@@ -249,7 +250,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.LowerTranslation = -0.25f;
                 jd.UpperTranslation = 0.25f;
                 jd.EnableLimit = true;
-                _spring2 = (WheelJoint)World.CreateJoint(jd);
+                _spring2 = (WheelJoint)JointFactory.CreateFromDef(World, jd);
             }
         }
 

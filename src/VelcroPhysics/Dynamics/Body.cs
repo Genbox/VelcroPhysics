@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -56,7 +56,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         internal Transform _xf; // the body origin transform
         internal int _islandIndex;
 
-        internal Body(World world, BodyDef def)
+        internal Body(BodyDef def, World world)
         {
             FixtureList = new List<Fixture>(1);
 
@@ -145,7 +145,11 @@ namespace Genbox.VelcroPhysics.Dynamics
             get => _type;
             set
             {
-                if (value == _type)
+                Debug.Assert(!_world.IsLocked);
+                if (_world.IsLocked)
+                    return;
+
+                if (_type == value)
                     return;
 
                 _type = value;
@@ -173,7 +177,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 {
                     ContactEdge ce0 = ce;
                     ce = ce.Next;
-                    _world.ContactManager.Destroy(ce0.Contact);
+                    _world.ContactManager.Remove(ce0.Contact);
                 }
 
                 ContactList = null;
@@ -307,6 +311,8 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             set
             {
+                Debug.Assert(!_world.IsLocked);
+
                 if (value == Enabled)
                     return;
 
@@ -341,7 +347,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     {
                         ContactEdge ce0 = ce;
                         ce = ce.Next;
-                        _world.ContactManager.Destroy(ce0.Contact);
+                        _world.ContactManager.Remove(ce0.Contact);
                     }
                     ContactList = null;
                 }
@@ -612,8 +618,12 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// the mass of the body. Contacts are not created until the next time step. Warning: This function is locked during
         /// callbacks.
         /// </summary>
-        public Fixture CreateFixture(FixtureDef template)
+        public Fixture AddFixture(FixtureDef template)
         {
+            Debug.Assert(!_world.IsLocked);
+            if (_world.IsLocked)
+                return null;
+
             Fixture f = new Fixture(this, template);
 
             //Velcro: Added this code to raise the FixtureAdded event and get an identifier
@@ -622,12 +632,21 @@ namespace Genbox.VelcroPhysics.Dynamics
             return f;
         }
 
-        public Fixture CreateFixture(Shape shape)
+        /// <summary>
+        /// Creates a fixture and attach it to this body. If the density is non-zero, this function automatically updates
+        /// the mass of the body. Contacts are not created until the next time step. Warning: This function is locked during
+        /// callbacks.
+        /// </summary>
+        public Fixture AddFixture(Shape shape)
         {
+            Debug.Assert(!_world.IsLocked);
+            if (_world.IsLocked)
+                return null;
+
             FixtureDef template = new FixtureDef();
             template.Shape = shape;
 
-            return CreateFixture(template);
+            return AddFixture(template);
         }
 
         /// <summary>
@@ -637,8 +656,12 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// locked during callbacks.
         /// </summary>
         /// <param name="fixture">The fixture to be removed.</param>
-        public void DestroyFixture(Fixture fixture)
+        public void RemoveFixture(Fixture fixture)
         {
+            Debug.Assert(!_world.IsLocked);
+            if (_world.IsLocked)
+                return;
+
             if (fixture == null)
                 return;
 
@@ -664,7 +687,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 {
                     // This destroys the contact and removes it from
                     // this body's contact list.
-                    _world.ContactManager.Destroy(c);
+                    _world.ContactManager.Remove(c);
                 }
             }
 
@@ -703,8 +726,9 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <param name="rotation">The world rotation in radians.</param>
         public void SetTransform(Vector2 position, float rotation)
         {
-            SetTransform(ref position, rotation);
-        }
+            Debug.Assert(!_world.IsLocked);
+            if (_world.IsLocked)
+                return;
 
         /// <summary>For teleporting a body without considering new contacts immediately.</summary>
         /// <param name="position">The position.</param>
@@ -1051,7 +1075,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// <summary> Calling this will remove the body from its associated world.</summary>
         public void RemoveFromWorld()
         {
-            _world.DestroyBody(this);
+            _world.RemoveBody(this);
         }
 
         internal void SynchronizeFixtures()

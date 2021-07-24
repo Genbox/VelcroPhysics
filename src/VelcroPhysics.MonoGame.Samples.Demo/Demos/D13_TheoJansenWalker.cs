@@ -38,7 +38,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos
                 _circles[i] = BodyFactory.CreateBody(World);
                 _circles[i].BodyType = BodyType.Dynamic;
                 _circles[i].Position = new Vector2(-24f + 1f * i, 10f);
-                _circles[i].CreateFixture(shape);
+                _circles[i].AddFixture(shape);
             }
 
             _walker = new TheoJansenWalker(World, Vector2.Zero);

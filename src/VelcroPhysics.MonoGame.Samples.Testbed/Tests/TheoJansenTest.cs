@@ -28,6 +28,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -102,11 +103,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             bd1.AngularDamping = 10.0f;
             bd2.AngularDamping = 10.0f;
 
-            Body body1 = World.CreateBody(bd1);
-            Body body2 = World.CreateBody(bd2);
+            Body body1 = BodyFactory.CreateFromDef(World, bd1);
+            Body body2 = BodyFactory.CreateFromDef(World, bd2);
 
-            body1.CreateFixture(fd1);
-            body2.CreateFixture(fd2);
+            body1.AddFixture(fd1);
+            body2.AddFixture(fd2);
 
             {
                 DistanceJointDef jd = new DistanceJointDef();
@@ -121,31 +122,31 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out float stiffness, out float damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
 
                 jd.Initialize(body1, body2, p3 + _offset, p4 + _offset);
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
 
                 jd.Initialize(body1, _wheel, p3 + _offset, wheelAnchor + _offset);
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
 
                 jd.Initialize(body2, _wheel, p6 + _offset, wheelAnchor + _offset);
                 JointHelper.LinearStiffness(frequencyHz, dampingRatio, jd.BodyA, jd.BodyB, out stiffness, out damping);
                 jd.Stiffness = stiffness;
                 jd.Damping = damping;
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
             }
 
             {
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.Initialize(body2, _chassis, p4 + _offset);
-                World.CreateJoint(jd);
+                JointFactory.CreateFromDef(World, jd);
             }
         }
 
@@ -159,17 +160,17 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             // Ground
             {
                 BodyDef bd = new BodyDef();
-                Body ground = World.CreateBody(bd);
+                Body ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-50.0f, 0.0f), new Vector2(50.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
 
                 shape.SetTwoSided(new Vector2(-50.0f, 0.0f), new Vector2(-50.0f, 10.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
 
                 shape.SetTwoSided(new Vector2(50.0f, 0.0f), new Vector2(50.0f, 10.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             // Balls
@@ -182,8 +183,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-40.0f + 2.0f * i, 0.5f);
 
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
             }
 
             // Chassis
@@ -197,8 +198,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = pivot + _offset;
-                _chassis = World.CreateBody(bd);
-                _chassis.CreateFixture(sd);
+                _chassis = BodyFactory.CreateFromDef(World, bd);
+                _chassis.AddFixture(sd);
             }
 
             {
@@ -211,8 +212,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = pivot + _offset;
-                _wheel = World.CreateBody(bd);
-                _wheel.CreateFixture(sd);
+                _wheel = BodyFactory.CreateFromDef(World, bd);
+                _wheel.AddFixture(sd);
             }
 
             {
@@ -222,7 +223,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.MotorSpeed = _motorSpeed;
                 jd.MaxMotorTorque = 400.0f;
                 jd.EnableMotor = _motorOn;
-                _motorJoint = (RevoluteJoint)World.CreateJoint(jd);
+                _motorJoint = (RevoluteJoint)JointFactory.CreateFromDef(World, jd);
             }
 
             Vector2 wheelAnchor;

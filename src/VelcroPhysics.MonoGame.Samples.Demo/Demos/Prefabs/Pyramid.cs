@@ -39,7 +39,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
                     Body body = BodyFactory.CreateBody(world);
                     body.BodyType = BodyType.Dynamic;
                     body.Position = pos;
-                    body.CreateFixture(shape);
+                    body.AddFixture(shape);
                     _boxes.Add(body);
 
                     pos.X += spacing;

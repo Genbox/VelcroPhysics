@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Utilities;
@@ -46,7 +47,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-20.0f, 0.0f), new Vector2(20.0f, 0.0f));
@@ -54,7 +55,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
 
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             // Define motorized body
@@ -62,7 +63,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(0.0f, 8.0f);
-                Body body = World.CreateBody(bd);
+                Body body = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape shape = new PolygonShape(2.0f);
                 shape.SetAsBox(2.0f, 0.5f);
@@ -70,13 +71,13 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 FixtureDef fd = new FixtureDef();
                 fd.Shape = shape;
                 fd.Friction = 0.6f;
-                body.CreateFixture(fd);
+                body.AddFixture(fd);
 
                 MotorJointDef mjd = new MotorJointDef();
                 mjd.Initialize(ground, body);
                 mjd.MaxForce = 1000.0f;
                 mjd.MaxTorque = 1000.0f;
-                _joint = (MotorJoint)World.CreateJoint(mjd);
+                _joint = (MotorJoint)JointFactory.CreateFromDef(World, mjd);
             }
 
             _go = false;

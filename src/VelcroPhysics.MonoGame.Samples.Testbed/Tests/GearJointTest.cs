@@ -25,6 +25,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -43,11 +44,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(50.0f, 0.0f), new Vector2(-50.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -63,28 +64,28 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd1 = new BodyDef();
                 bd1.Type = BodyType.Static;
                 bd1.Position = new Vector2(10.0f, 9.0f);
-                Body body1 = World.CreateBody(bd1);
-                body1.CreateFixture(circle1);
+                Body body1 = BodyFactory.CreateFromDef(World, bd1);
+                body1.AddFixture(circle1);
 
                 BodyDef bd2 = new BodyDef();
                 bd2.Type = BodyType.Dynamic;
                 bd2.Position = new Vector2(10.0f, 8.0f);
-                Body body2 = World.CreateBody(bd2);
-                body2.CreateFixture(box);
+                Body body2 =BodyFactory.CreateFromDef(World, bd2);
+                body2.AddFixture(box);
 
                 BodyDef bd3 = new BodyDef();
                 bd3.Type = BodyType.Dynamic;
                 bd3.Position = new Vector2(10.0f, 6.0f);
-                Body body3 = World.CreateBody(bd3);
-                body3.CreateFixture(circle2);
+                Body body3 = BodyFactory.CreateFromDef(World, bd3);
+                body3.AddFixture(circle2);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
                 jd1.Initialize(body1, body2, bd1.Position);
-                Joint joint1 = World.CreateJoint(jd1);
+                Joint joint1 = JointFactory.CreateFromDef(World, jd1);
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
                 jd2.Initialize(body2, body3, bd3.Position);
-                Joint joint2 = World.CreateJoint(jd2);
+                Joint joint2 = JointFactory.CreateFromDef(World, jd2);
 
                 GearJointDef jd4 = new GearJointDef();
                 jd4.BodyA = body1;
@@ -92,7 +93,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd4.JointA = joint1;
                 jd4.JointB = joint2;
                 jd4.Ratio = circle2.Radius / circle1.Radius;
-                World.CreateJoint(jd4);
+                JointFactory.CreateFromDef(World, jd4);
             }
 
             {
@@ -108,8 +109,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd1 = new BodyDef();
                 bd1.Type = BodyType.Dynamic;
                 bd1.Position = new Vector2(-3.0f, 12.0f);
-                Body body1 = World.CreateBody(bd1);
-                body1.CreateFixture(circle1);
+                Body body1 = BodyFactory.CreateFromDef(World, bd1);
+                body1.AddFixture(circle1);
 
                 RevoluteJointDef jd1 = new RevoluteJointDef();
                 jd1.BodyA = ground;
@@ -117,23 +118,23 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd1.LocalAnchorA = ground.GetLocalPoint(bd1.Position);
                 jd1.LocalAnchorB = body1.GetLocalPoint(bd1.Position);
                 jd1.ReferenceAngle = body1.Rotation - ground.Rotation;
-                _joint1 = (RevoluteJoint)World.CreateJoint(jd1);
+                _joint1 = (RevoluteJoint)JointFactory.CreateFromDef(World, jd1);
 
                 BodyDef bd2 = new BodyDef();
                 bd2.Type = BodyType.Dynamic;
                 bd2.Position = new Vector2(0.0f, 12.0f);
-                Body body2 = World.CreateBody(bd2);
-                body2.CreateFixture(circle2);
+                Body body2 = BodyFactory.CreateFromDef(World, bd2);
+                body2.AddFixture(circle2);
 
                 RevoluteJointDef jd2 = new RevoluteJointDef();
                 jd2.Initialize(ground, body2, bd2.Position);
-                _joint2 = (RevoluteJoint)World.CreateJoint(jd2);
+                _joint2 = (RevoluteJoint)JointFactory.CreateFromDef(World, jd2);
 
                 BodyDef bd3 = new BodyDef();
                 bd3.Type = BodyType.Dynamic;
                 bd3.Position = new Vector2(2.5f, 12.0f);
-                Body body3 = World.CreateBody(bd3);
-                body3.CreateFixture(box);
+                Body body3 = BodyFactory.CreateFromDef(World, bd3);
+                body3.AddFixture(box);
 
                 PrismaticJointDef jd3 = new PrismaticJointDef();
                 jd3.Initialize(ground, body3, bd3.Position, new Vector2(0.0f, 1.0f));
@@ -141,7 +142,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd3.UpperTranslation = 5.0f;
                 jd3.EnableLimit = true;
 
-                _joint3 = (PrismaticJoint)World.CreateJoint(jd3);
+                _joint3 = (PrismaticJoint)JointFactory.CreateFromDef(World, jd3);
 
                 GearJointDef jd4 = new GearJointDef();
                 jd4.BodyA = body1;
@@ -149,7 +150,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd4.JointA = _joint1;
                 jd4.JointB = _joint2;
                 jd4.Ratio = circle2.Radius / circle1.Radius;
-                _joint4 = (GearJoint)World.CreateJoint(jd4);
+                _joint4 = (GearJoint)JointFactory.CreateFromDef(World, jd4);
 
                 GearJointDef jd5 = new GearJointDef();
                 jd5.BodyA = body2;
@@ -157,7 +158,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd5.JointA = _joint2;
                 jd5.JointB = _joint3;
                 jd5.Ratio = -1.0f / circle2.Radius;
-                _joint5 = (GearJoint)World.CreateJoint(jd5);
+                _joint5 = (GearJoint)JointFactory.CreateFromDef(World, jd5);
             }
         }
 

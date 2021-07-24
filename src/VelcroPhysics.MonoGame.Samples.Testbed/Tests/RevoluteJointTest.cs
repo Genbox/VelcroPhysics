@@ -26,6 +26,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
@@ -46,7 +47,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
@@ -56,7 +57,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
                 //fd.Filter.Category = 2;
 
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             _enableLimit = true;
@@ -70,8 +71,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 BodyDef bd = new BodyDef();
                 bd.Type = BodyType.Dynamic;
                 bd.Position = new Vector2(-10.0f, 20.0f);
-                Body body = World.CreateBody(bd);
-                body.CreateFixture(shape);
+                Body body = BodyFactory.CreateFromDef(World, bd);
+                body.AddFixture(shape);
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.Initialize(ground, body, new Vector2(-10.0f, 20.5f));
@@ -82,7 +83,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.UpperAngle = 0.5f * MathConstants.Pi;
                 jd.EnableLimit = _enableLimit;
 
-                _joint1 = (RevoluteJoint)World.CreateJoint(jd);
+                _joint1 = (RevoluteJoint)JointFactory.CreateFromDef(World, jd);
             }
 
             {
@@ -97,8 +98,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Filter.CategoryMask = Category.Cat1;
                 fd.Shape = circle_shape;
 
-                _ball = World.CreateBody(circle_bd);
-                _ball.CreateFixture(fd);
+                _ball = BodyFactory.CreateFromDef(World, circle_bd);
+                _ball.AddFixture(fd);
 
                 PolygonShape polygon_shape = new PolygonShape(2.0f);
                 polygon_shape.SetAsBox(10.0f, 0.5f, new Vector2(-10.0f, 0.0f), 0.0f);
@@ -107,8 +108,8 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 polygon_bd.Position = new Vector2(20.0f, 10.0f);
                 polygon_bd.Type = BodyType.Dynamic;
                 polygon_bd.IsBullet = true;
-                Body polygon_body = World.CreateBody(polygon_bd);
-                polygon_body.CreateFixture(polygon_shape);
+                Body polygon_body = BodyFactory.CreateFromDef(World, polygon_bd);
+                polygon_body.AddFixture(polygon_shape);
 
                 RevoluteJointDef jd = new RevoluteJointDef();
                 jd.Initialize(ground, polygon_body, new Vector2(19.0f, 10.0f));
@@ -119,7 +120,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.MotorSpeed = 0.0f;
                 jd.MaxMotorTorque = 10000.0f;
 
-                _joint2 = (RevoluteJoint)World.CreateJoint(jd);
+                _joint2 = (RevoluteJoint)JointFactory.CreateFromDef(World, jd);
             }
         }
 

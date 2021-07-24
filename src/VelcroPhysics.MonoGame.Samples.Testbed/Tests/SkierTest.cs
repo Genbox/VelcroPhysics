@@ -5,6 +5,7 @@ Test case for collision/jerking issue.
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework.Input;
 using Genbox.VelcroPhysics.Shared;
@@ -25,7 +26,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 float PlatformWidth = 8.0f;
 
@@ -68,7 +69,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Shape = shape;
                 fd.Friction = SurfaceFriction;
 
-                ground.CreateFixture(fd);
+                ground.AddFixture(fd);
             }
 
             {
@@ -90,7 +91,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 float initial_y = BodyHeight / 2 + SkiThickness;
                 bd.Position = new Vector2(-_platformWidth / 2, initial_y);
 
-                Body skier = World.CreateBody(bd);
+                Body skier = BodyFactory.CreateFromDef(World, bd);
 
                 PolygonShape ski = new PolygonShape(1.0f);
                 Vertices verts = new Vertices(4);
@@ -106,7 +107,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 fd.Restitution = SkiRestitution;
 
                 fd.Shape = ski;
-                skier.CreateFixture(fd);
+                skier.AddFixture(fd);
 
                 skier.LinearVelocity = new Vector2(0.5f, 0.0f);
 

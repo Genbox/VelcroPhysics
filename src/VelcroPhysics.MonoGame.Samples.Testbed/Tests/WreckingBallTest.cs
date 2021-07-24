@@ -26,6 +26,7 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Definitions.Joints;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Dynamics.Joints;
+using Genbox.VelcroPhysics.Factories;
 using Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Framework;
 using Microsoft.Xna.Framework;
 
@@ -47,11 +48,11 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
             Body ground;
             {
                 BodyDef bd = new BodyDef();
-                ground = World.CreateBody(bd);
+                ground = BodyFactory.CreateFromDef(World, bd);
 
                 EdgeShape shape = new EdgeShape();
                 shape.SetTwoSided(new Vector2(-40.0f, 0.0f), new Vector2(40.0f, 0.0f));
-                ground.CreateFixture(shape);
+                ground.AddFixture(shape);
             }
 
             {
@@ -83,7 +84,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                         bd.AngularDamping = 0.4f;
                     }
 
-                    Body body = World.CreateBody(bd);
+                    Body body = BodyFactory.CreateFromDef(World, bd);
 
                     if (i == N - 1)
                     {
@@ -92,16 +93,16 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                         FixtureDef sfd = new FixtureDef();
                         sfd.Shape = circleShape;
                         sfd.Filter.Category = Category.Cat2;
-                        body.CreateFixture(sfd);
+                        body.AddFixture(sfd);
                     }
                     else
                     {
-                        body.CreateFixture(fd);
+                        body.AddFixture(fd);
                     }
 
                     Vector2 anchor = new Vector2(i, y);
                     jd.Initialize(prevBody, body, anchor);
-                    World.CreateJoint(jd);
+                    JointFactory.CreateFromDef(World, jd);
 
                     prevBody = body;
                 }
@@ -116,7 +117,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
 
             {
                 _distanceJointDef.BodyA = ground;
-                _distanceJoint = World.CreateJoint(_distanceJointDef);
+                _distanceJoint = JointFactory.CreateFromDef(World, _distanceJointDef);
                 _stabilize = true;
             }
         }

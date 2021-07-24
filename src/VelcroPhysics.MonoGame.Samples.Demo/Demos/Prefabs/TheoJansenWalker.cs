@@ -61,7 +61,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _chassis.BodyType = BodyType.Dynamic;
             _chassis.Position = pivot + _position;
 
-            Fixture bodyFixture = _chassis.CreateFixture(box);
+            Fixture bodyFixture = _chassis.AddFixture(box);
             bodyFixture.CollisionGroup = -1;
 
             // Wheel
@@ -72,7 +72,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             _wheel.BodyType = BodyType.Dynamic;
             _wheel.Position = pivot + _position;
 
-            Fixture wheelFixture = _wheel.CreateFixture(circle);
+            Fixture wheelFixture = _wheel.AddFixture(circle);
             wheelFixture.CollisionGroup = -1;
 
             // Physics
@@ -173,10 +173,10 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Demo.Demos.Prefabs
             if (direction > 0f)
                 _rightShoulders[index] = shoulder;
 
-            Fixture legFixture = leg.CreateFixture(legPolygon);
+            Fixture legFixture = leg.AddFixture(legPolygon);
             legFixture.CollisionGroup = -1;
 
-            Fixture shoulderFixture = shoulder.CreateFixture(shoulderPolygon);
+            Fixture shoulderFixture = shoulder.AddFixture(shoulderPolygon);
             shoulderFixture.CollisionGroup = -1;
 
             float dampingRatio = 0.5f;
