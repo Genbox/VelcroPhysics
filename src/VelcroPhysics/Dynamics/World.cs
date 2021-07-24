@@ -46,11 +46,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         private HashSet<Body> _bodyRemoveList = new HashSet<Body>();
         private HashSet<Joint> _jointAddList = new HashSet<Joint>();
         private HashSet<Joint> _jointRemoveList = new HashSet<Joint>();
-
-        internal int _bodyIdCounter;
-        internal int _fixtureIdCounter;
-
-        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
         private float _invDt0;
         private Fixture _myFixture;
         private Vector2 _point1;
@@ -64,8 +59,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         private bool _stepComplete = true;
         private Pool<Stopwatch> _timerPool = new Pool<Stopwatch>(Stopwatch.StartNew, sw => sw.Restart(), 5, false);
         private List<Fixture> _testPointAllFixtures;
-        internal bool _newContacts;
-        internal Island _island;
         private readonly ContactManager _contactManager;
         private Profile _profile;
         private readonly List<Controller> _controllerList;
@@ -74,6 +67,13 @@ namespace Genbox.VelcroPhysics.Dynamics
         private readonly List<Joint> _jointList;
         private bool _enabled;
         private bool _isLocked;
+
+        internal int _bodyIdCounter;
+        internal int _fixtureIdCounter;
+        internal Queue<Contact> _contactPool = new Queue<Contact>(256);
+        internal bool _newContacts;
+        internal Island _island;
+        private bool _warmStartingEnabled;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
