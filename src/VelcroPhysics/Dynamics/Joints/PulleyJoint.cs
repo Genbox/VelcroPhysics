@@ -213,6 +213,12 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             set => _ratio = value;
         }
 
+        public override void ShiftOrigin(ref Vector2 newOrigin)
+        {
+            _worldAnchorA -= newOrigin;
+            _worldAnchorB -= newOrigin;
+        }
+
         public override Vector2 GetReactionForce(float invDt)
         {
             Vector2 P = _impulse * _uB;

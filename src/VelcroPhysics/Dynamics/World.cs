@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -1206,10 +1206,10 @@ namespace Genbox.VelcroPhysics.Dynamics
 
             foreach (Joint joint in _jointList)
             {
-                //joint.ShiftOrigin(newOrigin); //TODO: uncomment
+                joint.ShiftOrigin(ref newOrigin);
             }
 
-            _contactManager.BroadPhase.ShiftOrigin(newOrigin);
+            _contactManager.BroadPhase.ShiftOrigin(ref newOrigin);
         }
 
         public void Clear()

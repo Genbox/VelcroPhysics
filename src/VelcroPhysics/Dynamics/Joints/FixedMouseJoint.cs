@@ -131,6 +131,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             set => _damping = value;
         }
 
+        public override void ShiftOrigin(ref Vector2 newOrigin)
+        {
+            _targetB -= newOrigin;
+        }
+
         public override Vector2 GetReactionForce(float invDt)
         {
             return invDt * _impulse;

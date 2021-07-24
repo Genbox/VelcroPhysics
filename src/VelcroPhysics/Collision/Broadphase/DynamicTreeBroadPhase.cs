@@ -207,9 +207,9 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
         }
 
         /// <summary>Shift the world origin. Useful for large worlds.</summary>
-        public void ShiftOrigin(Vector2 newOrigin)
+        public void ShiftOrigin(ref Vector2 newOrigin)
         {
-            _tree.ShiftOrigin(newOrigin);
+            _tree.ShiftOrigin(ref newOrigin);
         }
 
         private void BufferMove(int proxyId)

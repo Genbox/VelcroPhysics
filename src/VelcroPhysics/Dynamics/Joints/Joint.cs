@@ -147,6 +147,11 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
         /// <param name="invDt">The inverse delta time.</param>
         public abstract float GetReactionTorque(float invDt);
 
+        /// <summary>
+        /// Shift the origin for any points stored in world coordinates.
+        /// </summary>
+        public virtual void ShiftOrigin(ref Vector2 newOrigin) { }
+
         protected void WakeBodies()
         {
             if (BodyA != null)

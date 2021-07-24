@@ -31,6 +31,6 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
 
         void RayCast(Func<RayCastInput, int, float> callback, ref RayCastInput input);
 
-        void ShiftOrigin(Vector2 newOrigin);
+        void ShiftOrigin(ref Vector2 newOrigin);
     }
 }

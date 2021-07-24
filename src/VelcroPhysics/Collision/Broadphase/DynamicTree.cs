@@ -939,7 +939,7 @@ namespace Genbox.VelcroPhysics.Collision.Broadphase
 
         /// <summary>Shift the origin of the nodes</summary>
         /// <param name="newOrigin">The displacement to use.</param>
-        public void ShiftOrigin(Vector2 newOrigin)
+        public void ShiftOrigin(ref Vector2 newOrigin)
         {
             // Build array of leaves. Free the rest.
             for (int i = 0; i < _nodeCapacity; ++i)
