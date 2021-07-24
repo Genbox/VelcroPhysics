@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -178,33 +178,33 @@ namespace Genbox.VelcroPhysics.Dynamics
                         bodyB.Awake = true;
 
                     // Remove from body 1.
-                    if (joint.EdgeA.Prev != null)
-                        joint.EdgeA.Prev.Next = joint.EdgeA.Next;
+                    if (joint._edgeA.Prev != null)
+                        joint._edgeA.Prev.Next = joint._edgeA.Next;
 
-                    if (joint.EdgeA.Next != null)
-                        joint.EdgeA.Next.Prev = joint.EdgeA.Prev;
+                    if (joint._edgeA.Next != null)
+                        joint._edgeA.Next.Prev = joint._edgeA.Prev;
 
-                    if (joint.EdgeA == bodyA.JointList)
-                        bodyA.JointList = joint.EdgeA.Next;
+                    if (joint._edgeA == bodyA.JointList)
+                        bodyA.JointList = joint._edgeA.Next;
 
-                    joint.EdgeA.Prev = null;
-                    joint.EdgeA.Next = null;
+                    joint._edgeA.Prev = null;
+                    joint._edgeA.Next = null;
 
                     // WIP David
                     if (!joint.IsFixedType())
                     {
                         // Remove from body 2
-                        if (joint.EdgeB.Prev != null)
-                            joint.EdgeB.Prev.Next = joint.EdgeB.Next;
+                        if (joint._edgeB.Prev != null)
+                            joint._edgeB.Prev.Next = joint._edgeB.Next;
 
-                        if (joint.EdgeB.Next != null)
-                            joint.EdgeB.Next.Prev = joint.EdgeB.Prev;
+                        if (joint._edgeB.Next != null)
+                            joint._edgeB.Next.Prev = joint._edgeB.Prev;
 
-                        if (joint.EdgeB == bodyB.JointList)
-                            bodyB.JointList = joint.EdgeB.Next;
+                        if (joint._edgeB == bodyB.JointList)
+                            bodyB.JointList = joint._edgeB.Next;
 
-                        joint.EdgeB.Prev = null;
-                        joint.EdgeB.Next = null;
+                        joint._edgeB.Prev = null;
+                        joint._edgeB.Next = null;
 
                         // If the joint prevents collisions, then flag any contacts for filtering.
                         if (!collideConnected)
@@ -241,28 +241,28 @@ namespace Genbox.VelcroPhysics.Dynamics
                     _jointList.Add(joint);
 
                     // Connect to the bodies' doubly linked lists.
-                    joint.EdgeA.Joint = joint;
-                    joint.EdgeA.Other = joint.BodyB;
-                    joint.EdgeA.Prev = null;
-                    joint.EdgeA.Next = joint.BodyA.JointList;
+                    joint._edgeA.Joint = joint;
+                    joint._edgeA.Other = joint.BodyB;
+                    joint._edgeA.Prev = null;
+                    joint._edgeA.Next = joint.BodyA.JointList;
 
                     if (joint.BodyA.JointList != null)
-                        joint.BodyA.JointList.Prev = joint.EdgeA;
+                        joint.BodyA.JointList.Prev = joint._edgeA;
 
-                    joint.BodyA.JointList = joint.EdgeA;
+                    joint.BodyA.JointList = joint._edgeA;
 
                     // WIP David
                     if (!joint.IsFixedType())
                     {
-                        joint.EdgeB.Joint = joint;
-                        joint.EdgeB.Other = joint.BodyA;
-                        joint.EdgeB.Prev = null;
-                        joint.EdgeB.Next = joint.BodyB.JointList;
+                        joint._edgeB.Joint = joint;
+                        joint._edgeB.Other = joint.BodyA;
+                        joint._edgeB.Prev = null;
+                        joint._edgeB.Next = joint.BodyB.JointList;
 
                         if (joint.BodyB.JointList != null)
-                            joint.BodyB.JointList.Prev = joint.EdgeB;
+                            joint.BodyB.JointList.Prev = joint._edgeB;
 
-                        joint.BodyB.JointList = joint.EdgeB;
+                        joint.BodyB.JointList = joint._edgeB;
 
                         Body bodyA = joint.BodyA;
                         Body bodyB = joint.BodyB;

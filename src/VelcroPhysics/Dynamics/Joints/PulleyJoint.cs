@@ -52,32 +52,32 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
     /// </summary>
     public class PulleyJoint : Joint
     {
-        // Solver shared
-        private float _impulse;
-
-        // Solver temp
-        private int _indexA;
-
-        private int _indexB;
-        private float _invIA;
-        private float _invIB;
-        private float _invMassA;
-        private float _invMassB;
-        private Vector2 _localCenterA;
-        private Vector2 _localCenterB;
-        private float _mass;
-        private Vector2 _rA;
-        private Vector2 _rB;
-        private Vector2 _uA;
-        private Vector2 _uB;
-        private Vector2 _localAnchorA;
-        private Vector2 _localAnchorB;
         private Vector2 _worldAnchorA;
         private Vector2 _worldAnchorB;
         private float _lengthA;
         private float _lengthB;
-        private float _ratio;
+
+        // Solver shared
+        private Vector2 _localAnchorA;
+        private Vector2 _localAnchorB;
         private float _constant;
+        private float _ratio;
+        private float _impulse;
+
+        // Solver temp
+        private int _indexA;
+        private int _indexB;
+        private Vector2 _uA;
+        private Vector2 _uB;
+        private Vector2 _rA;
+        private Vector2 _rB;
+        private Vector2 _localCenterA;
+        private Vector2 _localCenterB;
+        private float _invMassA;
+        private float _invMassB;
+        private float _invIA;
+        private float _invIB;
+        private float _mass;
 
         public PulleyJoint(PulleyJointDef def)
             : base(def)

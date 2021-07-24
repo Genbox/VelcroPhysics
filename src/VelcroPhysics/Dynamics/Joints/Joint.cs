@@ -38,9 +38,9 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
 
         internal bool _enabled;
         internal bool _islandFlag;
-      
-        internal JointEdge EdgeA = new JointEdge();
-        internal JointEdge EdgeB = new JointEdge();
+
+        internal JointEdge _edgeA = new JointEdge();
+        internal JointEdge _edgeB = new JointEdge();
 
         /// <summary>Indicate if this join is enabled or not. Disabling a joint means it is still in the simulation, but inactive.</summary>
         protected Body _bodyA;
