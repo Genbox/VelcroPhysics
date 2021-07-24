@@ -53,22 +53,22 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 body.AddFixture(shape);
             }
 
-#if TRUE
-        {
-            BodyDef bd = new BodyDef();
-            bd.Type = BodyType.Dynamic;
-            bd.Position = new Vector2(0.0f, 20.0f);
+#if true
+            {
+                BodyDef bd = new BodyDef();
+                bd.Type = BodyType.Dynamic;
+                bd.Position = new Vector2(0.0f, 20.0f);
 
-            PolygonShape shape = new PolygonShape(1.0f);
-            shape.SetAsBox(2.0f, 0.1f);
+                PolygonShape shape = new PolygonShape(1.0f);
+                shape.SetAsBox(2.0f, 0.1f);
 
-            _body = World.CreateBody(bd);
-            _body.CreateFixture(shape);
+                _body = BodyFactory.CreateFromDef(World, bd);
+                _body.AddFixture(shape);
 
-            _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
-            _body.LinearVelocity = new Vector2(0.0f, -100.0f);
-            _body.AngularVelocity = _angularVelocity;
-        }
+                _angularVelocity = Rand.RandomFloat(-50.0f, 50.0f);
+                _body.LinearVelocity = new Vector2(0.0f, -100.0f);
+                _body.AngularVelocity = _angularVelocity;
+            }
 #else
             {
                 BodyDef bd = new BodyDef();
