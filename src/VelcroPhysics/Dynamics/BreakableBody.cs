@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Genbox.VelcroPhysics.Collision.Shapes;
@@ -17,15 +17,15 @@ namespace Genbox.VelcroPhysics.Dynamics
         private bool _break;
         private Vector2[] _velocitiesCache = new Vector2[8];
 
-        public BreakableBody(World world, IEnumerable<Vertices> vertices, float density, Vector2 position = new Vector2(), float rotation = 0)
+        public BreakableBody(World world, ICollection<Vertices> parts, float density, Vector2 position = new Vector2(), float rotation = 0)
         {
             _world = world;
             _world.ContactManager.PostSolve += PostSolve;
-            Parts = new List<Fixture>(8);
+            Parts = new List<Fixture>(parts.Count);
             MainBody = BodyFactory.CreateBody(_world, position, rotation, BodyType.Dynamic);
             Strength = 500.0f;
 
-            foreach (Vertices part in vertices)
+            foreach (Vertices part in parts)
             {
                 PolygonShape polygonShape = new PolygonShape(part, density);
                 Fixture fixture = MainBody.AddFixture(polygonShape);

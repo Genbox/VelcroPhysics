@@ -118,7 +118,6 @@ namespace Genbox.VelcroPhysics.Dynamics
         }
 
         /// <summary>Change the global gravity vector.</summary>
-        /// <value>The gravity.</value>
         public Vector2 Gravity
         {
             get => _gravity;
