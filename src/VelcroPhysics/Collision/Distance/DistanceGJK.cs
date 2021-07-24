@@ -65,8 +65,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
         {
             cache = new SimplexCache();
 
-            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                ++GJKCalls;
+            ++GJKCalls;
 
             // Initialize the simplex.
             Simplex simplex = new Simplex();
@@ -138,8 +137,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 // Iteration count is equated to the number of support point calls.
                 ++iter;
 
-                if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                    ++GJKIters;
+                ++GJKIters;
 
                 // Check for duplicate support points. This is the main termination criteria.
                 bool duplicate = false;
@@ -160,8 +158,7 @@ namespace Genbox.VelcroPhysics.Collision.Distance
                 ++simplex.Count;
             }
 
-            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                GJKMaxIters = Math.Max(GJKMaxIters, iter);
+            GJKMaxIters = Math.Max(GJKMaxIters, iter);
 
             // Prepare output.
             simplex.GetWitnessPoints(out output.PointA, out output.PointB);

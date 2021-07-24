@@ -202,7 +202,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             if (_angularMass > 0.0f)
                 _angularMass = 1.0f / _angularMass;
 
-            if (Settings.EnableWarmStarting)
+            if (data.Step.WarmStarting)
             {
                 // Scale impulses to support a variable time step.
                 _linearImpulse *= data.Step.DeltaTimeRatio;

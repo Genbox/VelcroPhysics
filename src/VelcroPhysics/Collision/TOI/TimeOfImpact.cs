@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -53,8 +53,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
         /// <param name="output">The output.</param>
         public static void CalculateTimeOfImpact(ref TOIInput input, out TOIOutput output)
         {
-            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                ++TOICalls;
+            ++TOICalls;
 
             output = new TOIOutput();
             output.State = TOIOutputState.Unknown;
@@ -187,8 +186,6 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                         }
 
                         ++rootIterCount;
-
-                        if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
                             ++TOIRootIters;
 
                         float s = SeparationFunction.Evaluate(indexA, indexB, t, input.ProxyA, ref sweepA, input.ProxyB, ref sweepB, ref axis, ref localPoint, type);
@@ -216,8 +213,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                             break;
                     }
 
-                    if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                        TOIMaxRootIters = Math.Max(TOIMaxRootIters, rootIterCount);
+                    TOIMaxRootIters = Math.Max(TOIMaxRootIters, rootIterCount);
 
                     ++pushBackIter;
 
@@ -226,9 +222,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                 }
 
                 ++iter;
-
-                if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                    ++TOIIters;
+                ++TOIIters;
 
                 if (done)
                     break;
@@ -242,8 +236,7 @@ namespace Genbox.VelcroPhysics.Collision.TOI
                 }
             }
 
-            if (Settings.EnableDiagnostics) //Velcro: We only gather diagnostics when enabled
-                TOIMaxIters = Math.Max(TOIMaxIters, iter);
+            TOIMaxIters = Math.Max(TOIMaxIters, iter);
         }
     }
 }

@@ -67,13 +67,16 @@ namespace Genbox.VelcroPhysics.Dynamics
         private readonly List<Joint> _jointList;
         private bool _enabled;
         private bool _isLocked;
+        private bool _warmStartingEnabled;
+        private bool _enableDiagnostics;
+        private bool _sleepingAllowed;
 
         internal int _bodyIdCounter;
         internal int _fixtureIdCounter;
         internal Queue<Contact> _contactPool = new Queue<Contact>(256);
         internal bool _newContacts;
         internal Island _island;
-        private bool _warmStartingEnabled;
+        private bool _continuousPhysicsEnabled;
 
         /// <summary>Fires whenever a body has been added</summary>
         public event BodyHandler BodyAdded;
@@ -104,6 +107,7 @@ namespace Genbox.VelcroPhysics.Dynamics
         {
             _gravity = gravity;
             _enabled = true;
+            _warmStartingEnabled = true;
 
             _island = new Island();
             _controllerList = new List<Controller>();
@@ -115,6 +119,32 @@ namespace Genbox.VelcroPhysics.Dynamics
             _rayCastCallbackWrapper = RayCastCallbackWrapper;
 
             _contactManager = new ContactManager(new DynamicTreeBroadPhase());
+        }
+
+        public bool ContinuousPhysicsEnabled
+        {
+            get => _continuousPhysicsEnabled;
+            set => _continuousPhysicsEnabled = value;
+        }
+
+        public bool SleepingAllowed
+        {
+            get => _sleepingAllowed;
+            set => _sleepingAllowed = value;
+        }
+
+        public bool WarmStartingEnabled
+        {
+            get => _warmStartingEnabled;
+            set => _warmStartingEnabled = value;
+        }
+
+        /// <summary>Enabling diagnostics causes the engine to gather timing information. You can see how much time it took to
+        /// solve the contacts, solve CCD and update the controllers.</summary>
+        public bool EnableDiagnostics
+        {
+            get => _enableDiagnostics;
+            set => _enableDiagnostics = value;
         }
 
         /// <summary>Change the global gravity vector.</summary>
@@ -285,7 +315,9 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Take a time step. This performs collision detection, integration, and constraint solution.</summary>
         /// <param name="dt">The amount of time to simulate, this should not vary.</param>
-        public void Step(float dt)
+        /// <param name="velocityIterations">The number of velocity iterations to do in this step. Lesser means more performance but more inaccurate velocity calculations.</param>
+        /// <param name="positionIterations">The number of position iterations to do in this step. Lesser means more performance, but also more inaccurate position calculations.</param>
+        public void Step(float dt, int velocityIterations = 8, int positionIterations = 3)
         {
             //Velcro: We support disabling the world
             if (!_enabled)
@@ -313,10 +345,11 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _timerPool.ReturnToPool(timer);
             }
 
-            //Velcro: Moved warmstarting into Settings
-            //Velcro: Moved position and velocity iterations into Settings.cs
             TimeStep step;
             step.DeltaTime = dt;
+            step.VelocityIterations = velocityIterations;
+            step.PositionIterations = positionIterations;
+            step.WarmStarting = WarmStartingEnabled;
             if (dt > 0.0f)
                 step.InvertedDeltaTime = 1.0f / dt;
             else
@@ -353,7 +386,7 @@ namespace Genbox.VelcroPhysics.Dynamics
             }
 
             // Handle TOI events.
-            if (Settings.ContinuousPhysics && step.DeltaTime > 0.0f)
+            if (_continuousPhysicsEnabled && step.DeltaTime > 0.0f)
             {
                 Stopwatch timer = _timerPool.GetFromPool(true);
                 SolveTOI(ref step);
@@ -769,7 +802,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                 }
 
                 Profile profile = new Profile();
-                _island.Solve(ref profile, ref step, ref _gravity);
+                _island.Solve(ref profile, ref step, ref _gravity, _sleepingAllowed);
                 _profile.SolveInit += profile.SolveInit;
                 _profile.SolveVelocity += profile.SolveVelocity;
                 _profile.SolvePosition += profile.SolvePosition;
@@ -1057,9 +1090,9 @@ namespace Genbox.VelcroPhysics.Dynamics
                 subStep.DeltaTime = (1.0f - minAlpha) * step.DeltaTime;
                 subStep.InvertedDeltaTime = 1.0f / subStep.DeltaTime;
                 subStep.DeltaTimeRatio = 1.0f;
-                //subStep.velocityIterations = step.velocityIterations;
-                //subStep.warmStarting = false;
-
+                subStep.PositionIterations = 20;
+                subStep.VelocityIterations = step.VelocityIterations;
+                subStep.WarmStarting = false;
                 _island.SolveTOI(ref subStep, bA0.IslandIndex, bB0.IslandIndex);
 
                 // Reset island flags and synchronize broad-phase proxies.

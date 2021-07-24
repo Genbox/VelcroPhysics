@@ -35,34 +35,9 @@ namespace Genbox.VelcroPhysics
     {
         /* Velcro */
 
-        /// <summary>Enabling diagnostics causes the engine to gather timing information. You can see how much time it took to
-        /// solve the contacts, solve CCD and update the controllers. NOTE: If you are using a debug view that shows performance
-        /// counters, you might want to enable this.</summary>
-#if DEBUG
-        public static bool EnableDiagnostics = true;
-#else
-        public static bool EnableDiagnostics = false;
-#endif
-
         /// <summary>Set this to true to skip sanity checks in the engine. This will speed up the tools by removing the overhead of
         /// the checks, but you will need to handle checks yourself where it is needed.</summary>
         public static bool SkipSanityChecks = false;
-
-        //Velcro: Moved AllowSleep from World to Settings
-        /// <summary>Enable/Disable sleeping</summary>
-        public static bool AllowSleep = true;
-
-        /// <summary>The number of velocity iterations used in the solver.</summary>
-        public static int VelocityIterations = 8;
-
-        /// <summary>The number of position iterations used in the solver.</summary>
-        public static int PositionIterations = 3;
-
-        /// <summary>The number of velocity iterations in the TOI solver</summary>
-        public static int TOIVelocityIterations = 8;
-
-        /// <summary>The number of position iterations in the TOI solver</summary>
-        public static int TOIPositionIterations = 20;
 
         /// <summary>If true, it will run a GiftWrap convex hull on all polygon inputs. This makes for a more stable engine when
         /// given random input, but if speed of the creation of polygons are more important, you might want to set this to false.</summary>
@@ -91,10 +66,6 @@ namespace Genbox.VelcroPhysics
         //Velcro: Moved the maximum number of iterations to Settings
         /// <summary>Defines the maximum number of iterations made by the GJK algorithm.</summary>
         public static int MaxGJKIterations = 20;
-
-        //Velcro: Moved ContinuousPhysics to Settings and made it public. People might want ot disable it.
-        /// <summary>Enable/Disable Continuous Collision Detection (CCD)</summary>
-        public static bool ContinuousPhysics = true;
 
         /* Common */
 
@@ -174,10 +145,6 @@ namespace Genbox.VelcroPhysics
         //Velcro: Moved EnableSubStepping from TimeStep to Settings
         /// <summary>Enable or disable sub stepping. Used for debugging.</summary>
         internal const bool EnableSubStepping = false;
-
-        //Velcro: Moved EnableWarmStarting from TimeStep to Settings
-        /// <summary>Enable/Disable warm-starting. Used for debugging.</summary>
-        internal const bool EnableWarmStarting = true;
 
         //Velcro: Moved this value out of the contact solver and into Settings
         /// <summary>Enable or disable the block contact solver. Used for debugging.</summary>

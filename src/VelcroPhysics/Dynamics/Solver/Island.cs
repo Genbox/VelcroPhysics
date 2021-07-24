@@ -201,7 +201,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _jointCount = 0;
         }
 
-        public void Solve(ref Profile profile, ref TimeStep step, ref Vector2 gravity)
+        public void Solve(ref Profile profile, ref TimeStep step, ref Vector2 gravity, bool allowSleep)
         {
             float h = step.DeltaTime;
 
@@ -254,7 +254,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _contactSolver.Reset(step, _contactCount, _contacts, _positions, _velocities);
             _contactSolver.InitializeVelocityConstraints();
 
-            if (Settings.EnableWarmStarting)
+            if (step.WarmStarting)
                 _contactSolver.WarmStart();
 
             for (int i = 0; i < _jointCount; ++i)
@@ -267,7 +267,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
             // Solve velocity constraints.
             _timer.Restart();
-            for (int i = 0; i < Settings.VelocityIterations; ++i)
+            for (int i = 0; i < step.VelocityIterations; ++i)
             {
                 for (int j = 0; j < _jointCount; ++j)
                 {
@@ -323,7 +323,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             // Solve position constraints
             _timer.Restart();
             bool positionSolved = false;
-            for (int i = 0; i < Settings.PositionIterations; ++i)
+            for (int i = 0; i < step.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolvePositionConstraints();
 
@@ -363,7 +363,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
 
             Report(_contactSolver.VelocityConstraints);
 
-            if (Settings.AllowSleep)
+            if (allowSleep)
             {
                 float minSleepTime = MathConstants.MaxFloat;
 
@@ -416,7 +416,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _contactSolver.Reset(subStep, _contactCount, _contacts, _positions, _velocities);
 
             // Solve position constraints.
-            for (int i = 0; i < Settings.TOIPositionIterations; ++i)
+            for (int i = 0; i < subStep.PositionIterations; ++i)
             {
                 bool contactsOkay = _contactSolver.SolveTOIPositionConstraints(toiIndexA, toiIndexB);
                 if (contactsOkay)
@@ -434,7 +434,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Solver
             _contactSolver.InitializeVelocityConstraints();
 
             // Solve velocity constraints.
-            for (int i = 0; i < Settings.TOIVelocityIterations; ++i)
+            for (int i = 0; i < subStep.VelocityIterations; ++i)
             {
                 _contactSolver.SolveVelocityConstraints();
             }

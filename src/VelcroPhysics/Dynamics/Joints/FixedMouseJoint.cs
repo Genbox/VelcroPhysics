@@ -193,7 +193,7 @@ namespace Genbox.VelcroPhysics.Dynamics.Joints
             // Cheat with some damping
             wA *= 0.98f;
 
-            if (Settings.EnableWarmStarting)
+            if (data.Step.WarmStarting)
             {
                 _impulse *= data.Step.DeltaTimeRatio;
                 vA += _invMassA * _impulse;

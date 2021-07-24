@@ -30,5 +30,11 @@ namespace Genbox.VelcroPhysics.Dynamics
 
         /// <summary>Inverse time step (0 if dt == 0).</summary>
         public float InvertedDeltaTime;
+
+        public int VelocityIterations;
+
+        public int PositionIterations;
+
+        public bool WarmStarting;
     }
 }
