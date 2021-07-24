@@ -345,6 +345,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _timerPool.ReturnToPool(timer);
             }
 
+            _isLocked = true;
+
             TimeStep step;
             step.DeltaTime = dt;
             step.VelocityIterations = velocityIterations;
@@ -411,6 +413,8 @@ namespace Genbox.VelcroPhysics.Dynamics
                 _profile.BreakableBodies = timer.ElapsedTicks;
                 _timerPool.ReturnToPool(timer);
             }
+
+            _isLocked = false;
 
             _profile.Step = stepTimer.ElapsedTicks;
             _timerPool.ReturnToPool(stepTimer);
@@ -539,6 +543,10 @@ namespace Genbox.VelcroPhysics.Dynamics
         /// </summary>
         public void ShiftOrigin(Vector2 newOrigin)
         {
+            Debug.Assert(!_isLocked);
+            if (_isLocked)
+                return;
+
             foreach (Body b in _bodyList)
             {
                 b._xf.p -= newOrigin;
