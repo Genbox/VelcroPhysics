@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Velcro Physics:
 * Copyright (c) 2017 Ian Qvist
 * 
@@ -328,6 +328,7 @@ namespace Genbox.VelcroPhysics.Dynamics
                     }
 
                     // Contacts are created the next time step.
+                    _world._newContacts = true;
                 }
                 else
                 {
