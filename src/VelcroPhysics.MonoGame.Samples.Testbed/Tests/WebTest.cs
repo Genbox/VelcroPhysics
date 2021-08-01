@@ -138,7 +138,7 @@ namespace Genbox.VelcroPhysics.MonoGame.Samples.Testbed.Tests
                 jd.BodyB = _bodies[1];
                 jd.LocalAnchorA = new Vector2(0.5f, 0.0f);
                 jd.LocalAnchorB = new Vector2(-0.5f, 0.0f);
-                ;
+                
                 p1 = jd.BodyA.GetWorldPoint(jd.LocalAnchorA);
                 p2 = jd.BodyB.GetWorldPoint(jd.LocalAnchorB);
                 d = p2 - p1;
